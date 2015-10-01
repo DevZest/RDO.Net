@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A6FA783F-4ADA-4BEA-9422-DF79344EC625}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevZest.Data.SqlServer</RootNamespace>
+    <AssemblyName>DevZest.Data.SqlServer</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Key.snk" />
+    <None Include="project.json" />
+    <!-- A reference to the entire .NET Framework is automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BinaryExtensions.cs" />
+    <Compile Include="Check.cs" />
+    <Compile Include="ColumnAttributes.cs" />
+    <Compile Include="ColumnExtensions.cs" />
+    <Compile Include="ColumnMapper.cs" />
+    <Compile Include="DbExpressionExtensions.cs" />
+    <Compile Include="DbJoinKindExtensions.cs" />
+    <Compile Include="ExpressionGenerator.cs" />
+    <Compile Include="FunctionKeys.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="IdentityOutput.cs" />
+    <Compile Include="IModelAliasManager.cs" />
+    <Compile Include="IndentedStringBuilderExtensions.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="ModelAliasManager.cs" />
+    <Compile Include="ModelExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.cs">
+      <DependentUpon>Resources.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SqlCommandExtensions.cs" />
+    <Compile Include="SqlConnectionExtensions.cs" />
+    <Compile Include="SqlDbTypeExtensions.cs" />
+    <Compile Include="SqlGenerator.cs" />
+    <Compile Include="SqlParameterExtensions.cs" />
+    <Compile Include="SqlParameterInfo.cs" />
+    <Compile Include="SqlReader.cs" />
+    <Compile Include="SqlReaderInvoker.cs" />
+    <Compile Include="SqlSession.cs" />
+    <Compile Include="SqlSession.TableManager.cs" />
+    <Compile Include="SqlTransactionInvoker.cs" />
+    <Compile Include="SqlVersion.cs" />
+    <Compile Include="SqlXmlModel.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="_DateTimeOffset.cs" />
+    <Compile Include="_SqlXml.cs" />
+    <Compile Include="_TimeSpan.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Resources.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

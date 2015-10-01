@@ -1,0 +1,11 @@
+obj
+
+bin
+
+
+packages
+TestResults
+*.suo
+*.lock.json
+
+

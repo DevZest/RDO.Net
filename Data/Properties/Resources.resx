@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accessor_InvalidGetter" xml:space="preserve">
+    <value>The provided getter expression is invalid.</value>
+  </data>
+  <data name="Accessor_RegisterAfterUse" xml:space="preserve">
+    <value>Cannot register accessor for type '{0}' after an instance of this type or its derived type has been created.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Accessor_RegisterDuplicate" xml:space="preserve">
+    <value>The accessor with OwnerType '{0}' and Name '{1}' has been registered already.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
+    <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
+  </data>
+  <data name="Case_WhenAfterElse" xml:space="preserve">
+    <value>Cannot call When after Else has been called.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ColumnAggregateFunction_EvalOnNonDataSet" xml:space="preserve">
+    <value>Cannot evaluate a non DataSet column: Column={0}, DataSource.Kind={1}.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ColumnAggregateFunction_NestedAggregate" xml:space="preserve">
+    <value>Aggregate function cannot be nested.</value>
+  </data>
+  <data name="ColumnAggregateFunction_NoModelChain" xml:space="preserve">
+    <value>Cannot resolve model chain from Column "{0}" to provided dataRow.</value>
+  </data>
+  <data name="ColumnCollection_DuplicateColumnKey" xml:space="preserve">
+    <value>Duplicate ColumnKey is not allowed: OriginalOwnerType={0}, OriginalName={1}.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="GenericInvoker_GetMethodInfo" xml:space="preserve">
+    <value>Cannot get method info: Type={0}, MethodName={1}.</value>
+  </data>
+  <data name="GenericInvoker_TypeResolverReturnsNull" xml:space="preserve">
+    <value>The type resolver callback returns null.</value>
+  </data>
+  <data name="ColumnGroup_GetterReturnsNull" xml:space="preserve">
+    <value>The class {0} is not implemented correctly. The column getter "{1}" returns null.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ColumnGroup_InconsistentParentModel" xml:space="preserve">
+    <value>The class {0} is not implemented correctly. The parent models of column "{1}" and "{2}" are inconsistent.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Column_ExpressionAlreadyAttached" xml:space="preserve">
+    <value>The expression is already attached to a Column.</value>
+  </data>
+  <data name="Column_ExpressionModelProperty" xml:space="preserve">
+    <value>The expression cannot be set to a column owned by a model.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Column_ExpressionOverwrite" xml:space="preserve">
+    <value>The column's Expression exists and cannot be overwrite.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Column_VerifyDataRow" xml:space="preserve">
+    <value>The Model of the given DataRow must be the same as this column's ParentModel.</value>
+  </data>
+  <data name="Column_VerifyDbReader" xml:space="preserve">
+    <value>The Model of the given DbReader parameter must be the same as this column's ParentModel.</value>
+  </data>
+  <data name="DbLogger_CommandCanceled" xml:space="preserve">
+    <value>-- Canceled in {0} ms</value>
+  </data>
+  <data name="DbLogger_CommandComplete" xml:space="preserve">
+    <value>-- Completed in {0} ms with result: {1}</value>
+  </data>
+  <data name="DbLogger_CommandExecuting" xml:space="preserve">
+    <value>-- Executing at {0}</value>
+  </data>
+  <data name="DbLogger_CommandExecutingAsync" xml:space="preserve">
+    <value>-- Executing asynchronously at {0}</value>
+  </data>
+  <data name="DbLogger_CommandFailed" xml:space="preserve">
+    <value>-- Failed in {0} ms with error: {1}</value>
+  </data>
+  <data name="DbLogger_ConnectionClosed" xml:space="preserve">
+    <value>Closed connection at {0}</value>
+  </data>
+  <data name="DbLogger_ConnectionCloseError" xml:space="preserve">
+    <value>Failed to close connection at {0} with error: {1}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpen" xml:space="preserve">
+    <value>Opened connection at {0}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenAsync" xml:space="preserve">
+    <value>Opened connection asynchronously at {0}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenCanceled" xml:space="preserve">
+    <value>Cancelled open connection at {0}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenError" xml:space="preserve">
+    <value>Failed to open connection at {0} with error: {1}</value>
+  </data>
+  <data name="DbLogger_ConnectionOpenErrorAsync" xml:space="preserve">
+    <value>Failed to open connection asynchronously at {0} with error: {1}</value>
+  </data>
+  <data name="DbLogger_TransactionCommitError" xml:space="preserve">
+    <value>Failed to commit transaction at {0} with error: {1}</value>
+  </data>
+  <data name="DbLogger_TransactionCommitted" xml:space="preserve">
+    <value>Committed transaction at {0}</value>
+  </data>
+  <data name="DbLogger_TransactionRollbackError" xml:space="preserve">
+    <value>Failed to rollback transaction at {0} with error: {1}</value>
+  </data>
+  <data name="DbLogger_TransactionRolledBack" xml:space="preserve">
+    <value>Rolled back transaction at {0}</value>
+  </data>
+  <data name="DbLogger_TransactionStarted" xml:space="preserve">
+    <value>Started transaction at {0}</value>
+  </data>
+  <data name="DbLogger_TransactionStartError" xml:space="preserve">
+    <value>Failed to start transaction at {0} with error: {1}</value>
+  </data>
+  <data name="DbQueryBuilder_DuplicateFrom" xml:space="preserve">
+    <value>Cannot call From method multiple times.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbQueryBuilder_Join_InvalidLeftKey" xml:space="preserve">
+    <value>Invalid left key. Its ParentModel must be previously added as source query.</value>
+  </data>
+  <data name="DbQueryBuilder_Join_InvalidRightKey" xml:space="preserve">
+    <value>Invalid right key. Its ParentModel must be the same as the provided model parameter.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifyChildModel" xml:space="preserve">
+    <value>The child model is invalid. It must be child model of current query builder's Model, and can only be used to create child query builder once.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifyModel" xml:space="preserve">
+    <value>The model is invalid. Its DataSource.Kind must be DbTable, DbTempTable or DbQuery.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifySourceColumnAggregateModels" xml:space="preserve">
+    <value>Aggregate expression is not supported.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifySourceColumnParentModels" xml:space="preserve">
+    <value>The expression contains parent model '{0}' which does not exist in the source queries.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifyTargetColumn" xml:space="preserve">
+    <value>The target column has been selected already.</value>
+  </data>
+  <data name="InvalidChildModel" xml:space="preserve">
+    <value>The child model's ParentModel must be the same as this object's Model.</value>
+  </data>
+  <data name="InvalidChildModelGetter" xml:space="preserve">
+    <value>The child model returned by the getter is invalid. It cannot be null and its ParentModel must be the calling model.</value>
+  </data>
+  <data name="InvalidColumnGetter" xml:space="preserve">
+    <value>The column returned by the getter is invalid. It cannot be null and its ParentModel must be the calling Model.</value>
+  </data>
+  <data name="Model_GetPrimaryKeyOverrideReturnsNull" xml:space="preserve">
+    <value>The class {0} is not correctly implemented. The override of GetPrimaryKeyOverride should not return null.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_InvalidIdentityIncrement" xml:space="preserve">
+    <value>The identity increment value cannot be 0.</value>
+  </data>
+  <data name="Model_VerifyChildColumn" xml:space="preserve">
+    <value>The column must be child of this model.</value>
+  </data>
+  <data name="VerifyDesignMode" xml:space="preserve">
+    <value>The operation is only allowed in design mode.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_MultipleIdentityColumn" xml:space="preserve">
+    <value>Cannot define multiple identity column on the same table.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_MultipleClusteredIndex" xml:space="preserve">
+    <value>Cannot have more than one clustered index.  The clustered index '{0}' already exists.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_PrimaryKeyColumnsAndSortDirectionsDoesNotMatch" xml:space="preserve">
+    <value>The number of sort directions does not match with the number of primary key columns.</value>
+  </data>
+  <data name="Model_DuplicateConstraintName" xml:space="preserve">
+    <value>The constraint '{0}' already exists.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_EmptyColumns" xml:space="preserve">
+    <value>The columns cannot be empty.</value>
+  </data>
+  <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
+    <value>The FROM clause is empty.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Model_InvalidRefTableModel" xml:space="preserve">
+    <value>The reference table model is invalid. It must either be a self reference or a reference to a existing table.</value>
+  </data>
+  <data name="DbQueryBuilder_VerifyToSet_DataSourceNotNull" xml:space="preserve">
+    <value>The DataSource must be null.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind" xml:space="preserve">
+    <value>The DataSourceKind of the parent model must be '{0}'.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbSet_VerifyCreateChild_AlreadyCreated" xml:space="preserve">
+    <value>The child DbSet has been created already.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbSet_VerifyCreateChild_InvalidDataSourceKind" xml:space="preserve">
+    <value>Creating child DbSet on DbTable is not allowed.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Column_NullValueManager" xml:space="preserve">
+    <value>Cannot access values of the column. The column must belong to a dataset.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="Column_SetReadOnlyValue" xml:space="preserve">
+    <value>Cannot set value of readonly column. The column is part of the primary key or child-parent relationship.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbSession_ColumnNotSupported" xml:space="preserve">
+    <value>The column[{0}] '{1}' is not supported by this DbSession.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="JsonParser_UnexpectedEof" xml:space="preserve">
+    <value>Reached EOF unexpectedly.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidChar" xml:space="preserve">
+    <value>Invalid char '{0}' at index {1}.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidHexChar" xml:space="preserve">
+    <value>Char '{0}' at index {1} is not a valid hex number.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidLiteral" xml:space="preserve">
+    <value>'{0}' expected at index {1}.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidStringEscape" xml:space="preserve">
+    <value>Invalid string escape '{0}' at index {1}.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidModelMember" xml:space="preserve">
+    <value>Invalid member name '{0}' for Model {1}.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="BooleanColumn_CannotDeserialize" xml:space="preserve">
+    <value>Cannot deserialize from JSON value. Provided JSON value must be 'true', 'false' or 'null'.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="JsonParser_InvalidTokenKind" xml:space="preserve">
+    <value>Current token kind {0} is invalid. Expected token kind: {1}.</value>
+    <comment>## ExceptionType=FormatException</comment>
+  </data>
+  <data name="DbTable_NullDataSource" xml:space="preserve">
+    <value>The DataSource is null.</value>
+  </data>
+  <data name="DbTable_VerifyColumnMappings_Empty" xml:space="preserve">
+    <value>The ColumnMapping list is empty.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidSourceParentModelSet" xml:space="preserve">
+    <value>The source column derives from invalid model '{0}'.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidTarget" xml:space="preserve">
+    <value>The target column is invalid.</value>
+  </data>
+  <data name="DbTable_GetKeyMappings_CannotMatch" xml:space="preserve">
+    <value>Cannot match primary key of current table and the source Model.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="NotSupportedByReadOnlyList" xml:space="preserve">
+    <value>The operation is not supported by readonly list.</value>
+    <comment>## ExceptionType=NotSupportedException</comment>
+  </data>
+  <data name="MockDb_CircularReference" xml:space="preserve">
+    <value>Circular reference detected for table '{0}'.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="MockDb_DuplicateTable" xml:space="preserve">
+    <value>The table '{0}' cannot be mocked twice.</value>
+  </data>
+  <data name="MockDb_InitializeTwice" xml:space="preserve">
+    <value>DbMock object cannot be initialized twice.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="MockDb_InvalidTable" xml:space="preserve">
+    <value>The mocking table is invalid. It must belong to the giving DbSession.</value>
+  </data>
+  <data name="MockDb_MockOnlyAllowedDuringInitialization" xml:space="preserve">
+    <value>Mock can only be called during initialization.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="MockDb_ModelTypeMismatch" xml:space="preserve">
+    <value>The type argument '{0}' does not match with type argument '{1}' used for for table '{2}'.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="Model_InvalidForeignKey" xml:space="preserve">
+    <value>The provided foreign key is not valid. It must be child of this model.</value>
+  </data>
+  <data name="DbTable_VerifyWhere" xml:space="preserve">
+    <value>The returned where expression is invalid.</value>
+  </data>
+  <data name="ChildColumnNotExistInColumnMappings" xml:space="preserve">
+    <value>The child column '{0}' does not exist in the column mappings.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="DbTable_NoPrimaryKey" xml:space="preserve">
+    <value>The operation requires a primary key of model '{0}'.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ColumnMappingsBuilder_InvalidSourceDataType" xml:space="preserve">
+    <value>The source column's data type '{0}' is invalid. Data type '{1}' required.</value>
+  </data>
+  <data name="ColumnMappingsBuilder_NoColumnMapping" xml:space="preserve">
+    <value>No ColumnMapping specified.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+</root>
