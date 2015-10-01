@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{406601E1-B089-41BB-8E8B-2A0AF0E402C5}</ProjectGuid>
+    <ProjectGuid>{55670E5D-0C04-4861-A080-C9FE7D258305}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DevZest.Data</RootNamespace>
-    <AssemblyName>Data.UnitTests</AssemblyName>
+    <AssemblyName>Data.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -35,16 +35,57 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
   <ItemGroup>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
-    </Reference>
+    <Compile Include="AdventureWorksTestsBase.cs" />
+    <Compile Include="DbSetTests.cs" />
+    <Compile Include="DbSessionTests.cs" />
+    <Compile Include="DbTableInsertTests.cs" />
+    <Compile Include="MockDbTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataSetTests.cs" />
+    <Compile Include="SalesOrderMockDb.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj">
+      <Project>{1b21d8eb-46ca-4059-b753-25481b3ef739}</Project>
+      <Name>AdventureWorksLT</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.Common\Data.Common.csproj">
+      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
+      <Name>Data.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data.SqlServer\Data.SqlServer.csproj">
+      <Project>{a6fa783f-4ada-4bea-9422-df79344ec625}</Project>
+      <Name>Data.SqlServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Collections.NonGeneric, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.NonGeneric.4.0.0\lib\net46\System.Collections.NonGeneric.dll</HintPath>
@@ -63,101 +104,6 @@
       <HintPath>..\packages\System.Reflection.TypeExtensions.4.0.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-  </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-  <ItemGroup>
-    <Compile Include="BinaryTests.cs" />
-    <Compile Include="CaseTests.cs" />
-    <Compile Include="DbTableDeleteTests.cs" />
-    <Compile Include="Helpers\DbSessionExtensions.cs" />
-    <Compile Include="Helpers\DbSetExtensions.cs" />
-    <Compile Include="Helpers\DbTableExtensions.cs" />
-    <Compile Include="_CharTests.cs" />
-    <Compile Include="ColumnTests.cs" />
-    <Compile Include="_DateTimeTests.cs" />
-    <Compile Include="DbFunctionsAggregateTests.cs" />
-    <Compile Include="Helpers\DbQueryExtensions.cs" />
-    <Compile Include="DbQueryTests.cs" />
-    <Compile Include="DbSetTests.cs" />
-    <Compile Include="DbTableUpdateTests.cs" />
-    <Compile Include="DbTableInsertTests.cs" />
-    <Compile Include="ColumnAttributeTests.cs" />
-    <Compile Include="DbSessionTests.cs" />
-    <Compile Include="Primitives\InterceptableTests.cs" />
-    <Compile Include="SqlServer\SqlSessionTests.cs" />
-    <Compile Include="SqlServer\StringExtensionsTests.cs" />
-    <Compile Include="Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\StringsTests.cs" />
-    <Compile Include="SqlServer\ColumnExtensionsTests.cs" />
-    <Compile Include="SqlServer\Resources\StringsTests.cs" />
-    <Compile Include="SqlServer\_TimeSpanTests.cs" />
-    <Compile Include="SqlServer\_DateTimeOffsetTests.cs" />
-    <Compile Include="SqlServer\DbExpressionSqlGeneratorTests.cs" />
-    <Compile Include="_StringTests.cs" />
-    <Compile Include="_SingleTests.cs" />
-    <Compile Include="_Int64Tests.cs" />
-    <Compile Include="_Int16Tests.cs" />
-    <Compile Include="_GuidTests.cs" />
-    <Compile Include="_DoubleTests.cs" />
-    <Compile Include="_DecimalTests.cs" />
-    <Compile Include="_ByteTests.cs" />
-    <Compile Include="_BinaryTests.cs" />
-    <Compile Include="_Int32Tests.cs" />
-    <Compile Include="_BooleanTests.cs" />
-    <Compile Include="DataSetTests.cs" />
-    <Compile Include="DbFunctionsTests.cs" />
-    <Compile Include="Helpers\SimpleModelBase.cs" />
-    <Compile Include="Helpers\SimpleModelKey.cs" />
-    <Compile Include="Helpers\ModelCollectionExtensions.cs" />
-    <Compile Include="Helpers\ColumnCollectionExtensions.cs" />
-    <Compile Include="Helpers\ColumnExtensions.cs" />
-    <Compile Include="ModelTests.cs" />
-    <Compile Include="Primitives\AccessorManagerTests.cs" />
-    <Compile Include="ModelKeyTests.cs" />
-    <Compile Include="Helpers\DbExpressionExtensions.cs" />
-    <Compile Include="Helpers\ModelMemberExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\ByteArrayExtensionsTests.cs" />
-    <Compile Include="Utilities\UniqueNameManagerTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Key.snk" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdventureWorksLT\AdventureWorksLT.csproj">
-      <Project>{1b21d8eb-46ca-4059-b753-25481b3ef739}</Project>
-      <Name>AdventureWorksLT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data.SqlServer\Data.SqlServer.csproj">
-      <Project>{a6fa783f-4ada-4bea-9422-df79344ec625}</Project>
-      <Name>Data.SqlServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data\Data.csproj">
-      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
-      <Name>Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

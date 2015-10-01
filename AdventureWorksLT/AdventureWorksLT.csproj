@@ -76,13 +76,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Data.Common\Data.Common.csproj">
+      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
+      <Name>Data.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data.SqlServer\Data.SqlServer.csproj">
       <Project>{a6fa783f-4ada-4bea-9422-df79344ec625}</Project>
       <Name>Data.SqlServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data\Data.csproj">
-      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
-      <Name>Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
