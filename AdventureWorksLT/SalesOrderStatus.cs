@@ -2,7 +2,7 @@
 using DevZest.Data;
 using DevZest.Data.Primitives;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public struct SalesOrderStatus
     {

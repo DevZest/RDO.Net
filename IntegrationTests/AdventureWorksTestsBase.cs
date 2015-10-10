@@ -1,6 +1,4 @@
-﻿using AdventureWorksLT;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using DevZest.Samples.AdventureWorksLT;
 using System.IO;
 using System.Reflection;
 using System.Text;

@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 using DevZest.Data.SqlServer;
-using AdventureWorksLT;
+using DevZest.Samples.AdventureWorksLT;
 using Moq;
 
 namespace DevZest.Data.SqlServer

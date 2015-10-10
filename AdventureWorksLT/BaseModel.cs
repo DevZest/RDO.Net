@@ -1,7 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public abstract class BaseModel<T> : Model<T>
         where T : ModelKey

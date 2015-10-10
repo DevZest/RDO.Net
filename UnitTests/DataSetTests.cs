@@ -1,4 +1,4 @@
-﻿using AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;

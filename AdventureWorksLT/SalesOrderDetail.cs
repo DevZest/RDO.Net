@@ -2,7 +2,7 @@
 using DevZest.Data.SqlServer;
 using System;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public class SalesOrderDetail : BaseModel<SalesOrderDetail.Key>
     {

@@ -1,4 +1,4 @@
-﻿using AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Data.Helpers;

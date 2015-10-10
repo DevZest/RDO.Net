@@ -1,5 +1,5 @@
 ﻿
-using AdventureWorksLT;
+using DevZest.Samples.AdventureWorksLT;
 
 namespace DevZest.Data
 {

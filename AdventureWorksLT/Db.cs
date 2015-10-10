@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public class Db : SqlSession
     {

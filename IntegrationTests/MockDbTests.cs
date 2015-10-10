@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AdventureWorksLT;
+using DevZest.Samples.AdventureWorksLT;
 using System.Text;
 
 namespace DevZest.Data

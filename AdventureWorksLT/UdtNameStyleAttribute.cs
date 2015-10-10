@@ -2,7 +2,7 @@
 using System;
 using DevZest.Data;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public sealed class UdtNameStyleAttribute : UdtAttribute
     {

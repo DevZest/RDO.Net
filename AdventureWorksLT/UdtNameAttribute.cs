@@ -3,7 +3,7 @@ using System;
 using DevZest.Data;
 using DevZest.Data.SqlServer;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public sealed class UdtNameAttribute : UdtAttribute
     {

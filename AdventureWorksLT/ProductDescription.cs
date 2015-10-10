@@ -1,7 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
 
-namespace AdventureWorksLT
+namespace DevZest.Samples.AdventureWorksLT
 {
     public class ProductDescription : BaseModel<ProductDescription.Key>
     {
