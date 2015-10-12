@@ -10,19 +10,20 @@ namespace DevZest.Data.Wpf
         internal GridDefinition(DataSetControl dataSetControl, int ordinal, DataGridLength length)
         {
             DataSetControl = dataSetControl;
-            _ordinal = ordinal;
+            Ordinal = ordinal;
             Length = length;
         }
 
         public DataSetControl DataSetControl { get; private set; }
-        private int _ordinal;
+
+        internal int Ordinal { get; private set; }
 
         public DataGridLength Length { get; private set; }
 
         internal void Clear()
         {
             DataSetControl = null;
-            _ordinal = 0;
+            Ordinal = 0;
             Length = new DataGridLength();
         }
     }

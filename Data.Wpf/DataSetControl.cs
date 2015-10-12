@@ -128,20 +128,36 @@ namespace DevZest.Data.Wpf
             throw new NotImplementedException();
         }
 
-        private void VerifyGridDefinition(GridDefinition gridDefinition, string paramName)
+        private void VerifyGridColumn(GridColumn gridColumn, string paramName)
         {
-            if (gridDefinition == null)
+            if (gridColumn == null)
                 throw new ArgumentNullException(paramName);
-            if (gridDefinition.DataSetControl != this)
-                throw new ArgumentException(Strings.DataSetControl_InvalidGridDefinition, paramName);
+            if (!GetGridRangeAll().Contains(gridColumn))
+                throw new ArgumentOutOfRangeException(paramName);
+        }
+
+        private void VerifyGridRow(GridRow gridRow, string paramName)
+        {
+            if (gridRow == null)
+                throw new ArgumentNullException(paramName);
+            if (!GetGridRangeAll().Contains(gridRow))
+                throw new ArgumentOutOfRangeException(paramName);
+        }
+
+        private GridRange GetGridRangeAll()
+        {
+            if (GridColumns.Count == 0 || GridRows.Count == 0)
+                return new GridRange();
+
+            return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
         }
 
         public GridRange this[GridColumn column, GridRow row]
         {
             get
             {
-                VerifyGridDefinition(column, nameof(column));
-                VerifyGridDefinition(row, nameof(row));
+                VerifyGridColumn(column, nameof(column));
+                VerifyGridRow(row, nameof(row));
                 return new GridRange(column, row);
             }
         }
@@ -150,10 +166,10 @@ namespace DevZest.Data.Wpf
         {
             get
             {
-                VerifyGridDefinition(left, nameof(left));
-                VerifyGridDefinition(top, nameof(top));
-                VerifyGridDefinition(right, nameof(right));
-                VerifyGridDefinition(bottom, nameof(bottom));
+                VerifyGridColumn(left, nameof(left));
+                VerifyGridRow(top, nameof(top));
+                VerifyGridColumn(right, nameof(right));
+                VerifyGridRow(bottom, nameof(bottom));
                 return new GridRange(left, top, right, bottom);
             }
         }

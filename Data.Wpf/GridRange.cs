@@ -27,5 +27,26 @@ namespace DevZest.Data.Wpf
         {
             get { return Left == null ? null : Left.DataSetControl; }
         }
+
+        public bool IsEmpty
+        {
+            get { return DataSetControl == null; }
+        }
+
+        public bool Contains(GridColumn gridColumn)
+        {
+            if (IsEmpty || DataSetControl != gridColumn.DataSetControl)
+                return false;
+
+            return Left.Ordinal <= gridColumn.Ordinal && Right.Ordinal >= gridColumn.Ordinal;
+        }
+
+        public bool Contains(GridRow gridRow)
+        {
+            if (IsEmpty || DataSetControl != gridRow.DataSetControl)
+                return false;
+
+            return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
+        }
     }
 }
