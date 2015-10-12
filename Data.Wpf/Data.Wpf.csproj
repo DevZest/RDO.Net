@@ -37,7 +37,7 @@
     <Compile Include="ColumnViewGenerator.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
-    <Compile Include="DataSetControlExtensions.cs" />
+    <Compile Include="DataSetControlInitialization.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="CellsPanel.cs" />
     <Compile Include="GridRange.cs" />

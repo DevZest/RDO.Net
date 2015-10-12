@@ -5,10 +5,10 @@ using System.Windows;
 namespace DevZest.Data.Wpf
 {
     public abstract class ModelViewGenerator<T> : ViewGenerator<T>
-        where T : UIElement
+        where T : UIElement, new()
     {
-        internal ModelViewGenerator(Model model, Func<T> creator, Action<T> initializer)
-            : base(creator, initializer)
+        internal ModelViewGenerator(Model model, Action<T> initializer)
+            : base(initializer)
         {
             Debug.Assert(model != null);
             Model = model;

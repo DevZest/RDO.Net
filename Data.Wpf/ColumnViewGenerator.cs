@@ -6,10 +6,10 @@ using System.Windows;
 namespace DevZest.Data.Wpf
 {
     public abstract class ColumnViewGenerator<T> : ViewGenerator<T>
-        where T : UIElement
+        where T : UIElement, new()
     {
-        internal ColumnViewGenerator(Column column, Func<T> creator, Action<T> initializer)
-            : base(creator, initializer)
+        internal ColumnViewGenerator(Column column, Action<T> initializer)
+            : base(initializer)
         {
             Debug.Assert(column != null);
             Column = column;

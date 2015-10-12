@@ -3,10 +3,11 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class RowSelectorGenerator : ModelViewGenerator<RowSelector>
+    public sealed class RowSelectorGenerator<T> : ModelViewGenerator<T>
+        where T : RowSelector, new()
     {
-        internal RowSelectorGenerator(Model model, Func<RowSelector> creator, Action<RowSelector> initializer)
-            : base(model, creator, initializer)
+        internal RowSelectorGenerator(Model model, Action<T> initializer)
+            : base(model, initializer)
         {
         }
 

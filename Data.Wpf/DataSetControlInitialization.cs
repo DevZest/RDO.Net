@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public static class DataSetControlExtensions
+    public static class DataSetControlInitialization
     {
         public static void Initialize<TDataSetControl, TModel>(this TDataSetControl dataSetControl, DataSet<TModel> dataSet, Action<DataSetControl, TModel> initializer = null)
             where TDataSetControl : DataSetControl
@@ -52,6 +52,14 @@ namespace DevZest.Data.Wpf
             where T : DataSetControl
         {
             dataSetControl.RowOrientation = RowOrientation.YX;
+            return dataSetControl;
+        }
+
+        public static T Panel<T, TChild>(this T dataSetControl, GridRange gridRange, PanelGenerator<TChild> generator)
+            where T : DataSetControl
+            where TChild : DataSetControl, new()
+        {
+            dataSetControl.InitPanel(gridRange, generator);
             return dataSetControl;
         }
     }

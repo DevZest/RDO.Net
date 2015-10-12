@@ -4,10 +4,11 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class PanelGenerator : ModelViewGenerator<DataSetControl>
+    public sealed class PanelGenerator<T> : ModelViewGenerator<T>
+        where T : DataSetControl, new()
     {
-        internal PanelGenerator(Model model, Func<DataSetControl> creator, Action<DataSetControl> initializer)
-            : base(model, creator, initializer)
+        internal PanelGenerator(Model model, Action<T> initializer)
+            : base(model, initializer)
         {
         }
 
@@ -16,7 +17,7 @@ namespace DevZest.Data.Wpf
             get { return ViewGeneratorKind.Panel; }
         }
 
-        internal override void InitializeUIElementOverride(DataSetControl uiElement)
+        internal override void InitializeUIElementOverride(T uiElement)
         {
             uiElement.Initialize(this, GetDataSet(uiElement));
             base.InitializeUIElementOverride(uiElement);

@@ -5,26 +5,18 @@ using System.Windows;
 namespace DevZest.Data.Wpf
 {
     public abstract class ViewGenerator<T> : ViewGenerator
-        where T : UIElement
+        where T : UIElement, new()
     {
-        internal ViewGenerator(Func<T> creator, Action<T> initializer)
+        internal ViewGenerator(Action<T> initializer)
         {
-            Debug.Assert(creator != null);
-            Debug.Assert(initializer != null);
-            _creator = creator;
+            _initializer = initializer;
         }
 
-        Func<T> _creator;
         Action<T> _initializer;
 
         internal sealed override UIElement CreateUIElement()
         {
-            return _creator();
-        }
-
-        internal virtual T CreateUIElementOverride()
-        {
-            return _creator();
+            return new T();
         }
 
         internal sealed override void InitializeUIElement(UIElement uiElement)
@@ -34,7 +26,8 @@ namespace DevZest.Data.Wpf
 
         internal virtual void InitializeUIElementOverride(T uiElement)
         {
-            _initializer(uiElement);
+            if (_initializer != null)
+                _initializer(uiElement);
         }
     }
 }

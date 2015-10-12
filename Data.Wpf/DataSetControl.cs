@@ -39,7 +39,7 @@ namespace DevZest.Data.Wpf
 
 
         private static DataGridLengthConverter s_gridLengthConverter = new DataGridLengthConverter();
-        private DataGridLength GetGridLength(string gridLength)
+        private static DataGridLength GetGridLength(string gridLength)
         {
             if (string.IsNullOrEmpty(gridLength))
                 throw new ArgumentNullException(nameof(gridLength));
@@ -47,37 +47,23 @@ namespace DevZest.Data.Wpf
             return (DataGridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
         }
 
-        public DataSetControl GridColumn(string width)
+        internal int InitGridColumn(string width)
         {
             VerifyAreGridsInherited();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
-            return this;
+            return GridColumns.Count - 1;
         }
 
-        public DataSetControl GridColumn(string width, out GridColumn gridColumn)
-        {
-            VerifyAreGridsInherited();
-            GridColumns.Add(gridColumn = new GridColumn(this, GridColumns.Count, GetGridLength(width)));
-            return this;
-        }
-
-        public DataSetControl GridRow(string height)
+        internal int InitGridRow(string height)
         {
             VerifyAreGridsInherited();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
-            return this;
-        }
-
-        public DataSetControl GridRow(string height, out GridRow gridRow)
-        {
-            VerifyAreGridsInherited();
-            GridRows.Add(gridRow = new GridRow(this, GridRows.Count, GetGridLength(height)));
-            return this;
+            return GridRows.Count - 1;
         }
 
         private bool _areGridsInherited;
-        private PanelGenerator _panelGenerator;
-        public DataSetControl InheritGrids()
+        private ViewGenerator _panelGenerator;
+        internal void InheritGrids()
         {
             if (GridRows.Count > 0 || GridColumns.Count > 0)
                 throw Error.DataSetControl_InheritGrids();
@@ -93,7 +79,6 @@ namespace DevZest.Data.Wpf
                 GridRows.Add(sourceControl.GridColumns[i]);
 
             _areGridsInherited = true;
-            return this;
         }
 
         private void VerifyAreGridsInherited()
@@ -102,43 +87,47 @@ namespace DevZest.Data.Wpf
                 throw Error.DataSetControl_VerifyAreGridsInherited();
         }
 
-        public DataSetControl HeaderSelector(GridRange gridRange, HeaderSelectorGenerator generator = null)
+        internal void InitHeaderSelector<T>(GridRange gridRange, HeaderSelectorGenerator<T> generator = null)
+            where T : HeaderSelector, new()
         {
+            VerifyGridRange(gridRange, nameof(GridRange));
             throw new NotImplementedException();
         }
 
-        public DataSetControl RowSelector(GridRange gridRange, RowSelectorGenerator generator = null)
+        internal void InitRowSelector<T>(GridRange gridRange, RowSelectorGenerator<T> generator = null)
+            where T : RowSelector, new()
         {
-            throw new NotImplementedException();
+            VerifyGridRange(gridRange, nameof(GridRange));
+            if (generator == null)
+                throw new NotImplementedException();
+            else
+                VerifyViewGenerator(generator, nameof(generator));
+            ViewGenerators.Add(generator, gridRange);
         }
 
-        public DataSetControl ColumnHeader(GridRange gridRange, Column column)
+        internal void InitColumnHeader<T>(GridRange gridRange, ColumnHeaderGenerator<T> generator)
+            where T : ColumnHeader, new()
         {
-            throw new NotImplementedException();
+            VerifyGridRange(gridRange, nameof(GridRange));
+            VerifyViewGenerator(generator, nameof(generator));
+            ViewGenerators.Add(generator, gridRange);
         }
 
-        public DataSetControl ColumnHeader(GridRange gridRange, ColumnHeaderGenerator generator)
+        internal void InitColumnValue<T>(GridRange gridRange, ColumnValueGenerator<T> generator)
+            where T : UIElement, new()
         {
-            throw new NotImplementedException();
+            VerifyGridRange(gridRange, nameof(GridRange));
+            VerifyViewGenerator(generator, nameof(generator));
+            ViewGenerators.Add(generator, gridRange);
         }
 
-        public DataSetControl ColumnValue(GridRange gridRange, Column column)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DataSetControl ColumnValue(GridRange gridRange, ColumnValueGenerator generator)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DataSetControl Panel(GridRange gridRange, PanelGenerator generator)
+        internal void InitPanel<T>(GridRange gridRange, PanelGenerator<T> generator)
+            where T : DataSetControl, new()
         {
             VerifyGridRange(gridRange, nameof(gridRange));
             VerifyGenerator(generator, nameof(generator));
 
             ViewGenerators.Add(generator, gridRange);
-            return this;
         }
 
         private void VerifyGenerator(ViewGenerator generator, string paramName)
@@ -161,19 +150,15 @@ namespace DevZest.Data.Wpf
                 throw new ArgumentNullException(nameof(paramName));
         }
 
-        private void VerifyGridColumn(GridColumn gridColumn, string paramName)
+        private void VerifyGridColumn(int index, string paramName)
         {
-            if (gridColumn == null)
-                throw new ArgumentNullException(paramName);
-            if (!GetGridRangeAll().Contains(gridColumn))
+            if (index < 0 || index >= GridColumns.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
-        private void VerifyGridRow(GridRow gridRow, string paramName)
+        private void VerifyGridRow(int index, string paramName)
         {
-            if (gridRow == null)
-                throw new ArgumentNullException(paramName);
-            if (!GetGridRangeAll().Contains(gridRow))
+            if (index < 0 || index >= GridRows.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
@@ -185,17 +170,17 @@ namespace DevZest.Data.Wpf
             return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
         }
 
-        public GridRange this[GridColumn column, GridRow row]
+        public GridRange this[int column, int row]
         {
             get
             {
                 VerifyGridColumn(column, nameof(column));
                 VerifyGridRow(row, nameof(row));
-                return new GridRange(column, row);
+                return new GridRange(GridColumns[column], GridRows[row]);
             }
         }
 
-        public GridRange this[GridColumn left, GridRow top, GridColumn right, GridRow bottom]
+        public GridRange this[int left, int top, int right, int bottom]
         {
             get
             {
@@ -203,12 +188,16 @@ namespace DevZest.Data.Wpf
                 VerifyGridRow(top, nameof(top));
                 VerifyGridColumn(right, nameof(right));
                 VerifyGridRow(bottom, nameof(bottom));
-                return new GridRange(left, top, right, bottom);
+                if (right < left)
+                    throw new ArgumentOutOfRangeException(nameof(right));
+                if (bottom < top)
+                    throw new ArgumentOutOfRangeException(nameof(bottom));
+                return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
             }
         }
 
 
-        internal void Initialize(PanelGenerator panelGenerator, DataSet dataSet)
+        internal void Initialize(ViewGenerator panelGenerator, DataSet dataSet)
         {
             _panelGenerator = panelGenerator;
             DataSet = dataSet;
@@ -219,24 +208,22 @@ namespace DevZest.Data.Wpf
         internal void DefaultInitialize()
         {
             RowOrientation = RowOrientation.Z;
-            GridRow row0, row1;
-            GridRow("Auto", out row0);
-            GridRow("Auto", out row1);
+            InitGridRow("Auto");
+            InitGridRow("Auto");
 
             var model = DataSet.Model;
             var columns = model.GetColumns();
             foreach (var column in columns)
             {
-                GridColumn gridColumn;
-                GridColumn("Auto", out gridColumn);
-                ColumnHeader(this[gridColumn, row0], column);
+                int columnIndex = InitGridColumn("Auto");
+                //InitColumnHeader(this[columnIndex, 0], column);
             }
 
-            Panel(this[GridColumns[0], row1, GridColumns[columns.Count - 1], row1], model.Panel((DataSetControl x, Model m) =>
+            InitPanel(this[0, 1, columns.Count - 1, 1], model.Panel((DataSetControl x, Model m) =>
             {
                 x.RowOrientationY().InheritGrids();
-                for (int i = 0; i < columns.Count; i++)
-                    x.ColumnValue(x[GridColumns[i], row1], columns[i]);
+                //for (int i = 0; i < columns.Count; i++)
+                //    x.InitColumnValue(x[i, 0], columns[i]);
             }));
         }
     }

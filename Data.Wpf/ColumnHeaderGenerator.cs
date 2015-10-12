@@ -3,10 +3,11 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class ColumnHeaderGenerator : ColumnViewGenerator<ColumnHeader>
+    public sealed class ColumnHeaderGenerator<T> : ColumnViewGenerator<T>
+        where T : ColumnHeader, new()
     {
-        internal ColumnHeaderGenerator(Column column, Func<ColumnHeader> creator, Action<ColumnHeader> initializer)
-            : base(column, creator, initializer)
+        internal ColumnHeaderGenerator(Column column, Action<T> initializer)
+            : base(column, initializer)
         {
         }
 
