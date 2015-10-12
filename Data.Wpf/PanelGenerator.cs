@@ -4,16 +4,11 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class PanelGenerator : ViewGenerator
+    public sealed class PanelGenerator : ModelViewGenerator<DataSetControl>
     {
         internal PanelGenerator(Model model, Func<DataSetControl> creator, Action<DataSetControl> initializer)
+            : base(model, creator, initializer)
         {
-            Debug.Assert(model != null);
-            Debug.Assert(creator != null);
-            Debug.Assert(initializer != null);
-
-            _creator = creator;
-            _initializer = initializer;
         }
 
         public sealed override ViewGeneratorKind Kind
@@ -21,28 +16,16 @@ namespace DevZest.Data.Wpf
             get { return ViewGeneratorKind.Panel; }
         }
 
-        Model _model;
-        Func<DataSetControl> _creator;
-        Action<DataSetControl> _initializer;
-
-        internal override UIElement CreateUIElement()
+        internal override void InitializeUIElementOverride(DataSetControl uiElement)
         {
-            return _creator();
-        }
-
-        internal override void Initialize(UIElement uiElement)
-        {
-            var dataSetControl = (DataSetControl)uiElement;
-            dataSetControl.DataSet = GetDataSet(uiElement);
-
-            if (_initializer != null)
-                _initializer(dataSetControl);
+            uiElement.Initialize(this, GetDataSet(uiElement));
+            base.InitializeUIElementOverride(uiElement);
         }
 
         private DataSet GetDataSet(UIElement uiElement)
         {
             var dataRowControl = uiElement.GetParent<DataRowControl>();
-            return DataSet.Get(dataRowControl, _model);
+            return DataSet.Get(dataRowControl, Model);
         }
     }
 }

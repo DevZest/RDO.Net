@@ -33,6 +33,14 @@ namespace DevZest.Data.Wpf
             get { return DataSetControl == null; }
         }
 
+        public bool Contains(GridRange gridRange)
+        {
+            if (IsEmpty || DataSetControl != gridRange.DataSetControl)
+                return false;
+            return Left.Ordinal <= gridRange.Left.Ordinal && Right.Ordinal >= gridRange.Right.Ordinal
+                && Top.Ordinal <= gridRange.Top.Ordinal && Bottom.Ordinal >= gridRange.Bottom.Ordinal;
+        }
+
         public bool Contains(GridColumn gridColumn)
         {
             if (IsEmpty || DataSetControl != gridColumn.DataSetControl)

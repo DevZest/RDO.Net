@@ -7,23 +7,27 @@ namespace DevZest.Data.Wpf
     {
         public abstract ViewGeneratorKind Kind { get; }
 
-        public GridRange GridRange { get; protected set; }
+        public DataSetControl Owner { get; private set; }
 
-        public DataSetControl DataSetControl { get; internal set; }
+        public GridRange GridRange { get; private set; }
 
-        public Model Model
+        internal ViewGenerator Initialize(DataSetControl owner, GridRange gridRange)
         {
-            get { return DataSetControl == null ? null : DataSetControl.DataSet.Model; }
+            Owner = owner;
+            GridRange = gridRange;
+            return this;
         }
+
+        internal void Clear()
+        {
+            Owner = null;
+            GridRange = new GridRange();
+        }
+
+        internal abstract bool IsValidFor(Model model);
 
         internal abstract UIElement CreateUIElement();
 
-        internal virtual void Initialize(UIElement uiElement)
-        {
-        }
-
-        internal virtual void Dispose(UIElement uiElement)
-        {
-        }
+        internal abstract void InitializeUIElement(UIElement uiElement);
     }
 }

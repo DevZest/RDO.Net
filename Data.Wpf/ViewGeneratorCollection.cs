@@ -6,27 +6,26 @@ namespace DevZest.Data.Wpf
 {
     internal class ViewGeneratorCollection : ReadOnlyCollection<ViewGenerator>
     {
-        internal ViewGeneratorCollection(DataSetControl dataSetControl)
+        internal ViewGeneratorCollection(DataSetControl owner)
             : base(new List<ViewGenerator>())
         {
-            Debug.Assert(dataSetControl != null);
-            _dataSetControl = dataSetControl;
+            Debug.Assert(owner != null);
+            _owner = owner;
         }
 
-        private DataSetControl _dataSetControl;
+        private DataSetControl _owner;
 
-        internal void Add(ViewGenerator viewGenerator)
+        internal void Add(ViewGenerator viewGenerator, GridRange gridRange)
         {
             Debug.Assert(viewGenerator != null);
-            Debug.Assert(viewGenerator.DataSetControl == null);
-            Items.Add(viewGenerator);
-            viewGenerator.DataSetControl = _dataSetControl;
+            Debug.Assert(viewGenerator.Owner == null);
+            Items.Add(viewGenerator.Initialize(_owner, gridRange));
         }
 
         internal void Clear()
         {
             foreach (var viewGenerator in this)
-                viewGenerator.DataSetControl = null;
+                viewGenerator.Clear();
             Items.Clear();
         }
     }

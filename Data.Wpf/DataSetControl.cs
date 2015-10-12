@@ -76,15 +76,24 @@ namespace DevZest.Data.Wpf
         }
 
         private bool _areGridsInherited;
+        private PanelGenerator _panelGenerator;
         public DataSetControl InheritGrids()
         {
             if (GridRows.Count > 0 || GridColumns.Count > 0)
                 throw Error.DataSetControl_InheritGrids();
 
-            throw new NotImplementedException();
+            if (_panelGenerator == null)
+                throw Error.DataSetControl_NullPanelGenerator();
 
-            //_areGridsInherited = true;
-            //return this;
+            var gridRange = _panelGenerator.GridRange;
+            var sourceControl = gridRange.DataSetControl;
+            for (int i = gridRange.Left.Ordinal; i <= gridRange.Right.Ordinal; i++)
+                GridColumns.Add(sourceControl.GridColumns[i]);
+            for (int i = gridRange.Top.Ordinal; i <= gridRange.Bottom.Ordinal; i++)
+                GridRows.Add(sourceControl.GridColumns[i]);
+
+            _areGridsInherited = true;
+            return this;
         }
 
         private void VerifyAreGridsInherited()
@@ -125,7 +134,31 @@ namespace DevZest.Data.Wpf
 
         public DataSetControl Panel(GridRange gridRange, PanelGenerator generator)
         {
-            throw new NotImplementedException();
+            VerifyGridRange(gridRange, nameof(gridRange));
+            VerifyGenerator(generator, nameof(generator));
+
+            ViewGenerators.Add(generator, gridRange);
+            return this;
+        }
+
+        private void VerifyGenerator(ViewGenerator generator, string paramName)
+        {
+            if (generator == null)
+                throw new ArgumentNullException(paramName);
+            if (!generator.IsValidFor(DataSet.Model))
+                throw new ArgumentException(Strings.DataSetControl_InvalidGenerator(DataSet.Model), nameof(paramName));
+        }
+
+        private void VerifyGridRange(GridRange gridRange, string paramName)
+        {
+            if (!GetGridRangeAll().Contains(gridRange))
+                throw new ArgumentOutOfRangeException(paramName);
+        }
+
+        private void VerifyViewGenerator(ViewGenerator generator, string paramName)
+        {
+            if (generator == null)
+                throw new ArgumentNullException(nameof(paramName));
         }
 
         private void VerifyGridColumn(GridColumn gridColumn, string paramName)
@@ -175,8 +208,9 @@ namespace DevZest.Data.Wpf
         }
 
 
-        internal void Initialize(DataSet dataSet)
+        internal void Initialize(PanelGenerator panelGenerator, DataSet dataSet)
         {
+            _panelGenerator = panelGenerator;
             DataSet = dataSet;
             GridRows.Clear();
             GridColumns.Clear();

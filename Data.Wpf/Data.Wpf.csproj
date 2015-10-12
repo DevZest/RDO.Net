@@ -34,6 +34,7 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="ColumnHeaderGenerator.cs" />
     <Compile Include="ColumnValueGenerator.cs" />
+    <Compile Include="ColumnViewGenerator.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlExtensions.cs" />
@@ -43,6 +44,7 @@
     <Compile Include="HeaderSelector.cs" />
     <Compile Include="HeaderSelectorGenerator.cs" />
     <Compile Include="ModelExtensions.cs" />
+    <Compile Include="ModelViewGenerator.cs" />
     <Compile Include="PanelGenerator.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
@@ -64,6 +66,7 @@
     <Compile Include="ViewGenerator.cs" />
     <Compile Include="ViewGeneratorCollection.cs" />
     <Compile Include="ViewGeneratorKind.cs" />
+    <Compile Include="ViewGenerator_T.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

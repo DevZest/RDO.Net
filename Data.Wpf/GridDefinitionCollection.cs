@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Wpf
@@ -21,6 +22,11 @@ namespace DevZest.Data.Wpf
             foreach (var item in this)
                 item.Clear();
             Items.Clear();
+        }
+
+        internal void Add(object rootData)
+        {
+            throw new NotImplementedException();
         }
     }
 }
