@@ -19,12 +19,12 @@ namespace DevZest.Data.Wpf
             return new T();
         }
 
-        internal sealed override void InitializeUIElement(UIElement uiElement)
+        internal sealed override void InitUIElement(UIElement uiElement)
         {
-            InitializeUIElementOverride((T)uiElement);
+            InitUIElementOverride((T)uiElement);
         }
 
-        internal virtual void InitializeUIElementOverride(T uiElement)
+        internal virtual void InitUIElementOverride(T uiElement)
         {
             if (_initializer != null)
                 _initializer(uiElement);

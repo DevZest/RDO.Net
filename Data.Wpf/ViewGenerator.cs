@@ -28,6 +28,6 @@ namespace DevZest.Data.Wpf
 
         internal abstract UIElement CreateUIElement();
 
-        internal abstract void InitializeUIElement(UIElement uiElement);
+        internal abstract void InitUIElement(UIElement uiElement);
     }
 }

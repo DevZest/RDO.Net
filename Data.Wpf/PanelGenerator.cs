@@ -17,10 +17,10 @@ namespace DevZest.Data.Wpf
             get { return ViewGeneratorKind.Panel; }
         }
 
-        internal override void InitializeUIElementOverride(T dataSetControl)
+        internal override void InitUIElementOverride(T dataSetControl)
         {
             dataSetControl.BeginInitialization(this, GetDataSet(dataSetControl));
-            base.InitializeUIElementOverride(dataSetControl);
+            base.InitUIElementOverride(dataSetControl);
             dataSetControl.EndInitialization();
         }
 
