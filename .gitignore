@@ -1,0 +1,9 @@
+[Oo]bj/
+[Bb]in/
+packages/
+.vs/
+[Tt]est[Rr]esults
+*.suo
+*.lock.json
+
+
