@@ -21,7 +21,7 @@ namespace DevZest.Data.Wpf
         {
             uiElement.BeginInitialization(this, GetDataSet(uiElement));
             base.InitializeUIElementOverride(uiElement);
-            uiElement.EndInit();
+            uiElement.EndInitialization();
         }
 
         private DataSet GetDataSet(UIElement uiElement)

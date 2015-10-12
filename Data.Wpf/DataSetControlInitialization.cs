@@ -18,6 +18,7 @@ namespace DevZest.Data.Wpf
                 initializer(dataSetControl, dataSet._);
             else
                 dataSetControl.DefaultInitialize();
+            dataSetControl.EndInitialization();
         }
 
         public static T RowOrientationX<T>(this T dataSetControl)
