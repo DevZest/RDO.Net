@@ -167,5 +167,14 @@ namespace DevZest.Data
 
             Assert.AreEqual(Strings.ProductCategoriesJson.Trim(), result.ToString().Trim());
         }
+
+        [TestMethod]
+        public void DataSet_DataRow_GetChildren()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+
+            Assert.AreEqual(count, dataSet[0].GetChildren(dataSet._.Child).Count);
+        }
     }
 }

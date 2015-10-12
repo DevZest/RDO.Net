@@ -1,5 +1,7 @@
 ﻿using DevZest.Data.Resources;
+using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -18,6 +20,15 @@ namespace DevZest.Data
         }
 
         private IDataSet[] _childDataSets;
+
+        public IList<DataRow> GetChildren(Model childModel)
+        {
+            Check.NotNull(childModel, nameof(childModel));
+            if (childModel.ParentModel != Model)
+                throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
+
+            return _childDataSets[childModel.Ordinal];
+        }
 
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
