@@ -49,6 +49,7 @@ namespace DevZest.Data.Wpf
 
         internal int InitGridColumn(string width)
         {
+            VerifyDesignMode();
             VerifyAreGridsInherited();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
             return GridColumns.Count - 1;
@@ -56,6 +57,7 @@ namespace DevZest.Data.Wpf
 
         internal int InitGridRow(string height)
         {
+            VerifyDesignMode();
             VerifyAreGridsInherited();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
             return GridRows.Count - 1;
@@ -63,8 +65,9 @@ namespace DevZest.Data.Wpf
 
         private bool _areGridsInherited;
         private ViewGenerator _panelGenerator;
-        internal void InheritGrids()
+        internal void InitGridsInherited()
         {
+            VerifyDesignMode();
             if (GridRows.Count > 0 || GridColumns.Count > 0)
                 throw Error.DataSetControl_InheritGrids();
 
@@ -90,6 +93,7 @@ namespace DevZest.Data.Wpf
         internal void InitHeaderSelector<T>(GridRange gridRange, HeaderSelectorGenerator<T> generator = null)
             where T : HeaderSelector, new()
         {
+            VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(GridRange));
             throw new NotImplementedException();
         }
@@ -97,6 +101,7 @@ namespace DevZest.Data.Wpf
         internal void InitRowSelector<T>(GridRange gridRange, RowSelectorGenerator<T> generator = null)
             where T : RowSelector, new()
         {
+            VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(GridRange));
             if (generator == null)
                 throw new NotImplementedException();
@@ -108,6 +113,7 @@ namespace DevZest.Data.Wpf
         internal void InitColumnHeader<T>(GridRange gridRange, ColumnHeaderGenerator<T> generator)
             where T : ColumnHeader, new()
         {
+            VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(GridRange));
             VerifyViewGenerator(generator, nameof(generator));
             ViewGenerators.Add(generator, gridRange);
@@ -116,6 +122,7 @@ namespace DevZest.Data.Wpf
         internal void InitColumnValue<T>(GridRange gridRange, ColumnValueGenerator<T> generator)
             where T : UIElement, new()
         {
+            VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(GridRange));
             VerifyViewGenerator(generator, nameof(generator));
             ViewGenerators.Add(generator, gridRange);
@@ -124,6 +131,7 @@ namespace DevZest.Data.Wpf
         internal void InitPanel<T>(GridRange gridRange, PanelGenerator<T> generator)
             where T : DataSetControl, new()
         {
+            VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(gridRange));
             VerifyGenerator(generator, nameof(generator));
 
@@ -196,13 +204,30 @@ namespace DevZest.Data.Wpf
             }
         }
 
+        bool _designMode = true;
+        public bool DesignMode
+        {
+            get { return _designMode; }
+        }
 
-        internal void Initialize(ViewGenerator panelGenerator, DataSet dataSet)
+        internal void BeginInitialization(ViewGenerator panelGenerator, DataSet dataSet)
         {
             _panelGenerator = panelGenerator;
             DataSet = dataSet;
             GridRows.Clear();
             GridColumns.Clear();
+            _designMode = true;
+        }
+
+        internal void EndInitialization()
+        {
+            _designMode = false;
+        }
+
+        protected void VerifyDesignMode()
+        {
+            if (!_designMode)
+                throw Error.DataSetControl_VerifyDesignMode();
         }
 
         internal void DefaultInitialize()
@@ -221,7 +246,7 @@ namespace DevZest.Data.Wpf
 
             InitPanel(this[0, 1, columns.Count - 1, 1], model.Panel((DataSetControl x, Model m) =>
             {
-                x.RowOrientationY().InheritGrids();
+                x.RowOrientationY().InitGridsInherited();
                 //for (int i = 0; i < columns.Count; i++)
                 //    x.InitColumnValue(x[i, 0], columns[i]);
             }));

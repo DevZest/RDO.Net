@@ -132,4 +132,8 @@
     <value>Cannot add GridRow or GridColumn after grids inherited.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="DataSetControl_VerifyDesignMode" xml:space="preserve">
+    <value>The operation is only allowed in design mode.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

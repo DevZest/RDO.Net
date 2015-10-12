@@ -19,8 +19,9 @@ namespace DevZest.Data.Wpf
 
         internal override void InitializeUIElementOverride(T uiElement)
         {
-            uiElement.Initialize(this, GetDataSet(uiElement));
+            uiElement.BeginInitialization(this, GetDataSet(uiElement));
             base.InitializeUIElementOverride(uiElement);
+            uiElement.EndInit();
         }
 
         private DataSet GetDataSet(UIElement uiElement)

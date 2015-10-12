@@ -13,7 +13,7 @@ namespace DevZest.Data.Wpf
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            dataSetControl.Initialize(null, DataSet.Get(dataSet));
+            dataSetControl.BeginInitialization(null, DataSet.Get(dataSet));
             if (initializer != null)
                 initializer(dataSetControl, dataSet._);
             else

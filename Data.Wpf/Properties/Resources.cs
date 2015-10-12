@@ -46,6 +46,14 @@ namespace DevZest.Data.Wpf.Resources
         {
             get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_VerifyAreGridsInherited); }
         }
+
+        // <summary>
+        // A string like "The operation is only allowed in design mode."
+        // </summary>
+        internal static string DataSetControl_VerifyDesignMode
+        {
+            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_VerifyDesignMode); }
+        }
     }
 
     // <summary>
@@ -79,6 +87,14 @@ namespace DevZest.Data.Wpf.Resources
         }
 
         // <summary>
+        // InvalidOperationException with message like "The operation is only allowed in design mode."
+        // </summary>
+        internal static Exception DataSetControl_VerifyDesignMode()
+        {
+            return new InvalidOperationException(Strings.DataSetControl_VerifyDesignMode);
+        }
+
+        // <summary>
         // The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         // </summary>
         internal static Exception Argument(string message, string paramName)
@@ -106,6 +122,7 @@ namespace DevZest.Data.Wpf.Resources
         internal const string DataSetControl_InvalidGenerator = "DataSetControl_InvalidGenerator";
         internal const string DataSetControl_NullPanelGenerator = "DataSetControl_NullPanelGenerator";
         internal const string DataSetControl_VerifyAreGridsInherited = "DataSetControl_VerifyAreGridsInherited";
+        internal const string DataSetControl_VerifyDesignMode = "DataSetControl_VerifyDesignMode";
 
         private static ResourceLoader loader;
         private readonly ResourceManager resources;
