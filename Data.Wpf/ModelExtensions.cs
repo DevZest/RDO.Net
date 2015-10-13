@@ -5,7 +5,7 @@ namespace DevZest.Data.Wpf
 {
     public static class ModelExtensions
     {
-        internal static PanelManager<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
+        public static PanelManager<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
             where TModel : Model
             where TDataSetControl : DataSetControl, new()
         {

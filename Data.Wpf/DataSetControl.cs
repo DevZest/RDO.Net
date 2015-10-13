@@ -95,7 +95,7 @@ namespace DevZest.Data.Wpf
                 throw Error.DataSetControl_VerifyAreGridsInherited();
         }
 
-        internal void InitView(GridRange gridRange, ViewManager manager)
+        public void InitView(GridRange gridRange, ViewManager manager)
         {
             VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(gridRange));
@@ -207,8 +207,8 @@ namespace DevZest.Data.Wpf
             this.Panel(this[0, 1, columns.Count - 1, 1], model.Panel((DataSetControl x, Model m) =>
             {
                 x.RowOrientationY().InitGridsInherited();
-                //for (int i = 0; i < columns.Count; i++)
-                //    x.InitColumnValue(x[i, 0], columns[i]);
+                for (int i = 0; i < columns.Count; i++)
+                    x.ColumnValue(x[i, 0], columns[i].TextBlock());
             }));
         }
     }
