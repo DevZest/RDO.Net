@@ -4,10 +4,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ModelViewGenerator<T> : ViewGenerator<T>
+    public abstract class ModelViewManager<T> : ViewManager<T>
         where T : UIElement, new()
     {
-        internal ModelViewGenerator(Model model, Action<T> initializer)
+        internal ModelViewManager(Model model, Action<T> initializer)
             : base(initializer)
         {
             Debug.Assert(model != null);

@@ -121,10 +121,10 @@
     <value>Cannot inherit grids after any GridRow or GridColumn added.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="DataSetControl_InvalidGenerator" xml:space="preserve">
-    <value>The generator is invalid for Model '{0}'.</value>
+  <data name="DataSetControl_InvalidViewManager" xml:space="preserve">
+    <value>The view manager is invalid for Model '{0}'.</value>
   </data>
-  <data name="DataSetControl_NullPanelGenerator" xml:space="preserve">
+  <data name="DataSetControl_NullPanelManager" xml:space="preserve">
     <value>Cannot inherit grids for top level DataSetControl.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>

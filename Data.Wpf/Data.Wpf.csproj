@@ -31,10 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnHeader.cs" />
-    <Compile Include="ColumnHeaderGenerator.cs" />
-    <Compile Include="ColumnValueGenerator.cs" />
-    <Compile Include="ColumnViewGenerator.cs" />
+    <Compile Include="ColumnHeaderManager.cs" />
+    <Compile Include="ColumnValueManager.cs" />
+    <Compile Include="ColumnViewManager.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlInitialization.cs" />
@@ -42,10 +43,10 @@
     <Compile Include="CellsPanel.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="HeaderSelector.cs" />
-    <Compile Include="HeaderSelectorGenerator.cs" />
+    <Compile Include="HeaderSelectorManager.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="ModelViewGenerator.cs" />
-    <Compile Include="PanelGenerator.cs" />
+    <Compile Include="PanelManager.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -58,15 +59,14 @@
     <Compile Include="GridRow.cs" />
     <Compile Include="RowOrientation.cs" />
     <Compile Include="RowSelector.cs" />
-    <Compile Include="RowSelectorGenerator.cs" />
+    <Compile Include="RowSelectorManager.cs" />
     <Compile Include="RowsPanel.cs" />
     <Compile Include="ScrollManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIElementExtensions.cs" />
-    <Compile Include="ViewGenerator.cs" />
-    <Compile Include="ViewGeneratorCollection.cs" />
-    <Compile Include="ViewGeneratorKind.cs" />
-    <Compile Include="ViewGenerator_T.cs" />
+    <Compile Include="ViewManager.cs" />
+    <Compile Include="ViewManagerCollection.cs" />
+    <Compile Include="ViewManager_T.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

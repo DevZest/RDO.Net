@@ -4,17 +4,17 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ViewGenerator<T> : ViewGenerator
+    public abstract class ViewManager<T> : ViewManager
         where T : UIElement, new()
     {
-        internal ViewGenerator(Action<T> initializer)
+        internal ViewManager(Action<T> initializer)
         {
             _initializer = initializer;
         }
 
         Action<T> _initializer;
 
-        internal sealed override UIElement CreateUIElement()
+        internal sealed override UIElement CreateView()
         {
             return new T();
         }

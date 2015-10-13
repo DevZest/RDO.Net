@@ -24,19 +24,19 @@ namespace DevZest.Data.Wpf.Resources
         }
 
         // <summary>
-        // A string like "The generator is invalid for Model '{0}'."
+        // A string like "The view manager is invalid for Model '{0}'."
         // </summary>
-        internal static string DataSetControl_InvalidGenerator(object p0)
+        internal static string DataSetControl_InvalidViewManager(object p0)
         {
-            return ResourceLoader.GetString(ResourceLoader.DataSetControl_InvalidGenerator, p0);
+            return ResourceLoader.GetString(ResourceLoader.DataSetControl_InvalidViewManager, p0);
         }
 
         // <summary>
         // A string like "Cannot inherit grids for top level DataSetControl."
         // </summary>
-        internal static string DataSetControl_NullPanelGenerator
+        internal static string DataSetControl_NullPanelManager
         {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_NullPanelGenerator); }
+            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_NullPanelManager); }
         }
 
         // <summary>
@@ -73,9 +73,9 @@ namespace DevZest.Data.Wpf.Resources
         // <summary>
         // InvalidOperationException with message like "Cannot inherit grids for top level DataSetControl."
         // </summary>
-        internal static Exception DataSetControl_NullPanelGenerator()
+        internal static Exception DataSetControl_NullPanelManager()
         {
-            return new InvalidOperationException(Strings.DataSetControl_NullPanelGenerator);
+            return new InvalidOperationException(Strings.DataSetControl_NullPanelManager);
         }
 
         // <summary>
@@ -119,8 +119,8 @@ namespace DevZest.Data.Wpf.Resources
     internal sealed class ResourceLoader
     {
         internal const string DataSetControl_InheritGrids = "DataSetControl_InheritGrids";
-        internal const string DataSetControl_InvalidGenerator = "DataSetControl_InvalidGenerator";
-        internal const string DataSetControl_NullPanelGenerator = "DataSetControl_NullPanelGenerator";
+        internal const string DataSetControl_InvalidViewManager = "DataSetControl_InvalidViewManager";
+        internal const string DataSetControl_NullPanelManager = "DataSetControl_NullPanelManager";
         internal const string DataSetControl_VerifyAreGridsInherited = "DataSetControl_VerifyAreGridsInherited";
         internal const string DataSetControl_VerifyDesignMode = "DataSetControl_VerifyDesignMode";
 

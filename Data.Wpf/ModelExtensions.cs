@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Wpf
 {
     public static class ModelExtensions
     {
-        public static PanelGenerator<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
+        internal static PanelManager<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
             where TModel : Model
             where TDataSetControl : DataSetControl, new()
         {
@@ -14,7 +15,7 @@ namespace DevZest.Data.Wpf
             if (initializer == null)
                 throw new ArgumentNullException(nameof(initializer));
 
-            return new PanelGenerator<TDataSetControl>(model, x => initializer(x, model));
+            return new PanelManager<TDataSetControl>(model, x => initializer(x, model));
         }
     }
 }
