@@ -45,7 +45,7 @@
     <Compile Include="HeaderSelector.cs" />
     <Compile Include="HeaderSelectorManager.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="ModelViewGenerator.cs" />
+    <Compile Include="ModelViewManager.cs" />
     <Compile Include="PanelManager.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
