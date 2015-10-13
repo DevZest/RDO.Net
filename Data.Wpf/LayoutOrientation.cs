@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Wpf
 {
-    public enum RowOrientation
+    public enum LayoutOrientation
     {
         Y,
         X,

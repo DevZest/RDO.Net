@@ -57,7 +57,7 @@
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />
-    <Compile Include="RowOrientation.cs" />
+    <Compile Include="LayoutOrientation.cs" />
     <Compile Include="RowSelector.cs" />
     <Compile Include="RowSelectorManager.cs" />
     <Compile Include="RowsPanel.cs" />

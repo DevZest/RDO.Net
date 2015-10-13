@@ -9,8 +9,8 @@ namespace DevZest.Data.Wpf
 {
     public class DataSetControl : Control
     {
-        public static readonly DependencyProperty RowOrientationProperty = DependencyProperty.Register(nameof(RowOrientation), typeof(RowOrientation), typeof(DataSetControl),
-            new FrameworkPropertyMetadata(RowOrientation.Y));
+        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(DataSetControl.Orientation), typeof(LayoutOrientation), typeof(DataSetControl),
+            new FrameworkPropertyMetadata(Wpf.LayoutOrientation.Y));
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(DataSetControl),
             new FrameworkPropertyMetadata(true));
 
@@ -21,10 +21,10 @@ namespace DevZest.Data.Wpf
             ViewManagers = new ViewManagerCollection(this);
         }
 
-        public RowOrientation RowOrientation
+        public LayoutOrientation Orientation
         {
-            get { return (RowOrientation)GetValue(RowOrientationProperty); }
-            set { SetValue(RowOrientationProperty, value); }
+            get { return (LayoutOrientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
         }
 
         public bool Scrollable
@@ -192,7 +192,7 @@ namespace DevZest.Data.Wpf
 
         internal void DefaultInitialize()
         {
-            RowOrientation = RowOrientation.Z;
+            Orientation = Wpf.LayoutOrientation.Z;
             InitGridRow("Auto");
             InitGridRow("Auto");
 
@@ -206,7 +206,7 @@ namespace DevZest.Data.Wpf
 
             this.Panel(this[0, 1, columns.Count - 1, 1], model.Panel((DataSetControl x, Model m) =>
             {
-                x.RowOrientationY().InitGridsInherited();
+                x.OrientationY().InitGridsInherited();
                 for (int i = 0; i < columns.Count; i++)
                     x.ColumnValue(x[i, 0], columns[i].TextBlock());
             }));

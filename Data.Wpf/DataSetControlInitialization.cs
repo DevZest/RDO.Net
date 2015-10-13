@@ -22,38 +22,38 @@ namespace DevZest.Data.Wpf
             dataSetControl.EndInitialization();
         }
 
-        public static T RowOrientationX<T>(this T dataSetControl)
+        public static T OrientationX<T>(this T dataSetControl)
             where T : DataSetControl
         {
-            dataSetControl.RowOrientation = RowOrientation.X;
+            dataSetControl.Orientation = LayoutOrientation.X;
             return dataSetControl;
         }
 
-        public static T RowOrientationY<T>(this T dataSetControl)
+        public static T OrientationY<T>(this T dataSetControl)
             where T : DataSetControl
         {
-            dataSetControl.RowOrientation = RowOrientation.Y;
+            dataSetControl.Orientation = LayoutOrientation.Y;
             return dataSetControl;
         }
 
-        public static T RowOrientationZ<T>(this T dataSetControl)
+        public static T OrientationZ<T>(this T dataSetControl)
             where T : DataSetControl
         {
-            dataSetControl.RowOrientation = RowOrientation.Z;
+            dataSetControl.Orientation = LayoutOrientation.Z;
             return dataSetControl;
         }
 
-        public static T RowOrientationXY<T>(this T dataSetControl)
+        public static T OrientationXY<T>(this T dataSetControl)
             where T : DataSetControl
         {
-            dataSetControl.RowOrientation = RowOrientation.XY;
+            dataSetControl.Orientation = LayoutOrientation.XY;
             return dataSetControl;
         }
 
-        public static T RowOrientationYX<T>(this T dataSetControl)
+        public static T OrientationYX<T>(this T dataSetControl)
             where T : DataSetControl
         {
-            dataSetControl.RowOrientation = RowOrientation.YX;
+            dataSetControl.Orientation = LayoutOrientation.YX;
             return dataSetControl;
         }
 
