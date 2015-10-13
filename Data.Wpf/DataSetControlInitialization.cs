@@ -5,7 +5,7 @@ namespace DevZest.Data.Wpf
 {
     public static class DataSetControlInitialization
     {
-        public static void Initialize<TDataSetControl, TModel>(this TDataSetControl dataSetControl, DataSet<TModel> dataSet, Action<DataSetControl, TModel> initializer = null)
+        public static void Initialize<TDataSetControl, TModel>(this TDataSetControl dataSetControl, DataSet<TModel> dataSet, Action<TDataSetControl, TModel> initializer = null)
             where TDataSetControl : DataSetControl
             where TModel : Model, new()
         {
