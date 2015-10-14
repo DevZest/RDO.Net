@@ -42,17 +42,16 @@
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="CellsPanel.cs" />
     <Compile Include="GridRange.cs" />
-    <Compile Include="HeaderSelector.cs" />
-    <Compile Include="HeaderSelectorManager.cs" />
+    <Compile Include="SetSelector.cs" />
+    <Compile Include="SetSelectorManager.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="ModelViewManager.cs" />
-    <Compile Include="PanelManager.cs" />
+    <Compile Include="ChildSetManager.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="RowControl.cs" />
     <Compile Include="DataSetControl.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
@@ -66,6 +65,7 @@
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="ViewManagerCollection.cs" />
+    <Compile Include="ViewManagerKind.cs" />
     <Compile Include="ViewManager_T.cs" />
   </ItemGroup>
   <ItemGroup>

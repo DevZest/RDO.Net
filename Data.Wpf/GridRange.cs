@@ -1,4 +1,6 @@
 ﻿
+using DevZest.Data.Wpf.Resources;
+using System;
 using System.Windows;
 
 namespace DevZest.Data.Wpf
@@ -55,6 +57,24 @@ namespace DevZest.Data.Wpf
                 return false;
 
             return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
+        }
+
+        public GridRange Union(GridRange gridRange)
+        {
+            if (gridRange.IsEmpty)
+                return this;
+
+            if (this.IsEmpty)
+                return gridRange;
+
+            if (DataSetControl != gridRange.DataSetControl)
+                throw new ArgumentException(Strings.GridRange_InvalidDataSetControl, nameof(gridRange));
+
+            return new GridRange(
+                Left.Ordinal < gridRange.Left.Ordinal ? Left : gridRange.Left,
+                Top.Ordinal < gridRange.Top.Ordinal ? Top : gridRange.Top,
+                Right.Ordinal > gridRange.Right.Ordinal ? Right : gridRange.Right,
+                Bottom.Ordinal > gridRange.Bottom.Ordinal ? Bottom : gridRange.Bottom);
         }
     }
 }

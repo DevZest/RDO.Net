@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class RowControl : Control
+    public class SetSelector : Control
     {
     }
 }

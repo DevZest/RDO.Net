@@ -4,9 +4,9 @@ namespace DevZest.Data.Wpf
 {
     public class CellsPanel : Panel
     {
-        RowControl RowControl
+        DataRowControl DataRowControl
         {
-            get { return TemplatedParent as RowControl; }
+            get { return TemplatedParent as DataRowControl; }
         }
     }
 }

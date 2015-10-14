@@ -2,12 +2,17 @@
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class RowSelectorManager<T> : ModelViewManager<T>
+    public sealed class DataRowSelectorManager<T> : ModelViewManager<T>
         where T : RowSelector, new()
     {
-        public RowSelectorManager(Model model, Action<T> initializer)
+        public DataRowSelectorManager(Model model, Action<T> initializer)
             : base(model, initializer)
         {
+        }
+
+        internal sealed override ViewManagerKind Kind
+        {
+            get { return ViewManagerKind.RowSelector; }
         }
     }
 }

@@ -2,6 +2,7 @@
 using DevZest.Data.Wpf.Resources;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,6 +34,20 @@ namespace DevZest.Data.Wpf
             set { SetValue(ScrollableProperty, value); }
         }
 
+        private GridRange? _rowsPanelRange;
+        public GridRange RowsPanelRange
+        {
+            get { return _rowsPanelRange.HasValue ? _rowsPanelRange.GetValueOrDefault() : GetGridRangeAll(); }
+            internal set
+            {
+                VerifyDesignMode();
+                if (!GetGridRangeAll().Contains(value) || !value.Contains(ViewManagers.CalculatedRowsPanelRange))
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                _rowsPanelRange = value;
+            }
+        }
+
         internal DataSet DataSet { get; set; }
         public GridDefinitionCollection<GridRow> GridRows { get; private set; }
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
@@ -55,7 +70,6 @@ namespace DevZest.Data.Wpf
         internal int InitGridColumn(string width)
         {
             VerifyDesignMode();
-            VerifyAreGridsInherited();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
             return GridColumns.Count - 1;
         }
@@ -63,36 +77,8 @@ namespace DevZest.Data.Wpf
         internal int InitGridRow(string height)
         {
             VerifyDesignMode();
-            VerifyAreGridsInherited();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
             return GridRows.Count - 1;
-        }
-
-        private bool _areGridsInherited;
-        private ViewManager _panelManager;
-        internal void InitGridsInherited()
-        {
-            VerifyDesignMode();
-            if (GridRows.Count > 0 || GridColumns.Count > 0)
-                throw Error.DataSetControl_InheritGrids();
-
-            if (_panelManager == null)
-                throw Error.DataSetControl_NullPanelManager();
-
-            var gridRange = _panelManager.GridRange;
-            var sourceControl = gridRange.DataSetControl;
-            for (int i = gridRange.Left.Ordinal; i <= gridRange.Right.Ordinal; i++)
-                GridColumns.Add(sourceControl.GridColumns[i]);
-            for (int i = gridRange.Top.Ordinal; i <= gridRange.Bottom.Ordinal; i++)
-                GridRows.Add(sourceControl.GridColumns[i]);
-
-            _areGridsInherited = true;
-        }
-
-        private void VerifyAreGridsInherited()
-        {
-            if (_areGridsInherited)
-                throw Error.DataSetControl_VerifyAreGridsInherited();
         }
 
         public void InitView(GridRange gridRange, ViewManager manager)
@@ -170,9 +156,8 @@ namespace DevZest.Data.Wpf
             get { return _designMode; }
         }
 
-        internal void BeginInitialization(ViewManager panelManager, DataSet dataSet)
+        internal void BeginInitialization(DataSet dataSet)
         {
-            _panelManager = panelManager;
             DataSet = dataSet;
             GridRows.Clear();
             GridColumns.Clear();
@@ -192,24 +177,19 @@ namespace DevZest.Data.Wpf
 
         internal void DefaultInitialize()
         {
-            Orientation = Wpf.LayoutOrientation.Z;
-            InitGridRow("Auto");
-            InitGridRow("Auto");
-
             var model = DataSet.Model;
             var columns = model.GetColumns();
-            foreach (var column in columns)
-            {
-                int columnIndex = InitGridColumn("Auto");
-                this.ColumnHeader(this[columnIndex, 0], column);
-            }
 
-            this.Panel(this[0, 1, columns.Count - 1, 1], model.Panel((DataSetControl x, Model m) =>
+            this.GridColumns(columns.Select(x => "Auto").ToArray())
+                .GridRows("Auto", "Auto")
+                .RowsPanel(this[0, 1, columns.Count, 1]);
+
+            for (int i = 0; i < columns.Count; i++)
             {
-                x.OrientationY().InitGridsInherited();
-                for (int i = 0; i < columns.Count; i++)
-                    x.ColumnValue(x[i, 0], columns[i].TextBlock());
-            }));
+                var column = columns[i];
+                this.ColumnHeader(this[i, 0], column)
+                    .ColumnValue(this[i, 1], column.TextBlock());
+            }
         }
     }
 }

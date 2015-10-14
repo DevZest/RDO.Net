@@ -16,35 +16,11 @@ namespace DevZest.Data.Wpf.Resources
     internal static class Strings
     {
         // <summary>
-        // A string like "Cannot inherit grids after any GridRow or GridColumn added."
-        // </summary>
-        internal static string DataSetControl_InheritGrids
-        {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_InheritGrids); }
-        }
-
-        // <summary>
         // A string like "The view manager is invalid for Model '{0}'."
         // </summary>
         internal static string DataSetControl_InvalidViewManager(object p0)
         {
             return ResourceLoader.GetString(ResourceLoader.DataSetControl_InvalidViewManager, p0);
-        }
-
-        // <summary>
-        // A string like "Cannot inherit grids for top level DataSetControl."
-        // </summary>
-        internal static string DataSetControl_NullPanelManager
-        {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_NullPanelManager); }
-        }
-
-        // <summary>
-        // A string like "Cannot add GridRow or GridColumn after grids inherited."
-        // </summary>
-        internal static string DataSetControl_VerifyAreGridsInherited
-        {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_VerifyAreGridsInherited); }
         }
 
         // <summary>
@@ -54,6 +30,14 @@ namespace DevZest.Data.Wpf.Resources
         {
             get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_VerifyDesignMode); }
         }
+
+        // <summary>
+        // A string like "The GridRange does not belong to the same DataSetControl."
+        // </summary>
+        internal static string GridRange_InvalidDataSetControl
+        {
+            get { return ResourceLoader.GetString(ResourceLoader.GridRange_InvalidDataSetControl); }
+        }
     }
 
     // <summary>
@@ -62,30 +46,6 @@ namespace DevZest.Data.Wpf.Resources
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal static class Error
     {
-        // <summary>
-        // InvalidOperationException with message like "Cannot inherit grids after any GridRow or GridColumn added."
-        // </summary>
-        internal static Exception DataSetControl_InheritGrids()
-        {
-            return new InvalidOperationException(Strings.DataSetControl_InheritGrids);
-        }
-
-        // <summary>
-        // InvalidOperationException with message like "Cannot inherit grids for top level DataSetControl."
-        // </summary>
-        internal static Exception DataSetControl_NullPanelManager()
-        {
-            return new InvalidOperationException(Strings.DataSetControl_NullPanelManager);
-        }
-
-        // <summary>
-        // InvalidOperationException with message like "Cannot add GridRow or GridColumn after grids inherited."
-        // </summary>
-        internal static Exception DataSetControl_VerifyAreGridsInherited()
-        {
-            return new InvalidOperationException(Strings.DataSetControl_VerifyAreGridsInherited);
-        }
-
         // <summary>
         // InvalidOperationException with message like "The operation is only allowed in design mode."
         // </summary>
@@ -118,11 +78,9 @@ namespace DevZest.Data.Wpf.Resources
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal sealed class ResourceLoader
     {
-        internal const string DataSetControl_InheritGrids = "DataSetControl_InheritGrids";
         internal const string DataSetControl_InvalidViewManager = "DataSetControl_InvalidViewManager";
-        internal const string DataSetControl_NullPanelManager = "DataSetControl_NullPanelManager";
-        internal const string DataSetControl_VerifyAreGridsInherited = "DataSetControl_VerifyAreGridsInherited";
         internal const string DataSetControl_VerifyDesignMode = "DataSetControl_VerifyDesignMode";
+        internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
 
         private static ResourceLoader loader;
         private readonly ResourceManager resources;

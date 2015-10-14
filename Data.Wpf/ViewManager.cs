@@ -22,6 +22,8 @@ namespace DevZest.Data.Wpf
             GridRange = new GridRange();
         }
 
+        internal abstract ViewManagerKind Kind { get; }
+
         internal abstract bool IsValidFor(Model model);
 
         internal abstract UIElement CreateView();

@@ -15,11 +15,16 @@ namespace DevZest.Data.Wpf
 
         private DataSetControl _owner;
 
+        internal GridRange CalculatedRowsPanelRange { get; private set; }
+
         internal void Add(ViewManager viewManager, GridRange gridRange)
         {
             Debug.Assert(viewManager != null);
             Debug.Assert(viewManager.Owner == null);
             Items.Add(viewManager.Initialize(_owner, gridRange));
+            var kind = viewManager.Kind;
+            if (kind == ViewManagerKind.RowSelector || kind == ViewManagerKind.ColumnValue || kind == ViewManagerKind.ChildSet)
+                CalculatedRowsPanelRange = CalculatedRowsPanelRange.Union(gridRange);
         }
 
         internal void Clear()
@@ -27,6 +32,7 @@ namespace DevZest.Data.Wpf
             foreach (var viewManager in this)
                 viewManager.Clear();
             Items.Clear();
+            CalculatedRowsPanelRange = new GridRange();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Wpf
 {
@@ -14,7 +15,7 @@ namespace DevZest.Data.Wpf
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            dataSetControl.BeginInitialization(null, DataSet.Get(dataSet));
+            dataSetControl.BeginInitialization(DataSet.Get(dataSet));
             if (initializer != null)
                 initializer(dataSetControl, dataSet._);
             else
@@ -57,7 +58,36 @@ namespace DevZest.Data.Wpf
             return dataSetControl;
         }
 
-        public static T Panel<T, TChild>(this T dataSetControl, GridRange gridRange, PanelManager<TChild> manager)
+        public static T GridRows<T>(this T dataSetControl, params string[] heights)
+            where T : DataSetControl
+        {
+            if (heights != null)
+                throw new ArgumentNullException(nameof(heights));
+
+            foreach (var height in heights)
+                dataSetControl.InitGridRow(height);
+            return dataSetControl;
+        }
+
+        public static T GridColumns<T>(this T dataSetControl, params string[] widths)
+            where T : DataSetControl
+        {
+            if (widths != null)
+                throw new ArgumentNullException(nameof(widths));
+
+            foreach (var width in widths)
+                dataSetControl.InitGridColumn(width);
+            return dataSetControl;
+        }
+
+        public static T RowsPanel<T>(this T dataSetControl, GridRange value)
+            where T : DataSetControl
+        {
+            dataSetControl.RowsPanelRange = value;
+            return dataSetControl;
+        }
+
+        public static T ChildSet<T, TChild>(this T dataSetControl, GridRange gridRange, ChildSetManager<TChild> manager)
             where T : DataSetControl
             where TChild : DataSetControl, new()
         {
@@ -73,17 +103,17 @@ namespace DevZest.Data.Wpf
             return dataSetControl;
         }
 
-        public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<HeaderSelector> initializer = null)
+        public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<SetSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.InitView(gridRange, new HeaderSelectorManager<HeaderSelector>(dataSetControl.Model, initializer));
+            dataSetControl.InitView(gridRange, new HeaderSelectorManager<SetSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
         public static T RowSelector<T>(this T dataSetControl, GridRange gridRange, Action<RowSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.InitView(gridRange, new RowSelectorManager<RowSelector>(dataSetControl.Model, initializer));
+            dataSetControl.InitView(gridRange, new DataRowSelectorManager<RowSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 

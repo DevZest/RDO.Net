@@ -117,23 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DataSetControl_InheritGrids" xml:space="preserve">
-    <value>Cannot inherit grids after any GridRow or GridColumn added.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
   <data name="DataSetControl_InvalidViewManager" xml:space="preserve">
     <value>The view manager is invalid for Model '{0}'.</value>
-  </data>
-  <data name="DataSetControl_NullPanelManager" xml:space="preserve">
-    <value>Cannot inherit grids for top level DataSetControl.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="DataSetControl_VerifyAreGridsInherited" xml:space="preserve">
-    <value>Cannot add GridRow or GridColumn after grids inherited.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="DataSetControl_VerifyDesignMode" xml:space="preserve">
     <value>The operation is only allowed in design mode.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="GridRange_InvalidDataSetControl" xml:space="preserve">
+    <value>The GridRange does not belong to the same DataSetControl.</value>
   </data>
 </root>

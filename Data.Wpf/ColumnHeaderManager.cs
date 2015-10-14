@@ -10,5 +10,10 @@ namespace DevZest.Data.Wpf
             : base(column, initializer)
         {
         }
+
+        internal sealed override ViewManagerKind Kind
+        {
+            get { return ViewManagerKind.ColumnHeader; }
+        }
     }
 }
