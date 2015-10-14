@@ -23,38 +23,24 @@ namespace DevZest.Data.Wpf
             dataSetControl.EndInitialization();
         }
 
-        public static T OrientationX<T>(this T dataSetControl)
+        public static T Orientation<T>(this T dataSetControl, LayoutOrientation orientation)
             where T : DataSetControl
         {
-            dataSetControl.Orientation = LayoutOrientation.X;
+            dataSetControl.Orientation = orientation;
             return dataSetControl;
         }
 
-        public static T OrientationY<T>(this T dataSetControl)
+        public static T Scrollable<T>(this T dataSetControl, bool value)
             where T : DataSetControl
         {
-            dataSetControl.Orientation = LayoutOrientation.Y;
+            dataSetControl.Scrollable = value;
             return dataSetControl;
         }
 
-        public static T OrientationZ<T>(this T dataSetControl)
+        public static T IsVirtualizing<T>(this T dataSetControl, bool value)
             where T : DataSetControl
         {
-            dataSetControl.Orientation = LayoutOrientation.Z;
-            return dataSetControl;
-        }
-
-        public static T OrientationXY<T>(this T dataSetControl)
-            where T : DataSetControl
-        {
-            dataSetControl.Orientation = LayoutOrientation.XY;
-            return dataSetControl;
-        }
-
-        public static T OrientationYX<T>(this T dataSetControl)
-            where T : DataSetControl
-        {
-            dataSetControl.Orientation = LayoutOrientation.YX;
+            dataSetControl.IsVirtualizing = value;
             return dataSetControl;
         }
 
@@ -116,7 +102,6 @@ namespace DevZest.Data.Wpf
             dataSetControl.InitView(gridRange, new DataRowSelectorManager<RowSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
-
 
         public static T ColumnHeader<T>(this T dataSetControl, GridRange gridRange, Column column, Action<ColumnHeader> initializer = null)
             where T : DataSetControl

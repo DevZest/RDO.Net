@@ -13,7 +13,9 @@ namespace DevZest.Data.Wpf
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(DataSetControl.Orientation), typeof(LayoutOrientation), typeof(DataSetControl),
             new FrameworkPropertyMetadata(Wpf.LayoutOrientation.Y));
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(DataSetControl),
-            new FrameworkPropertyMetadata(true));
+            new FrameworkPropertyMetadata(BooleanBoxes.True));
+        public static readonly DependencyProperty IsVirtualizingProperty = DependencyProperty.Register(nameof(IsVirtualizing), typeof(bool), typeof(DataSetControl),
+            new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         public DataSetControl()
         {
@@ -31,7 +33,13 @@ namespace DevZest.Data.Wpf
         public bool Scrollable
         {
             get { return (bool)GetValue(ScrollableProperty); }
-            set { SetValue(ScrollableProperty, value); }
+            set { SetValue(ScrollableProperty, BooleanBoxes.Box(value)); }
+        }
+
+        public bool IsVirtualizing
+        {
+            get { return (bool)GetValue(IsVirtualizingProperty); }
+            set { SetValue(IsVirtualizingProperty, BooleanBoxes.Box(value)); }
         }
 
         private GridRange? _rowsPanelRange;
