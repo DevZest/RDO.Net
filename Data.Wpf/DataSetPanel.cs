@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Wpf
 {
-    public class RowsPanel : Panel, IScrollInfo
+    public class DataSetPanel : Panel, IScrollInfo
     {
         DataSetControl DataSetControl
         {
