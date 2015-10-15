@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -14,7 +15,7 @@ namespace DevZest.Data.Wpf
 
         Action<T> _initializer;
 
-        internal sealed override UIElement CreateView()
+        internal sealed override UIElement CreateUIElement()
         {
             return new T();
         }

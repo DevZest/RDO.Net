@@ -37,13 +37,6 @@ namespace DevZest.Data.Wpf
             return dataSetControl;
         }
 
-        public static T IsVirtualizing<T>(this T dataSetControl, bool value)
-            where T : DataSetControl
-        {
-            dataSetControl.IsVirtualizing = value;
-            return dataSetControl;
-        }
-
         public static T GridRows<T>(this T dataSetControl, params string[] heights)
             where T : DataSetControl
         {

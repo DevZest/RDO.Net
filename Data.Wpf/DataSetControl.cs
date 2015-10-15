@@ -14,8 +14,8 @@ namespace DevZest.Data.Wpf
             new FrameworkPropertyMetadata(Wpf.LayoutOrientation.Y));
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(DataSetControl),
             new FrameworkPropertyMetadata(BooleanBoxes.True));
-        public static readonly DependencyProperty IsVirtualizingProperty = DependencyProperty.Register(nameof(IsVirtualizing), typeof(bool), typeof(DataSetControl),
-            new FrameworkPropertyMetadata(BooleanBoxes.True));
+        public static readonly DependencyProperty FrozenGridCountProperty = DependencyProperty.Register(nameof(FrozenGridCount), typeof(int), typeof(DataSetControl),
+            new FrameworkPropertyMetadata(0));
 
         public DataSetControl()
         {
@@ -36,10 +36,10 @@ namespace DevZest.Data.Wpf
             set { SetValue(ScrollableProperty, BooleanBoxes.Box(value)); }
         }
 
-        public bool IsVirtualizing
+        public int FrozenGridCount
         {
-            get { return (bool)GetValue(IsVirtualizingProperty); }
-            set { SetValue(IsVirtualizingProperty, BooleanBoxes.Box(value)); }
+            get { return (int)GetValue(FrozenGridCountProperty); }
+            set { SetValue(FrozenGridCountProperty, value); }
         }
 
         private GridRange? _rowsPanelRange;

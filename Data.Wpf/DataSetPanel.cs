@@ -1,15 +1,77 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace DevZest.Data.Wpf
 {
-    public class DataSetPanel : Panel, IScrollInfo
+    public class DataSetPanel : VirtualizingPanel, IScrollInfo
     {
+        private DataSetControl _dataSetControl;
         DataSetControl DataSetControl
         {
-            get { return TemplatedParent as DataSetControl; }
+            get { return _dataSetControl; }
+            set
+            {
+                if (_dataSetControl == value)
+                    return;
+
+                if (_dataSetControl != null)
+                {
+                    DependencyPropertyDescriptor.FromProperty(DataSetControl.OrientationProperty, typeof(DataSetControl))
+                        .RemoveValueChanged(_dataSetControl, OnOrientationChanged);
+                    DependencyPropertyDescriptor.FromProperty(DataSetControl.FrozenGridCountProperty, typeof(DataSetControl))
+                        .RemoveValueChanged(_dataSetControl, OnFrozenGridCountChanged);
+                }
+                _dataSetControl = value;
+                if (_dataSetControl != null)
+                {
+                    DependencyPropertyDescriptor.FromProperty(DataSetControl.OrientationProperty, typeof(DataSetControl))
+                        .AddValueChanged(_dataSetControl, OnOrientationChanged);
+                    DependencyPropertyDescriptor.FromProperty(DataSetControl.FrozenGridCountProperty, typeof(DataSetControl))
+                        .AddValueChanged(_dataSetControl, OnFrozenGridCountChanged);
+                }
+            }
+        }
+
+        public override void OnApplyTemplate()
+        {
+            DataSetControl = TemplatedParent as DataSetControl;
+        }
+
+        private void OnOrientationChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void OnFrozenGridCountChanged(object sender, EventArgs e)
+        {
+        }
+
+        List<UIElement> _visibleUIElements = new List<UIElement>();
+
+        private void Reset()
+        {
+            if (Children.Count > 0)
+                RemoveInternalChildRange(0, Children.Count); // Remove all visual elements
+
+            foreach (var element in _visibleUIElements)
+            {
+                var viewManager = element.GetViewManager();
+                Debug.Assert(viewManager != null);
+                viewManager.ReturnUIElement(element);
+            }
+
+            _visibleUIElements.Clear();
+            //_topmostElementsCount = 0;
+        }
+
+        private void Refresh()
+        {
+
         }
 
         #region IScrollInfo
