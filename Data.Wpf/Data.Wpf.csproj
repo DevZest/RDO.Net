@@ -41,7 +41,7 @@
     <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlInitialization.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
-    <Compile Include="CellsPanel.cs" />
+    <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="SetSelector.cs" />
     <Compile Include="SetSelectorManager.cs" />

@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class CellsPanel : Panel
+    public class DataRowPanel : Panel
     {
         DataRowControl DataRowControl
         {
