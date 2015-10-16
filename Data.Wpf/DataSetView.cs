@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Wpf.Resources;
+﻿using DevZest.Data.Wpf.Resources;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -43,35 +42,35 @@ namespace DevZest.Data.Wpf
             return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
         }
 
-        private GridRange? _rowsPanelRange;
-        public GridRange RowsPanelRange
+        private GridRange? _dataRowRange;
+        public GridRange DataRowRange
         {
-            get { return _rowsPanelRange.HasValue ? _rowsPanelRange.GetValueOrDefault() : GetGridRangeAll(); }
+            get { return _dataRowRange.HasValue ? _dataRowRange.GetValueOrDefault() : GetGridRangeAll(); }
             internal set
             {
                 VerifyDesignMode();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(Items.CalculatedRowsPanelRange))
+                if (!GetGridRangeAll().Contains(value) || !value.Contains(Items.CalculatedDataRowRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                _rowsPanelRange = value;
+                _dataRowRange = value;
             }
         }
 
-        public int InitGridColumn(string width)
+        public int AddGridColumn(string width)
         {
             VerifyDesignMode();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
             return GridColumns.Count - 1;
         }
 
-        internal int InitGridRow(string height)
+        public int AddGridRow(string height)
         {
             VerifyDesignMode();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
             return GridRows.Count - 1;
         }
 
-        public void InitViewItem(GridRange gridRange, ViewItem viewItem)
+        public void AddViewItem(GridRange gridRange, ViewItem viewItem)
         {
             VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(gridRange));
@@ -146,7 +145,7 @@ namespace DevZest.Data.Wpf
             get { return _designMode; }
         }
 
-        internal void BeginInitialization(DataSet dataSet)
+        internal void BeginInit(DataSet dataSet)
         {
             DataSet = dataSet;
             GridRows.Clear();
@@ -154,7 +153,7 @@ namespace DevZest.Data.Wpf
             _designMode = true;
         }
 
-        internal void EndInitialization()
+        internal void EndInit()
         {
             _designMode = false;
         }

@@ -14,9 +14,9 @@ namespace DevZest.Data.Wpf
 
         internal override void InitUIElementOverride(T dataSetControl)
         {
-            dataSetControl.View.BeginInitialization(GetDataSet(dataSetControl));
+            dataSetControl.View.BeginInit(GetDataSet(dataSetControl));
             base.InitUIElementOverride(dataSetControl);
-            dataSetControl.View.EndInitialization();
+            dataSetControl.View.EndInit();
         }
 
         internal sealed override bool IsValidFor(Model model)

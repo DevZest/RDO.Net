@@ -16,12 +16,12 @@ namespace DevZest.Data.Wpf
                 throw new ArgumentNullException(nameof(dataSet));
 
             var dataSetView = dataSetControl.View;
-            dataSetView.BeginInitialization(DataSet.Get(dataSet));
+            dataSetView.BeginInit(DataSet.Get(dataSet));
             if (initializer != null)
                 initializer(dataSetControl, dataSet._);
             else
                 dataSetControl.DefaultInitialize();
-            dataSetView.EndInitialization();
+            dataSetView.EndInit();
         }
 
         public static T Orientation<T>(this T dataSetControl, LayoutOrientation orientation)
@@ -46,7 +46,7 @@ namespace DevZest.Data.Wpf
 
             var dataSetView = dataSetControl.View;
             foreach (var height in heights)
-                dataSetView.InitGridRow(height);
+                dataSetView.AddGridRow(height);
             return dataSetControl;
         }
 
@@ -58,22 +58,27 @@ namespace DevZest.Data.Wpf
 
             var dataSetView = dataSetControl.View;
             foreach (var width in widths)
-                dataSetView.InitGridColumn(width);
+                dataSetView.AddGridColumn(width);
             return dataSetControl;
         }
 
-        public static T RowsPanel<T>(this T dataSetControl, GridRange value)
+        public static T DataRowRange<T>(this T dataSetControl, GridRange value)
             where T : DataSetControl
         {
-            dataSetControl.View.RowsPanelRange = value;
+            dataSetControl.View.DataRowRange = value;
             return dataSetControl;
+        }
+
+        public static GridRange DataRowRange(DataSetControl dataSetControl)
+        {
+            return dataSetControl.View.DataRowRange;
         }
 
         public static T ChildSet<T, TChild>(this T dataSetControl, GridRange gridRange, ChildSetViewItem<TChild> viewItem)
             where T : DataSetControl
             where TChild : DataSetControl, new()
         {
-            dataSetControl.View.InitViewItem(gridRange, viewItem);
+            dataSetControl.View.AddViewItem(gridRange, viewItem);
             return dataSetControl;
         }
 
@@ -81,21 +86,21 @@ namespace DevZest.Data.Wpf
             where T : DataSetControl
             where TUIElement : UIElement, new()
         {
-            dataSetControl.View.InitViewItem(gridRange, viewItem);
+            dataSetControl.View.AddViewItem(gridRange, viewItem);
             return dataSetControl;
         }
 
         public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<SetSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.View.InitViewItem(gridRange, new HeaderSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new HeaderSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
         public static T RowSelector<T>(this T dataSetControl, GridRange gridRange, Action<RowSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.View.InitViewItem(gridRange, new DataRowSelectorViewItem<RowSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new DataRowSelectorViewItem<RowSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
@@ -104,7 +109,7 @@ namespace DevZest.Data.Wpf
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
-            dataSetControl.View.InitViewItem(gridRange, new ColumnHeaderViewItem<ColumnHeader>(column, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new ColumnHeaderViewItem<ColumnHeader>(column, initializer));
             return dataSetControl;
         }
     }

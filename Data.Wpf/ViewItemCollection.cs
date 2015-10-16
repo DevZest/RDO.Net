@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Wpf
 {
-    internal class ViewItemCollection : ReadOnlyCollection<ViewItem>
+    public sealed class ViewItemCollection : ReadOnlyCollection<ViewItem>
     {
         internal ViewItemCollection(DataSetView owner)
             : base(new List<ViewItem>())
@@ -15,7 +15,7 @@ namespace DevZest.Data.Wpf
 
         private DataSetView _owner;
 
-        internal GridRange CalculatedRowsPanelRange { get; private set; }
+        internal GridRange CalculatedDataRowRange { get; private set; }
 
         internal void Add(ViewItem viewItem, GridRange gridRange)
         {
@@ -24,7 +24,7 @@ namespace DevZest.Data.Wpf
             Items.Add(viewItem.Initialize(_owner, gridRange));
             var kind = viewItem.Kind;
             if (kind == ViewItemKind.RowSelector || kind == ViewItemKind.ColumnValue || kind == ViewItemKind.ChildSet)
-                CalculatedRowsPanelRange = CalculatedRowsPanelRange.Union(gridRange);
+                CalculatedDataRowRange = CalculatedDataRowRange.Union(gridRange);
         }
 
         internal void Clear()
@@ -32,7 +32,7 @@ namespace DevZest.Data.Wpf
             foreach (var viewItem in this)
                 viewItem.Clear();
             Items.Clear();
-            CalculatedRowsPanelRange = new GridRange();
+            CalculatedDataRowRange = new GridRange();
         }
     }
 }

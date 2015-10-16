@@ -54,6 +54,11 @@ namespace DevZest.Data.Wpf
             get { return View.GridColumns; }
         }
 
+        public ViewItemCollection ViewItems
+        {
+            get { return View.Items; }
+        }
+
         public GridRange this[int column, int row]
         {
             get { return View[column, row]; }
@@ -70,7 +75,7 @@ namespace DevZest.Data.Wpf
 
             this.GridColumns(columns.Select(x => "Auto").ToArray())
                 .GridRows("Auto", "Auto")
-                .RowsPanel(this[0, 1, columns.Count, 1]);
+                .DataRowRange(this[0, 1, columns.Count - 1, 1]);
 
             for (int i = 0; i < columns.Count; i++)
             {
