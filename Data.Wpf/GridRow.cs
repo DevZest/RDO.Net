@@ -5,8 +5,8 @@ namespace DevZest.Data.Wpf
 {
     public sealed class GridRow : GridDefinition
     {
-        public GridRow(DataSetControl dataSetControl, int ordinal, GridLength height)
-            : base(dataSetControl, ordinal, height)
+        internal GridRow(DataSetView owner, int ordinal, GridLength height)
+            : base(owner, ordinal, height)
         {
         }
 

@@ -15,12 +15,13 @@ namespace DevZest.Data.Wpf
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            dataSetControl.BeginInitialization(DataSet.Get(dataSet));
+            var dataSetView = dataSetControl.View;
+            dataSetView.BeginInitialization(DataSet.Get(dataSet));
             if (initializer != null)
                 initializer(dataSetControl, dataSet._);
             else
                 dataSetControl.DefaultInitialize();
-            dataSetControl.EndInitialization();
+            dataSetView.EndInitialization();
         }
 
         public static T Orientation<T>(this T dataSetControl, LayoutOrientation orientation)
@@ -43,8 +44,9 @@ namespace DevZest.Data.Wpf
             if (heights != null)
                 throw new ArgumentNullException(nameof(heights));
 
+            var dataSetView = dataSetControl.View;
             foreach (var height in heights)
-                dataSetControl.InitGridRow(height);
+                dataSetView.InitGridRow(height);
             return dataSetControl;
         }
 
@@ -54,45 +56,46 @@ namespace DevZest.Data.Wpf
             if (widths != null)
                 throw new ArgumentNullException(nameof(widths));
 
+            var dataSetView = dataSetControl.View;
             foreach (var width in widths)
-                dataSetControl.InitGridColumn(width);
+                dataSetView.InitGridColumn(width);
             return dataSetControl;
         }
 
         public static T RowsPanel<T>(this T dataSetControl, GridRange value)
             where T : DataSetControl
         {
-            dataSetControl.RowsPanelRange = value;
+            dataSetControl.View.RowsPanelRange = value;
             return dataSetControl;
         }
 
-        public static T ChildSet<T, TChild>(this T dataSetControl, GridRange gridRange, ChildSetManager<TChild> manager)
+        public static T ChildSet<T, TChild>(this T dataSetControl, GridRange gridRange, ChildSetViewItem<TChild> viewItem)
             where T : DataSetControl
             where TChild : DataSetControl, new()
         {
-            dataSetControl.InitView(gridRange, manager);
+            dataSetControl.View.InitViewItem(gridRange, viewItem);
             return dataSetControl;
         }
 
-        public static T ColumnValue<T, TUIElement>(this T dataSetControl, GridRange gridRange, ColumnValueManager<TUIElement> manager)
+        public static T ColumnValue<T, TUIElement>(this T dataSetControl, GridRange gridRange, ColumnValueViewItem<TUIElement> viewItem)
             where T : DataSetControl
             where TUIElement : UIElement, new()
         {
-            dataSetControl.InitView(gridRange, manager);
+            dataSetControl.View.InitViewItem(gridRange, viewItem);
             return dataSetControl;
         }
 
         public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<SetSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.InitView(gridRange, new HeaderSelectorManager<SetSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.InitViewItem(gridRange, new HeaderSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
         public static T RowSelector<T>(this T dataSetControl, GridRange gridRange, Action<RowSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.InitView(gridRange, new DataRowSelectorManager<RowSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.InitViewItem(gridRange, new DataRowSelectorViewItem<RowSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
@@ -101,7 +104,7 @@ namespace DevZest.Data.Wpf
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
-            dataSetControl.InitView(gridRange, new ColumnHeaderManager<ColumnHeader>(column, initializer));
+            dataSetControl.View.InitViewItem(gridRange, new ColumnHeaderViewItem<ColumnHeader>(column, initializer));
             return dataSetControl;
         }
     }

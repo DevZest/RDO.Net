@@ -1,7 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Wpf.Resources;
-using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,9 +16,7 @@ namespace DevZest.Data.Wpf
 
         public DataSetControl()
         {
-            GridRows = new GridDefinitionCollection<GridRow>();
-            GridColumns = new GridDefinitionCollection<GridColumn>();
-            ViewManagers = new ViewManagerCollection(this);
+            View = new DataSetView();
         }
 
         public LayoutOrientation Orientation
@@ -42,151 +37,36 @@ namespace DevZest.Data.Wpf
             set { SetValue(FrozenGridCountProperty, value); }
         }
 
-        private GridRange? _rowsPanelRange;
-        public GridRange RowsPanelRange
-        {
-            get { return _rowsPanelRange.HasValue ? _rowsPanelRange.GetValueOrDefault() : GetGridRangeAll(); }
-            internal set
-            {
-                VerifyDesignMode();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(ViewManagers.CalculatedRowsPanelRange))
-                    throw new ArgumentOutOfRangeException(nameof(value));
+        internal DataSetView View { get; private set; }
 
-                _rowsPanelRange = value;
-            }
+        public Model Model
+        {
+            get { return View.Model; }
         }
 
-        internal DataSet DataSet { get; set; }
-        public GridDefinitionCollection<GridRow> GridRows { get; private set; }
-        public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
-        internal ViewManagerCollection ViewManagers { get; private set; }
-
-        internal Model Model
+        public GridDefinitionCollection<GridRow> GridRows
         {
-            get { return DataSet.Model; }
+            get { return View.GridRows; }
         }
 
-        private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
-        private static GridLength GetGridLength(string gridLength)
+        public GridDefinitionCollection<GridColumn> GridColumns
         {
-            if (string.IsNullOrEmpty(gridLength))
-                throw new ArgumentNullException(nameof(gridLength));
-
-            return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
-        }
-
-        internal int InitGridColumn(string width)
-        {
-            VerifyDesignMode();
-            GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
-            return GridColumns.Count - 1;
-        }
-
-        internal int InitGridRow(string height)
-        {
-            VerifyDesignMode();
-            GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
-            return GridRows.Count - 1;
-        }
-
-        public void InitView(GridRange gridRange, ViewManager manager)
-        {
-            VerifyDesignMode();
-            VerifyGridRange(gridRange, nameof(gridRange));
-            VerifyViewManager(manager, nameof(manager));
-
-            ViewManagers.Add(manager, gridRange);
-        }
-
-        private void VerifyViewManager(ViewManager manager, string paramName)
-        {
-            if (manager == null)
-                throw new ArgumentNullException(nameof(paramName));
-            if (!manager.IsValidFor(DataSet.Model))
-                throw new ArgumentException(Strings.DataSetControl_InvalidViewManager(DataSet.Model), nameof(paramName));
-        }
-
-        private void VerifyGridRange(GridRange gridRange, string paramName)
-        {
-            if (!GetGridRangeAll().Contains(gridRange))
-                throw new ArgumentOutOfRangeException(paramName);
-        }
-
-        private void VerifyGridColumn(int index, string paramName)
-        {
-            if (index < 0 || index >= GridColumns.Count)
-                throw new ArgumentOutOfRangeException(paramName);
-        }
-
-        private void VerifyGridRow(int index, string paramName)
-        {
-            if (index < 0 || index >= GridRows.Count)
-                throw new ArgumentOutOfRangeException(paramName);
-        }
-
-        private GridRange GetGridRangeAll()
-        {
-            if (GridColumns.Count == 0 || GridRows.Count == 0)
-                return new GridRange();
-
-            return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
+            get { return View.GridColumns; }
         }
 
         public GridRange this[int column, int row]
         {
-            get
-            {
-                VerifyGridColumn(column, nameof(column));
-                VerifyGridRow(row, nameof(row));
-                return new GridRange(GridColumns[column], GridRows[row]);
-            }
+            get { return View[column, row]; }
         }
 
         public GridRange this[int left, int top, int right, int bottom]
         {
-            get
-            {
-                VerifyGridColumn(left, nameof(left));
-                VerifyGridRow(top, nameof(top));
-                VerifyGridColumn(right, nameof(right));
-                VerifyGridRow(bottom, nameof(bottom));
-                if (right < left)
-                    throw new ArgumentOutOfRangeException(nameof(right));
-                if (bottom < top)
-                    throw new ArgumentOutOfRangeException(nameof(bottom));
-                return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
-            }
-        }
-
-        bool _designMode = true;
-        public bool DesignMode
-        {
-            get { return _designMode; }
-        }
-
-        internal void BeginInitialization(DataSet dataSet)
-        {
-            DataSet = dataSet;
-            GridRows.Clear();
-            GridColumns.Clear();
-            _designMode = true;
-        }
-
-        internal void EndInitialization()
-        {
-            _designMode = false;
-        }
-
-        protected void VerifyDesignMode()
-        {
-            if (!_designMode)
-                throw Error.DataSetControl_VerifyDesignMode();
+            get { return View[left, top, right, bottom]; }
         }
 
         internal void DefaultInitialize()
         {
-            var model = DataSet.Model;
-            var columns = model.GetColumns();
+            var columns = Model.GetColumns();
 
             this.GridColumns(columns.Select(x => "Auto").ToArray())
                 .GridRows("Auto", "Auto")

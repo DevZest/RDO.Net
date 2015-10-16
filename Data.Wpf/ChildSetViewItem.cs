@@ -4,19 +4,19 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class ChildSetManager<T> : ModelViewManager<T>
+    public sealed class ChildSetViewItem<T> : ModelViewItem<T>
         where T : DataSetControl, new()
     {
-        internal ChildSetManager(Model model, Action<T> initializer)
+        internal ChildSetViewItem(Model model, Action<T> initializer)
             : base(model, initializer)
         {
         }
 
         internal override void InitUIElementOverride(T dataSetControl)
         {
-            dataSetControl.BeginInitialization(GetDataSet(dataSetControl));
+            dataSetControl.View.BeginInitialization(GetDataSet(dataSetControl));
             base.InitUIElementOverride(dataSetControl);
-            dataSetControl.EndInitialization();
+            dataSetControl.View.EndInitialization();
         }
 
         internal sealed override bool IsValidFor(Model model)
@@ -30,9 +30,9 @@ namespace DevZest.Data.Wpf
             return DataSet.Get(dataRowControl, Model);
         }
 
-        internal sealed override ViewManagerKind Kind
+        internal sealed override ViewItemKind Kind
         {
-            get { return ViewManagerKind.ChildSet; }
+            get { return ViewItemKind.ChildSet; }
         }
     }
 }

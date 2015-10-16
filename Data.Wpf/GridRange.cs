@@ -1,6 +1,7 @@
 ﻿
 using DevZest.Data.Wpf.Resources;
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Wpf
@@ -14,6 +15,10 @@ namespace DevZest.Data.Wpf
 
         internal GridRange(GridColumn left, GridRow top, GridColumn right, GridRow bottom)
         {
+            Debug.Assert(left != null);
+            Debug.Assert(top != null && top.Owner == left.Owner);
+            Debug.Assert(right != null && right.Owner == top.Owner);
+            Debug.Assert(bottom != null && bottom.Owner == right.Owner);
             Left = left;
             Top = top;
             Right = right;
@@ -25,19 +30,19 @@ namespace DevZest.Data.Wpf
         public readonly GridColumn Right;
         public readonly GridRow Bottom;
 
-        public DataSetControl DataSetControl
+        internal DataSetView Owner
         {
-            get { return Left == null ? null : Left.DataSetControl; }
+            get { return Left == null ? null : Left.Owner; }
         }
 
         public bool IsEmpty
         {
-            get { return DataSetControl == null; }
+            get { return Owner == null; }
         }
 
         public bool Contains(GridRange gridRange)
         {
-            if (IsEmpty || DataSetControl != gridRange.DataSetControl)
+            if (IsEmpty || Owner != gridRange.Owner)
                 return false;
             return Left.Ordinal <= gridRange.Left.Ordinal && Right.Ordinal >= gridRange.Right.Ordinal
                 && Top.Ordinal <= gridRange.Top.Ordinal && Bottom.Ordinal >= gridRange.Bottom.Ordinal;
@@ -45,7 +50,7 @@ namespace DevZest.Data.Wpf
 
         public bool Contains(GridColumn gridColumn)
         {
-            if (IsEmpty || DataSetControl != gridColumn.DataSetControl)
+            if (IsEmpty || Owner != gridColumn.Owner)
                 return false;
 
             return Left.Ordinal <= gridColumn.Ordinal && Right.Ordinal >= gridColumn.Ordinal;
@@ -53,7 +58,7 @@ namespace DevZest.Data.Wpf
 
         public bool Contains(GridRow gridRow)
         {
-            if (IsEmpty || DataSetControl != gridRow.DataSetControl)
+            if (IsEmpty || Owner != gridRow.Owner)
                 return false;
 
             return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
@@ -67,7 +72,7 @@ namespace DevZest.Data.Wpf
             if (this.IsEmpty)
                 return gridRange;
 
-            if (DataSetControl != gridRange.DataSetControl)
+            if (Owner != gridRange.Owner)
                 throw new ArgumentException(Strings.GridRange_InvalidDataSetControl, nameof(gridRange));
 
             return new GridRange(

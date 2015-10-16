@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ColumnViewManager<T> : ViewManager<T>
+    public abstract class ColumnViewItem<T> : ViewItem<T>
         where T : UIElement, new()
     {
-        internal ColumnViewManager(Column column, Action<T> initializer)
+        internal ColumnViewItem(Column column, Action<T> initializer)
             : base(initializer)
         {
             Debug.Assert(column != null);

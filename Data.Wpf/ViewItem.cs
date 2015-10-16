@@ -6,18 +6,18 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ViewManager
+    public abstract class ViewItem
     {
-        public DataSetControl Owner { get; private set; }
+        internal DataSetView Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
         internal bool Repeatable
         {
-            get { return Kind != ViewManagerKind.SetSelector; }
+            get { return Kind != ViewItemKind.SetSelector; }
         }
 
-        internal ViewManager Initialize(DataSetControl owner, GridRange gridRange)
+        internal ViewItem Initialize(DataSetView owner, GridRange gridRange)
         {
             Owner = owner;
             GridRange = gridRange;
@@ -30,7 +30,7 @@ namespace DevZest.Data.Wpf
             GridRange = new GridRange();
         }
 
-        internal abstract ViewManagerKind Kind { get; }
+        internal abstract ViewItemKind Kind { get; }
 
         internal abstract bool IsValidFor(Model model);
 
@@ -40,7 +40,7 @@ namespace DevZest.Data.Wpf
         internal UIElement GetUIElement2()
         {
             if (_cachedUIElements.Count == 0)
-                return CreateUIElement().SetViewManager(this);
+                return CreateUIElement().SetViewItem(this);
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -50,9 +50,9 @@ namespace DevZest.Data.Wpf
 
         internal void ReturnUIElement(UIElement uiElement)
         {
-            Debug.Assert(uiElement != null && uiElement.GetViewManager() == this);
+            Debug.Assert(uiElement != null && uiElement.GetViewItem() == this);
 
-            uiElement.SetViewManager(null);
+            uiElement.SetViewItem(null);
             _cachedUIElements.Add(uiElement);
         }
 

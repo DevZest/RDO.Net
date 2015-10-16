@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Wpf
 {
-    internal enum ViewManagerKind
+    internal enum ViewItemKind
     {
         ColumnHeader,
         ColumnValue,

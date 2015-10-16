@@ -16,19 +16,19 @@ namespace DevZest.Data.Wpf.Resources
     internal static class Strings
     {
         // <summary>
-        // A string like "The view manager is invalid for Model '{0}'."
+        // A string like "The ViewItem is invalid for Model '{0}'."
         // </summary>
-        internal static string DataSetControl_InvalidViewManager(object p0)
+        internal static string DataSetView_InvalidViewItem(object p0)
         {
-            return ResourceLoader.GetString(ResourceLoader.DataSetControl_InvalidViewManager, p0);
+            return ResourceLoader.GetString(ResourceLoader.DataSetView_InvalidViewItem, p0);
         }
 
         // <summary>
         // A string like "The operation is only allowed in design mode."
         // </summary>
-        internal static string DataSetControl_VerifyDesignMode
+        internal static string DataSetView_VerifyDesignMode
         {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetControl_VerifyDesignMode); }
+            get { return ResourceLoader.GetString(ResourceLoader.DataSetView_VerifyDesignMode); }
         }
 
         // <summary>
@@ -49,9 +49,9 @@ namespace DevZest.Data.Wpf.Resources
         // <summary>
         // InvalidOperationException with message like "The operation is only allowed in design mode."
         // </summary>
-        internal static Exception DataSetControl_VerifyDesignMode()
+        internal static Exception DataSetView_VerifyDesignMode()
         {
-            return new InvalidOperationException(Strings.DataSetControl_VerifyDesignMode);
+            return new InvalidOperationException(Strings.DataSetView_VerifyDesignMode);
         }
 
         // <summary>
@@ -78,8 +78,8 @@ namespace DevZest.Data.Wpf.Resources
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal sealed class ResourceLoader
     {
-        internal const string DataSetControl_InvalidViewManager = "DataSetControl_InvalidViewManager";
-        internal const string DataSetControl_VerifyDesignMode = "DataSetControl_VerifyDesignMode";
+        internal const string DataSetView_InvalidViewItem = "DataSetView_InvalidViewItem";
+        internal const string DataSetView_VerifyDesignMode = "DataSetView_VerifyDesignMode";
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
 
         private static ResourceLoader loader;

@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ViewManager<T> : ViewManager
+    public abstract class ViewItem<T> : ViewItem
         where T : UIElement, new()
     {
-        internal ViewManager(Action<T> initializer)
+        internal ViewItem(Action<T> initializer)
         {
             _initializer = initializer;
         }

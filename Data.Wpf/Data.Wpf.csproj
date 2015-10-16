@@ -34,9 +34,9 @@
     <Compile Include="BooleanBoxes.cs" />
     <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnHeader.cs" />
-    <Compile Include="ColumnHeaderManager.cs" />
-    <Compile Include="ColumnValueManager.cs" />
-    <Compile Include="ColumnViewManager.cs" />
+    <Compile Include="ColumnHeaderViewItem.cs" />
+    <Compile Include="ColumnValueViewItem.cs" />
+    <Compile Include="ColumnViewItem.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlInitialization.cs" />
@@ -44,10 +44,10 @@
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="SetSelector.cs" />
-    <Compile Include="SetSelectorManager.cs" />
+    <Compile Include="SetSelectorViewItem.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="ModelViewManager.cs" />
-    <Compile Include="ChildSetManager.cs" />
+    <Compile Include="ModelViewItem.cs" />
+    <Compile Include="ChildSetViewItem.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -59,15 +59,15 @@
     <Compile Include="GridRow.cs" />
     <Compile Include="LayoutOrientation.cs" />
     <Compile Include="RowSelector.cs" />
-    <Compile Include="RowSelectorManager.cs" />
+    <Compile Include="RowSelectorViewItem.cs" />
     <Compile Include="DataSetPanel.cs" />
-    <Compile Include="ScrollManager.cs" />
+    <Compile Include="DataSetView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIElementExtensions.cs" />
-    <Compile Include="ViewManager.cs" />
-    <Compile Include="ViewManagerCollection.cs" />
-    <Compile Include="ViewManagerKind.cs" />
-    <Compile Include="ViewManager_T.cs" />
+    <Compile Include="ViewItem.cs" />
+    <Compile Include="ViewItemCollection.cs" />
+    <Compile Include="ViewItemKind.cs" />
+    <Compile Include="ViewItem_T.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

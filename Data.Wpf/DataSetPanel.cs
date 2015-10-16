@@ -60,9 +60,9 @@ namespace DevZest.Data.Wpf
 
             foreach (var element in _visibleUIElements)
             {
-                var viewManager = element.GetViewManager();
-                Debug.Assert(viewManager != null);
-                viewManager.ReturnUIElement(element);
+                var viewItem = element.GetViewItem();
+                Debug.Assert(viewItem != null);
+                viewItem.ReturnUIElement(element);
             }
 
             _visibleUIElements.Clear();
@@ -76,129 +76,132 @@ namespace DevZest.Data.Wpf
 
         #region IScrollInfo
 
-        ScrollManager _scrollManager;
+        DataSetView DataSetView
+        {
+            get { return DataSetControl == null ? null : DataSetControl.View; }
+        }
 
         ScrollViewer IScrollInfo.ScrollOwner
         {
-            get { return _scrollManager.ScrollOwner; }
-            set { _scrollManager.ScrollOwner = value; }
+            get { return DataSetView.ScrollOwner; }
+            set { DataSetView.ScrollOwner = value; }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return _scrollManager.ExtentHeight; }
+            get { return DataSetView.ExtentHeight; }
         }
 
         double IScrollInfo.ExtentWidth
         {
-            get { return _scrollManager.ExtentWidth; }
+            get { return DataSetView.ExtentWidth; }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return _scrollManager.ViewportHeight; }
+            get { return DataSetView.ViewportHeight; }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return _scrollManager.ViewportWidth; }
+            get { return DataSetView.ViewportWidth; }
         }
 
         double IScrollInfo.VerticalOffset
         {
-            get { return _scrollManager.VerticalOffset; }
+            get { return DataSetView.VerticalOffset; }
         }
 
         double IScrollInfo.HorizontalOffset
         {
-            get { return _scrollManager.HorizontalOffset; }
+            get { return DataSetView.HorizontalOffset; }
         }
 
         bool IScrollInfo.CanVerticallyScroll
         {
-            get { return _scrollManager.CanVerticallyScroll; }
-            set { _scrollManager.CanVerticallyScroll = value; }
+            get { return DataSetView.CanVerticallyScroll; }
+            set { DataSetView.CanVerticallyScroll = value; }
         }
 
         bool IScrollInfo.CanHorizontallyScroll
         {
-            get { return _scrollManager.CanHorizontallyScroll; }
-            set { _scrollManager.CanHorizontallyScroll = value; }
+            get { return DataSetView.CanHorizontallyScroll; }
+            set { DataSetView.CanHorizontallyScroll = value; }
         }
 
         void IScrollInfo.LineUp()
         {
-            _scrollManager.LineUp();
+            DataSetView.LineUp();
         }
 
         void IScrollInfo.LineDown()
         {
-            _scrollManager.LineDown();
+            DataSetView.LineDown();
         }
 
         void IScrollInfo.LineLeft()
         {
-            _scrollManager.LineLeft();
+            DataSetView.LineLeft();
         }
 
         void IScrollInfo.LineRight()
         {
-            _scrollManager.LineRight();
+            DataSetView.LineRight();
         }
 
         void IScrollInfo.PageUp()
         {
-            _scrollManager.PageUp();
+            DataSetView.PageUp();
         }
 
         void IScrollInfo.PageDown()
         {
-            _scrollManager.PageDown();
+            DataSetView.PageDown();
         }
 
         void IScrollInfo.PageLeft()
         {
-            _scrollManager.PageLeft();
+            DataSetView.PageLeft();
         }
 
         void IScrollInfo.PageRight()
         {
-            _scrollManager.PageRight();
+            DataSetView.PageRight();
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            _scrollManager.MouseWheelUp();
+            DataSetView.MouseWheelUp();
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            _scrollManager.MouseWheelDown();
+            DataSetView.MouseWheelDown();
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            _scrollManager.MouseWheelLeft();
+            DataSetView.MouseWheelLeft();
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            _scrollManager.MouseWheelRight();
+            DataSetView.MouseWheelRight();
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
         {
-           _scrollManager.SetHorizontalOffset(offset);
+           DataSetView.SetHorizontalOffset(offset);
         }
 
         void IScrollInfo.SetVerticalOffset(double offset)
         {
-            _scrollManager.SetVerticalOffset(offset);
+            DataSetView.SetVerticalOffset(offset);
         }
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
         {
-            return _scrollManager.MakeVisible(visual, rectangle);
+            return DataSetView.MakeVisible(visual, rectangle);
         }
 
         #endregion

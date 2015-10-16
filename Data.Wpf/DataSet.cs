@@ -19,7 +19,7 @@ namespace DevZest.Data.Wpf
             var dataRow = dataRowControl.DataRow;
             Debug.Assert(dataRow != null);
             if (dataRow.Model == model)
-                return dataRowControl.GetParent<DataSetControl>().DataSet;
+                return dataRowControl.GetParent<DataSetControl>().View.DataSet;
 
             Debug.Assert(model.GetParentModel() == dataRow.Model.GetParentModel());
             return new DataSet(model, dataRow.GetChildren(model));
