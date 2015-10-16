@@ -2,17 +2,22 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class HeaderSelectorViewItem<T> : ModelViewItem<T>
+    public class SetSelectorViewItem<T> : ModelViewItem<T>
         where T : SetSelector, new()
     {
-        public HeaderSelectorViewItem(Model model, Action<T> initializer)
+        public SetSelectorViewItem(Model model, Action<T> initializer)
             : base(model, initializer)
         {
         }
 
-        internal sealed override ViewItemKind Kind
+        internal sealed override bool Repeatable
         {
-            get { return ViewItemKind.SetSelector; }
+            get { return false; }
+        }
+
+        internal sealed override bool WithinDataRow
+        {
+            get { return false; }
         }
     }
 }

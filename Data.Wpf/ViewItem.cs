@@ -10,10 +10,9 @@ namespace DevZest.Data.Wpf
 
         public GridRange GridRange { get; private set; }
 
-        internal bool Repeatable
-        {
-            get { return Kind != ViewItemKind.SetSelector; }
-        }
+        internal abstract bool Repeatable { get; }
+
+        internal abstract bool WithinDataRow { get; }
 
         internal ViewItem Initialize(DataSetView owner, GridRange gridRange)
         {
@@ -27,8 +26,6 @@ namespace DevZest.Data.Wpf
             Owner = null;
             GridRange = new GridRange();
         }
-
-        internal abstract ViewItemKind Kind { get; }
 
         internal abstract bool IsValidFor(Model model);
 

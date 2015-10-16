@@ -93,7 +93,7 @@ namespace DevZest.Data.Wpf
         public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<SetSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.View.AddViewItem(gridRange, new HeaderSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new SetSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 

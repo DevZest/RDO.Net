@@ -19,6 +19,16 @@ namespace DevZest.Data.Wpf
             dataSetControl.View.EndInit();
         }
 
+        internal override bool Repeatable
+        {
+            get { return true; }
+        }
+
+        internal override bool WithinDataRow
+        {
+            get { return true; }
+        }
+
         internal sealed override bool IsValidFor(Model model)
         {
             return Model.GetParentModel() == model;
@@ -28,11 +38,6 @@ namespace DevZest.Data.Wpf
         {
             var dataRowControl = uiElement.GetParent<DataRowControl>();
             return DataSet.Get(dataRowControl, Model);
-        }
-
-        internal sealed override ViewItemKind Kind
-        {
-            get { return ViewItemKind.ChildSet; }
         }
     }
 }

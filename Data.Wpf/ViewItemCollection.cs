@@ -22,8 +22,7 @@ namespace DevZest.Data.Wpf
             Debug.Assert(viewItem != null);
             Debug.Assert(viewItem.Owner == null);
             Items.Add(viewItem.Initialize(_owner, gridRange));
-            var kind = viewItem.Kind;
-            if (kind == ViewItemKind.RowSelector || kind == ViewItemKind.ColumnValue || kind == ViewItemKind.ChildSet)
+            if (viewItem.WithinDataRow)
                 CalculatedDataRowRange = CalculatedDataRowRange.Union(gridRange);
         }
 

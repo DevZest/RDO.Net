@@ -11,9 +11,14 @@ namespace DevZest.Data.Wpf
         {
         }
 
-        internal sealed override ViewItemKind Kind
+        internal override bool Repeatable
         {
-            get { return ViewItemKind.ColumnHeader; }
+            get { return true; }
+        }
+
+        internal override bool WithinDataRow
+        {
+            get { return false; }
         }
     }
 }
