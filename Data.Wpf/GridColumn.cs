@@ -5,12 +5,12 @@ namespace DevZest.Data.Wpf
 {
     public sealed class GridColumn : GridDefinition
     {
-        internal GridColumn(DataSetControl dataSetControl, int ordinal, DataGridLength width)
+        internal GridColumn(DataSetControl dataSetControl, int ordinal, GridLength width)
             : base(dataSetControl, ordinal, width)
         {
         }
 
-        public DataGridLength Width
+        public GridLength Width
         {
             get { return Length; }
         }

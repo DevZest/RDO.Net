@@ -66,13 +66,13 @@ namespace DevZest.Data.Wpf
             get { return DataSet.Model; }
         }
 
-        private static DataGridLengthConverter s_gridLengthConverter = new DataGridLengthConverter();
-        private static DataGridLength GetGridLength(string gridLength)
+        private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
+        private static GridLength GetGridLength(string gridLength)
         {
             if (string.IsNullOrEmpty(gridLength))
                 throw new ArgumentNullException(nameof(gridLength));
 
-            return (DataGridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
+            return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
         }
 
         internal int InitGridColumn(string width)

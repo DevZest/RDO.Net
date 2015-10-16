@@ -7,7 +7,7 @@ namespace DevZest.Data.Wpf
 {
     public abstract class GridDefinition
     {
-        internal GridDefinition(DataSetControl dataSetControl, int ordinal, DataGridLength length)
+        internal GridDefinition(DataSetControl dataSetControl, int ordinal, GridLength length)
         {
             DataSetControl = dataSetControl;
             Ordinal = ordinal;
@@ -18,13 +18,13 @@ namespace DevZest.Data.Wpf
 
         internal int Ordinal { get; private set; }
 
-        public DataGridLength Length { get; private set; }
+        public GridLength Length { get; private set; }
 
         internal void Clear()
         {
             DataSetControl = null;
             Ordinal = 0;
-            Length = new DataGridLength();
+            Length = new GridLength();
         }
     }
 }

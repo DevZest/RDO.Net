@@ -5,12 +5,12 @@ namespace DevZest.Data.Wpf
 {
     public sealed class GridRow : GridDefinition
     {
-        public GridRow(DataSetControl dataSetControl, int ordinal, DataGridLength height)
+        public GridRow(DataSetControl dataSetControl, int ordinal, GridLength height)
             : base(dataSetControl, ordinal, height)
         {
         }
 
-        public DataGridLength Height
+        public GridLength Height
         {
             get { return Length; }
         }
