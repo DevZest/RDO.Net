@@ -56,7 +56,7 @@ namespace DevZest.Data.Wpf
 
         public ViewItemCollection ViewItems
         {
-            get { return View.Items; }
+            get { return View.ViewItems; }
         }
 
         public GridRange this[int column, int row]

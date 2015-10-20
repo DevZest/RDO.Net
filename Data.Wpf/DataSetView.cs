@@ -2,24 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 
 namespace DevZest.Data.Wpf
 {
-    internal class DataSetView : IScrollInfo
+    internal class DataSetView
     {
         internal DataSetView()
         {
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            Items = new ViewItemCollection(this);
+            ViewItems = new ViewItemCollection(this);
         }
 
         public GridDefinitionCollection<GridRow> GridRows { get; private set; }
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
-        public ViewItemCollection Items { get; private set; }
+        public ViewItemCollection ViewItems { get; private set; }
 
         public DataSet DataSet { get; private set; }
 
@@ -49,7 +46,7 @@ namespace DevZest.Data.Wpf
             internal set
             {
                 VerifyDesignMode();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(Items.CalculatedDataRowRange))
+                if (!GetGridRangeAll().Contains(value) || !value.Contains(ViewItems.CalculatedDataRowRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
                 _dataRowRange = value;
@@ -76,7 +73,7 @@ namespace DevZest.Data.Wpf
             VerifyGridRange(gridRange, nameof(gridRange));
             VerifyViewItem(viewItem, nameof(viewItem));
 
-            Items.Add(viewItem, gridRange);
+            ViewItems.Add(viewItem, gridRange);
         }
 
         private void VerifyViewItem(ViewItem viewItem, string paramName)
@@ -180,183 +177,20 @@ namespace DevZest.Data.Wpf
             throw new NotImplementedException();
         }
 
-        //private void Reset()
-        //{
-        //    if (Children.Count > 0)
-        //        RemoveInternalChildRange(0, Children.Count); // Remove all visual elements
+        internal Size ExtentSize { get; private set; }
 
-        //    foreach (var element in _visibleUIElements)
-        //    {
-        //        var viewItem = element.GetViewItem();
-        //        Debug.Assert(viewItem != null);
-        //        viewItem.ReturnUIElement(element);
-        //    }
+        internal Point ViewportOffset { get; private set; }
 
-        //    _visibleUIElements.Clear();
-        //    //_topmostElementsCount = 0;
-        //}
-
-
-        public bool CanHorizontallyScroll
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool CanVerticallyScroll
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double ExtentHeight
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double ExtentWidth
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double HorizontalOffset
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public ScrollViewer ScrollOwner
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double VerticalOffset
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double ViewportHeight
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public double ViewportWidth
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public void LineDown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LineLeft()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LineRight()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LineUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Rect MakeVisible(Visual visual, Rect rectangle)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MouseWheelDown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MouseWheelLeft()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MouseWheelRight()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MouseWheelUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PageDown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PageLeft()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PageRight()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PageUp()
-        {
-            throw new NotImplementedException();
-        }
+        internal Size ViewportSize { get; private set; }
 
         public void SetHorizontalOffset(double offset)
         {
-            throw new NotImplementedException();
+            ViewportOffset = new Point(offset, ViewportOffset.Y);
         }
 
         public void SetVerticalOffset(double offset)
         {
-            throw new NotImplementedException();
+            ViewportOffset = new Point(ViewportOffset.X, offset);
         }
     }
 }

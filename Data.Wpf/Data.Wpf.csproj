@@ -39,9 +39,11 @@
     <Compile Include="ColumnViewItem.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
-    <Compile Include="DataSetControlInitialization.cs" />
+    <Compile Include="DataSetControlExtensions.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
+    <Compile Include="GridExpander.cs" />
+    <Compile Include="GridExpanderViewItem.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
     <Compile Include="DataSetSelectorViewItem.cs" />

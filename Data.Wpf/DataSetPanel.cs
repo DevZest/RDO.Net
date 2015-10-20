@@ -145,112 +145,113 @@ namespace DevZest.Data.Wpf
 
         #region IScrollInfo
 
+        ScrollViewer _scrollOwner;
         ScrollViewer IScrollInfo.ScrollOwner
         {
-            get { return DataSetView.ScrollOwner; }
-            set { DataSetView.ScrollOwner = value; }
+            get { return _scrollOwner; }
+            set { _scrollOwner = value; }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return DataSetView.ExtentHeight; }
+            get { return DataSetView.ExtentSize.Height; }
         }
 
         double IScrollInfo.ExtentWidth
         {
-            get { return DataSetView.ExtentWidth; }
+            get { return DataSetView.ExtentSize.Width; }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return DataSetView.ViewportHeight; }
+            get { return DataSetView.ViewportSize.Height; }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return DataSetView.ViewportWidth; }
+            get { return DataSetView.ViewportSize.Width; }
         }
 
         double IScrollInfo.VerticalOffset
         {
-            get { return DataSetView.VerticalOffset; }
+            get { return DataSetView.ViewportOffset.Y; }
         }
 
         double IScrollInfo.HorizontalOffset
         {
-            get { return DataSetView.HorizontalOffset; }
+            get { return DataSetView.ViewportOffset.X; }
         }
 
         bool IScrollInfo.CanVerticallyScroll
         {
-            get { return DataSetView.CanVerticallyScroll; }
-            set { DataSetView.CanVerticallyScroll = value; }
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         bool IScrollInfo.CanHorizontallyScroll
         {
-            get { return DataSetView.CanHorizontallyScroll; }
-            set { DataSetView.CanHorizontallyScroll = value; }
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         void IScrollInfo.LineUp()
         {
-            DataSetView.LineUp();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.LineDown()
         {
-            DataSetView.LineDown();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.LineLeft()
         {
-            DataSetView.LineLeft();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.LineRight()
         {
-            DataSetView.LineRight();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.PageUp()
         {
-            DataSetView.PageUp();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.PageDown()
         {
-            DataSetView.PageDown();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.PageLeft()
         {
-            DataSetView.PageLeft();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.PageRight()
         {
-            DataSetView.PageRight();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            DataSetView.MouseWheelUp();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            DataSetView.MouseWheelDown();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            DataSetView.MouseWheelLeft();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            DataSetView.MouseWheelRight();
+            throw new NotImplementedException();
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
@@ -265,7 +266,7 @@ namespace DevZest.Data.Wpf
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
         {
-            return DataSetView.MakeVisible(visual, rectangle);
+            throw new NotImplementedException();
         }
 
         #endregion

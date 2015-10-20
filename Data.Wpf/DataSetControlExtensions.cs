@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Wpf
 {
-    public static class DataSetControlInitialization
+    public static class DataSetControlExtensions
     {
         public static void Initialize<TDataSetControl, TModel>(this TDataSetControl dataSetControl, DataSet<TModel> dataSet, Action<TDataSetControl, TModel> initializer = null)
             where TDataSetControl : DataSetControl
