@@ -7,8 +7,8 @@ namespace DevZest.Data.Wpf
 {
     public class DataSetControl : Control
     {
-        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(DataSetControl.Orientation), typeof(LayoutOrientation), typeof(DataSetControl),
-            new FrameworkPropertyMetadata(Wpf.LayoutOrientation.Y));
+        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(DataSetControl.Orientation), typeof(DataRowOrientation), typeof(DataSetControl),
+            new FrameworkPropertyMetadata(Wpf.DataRowOrientation.Y));
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(DataSetControl),
             new FrameworkPropertyMetadata(BooleanBoxes.True));
         public static readonly DependencyProperty FrozenGridCountProperty = DependencyProperty.Register(nameof(FrozenGridCount), typeof(int), typeof(DataSetControl),
@@ -19,9 +19,9 @@ namespace DevZest.Data.Wpf
             View = new DataSetView();
         }
 
-        public LayoutOrientation Orientation
+        public DataRowOrientation Orientation
         {
-            get { return (LayoutOrientation)GetValue(OrientationProperty); }
+            get { return (DataRowOrientation)GetValue(OrientationProperty); }
             set { SetValue(OrientationProperty, value); }
         }
 

@@ -164,6 +164,39 @@ namespace DevZest.Data.Wpf
                 throw Error.DataSetView_VerifyDesignMode();
         }
 
+        private ViewElementCollection _elements = new ViewElementCollection();
+        internal ViewElementCollection Elements
+        {
+            get { return _elements; }
+        }
+
+        internal Size Measure(Size availableSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Size Arrange(Size finalSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        //private void Reset()
+        //{
+        //    if (Children.Count > 0)
+        //        RemoveInternalChildRange(0, Children.Count); // Remove all visual elements
+
+        //    foreach (var element in _visibleUIElements)
+        //    {
+        //        var viewItem = element.GetViewItem();
+        //        Debug.Assert(viewItem != null);
+        //        viewItem.ReturnUIElement(element);
+        //    }
+
+        //    _visibleUIElements.Clear();
+        //    //_topmostElementsCount = 0;
+        //}
+
+
         public bool CanHorizontallyScroll
         {
             get

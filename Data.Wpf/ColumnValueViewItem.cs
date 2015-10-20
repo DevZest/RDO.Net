@@ -10,15 +10,5 @@ namespace DevZest.Data.Wpf
             : base(column, initializer)
         {
         }
-
-        internal sealed override bool Repeatable
-        {
-            get { return true; }
-        }
-
-        internal sealed override bool WithinDataRow
-        {
-            get { return true; }
-        }
     }
 }

@@ -22,7 +22,7 @@ namespace DevZest.Data.Wpf
             Debug.Assert(viewItem != null);
             Debug.Assert(viewItem.Owner == null);
             Items.Add(viewItem.Initialize(_owner, gridRange));
-            if (viewItem.WithinDataRow)
+            if (!(viewItem is IScalarViewItem))
                 CalculatedDataRowRange = CalculatedDataRowRange.Union(gridRange);
         }
 

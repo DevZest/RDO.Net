@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,77 +9,141 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Wpf
 {
-    public class DataSetPanel : VirtualizingPanel, IScrollInfo
+    public class DataSetPanel : FrameworkElement, IScrollInfo
     {
-        private DataSetControl _dataSetControl;
-        DataSetControl DataSetControl
+        private static ConditionalWeakTable<DataSetView, DataSetPanel> s_panelsByView = new ConditionalWeakTable<DataSetView, DataSetPanel>();
+
+        private static DataSetPanel GetDataSetPanel(DataSetView dataSetView)
         {
-            get { return _dataSetControl; }
+            Debug.Assert(dataSetView != null);
+            DataSetPanel result;
+            return s_panelsByView.TryGetValue(dataSetView, out result) ? result : null;
+        }
+
+        private static void SetDataSetPanel(DataSetView dataSetView, DataSetPanel value)
+        {
+            Debug.Assert(dataSetView != null);
+            Debug.Assert(value != null);
+
+            var oldValue = GetDataSetPanel(dataSetView);
+            if (oldValue == value)
+                return;
+
+            if (oldValue != null)
+            {
+                s_panelsByView.Remove(dataSetView);
+                oldValue.DataSetView = null;
+            }
+
+            s_panelsByView.Add(dataSetView, value);
+            value.DataSetView = dataSetView;
+        }
+
+        private DataSetView _dataSetView;
+        private DataSetView DataSetView
+        {
+            get { return _dataSetView; }
             set
             {
-                if (_dataSetControl == value)
+                if (_dataSetView == value)
                     return;
 
-                if (_dataSetControl != null)
+                if (_dataSetView != null)
+                    _dataSetView.Elements.CollectionChanged -= OnViewElementsChanged;
+                _dataSetView = value;
+                if (_dataSetView != null)
+                    _dataSetView.Elements.CollectionChanged += OnViewElementsChanged;
+            }
+        }
+
+        private ViewElementCollection _viewElements;
+        private ViewElementCollection ViewElements
+        {
+            get { return _viewElements; }
+            set
+            {
+                if (_viewElements == value)
+                    return;
+
+                if (_viewElements != null)
                 {
-                    DependencyPropertyDescriptor.FromProperty(DataSetControl.OrientationProperty, typeof(DataSetControl))
-                        .RemoveValueChanged(_dataSetControl, OnOrientationChanged);
-                    DependencyPropertyDescriptor.FromProperty(DataSetControl.FrozenGridCountProperty, typeof(DataSetControl))
-                        .RemoveValueChanged(_dataSetControl, OnFrozenGridCountChanged);
+                    _viewElements.CollectionChanged -= OnViewElementsChanged;
+                    foreach (var viewElement in _viewElements)
+                    {
+                        RemoveVisualChild(viewElement.UIElement);
+                        RemoveLogicalChild(viewElement.UIElement);
+                    }
                 }
-                _dataSetControl = value;
-                if (_dataSetControl != null)
+
+                _viewElements = value;
+
+                if (_viewElements != null)
                 {
-                    DependencyPropertyDescriptor.FromProperty(DataSetControl.OrientationProperty, typeof(DataSetControl))
-                        .AddValueChanged(_dataSetControl, OnOrientationChanged);
-                    DependencyPropertyDescriptor.FromProperty(DataSetControl.FrozenGridCountProperty, typeof(DataSetControl))
-                        .AddValueChanged(_dataSetControl, OnFrozenGridCountChanged);
+                    foreach (var viewElement in _viewElements)
+                    {
+                        AddVisualChild(viewElement.UIElement);
+                        AddLogicalChild(viewElement.UIElement);
+                    }
+                    _viewElements.CollectionChanged += OnViewElementsChanged;
                 }
             }
+        }
+
+        private void OnViewElementsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var item in e.OldItems)
+            {
+                var viewElement = item as ViewElement;
+                if (viewElement != null)
+                {
+                    RemoveLogicalChild(viewElement.UIElement);
+                    RemoveVisualChild(viewElement.UIElement);
+                }
+            }
+
+            foreach (var item in e.NewItems)
+            {
+                var viewElement = item as ViewElement;
+                if (viewElement != null)
+                {
+                    AddVisualChild(viewElement.UIElement);
+                    AddLogicalChild(viewElement.UIElement);
+                }
+            }
+        }
+
+        protected override int VisualChildrenCount
+        {
+            get { return ViewElements == null ? 0 : ViewElements.Count; }
+        }
+
+        protected override Visual GetVisualChild(int index)
+        {
+            if (index < 0 || index >= VisualChildrenCount)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            return ViewElements[index].UIElement;
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            return DataSetView != null ? DataSetView.Measure(availableSize) : base.MeasureOverride(availableSize);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return DataSetView != null ? DataSetView.Arrange(finalSize) : base.ArrangeOverride(finalSize);
         }
 
         public override void OnApplyTemplate()
         {
-            DataSetControl = TemplatedParent as DataSetControl;
-        }
-
-        private void OnOrientationChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void OnFrozenGridCountChanged(object sender, EventArgs e)
-        {
-        }
-
-        List<UIElement> _visibleUIElements = new List<UIElement>();
-
-        private void Reset()
-        {
-            if (Children.Count > 0)
-                RemoveInternalChildRange(0, Children.Count); // Remove all visual elements
-
-            foreach (var element in _visibleUIElements)
-            {
-                var viewItem = element.GetViewItem();
-                Debug.Assert(viewItem != null);
-                viewItem.ReturnUIElement(element);
-            }
-
-            _visibleUIElements.Clear();
-            //_topmostElementsCount = 0;
-        }
-
-        private void Refresh()
-        {
-
+            var dataSetControl = TemplatedParent as DataSetControl;
+            var dataSetView = dataSetControl == null ? null : dataSetControl.View;
+            if (dataSetView != null)
+                SetDataSetPanel(dataSetView, this);
         }
 
         #region IScrollInfo
-
-        DataSetView DataSetView
-        {
-            get { return DataSetControl == null ? null : DataSetControl.View; }
-        }
 
         ScrollViewer IScrollInfo.ScrollOwner
         {

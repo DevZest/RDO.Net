@@ -10,10 +10,6 @@ namespace DevZest.Data.Wpf
 
         public GridRange GridRange { get; private set; }
 
-        internal abstract bool Repeatable { get; }
-
-        internal abstract bool WithinDataRow { get; }
-
         internal ViewItem Initialize(DataSetView owner, GridRange gridRange)
         {
             Owner = owner;
@@ -31,11 +27,11 @@ namespace DevZest.Data.Wpf
 
         internal abstract UIElement CreateUIElement();
 
-        List<UIElement> _cachedUIElements = new List<UIElement>();
-        internal UIElement GetUIElement2()
+        List<ViewElement> _cachedUIElements = new List<ViewElement>();
+        internal ViewElement GetElement()
         {
             if (_cachedUIElements.Count == 0)
-                return CreateUIElement().SetViewItem(this);
+                return new ViewElement(this, CreateUIElement());
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -43,12 +39,10 @@ namespace DevZest.Data.Wpf
             return result;
         }
 
-        internal void ReturnUIElement(UIElement uiElement)
+        internal void ReturnElement(ViewElement element)
         {
-            Debug.Assert(uiElement != null && uiElement.GetViewItem() == this);
-
-            uiElement.SetViewItem(null);
-            _cachedUIElements.Add(uiElement);
+            Debug.Assert(element != null && element.Owner == this);
+            _cachedUIElements.Add(element);
         }
 
         internal abstract void InitUIElement(UIElement uiElement);

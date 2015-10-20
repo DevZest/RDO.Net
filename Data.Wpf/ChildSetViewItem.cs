@@ -19,16 +19,6 @@ namespace DevZest.Data.Wpf
             dataSetControl.View.EndInit();
         }
 
-        internal override bool Repeatable
-        {
-            get { return true; }
-        }
-
-        internal override bool WithinDataRow
-        {
-            get { return true; }
-        }
-
         internal sealed override bool IsValidFor(Model model)
         {
             return Model.GetParentModel() == model;

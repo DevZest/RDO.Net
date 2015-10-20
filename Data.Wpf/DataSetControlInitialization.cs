@@ -24,7 +24,7 @@ namespace DevZest.Data.Wpf
             dataSetView.EndInit();
         }
 
-        public static T Orientation<T>(this T dataSetControl, LayoutOrientation orientation)
+        public static T Orientation<T>(this T dataSetControl, DataRowOrientation orientation)
             where T : DataSetControl
         {
             dataSetControl.Orientation = orientation;
@@ -90,17 +90,17 @@ namespace DevZest.Data.Wpf
             return dataSetControl;
         }
 
-        public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<SetSelector> initializer = null)
+        public static T HeaderSelector<T>(this T dataSetControl, GridRange gridRange, Action<DataSetSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.View.AddViewItem(gridRange, new SetSelectorViewItem<SetSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new DataSetSelectorViewItem<DataSetSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 
-        public static T RowSelector<T>(this T dataSetControl, GridRange gridRange, Action<RowSelector> initializer = null)
+        public static T RowSelector<T>(this T dataSetControl, GridRange gridRange, Action<DataRowSelector> initializer = null)
             where T : DataSetControl
         {
-            dataSetControl.View.AddViewItem(gridRange, new DataRowSelectorViewItem<RowSelector>(dataSetControl.Model, initializer));
+            dataSetControl.View.AddViewItem(gridRange, new DataRowSelectorViewItem<DataRowSelector>(dataSetControl.Model, initializer));
             return dataSetControl;
         }
 

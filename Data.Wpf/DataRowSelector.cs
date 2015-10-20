@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class RowSelector : Control
+    public class DataRowSelector : Control
     {
     }
 }
