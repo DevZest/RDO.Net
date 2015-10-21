@@ -48,11 +48,8 @@ namespace DevZest.Data.Wpf
                 if (_dataSetView == value)
                     return;
 
-                if (_dataSetView != null)
-                    _dataSetView.Elements.CollectionChanged -= OnViewElementsChanged;
                 _dataSetView = value;
-                if (_dataSetView != null)
-                    _dataSetView.Elements.CollectionChanged += OnViewElementsChanged;
+                ViewElements = _dataSetView == null ? null : _dataSetView.Elements;
             }
         }
 
@@ -140,7 +137,7 @@ namespace DevZest.Data.Wpf
             var dataSetControl = TemplatedParent as DataSetControl;
             var dataSetView = dataSetControl == null ? null : dataSetControl.View;
             if (dataSetView != null)
-                SetDataSetPanel(dataSetView, this);
+                SetDataSetPanel(dataSetView, this); // Call this method to tie this DataSetPanel with dataSetView exclusively.
         }
 
         #region IScrollInfo

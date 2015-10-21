@@ -28,7 +28,7 @@ namespace DevZest.Data.Wpf
         internal abstract UIElement CreateUIElement();
 
         List<ViewElement> _cachedUIElements = new List<ViewElement>();
-        internal ViewElement GetElement()
+        internal ViewElement Generate()
         {
             if (_cachedUIElements.Count == 0)
                 return new ViewElement(this, CreateUIElement());
@@ -39,7 +39,7 @@ namespace DevZest.Data.Wpf
             return result;
         }
 
-        internal void ReturnElement(ViewElement element)
+        internal void Recycle(ViewElement element)
         {
             Debug.Assert(element != null && element.Owner == this);
             _cachedUIElements.Add(element);
