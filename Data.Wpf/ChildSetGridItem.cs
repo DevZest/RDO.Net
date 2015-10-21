@@ -14,20 +14,14 @@ namespace DevZest.Data.Wpf
 
         internal override void InitUIElementOverride(T dataSetControl)
         {
-            dataSetControl.View.BeginInit(GetDataSet(dataSetControl));
+            dataSetControl.GridView.BeginInit(Model);
             base.InitUIElementOverride(dataSetControl);
-            dataSetControl.View.EndInit();
+            dataSetControl.GridView.EndInit();
         }
 
         internal sealed override bool IsValidFor(Model model)
         {
             return Model.GetParentModel() == model;
-        }
-
-        private DataSet GetDataSet(UIElement uiElement)
-        {
-            var dataRowControl = uiElement.GetParent<DataRowControl>();
-            return DataSet.Get(dataRowControl, Model);
         }
     }
 }

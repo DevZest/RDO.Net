@@ -1,6 +1,7 @@
-﻿using DevZest.Data.Wpf.Resources;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Wpf.Resources;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Wpf
@@ -11,24 +12,95 @@ namespace DevZest.Data.Wpf
         {
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            ViewItems = new GridItemCollection(this);
+            GridItems = new GridItemCollection(this);
+        }
+
+        bool _isSealed = false;
+        public bool IsSealed
+        {
+            get { return _isSealed; }
+        }
+        private void VerifyIsSealed()
+        {
+            if (_isSealed)
+                throw Error.GridView_VerifyIsSealed();
+        }
+
+
+        internal void BeginInit(Model model)
+        {
+            Model = model;
+            GridRows.Clear();
+            GridColumns.Clear();
+            _isSealed = false;
+        }
+
+        internal void EndInit()
+        {
+            _isSealed = true;
+        }
+
+        public Model Model { get; private set; }
+
+        private GridViewOrientation _orientation = GridViewOrientation.Y;
+        public GridViewOrientation Orientation
+        {
+            get { return _orientation; }
+            set
+            {
+                VerifyIsSealed();
+                _orientation = value;
+            }
+        }
+
+        public GridView SetOrientation(GridViewOrientation value)
+        {
+            Orientation = value;
+            return this;
+        }
+
+        private GridRange? _dataRowRange;
+        public GridRange DataRowRange
+        {
+            get { return _dataRowRange.HasValue ? _dataRowRange.GetValueOrDefault() : GetGridRangeAll(); }
+            set
+            {
+                VerifyIsSealed();
+                if (!GetGridRangeAll().Contains(value) || !value.Contains(GridItems.CalculatedDataRowRange))
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                _dataRowRange = value;
+            }
+        }
+
+        public GridView SetDataRowRange(GridRange value)
+        {
+            DataRowRange = value;
+            return this;
+        }
+
+        private int _frozenCount;
+        public int FrozenCount
+        {
+            get { return _frozenCount; }
+            set
+            {
+                VerifyIsSealed();
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException();
+                _frozenCount = value;
+            }
+        }
+
+        public GridView SetFrozenCount(int value)
+        {
+            FrozenCount = value;
+            return this;
         }
 
         public GridDefinitionCollection<GridRow> GridRows { get; private set; }
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
-        public GridItemCollection ViewItems { get; private set; }
-
-        internal DataSet DataSet { get; private set; }
-
-        public IList<DataRow> DataRows
-        {
-            get { return DataSet.Rows; }
-        }
-
-        public Model Model
-        {
-            get { return DataSet.Model; }
-        }
+        public GridItemCollection GridItems { get; private set; }
 
         private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
         private static GridLength GetGridLength(string gridLength)
@@ -39,49 +111,47 @@ namespace DevZest.Data.Wpf
             return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
         }
 
-        private GridRange? _dataRowRange;
-        public GridRange DataRowRange
+        private int AddGridColumn(string width)
         {
-            get { return _dataRowRange.HasValue ? _dataRowRange.GetValueOrDefault() : GetGridRangeAll(); }
-            internal set
-            {
-                VerifyDesignMode();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(ViewItems.CalculatedDataRowRange))
-                    throw new ArgumentOutOfRangeException(nameof(value));
-
-                _dataRowRange = value;
-            }
-        }
-
-        public int AddGridColumn(string width)
-        {
-            VerifyDesignMode();
+            VerifyIsSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
             return GridColumns.Count - 1;
         }
 
-        public int AddGridRow(string height)
+        public GridView AddGridColumn(string width, out int index)
         {
-            VerifyDesignMode();
+            index = AddGridColumn(width);
+            return this;
+        }
+
+        private int AddGridRow(string height)
+        {
+            VerifyIsSealed();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
             return GridRows.Count - 1;
         }
 
-        public void AddViewItem(GridRange gridRange, GridItem viewItem)
+        public GridView AddGridRow(string height, out int index)
         {
-            VerifyDesignMode();
-            VerifyGridRange(gridRange, nameof(gridRange));
-            VerifyViewItem(viewItem, nameof(viewItem));
-
-            ViewItems.Add(viewItem, gridRange);
+            index = AddGridRow(height);
+            return this;
         }
 
-        private void VerifyViewItem(GridItem viewItem, string paramName)
+        private void AddGridItem(GridRange gridRange, GridItem gridItem)
         {
-            if (viewItem == null)
+            VerifyIsSealed();
+            VerifyGridRange(gridRange, nameof(gridRange));
+            VerifyGridItem(gridItem, nameof(gridItem));
+
+            GridItems.Add(gridItem, gridRange);
+        }
+
+        private void VerifyGridItem(GridItem gridItem, string paramName)
+        {
+            if (gridItem == null)
                 throw new ArgumentNullException(nameof(paramName));
-            if (!viewItem.IsValidFor(DataSet.Model))
-                throw new ArgumentException(Strings.DataSetView_InvalidViewItem(DataSet.Model), nameof(paramName));
+            if (!gridItem.IsValidFor(Model))
+                throw new ArgumentException(Strings.GridView_InvalidGridItemForModel(Model), nameof(paramName));
         }
 
         private void VerifyGridRange(GridRange gridRange, string paramName)
@@ -136,61 +206,74 @@ namespace DevZest.Data.Wpf
             }
         }
 
-        bool _designMode = true;
-        public bool DesignMode
+        internal void DefaultInitialize()
         {
-            get { return _designMode; }
+            var columns = Model.GetColumns();
+
+            this.AddGridColumns(columns.Select(x => "Auto").ToArray())
+                .AddGridRows("Auto", "Auto")
+                .SetDataRowRange(this[0, 1, columns.Count - 1, 1]);
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                this.AddColumnHeader(this[i, 0], column)
+                    .AddColumnValue(this[i, 1], column.TextBlock());
+            }
         }
 
-        internal void BeginInit(DataSet dataSet)
+        public GridView AddGridRows(params string[] heights)
         {
-            DataSet = dataSet;
-            GridRows.Clear();
-            GridColumns.Clear();
-            _designMode = true;
+            if (heights != null)
+                throw new ArgumentNullException(nameof(heights));
+
+            foreach (var height in heights)
+                AddGridRow(height);
+            return this;
         }
 
-        internal void EndInit()
+        public GridView AddGridColumns(params string[] widths)
         {
-            _designMode = false;
+            if (widths != null)
+                throw new ArgumentNullException(nameof(widths));
+
+            foreach (var width in widths)
+                AddGridColumn(width);
+            return this;
         }
 
-        protected void VerifyDesignMode()
+        public GridView AddChildSet<T>(GridRange gridRange, ChildSetGridItem<T> gridItem)
+            where T : DataSetControl, new()
         {
-            if (!_designMode)
-                throw Error.DataSetView_VerifyDesignMode();
+            AddGridItem(gridRange, gridItem);
+            return this;
         }
 
-        private GridElementCollection _elements = new GridElementCollection();
-        internal GridElementCollection Elements
+        public GridView AddColumnValue<T>(GridRange gridRange, ColumnValueGridItem<T> gridItem)
+            where T : UIElement, new()
         {
-            get { return _elements; }
+            AddGridItem(gridRange, gridItem);
+            return this;
         }
 
-        internal Size Measure(Size availableSize)
+        public GridView AddHeaderSelector(GridRange gridRange, Action<DataSetSelector> initializer = null)
         {
-            throw new NotImplementedException();
+            AddGridItem(gridRange, new DataSetSelectorGridItem<DataSetSelector>(Model, initializer));
+            return this;
         }
 
-        internal Size Arrange(Size finalSize)
+        public GridView AddRowSelector(GridRange gridRange, Action<DataRowSelector> initializer = null)
         {
-            throw new NotImplementedException();
+            AddGridItem(gridRange, new DataRowSelectorGridItem<DataRowSelector>(Model, initializer));
+            return this;
         }
 
-        internal Size ExtentSize { get; private set; }
-
-        internal Point ViewportOffset { get; private set; }
-
-        internal Size ViewportSize { get; private set; }
-
-        public void SetHorizontalOffset(double offset)
+        public GridView AddColumnHeader(GridRange gridRange, Column column, Action<ColumnHeader> initializer = null)
         {
-            ViewportOffset = new Point(offset, ViewportOffset.Y);
-        }
-
-        public void SetVerticalOffset(double offset)
-        {
-            ViewportOffset = new Point(ViewportOffset.X, offset);
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+            AddGridItem(gridRange, new ColumnHeaderGridItem<ColumnHeader>(column, initializer));
+            return this;
         }
     }
 }

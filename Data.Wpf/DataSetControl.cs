@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,8 +8,6 @@ namespace DevZest.Data.Wpf
 {
     public class DataSetControl : Control
     {
-        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(DataSetControl.Orientation), typeof(DataRowOrientation), typeof(DataSetControl),
-            new FrameworkPropertyMetadata(Wpf.DataRowOrientation.Y));
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable), typeof(bool), typeof(DataSetControl),
             new FrameworkPropertyMetadata(BooleanBoxes.True));
         public static readonly DependencyProperty FrozenGridCountProperty = DependencyProperty.Register(nameof(FrozenGridCount), typeof(int), typeof(DataSetControl),
@@ -16,13 +15,7 @@ namespace DevZest.Data.Wpf
 
         public DataSetControl()
         {
-            View = new GridView();
-        }
-
-        public DataRowOrientation Orientation
-        {
-            get { return (DataRowOrientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
+            GridView = new GridView();
         }
 
         public bool Scrollable
@@ -37,52 +30,36 @@ namespace DevZest.Data.Wpf
             set { SetValue(FrozenGridCountProperty, value); }
         }
 
-        internal GridView View { get; private set; }
+        private GridView _gridView;
+        public GridView GridView
+        {
+            get
+            {
+                if (_gridView == null)
+                    _gridView = new GridView();
+                return _gridView;
+            }
+            internal set { _gridView = value; }
+        }
 
         public Model Model
         {
-            get { return View.Model; }
+            get { return GridView.Model; }
         }
 
-        public GridDefinitionCollection<GridRow> GridRows
+        public void Initialize<TModel>(DataSet<TModel> dataSet, Action<GridView, TModel> gridViewInitializer = null)
+            where TModel : Model, new()
         {
-            get { return View.GridRows; }
-        }
+            if (dataSet == null)
+                throw new ArgumentNullException(nameof(dataSet));
 
-        public GridDefinitionCollection<GridColumn> GridColumns
-        {
-            get { return View.GridColumns; }
-        }
-
-        public GridItemCollection ViewItems
-        {
-            get { return View.ViewItems; }
-        }
-
-        public GridRange this[int column, int row]
-        {
-            get { return View[column, row]; }
-        }
-
-        public GridRange this[int left, int top, int right, int bottom]
-        {
-            get { return View[left, top, right, bottom]; }
-        }
-
-        internal void DefaultInitialize()
-        {
-            var columns = Model.GetColumns();
-
-            this.GridColumns(columns.Select(x => "Auto").ToArray())
-                .GridRows("Auto", "Auto")
-                .DataRowRange(this[0, 1, columns.Count - 1, 1]);
-
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                this.ColumnHeader(this[i, 0], column)
-                    .ColumnValue(this[i, 1], column.TextBlock());
-            }
+            var gridView = GridView;
+            gridView.BeginInit(dataSet.Model);
+            if (gridViewInitializer != null)
+                gridViewInitializer(gridView, dataSet._);
+            else
+                gridView.DefaultInitialize();
+            gridView.EndInit();
         }
     }
 }

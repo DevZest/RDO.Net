@@ -38,12 +38,11 @@
     <Compile Include="ColumnValueViewItem.cs" />
     <Compile Include="ColumnGridItem.cs" />
     <Compile Include="DataRowControl.cs" />
-    <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlExtensions.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />
-    <Compile Include="GridExpanderViewItem.cs" />
+    <Compile Include="GridExpanderGridItem.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
     <Compile Include="DataSetSelectorGridItem.cs" />
@@ -60,7 +59,7 @@
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />
-    <Compile Include="DataRowOrientation.cs" />
+    <Compile Include="GridViewOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
     <Compile Include="DataRowSelectorGridItem.cs" />
     <Compile Include="DataSetPanel.cs" />

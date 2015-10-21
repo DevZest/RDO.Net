@@ -16,27 +16,27 @@ namespace DevZest.Data.Wpf.Resources
     internal static class Strings
     {
         // <summary>
-        // A string like "The ViewItem is invalid for Model '{0}'."
-        // </summary>
-        internal static string DataSetView_InvalidViewItem(object p0)
-        {
-            return ResourceLoader.GetString(ResourceLoader.DataSetView_InvalidViewItem, p0);
-        }
-
-        // <summary>
-        // A string like "The operation is only allowed in design mode."
-        // </summary>
-        internal static string DataSetView_VerifyDesignMode
-        {
-            get { return ResourceLoader.GetString(ResourceLoader.DataSetView_VerifyDesignMode); }
-        }
-
-        // <summary>
         // A string like "The GridRange does not belong to the same DataSetControl."
         // </summary>
         internal static string GridRange_InvalidDataSetControl
         {
             get { return ResourceLoader.GetString(ResourceLoader.GridRange_InvalidDataSetControl); }
+        }
+
+        // <summary>
+        // A string like "The GridItem is invalid for Model '{0}'."
+        // </summary>
+        internal static string GridView_InvalidGridItemForModel(object p0)
+        {
+            return ResourceLoader.GetString(ResourceLoader.GridView_InvalidGridItemForModel, p0);
+        }
+
+        // <summary>
+        // A string like "The GridView is currently sealed (read-only)."
+        // </summary>
+        internal static string GridView_VerifyIsSealed
+        {
+            get { return ResourceLoader.GetString(ResourceLoader.GridView_VerifyIsSealed); }
         }
     }
 
@@ -47,11 +47,11 @@ namespace DevZest.Data.Wpf.Resources
     internal static class Error
     {
         // <summary>
-        // InvalidOperationException with message like "The operation is only allowed in design mode."
+        // InvalidOperationException with message like "The GridView is currently sealed (read-only)."
         // </summary>
-        internal static Exception DataSetView_VerifyDesignMode()
+        internal static Exception GridView_VerifyIsSealed()
         {
-            return new InvalidOperationException(Strings.DataSetView_VerifyDesignMode);
+            return new InvalidOperationException(Strings.GridView_VerifyIsSealed);
         }
 
         // <summary>
@@ -78,9 +78,9 @@ namespace DevZest.Data.Wpf.Resources
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal sealed class ResourceLoader
     {
-        internal const string DataSetView_InvalidViewItem = "DataSetView_InvalidViewItem";
-        internal const string DataSetView_VerifyDesignMode = "DataSetView_VerifyDesignMode";
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
+        internal const string GridView_InvalidGridItemForModel = "GridView_InvalidGridItemForModel";
+        internal const string GridView_VerifyIsSealed = "GridView_VerifyIsSealed";
 
         private static ResourceLoader loader;
         private readonly ResourceManager resources;

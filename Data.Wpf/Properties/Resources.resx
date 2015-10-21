@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DataSetView_InvalidViewItem" xml:space="preserve">
-    <value>The ViewItem is invalid for Model '{0}'.</value>
-  </data>
-  <data name="DataSetView_VerifyDesignMode" xml:space="preserve">
-    <value>The operation is only allowed in design mode.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
   <data name="GridRange_InvalidDataSetControl" xml:space="preserve">
     <value>The GridRange does not belong to the same DataSetControl.</value>
+  </data>
+  <data name="GridView_InvalidGridItemForModel" xml:space="preserve">
+    <value>The GridItem is invalid for Model '{0}'.</value>
+  </data>
+  <data name="GridView_VerifyIsSealed" xml:space="preserve">
+    <value>The GridView is currently sealed (read-only).</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>
