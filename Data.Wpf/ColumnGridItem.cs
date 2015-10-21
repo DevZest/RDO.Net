@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ColumnViewItem<T> : ViewItem<T>
+    public abstract class ColumnGridItem<T> : GridItem<T>
         where T : UIElement, new()
     {
-        internal ColumnViewItem(Column column, Action<T> initializer)
+        internal ColumnGridItem(Column column, Action<T> initializer)
             : base(initializer)
         {
             Debug.Assert(column != null);

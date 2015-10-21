@@ -4,20 +4,20 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class ViewItemCollection : ReadOnlyCollection<ViewItem>
+    public sealed class GridItemCollection : ReadOnlyCollection<GridItem>
     {
-        internal ViewItemCollection(DataSetView owner)
-            : base(new List<ViewItem>())
+        internal GridItemCollection(GridView owner)
+            : base(new List<GridItem>())
         {
             Debug.Assert(owner != null);
             _owner = owner;
         }
 
-        private DataSetView _owner;
+        private GridView _owner;
 
         internal GridRange CalculatedDataRowRange { get; private set; }
 
-        internal void Add(ViewItem viewItem, GridRange gridRange)
+        internal void Add(GridItem viewItem, GridRange gridRange)
         {
             Debug.Assert(viewItem != null);
             Debug.Assert(viewItem.Owner == null);

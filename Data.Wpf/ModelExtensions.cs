@@ -5,7 +5,7 @@ namespace DevZest.Data.Wpf
 {
     public static class ModelExtensions
     {
-        public static ChildSetViewItem<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
+        public static ChildSetGridItem<TDataSetControl> Panel<TModel, TDataSetControl>(this TModel model, Action<TDataSetControl, TModel> initializer)
             where TModel : Model
             where TDataSetControl : DataSetControl, new()
         {
@@ -15,7 +15,7 @@ namespace DevZest.Data.Wpf
             if (initializer == null)
                 throw new ArgumentNullException(nameof(initializer));
 
-            return new ChildSetViewItem<TDataSetControl>(model, x => initializer(x, model));
+            return new ChildSetGridItem<TDataSetControl>(model, x => initializer(x, model));
         }
     }
 }

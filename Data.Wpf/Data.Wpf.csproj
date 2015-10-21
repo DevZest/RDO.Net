@@ -34,9 +34,9 @@
     <Compile Include="BooleanBoxes.cs" />
     <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnHeader.cs" />
-    <Compile Include="ColumnHeaderViewItem.cs" />
+    <Compile Include="ColumnHeaderGridItem.cs" />
     <Compile Include="ColumnValueViewItem.cs" />
-    <Compile Include="ColumnViewItem.cs" />
+    <Compile Include="ColumnGridItem.cs" />
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataSet.cs" />
     <Compile Include="DataSetControlExtensions.cs" />
@@ -46,11 +46,11 @@
     <Compile Include="GridExpanderViewItem.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
-    <Compile Include="DataSetSelectorViewItem.cs" />
+    <Compile Include="DataSetSelectorGridItem.cs" />
     <Compile Include="IScalarViewItem.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="ModelViewItem.cs" />
-    <Compile Include="ChildSetViewItem.cs" />
+    <Compile Include="ModelGridItem.cs" />
+    <Compile Include="ChildSetGridItem.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -62,16 +62,16 @@
     <Compile Include="GridRow.cs" />
     <Compile Include="DataRowOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
-    <Compile Include="DataRowSelectorViewItem.cs" />
+    <Compile Include="DataRowSelectorGridItem.cs" />
     <Compile Include="DataSetPanel.cs" />
-    <Compile Include="DataSetView.cs" />
+    <Compile Include="GridView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIElementExtensions.cs" />
-    <Compile Include="ViewElement.cs" />
-    <Compile Include="ViewElementCollection.cs" />
-    <Compile Include="ViewItem.cs" />
-    <Compile Include="ViewItemCollection.cs" />
-    <Compile Include="ViewItem_T.cs" />
+    <Compile Include="GridElement.cs" />
+    <Compile Include="GridElementCollection.cs" />
+    <Compile Include="GridItem.cs" />
+    <Compile Include="GridItemCollection.cs" />
+    <Compile Include="GridViewItem_T.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />

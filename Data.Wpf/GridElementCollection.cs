@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Wpf
 {
-    internal class ViewElementCollection : ObservableCollection<ViewElement>
+    internal class GridElementCollection : ObservableCollection<GridElement>
     {
-        internal ViewElementCollection()
+        internal GridElementCollection()
         {
         }
     }

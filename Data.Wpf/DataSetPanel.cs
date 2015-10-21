@@ -11,16 +11,16 @@ namespace DevZest.Data.Wpf
 {
     public class DataSetPanel : FrameworkElement, IScrollInfo
     {
-        private static ConditionalWeakTable<DataSetView, DataSetPanel> s_panelsByView = new ConditionalWeakTable<DataSetView, DataSetPanel>();
+        private static ConditionalWeakTable<GridView, DataSetPanel> s_panelsByView = new ConditionalWeakTable<GridView, DataSetPanel>();
 
-        private static DataSetPanel GetDataSetPanel(DataSetView dataSetView)
+        private static DataSetPanel GetDataSetPanel(GridView dataSetView)
         {
             Debug.Assert(dataSetView != null);
             DataSetPanel result;
             return s_panelsByView.TryGetValue(dataSetView, out result) ? result : null;
         }
 
-        private static void SetDataSetPanel(DataSetView dataSetView, DataSetPanel value)
+        private static void SetDataSetPanel(GridView dataSetView, DataSetPanel value)
         {
             Debug.Assert(dataSetView != null);
             Debug.Assert(value != null);
@@ -39,8 +39,8 @@ namespace DevZest.Data.Wpf
             value.DataSetView = dataSetView;
         }
 
-        private DataSetView _dataSetView;
-        private DataSetView DataSetView
+        private GridView _dataSetView;
+        private GridView DataSetView
         {
             get { return _dataSetView; }
             set
@@ -53,8 +53,8 @@ namespace DevZest.Data.Wpf
             }
         }
 
-        private ViewElementCollection _viewElements;
-        private ViewElementCollection ViewElements
+        private GridElementCollection _viewElements;
+        private GridElementCollection ViewElements
         {
             get { return _viewElements; }
             set
@@ -90,7 +90,7 @@ namespace DevZest.Data.Wpf
         {
             foreach (var item in e.OldItems)
             {
-                var viewElement = item as ViewElement;
+                var viewElement = item as GridElement;
                 if (viewElement != null)
                 {
                     RemoveLogicalChild(viewElement.UIElement);
@@ -100,7 +100,7 @@ namespace DevZest.Data.Wpf
 
             foreach (var item in e.NewItems)
             {
-                var viewElement = item as ViewElement;
+                var viewElement = item as GridElement;
                 if (viewElement != null)
                 {
                     AddVisualChild(viewElement.UIElement);

@@ -4,10 +4,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class ChildSetViewItem<T> : ModelViewItem<T>
+    public sealed class ChildSetGridItem<T> : ModelGridItem<T>
         where T : DataSetControl, new()
     {
-        internal ChildSetViewItem(Model model, Action<T> initializer)
+        internal ChildSetGridItem(Model model, Action<T> initializer)
             : base(model, initializer)
         {
         }

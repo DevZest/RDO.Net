@@ -16,7 +16,7 @@ namespace DevZest.Data.Wpf
 
         public DataSetControl()
         {
-            View = new DataSetView();
+            View = new GridView();
         }
 
         public DataRowOrientation Orientation
@@ -37,7 +37,7 @@ namespace DevZest.Data.Wpf
             set { SetValue(FrozenGridCountProperty, value); }
         }
 
-        internal DataSetView View { get; private set; }
+        internal GridView View { get; private set; }
 
         public Model Model
         {
@@ -54,7 +54,7 @@ namespace DevZest.Data.Wpf
             get { return View.GridColumns; }
         }
 
-        public ViewItemCollection ViewItems
+        public GridItemCollection ViewItems
         {
             get { return View.ViewItems; }
         }

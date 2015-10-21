@@ -30,7 +30,7 @@ namespace DevZest.Data.Wpf
         public readonly GridColumn Right;
         public readonly GridRow Bottom;
 
-        internal DataSetView Owner
+        internal GridView Owner
         {
             get { return Left == null ? null : Left.Owner; }
         }

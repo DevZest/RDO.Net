@@ -3,10 +3,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ViewItem<T> : ViewItem
+    public abstract class GridItem<T> : GridItem
         where T : UIElement, new()
     {
-        internal ViewItem(Action<T> initializer)
+        internal GridItem(Action<T> initializer)
         {
             _initializer = initializer;
         }

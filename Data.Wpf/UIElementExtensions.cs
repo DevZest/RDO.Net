@@ -7,16 +7,16 @@ namespace DevZest.Data.Wpf
 {
     internal static class UIElementExtensions
     {
-        private static ConditionalWeakTable<UIElement, ViewItem> s_uiElements = new ConditionalWeakTable<UIElement, ViewItem>();
+        private static ConditionalWeakTable<UIElement, GridItem> s_uiElements = new ConditionalWeakTable<UIElement, GridItem>();
 
-        internal static ViewItem GetViewItem(this UIElement uiElement)
+        internal static GridItem GetViewItem(this UIElement uiElement)
         {
             Debug.Assert(uiElement != null);
-            ViewItem result;
+            GridItem result;
             return s_uiElements.TryGetValue(uiElement, out result) ? result : null;
         }
 
-        internal static T SetViewItem<T>(this T uiElement, ViewItem value)
+        internal static T SetViewItem<T>(this T uiElement, GridItem value)
             where T : UIElement
         {
             Debug.Assert(uiElement != null);

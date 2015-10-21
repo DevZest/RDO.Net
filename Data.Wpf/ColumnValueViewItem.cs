@@ -3,10 +3,10 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public class ColumnValueViewItem<T> : ColumnViewItem<T>
+    public class ColumnValueGridItem<T> : ColumnGridItem<T>
         where T : UIElement, new()
     {
-        public ColumnValueViewItem(Column column, Action<T> initializer)
+        public ColumnValueGridItem(Column column, Action<T> initializer)
             : base(column, initializer)
         {
         }

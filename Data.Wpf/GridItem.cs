@@ -4,13 +4,13 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public abstract class ViewItem
+    public abstract class GridItem
     {
-        internal DataSetView Owner { get; private set; }
+        internal GridView Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
-        internal ViewItem Initialize(DataSetView owner, GridRange gridRange)
+        internal GridItem Initialize(GridView owner, GridRange gridRange)
         {
             Owner = owner;
             GridRange = gridRange;
@@ -27,11 +27,11 @@ namespace DevZest.Data.Wpf
 
         internal abstract UIElement CreateUIElement();
 
-        List<ViewElement> _cachedUIElements = new List<ViewElement>();
-        internal ViewElement Generate()
+        List<GridElement> _cachedUIElements = new List<GridElement>();
+        internal GridElement Generate()
         {
             if (_cachedUIElements.Count == 0)
-                return new ViewElement(this, CreateUIElement());
+                return new GridElement(this, CreateUIElement());
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -39,7 +39,7 @@ namespace DevZest.Data.Wpf
             return result;
         }
 
-        internal void Recycle(ViewElement element)
+        internal void Recycle(GridElement element)
         {
             Debug.Assert(element != null && element.Owner == this);
             _cachedUIElements.Add(element);

@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class GridExpanderViewItem<T> : ModelViewItem<T>
+    public class GridExpanderViewItem<T> : ModelGridItem<T>
         where T : GridExpander, new()
     {
         public GridExpanderViewItem(Model model, Action<T> initializer, params GridDefinition[] gridDefinitions)

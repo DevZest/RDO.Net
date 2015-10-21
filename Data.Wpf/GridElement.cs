@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    internal class ViewElement
+    internal class GridElement
     {
-        internal ViewElement(ViewItem owner, UIElement uiElement)
+        internal GridElement(GridItem owner, UIElement uiElement)
         {
             Debug.Assert(owner != null);
             Debug.Assert(uiElement != null);
@@ -13,7 +13,7 @@ namespace DevZest.Data.Wpf
             UIElement = uiElement;
         }
 
-        public ViewItem Owner { get; private set; }
+        public GridItem Owner { get; private set; }
 
         public UIElement UIElement { get; private set; }
 

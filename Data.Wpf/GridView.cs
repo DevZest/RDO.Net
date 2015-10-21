@@ -5,20 +5,20 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    internal class DataSetView
+    public sealed class GridView
     {
-        internal DataSetView()
+        internal GridView()
         {
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            ViewItems = new ViewItemCollection(this);
+            ViewItems = new GridItemCollection(this);
         }
 
         public GridDefinitionCollection<GridRow> GridRows { get; private set; }
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
-        public ViewItemCollection ViewItems { get; private set; }
+        public GridItemCollection ViewItems { get; private set; }
 
-        public DataSet DataSet { get; private set; }
+        internal DataSet DataSet { get; private set; }
 
         public IList<DataRow> DataRows
         {
@@ -67,7 +67,7 @@ namespace DevZest.Data.Wpf
             return GridRows.Count - 1;
         }
 
-        public void AddViewItem(GridRange gridRange, ViewItem viewItem)
+        public void AddViewItem(GridRange gridRange, GridItem viewItem)
         {
             VerifyDesignMode();
             VerifyGridRange(gridRange, nameof(gridRange));
@@ -76,7 +76,7 @@ namespace DevZest.Data.Wpf
             ViewItems.Add(viewItem, gridRange);
         }
 
-        private void VerifyViewItem(ViewItem viewItem, string paramName)
+        private void VerifyViewItem(GridItem viewItem, string paramName)
         {
             if (viewItem == null)
                 throw new ArgumentNullException(nameof(paramName));
@@ -161,8 +161,8 @@ namespace DevZest.Data.Wpf
                 throw Error.DataSetView_VerifyDesignMode();
         }
 
-        private ViewElementCollection _elements = new ViewElementCollection();
-        internal ViewElementCollection Elements
+        private GridElementCollection _elements = new GridElementCollection();
+        internal GridElementCollection Elements
         {
             get { return _elements; }
         }

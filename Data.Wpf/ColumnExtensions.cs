@@ -5,21 +5,21 @@ namespace DevZest.Data.Wpf
 {
     public static class ColumnExtensions
     {
-        public static ColumnValueViewItem<TextBlock> TextBlock(this Column column, Action<TextBlock> initializer = null)
+        public static ColumnValueGridItem<TextBlock> TextBlock(this Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return new ColumnValueViewItem<TextBlock>(column, initializer);
+            return new ColumnValueGridItem<TextBlock>(column, initializer);
         }
 
-        public static ColumnValueViewItem<TTextBlock> TextBlock<TTextBlock>(this Column column, Action<TTextBlock> initializer)
+        public static ColumnValueGridItem<TTextBlock> TextBlock<TTextBlock>(this Column column, Action<TTextBlock> initializer)
             where TTextBlock : TextBlock, new()
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return new ColumnValueViewItem<TTextBlock>(column, initializer);
+            return new ColumnValueGridItem<TTextBlock>(column, initializer);
         }
     }
 }

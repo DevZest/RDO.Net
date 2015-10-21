@@ -2,10 +2,10 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class DataSetSelectorViewItem<T> : ModelViewItem<T>, IScalarViewItem
+    public class DataSetSelectorGridItem<T> : ModelGridItem<T>, IScalarViewItem
         where T : DataSetSelector, new()
     {
-        public DataSetSelectorViewItem(Model model, Action<T> initializer)
+        public DataSetSelectorGridItem(Model model, Action<T> initializer)
             : base(model, initializer)
         {
         }

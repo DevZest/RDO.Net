@@ -2,10 +2,10 @@
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class DataRowSelectorViewItem<T> : ModelViewItem<T>
+    public sealed class DataRowSelectorGridItem<T> : ModelGridItem<T>
         where T : DataRowSelector, new()
     {
-        public DataRowSelectorViewItem(Model model, Action<T> initializer)
+        public DataRowSelectorGridItem(Model model, Action<T> initializer)
             : base(model, initializer)
         {
         }

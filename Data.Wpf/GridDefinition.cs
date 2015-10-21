@@ -7,14 +7,14 @@ namespace DevZest.Data.Wpf
 {
     public abstract class GridDefinition
     {
-        internal GridDefinition(DataSetView owner, int ordinal, GridLength length)
+        internal GridDefinition(GridView owner, int ordinal, GridLength length)
         {
             Owner = owner;
             Ordinal = ordinal;
             Length = length;
         }
 
-        internal DataSetView Owner { get; private set; }
+        internal GridView Owner { get; private set; }
 
         internal int Ordinal { get; private set; }
 
