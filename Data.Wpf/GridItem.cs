@@ -7,7 +7,14 @@ namespace DevZest.Data.Wpf
 {
     public abstract class GridItem
     {
-        internal GridTemplate Owner { get; private set; }
+        protected GridItem(Model parentModel)
+        {
+            ParentModel = parentModel;
+        }
+
+        public Model ParentModel { get; private set; }
+
+        public GridTemplate Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
@@ -33,8 +40,6 @@ namespace DevZest.Data.Wpf
             if (IsSealed)
                 throw Error.GridTemplate_VerifyIsSealed();
         }
-
-        internal abstract bool IsValidFor(Model model);
 
         internal abstract UIElement CreateUIElement();
 

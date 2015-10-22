@@ -241,10 +241,8 @@ namespace DevZest.Data.Wpf
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
                 throw new ArgumentNullException(nameof(gridItem));
-            if (gridItem.Owner != null)
+            if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
                 throw new ArgumentException(Strings.GridTemplate_InvalidGridItemForOwner, nameof(gridItem));
-            if (!gridItem.IsValidFor(Model))
-                throw new ArgumentException(Strings.GridTemplate_InvalidGridItemForModel(Model), nameof(gridItem));
         }
 
 
