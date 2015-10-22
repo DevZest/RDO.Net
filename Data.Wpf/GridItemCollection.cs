@@ -4,26 +4,27 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class GridItemCollection : ReadOnlyCollection<GridItem>
+    public sealed class GridItemCollection<T> : ReadOnlyCollection<T>
+        where T : GridItem
     {
-        internal GridItemCollection(GridView owner)
-            : base(new List<GridItem>())
+        internal GridItemCollection(GridTemplate owner)
+            : base(new List<T>())
         {
             Debug.Assert(owner != null);
             _owner = owner;
         }
 
-        private GridView _owner;
+        private GridTemplate _owner;
 
-        internal GridRange CalculatedDataRowRange { get; private set; }
+        internal GridRange Range { get; private set; }
 
-        internal void Add(GridItem viewItem, GridRange gridRange)
+        internal void Add(T gridItem, GridRange gridRange)
         {
-            Debug.Assert(viewItem != null);
-            Debug.Assert(viewItem.Owner == null);
-            Items.Add(viewItem.Initialize(_owner, gridRange));
-            if (!(viewItem is IScalarViewItem))
-                CalculatedDataRowRange = CalculatedDataRowRange.Union(gridRange);
+            Debug.Assert(gridItem != null);
+            Debug.Assert(gridItem.Owner == null);
+            gridItem.Initialize(_owner, gridRange);
+            Items.Add(gridItem);
+            Range = Range.Union(gridRange);
         }
 
         internal void Clear()
@@ -31,7 +32,7 @@ namespace DevZest.Data.Wpf
             foreach (var viewItem in this)
                 viewItem.Clear();
             Items.Clear();
-            CalculatedDataRowRange = new GridRange();
+            Range = new GridRange();
         }
     }
 }

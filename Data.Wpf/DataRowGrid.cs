@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Wpf
 {
-    public class DataRowControl : Control
+    public class DataRowGrid : Control
     {
         public DataRow DataRow { get; set; }
     }

@@ -6,15 +6,14 @@ namespace DevZest.Data.Wpf
 {
     public abstract class GridItem
     {
-        internal GridView Owner { get; private set; }
+        internal GridTemplate Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
-        internal GridItem Initialize(GridView owner, GridRange gridRange)
+        internal void Initialize(GridTemplate owner, GridRange gridRange)
         {
             Owner = owner;
             GridRange = gridRange;
-            return this;
         }
 
         internal void Clear()

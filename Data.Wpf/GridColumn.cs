@@ -4,7 +4,7 @@ namespace DevZest.Data.Wpf
 {
     public sealed class GridColumn : GridDefinition
     {
-        internal GridColumn(GridView owner, int ordinal, GridLength width)
+        internal GridColumn(GridTemplate owner, int ordinal, GridLength width)
             : base(owner, ordinal, width)
         {
         }

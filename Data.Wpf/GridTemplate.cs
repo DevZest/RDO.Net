@@ -6,13 +6,15 @@ using System.Windows;
 
 namespace DevZest.Data.Wpf
 {
-    public sealed class GridView
+    public sealed class GridTemplate
     {
-        internal GridView()
+        internal GridTemplate()
         {
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            GridItems = new GridItemCollection(this);
+            ScalarItems = new GridItemCollection<ScalarGridItem>(this);
+            SetItems = new GridItemCollection<SetGridItem>(this);
+            ChildSetItems = new GridItemCollection<ChildSetGridItem>(this);
         }
 
         bool _isSealed = false;
@@ -42,8 +44,8 @@ namespace DevZest.Data.Wpf
 
         public Model Model { get; private set; }
 
-        private GridViewOrientation _orientation = GridViewOrientation.Y;
-        public GridViewOrientation Orientation
+        private DataRowOrientation _orientation = DataRowOrientation.Y;
+        public DataRowOrientation Orientation
         {
             get { return _orientation; }
             set
@@ -53,7 +55,7 @@ namespace DevZest.Data.Wpf
             }
         }
 
-        public GridView SetOrientation(GridViewOrientation value)
+        public GridTemplate SetOrientation(DataRowOrientation value)
         {
             Orientation = value;
             return this;
@@ -66,14 +68,19 @@ namespace DevZest.Data.Wpf
             set
             {
                 VerifyIsSealed();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(GridItems.CalculatedDataRowRange))
+                if (!GetGridRangeAll().Contains(value) || !value.Contains(CalculatedDataRowRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
                 _dataRowRange = value;
             }
         }
 
-        public GridView SetDataRowRange(GridRange value)
+        private GridRange CalculatedDataRowRange
+        {
+            get { return SetItems.Range.Union(ChildSetItems.Range); }
+        }
+
+        public GridTemplate SetDataRowRange(GridRange value)
         {
             DataRowRange = value;
             return this;
@@ -92,15 +99,21 @@ namespace DevZest.Data.Wpf
             }
         }
 
-        public GridView SetFrozenCount(int value)
+        public GridTemplate SetFrozenCount(int value)
         {
             FrozenCount = value;
             return this;
         }
 
         public GridDefinitionCollection<GridRow> GridRows { get; private set; }
+
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
-        public GridItemCollection GridItems { get; private set; }
+
+        public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
+
+        public GridItemCollection<SetGridItem> SetItems { get; private set; }
+
+        public GridItemCollection<ChildSetGridItem> ChildSetItems { get; private set; }
 
         private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
         private static GridLength GetGridLength(string gridLength)
@@ -111,6 +124,26 @@ namespace DevZest.Data.Wpf
             return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
         }
 
+        public GridTemplate AddGridRows(params string[] heights)
+        {
+            if (heights != null)
+                throw new ArgumentNullException(nameof(heights));
+
+            foreach (var height in heights)
+                AddGridRow(height);
+            return this;
+        }
+
+        public GridTemplate AddGridColumns(params string[] widths)
+        {
+            if (widths != null)
+                throw new ArgumentNullException(nameof(widths));
+
+            foreach (var width in widths)
+                AddGridColumn(width);
+            return this;
+        }
+
         private int AddGridColumn(string width)
         {
             VerifyIsSealed();
@@ -118,7 +151,7 @@ namespace DevZest.Data.Wpf
             return GridColumns.Count - 1;
         }
 
-        public GridView AddGridColumn(string width, out int index)
+        public GridTemplate AddGridColumn(string width, out int index)
         {
             index = AddGridColumn(width);
             return this;
@@ -131,19 +164,38 @@ namespace DevZest.Data.Wpf
             return GridRows.Count - 1;
         }
 
-        public GridView AddGridRow(string height, out int index)
+        public GridTemplate AddGridRow(string height, out int index)
         {
             index = AddGridRow(height);
             return this;
         }
 
-        private void AddGridItem(GridRange gridRange, GridItem gridItem)
+        public GridTemplate AddItem(GridRange gridRange, ScalarGridItem gridItem)
+        {
+            VerifyAddItem(gridRange, gridItem);
+            ScalarItems.Add(gridItem, gridRange);
+            return this;
+        }
+
+        public GridTemplate AddItem(GridRange gridRange, SetGridItem gridItem)
+        {
+            VerifyAddItem(gridRange, gridItem);
+            SetItems.Add(gridItem, gridRange);
+            return this;
+        }
+
+        public GridTemplate AddItem(GridRange gridRange, ChildSetGridItem gridItem)
+        {
+            VerifyAddItem(gridRange, gridItem);
+            ChildSetItems.Add(gridItem, gridRange);
+            return this;
+        }
+
+        private void VerifyAddItem(GridRange gridRange, GridItem gridItem)
         {
             VerifyIsSealed();
             VerifyGridRange(gridRange, nameof(gridRange));
             VerifyGridItem(gridItem, nameof(gridItem));
-
-            GridItems.Add(gridItem, gridRange);
         }
 
         private void VerifyGridItem(GridItem gridItem, string paramName)
@@ -217,63 +269,9 @@ namespace DevZest.Data.Wpf
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                this.AddColumnHeader(this[i, 0], column)
-                    .AddColumnValue(this[i, 1], column.TextBlock());
+                //this.AddScalarItem(this[i, 0], column)
+                //    .AddSetItem(this[i, 1], column.TextBlock());
             }
-        }
-
-        public GridView AddGridRows(params string[] heights)
-        {
-            if (heights != null)
-                throw new ArgumentNullException(nameof(heights));
-
-            foreach (var height in heights)
-                AddGridRow(height);
-            return this;
-        }
-
-        public GridView AddGridColumns(params string[] widths)
-        {
-            if (widths != null)
-                throw new ArgumentNullException(nameof(widths));
-
-            foreach (var width in widths)
-                AddGridColumn(width);
-            return this;
-        }
-
-        public GridView AddChildSet<T>(GridRange gridRange, ChildSetGridItem<T> gridItem)
-            where T : DataSetControl, new()
-        {
-            AddGridItem(gridRange, gridItem);
-            return this;
-        }
-
-        public GridView AddColumnValue<T>(GridRange gridRange, ColumnValueGridItem<T> gridItem)
-            where T : UIElement, new()
-        {
-            AddGridItem(gridRange, gridItem);
-            return this;
-        }
-
-        public GridView AddHeaderSelector(GridRange gridRange, Action<DataSetSelector> initializer = null)
-        {
-            AddGridItem(gridRange, new DataSetSelectorGridItem<DataSetSelector>(Model, initializer));
-            return this;
-        }
-
-        public GridView AddRowSelector(GridRange gridRange, Action<DataRowSelector> initializer = null)
-        {
-            AddGridItem(gridRange, new DataRowSelectorGridItem<DataRowSelector>(Model, initializer));
-            return this;
-        }
-
-        public GridView AddColumnHeader(GridRange gridRange, Column column, Action<ColumnHeader> initializer = null)
-        {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            AddGridItem(gridRange, new ColumnHeaderGridItem<ColumnHeader>(column, initializer));
-            return this;
         }
     }
 }
