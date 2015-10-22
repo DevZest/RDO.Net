@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Resources;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -6,6 +7,16 @@ namespace DevZest.Data.Primitives
 {
     public static class ModelExtensions
     {
+        public static IList<DataRow> GetDataSet(this Model model, DataRow parentDataRow)
+        {
+            var parentModel = model.ParentModel;
+            var parentDataRowModel = parentDataRow == null ? null : parentDataRow.Model;
+            if (parentModel != parentDataRowModel)
+                throw new ArgumentException(Strings.InvalidChildModel, nameof(parentDataRow));
+
+            return parentDataRowModel == null ? model.DataSet : parentDataRow.GetChildren(model);
+        }
+
         public static ColumnCollection GetColumns(this Model model)
         {
             return model.Columns;
