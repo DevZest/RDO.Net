@@ -24,19 +24,11 @@ namespace DevZest.Data.Wpf.Resources
         }
 
         // <summary>
-        // A string like "The GridItem is invalid for Model '{0}'."
+        // A string like "Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property."
         // </summary>
-        internal static string GridTemplate_InvalidGridItemForModel(object p0)
+        internal static string GridTemplate_InvalidGridItem
         {
-            return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItemForModel, p0);
-        }
-
-        // <summary>
-        // A string like "Cannot add this GridItem to multiple GridTemplate."
-        // </summary>
-        internal static string GridTemplate_InvalidGridItemForOwner
-        {
-            get { return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItemForOwner); }
+            get { return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItem); }
         }
 
         // <summary>
@@ -87,8 +79,7 @@ namespace DevZest.Data.Wpf.Resources
     internal sealed class ResourceLoader
     {
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
-        internal const string GridTemplate_InvalidGridItemForModel = "GridTemplate_InvalidGridItemForModel";
-        internal const string GridTemplate_InvalidGridItemForOwner = "GridTemplate_InvalidGridItemForOwner";
+        internal const string GridTemplate_InvalidGridItem = "GridTemplate_InvalidGridItem";
         internal const string GridTemplate_VerifyIsSealed = "GridTemplate_VerifyIsSealed";
 
         private static ResourceLoader loader;

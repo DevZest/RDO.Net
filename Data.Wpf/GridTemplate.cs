@@ -242,7 +242,7 @@ namespace DevZest.Data.Wpf
             if (gridItem == null)
                 throw new ArgumentNullException(nameof(gridItem));
             if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
-                throw new ArgumentException(Strings.GridTemplate_InvalidGridItemForOwner, nameof(gridItem));
+                throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, nameof(gridItem));
         }
 
 
