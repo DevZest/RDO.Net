@@ -26,17 +26,25 @@ namespace DevZest.Data.Wpf.Resources
         // <summary>
         // A string like "The GridItem is invalid for Model '{0}'."
         // </summary>
-        internal static string GridView_InvalidGridItemForModel(object p0)
+        internal static string GridTemplate_InvalidGridItemForModel(object p0)
         {
-            return ResourceLoader.GetString(ResourceLoader.GridView_InvalidGridItemForModel, p0);
+            return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItemForModel, p0);
         }
 
         // <summary>
-        // A string like "The GridView is currently sealed (read-only)."
+        // A string like "Cannot add this GridItem to multiple GridTemplate."
         // </summary>
-        internal static string GridView_VerifyIsSealed
+        internal static string GridTemplate_InvalidGridItemForOwner
         {
-            get { return ResourceLoader.GetString(ResourceLoader.GridView_VerifyIsSealed); }
+            get { return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItemForOwner); }
+        }
+
+        // <summary>
+        // A string like "The GridTemplate is currently sealed (read-only)."
+        // </summary>
+        internal static string GridTemplate_VerifyIsSealed
+        {
+            get { return ResourceLoader.GetString(ResourceLoader.GridTemplate_VerifyIsSealed); }
         }
     }
 
@@ -47,11 +55,11 @@ namespace DevZest.Data.Wpf.Resources
     internal static class Error
     {
         // <summary>
-        // InvalidOperationException with message like "The GridView is currently sealed (read-only)."
+        // InvalidOperationException with message like "The GridTemplate is currently sealed (read-only)."
         // </summary>
-        internal static Exception GridView_VerifyIsSealed()
+        internal static Exception GridTemplate_VerifyIsSealed()
         {
-            return new InvalidOperationException(Strings.GridView_VerifyIsSealed);
+            return new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
         }
 
         // <summary>
@@ -79,8 +87,9 @@ namespace DevZest.Data.Wpf.Resources
     internal sealed class ResourceLoader
     {
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
-        internal const string GridView_InvalidGridItemForModel = "GridView_InvalidGridItemForModel";
-        internal const string GridView_VerifyIsSealed = "GridView_VerifyIsSealed";
+        internal const string GridTemplate_InvalidGridItemForModel = "GridTemplate_InvalidGridItemForModel";
+        internal const string GridTemplate_InvalidGridItemForOwner = "GridTemplate_InvalidGridItemForOwner";
+        internal const string GridTemplate_VerifyIsSealed = "GridTemplate_VerifyIsSealed";
 
         private static ResourceLoader loader;
         private readonly ResourceManager resources;

@@ -20,8 +20,7 @@ namespace DevZest.Data.Wpf
 
         internal void Add(T gridItem, GridRange gridRange)
         {
-            Debug.Assert(gridItem != null);
-            Debug.Assert(gridItem.Owner == null);
+            Debug.Assert(gridItem != null && gridItem.Owner == null);
             gridItem.Initialize(_owner, gridRange);
             Items.Add(gridItem);
             Range = Range.Union(gridRange);

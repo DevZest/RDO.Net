@@ -120,11 +120,14 @@
   <data name="GridRange_InvalidDataSetControl" xml:space="preserve">
     <value>The GridRange does not belong to the same DataSetControl.</value>
   </data>
-  <data name="GridView_InvalidGridItemForModel" xml:space="preserve">
+  <data name="GridTemplate_InvalidGridItemForModel" xml:space="preserve">
     <value>The GridItem is invalid for Model '{0}'.</value>
   </data>
-  <data name="GridView_VerifyIsSealed" xml:space="preserve">
-    <value>The GridView is currently sealed (read-only).</value>
+  <data name="GridTemplate_InvalidGridItemForOwner" xml:space="preserve">
+    <value>Cannot add this GridItem to multiple GridTemplate.</value>
+  </data>
+  <data name="GridTemplate_VerifyIsSealed" xml:space="preserve">
+    <value>The GridTemplate is currently sealed (read-only).</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
 </root>

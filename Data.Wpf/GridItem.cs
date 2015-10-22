@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DevZest.Data.Wpf.Resources;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -20,6 +21,17 @@ namespace DevZest.Data.Wpf
         {
             Owner = null;
             GridRange = new GridRange();
+        }
+
+        public bool IsSealed
+        {
+            get { return Owner == null ? false : Owner.IsSealed; }
+        }
+
+        protected void VerifyIsSealed()
+        {
+            if (IsSealed)
+                throw Error.GridTemplate_VerifyIsSealed();
         }
 
         internal abstract bool IsValidFor(Model model);

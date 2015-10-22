@@ -42,7 +42,7 @@ namespace DevZest.Data.Wpf
         private void VerifyIsSealed()
         {
             if (_isSealed)
-                throw Error.GridView_VerifyIsSealed();
+                throw Error.GridTemplate_VerifyIsSealed();
         }
 
 
@@ -237,23 +237,16 @@ namespace DevZest.Data.Wpf
         private void VerifyAddItem(GridRange gridRange, GridItem gridItem)
         {
             VerifyIsSealed();
-            VerifyGridRange(gridRange, nameof(gridRange));
-            VerifyGridItem(gridItem, nameof(gridItem));
-        }
-
-        private void VerifyGridItem(GridItem gridItem, string paramName)
-        {
-            if (gridItem == null)
-                throw new ArgumentNullException(nameof(paramName));
-            if (!gridItem.IsValidFor(Model))
-                throw new ArgumentException(Strings.GridView_InvalidGridItemForModel(Model), nameof(paramName));
-        }
-
-        private void VerifyGridRange(GridRange gridRange, string paramName)
-        {
             if (!GetGridRangeAll().Contains(gridRange))
-                throw new ArgumentOutOfRangeException(paramName);
+                throw new ArgumentOutOfRangeException(nameof(gridRange));
+            if (gridItem == null)
+                throw new ArgumentNullException(nameof(gridItem));
+            if (gridItem.Owner != null)
+                throw new ArgumentException(Strings.GridTemplate_InvalidGridItemForOwner, nameof(gridItem));
+            if (!gridItem.IsValidFor(Model))
+                throw new ArgumentException(Strings.GridTemplate_InvalidGridItemForModel(Model), nameof(gridItem));
         }
+
 
         private void VerifyGridColumn(int index, string paramName)
         {
