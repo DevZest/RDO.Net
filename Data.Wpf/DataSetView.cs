@@ -26,6 +26,11 @@ namespace DevZest.Data.Wpf
             get { return Template.Model; }
         }
 
+        public ScrollOption ScrollOption
+        {
+            get { return Template.ScrollOption; }
+        }
+
         #region IList<DataRowView>
 
         IList<DataRow> _dataRows;

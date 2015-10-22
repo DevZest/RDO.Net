@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,20 +9,34 @@ namespace DevZest.Data.Wpf
 {
     public class DataSetGrid : Control
     {
-        public static readonly DependencyProperty ScrollOptionProperty = DependencyProperty.Register(nameof(ScrollOption), typeof(ScrollOption), typeof(DataSetGrid),
-            new FrameworkPropertyMetadata(BooleanBoxes.True));
+        private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
+            typeof(DataSetView), typeof(DataSetGrid), new FrameworkPropertyMetadata(null, OnViewChanged));
 
-        public DataSetGrid()
+        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            var newValue = (DataSetView)e.NewValue;
+            Debug.Assert(newValue != null);
+            ((DataSetGrid)d).ScrollOption = newValue.ScrollOption;
+        }
+
+        public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey ScrollOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollOption),
+            typeof(ScrollOption), typeof(DataSetGrid), new FrameworkPropertyMetadata(ScrollOption.None));
+
+        public static readonly DependencyProperty ScrollOptionProperty = ScrollOptionPropertyKey.DependencyProperty;
+
+        public DataSetView View
+        {
+            get { return (DataSetView)GetValue(ViewProperty); }
+            private set { SetValue(ViewPropertyKey, value); }
         }
 
         public ScrollOption ScrollOption
         {
             get { return (ScrollOption)GetValue(ScrollOptionProperty); }
-            set { SetValue(ScrollOptionProperty, value); }
+            private set { SetValue(ScrollOptionPropertyKey, value); }
         }
-
-        public DataSetView View { get; private set; }
 
         public void Initialize<TModel>(DataSet<TModel> dataSet, Action<GridTemplate, TModel> templateInitializer = null)
             where TModel : Model, new()

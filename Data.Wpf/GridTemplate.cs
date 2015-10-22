@@ -17,6 +17,23 @@ namespace DevZest.Data.Wpf
             ChildSetItems = new GridItemCollection<ChildSetGridItem>(this);
         }
 
+        internal void BeginInit(Model model)
+        {
+            Model = model;
+            GridRows.Clear();
+            GridColumns.Clear();
+            ScalarItems.Clear();
+            SetItems.Clear();
+            ChildSetItems.Clear();
+            _isSealed = false;
+        }
+
+        internal void EndInit()
+        {
+            _isSealed = true;
+        }
+
+
         bool _isSealed = false;
         public bool IsSealed
         {
@@ -28,19 +45,6 @@ namespace DevZest.Data.Wpf
                 throw Error.GridView_VerifyIsSealed();
         }
 
-
-        internal void BeginInit(Model model)
-        {
-            Model = model;
-            GridRows.Clear();
-            GridColumns.Clear();
-            _isSealed = false;
-        }
-
-        internal void EndInit()
-        {
-            _isSealed = true;
-        }
 
         public Model Model { get; private set; }
 
@@ -58,6 +62,45 @@ namespace DevZest.Data.Wpf
         public GridTemplate SetOrientation(DataRowOrientation value)
         {
             Orientation = value;
+            return this;
+        }
+
+        private ScrollOption? _scrollOption;
+        public ScrollOption ScrollOption
+        {
+            get { return _scrollOption.HasValue ? _scrollOption.GetValueOrDefault() : GetDefaultScrollOption(Orientation); }
+            set
+            {
+                VerifyIsSealed();
+                _scrollOption = value;
+            }
+        }
+
+        private static ScrollOption GetDefaultScrollOption(DataRowOrientation orientation)
+        {
+            return orientation == DataRowOrientation.Z ? ScrollOption.None : ScrollOption.Virtualizing;
+        }
+
+        public GridTemplate SetScrollOption(ScrollOption value)
+        {
+            ScrollOption = value;
+            return this;
+        }
+
+        private bool _isReadOnly;
+        public bool IsReadOnly
+        {
+            get { return _isReadOnly; }
+            set
+            {
+                VerifyIsSealed();
+                _isReadOnly = value;
+            }
+        }
+
+        public GridTemplate SetIsReadOnly(bool value)
+        {
+            IsReadOnly = value;
             return this;
         }
 
