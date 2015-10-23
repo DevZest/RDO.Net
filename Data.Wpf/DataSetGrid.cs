@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public class DataSetGrid : Control
     {

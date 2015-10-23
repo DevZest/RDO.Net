@@ -1,9 +1,9 @@
-﻿using DevZest.Data.Wpf.Resources;
+﻿using DevZest.Data.Windows.Resources;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public abstract class GridItem
     {

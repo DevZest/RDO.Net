@@ -1,5 +1,5 @@
 ﻿
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public enum DataRowOrientation
     {

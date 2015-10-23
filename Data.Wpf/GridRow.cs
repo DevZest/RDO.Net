@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public sealed class GridRow : GridDefinition
     {

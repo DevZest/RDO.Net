@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public sealed class DataRowView : IReadOnlyList<DataSetView>
     {

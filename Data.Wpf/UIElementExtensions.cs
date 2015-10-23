@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     internal static class UIElementExtensions
     {

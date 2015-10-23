@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     internal class GridElement
     {

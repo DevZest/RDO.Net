@@ -11,8 +11,8 @@
 <#@ output extension=".cs" #>
 <#
 
-string outputNamespace = "DevZest.Data.Wpf.Resources";
-string resourceManagerNamespace = "DevZest.Data.Wpf.Properties";
+string outputNamespace = "DevZest.Data.Windows.Resources";
+string resourceManagerNamespace = "DevZest.Data.Windows.Properties";
 
 var parameterMatcher = new Regex(@"\{(\d)\}");
 var lines = new List<Tuple<string, string, string, bool, string, string>>();

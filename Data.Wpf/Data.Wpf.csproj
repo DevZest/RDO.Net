@@ -7,8 +7,8 @@
     <ProjectGuid>{13148E98-0F1A-44D3-8DEF-99392773AF3E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevZest.Data.Wpf</RootNamespace>
-    <AssemblyName>DevZest.Data.Wpf</AssemblyName>
+    <RootNamespace>DevZest.Data.Windows</RootNamespace>
+    <AssemblyName>DevZest.Data.PresentationFramework</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

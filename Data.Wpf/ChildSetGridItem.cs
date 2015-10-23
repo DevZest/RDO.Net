@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using System.Windows;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public abstract class ChildSetGridItem : GridItem
     {

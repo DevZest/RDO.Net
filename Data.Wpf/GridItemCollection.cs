@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public sealed class GridItemCollection<T> : ReadOnlyCollection<T>
         where T : GridItem

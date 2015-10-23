@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public class GridDefinitionCollection<T> : ReadOnlyCollection<T>
         where T : GridDefinition

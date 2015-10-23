@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public abstract class GridDefinition
     {

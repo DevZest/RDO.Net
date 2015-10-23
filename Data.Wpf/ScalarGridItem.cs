@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Wpf
+﻿namespace DevZest.Data.Windows
 {
     public abstract class ScalarGridItem : GridItem
     {

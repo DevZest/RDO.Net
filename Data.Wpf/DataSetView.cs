@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Collections;
 using System;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public sealed class DataSetView : IList<DataRowView>
     {

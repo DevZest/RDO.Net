@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace DevZest.Data.Wpf
+namespace DevZest.Data.Windows
 {
     public sealed class GridColumn : GridDefinition
     {
