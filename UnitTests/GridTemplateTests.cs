@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_AddGridColumns()
         {
-            var template = new GridTemplate().AddGridColumns("25;min:20;max:30", "28px");
+            var template = new GridTemplate(null).AddGridColumns("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridColumns.Count);
             VerifyGridDefinition(template.GridColumns[0], new GridLength(25), 20.0, 30.0);
             VerifyGridDefinition(template.GridColumns[1], new GridLength(28), 0.0, double.PositiveInfinity);
@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_AddGridRows()
         {
-            var template = new GridTemplate().AddGridRows("25;min:20;max:30", "28px");
+            var template = new GridTemplate(null).AddGridRows("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridRows.Count);
             VerifyGridDefinition(template.GridRows[0], new GridLength(25), 20.0, 30.0);
             VerifyGridDefinition(template.GridRows[1], new GridLength(28), 0.0, double.PositiveInfinity);

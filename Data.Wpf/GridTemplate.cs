@@ -9,8 +9,9 @@ namespace DevZest.Data.Windows
 {
     public sealed class GridTemplate
     {
-        internal GridTemplate()
+        internal GridTemplate(Model model)
         {
+            Model = model;
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
             ScalarItems = new GridItemCollection<ScalarGridItem>(this);
@@ -18,22 +19,10 @@ namespace DevZest.Data.Windows
             ChildSetItems = new GridItemCollection<ChildSetGridItem>(this);
         }
 
-        internal void BeginInit(Model model)
-        {
-            Model = model;
-            GridRows.Clear();
-            GridColumns.Clear();
-            ScalarItems.Clear();
-            SetItems.Clear();
-            ChildSetItems.Clear();
-            _isSealed = false;
-        }
-
-        internal void EndInit()
+        internal void Seal()
         {
             _isSealed = true;
         }
-
 
         bool _isSealed = false;
         public bool IsSealed

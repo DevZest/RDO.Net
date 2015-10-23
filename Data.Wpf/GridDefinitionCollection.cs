@@ -16,17 +16,5 @@ namespace DevZest.Data.Windows
         {
             Items.Add(item);
         }
-
-        internal void Clear()
-        {
-            foreach (var item in this)
-                item.Clear();
-            Items.Clear();
-        }
-
-        internal void Add(object rootData)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -44,13 +44,12 @@ namespace DevZest.Data.Windows
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            var gridTemplate = new GridTemplate();
-            gridTemplate.BeginInit(dataSet.Model);
+            var gridTemplate = new GridTemplate(dataSet.Model);
             if (templateInitializer != null)
                 templateInitializer(gridTemplate, dataSet._);
             else
                 gridTemplate.DefaultInitialize();
-            gridTemplate.EndInit();
+            gridTemplate.Seal();
             View = new DataSetView(null, gridTemplate);
         }
     }

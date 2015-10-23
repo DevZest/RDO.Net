@@ -25,14 +25,5 @@ namespace DevZest.Data.Windows
         public double MinLength { get; private set; }
 
         public double MaxLength { get; private set; }
-
-        internal void Clear()
-        {
-            Owner = null;
-            Ordinal = 0;
-            Length = default(GridLength);
-            MinLength = 0.0;
-            MaxLength = 0.0;
-        }
     }
 }

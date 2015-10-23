@@ -65,6 +65,10 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RDO.Data\Data.Common\Data.Common.csproj">
+      <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
+      <Name>Data.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data.Wpf\Data.WPF.csproj">
       <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
       <Name>Data.WPF</Name>
