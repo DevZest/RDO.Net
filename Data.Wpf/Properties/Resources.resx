@@ -120,8 +120,14 @@
   <data name="GridRange_InvalidDataSetControl" xml:space="preserve">
     <value>The GridRange does not belong to the same DataSetControl.</value>
   </data>
+  <data name="GridTemplate_InvalidGridColumnWidthOrientation" xml:space="preserve">
+    <value>Invalid GridColumn.Width/Orientation combination: GridColumns[{0}]="{1}", Orientation="{2}".</value>
+  </data>
   <data name="GridTemplate_InvalidGridItem" xml:space="preserve">
     <value>Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property.</value>
+  </data>
+  <data name="GridTemplate_InvalidGridRowHeightOrientation" xml:space="preserve">
+    <value>Invalid GridRow.Height/Orientation combination: GridRows[{0}]="{1}", Orientation="{2}".</value>
   </data>
   <data name="GridTemplate_VerifyIsSealed" xml:space="preserve">
     <value>The GridTemplate is currently sealed (read-only).</value>

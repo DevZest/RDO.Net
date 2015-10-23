@@ -24,11 +24,27 @@ namespace DevZest.Data.Wpf.Resources
         }
 
         // <summary>
+        // A string like "Invalid GridColumn.Width/Orientation combination: GridColumns[{0}]="{1}", Orientation="{2}"."
+        // </summary>
+        internal static string GridTemplate_InvalidGridColumnWidthOrientation(object p0, object p1, object p2)
+        {
+            return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridColumnWidthOrientation, p0, p1, p2);
+        }
+
+        // <summary>
         // A string like "Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property."
         // </summary>
         internal static string GridTemplate_InvalidGridItem
         {
             get { return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridItem); }
+        }
+
+        // <summary>
+        // A string like "Invalid GridRow.Height/Orientation combination: GridRows[{0}]="{1}", Orientation="{2}"."
+        // </summary>
+        internal static string GridTemplate_InvalidGridRowHeightOrientation(object p0, object p1, object p2)
+        {
+            return ResourceLoader.GetString(ResourceLoader.GridTemplate_InvalidGridRowHeightOrientation, p0, p1, p2);
         }
 
         // <summary>
@@ -79,7 +95,9 @@ namespace DevZest.Data.Wpf.Resources
     internal sealed class ResourceLoader
     {
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
+        internal const string GridTemplate_InvalidGridColumnWidthOrientation = "GridTemplate_InvalidGridColumnWidthOrientation";
         internal const string GridTemplate_InvalidGridItem = "GridTemplate_InvalidGridItem";
+        internal const string GridTemplate_InvalidGridRowHeightOrientation = "GridTemplate_InvalidGridRowHeightOrientation";
         internal const string GridTemplate_VerifyIsSealed = "GridTemplate_VerifyIsSealed";
 
         private static ResourceLoader loader;

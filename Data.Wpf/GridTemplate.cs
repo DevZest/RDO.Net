@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Wpf.Resources;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -55,6 +56,8 @@ namespace DevZest.Data.Wpf
             set
             {
                 VerifyIsSealed();
+                VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
+                VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
                 _orientation = value;
             }
         }
@@ -191,7 +194,9 @@ namespace DevZest.Data.Wpf
         {
             VerifyIsSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
-            return GridColumns.Count - 1;
+            var result = GridRows.Count - 1;
+            VerifyGridColumnWidth(Orientation, result, result, nameof(width));
+            return result;
         }
 
         public GridTemplate AddGridColumn(string width, out int index)
@@ -204,13 +209,61 @@ namespace DevZest.Data.Wpf
         {
             VerifyIsSealed();
             GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
-            return GridRows.Count - 1;
+            var result = GridRows.Count - 1;
+            VerifyGridRowHeight(Orientation, result, result, nameof(height));
+            return result;
         }
 
         public GridTemplate AddGridRow(string height, out int index)
         {
             index = AddGridRow(height);
             return this;
+        }
+
+        private void VerifyGridRowHeight(DataRowOrientation orientation, int startIndex, int endIndex, string paramName)
+        {
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                if (!IsValidGridRowHeight(GridRows[i], orientation))
+                    throw new ArgumentException(Strings.GridTemplate_InvalidGridRowHeightOrientation(i, GridRows[i].Height, orientation), paramName);
+            }
+        }
+
+        private static bool IsValidGridRowHeight(GridRow gridRow, DataRowOrientation orentation)
+        {
+            var height = gridRow.Height;
+
+            if (height.IsAbsolute)
+                return true;
+
+            if (height.IsStar)
+                return orentation != DataRowOrientation.Y && orentation != DataRowOrientation.YX && orentation != DataRowOrientation.XY;
+
+            Debug.Assert(height.IsAuto);
+            return orentation != DataRowOrientation.YX;
+        }
+
+        private void VerifyGridColumnWidth(DataRowOrientation orientation, int startIndex, int endIndex, string paramName)
+        {
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                if (!IsValidGridColumnWidth(GridColumns[i], orientation))
+                    throw new ArgumentException(Strings.GridTemplate_InvalidGridColumnWidthOrientation(i, GridColumns[i].Width, orientation), paramName);
+            }
+        }
+
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, DataRowOrientation orentation)
+        {
+            var width = gridColumn.Width;
+
+            if (width.IsAbsolute)
+                return true;
+
+            if (width.IsStar)
+                return orentation != DataRowOrientation.X && orentation != DataRowOrientation.YX && orentation != DataRowOrientation.XY;
+
+            Debug.Assert(width.IsAuto);
+            return orentation != DataRowOrientation.XY;
         }
 
         public GridTemplate AddItem(GridRange gridRange, ScalarGridItem gridItem)
