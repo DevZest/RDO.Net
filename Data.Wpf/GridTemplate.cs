@@ -57,25 +57,25 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private ScrollOption? _scrollOption;
-        public ScrollOption ScrollOption
+        private ScrollMode? _scrollMode;
+        public ScrollMode ScrollMode
         {
-            get { return _scrollOption.HasValue ? _scrollOption.GetValueOrDefault() : GetDefaultScrollOption(Orientation); }
+            get { return _scrollMode.HasValue ? _scrollMode.GetValueOrDefault() : DefaultScrollMode; }
             set
             {
                 VerifyIsSealed();
-                _scrollOption = value;
+                _scrollMode = value;
             }
         }
 
-        private static ScrollOption GetDefaultScrollOption(DataRowOrientation orientation)
+        private ScrollMode DefaultScrollMode
         {
-            return orientation == DataRowOrientation.Z ? ScrollOption.None : ScrollOption.Virtualizing;
+            get { return Orientation == DataRowOrientation.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
         }
 
-        public GridTemplate SetScrollOption(ScrollOption value)
+        public GridTemplate SetScrollMode(ScrollMode value)
         {
-            ScrollOption = value;
+            ScrollMode = value;
             return this;
         }
 

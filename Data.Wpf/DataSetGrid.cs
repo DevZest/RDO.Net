@@ -16,15 +16,15 @@ namespace DevZest.Data.Windows
         {
             var newValue = (DataSetView)e.NewValue;
             Debug.Assert(newValue != null);
-            ((DataSetGrid)d).ScrollOption = newValue.ScrollOption;
+            ((DataSetGrid)d).ScrollMode = newValue.ScrollMode;
         }
 
         public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey ScrollOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollOption),
-            typeof(ScrollOption), typeof(DataSetGrid), new FrameworkPropertyMetadata(ScrollOption.None));
+        private static readonly DependencyPropertyKey ScrollModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollMode),
+            typeof(ScrollMode), typeof(DataSetGrid), new FrameworkPropertyMetadata(ScrollMode.None));
 
-        public static readonly DependencyProperty ScrollOptionProperty = ScrollOptionPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ScrollModeProperty = ScrollModePropertyKey.DependencyProperty;
 
         public DataSetView View
         {
@@ -32,10 +32,10 @@ namespace DevZest.Data.Windows
             private set { SetValue(ViewPropertyKey, value); }
         }
 
-        public ScrollOption ScrollOption
+        public ScrollMode ScrollMode
         {
-            get { return (ScrollOption)GetValue(ScrollOptionProperty); }
-            private set { SetValue(ScrollOptionPropertyKey, value); }
+            get { return (ScrollMode)GetValue(ScrollModeProperty); }
+            private set { SetValue(ScrollModePropertyKey, value); }
         }
 
         public void Initialize<TModel>(DataSet<TModel> dataSet, Action<GridTemplate, TModel> templateInitializer = null)

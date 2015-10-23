@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum ScrollOption
+    public enum ScrollMode
     {
         None,
         Normal,

@@ -26,9 +26,9 @@ namespace DevZest.Data.Windows
             get { return Template.Model; }
         }
 
-        public ScrollOption ScrollOption
+        public ScrollMode ScrollMode
         {
-            get { return Template.ScrollOption; }
+            get { return Template.ScrollMode; }
         }
 
         #region IList<DataRowView>
