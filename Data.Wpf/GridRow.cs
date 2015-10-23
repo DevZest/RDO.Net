@@ -1,18 +1,27 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
     public sealed class GridRow : GridDefinition
     {
-        internal GridRow(GridTemplate owner, int ordinal, GridLength height)
-            : base(owner, ordinal, height)
+        internal GridRow(GridTemplate owner, int ordinal, GridLengthParser.Result result)
+            : base(owner, ordinal, result)
         {
         }
 
         public GridLength Height
         {
             get { return Length; }
+        }
+
+        public double MinHeight
+        {
+            get { return MinLength; }
+        }
+
+        public double MaxHeight
+        {
+            get { return MaxLength; }
         }
     }
 }

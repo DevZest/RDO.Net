@@ -161,18 +161,9 @@ namespace DevZest.Data.Windows
 
         public GridItemCollection<ChildSetGridItem> ChildSetItems { get; private set; }
 
-        private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
-        private static GridLength GetGridLength(string gridLength)
-        {
-            if (string.IsNullOrEmpty(gridLength))
-                throw new ArgumentNullException(nameof(gridLength));
-
-            return (GridLength)s_gridLengthConverter.ConvertFromInvariantString(gridLength);
-        }
-
         public GridTemplate AddGridRows(params string[] heights)
         {
-            if (heights != null)
+            if (heights == null)
                 throw new ArgumentNullException(nameof(heights));
 
             foreach (var height in heights)
@@ -182,7 +173,7 @@ namespace DevZest.Data.Windows
 
         public GridTemplate AddGridColumns(params string[] widths)
         {
-            if (widths != null)
+            if (widths == null)
                 throw new ArgumentNullException(nameof(widths));
 
             foreach (var width in widths)
@@ -193,7 +184,7 @@ namespace DevZest.Data.Windows
         private int AddGridColumn(string width)
         {
             VerifyIsSealed();
-            GridColumns.Add(new GridColumn(this, GridColumns.Count, GetGridLength(width)));
+            GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridRows.Count - 1;
             VerifyGridColumnWidth(Orientation, result, result, nameof(width));
             return result;
@@ -208,7 +199,7 @@ namespace DevZest.Data.Windows
         private int AddGridRow(string height)
         {
             VerifyIsSealed();
-            GridRows.Add(new GridRow(this, GridRows.Count, GetGridLength(height)));
+            GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(Orientation, result, result, nameof(height));
             return result;

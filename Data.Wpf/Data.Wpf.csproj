@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="BooleanBoxes.cs" />
     <Compile Include="ChildSetGridItem.cs" />
@@ -40,9 +46,11 @@
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />
     <Compile Include="GridItemFactory.cs" />
+    <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
     <Compile Include="DataSetView.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="Properties\Resources.cs">
       <DependentUpon>Resources.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -76,6 +84,7 @@
     <EmbeddedResource Include="Properties\Resources.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Key.snk" />
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>

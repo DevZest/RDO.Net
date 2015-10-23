@@ -16,6 +16,14 @@ namespace DevZest.Data.Windows.Resources
     internal static class Strings
     {
         // <summary>
+        // A string like "The input string "{0}" is invalid."
+        // </summary>
+        internal static string GridLengthParser_InvalidInput(object p0)
+        {
+            return ResourceLoader.GetString(ResourceLoader.GridLengthParser_InvalidInput, p0);
+        }
+
+        // <summary>
         // A string like "The GridRange does not belong to the same DataSetControl."
         // </summary>
         internal static string GridRange_InvalidDataSetControl
@@ -63,6 +71,14 @@ namespace DevZest.Data.Windows.Resources
     internal static class Error
     {
         // <summary>
+        // FormatException with message like "The input string "{0}" is invalid."
+        // </summary>
+        internal static Exception GridLengthParser_InvalidInput(object p0)
+        {
+            return new FormatException(Strings.GridLengthParser_InvalidInput(p0));
+        }
+
+        // <summary>
         // InvalidOperationException with message like "The GridTemplate is currently sealed (read-only)."
         // </summary>
         internal static Exception GridTemplate_VerifyIsSealed()
@@ -94,6 +110,7 @@ namespace DevZest.Data.Windows.Resources
     [GeneratedCode("Resources.tt", "1.0.0.0")]
     internal sealed class ResourceLoader
     {
+        internal const string GridLengthParser_InvalidInput = "GridLengthParser_InvalidInput";
         internal const string GridRange_InvalidDataSetControl = "GridRange_InvalidDataSetControl";
         internal const string GridTemplate_InvalidGridColumnWidthOrientation = "GridTemplate_InvalidGridColumnWidthOrientation";
         internal const string GridTemplate_InvalidGridItem = "GridTemplate_InvalidGridItem";

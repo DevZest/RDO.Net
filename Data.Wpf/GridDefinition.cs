@@ -7,11 +7,13 @@ namespace DevZest.Data.Windows
 {
     public abstract class GridDefinition
     {
-        internal GridDefinition(GridTemplate owner, int ordinal, GridLength length)
+        internal GridDefinition(GridTemplate owner, int ordinal, GridLengthParser.Result result)
         {
             Owner = owner;
             Ordinal = ordinal;
-            Length = length;
+            Length = result.Length;
+            MinLength = result.MinLength;
+            MaxLength = result.MaxLength;
         }
 
         internal GridTemplate Owner { get; private set; }
@@ -20,11 +22,17 @@ namespace DevZest.Data.Windows
 
         public GridLength Length { get; private set; }
 
+        public double MinLength { get; private set; }
+
+        public double MaxLength { get; private set; }
+
         internal void Clear()
         {
             Owner = null;
             Ordinal = 0;
-            Length = new GridLength();
+            Length = default(GridLength);
+            MinLength = 0.0;
+            MaxLength = 0.0;
         }
     }
 }
