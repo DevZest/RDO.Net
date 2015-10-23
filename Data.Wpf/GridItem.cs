@@ -43,11 +43,11 @@ namespace DevZest.Data.Windows
 
         internal abstract UIElement CreateUIElement();
 
-        List<GridElement> _cachedUIElements = new List<GridElement>();
-        internal GridElement Generate()
+        List<UIElement> _cachedUIElements;
+        internal UIElement Generate()
         {
-            if (_cachedUIElements.Count == 0)
-                return new GridElement(this, CreateUIElement());
+            if (_cachedUIElements == null || _cachedUIElements.Count == 0)
+                return CreateUIElement();
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -55,9 +55,11 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        internal void Recycle(GridElement element)
+        internal void Recycle(UIElement element)
         {
-            Debug.Assert(element != null && element.Owner == this);
+            Debug.Assert(element != null);
+            if (_cachedUIElements == null)
+                _cachedUIElements = new List<UIElement>();
             _cachedUIElements.Add(element);
         }
 

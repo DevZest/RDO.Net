@@ -69,8 +69,6 @@
     <Compile Include="ScrollMode.cs" />
     <Compile Include="SetGridItem.cs" />
     <Compile Include="UIElementExtensions.cs" />
-    <Compile Include="GridElement.cs" />
-    <Compile Include="GridElementCollection.cs" />
     <Compile Include="GridItem.cs" />
     <Compile Include="GridItemCollection.cs" />
   </ItemGroup>
