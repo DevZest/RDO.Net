@@ -185,7 +185,7 @@ namespace DevZest.Data.Windows
         {
             VerifyIsSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
-            var result = GridRows.Count - 1;
+            var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(Orientation, result, result, nameof(width));
             return result;
         }
