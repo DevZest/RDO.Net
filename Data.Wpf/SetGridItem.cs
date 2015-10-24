@@ -6,5 +6,10 @@
             : base(parentModel)
         {
         }
+
+        internal virtual GridTemplate Template
+        {
+            get { return null; }
+        }
     }
 }

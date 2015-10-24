@@ -20,6 +20,7 @@ namespace DevZest.Data.Windows
 
         internal void Seal()
         {
+            ChildTemplates = SetItems.Where(x => x.Template != null).Select(x => x.Template).ToArray();
             _isSealed = true;
         }
 
@@ -146,6 +147,8 @@ namespace DevZest.Data.Windows
         public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
 
         public GridItemCollection<SetGridItem> SetItems { get; private set; }
+
+        internal GridTemplate[] ChildTemplates { get; private set; }
 
         public GridTemplate AddGridRows(params string[] heights)
         {

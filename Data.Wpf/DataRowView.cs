@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(dataRow != null && owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
-            InitChildSetViews();
+            InitChildDataSetViews();
         }
 
         public DataRow DataRow { get; private set; }
@@ -31,41 +31,41 @@ namespace DevZest.Data.Windows
 
         private static DataSetView[] s_emptyChildSetViews = new DataSetView[0];
 
-        DataSetView[] _childSetViews;
+        DataSetView[] _childDataSetViews;
 
-        private void InitChildSetViews()
+        private void InitChildDataSetViews()
         {
-            //var childSetItems = Template.ChildSetItems;
-            //if (childSetItems.Count == 0)
-            //{
-            //    _childSetViews = s_emptyChildSetViews;
-            //    return;
-            //}
+            var childTemplates = Template.ChildTemplates;
+            if (childTemplates == null || childTemplates.Length == 0)
+            {
+                _childDataSetViews = s_emptyChildSetViews;
+                return;
+            }
 
-            //_childSetViews = new DataSetView[childSetItems.Count];
-            //for (int i = 0; i < childSetItems.Count; i++)
-            //    _childSetViews[i] = new DataSetView(this, childSetItems[i].Template);
+            _childDataSetViews = new DataSetView[childTemplates.Length];
+            for (int i = 0; i < childTemplates.Length; i++)
+                _childDataSetViews[i] = new DataSetView(this, childTemplates[i]);
         }
 
         public IEnumerator<DataSetView> GetEnumerator()
         {
-            foreach (var dataSetView in _childSetViews)
+            foreach (var dataSetView in _childDataSetViews)
                 yield return dataSetView;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _childSetViews.GetEnumerator();
+            return _childDataSetViews.GetEnumerator();
         }
 
         public int Count
         {
-            get { return _childSetViews.Length; }
+            get { return _childDataSetViews.Length; }
         }
 
         public DataSetView this[int index]
         {
-            get { return _childSetViews[index]; }
+            get { return _childDataSetViews[index]; }
         }
     }
 }
