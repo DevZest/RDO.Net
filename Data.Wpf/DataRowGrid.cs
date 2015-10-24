@@ -4,6 +4,6 @@ namespace DevZest.Data.Windows
 {
     public class DataRowGrid : Control
     {
-        public DataRow DataRow { get; set; }
+        public DataRowView View { get; private set; }
     }
 }
