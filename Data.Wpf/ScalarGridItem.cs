@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -9,60 +11,55 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal UIElement Generate(DataSetView dataSetView)
-        {
-            var result = InternalGetOrCreate();
-            result.InternalSetDataSetView(dataSetView);
-            InternalInitialize(result);
-            Refresh(result);
-            return result;
-        }
+        internal abstract UIElement Generate(DataSetView dataSetView);
 
-        internal override void Recycle(UIElement uiElement)
-        {
-            uiElement.InternalSetDataSetView(null);
-            base.Recycle(uiElement);
-        }
+        internal abstract void Refresh(DataSetView dataSetView, UIElement uiElement);
+
+        internal abstract void Recycle(DataSetView dataSetView, UIElement uiElement);
     }
 
     public abstract class ScalarGridItem<T> : ScalarGridItem
         where T : UIElement, new()
     {
-        protected ScalarGridItem(Model parentModel)
+        protected ScalarGridItem(Model parentModel, Action<T> initializer)
             : base(parentModel)
         {
+            _initializer = initializer;
         }
 
-        protected DataSetView GetDataSetView(T uiElement)
+        Action<T> _initializer;
+        List<T> _cachedUIElements;
+
+        internal sealed override UIElement Generate(DataSetView dataSetView)
         {
-            return uiElement.InternalGetDataSetView();
+            var result = GetOrCreate(_cachedUIElements);
+            if (_initializer != null)
+                _initializer(result);
+            Initialize(dataSetView, result);
+            Refresh(dataSetView, result);
+            return result;
         }
 
-        internal sealed override UIElement InternalCreate()
+        protected virtual void Initialize(DataSetView dataSetView, T uiElement)
         {
-            return new T();
         }
 
-        internal sealed override void InternalInitialize(UIElement uiElement)
+        internal sealed override void Refresh(DataSetView dataSetView, UIElement uiElement)
         {
-            Initialize((T)uiElement);
+            Refresh(dataSetView, (T)uiElement);
         }
 
-        protected abstract void Initialize(T uiElement);
+        protected abstract void Refresh(DataSetView dataSetView, T uiElement);
 
-        internal sealed override void Refresh(UIElement uiElement)
+        internal sealed override void Recycle(DataSetView dataSetView, UIElement uiElement)
         {
-            Refresh((T)uiElement);
+            var element = (T)uiElement;
+            Cleanup(dataSetView, element);
+            Recycle(_cachedUIElements, element);
         }
 
-        protected abstract void Refresh(T uiElement);
-
-        internal sealed override void Recycle(UIElement uiElement)
+        protected virtual void Cleanup(DataSetView dataSetView, T uiElement)
         {
-            Cleanup((T)uiElement);
-            base.Recycle(uiElement);
         }
-
-        protected abstract void Cleanup(T uiElement);
     }
 }

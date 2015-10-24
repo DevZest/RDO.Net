@@ -25,13 +25,5 @@ namespace DevZest.Data.Windows
             Items.Add(gridItem);
             Range = Range.Union(gridRange);
         }
-
-        internal void Clear()
-        {
-            foreach (var viewItem in this)
-                viewItem.Clear();
-            Items.Clear();
-            Range = new GridRange();
-        }
     }
 }

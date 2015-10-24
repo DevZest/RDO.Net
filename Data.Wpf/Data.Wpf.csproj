@@ -68,6 +68,7 @@
     <Compile Include="ScalarGridItem.cs" />
     <Compile Include="ScrollMode.cs" />
     <Compile Include="SetGridItem.cs" />
+    <Compile Include="TextBlockFactory.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="GridItem.cs" />
     <Compile Include="GridItemCollection.cs" />

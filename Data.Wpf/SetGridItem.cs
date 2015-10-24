@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -15,60 +16,55 @@ namespace DevZest.Data.Windows
             get { return null; }
         }
 
-        internal UIElement Generate(DataRowView dataRowView)
-        {
-            var result = InternalGetOrCreate();
-            result.InternalSetDataRowView(dataRowView);
-            InternalInitialize(result);
-            Refresh(result);
-            return result;
-        }
+        internal abstract UIElement Generate(DataRowView dataRowView);
 
-        internal override void Recycle(UIElement uiElement)
-        {
-            uiElement.InternalSetDataRowView(null);
-            base.Recycle(uiElement);
-        }
+        internal abstract void Refresh(DataRowView dataRowView, UIElement uiElement);
+
+        internal abstract void Recycle(DataRowView dataRowView, UIElement uiElement);
     }
 
     public abstract class SetGridItem<T> : SetGridItem
         where T : UIElement, new()
     {
-        protected SetGridItem(Model parentModel)
+        protected SetGridItem(Model parentModel, Action<T> initializer)
             : base(parentModel)
         {
+            _initializer = initializer;
         }
 
-        protected DataRowView GetDataRowView(T uiElement)
+        Action<T> _initializer;
+        List<T> _cachedUIElements;
+
+        internal override UIElement Generate(DataRowView dataRowView)
         {
-            return uiElement.InternalGetDataRowView();
+            var result = GetOrCreate(_cachedUIElements);
+            if (_initializer != null)
+                _initializer(result);
+            Initialize(dataRowView, result);
+            Refresh(dataRowView, result);
+            return result;
         }
 
-        internal sealed override UIElement InternalCreate()
+        protected virtual void Initialize(DataRowView dataRowView, T uiElement)
         {
-            return new T();
         }
 
-        internal sealed override void InternalInitialize(UIElement uiElement)
+        internal sealed override void Refresh(DataRowView dataRowView, UIElement uiElement)
         {
-            Initialize((T)uiElement);
+            Refresh(dataRowView, (T)uiElement);
         }
 
-        protected abstract void Initialize(T uiElement);
+        protected abstract void Refresh(DataRowView dataRowView, T uiElement);
 
-        internal sealed override void Refresh(UIElement uiElement)
+        internal sealed override void Recycle(DataRowView dataRowView, UIElement uiElement)
         {
-            Refresh((T)uiElement);
+            var element = (T)uiElement;
+            Cleanup(dataRowView, element);
+            Recycle(_cachedUIElements, element);
         }
 
-        protected abstract void Refresh(T uiElement);
-
-        internal sealed override void Recycle(UIElement uiElement)
+        protected virtual void Cleanup(DataRowView dataRowView, T uiElement)
         {
-            Cleanup((T)uiElement);
-            base.Recycle(uiElement);
         }
-
-        protected abstract void Cleanup(T uiElement);
     }
 }

@@ -24,12 +24,6 @@ namespace DevZest.Data.Windows
             GridRange = gridRange;
         }
 
-        internal void Clear()
-        {
-            Owner = null;
-            GridRange = new GridRange();
-        }
-
         public bool IsSealed
         {
             get { return Owner == null ? false : Owner.IsSealed; }
@@ -41,30 +35,25 @@ namespace DevZest.Data.Windows
                 throw Error.GridTemplate_VerifyIsSealed();
         }
 
-        internal abstract UIElement InternalCreate();
-
-        List<UIElement> _cachedUIElements;
-        internal UIElement InternalGetOrCreate()
+        internal static T GetOrCreate<T>(List<T> cachedUIElements)
+            where T : UIElement, new()
         {
-            if (_cachedUIElements == null || _cachedUIElements.Count == 0)
-                return InternalCreate();
+            if (cachedUIElements == null || cachedUIElements.Count == 0)
+                return new T();
 
-            var last = _cachedUIElements.Count - 1;
-            var result = _cachedUIElements[last];
-            _cachedUIElements.RemoveAt(last);
+            var last = cachedUIElements.Count - 1;
+            var result = cachedUIElements[last];
+            cachedUIElements.RemoveAt(last);
             return result;
         }
 
-        internal abstract void InternalInitialize(UIElement uiElement);
-
-        internal abstract void Refresh(UIElement uiElement);
-
-        internal virtual void Recycle(UIElement uiElement)
+        internal static void Recycle<T>(List<T> cachedUIElements, T uiElement)
+            where T : UIElement, new()
         {
             Debug.Assert(uiElement != null);
-            if (_cachedUIElements == null)
-                _cachedUIElements = new List<UIElement>();
-            _cachedUIElements.Add(uiElement);
+            if (cachedUIElements == null)
+                cachedUIElements = new List<T>();
+            cachedUIElements.Add(uiElement);
         }
     }
 }
