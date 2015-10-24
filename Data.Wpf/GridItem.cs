@@ -41,13 +41,13 @@ namespace DevZest.Data.Windows
                 throw Error.GridTemplate_VerifyIsSealed();
         }
 
-        internal abstract UIElement CreateUIElement();
+        internal abstract UIElement InternalCreate();
 
         List<UIElement> _cachedUIElements;
-        internal UIElement Generate()
+        internal UIElement InternalGetOrCreate()
         {
             if (_cachedUIElements == null || _cachedUIElements.Count == 0)
-                return CreateUIElement();
+                return InternalCreate();
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -55,14 +55,14 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        internal void Recycle(UIElement element)
+        internal abstract void Refresh(UIElement uiElement);
+
+        internal virtual void Recycle(UIElement uiElement)
         {
-            Debug.Assert(element != null);
+            Debug.Assert(uiElement != null);
             if (_cachedUIElements == null)
                 _cachedUIElements = new List<UIElement>();
-            _cachedUIElements.Add(element);
+            _cachedUIElements.Add(uiElement);
         }
-
-        internal abstract void InitUIElement(UIElement uiElement);
     }
 }

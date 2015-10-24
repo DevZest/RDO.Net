@@ -35,16 +35,16 @@ namespace DevZest.Data.Windows
 
         private void InitChildSetViews()
         {
-            var childSetItems = Template.ChildSetItems;
-            if (childSetItems.Count == 0)
-            {
-                _childSetViews = s_emptyChildSetViews;
-                return;
-            }
+            //var childSetItems = Template.ChildSetItems;
+            //if (childSetItems.Count == 0)
+            //{
+            //    _childSetViews = s_emptyChildSetViews;
+            //    return;
+            //}
 
-            _childSetViews = new DataSetView[childSetItems.Count];
-            for (int i = 0; i < childSetItems.Count; i++)
-                _childSetViews[i] = new DataSetView(this, childSetItems[i].Template);
+            //_childSetViews = new DataSetView[childSetItems.Count];
+            //for (int i = 0; i < childSetItems.Count; i++)
+            //    _childSetViews[i] = new DataSetView(this, childSetItems[i].Template);
         }
 
         public IEnumerator<DataSetView> GetEnumerator()

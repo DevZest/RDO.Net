@@ -16,7 +16,6 @@ namespace DevZest.Data.Windows
             GridColumns = new GridDefinitionCollection<GridColumn>();
             ScalarItems = new GridItemCollection<ScalarGridItem>(this);
             SetItems = new GridItemCollection<SetGridItem>(this);
-            ChildSetItems = new GridItemCollection<ChildSetGridItem>(this);
         }
 
         internal void Seal()
@@ -112,7 +111,7 @@ namespace DevZest.Data.Windows
 
         private GridRange CalculatedDataRowRange
         {
-            get { return SetItems.Range.Union(ChildSetItems.Range); }
+            get { return SetItems.Range; }
         }
 
         public GridTemplate SetDataRowRange(GridRange value)
@@ -147,8 +146,6 @@ namespace DevZest.Data.Windows
         public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
 
         public GridItemCollection<SetGridItem> SetItems { get; private set; }
-
-        public GridItemCollection<ChildSetGridItem> ChildSetItems { get; private set; }
 
         public GridTemplate AddGridRows(params string[] heights)
         {
@@ -257,13 +254,6 @@ namespace DevZest.Data.Windows
         {
             VerifyAddItem(gridRange, gridItem);
             SetItems.Add(gridItem, gridRange);
-            return this;
-        }
-
-        public GridTemplate AddItem(GridRange gridRange, ChildSetGridItem gridItem)
-        {
-            VerifyAddItem(gridRange, gridItem);
-            ChildSetItems.Add(gridItem, gridRange);
             return this;
         }
 

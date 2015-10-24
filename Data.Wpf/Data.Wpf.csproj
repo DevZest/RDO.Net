@@ -38,7 +38,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BooleanBoxes.cs" />
-    <Compile Include="ChildSetGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowGrid.cs" />
     <Compile Include="DataRowView.cs" />

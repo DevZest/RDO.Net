@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Windows
+﻿using System.Windows;
+
+namespace DevZest.Data.Windows
 {
     public abstract class ScalarGridItem : GridItem
     {
@@ -6,5 +8,9 @@
             : base(parentModel)
         {
         }
+
+        internal abstract UIElement Generate(DataSetView dataSetView);
+
+        public new abstract void Recycle(UIElement uiElement);
     }
 }
