@@ -41,6 +41,7 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowGrid.cs" />
     <Compile Include="DataRowView.cs" />
+    <Compile Include="DataSetGridFactory.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />

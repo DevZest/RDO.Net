@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
         public DataSetView View
         {
             get { return (DataSetView)GetValue(ViewProperty); }
-            private set { SetValue(ViewPropertyKey, value); }
+            internal set { SetValue(ViewPropertyKey, value); }
         }
 
         public ScrollMode ScrollMode

@@ -55,6 +55,8 @@ namespace DevZest.Data.Windows
             return result;
         }
 
+        internal abstract void InternalInitialize(UIElement uiElement);
+
         internal abstract void Refresh(UIElement uiElement);
 
         internal virtual void Recycle(UIElement uiElement)

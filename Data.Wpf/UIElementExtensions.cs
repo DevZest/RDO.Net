@@ -8,13 +8,13 @@ namespace DevZest.Data.Windows
     {
         private static ConditionalWeakTable<UIElement, DataSetView> s_dataSetViews = new ConditionalWeakTable<UIElement, DataSetView>();
 
-        public static DataSetView GetDataSetView(this UIElement uiElement)
+        internal static DataSetView InternalGetDataSetView(this UIElement uiElement)
         {
             DataSetView result;
             return s_dataSetViews.TryGetValue(uiElement, out result) ? result : null;
         }
 
-        internal static void SetDataSetView(this UIElement uiElement, DataSetView value)
+        internal static void InternalSetDataSetView(this UIElement uiElement, DataSetView value)
         {
             Debug.Assert(uiElement != null);
             if (value == null)
@@ -24,13 +24,13 @@ namespace DevZest.Data.Windows
         }
 
         private static ConditionalWeakTable<UIElement, DataRowView> s_dataRowViews = new ConditionalWeakTable<UIElement, DataRowView>();
-        public static DataRowView GetDataRowView(this UIElement uiElement)
+        internal static DataRowView InternalGetDataRowView(this UIElement uiElement)
         {
             DataRowView result;
             return s_dataRowViews.TryGetValue(uiElement, out result) ? result : null;
         }
 
-        internal static void SetDataRowView(this UIElement uiElement, DataRowView value)
+        internal static void InternalSetDataRowView(this UIElement uiElement, DataRowView value)
         {
             Debug.Assert(uiElement != null);
             if (value == null)

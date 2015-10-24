@@ -21,8 +21,12 @@ namespace DevZest.Data.Windows
         internal void Seal()
         {
             ChildTemplates = SetItems.Where(x => x.Template != null).Select(x => x.Template).ToArray();
+            for (int i = 0; i < ChildTemplates.Length; i++)
+                ChildTemplates[i].ChildOrdinal = i;
             _isSealed = true;
         }
+
+        internal int ChildOrdinal { get; private set; }
 
         bool _isSealed = false;
         public bool IsSealed
@@ -34,7 +38,6 @@ namespace DevZest.Data.Windows
             if (_isSealed)
                 throw Error.GridTemplate_VerifyIsSealed();
         }
-
 
         public Model Model { get; private set; }
 
