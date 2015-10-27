@@ -118,27 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ColumnTypeNotSupported" xml:space="preserve">
-    <value>The column type {0} is not supported.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
+    <value>The column type "{columnType}" is not supported.</value>
   </data>
   <data name="ConstraintTypeNotSupported" xml:space="preserve">
-    <value>The constraint type {0} is not supported.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
+    <value>The constraint type "{constraintType}" is not supported.</value>
   </data>
   <data name="FunctionNotSupported" xml:space="preserve">
-    <value>The function {0} is not supported.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
-  </data>
-  <data name="InvalidTableName" xml:space="preserve">
-    <value>The table name '{0}' is not valid.</value>
-    <comment>## ExceptionType=FormatException</comment>
-  </data>
-  <data name="SqlDbTypeNotSupported" xml:space="preserve">
-    <value>The SqlDbType {0} is not supported on SQL Server Version {1}.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
+    <value>The function "{functionName}" is not supported.</value>
   </data>
   <data name="SqlVersionNotSupported" xml:space="preserve">
-    <value>The SQL Server version {0} is not supported.</value>
-    <comment>## ExceptionType=NotSupportedException</comment>
+    <value>The SQL Server version "{sqlServerVersion}" is not supported.</value>
   </data>
 </root>

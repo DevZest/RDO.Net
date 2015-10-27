@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using DevZest.Data.Primitives;
-using DevZest.Data.SqlServer.Resources;
 using System.Data.SqlTypes;
 using System.Collections.Concurrent;
 using System.Reflection;
@@ -330,7 +329,7 @@ namespace DevZest.Data.SqlServer
                 return s_defaultMapperProviders.GetOrAdd(columnDataType, BuildMapperProviderFactory(methodInfo, columnDataType));
             }
 
-            throw Error.ColumnTypeNotSupported(column.GetType());
+            throw new NotSupportedException(Strings.ColumnTypeNotSupported(column.GetType()));
         }
 
         private static MapperProvider<T> GetCharEnumMapperProvider<T>()

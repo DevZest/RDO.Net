@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.SqlServer.Resources;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -144,7 +143,7 @@ namespace DevZest.Data.SqlServer
             }
             catch (KeyNotFoundException)
             {
-                throw Error.FunctionNotSupported(e.FunctionKey);
+                throw new NotSupportedException(Strings.FunctionNotSupported(e.FunctionKey));
             }
             handler(this, e);
         }

@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.SqlServer.Resources;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,7 +66,7 @@ namespace DevZest.Data.SqlServer
                 else if (constraint is ForeignKeyConstraint)
                     GenerateForeignKeyConstraint(sqlBuilder, (ForeignKeyConstraint)constraint);
                 else
-                    throw Error.ConstraintTypeNotSupported(constraint.GetType().FullName);
+                    throw new NotSupportedException(Strings.ConstraintTypeNotSupported(constraint.GetType().FullName));
 
                 bool isLastConstraint = (i == constraints.Count - 1);
                 if (!isLastConstraint)

@@ -46,6 +46,12 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\tools\Resources.cs">
+      <Link>Properties\Resources.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.tt</DependentUpon>
+    </Compile>
     <Compile Include="BinaryExtensions.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="ColumnAttributes.cs" />
@@ -63,10 +69,8 @@
     <Compile Include="ModelAliasManager.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.cs">
-      <DependentUpon>Resources.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Properties\Strings.Designer.cs">
+      <DependentUpon>Strings.Resx</DependentUpon>
     </Compile>
     <Compile Include="SqlCommandExtensions.cs" />
     <Compile Include="SqlConnectionExtensions.cs" />
@@ -87,13 +91,10 @@
     <Compile Include="_TimeSpan.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\Resources.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx" />
+    <EmbeddedResource Include="Properties\Strings.resx">
+      <LogicalName>DevZest.Data.SqlServer.Strings.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -103,6 +104,13 @@
       <Project>{f6f84b00-da10-4559-a183-403af6e9bf16}</Project>
       <Name>Data.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\tools\Resources.tt">
+      <Link>Properties\Resources.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Resources.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

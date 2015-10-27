@@ -1,5 +1,4 @@
-﻿using DevZest.Data.SqlServer.Resources;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -25,7 +24,7 @@ namespace DevZest.Data.SqlServer
             else if (majorVersion == 11)
                 return SqlVersion.Sql11;
             else
-                throw Error.SqlVersionNotSupported(serverVersion);
+                throw new NotSupportedException(Strings.SqlVersionNotSupported(serverVersion));
         }
     }
 }
