@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.SqlServer", "Data.SqlServer\Data.SqlServer.csproj", "{A6FA783F-4ADA-4BEA-9422-DF79344EC625}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.SqlServer", "src\Data.SqlServer\Data.SqlServer.csproj", "{A6FA783F-4ADA-4BEA-9422-DF79344EC625}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT", "AdventureWorksLT\AdventureWorksLT.csproj", "{1B21D8EB-46CA-4059-B753-25481B3EF739}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdventureWorksLT", "test\AdventureWorksLT\AdventureWorksLT.csproj", "{1B21D8EB-46CA-4059-B753-25481B3EF739}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Common", "Data.Common\Data.Common.csproj", "{F6F84B00-DA10-4559-A183-403AF6E9BF16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Common", "src\Data.Common\Data.Common.csproj", "{F6F84B00-DA10-4559-A183-403AF6E9BF16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{55670E5D-0C04-4861-A080-C9FE7D258305}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "test\IntegrationTests\IntegrationTests.csproj", "{55670E5D-0C04-4861-A080-C9FE7D258305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{406601E1-B089-41BB-8E8B-2A0AF0E402C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{406601E1-B089-41BB-8E8B-2A0AF0E402C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
