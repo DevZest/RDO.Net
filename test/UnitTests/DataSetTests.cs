@@ -156,7 +156,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_serialize_deserialize_json()
         {
-            var result = DataSet<ProductCategory>.ParseJson(Strings.ProductCategoriesJson);
+            var result = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
 
             var childModel = result._.SubCategories;
             Assert.AreEqual(4, result.Count);
@@ -165,7 +165,7 @@ namespace DevZest.Data
             Assert.AreEqual(8, result[2].Children(childModel).Count);
             Assert.AreEqual(12, result[3].Children(childModel).Count);
 
-            Assert.AreEqual(Strings.ProductCategoriesJson.Trim(), result.ToString().Trim());
+            Assert.AreEqual(StringRes.ProductCategoriesJson.Trim(), result.ToString().Trim());
         }
 
         [TestMethod]

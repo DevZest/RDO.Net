@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Globalization;
@@ -758,13 +757,13 @@ namespace DevZest.Data
             VerifyDesignMode();
 
             if (increment == 0)
-                throw Error.Argument(Strings.Model_InvalidIdentityIncrement, nameof(increment));
+                throw new ArgumentException(Strings.Model_InvalidIdentityIncrement, nameof(increment));
 
             var identity = new Identity(this, seed, increment, isTempTable);
             AddOrUpdateInterceptor(identity);
             var model = ParentModel;
             if (model.ContainsInterceptor(identity.FullName))
-                throw Error.Model_MultipleIdentityColumn();
+                throw new InvalidOperationException(Strings.Model_MultipleIdentityColumn);
             model.AddInterceptor(identity);
             return identity;
         }

@@ -1,4 +1,4 @@
-﻿using DevZest.Data.Resources;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -34,7 +34,7 @@ namespace DevZest.Data.Utilities
                 var mapping = parentMappings[i];
                 var source = GetSource(mapping.Source, columnMappings);
                 if (source == null)
-                    throw Error.ChildColumnNotExistInColumnMappings(mapping.Source.ColumnName);
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source.ColumnName));
                 result[i] = new ColumnMapping(source, mapping.Target);
             }
 

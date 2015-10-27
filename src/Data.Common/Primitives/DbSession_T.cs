@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -298,7 +297,7 @@ namespace DevZest.Data.Primitives
             {
                 var column = columns[i] as IColumn<TReader>;
                 if (column == null)
-                    throw Error.DbSession_ColumnNotSupported(i, columns[i].ColumnName);
+                    throw new NotSupportedException(Strings.DbSession_ColumnNotSupported(i, columns[i].ColumnName));
                 result[i] = column;
             }
             return result;

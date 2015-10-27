@@ -13,7 +13,7 @@ namespace DevZest.Data.SqlServer
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(Strings.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var query = db.CreateDbSet(dataSet);
                 var expectedSql =
 @"DECLARE @p1 XML = N'
@@ -70,7 +70,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(Strings.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var commands = db.CreateDbSet(dataSet).GetToTempTableCommands();
 
                 var expectedSql0 =

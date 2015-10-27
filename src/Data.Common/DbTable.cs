@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
@@ -231,14 +230,14 @@ namespace DevZest.Data
         {
             var targetKey = this._.PrimaryKey;
             if (targetKey == null)
-                throw Error.DbTable_NoPrimaryKey(this._);
+                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(Model));
 
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)
-                throw Error.DbTable_NoPrimaryKey(sourceModel);
+                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(sourceModel));
 
             if (targetKey.Count() != sourceKey.Count())
-                throw Error.DbTable_GetKeyMappings_CannotMatch();
+                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
 
             var result = new ColumnMapping[targetKey.Count()];
             for (int i = 0; i < result.Length; i++)
@@ -246,7 +245,7 @@ namespace DevZest.Data
                 var targetColumn = targetKey[i].Column;
                 var sourceColumn = sourceKey[i].Column;
                 if (targetColumn.DataType != sourceColumn.DataType)
-                    throw Error.DbTable_GetKeyMappings_CannotMatch();
+                    throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
 
                 result[i] = new ColumnMapping(sourceColumn, targetColumn);
             }

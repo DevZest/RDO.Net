@@ -1,8 +1,6 @@
-﻿
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using System;
 using DevZest.Data.Utilities;
-using DevZest.Data.Resources;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -19,7 +17,7 @@ namespace DevZest.Data
         {
             Check.NotNull(db, nameof(db));
             if (Db != null)
-                throw Error.MockDb_InitializeTwice();
+                throw new InvalidOperationException(Strings.MockDb_InitializeTwice);
 
             Db = db;
             db.Mock = this;
@@ -95,7 +93,7 @@ namespace DevZest.Data
             if (dbTable.DbSession != Db)
                 throw new ArgumentException(Strings.MockDb_InvalidTable, nameof(dbTable));
             if (!_isInitializing)
-                throw Error.MockDb_MockOnlyAllowedDuringInitialization();
+                throw new InvalidOperationException(Strings.MockDb_MockOnlyAllowedDuringInitialization);
             if (_pendingMockTables.ContainsKey(dbTable))
                 throw new ArgumentException(Strings.MockDb_DuplicateTable(dbTable.Name), nameof(dbTable));
 
@@ -149,7 +147,7 @@ namespace DevZest.Data
                 var result = _mockTables[tableName];
                 var resultModelType = result.Table.GetType().GenericTypeArguments[0];
                 if (typeof(TModel) != resultModelType)
-                    throw Error.MockDb_ModelTypeMismatch(typeof(TModel).FullName, resultModelType.FullName, tableName);
+                    throw new InvalidOperationException(Strings.MockDb_ModelTypeMismatch(typeof(TModel).FullName, resultModelType.FullName, tableName));
                 return (DbTable<TModel>)result.Table;
             }
 
@@ -157,7 +155,7 @@ namespace DevZest.Data
                 return null;
 
             if (_creatingTableNames.Contains(tableName))
-                throw Error.MockDb_CircularReference(tableName);
+                throw new InvalidOperationException(Strings.MockDb_CircularReference(tableName));
 
             _creatingTableNames.Add(tableName);
 

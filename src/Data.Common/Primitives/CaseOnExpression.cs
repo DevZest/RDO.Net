@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +47,7 @@ namespace DevZest.Data.Primitives
             Check.NotNull(value, nameof(value));
 
             if (_else != null)
-                throw Error.Case_WhenAfterElse();
+                throw new InvalidOperationException(Strings.Case_WhenAfterElse);
 
             _when.Add(condition);
             _then.Add(value);

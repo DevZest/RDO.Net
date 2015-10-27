@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections;
@@ -51,7 +50,7 @@ namespace DevZest.Data
 
                 var dataRow = this[index];
                 if (dataRow.Parent != null)
-                    throw Error.NotSupportedByReadOnlyList();
+                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
                 dataRow.DisposeByMainDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
@@ -61,7 +60,7 @@ namespace DevZest.Data
             public override void Clear()
             {
                 if (IsReadOnly)
-                    throw Error.NotSupportedByReadOnlyList();
+                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
 
                 for (int i = _rows.Count - 1; i >= 0; i--)
                     _rows[i].DisposeByMainDataSet();
@@ -77,7 +76,7 @@ namespace DevZest.Data
                 if (dataRow == null)
                     throw new ArgumentNullException(nameof(dataRow));
                 if (IsReadOnly && dataRow.Parent == null)
-                    throw Error.NotSupportedByReadOnlyList();
+                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
                 if (index < 0 || index > Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 

@@ -1,5 +1,5 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
@@ -65,11 +65,11 @@ namespace DevZest.Data.Primitives
         public sealed override T Eval(DataRow dataRow)
         {
             if (Param.ParentModel.DataSource.Kind != DataSourceKind.DataSet)
-                throw Error.ColumnAggregateFunction_EvalOnNonDataSet(Param.ToString(), Param.ParentModel.DataSource.Kind);
+                throw new InvalidOperationException(Strings.ColumnAggregateFunction_EvalOnNonDataSet(Param, Param.ParentModel.DataSource.Kind));
 
             var modelChain = ResolveModelChain(dataRow);
             if (modelChain == null)
-                throw Error.Argument(Strings.ColumnAggregateFunction_NoModelChain(Param.ToString()), nameof(dataRow));
+                throw new ArgumentException(Strings.ColumnAggregateFunction_NoModelChain(Param.ToString()), nameof(dataRow));
 
             EvalInit();
 

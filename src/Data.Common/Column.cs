@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 
@@ -153,7 +152,7 @@ namespace DevZest.Data
         {
             Check.NotNull(reader, nameof(reader));
             if (reader.Model != this.ParentModel)
-                throw Error.Argument(Strings.Column_VerifyDbReader, nameof(reader));
+                throw new ArgumentException(Strings.Column_VerifyDbReader, nameof(reader));
         }
 
         internal Column Clone(Model parentModel)
@@ -204,11 +203,11 @@ namespace DevZest.Data
             foreach (var parentModel in ParentModelSet)
             {
                 if (!sourceModels.Contains(parentModel))
-                    throw Error.Argument(Strings.DbQueryBuilder_VerifySourceColumnParentModels(parentModel), exceptionParamName);
+                    throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnParentModels(parentModel), exceptionParamName);
             }
 
             if (!allowsAggregate && AggregateModelSet.Count > 0)
-                throw Error.Argument(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
+                throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
         }
 
         /// <summary>Gets this column as asending sorted.</summary>

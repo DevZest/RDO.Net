@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DevZest.Data.Resources;
 
 namespace DevZest.Data.Primitives
 {
@@ -88,7 +87,7 @@ namespace DevZest.Data.Primitives
             private void OnItemChanging(IInterceptor item)
             {
                 if (IsFrozen)
-                    throw Error.VerifyDesignMode();
+                    throw new InvalidOperationException(Strings.VerifyDesignMode);
 
                 var type = item.GetType();
                 var invalidatedTypes = new List<Type>();

@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
 using System.Diagnostics;
-using DevZest.Data.Resources;
 
 namespace DevZest.Data.Primitives
 {
@@ -170,7 +169,7 @@ namespace DevZest.Data.Primitives
                 var name = propertyInfo.Name;
                 var setter = GetSetter(name);
                 if (setter == null)
-                    throw Error.Argument(Strings.Accessor_InvalidGetter, nameof(propertyInfo));
+                    throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(propertyInfo));
                 Init(name, propertyInfo.Getter.Compile(), setter, constructor, initializer);
             }
 
@@ -273,7 +272,7 @@ namespace DevZest.Data.Primitives
             lock (_resultRegistrations) // ensure thread safety
             {
                 if (_resultRegistrations.ContainsKey(targetType))
-                    throw Error.Accessor_RegisterAfterUse(targetType.FullName);
+                    throw new InvalidOperationException(Strings.Accessor_RegisterAfterUse(targetType.FullName));
 
                 RegistrationCollection registrations;
                 if (!_registrations.TryGetValue(targetType, out registrations))
@@ -283,7 +282,7 @@ namespace DevZest.Data.Primitives
                 }
 
                 if (registrations.Contains(new Key(item)))
-                    throw Error.Accessor_RegisterDuplicate(item.OwnerType.FullName, item.Name);
+                    throw new InvalidOperationException(Strings.Accessor_RegisterDuplicate(item.OwnerType.FullName, item.Name));
 
                 registrations.Add(item);
             }

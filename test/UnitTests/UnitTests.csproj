@@ -97,12 +97,11 @@
     <Compile Include="Primitives\InterceptableTests.cs" />
     <Compile Include="SqlServer\SqlSessionTests.cs" />
     <Compile Include="SqlServer\StringExtensionsTests.cs" />
-    <Compile Include="Strings.Designer.cs">
+    <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
+      <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\StringsTests.cs" />
     <Compile Include="SqlServer\ColumnExtensionsTests.cs" />
     <Compile Include="SqlServer\Resources\StringsTests.cs" />
     <Compile Include="SqlServer\_TimeSpanTests.cs" />
@@ -140,9 +139,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Strings.resx">
+    <EmbeddedResource Include="StringRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <LastGenOutput>StringRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 

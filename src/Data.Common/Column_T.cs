@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
@@ -206,7 +205,7 @@ namespace DevZest.Data
             get
             {
                 if (_valueManager == null)
-                    throw Error.Column_NullValueManager();
+                    throw new InvalidOperationException(Strings.Column_NullValueManager);
                 return _valueManager;
             }
         }
@@ -221,11 +220,11 @@ namespace DevZest.Data
             {
                 Check.NotNull(value, nameof(value));
                 if (value.Owner != null)
-                    throw Error.Argument(Strings.Column_ExpressionAlreadyAttached, nameof(value));
+                    throw new ArgumentException(Strings.Column_ExpressionAlreadyAttached, nameof(value));
                 if (_expression != null)
-                    throw Error.Column_ExpressionOverwrite();
+                    throw new InvalidOperationException(Strings.Column_ExpressionOverwrite);
                 if (ParentModel != null)
-                    throw Error.Column_ExpressionModelProperty();
+                    throw new InvalidOperationException(Strings.Column_ExpressionModelProperty);
 
                 value.Owner = this;
                 _expression = value;
@@ -262,13 +261,13 @@ namespace DevZest.Data
                 }
 
                 if (IsExpression)
-                    throw Error.Column_SetReadOnlyValue();
+                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
 
                 VerifyDataRow(dataRow);
                 var valueManager = ValueManager;
                 var ordinal = dataRow.Ordinal;
                 if (valueManager.IsReadOnly(ordinal))
-                    throw Error.Column_SetReadOnlyValue();
+                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
                 valueManager[ordinal] = value;
             }
         }
@@ -322,14 +321,14 @@ namespace DevZest.Data
             set
             {
                 if (IsReadOnly(ordinal))
-                    throw Error.Column_SetReadOnlyValue();
+                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
 
                 var valueManager = ValueManager;
                 if (ordinal < 0 || ordinal >= valueManager.RowCount)
                     throw new ArgumentOutOfRangeException(nameof(ordinal));
 
                 if (valueManager.IsReadOnly(ordinal))
-                    throw Error.Column_SetReadOnlyValue();
+                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
                 valueManager[ordinal] = value;
             }
         }

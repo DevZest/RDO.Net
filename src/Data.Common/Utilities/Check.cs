@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using System;
+﻿using System;
 
 namespace DevZest.Data.Utilities
 {
@@ -16,7 +15,7 @@ namespace DevZest.Data.Utilities
         public static string NotEmpty(string value, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw Error.Argument(Strings.ArgumentIsNullOrWhitespace(parameterName), parameterName);
+                throw new ArgumentException(Strings.ArgumentIsNullOrWhitespace(parameterName), parameterName);
 
             return value;
         }

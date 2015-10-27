@@ -1,6 +1,4 @@
-﻿
-using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,7 +26,7 @@ namespace DevZest.Data
 
             buildAction(this);
             if (_result.Count == 0)
-                throw Error.ColumnMappingsBuilder_NoColumnMapping();
+                throw new InvalidOperationException(Strings.ColumnMappingsBuilder_NoColumnMapping);
             return _result;
         }
 

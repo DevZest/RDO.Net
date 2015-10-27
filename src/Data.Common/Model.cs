@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections;
@@ -394,7 +393,7 @@ namespace DevZest.Data
             set
             {
                 if (_clusteredIndex != null && _clusteredIndex != value)
-                    throw Error.Model_MultipleClusteredIndex(_clusteredIndex.SystemName);
+                    throw new InvalidOperationException(Strings.Model_MultipleClusteredIndex(_clusteredIndex.SystemName));
                 else
                     _clusteredIndex = value;
             }
@@ -414,7 +413,7 @@ namespace DevZest.Data
             Debug.Assert(constraint != null);
 
             if (!overwritable && this.ContainsInterceptor(constraint.FullName))
-                throw Error.Model_DuplicateConstraintName(constraint.SystemName);
+                throw new InvalidOperationException(Strings.Model_DuplicateConstraintName(constraint.SystemName));
 
             var index = constraint as IIndexConstraint;
             if (index != null && index.IsClustered)
@@ -572,13 +571,13 @@ namespace DevZest.Data
         {
             Utilities.Check.NotNull(columns, nameof(columns));
             if (columns.Length == 0)
-                throw Error.Argument(Strings.Model_EmptyColumns, nameof(columns));
+                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(columns));
 
             for (int i = 0; i < columns.Length; i++)
             {
                 var column = columns[i].Column;
                 if (column == null || column.ParentModel != this)
-                    throw Error.Argument(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(columns) + "[{0}]", i));
+                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(columns) + "[{0}]", i));
             }
 
             AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, columns), false);

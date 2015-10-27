@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
@@ -76,15 +75,15 @@ namespace DevZest.Data
             where TChild : Model, new()
         {
             if (Kind == DataSourceKind.DbTable)
-                throw Error.DbSet_VerifyCreateChild_InvalidDataSourceKind();
+                throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_InvalidDataSourceKind);
             Check.NotNull(getChildModel, nameof(getChildModel));
 
             _.EnsureChildModelsInitialized();
             var childModel = getChildModel(_);
             if (childModel == null || childModel.ParentModel != _)
-                throw Error.Argument(Strings.InvalidChildModelGetter, nameof(getChildModel));
+                throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChildModel));
             if (childModel.DataSource != null)
-                throw Error.DbSet_VerifyCreateChild_AlreadyCreated();
+                throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_AlreadyCreated);
 
             return childModel;
         }

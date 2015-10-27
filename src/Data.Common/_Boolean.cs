@@ -1,9 +1,6 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
-using System.Data.Common;
-using System.Diagnostics;
 
 namespace DevZest.Data
 {
@@ -39,7 +36,7 @@ namespace DevZest.Data
                 return true;
             else if (value.Type == JsonValueType.False)
                 return false;
-            throw Error.BooleanColumn_CannotDeserialize();
+            throw new FormatException(Strings.BooleanColumn_CannotDeserialize);
         }
 
         /// <inheritdoc cref="P:DevZest.Data._Binary.Item(DevZest.Data.DbReader)"/>

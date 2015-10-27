@@ -1,12 +1,10 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using DevZest.Data.Resources;
 using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Primitives

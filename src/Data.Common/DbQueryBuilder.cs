@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Resources;
 using DevZest.Data.Utilities;
 using System;
 using System.Linq;
@@ -118,7 +117,7 @@ namespace DevZest.Data
             VerifyModel(model);
 
             if (_sourceModelSet.Count > 0)
-                throw Error.DbQueryBuilder_DuplicateFrom();
+                throw new InvalidOperationException(Strings.DbQueryBuilder_DuplicateFrom);
 
             From(model);
             return this;
@@ -365,7 +364,7 @@ namespace DevZest.Data
             {
                 var from = GetFromClause(transformedSelectList);
                 if (from == null)
-                    throw Error.DbQueryBuilder_EmptyFrom();
+                    throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
                 result = BuildSelectStatement(transformedSelectList, from, WhereExpression, GetOrderBy());
             }
 
@@ -649,14 +648,14 @@ namespace DevZest.Data
         private void VerifyToSet(DataSourceKind dataSourceKind)
         {
             if (Model.DataSource != null)
-                throw Error.DbQueryBuilder_VerifyToSet_DataSourceNotNull();
+                throw new InvalidOperationException(Strings.DbQueryBuilder_VerifyToSet_DataSourceNotNull);
 
             var parentModel = Model.ParentModel;
             if (parentModel == null)
                 return;
             var dataSource = parentModel.DataSource;
             if (dataSource == null || dataSource.Kind != dataSourceKind)
-                throw Error.DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(dataSourceKind);
+                throw new InvalidOperationException(Strings.DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(dataSourceKind));
         }
 
         internal DbTable<T> ToTempTable<T>(T model)

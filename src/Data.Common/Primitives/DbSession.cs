@@ -3,7 +3,6 @@ using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Data;
-using DevZest.Data.Resources;
 
 namespace DevZest.Data.Primitives
 {
@@ -239,7 +238,7 @@ namespace DevZest.Data.Primitives
             var model = foreignKey.ParentModel;
             var foreignKeyConstraint = new ForeignKeyConstraint(constraintName, foreignKey, refTableModel.PrimaryKey, onDelete, onUpdate);
             if (refTableModel != model && string.IsNullOrEmpty(foreignKeyConstraint.ReferencedTableName))
-                throw Error.Argument(Strings.Model_InvalidRefTableModel, nameof(refTableModel));
+                throw new ArgumentException(Strings.Model_InvalidRefTableModel, nameof(refTableModel));
             model.AddDbTableConstraint(foreignKeyConstraint, false);
         }
     }

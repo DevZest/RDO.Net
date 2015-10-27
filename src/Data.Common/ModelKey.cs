@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -124,11 +123,11 @@ namespace DevZest.Data
             {
                 var column = columnGetters[i].Invoker(this);
                 if (column == null)
-                    throw Error.ColumnGroup_GetterReturnsNull(this.GetType().FullName, columnGetters[i].Name);
+                    throw new InvalidOperationException(Strings.ColumnGroup_GetterReturnsNull(this.GetType().FullName, columnGetters[i].Name));
                 if (i == 0)
                     _parentModel = column.ParentModel;
                 else if (_parentModel != column.ParentModel)
-                    throw Error.ColumnGroup_InconsistentParentModel(this.GetType().FullName, columnGetters[0].Name, columnGetters[i].Name);
+                    throw new InvalidOperationException(Strings.ColumnGroup_InconsistentParentModel(this.GetType().FullName, columnGetters[0].Name, columnGetters[i].Name));
 
                 var sort = columnGetters[i].Sort;
                 _columns[i] = new ColumnSort(column, sort == null ? SortDirection.Unspecified : sort.Direction);

@@ -1,5 +1,5 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -36,7 +36,7 @@ namespace DevZest.Data
 
             var columnKey = item.Key;
             if (_columns.ContainsKey(columnKey))
-                throw Error.ColumnCollection_DuplicateColumnKey(columnKey.OriginalOwnerType, columnKey.OriginalName);
+                throw new InvalidOperationException(Strings.ColumnCollection_DuplicateColumnKey(columnKey.OriginalOwnerType, columnKey.OriginalName));
 
             item.ColumnName = _columnNameSuffixes.GetUniqueName(item.ColumnName); // Ensure ColumnName is unique
             _columns.Add(columnKey, item);

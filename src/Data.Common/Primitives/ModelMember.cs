@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Resources;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data.Primitives
@@ -49,7 +48,7 @@ namespace DevZest.Data.Primitives
         protected void VerifyDesignMode()
         {
             if (!DesignMode)
-                throw Error.VerifyDesignMode();
+                throw new InvalidOperationException(Strings.VerifyDesignMode);
         }
 
         /// <inheritdoc/>
