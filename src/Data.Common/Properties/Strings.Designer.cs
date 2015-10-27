@@ -20,27 +20,27 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot register accessor for type '{0}' after an instance of this type or its derived type has been created.
+        /// Cannot register accessor for type '{type}' after an instance of this type or its derived type has been created.
         /// </summary>
-        public static string Accessor_RegisterAfterUse(object p0)
+        public static string Accessor_RegisterAfterUse(object type)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterAfterUse"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterAfterUse", "type"), type);
         }
 
         /// <summary>
-        /// The accessor with OwnerType '{0}' and Name '{1}' has been registered already.
+        /// The accessor with OwnerType '{ownerType}' and Name '{name}' has been registered already.
         /// </summary>
-        public static string Accessor_RegisterDuplicate(object p0, object p1)
+        public static string Accessor_RegisterDuplicate(object ownerType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterDuplicate"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterDuplicate", "ownerType", "name"), ownerType, name);
         }
 
         /// <summary>
-        /// The argument '{0}' cannot be null, empty or contain only white space.
+        /// The argument '{argumentName}' cannot be null, empty or contain only white space.
         /// </summary>
-        public static string ArgumentIsNullOrWhitespace(object p0)
+        public static string ArgumentIsNullOrWhitespace(object argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrWhitespace"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentIsNullOrWhitespace", "argumentName"), argumentName);
         }
 
         /// <summary>
@@ -52,43 +52,27 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot evaluate a non DataSet column: Column={0}, DataSource.Kind={1}.
+        /// Cannot evaluate a non DataSet column: Column={column}, DataSource.Kind={dataSourceKind}.
         /// </summary>
-        public static string ColumnAggregateFunction_EvalOnNonDataSet(object p0, object p1)
+        public static string ColumnAggregateFunction_EvalOnNonDataSet(object column, object dataSourceKind)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnAggregateFunction_EvalOnNonDataSet"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnAggregateFunction_EvalOnNonDataSet", "column", "dataSourceKind"), column, dataSourceKind);
         }
 
         /// <summary>
-        /// Aggregate function cannot be nested.
+        /// Cannot resolve model chain from Column "{column}" to provided dataRow.
         /// </summary>
-        public static string ColumnAggregateFunction_NestedAggregate
+        public static string ColumnAggregateFunction_NoModelChain(object column)
         {
-            get { return GetString("ColumnAggregateFunction_NestedAggregate"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnAggregateFunction_NoModelChain", "column"), column);
         }
 
         /// <summary>
-        /// Cannot resolve model chain from Column "{0}" to provided dataRow.
+        /// Duplicate ColumnKey is not allowed: OriginalOwnerType={originalOwnerType}, OriginalName={originalName}.
         /// </summary>
-        public static string ColumnAggregateFunction_NoModelChain(object p0)
+        public static string ColumnCollection_DuplicateColumnKey(object originalOwnerType, object originalName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnAggregateFunction_NoModelChain"), p0);
-        }
-
-        /// <summary>
-        /// Duplicate ColumnKey is not allowed: OriginalOwnerType={0}, OriginalName={1}.
-        /// </summary>
-        public static string ColumnCollection_DuplicateColumnKey(object p0, object p1)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateColumnKey"), p0, p1);
-        }
-
-        /// <summary>
-        /// Cannot get method info: Type={0}, MethodName={1}.
-        /// </summary>
-        public static string GenericInvoker_GetMethodInfo(object p0, object p1)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GenericInvoker_GetMethodInfo"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateColumnKey", "originalOwnerType", "originalName"), originalOwnerType, originalName);
         }
 
         /// <summary>
@@ -100,19 +84,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The class {0} is not implemented correctly. The column getter "{1}" returns null.
+        /// The type "{type}" is not implemented correctly. The column getter "{columnGetter}" returns null.
         /// </summary>
-        public static string ColumnGroup_GetterReturnsNull(object p0, object p1)
+        public static string ColumnGroup_GetterReturnsNull(object type, object columnGetter)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnGroup_GetterReturnsNull"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnGroup_GetterReturnsNull", "type", "columnGetter"), type, columnGetter);
         }
 
         /// <summary>
-        /// The class {0} is not implemented correctly. The parent models of column "{1}" and "{2}" are inconsistent.
+        /// The type "{type}" is not implemented correctly. The parent models of column "{column1}" and "{column2}" are inconsistent.
         /// </summary>
-        public static string ColumnGroup_InconsistentParentModel(object p0, object p1, object p2)
+        public static string ColumnGroup_InconsistentParentModel(object type, object column1, object column2)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnGroup_InconsistentParentModel"), p0, p1, p2);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnGroup_InconsistentParentModel", "type", "column1", "column2"), type, column1, column2);
         }
 
         /// <summary>
@@ -156,147 +140,147 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// -- Canceled in {0} ms
+        /// -- Canceled in {elapsedMilliSeconds} ms
         /// </summary>
-        public static string DbLogger_CommandCanceled(object p0)
+        public static string DbLogger_CommandCanceled(object elapsedMilliSeconds)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandCanceled"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandCanceled", "elapsedMilliSeconds"), elapsedMilliSeconds);
         }
 
         /// <summary>
-        /// -- Completed in {0} ms with result: {1}
+        /// -- Completed in {elapsedMilliSeconds} ms with result: {result}
         /// </summary>
-        public static string DbLogger_CommandComplete(object p0, object p1)
+        public static string DbLogger_CommandComplete(object elapsedMilliSeconds, object result)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandComplete"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandComplete", "elapsedMilliSeconds", "result"), elapsedMilliSeconds, result);
         }
 
         /// <summary>
-        /// -- Executing at {0}
+        /// -- Executing at {time}
         /// </summary>
-        public static string DbLogger_CommandExecuting(object p0)
+        public static string DbLogger_CommandExecuting(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandExecuting"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandExecuting", "time"), time);
         }
 
         /// <summary>
-        /// -- Executing asynchronously at {0}
+        /// -- Executing asynchronously at {time}
         /// </summary>
-        public static string DbLogger_CommandExecutingAsync(object p0)
+        public static string DbLogger_CommandExecutingAsync(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandExecutingAsync"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandExecutingAsync", "time"), time);
         }
 
         /// <summary>
-        /// -- Failed in {0} ms with error: {1}
+        /// -- Failed in {elapsedMilliSeconds} ms with error: {error}
         /// </summary>
-        public static string DbLogger_CommandFailed(object p0, object p1)
+        public static string DbLogger_CommandFailed(object elapsedMilliSeconds, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandFailed"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_CommandFailed", "elapsedMilliSeconds", "error"), elapsedMilliSeconds, error);
         }
 
         /// <summary>
-        /// Closed connection at {0}
+        /// Closed connection at {time}
         /// </summary>
-        public static string DbLogger_ConnectionClosed(object p0)
+        public static string DbLogger_ConnectionClosed(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionClosed"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionClosed", "time"), time);
         }
 
         /// <summary>
-        /// Failed to close connection at {0} with error: {1}
+        /// Failed to close connection at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_ConnectionCloseError(object p0, object p1)
+        public static string DbLogger_ConnectionCloseError(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionCloseError"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionCloseError", "time", "error"), time, error);
         }
 
         /// <summary>
-        /// Opened connection at {0}
+        /// Opened connection at {time}
         /// </summary>
-        public static string DbLogger_ConnectionOpen(object p0)
+        public static string DbLogger_ConnectionOpen(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpen"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpen", "time"), time);
         }
 
         /// <summary>
-        /// Opened connection asynchronously at {0}
+        /// Opened connection asynchronously at {time}
         /// </summary>
-        public static string DbLogger_ConnectionOpenAsync(object p0)
+        public static string DbLogger_ConnectionOpenAsync(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenAsync"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenAsync", "time"), time);
         }
 
         /// <summary>
-        /// Cancelled open connection at {0}
+        /// Cancelled open connection at {time}
         /// </summary>
-        public static string DbLogger_ConnectionOpenCanceled(object p0)
+        public static string DbLogger_ConnectionOpenCanceled(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenCanceled"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenCanceled", "time"), time);
         }
 
         /// <summary>
-        /// Failed to open connection at {0} with error: {1}
+        /// Failed to open connection at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_ConnectionOpenError(object p0, object p1)
+        public static string DbLogger_ConnectionOpenError(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenError"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenError", "time", "error"), time, error);
         }
 
         /// <summary>
-        /// Failed to open connection asynchronously at {0} with error: {1}
+        /// Failed to open connection asynchronously at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_ConnectionOpenErrorAsync(object p0, object p1)
+        public static string DbLogger_ConnectionOpenErrorAsync(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenErrorAsync"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_ConnectionOpenErrorAsync", "time", "error"), time, error);
         }
 
         /// <summary>
-        /// Failed to commit transaction at {0} with error: {1}
+        /// Failed to commit transaction at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionCommitError(object p0, object p1)
+        public static string DbLogger_TransactionCommitError(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitError"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitError", "time", "error"), time, error);
         }
 
         /// <summary>
-        /// Committed transaction at {0}
+        /// Committed transaction at {time}
         /// </summary>
-        public static string DbLogger_TransactionCommitted(object p0)
+        public static string DbLogger_TransactionCommitted(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitted"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionCommitted", "time"), time);
         }
 
         /// <summary>
-        /// Failed to rollback transaction at {0} with error: {1}
+        /// Failed to rollback transaction at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionRollbackError(object p0, object p1)
+        public static string DbLogger_TransactionRollbackError(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRollbackError"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRollbackError", "time", "error"), time, error);
         }
 
         /// <summary>
-        /// Rolled back transaction at {0}
+        /// Rolled back transaction at {time}
         /// </summary>
-        public static string DbLogger_TransactionRolledBack(object p0)
+        public static string DbLogger_TransactionRolledBack(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRolledBack"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionRolledBack", "time"), time);
         }
 
         /// <summary>
-        /// Started transaction at {0}
+        /// Started transaction at {time}
         /// </summary>
-        public static string DbLogger_TransactionStarted(object p0)
+        public static string DbLogger_TransactionStarted(object time)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStarted"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStarted", "time"), time);
         }
 
         /// <summary>
-        /// Failed to start transaction at {0} with error: {1}
+        /// Failed to start transaction at {time} with error: {error}
         /// </summary>
-        public static string DbLogger_TransactionStartError(object p0, object p1)
+        public static string DbLogger_TransactionStartError(object time, object error)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStartError"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbLogger_TransactionStartError", "time", "error"), time, error);
         }
 
         /// <summary>
@@ -321,14 +305,6 @@ namespace DevZest.Data
         public static string DbQueryBuilder_Join_InvalidRightKey
         {
             get { return GetString("DbQueryBuilder_Join_InvalidRightKey"); }
-        }
-
-        /// <summary>
-        /// The child model is invalid. It must be child model of current query builder's Model, and can only be used to create child query builder once.
-        /// </summary>
-        public static string DbQueryBuilder_VerifyChildModel
-        {
-            get { return GetString("DbQueryBuilder_VerifyChildModel"); }
         }
 
         /// <summary>
@@ -380,22 +356,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column returned by the getter is invalid. It cannot be null and its ParentModel must be the calling Model.
-        /// </summary>
-        public static string InvalidColumnGetter
-        {
-            get { return GetString("InvalidColumnGetter"); }
-        }
-
-        /// <summary>
-        /// The class {0} is not correctly implemented. The override of GetPrimaryKeyOverride should not return null.
-        /// </summary>
-        public static string Model_GetPrimaryKeyOverrideReturnsNull(object p0)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Model_GetPrimaryKeyOverrideReturnsNull"), p0);
-        }
-
-        /// <summary>
         /// The identity increment value cannot be 0.
         /// </summary>
         public static string Model_InvalidIdentityIncrement
@@ -428,27 +388,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot have more than one clustered index.  The clustered index '{0}' already exists.
+        /// Cannot have more than one clustered index.  The clustered index '{existingClusterIndexName}' already exists.
         /// </summary>
-        public static string Model_MultipleClusteredIndex(object p0)
+        public static string Model_MultipleClusteredIndex(object existingClusterIndexName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Model_MultipleClusteredIndex"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Model_MultipleClusteredIndex", "existingClusterIndexName"), existingClusterIndexName);
         }
 
         /// <summary>
-        /// The number of sort directions does not match with the number of primary key columns.
+        /// The constraint '{constraintName}' already exists.
         /// </summary>
-        public static string Model_PrimaryKeyColumnsAndSortDirectionsDoesNotMatch
+        public static string Model_DuplicateConstraintName(object constraintName)
         {
-            get { return GetString("Model_PrimaryKeyColumnsAndSortDirectionsDoesNotMatch"); }
-        }
-
-        /// <summary>
-        /// The constraint '{0}' already exists.
-        /// </summary>
-        public static string Model_DuplicateConstraintName(object p0)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Model_DuplicateConstraintName"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Model_DuplicateConstraintName", "constraintName"), constraintName);
         }
 
         /// <summary>
@@ -484,11 +436,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The DataSourceKind of the parent model must be '{0}'.
+        /// The DataSourceKind of the parent model must be '{expectedDataSourceKind}'.
         /// </summary>
-        public static string DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(object p0)
+        public static string DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(object expectedDataSourceKind)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind", "expectedDataSourceKind"), expectedDataSourceKind);
         }
 
         /// <summary>
@@ -524,11 +476,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The column[{0}] '{1}' is not supported by this DbSession.
+        /// The column[{columnIndex}] '{column}' is not supported by this DbSession.
         /// </summary>
-        public static string DbSession_ColumnNotSupported(object p0, object p1)
+        public static string DbSession_ColumnNotSupported(object columnIndex, object column)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbSession_ColumnNotSupported"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbSession_ColumnNotSupported", "columnIndex", "column"), columnIndex, column);
         }
 
         /// <summary>
@@ -540,43 +492,43 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid char '{0}' at index {1}.
+        /// Invalid char '{ch}' at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidChar(object p0, object p1)
+        public static string JsonParser_InvalidChar(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidChar"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidChar", "ch", "index"), ch, index);
         }
 
         /// <summary>
-        /// Char '{0}' at index {1} is not a valid hex number.
+        /// Char '{ch}' at index {index} is not a valid hex number.
         /// </summary>
-        public static string JsonParser_InvalidHexChar(object p0, object p1)
+        public static string JsonParser_InvalidHexChar(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidHexChar"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidHexChar", "ch", "index"), ch, index);
         }
 
         /// <summary>
-        /// '{0}' expected at index {1}.
+        /// '{ch}' expected at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidLiteral(object p0, object p1)
+        public static string JsonParser_InvalidLiteral(object ch, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidLiteral"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidLiteral", "ch", "index"), ch, index);
         }
 
         /// <summary>
-        /// Invalid string escape '{0}' at index {1}.
+        /// Invalid string escape '{stringEscape}' at index {index}.
         /// </summary>
-        public static string JsonParser_InvalidStringEscape(object p0, object p1)
+        public static string JsonParser_InvalidStringEscape(object stringEscape, object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidStringEscape"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidStringEscape", "stringEscape", "index"), stringEscape, index);
         }
 
         /// <summary>
-        /// Invalid member name '{0}' for Model {1}.
+        /// Invalid member name "{memberName}" for Model "{model}".
         /// </summary>
-        public static string JsonParser_InvalidModelMember(object p0, object p1)
+        public static string JsonParser_InvalidModelMember(object memberName, object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidModelMember"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidModelMember", "memberName", "model"), memberName, model);
         }
 
         /// <summary>
@@ -588,35 +540,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Current token kind {0} is invalid. Expected token kind: {1}.
+        /// Current token kind "{tokenKind}" is invalid. Expected token kind: {expectedTokenKind}.
         /// </summary>
-        public static string JsonParser_InvalidTokenKind(object p0, object p1)
+        public static string JsonParser_InvalidTokenKind(object tokenKind, object expectedTokenKind)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidTokenKind"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidTokenKind", "tokenKind", "expectedTokenKind"), tokenKind, expectedTokenKind);
         }
 
         /// <summary>
-        /// The DataSource is null.
+        /// The source column derives from invalid model '{model}'.
         /// </summary>
-        public static string DbTable_NullDataSource
+        public static string ColumnMappingsBuilder_InvalidSourceParentModelSet(object model)
         {
-            get { return GetString("DbTable_NullDataSource"); }
-        }
-
-        /// <summary>
-        /// The ColumnMapping list is empty.
-        /// </summary>
-        public static string DbTable_VerifyColumnMappings_Empty
-        {
-            get { return GetString("DbTable_VerifyColumnMappings_Empty"); }
-        }
-
-        /// <summary>
-        /// The source column derives from invalid model '{0}'.
-        /// </summary>
-        public static string ColumnMappingsBuilder_InvalidSourceParentModelSet(object p0)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceParentModelSet"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceParentModelSet", "model"), model);
         }
 
         /// <summary>
@@ -644,19 +580,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Circular reference detected for table '{0}'.
+        /// Circular reference detected for table "{tableName}".
         /// </summary>
-        public static string MockDb_CircularReference(object p0)
+        public static string MockDb_CircularReference(object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_CircularReference"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_CircularReference", "tableName"), tableName);
         }
 
         /// <summary>
-        /// The table '{0}' cannot be mocked twice.
+        /// The table "{tableName}" cannot be mocked twice.
         /// </summary>
-        public static string MockDb_DuplicateTable(object p0)
+        public static string MockDb_DuplicateTable(object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_DuplicateTable"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_DuplicateTable", "tableName"), tableName);
         }
 
         /// <summary>
@@ -668,7 +604,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The mocking table is invalid. It must belong to the giving DbSession.
+        /// The mocking table is invalid. It must belong to the given DbSession.
         /// </summary>
         public static string MockDb_InvalidTable
         {
@@ -684,19 +620,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The type argument '{0}' does not match with type argument '{1}' used for for table '{2}'.
+        /// The type argument "{typeArgument}" does not match with type argument "{expectedTypeArgument}" used for for table "{tableName}".
         /// </summary>
-        public static string MockDb_ModelTypeMismatch(object p0, object p1, object p2)
+        public static string MockDb_ModelTypeMismatch(object typeArgument, object expectedTypeArgument, object tableName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_ModelTypeMismatch"), p0, p1, p2);
-        }
-
-        /// <summary>
-        /// The provided foreign key is not valid. It must be child of this model.
-        /// </summary>
-        public static string Model_InvalidForeignKey
-        {
-            get { return GetString("Model_InvalidForeignKey"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("MockDb_ModelTypeMismatch", "typeArgument", "expectedTypeArgument", "tableName"), typeArgument, expectedTypeArgument, tableName);
         }
 
         /// <summary>
@@ -708,27 +636,27 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The child column '{0}' does not exist in the column mappings.
+        /// The child column '{childColumn}' does not exist in the column mappings.
         /// </summary>
-        public static string ChildColumnNotExistInColumnMappings(object p0)
+        public static string ChildColumnNotExistInColumnMappings(object childColumn)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ChildColumnNotExistInColumnMappings"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ChildColumnNotExistInColumnMappings", "childColumn"), childColumn);
         }
 
         /// <summary>
-        /// The operation requires a primary key of model '{0}'.
+        /// The operation requires a primary key of model '{model}'.
         /// </summary>
-        public static string DbTable_NoPrimaryKey(object p0)
+        public static string DbTable_NoPrimaryKey(object model)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbTable_NoPrimaryKey"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbTable_NoPrimaryKey", "model"), model);
         }
 
         /// <summary>
-        /// The source column's data type '{0}' is invalid. Data type '{1}' required.
+        /// The source column's data type '{sourceColumnDataType}' is invalid. Data type '{expectedDataType}' required.
         /// </summary>
-        public static string ColumnMappingsBuilder_InvalidSourceDataType(object p0, object p1)
+        public static string ColumnMappingsBuilder_InvalidSourceDataType(object sourceColumnDataType, object expectedDataType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceDataType"), p0, p1);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidSourceDataType", "sourceColumnDataType", "expectedDataType"), sourceColumnDataType, expectedDataType);
         }
 
         /// <summary>
