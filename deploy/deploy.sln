@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevZest.Data.Common", "DevZest.Data.Common\DevZest.Data.Common.xproj", "{2914AE95-42FB-4844-9E00-B192BF5EDA59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4DE5269C-9D97-4F4E-8D40-ECD972812EB3}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|x64.Build.0 = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Debug|x86.Build.0 = Debug|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|ARM.Build.0 = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|x64.ActiveCfg = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|x64.Build.0 = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|x86.ActiveCfg = Release|Any CPU
+		{2914AE95-42FB-4844-9E00-B192BF5EDA59}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
