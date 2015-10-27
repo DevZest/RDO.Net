@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\tools\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Moq">
@@ -103,7 +103,6 @@
       <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
     <Compile Include="SqlServer\ColumnExtensionsTests.cs" />
-    <Compile Include="SqlServer\Resources\StringsTests.cs" />
     <Compile Include="SqlServer\_TimeSpanTests.cs" />
     <Compile Include="SqlServer\_DateTimeOffsetTests.cs" />
     <Compile Include="SqlServer\DbExpressionSqlGeneratorTests.cs" />
@@ -135,7 +134,9 @@
     <Compile Include="Utilities\UniqueNameManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Key.snk" />
+    <None Include="..\..\tools\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
