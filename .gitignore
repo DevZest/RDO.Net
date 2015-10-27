@@ -4,6 +4,7 @@ packages/
 .vs/
 [Tt]est[Rr]esults
 *.suo
+*proj.user
 *.lock.json
 
 
