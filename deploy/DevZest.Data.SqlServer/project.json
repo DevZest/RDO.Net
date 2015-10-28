@@ -1,0 +1,36 @@
+﻿{
+  "version": "0.9.0-beta-*",
+  "description": "DevZest.Data.SqlServer",
+  "authors": [ "DevZest" ],
+  "tags": [ "RDO.NET ADO.NET" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "define": [ "DEPLOY" ],
+    "keyFile": "../../tools/Key.snk"
+  },
+
+  "compile": "../../src/Data.SqlServer/**/*.cs",
+  "namedResource": {
+    "DevZest.Data.SqlServer.Strings": "../../src/Data.SqlServer/Properties/Strings.resx"
+  },
+
+  "dependencies": {
+    "DevZest.Data.Common": "0.9.0"
+  },
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0",
+        "System.Xml": "4.0.0.0"
+      }
+    },
+    "dotnet": {
+      "dependencies": {
+        "System.Data.SqlClient": "4.0.0-*"
+      }
+    }
+  }
+}

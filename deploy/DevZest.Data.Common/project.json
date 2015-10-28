@@ -1,21 +1,24 @@
 ﻿{
-  "version": "0.9.0-beta1",
+  "version": "*",
   "description": "DevZest.Data.Common",
-  "authors": [ "DevZest" ],
-  "tags": [ "RDO.NET ADO.NET" ],
+  "authors": [
+    "DevZest"
+  ],
+  "tags": [
+    "RDO.NET ADO.NET"
+  ],
   "projectUrl": "",
   "licenseUrl": "",
-
   "compilationOptions": {
-    "define": [ "DEPLOY" ],
-    "keyFile": "../../tools/Key.snk"
+    "define": [
+      "DEPLOY"
+    ],
+    "keyFile": "../Key.snk"
   },
-
   "compile": "../../src/Data.Common/**/*.cs",
   "namedResource": {
     "DevZest.Data.Strings": "../../src/Data.Common/Properties/Strings.resx"
   },
-
   "frameworks": {
     "net451": {
       "frameworkAssemblies": {
