@@ -96,11 +96,14 @@ echo "PACKAGE_VERSION=$packageVersion"
 for ($i=0; $i -lt $files.Count; $i++)
 {
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
-	safeRename -from $srcFile -to $bakFile
+	$srcBakFile = $srcFile + '.bak'
+	safeRename -from $srcFile -to $srcBakFile
+
 	$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
 	$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
 	[System.IO.File]::WriteAllText($srcFile, $content)
+	$templateBakFile = $templateFile + '.bak'
+	safeRename -from $templateFile -to $templateBakFile
 }
 
 dnu restore "$projectDir"
@@ -109,6 +112,9 @@ dnu pack "$projectDir" --configuration Release
 for ($i=0; $i -lt $files.Count; $i++)
 {
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
-	#safeRename -from $bakFile -to $srcFile
+	$srcBakFile = $srcFile + '.bak'
+	safeRename -from $srcBakFile -to $srcFile
+	$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
+	$templateBakFile = $templateFile + '.bak'
+	safeRename -from $templateBakFile -to $templateFile
 }
