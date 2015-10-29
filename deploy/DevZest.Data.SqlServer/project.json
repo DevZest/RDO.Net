@@ -17,7 +17,7 @@
   },
 
   "dependencies": {
-    "DevZest.Data.Common": "0.9.0"
+    "DevZest.Data.Common": "1.0.0-beta-*"
   },
 
   "frameworks": {
