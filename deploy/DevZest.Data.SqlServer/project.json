@@ -8,7 +8,7 @@
 
   "compilationOptions": {
     "define": [ "DEPLOY" ],
-    "keyFile": "../../tools/Key.snk"
+    "keyFile": "../Key.snk"
   },
 
   "compile": "../../src/Data.SqlServer/**/*.cs",
