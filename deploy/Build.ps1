@@ -106,5 +106,5 @@ for ($i=0; $i -lt $files.Count; $i++)
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
 	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
 	Copy-Item $bakFile $srcFile > $null
-	del $bakFile > null
+	del $bakFile > $null
 }

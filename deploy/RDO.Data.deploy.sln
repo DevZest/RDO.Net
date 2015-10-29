@@ -7,6 +7,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevZest.Data.Common", "DevZ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4DE5269C-9D97-4F4E-8D40-ECD972812EB3}"
 	ProjectSection(SolutionItems) = preProject
+		Build.bat = Build.bat
+		Build.ps1 = Build.ps1
 		global.json = global.json
 		Key.snk = Key.snk
 	EndProjectSection
