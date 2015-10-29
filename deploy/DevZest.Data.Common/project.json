@@ -10,6 +10,9 @@
   "projectUrl": "",
   "licenseUrl": "",
   "compilationOptions": {
+    "define": [
+      "DEPLOY"
+    ],
     "keyFile": "../Key.snk"
   },
   "compile": "../../src/Data.Common/**/*.cs",

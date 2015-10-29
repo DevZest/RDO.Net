@@ -7,7 +7,7 @@
   "licenseUrl": "",
 
   "compilationOptions": {
-    "define": [ "DEPLOY" ],
+    "define": [ "DEPLOY", "VERSION_PLACEHOLDER" ],
     "keyFile": "../Key.snk"
   },
 

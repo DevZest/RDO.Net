@@ -1,4 +1,4 @@
-#if DEPLOY
+#if VERSION_PLACEHOLDER
 
 using System.Reflection;
 
