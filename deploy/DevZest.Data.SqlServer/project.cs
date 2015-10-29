@@ -12,4 +12,4 @@
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("$ASSEMBLY_VERSION$")]
 [assembly: AssemblyFileVersion("$ASSEMBLY_FILE_VERSION$")]
-[assembly: AssemblyInformationalVersion("$PKG_VERSION$")]
+[assembly: AssemblyInformationalVersion("$PACKAGE_VERSION$")]
