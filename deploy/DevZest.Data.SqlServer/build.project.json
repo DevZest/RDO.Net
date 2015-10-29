@@ -1,5 +1,5 @@
 ﻿{
-  "version": "0.0.0-dev",
+  "version": "$PACKAGE_VERSION$",
   "description": "DevZest.Data.SqlServer",
   "authors": [ "DevZest" ],
   "tags": [ "RDO.NET ADO.NET" ],
@@ -7,6 +7,7 @@
   "licenseUrl": "",
 
   "compilationOptions": {
+    "define": [ "DEPLOY" ],
     "keyFile": "../Key.snk"
   },
 

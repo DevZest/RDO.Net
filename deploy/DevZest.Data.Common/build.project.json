@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0-dev",
+  "version": "$PACKAGE_VERSION$",
   "description": "DevZest.Data.Common",
   "authors": [
     "DevZest"
@@ -10,6 +10,9 @@
   "projectUrl": "",
   "licenseUrl": "",
   "compilationOptions": {
+    "define": [
+      "DEPLOY"
+    ],
     "keyFile": "../Key.snk"
   },
   "compile": "../../src/Data.Common/**/*.cs",
