@@ -1,4 +1,4 @@
-#if VERSION_PLACEHOLDER
+#if !VER_GEN
 
 using System.Reflection;
 
