@@ -1,5 +1,5 @@
-﻿{
-  "version": "*",
+{
+  "version": "$PACKAGE_VERSION$",
   "description": "DevZest.Data.Common",
   "authors": [
     "DevZest"
