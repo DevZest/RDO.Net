@@ -53,13 +53,18 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 	return $version + "-" + $additionalLabel;
 }
 
-$buildDir = $projectDir + ".Build"
-if (Test-Path $buildDir)
+function safeRename([string]$from, [string]$to)
 {
-	echo "The build directory: $buildDir already exists!"
-	exit
+	if (Test-Path $to)
+	{
+		del $to > $null
+	}
+	Rename-Item $from $to
 }
 
+########################################################################
+# Start of the script
+########################################################################
 for ($i=0; $i -lt $files.Count; $i++)
 {
 	$file = Join-Path $projectDir -ChildPath $files[$i]
@@ -92,19 +97,18 @@ for ($i=0; $i -lt $files.Count; $i++)
 {
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
 	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
-	Copy-Item $srcFile $bakFile > $null
-	$content = [System.IO.File]::ReadAllText($srcFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
+	safeRename -from $srcFile -to $bakFile
+	$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
+	$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
 	[System.IO.File]::WriteAllText($srcFile, $content)
 }
 
-cd $projectDir
-dnu restore
-dnu pack --configuration Release
+dnu restore "$projectDir"
+dnu pack "$projectDir" --configuration Release
 
 for ($i=0; $i -lt $files.Count; $i++)
 {
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
 	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
-	Copy-Item $bakFile $srcFile > $null
-	del $bakFile > $null
+	safeRename -from $bakFile -to $srcFile
 }
