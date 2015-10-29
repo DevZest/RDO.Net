@@ -110,5 +110,5 @@ for ($i=0; $i -lt $files.Count; $i++)
 {
 	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
 	$bakFile = Join-Path $projectDir -ChildPath ($files[$i] + ".bak")
-	safeRename -from $bakFile -to $srcFile
+	#safeRename -from $bakFile -to $srcFile
 }

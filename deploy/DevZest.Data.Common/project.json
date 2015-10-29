@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0-dev",
+  "version": "1.0.0-beta-20151029",
   "description": "DevZest.Data.Common",
   "authors": [
     "DevZest"
@@ -11,7 +11,7 @@
   "licenseUrl": "",
   "compilationOptions": {
     "define": [
-      "DEPLOY"
+      "DEPLOY", "VERSION_PLACEHOLDER"
     ],
     "keyFile": "../Key.snk"
   },
