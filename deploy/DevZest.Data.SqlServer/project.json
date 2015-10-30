@@ -19,7 +19,7 @@
   },
 
   "dependencies": {
-    "DevZest.Data.Common": "0.0.0-dev"
+    "DevZest.Data.Common": { "target": "package", "version": "0.0.0-dev" }
   },
 
   "frameworks": {
