@@ -1,9 +1,7 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Windows.Resources;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -36,7 +34,7 @@ namespace DevZest.Data.Windows
         private void VerifyIsSealed()
         {
             if (_isSealed)
-                throw Error.GridTemplate_VerifyIsSealed();
+                throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
         }
 
         public Model Model { get; private set; }

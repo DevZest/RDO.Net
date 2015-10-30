@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Windows.Resources;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows;
 

@@ -1,8 +1,5 @@
-﻿
-using DevZest.Data.Windows.Resources;
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Windows;
 
 namespace DevZest.Data.Windows
 {

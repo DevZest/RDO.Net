@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Windows.Resources;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 
@@ -26,7 +25,7 @@ namespace DevZest.Data.Windows
         internal static Result Parse(string value)
         {
             if (value == null || string.IsNullOrEmpty(value))
-                throw Error.GridLengthParser_InvalidInput(value);
+                throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
 
             GridLength? length = null;
             double? minLength = null;
@@ -38,13 +37,13 @@ namespace DevZest.Data.Windows
                 splitCount--;
 
             if (splitCount < 1 || splitCount > 3)
-                throw Error.GridLengthParser_InvalidInput(value);
+                throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
 
             for (int i = 0; i < splitCount; i++)
             {
                 var result = ParseNameGridLengthPair(splits[i]);
                 if (!result.HasValue)
-                    throw Error.GridLengthParser_InvalidInput(value);
+                    throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
 
                 var pair = result.GetValueOrDefault();
                 var name = pair.Name;
@@ -52,30 +51,30 @@ namespace DevZest.Data.Windows
                 if (string.IsNullOrEmpty(name))
                 {
                     if (length.HasValue)
-                        throw Error.GridLengthParser_InvalidInput(value);
+                        throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
                     length = gridLength;
                 }
                 else if (name == "min")
                 {
                     if (minLength.HasValue)
-                        throw Error.GridLengthParser_InvalidInput(value);
+                        throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
                     minLength = gridLength.Value;
                 }
                 else
                 {
                     Debug.Assert(name == "max");
                     if (maxLength.HasValue)
-                        throw Error.GridLengthParser_InvalidInput(value);
+                        throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
                     maxLength = gridLength.Value;
                 }
             }
 
             if (!length.HasValue)
-                throw Error.GridLengthParser_InvalidInput(value);
+                throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
             double min = minLength.HasValue ? minLength.GetValueOrDefault() : 0.0;
             double max = maxLength.HasValue ? maxLength.GetValueOrDefault() : double.PositiveInfinity;
             if (min > max)
-                throw Error.GridLengthParser_InvalidInput(value);
+                throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
             return new Result(length.GetValueOrDefault(), min, max);
         }
 

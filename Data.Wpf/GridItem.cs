@@ -1,4 +1,4 @@
-﻿using DevZest.Data.Windows.Resources;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows
         protected void VerifyIsSealed()
         {
             if (IsSealed)
-                throw Error.GridTemplate_VerifyIsSealed();
+                throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
         }
 
         internal static T GetOrCreate<T>(List<T> cachedUIElements)
