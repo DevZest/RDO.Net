@@ -10,12 +10,12 @@
   "projectUrl": "",
   "licenseUrl": "",
   "compilationOptions": {
-    "define": [
-      "DEPLOY", "VER_GEN"
-    ],
+    "warningsAsErrors": true,
+    "define": [ "DEPLOY" ],
     "keyFile": "../Key.snk"
   },
   "compile": "../../src/Data.Common/**/*.cs",
+  "compileExclude": "build.project.cs",
   "namedResource": {
     "DevZest.Data.Strings": "../../src/Data.Common/Properties/Strings.resx"
   },

@@ -62,6 +62,17 @@ function safeRename([string]$from, [string]$to)
 	Rename-Item $from $to
 }
 
+function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
+{
+	for ($i=0; $i -lt $files.Count; $i++)
+	{
+		$srcFile = Join-Path $projectDir -ChildPath $files[$i]
+		$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
+		$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
+		[System.IO.File]::WriteAllText($srcFile, $content)
+	}
+}
+
 ########################################################################
 # Start of the script
 ########################################################################
@@ -93,28 +104,9 @@ echo "ASSEMBLY_VERSION=$assemblyVersion"
 echo "ASSEMBLY_FILE_VERSION=$assemblyFileVersion"
 echo "PACKAGE_VERSION=$packageVersion"
 
-for ($i=0; $i -lt $files.Count; $i++)
-{
-	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-	$srcBakFile = $srcFile + '.bak'
-	safeRename -from $srcFile -to $srcBakFile
-
-	$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
-	$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
-	[System.IO.File]::WriteAllText($srcFile, $content)
-	$templateBakFile = $templateFile + '.bak'
-	safeRename -from $templateFile -to $templateBakFile
-}
+generateFiles -files $files -assemblyVersion $assemblyVersion -assemblyFileVersion $assemblyFileVersion -packageVersion $packageVersion
 
 dnu restore "$projectDir"
 dnu pack "$projectDir" --configuration Release
 
-for ($i=0; $i -lt $files.Count; $i++)
-{
-	$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-	$srcBakFile = $srcFile + '.bak'
-	safeRename -from $srcBakFile -to $srcFile
-	$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
-	$templateBakFile = $templateFile + '.bak'
-	safeRename -from $templateBakFile -to $templateFile
-}
+generateFiles -files $files -assemblyVersion '0.0.0.0' -assemblyFileVersion '0.0.0.0' -packageVersion '0.0.0-dev'

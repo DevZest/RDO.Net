@@ -7,17 +7,19 @@
   "licenseUrl": "",
 
   "compilationOptions": {
-    "define": [ "DEPLOY", "VER_GEN" ],
+    "warningsAsErrors": true,
+    "define": [ "DEPLOY" ],
     "keyFile": "../Key.snk"
   },
 
   "compile": "../../src/Data.SqlServer/**/*.cs",
+  "compileExclude": "build.project.cs",
   "namedResource": {
     "DevZest.Data.SqlServer.Strings": "../../src/Data.SqlServer/Properties/Strings.resx"
   },
 
   "dependencies": {
-    "DevZest.Data.Common": "1.0.0-beta-*"
+    "DevZest.Data.Common": "$PACKAGE_VERSION$"
   },
 
   "frameworks": {

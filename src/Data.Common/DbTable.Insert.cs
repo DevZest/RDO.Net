@@ -276,12 +276,12 @@ namespace DevZest.Data
             throw new NotImplementedException();
         }
 
-        private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertSetResult result, CancellationToken cancellationToken)
+        private static Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertSetResult result, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var identityOutput = result.IdentityOutput;
-            if (identityOutput == null || result.RowCount == 0)
-                return;
+            //var identityOutput = result.IdentityOutput;
+            //if (identityOutput == null || result.RowCount == 0)
+            //    return;
 
             throw new NotImplementedException();
         }
