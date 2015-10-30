@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevZest.Data.Windows", "DevZest.Data.Windows\DevZest.Data.Windows.xproj", "{1D094A2E-1837-4010-BA9F-919ADEA46804}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DevZest.Data.WPF", "DevZest.Data.WPF\DevZest.Data.WPF.xproj", "{1D094A2E-1837-4010-BA9F-919ADEA46804}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
