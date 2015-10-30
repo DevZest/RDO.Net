@@ -12,6 +12,7 @@
     "keyFile": "../Key.snk"
   },
 
+  "contentFiles": [ "../../test/AdventureWorksLT.mdf", "../../test/AdventureWorksLT_log.ldf" ],
   "compile": "../../test/AdventureWorksLT/**/*.cs",
   "compileExclude": "build.project.cs",
 
