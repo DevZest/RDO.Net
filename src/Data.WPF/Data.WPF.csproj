@@ -38,7 +38,7 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\tools\Resources.cs">
+    <Compile Include="..\..\tools\Resources.cs">
       <Link>Properties\Resources.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

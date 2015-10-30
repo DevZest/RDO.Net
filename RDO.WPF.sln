@@ -3,56 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF", "Data.Wpf\Data.WPF.csproj", "{13148E98-0F1A-44D3-8DEF-99392773AF3E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4CCACBF3-5775-41B9-885C-F93002789A38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0A97428A-730F-4939-BF41-A65AE91BB01E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{792398A7-F929-420B-869F-278249C733B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF", "src\Data.WPF\Data.WPF.csproj", "{13148E98-0F1A-44D3-8DEF-99392773AF3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{0A97428A-730F-4939-BF41-A65AE91BB01E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|ARM = Debug|ARM
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|ARM = Release|ARM
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|ARM.Build.0 = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|x64.Build.0 = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Debug|x86.Build.0 = Debug|Any CPU
 		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|ARM.ActiveCfg = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|ARM.Build.0 = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|x64.ActiveCfg = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|x64.Build.0 = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|x86.ActiveCfg = Release|Any CPU
-		{13148E98-0F1A-44D3-8DEF-99392773AF3E}.Release|x86.Build.0 = Release|Any CPU
 		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|ARM.Build.0 = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|x64.Build.0 = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Debug|x86.Build.0 = Debug|Any CPU
 		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|ARM.ActiveCfg = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|ARM.Build.0 = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|x64.ActiveCfg = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|x64.Build.0 = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|x86.ActiveCfg = Release|Any CPU
-		{0A97428A-730F-4939-BF41-A65AE91BB01E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13148E98-0F1A-44D3-8DEF-99392773AF3E} = {4CCACBF3-5775-41B9-885C-F93002789A38}
+		{0A97428A-730F-4939-BF41-A65AE91BB01E} = {792398A7-F929-420B-869F-278249C733B1}
 	EndGlobalSection
 EndGlobal

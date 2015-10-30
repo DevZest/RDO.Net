@@ -78,7 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Data.Wpf\Data.WPF.csproj">
+    <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
       <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
       <Name>Data.WPF</Name>
     </ProjectReference>
