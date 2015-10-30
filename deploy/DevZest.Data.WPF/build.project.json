@@ -1,0 +1,34 @@
+{
+  "version": "$PACKAGE_VERSION$",
+  "description": "DevZest.Data.WPF",
+  "authors": [
+    "DevZest"
+  ],
+  "tags": [
+    "RDO.NET ADO.NET WPF Windows Presentation Foundation"
+  ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "compilationOptions": {
+    "warningsAsErrors": true,
+    "define": [ "DEPLOY" ],
+    "keyFile": "../Key.snk"
+  },
+  "compile": "../../src/Data.WPF/**/*.cs",
+  "compileExclude": "build.project.cs",
+  "namedResource": {
+    "DevZest.Data.Windows.Strings": "../../src/Data.WPF/Properties/Strings.resx"
+  },
+  "dependencies": {
+    "DevZest.Data.Common": "1.0.0-beta-*"
+  },
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "PresentationCore":  "4.0.0.0",
+        "PresentationFramework": "4.0.0.0",
+        "WindowsBase":  "4.0.0.0"
+      }
+    }
+  }
+}
