@@ -1,22 +1,30 @@
 param (
-  [string]$version = "",
-  [string]$additionalLabel = "",
-  [string]$projectDir = "",
-  [string[]]$files
+  [string]$version = '',
+  [string]$additionalLabel = '',
+  [string]$projectDir = '',
+  [string[]]$files = @()
 )
 
 function showUsage()
 {
-	echo "Usage: Build Version [AdditionalLabel]"
-	echo ""
-	echo "Version: MAJOR.MINOR.PATCH"
-	echo "  MAJOR version when you make incompatible API changes;"
-	echo "  MINOR version when you add functionality in a backwards-compatible manner;"
-	echo "  PATCH version when you make backwards-compatible bug fixes."
-	echo ""
-	echo "AdditionalLable:"
-	echo "  Additional labels for pre-release and build metadata."
-	echo "  If end '*' exists, it will be replaced with current date 'yyyyMMdd'."
+	echo 'Usage: Build -version Version [-additionalLabel AdditionalLable] [-projectDir ProjectDir] [-files Files...]'
+	echo ''
+	echo 'Version: MAJOR.MINOR.PATCH'
+	echo '  MAJOR version when you make incompatible API changes;'
+	echo '  MINOR version when you add functionality in a backwards-compatible manner;'
+	echo '  PATCH version when you make backwards-compatible bug fixes.'
+	echo ''
+	echo 'AdditionalLable:'
+	echo '  Additional labels for pre-release and build metadata.'
+	echo '  If end "*" exists, it will be replaced with current date "yyyyMMdd".'
+	echo ''
+	echo 'ProjectDir'
+	echo '  The project directory to build.'
+	echo '  If empty, current directory will be used.'
+	echo ''
+	echo 'Files...'
+	echo '  List of files to process.'
+	echo '  If empty, two files will be used: project.json and project.cs'.
 	exit
 }
 
@@ -28,38 +36,34 @@ function fileNotFound([string]$fileName)
 
 function getAssemblyVersion([string]$major, [string]$minor)
 {
-	return $major + "." + $minor + ".0.0"
+	return $major + '.' + $minor + '.0.0'
 }
 
 function getAssemblyFileVersion([string]$version)
 {
-	$span = New-TimeSpan -Start ([datetime]"2000/01/01") -End (Get-Date)
+	$span = New-TimeSpan -Start ([datetime]'2000/01/01') -End (Get-Date)
 	return $version + "." + $span.Days
 }
 
 function getPackageVersion([string]$version, [string]$additionalLabel)
 {
-	if ($additionalLabel -eq "")
+	if ($additionalLabel -eq '')
 	{
 		return $version
 	}
 
-	if ($additionalLabel.EndsWith("*"))
+	if ($additionalLabel.EndsWith('*'))
 	{
 		$additionalLabel = $additionalLabel.Substring(0, $additionalLabel.Length - 1)
-		$additionalLabel = $additionalLabel + (Get-Date -format "yyyyMMdd")
+		$additionalLabel = $additionalLabel + (Get-Date -format 'yyyyMMdd')
 	}
 
-	return $version + "-" + $additionalLabel;
+	return $version + '-' + $additionalLabel;
 }
 
-function safeRename([string]$from, [string]$to)
+function getTemplateFile([string]$dir, [string]$file)
 {
-	if (Test-Path $to)
-	{
-		del $to > $null
-	}
-	Rename-Item $from $to
+	return (Join-Path $dir -ChildPath ('build.' + $file))
 }
 
 function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
@@ -67,29 +71,41 @@ function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$asse
 	for ($i=0; $i -lt $files.Count; $i++)
 	{
 		$srcFile = Join-Path $projectDir -ChildPath $files[$i]
-		$templateFile = Join-Path $projectDir -ChildPath ('build.' + $files[$i])
+		$templateFile = getTemplateFile -dir $projectDir -file $files[$i]
 		$content = [System.IO.File]::ReadAllText($templateFile).Replace('$ASSEMBLY_VERSION$', $assemblyVersion).Replace('$ASSEMBLY_FILE_VERSION$', $assemblyFileVersion).Replace('$PACKAGE_VERSION$', $packageVersion)
 		[System.IO.File]::WriteAllText($srcFile, $content)
 	}
 }
 
+
 ########################################################################
-# Start of the script
+# Main Start
 ########################################################################
-for ($i=0; $i -lt $files.Count; $i++)
-{
-	$file = Join-Path $projectDir -ChildPath $files[$i]
-	if (!(Test-Path $file))
-	{
-		echo "File $file not found!"
-		exit
-	}
-}
 
 $versions = $version.Split('.');
 if ($versions.Count -ne 3)
 {
 	showUsage
+}
+
+if ($projectDir -eq '')
+{
+	$projectDir = (Get-Item -Path ".\" -Verbose).FullName
+}
+
+if ($files.Count -eq 0)
+{
+	$files = @('project.json', 'project.cs')
+}
+
+for ($i=0; $i -lt $files.Count; $i++)
+{
+	$file = getTemplateFile -dir $projectDir -file $files[$i]
+	if (!(Test-Path $file))
+	{
+		echo "File $file not found!"
+		exit
+	}
 }
 
 $major = $versions[0]

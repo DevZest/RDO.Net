@@ -1,0 +1,38 @@
+{
+  "version": "0.0.0-dev",
+  "description": "DevZest.Samples.AdventureWorksLT",
+  "authors": [ "DevZest" ],
+  "tags": [ "RDO.NET ADO.NET" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "warningsAsErrors": true,
+    "define": [ "DEPLOY" ],
+    "keyFile": "../Key.snk"
+  },
+
+  "compile": "../../test/AdventureWorksLT/**/*.cs",
+  "compileExclude": "build.project.cs",
+
+  "dependencies": {
+    "DevZest.Data.Common": {
+      "target": "package",
+      "version": "0.0.0-dev"
+    },
+    "DevZest.Data.SqlServer": {
+      "target": "package",
+      "version": "0.0.0-dev"
+    }
+  },
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0",
+        "System.Xml": "4.0.0.0"
+      }
+    },
+    "dotnet": { }
+  }
+}
