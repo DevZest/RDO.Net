@@ -33,16 +33,16 @@ namespace DevZest.Data.Windows
 
         #region IList<DataRowView>
 
-        IList<DataRow> _dataRows;
+        DataSet _dataSet;
         List<DataRowView> _dataRowViews;
 
         private void InitDataRowViews()
         {
-            _dataRows = Model.GetDataSet(Owner.DataRow);
-            Debug.Assert(_dataRows != null);
+            _dataSet = Model[Owner.DataRow];
+            Debug.Assert(_dataSet != null);
 
-            _dataRowViews = new List<DataRowView>(_dataRows.Count);
-            foreach (var dataRow in _dataRows)
+            _dataRowViews = new List<DataRowView>(_dataSet.Count);
+            foreach (var dataRow in _dataSet)
             {
                 var dataRowView = new DataRowView();
                 dataRowView.Initialize(this, dataRow);
@@ -76,14 +76,14 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(item));
 
             var dataRow = new DataRow();
-            _dataRows.Insert(index, dataRow);
+            _dataSet.Insert(index, dataRow);
             item.Initialize(this, dataRow);
             _dataRowViews.Insert(index, item);
         }
 
         public void RemoveAt(int index)
         {
-            _dataRows.RemoveAt(index);
+            _dataSet.RemoveAt(index);
             _dataRowViews.RemoveAt(index);
         }
 
@@ -94,7 +94,7 @@ namespace DevZest.Data.Windows
 
         public void Clear()
         {
-            _dataRows.Clear();
+            _dataSet.Clear();
             _dataRowViews.Clear();
         }
 
