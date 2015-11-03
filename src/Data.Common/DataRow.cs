@@ -164,5 +164,10 @@ namespace DevZest.Data
             stringBuilder.Append("\"");
             stringBuilder.Append(":");
         }
+
+        public bool IsDeleted
+        {
+            get { return Model == null; }
+        }
     }
 }

@@ -48,42 +48,20 @@ namespace DevZest.Data
                 return dataRow.Ordinal;
             }
 
-            public override void RemoveAt(int index)
+            internal override void InternalRemoveAtCore(int index, DataRow dataRow)
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                Debug.Assert(dataRow.Model == Model && dataRow.Ordinal == index);
 
-                var dataRow = this[index];
-                if (dataRow.Parent != null)
-                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
                 dataRow.DisposeByMainDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustOrdinal(i);
             }
 
-            public override void Clear()
+            internal override void InternalInsertCore(int index, DataRow dataRow)
             {
-                if (IsReadOnly)
-                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
-
-                for (int i = _rows.Count - 1; i >= 0; i--)
-                    _rows[i].DisposeByMainDataSet();
-
-                _rows.Clear();
-                var columns = Model.Columns;
-                foreach (var column in columns)
-                    column.ClearRows();
-            }
-
-            public override void Insert(int index, DataRow dataRow)
-            {
-                if (dataRow == null)
-                    throw new ArgumentNullException(nameof(dataRow));
-                if (IsReadOnly && dataRow.Parent == null)
-                    throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
-                if (index < 0 || index > Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                Debug.Assert(index >= 0 && index <= Count);
+                Debug.Assert(dataRow.Model == null);
 
                 dataRow.InitializeByMainDataSet(Model, index);
                 _rows.Insert(index, dataRow);
@@ -128,45 +106,26 @@ namespace DevZest.Data
                 return dataRow.ChildOrdinal;
             }
 
-            public override void RemoveAt(int index)
+            internal override void InternalRemoveAtCore(int index, DataRow dataRow)
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                Debug.Assert(dataRow.Model == Model && dataRow.ChildOrdinal == index);
 
-                var dataRow = this[index];
                 dataRow.DisposeBySubDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustChildOrdinal(i);
 
-                _mainDataSet.RemoveAt(dataRow.Ordinal);
+                _mainDataSet.InternalRemoveAt(dataRow.Ordinal);
             }
 
-            public override void Clear()
+            internal override void InternalInsertCore(int index, DataRow dataRow)
             {
-                for (int i = Count - 1; i >= 0; i--)
-                {
-                    var dataRow = this[i];
-                    dataRow.DisposeBySubDataSet();
-                    _mainDataSet.RemoveAt(dataRow.Ordinal);
-                }
-                _rows.Clear();
-            }
-
-            public override void Insert(int index, DataRow dataRow)
-            {
-                if (index < 0 || index > Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-
-                if (dataRow == null)
-                    throw new ArgumentNullException(nameof(dataRow));
-
-                if (dataRow.Parent != null)
-                    throw new ArgumentException(nameof(dataRow));
+                Debug.Assert(index >= 0 && index <= Count);
+                Debug.Assert(dataRow.Model == null);
 
                 dataRow.InitializeBySubDataSet(_parentRow, index);
                 _rows.Insert(index, dataRow);
-                _mainDataSet.Insert(GetMainDataSetIndex(dataRow), dataRow);
+                _mainDataSet.InternalInsert(GetMainDataSetIndex(dataRow), dataRow);
             }
 
             private int GetMainDataSetIndex(DataRow dataRow)

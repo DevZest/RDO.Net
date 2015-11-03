@@ -1,10 +1,15 @@
 ﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DevZest.Data
 {
+    public delegate void DataSetChangedEventHandler(DataSet dataSet, DataRow dataRow);
+
+    public delegate void DataValueChangedEventHandler(Column column, DataRow dataRow);
+
     public abstract class DataSet : DataSource, IList<DataRow>
     {
         internal DataSet(Model model)
@@ -68,10 +73,29 @@ namespace DevZest.Data
             return IndexOf(dataRow) != -1;
         }
 
-        /// <inheritdoc cref="IList{T}.Insert(int, T)"/>
-        public abstract void Insert(int index, DataRow dataRow);
+        /// <inheritdoc cref="IList{T}.InternalInsert(int, T)"/>
+        public void Insert(int index, DataRow dataRow)
+        {
+            Check.NotNull(dataRow, nameof(dataRow));
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+            if (index < 0 || index > Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (dataRow.Parent != null)
+                throw new ArgumentException(nameof(dataRow));
 
-        public virtual bool Remove(DataRow dataRow)
+            InternalInsert(index, dataRow);
+        }
+
+        internal void InternalInsert(int index, DataRow dataRow)
+        {
+            InternalInsertCore(index, dataRow);
+            OnChanged(dataRow);
+        }
+
+        internal abstract void InternalInsertCore(int index, DataRow dataRow);
+
+        public bool Remove(DataRow dataRow)
         {
             var index = IndexOf(dataRow);
             if (index == -1)
@@ -82,14 +106,38 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc cref="IList{T}.RemoveAt(int)"/>
-        public abstract void RemoveAt(int index);
+        public void RemoveAt(int index)
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+            if (index < 0 || index > Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            InternalRemoveAt(index);
+        }
+
+        internal void InternalRemoveAt(int index)
+        {
+            var dataRow = this[index];
+            InternalRemoveAtCore(index, dataRow);
+            OnChanged(dataRow);
+        }
+
+        internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
 
         public void Add(DataRow dataRow)
         {
             Insert(Count, dataRow);
         }
 
-        public abstract void Clear();
+        public void Clear()
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+
+            for (int i = Count - 1; i >= 0; i--)
+                RemoveAt(i);
+        }
 
         public void CopyTo(DataRow[] array, int arrayIndex)
         {
@@ -141,6 +189,14 @@ namespace DevZest.Data
         public bool AllowsKeyUpdate(bool value)
         {
             return Model.AllowsKeyUpdate(value);
+        }
+
+        public event DataSetChangedEventHandler Changed;
+
+        internal void OnChanged(DataRow dataRow)
+        {
+            if (Changed != null)
+                Changed(this, dataRow);
         }
     }
 }

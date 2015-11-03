@@ -73,7 +73,6 @@
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />
     <Compile Include="DataSet_T.cs" />
-    <Compile Include="DataSetChangedEventArgs.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSourceKind.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
