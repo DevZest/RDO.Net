@@ -5,14 +5,14 @@ namespace DevZest.Data.Primitives
 {
     public struct DataSetChain
     {
-        internal DataSetChain(IDataSet dataSet, List<Model> modelChain, int modelChainIndex)
+        internal DataSetChain(DataSet dataSet, List<Model> modelChain, int modelChainIndex)
         {
             Current = dataSet;
             ModelChain = modelChain;
             ModelChainIndex = modelChainIndex;
         }
 
-        private readonly IDataSet Current;
+        private readonly DataSet Current;
 
         private readonly List<Model> ModelChain;
 

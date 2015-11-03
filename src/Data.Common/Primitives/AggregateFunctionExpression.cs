@@ -75,7 +75,7 @@ namespace DevZest.Data.Primitives
 
             int lastIndex = modelChain.Count - 1;
             var lastModel = modelChain[lastIndex];
-            IDataSet dataSet = dataRow == null ? lastModel.DataSet : dataRow[lastModel];
+            DataSet dataSet = dataRow == null ? lastModel.DataSet : dataRow[lastModel];
             EvalTraverse(new DataSetChain(dataSet, modelChain, lastIndex));
             return EvalReturn();
         }

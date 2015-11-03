@@ -173,12 +173,12 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        internal sealed override void RecursiveFillDataSet(IDbSet dbSet, IDataSet dataSet)
+        internal sealed override void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet)
         {
             RecursiveFillDataSet(dbSet, dataSet.Model);
         }
 
-        internal sealed override Task RecursiveFillDataSetAsync(IDbSet dbSet, IDataSet dataSet, CancellationToken cancellationToken)
+        internal sealed override Task RecursiveFillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken)
         {
             return RecursiveFillDataSetAsync(dbSet, dataSet.Model, cancellationToken);
         }
@@ -190,7 +190,7 @@ namespace DevZest.Data.Primitives
                 var columns = GetReaderColumns(dataSetModel);
                 var parentRowIdColumn = reader.Model.GetSysParentRowIdColumn(createIfNotExist: false);
                 var prevParentRowId = -1;
-                IDataSet dataSet = null;
+                DataSet dataSet = null;
 
                 while (reader.Read())
                 {
@@ -210,7 +210,7 @@ namespace DevZest.Data.Primitives
                 var columns = GetReaderColumns(dataSetModel);
                 var parentRowIdColumn = reader.Model.GetSysParentRowIdColumn(createIfNotExist: false);
                 var prevParentRowId = -1;
-                IDataSet dataSet = null;
+                DataSet dataSet = null;
 
                 while (await reader.ReadAsync(cancellationToken))
                 {
@@ -223,7 +223,7 @@ namespace DevZest.Data.Primitives
             await FillChildrenDataSetAsync(dbSet, dataSetModel, cancellationToken);
         }
 
-        private static IDataSet GetDataSet(Model dataSetModel, int parentRowId)
+        private static DataSet GetDataSet(Model dataSetModel, int parentRowId)
         {
             if (parentRowId == 0)
             {
@@ -237,7 +237,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static void NewDataRow(IDataSet dataSet, IList<IColumn<TReader>> columns, TReader reader)
+        private static void NewDataRow(DataSet dataSet, IList<IColumn<TReader>> columns, TReader reader)
         {
             var model = dataSet.Model;
             model.EnterDataSetInitialization();
@@ -303,7 +303,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal sealed override void FillDataSet(IDbSet dbSet, IDataSet dataSet)
+        internal sealed override void FillDataSet(IDbSet dbSet, DataSet dataSet)
         {
             using (var reader = CreateReaderInvoker(dbSet.QueryStatement).Execute())
             {
@@ -316,7 +316,7 @@ namespace DevZest.Data.Primitives
             FillChildrenDataSet(dbSet, dataSet.Model);
         }
 
-        internal sealed override async Task FillDataSetAsync(IDbSet dbSet, IDataSet dataSet, CancellationToken cancellationToken)
+        internal sealed override async Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken)
         {
             using (var reader = await CreateReaderInvoker(dbSet.QueryStatement).ExecuteAsync(cancellationToken))
             {

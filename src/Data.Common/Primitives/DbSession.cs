@@ -151,13 +151,13 @@ namespace DevZest.Data.Primitives
             return builder.ToQuery<T>(model);
         }
 
-        internal abstract void RecursiveFillDataSet(IDbSet dbSet, IDataSet dataSet);
+        internal abstract void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet);
 
-        internal abstract Task RecursiveFillDataSetAsync(IDbSet dbSet, IDataSet dataSet, CancellationToken cancellationToken);
+        internal abstract Task RecursiveFillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        internal abstract void FillDataSet(IDbSet dbSet, IDataSet dataSet);
+        internal abstract void FillDataSet(IDbSet dbSet, DataSet dataSet);
 
-        internal abstract Task FillDataSetAsync(IDbSet dbSet, IDataSet dataSet, CancellationToken cancellationToken);
+        internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
         protected internal abstract DbSet<T> CreateDbSet<T>(DataSet<T> dataSet)
             where T : Model, new();

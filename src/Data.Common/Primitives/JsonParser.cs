@@ -65,7 +65,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public static void Parse(string json, IDataSet dataSet)
+        public static void Parse(string json, DataSet dataSet)
         {
             var parser = new JsonParser(json);
             parser.Parse(dataSet, true);
@@ -82,7 +82,7 @@ namespace DevZest.Data.Primitives
             _json = json;
         }
 
-        private void Parse(IDataSet dataSet, bool isTopLevel)
+        private void Parse(DataSet dataSet, bool isTopLevel)
         {
             ExpectToken(TokenKind.SquaredOpen);
 

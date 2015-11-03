@@ -1,6 +1,5 @@
 ﻿using DevZest.Data.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -18,16 +17,7 @@ namespace DevZest.Data
             ChildOrdinal = -1;
         }
 
-        private IDataSet[] _childDataSets;
-
-        public IList<DataRow> GetChildren(Model childModel)
-        {
-            Check.NotNull(childModel, nameof(childModel));
-            if (childModel.ParentModel != Model)
-                throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
-
-            return _childDataSets[childModel.Ordinal];
-        }
+        private DataSet[] _childDataSets;
 
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
@@ -52,7 +42,6 @@ namespace DevZest.Data
         internal void DisposeBySubDataSet()
         {
             Parent = null;
-            ChildOrdinal = -1;
         }
 
         internal void InitializeByMainDataSet(Model model, int ordinal)
@@ -65,7 +54,7 @@ namespace DevZest.Data
 
             model.EnsureChildModelsInitialized();
             var childModels = model.ChildModels;
-            _childDataSets = new IDataSet[childModels.Count];
+            _childDataSets = new DataSet[childModels.Count];
             for (int i = 0; i < childModels.Count; i++)
                 _childDataSets[i] = childModels[i].DataSet.CreateSubDataSet(this);
 
@@ -83,7 +72,6 @@ namespace DevZest.Data
                 column.RemoveRow(this);
 
             Model = null;
-            Ordinal = -1;
         }
 
         internal void AdjustOrdinal(int value)
@@ -98,20 +86,25 @@ namespace DevZest.Data
             ChildOrdinal = value;
         }
 
-        internal IDataSet this[Model childModel]
+        public DataSet this[Model childModel]
         {
             get
             {
-                Debug.Assert(Model != null);
-                Debug.Assert(childModel != null);
-                Debug.Assert(childModel.ParentModel == Model);
-                return this[childModel.Ordinal];
+                Check.NotNull(childModel, nameof(childModel));
+                if (childModel.ParentModel != Model)
+                    throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
+                return _childDataSets[childModel.Ordinal];
             }
         }
 
-        internal IDataSet this[int ordinal]
+        public DataSet this[int ordinal]
         {
-            get { return _childDataSets[ordinal]; }
+            get
+            {
+                if (ordinal < 0 || ordinal >= _childDataSets.Length)
+                    throw new ArgumentOutOfRangeException(nameof(ordinal));
+                return _childDataSets[ordinal];
+            }
         }
 
         internal void ClearChildren()

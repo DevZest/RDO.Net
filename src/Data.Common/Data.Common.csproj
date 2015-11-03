@@ -72,7 +72,8 @@
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />
-    <Compile Include="DataSet.cs" />
+    <Compile Include="DataSet_T.cs" />
+    <Compile Include="DataSetChangedEventArgs.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSourceKind.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Functions.Max.cs" />
     <Compile Include="Functions.Min.cs" />
     <Compile Include="Functions.Sum.cs" />
-    <Compile Include="IDataSet.cs" />
+    <Compile Include="DataSet.cs" />
     <Compile Include="IDbSet.cs" />
     <Compile Include="IDbTable.cs" />
     <Compile Include="Identity.cs" />

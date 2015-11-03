@@ -304,7 +304,7 @@ namespace DevZest.Data
             Debug.Assert(DataSource == null);
 
             DataSource = dataSource;
-            DataSet = dataSource as IDataSet;
+            DataSet = dataSource as DataSet;
             Columns.Seal();
         }
 
@@ -320,7 +320,7 @@ namespace DevZest.Data
             }
         }
 
-        internal IDataSet DataSet { get; private set; }
+        internal DataSet DataSet { get; private set; }
 
         private int _ordinal = -1;
         internal int Ordinal
@@ -621,6 +621,19 @@ namespace DevZest.Data
         public override string ToString()
         {
             return this.GetType().Name + ": [" + string.Join(", ", Columns.Select(x => x.ColumnName)) + "]";
+        }
+
+        public DataSet this[DataRow parentDataRow]
+        {
+            get
+            {
+                var parentModel = ParentModel;
+                var parentDataRowModel = parentDataRow == null ? null : parentDataRow.Model;
+                if (parentModel != parentDataRowModel)
+                    throw new ArgumentException(Strings.InvalidChildModel, nameof(parentDataRow));
+
+                return parentDataRowModel == null ? DataSet : parentDataRow[this];
+            }
         }
     }
 }

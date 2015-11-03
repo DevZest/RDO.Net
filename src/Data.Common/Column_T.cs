@@ -26,7 +26,7 @@ namespace DevZest.Data
 
         private sealed class ChildValueManager : IValueManager
         {
-            public ChildValueManager(IDataSet dataSet, Column<T> parentColumn)
+            public ChildValueManager(DataSet dataSet, Column<T> parentColumn)
             {
                 Debug.Assert(dataSet != null);
                 Debug.Assert(parentColumn != null);
@@ -35,7 +35,7 @@ namespace DevZest.Data
                 _parentColumn = parentColumn;
             }
 
-            private IDataSet _dataSet;
+            private DataSet _dataSet;
             private Column<T> _parentColumn;
 
             public int RowCount
@@ -175,7 +175,7 @@ namespace DevZest.Data
                 _valueManager = CreateValueManager(dataSet, this);
         }
 
-        private static IValueManager CreateValueManager(IDataSet dataSet, Column<T> column)
+        private static IValueManager CreateValueManager(DataSet dataSet, Column<T> column)
         {
             var parentColumn = GetParentColumn(column);
             if (parentColumn != null)

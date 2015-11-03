@@ -134,7 +134,7 @@ namespace DevZest.Data
             Assert.AreEqual((count - 1) * count * count, model.Child.Child.DataSet.Count);
         }
 
-        private static List<DataRow> ToList(IDataSet dataSet)
+        private static List<DataRow> ToList(DataSet dataSet)
         {
             var result = new List<DataRow>();
             for (int i = 0; i < dataSet.Count; i++)
@@ -148,7 +148,6 @@ namespace DevZest.Data
             foreach (var row in rows)
             {
                 Assert.AreEqual(null, row.Model);
-                Assert.AreEqual(-1, row.Ordinal);
                 Assert.AreEqual(null, row.Parent);
             }
         }
@@ -169,12 +168,12 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DataSet_DataRow_GetChildren()
+        public void DataSet_DataRow_child_DataSet()
         {
             int count = 3;
             var dataSet = GetDataSet(count);
 
-            Assert.AreEqual(count, dataSet[0].GetChildren(dataSet._.Child).Count);
+            Assert.AreEqual(count, dataSet[0][dataSet._.Child].Count);
         }
     }
 }
