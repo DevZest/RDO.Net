@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace DevZest.Data
@@ -118,6 +119,8 @@ namespace DevZest.Data
 
         internal void InternalRemoveAt(int index)
         {
+            Debug.Assert(index >= 0 && index < Count);
+
             var dataRow = this[index];
             InternalRemoveAtCore(index, dataRow);
             OnChanged(dataRow);
@@ -136,7 +139,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
 
             for (int i = Count - 1; i >= 0; i--)
-                RemoveAt(i);
+                InternalRemoveAt(i);
         }
 
         public void CopyTo(DataRow[] array, int arrayIndex)
