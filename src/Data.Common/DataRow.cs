@@ -107,7 +107,7 @@ namespace DevZest.Data
             }
         }
 
-        internal void ClearChildren()
+        private void ClearChildren()
         {
             foreach (var dataSet in _childDataSets)
                 dataSet.Clear();
@@ -169,5 +169,13 @@ namespace DevZest.Data
         {
             get { return Model == null; }
         }
+
+        internal void OnValueChanged(Column column)
+        {
+            if (ValueChanged != null)
+                ValueChanged(column, this);
+        }
+
+        public event DataValueChangedEventHandler ValueChanged;
     }
 }

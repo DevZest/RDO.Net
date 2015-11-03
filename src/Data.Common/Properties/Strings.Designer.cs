@@ -667,6 +667,22 @@ namespace DevZest.Data
             get { return GetString("ColumnMappingsBuilder_NoColumnMapping"); }
         }
 
+        /// <summary>
+        /// Invalid parent DataRow.
+        /// </summary>
+        public static string Column_InvalidParentDataRow
+        {
+            get { return GetString("Column_InvalidParentDataRow"); }
+        }
+
+        /// <summary>
+        /// Cannot add DataRow into multiple DataSet.
+        /// </summary>
+        public static string DataSet_InvalidNewDataRow
+        {
+            get { return GetString("DataSet_InvalidNewDataRow"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

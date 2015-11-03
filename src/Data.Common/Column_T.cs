@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
+    public delegate void DataValueChangedEventHandler(Column column, DataRow dataRow);
+
     /// <summary>
     /// Represents a column with strongly typed data.
     /// </summary>
@@ -260,16 +262,20 @@ namespace DevZest.Data
                     return;
                 }
 
-                if (IsExpression)
-                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
-
                 VerifyDataRow(dataRow);
-                var valueManager = ValueManager;
-                var ordinal = dataRow.Ordinal;
-                if (valueManager.IsReadOnly(ordinal))
-                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
-                valueManager[ordinal] = value;
+                SetValue(dataRow, value);
             }
+        }
+
+        private void SetValue(DataRow dataRow, T value)
+        {
+            Debug.Assert(dataRow != null);
+            var ordinal = dataRow.Ordinal;
+            if (IsReadOnly(ordinal))
+                throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
+            ValueManager[ordinal] = value;
+            OnValueChanged(dataRow);
+            dataRow.OnValueChanged(this);
         }
 
         private void VerifyDataRow(DataRow dataRow)
@@ -302,6 +308,11 @@ namespace DevZest.Data
             return ValueManager.IsReadOnly(ordinal);
         }
 
+        public bool IsReadOnly(DataRow parentDataRow, int childOrdinal)
+        {
+            return IsReadOnly(GetOrdinal(parentDataRow, childOrdinal));
+        }
+
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>
         /// <param name="ordinal">The provided <see cref="DataRow"/> ordinal.</param>
         /// <returns>The value of this column from provided <see cref="DataRow"/> ordinal.</returns>
@@ -310,27 +321,43 @@ namespace DevZest.Data
         /// <seealso cref="IsReadOnly(int)"/>
         public T this[int ordinal]
         {
+            get { return this[null, ordinal]; }
+            set { this[null, ordinal] = value; }
+        }
+
+        public T this[DataRow parentDataRow, int childOrdinal]
+        {
             get
             {
-                var valueManager = ValueManager;
-                if (ordinal < 0 || ordinal >= valueManager.RowCount)
-                    throw new ArgumentOutOfRangeException(nameof(ordinal));
-
-                return valueManager[ordinal];
+                var ordinal = GetOrdinal(parentDataRow, childOrdinal);
+                return ValueManager[ordinal];
             }
             set
             {
-                if (IsReadOnly(ordinal))
-                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
-
-                var valueManager = ValueManager;
-                if (ordinal < 0 || ordinal >= valueManager.RowCount)
-                    throw new ArgumentOutOfRangeException(nameof(ordinal));
-
-                if (valueManager.IsReadOnly(ordinal))
-                    throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
-                valueManager[ordinal] = value;
+                var dataRow = GetDataRow(parentDataRow, childOrdinal);
+                SetValue(dataRow, value);
             }
+        }
+
+        private int GetOrdinal(DataRow parentDataRow, int childOrdinal)
+        {
+            return parentDataRow == null ? childOrdinal : GetDataRow(parentDataRow, childOrdinal).Ordinal;
+        }
+
+        private DataRow GetDataRow(DataRow parentDataRow, int childOrdinal)
+        {
+            var dataSet = GetDataSet(parentDataRow);
+            return dataSet[childOrdinal];
+        }
+
+        private DataSet GetDataSet(DataRow parentDataRow)
+        {
+            var model = ParentModel;
+            if (parentDataRow == null)
+                return model.DataSet;
+            if (parentDataRow.Model != model.ParentModel)
+                throw new ArgumentException(Strings.Column_InvalidParentDataRow, nameof(parentDataRow));
+            return parentDataRow[model];
         }
 
         internal sealed override void InsertRow(DataRow dataRow)

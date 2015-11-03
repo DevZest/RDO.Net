@@ -277,5 +277,13 @@ namespace DevZest.Data
         /// <param name="column">The source <see cref="Column"/>.</param>
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
         public abstract ColumnMapping From(Column column);
+
+        internal void OnValueChanged(DataRow dataRow)
+        {
+            if (ValueChanged != null)
+                ValueChanged(this, dataRow);
+        }
+
+        public event DataValueChangedEventHandler ValueChanged;
     }
 }

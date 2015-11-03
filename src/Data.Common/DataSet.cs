@@ -9,8 +9,6 @@ namespace DevZest.Data
 {
     public delegate void DataSetChangedEventHandler(DataSet dataSet, DataRow dataRow);
 
-    public delegate void DataValueChangedEventHandler(Column column, DataRow dataRow);
-
     public abstract class DataSet : DataSource, IList<DataRow>
     {
         internal DataSet(Model model)
@@ -83,7 +81,7 @@ namespace DevZest.Data
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
             if (dataRow.Parent != null)
-                throw new ArgumentException(nameof(dataRow));
+                throw new ArgumentException(Strings.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);
         }

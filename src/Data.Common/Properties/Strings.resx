@@ -363,4 +363,10 @@
   <data name="ColumnMappingsBuilder_NoColumnMapping" xml:space="preserve">
     <value>No ColumnMapping specified.</value>
   </data>
+  <data name="Column_InvalidParentDataRow" xml:space="preserve">
+    <value>Invalid parent DataRow.</value>
+  </data>
+  <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
+    <value>Cannot add DataRow into multiple DataSet.</value>
+  </data>
 </root>
