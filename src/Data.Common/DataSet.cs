@@ -193,7 +193,7 @@ namespace DevZest.Data
 
         public event DataSetChangedEventHandler Changed;
 
-        internal void OnChanged(DataRow dataRow)
+        private void OnChanged(DataRow dataRow)
         {
             if (Changed != null)
                 Changed(this, dataRow);
