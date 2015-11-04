@@ -53,9 +53,13 @@ namespace DevZest.Data
             get { return _columns.ContainsKey(columnKey) ? _columns[columnKey] : null; }
         }
 
-        public Column this[string columnName]
+        public Column this[string name]
         {
-            get { return ((InnerCollection)Items)[columnName]; }
+            get
+            {
+                Check.NotEmpty(name, nameof(name));
+                return Model[name] as Column;
+            }
         }
 
         internal void Seal()

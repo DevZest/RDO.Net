@@ -133,10 +133,9 @@ namespace DevZest.Data.Primitives
             ExpectToken(TokenKind.Colon);
 
             var model = dataRow.Model;
-            if (!model.ContainsMember(memberName))
-                throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-
             var member = model[memberName];
+            if (member == null)
+                throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
             var column = member as Column;
             if (column != null)
                 Parse(column, dataRow.Ordinal);

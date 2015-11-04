@@ -441,21 +441,14 @@ namespace DevZest.Data
             _members.Add(member.Name, member);
         }
 
-        internal bool ContainsMember(string memberName)
+        private bool ContainsMember(string memberName)
         {
-            Utilities.Check.NotEmpty(memberName, nameof(memberName));
-            return _members.ContainsKey(memberName);
+            return string.IsNullOrEmpty(memberName) ? false : _members.ContainsKey(memberName);
         }
 
         internal ModelMember this[string memberName]
         {
-            get
-            {
-                if (!ContainsMember(memberName))
-                    throw new ArgumentOutOfRangeException(nameof(memberName));
-
-                return _members[memberName];
-            }
+            get { return ContainsMember(memberName) ? _members[memberName] : null; }
         }
 
         protected internal Identity GetIdentity(bool isTempTable)
