@@ -177,5 +177,11 @@ namespace DevZest.Data
         }
 
         public event DataValueChangedEventHandler ValueChanged;
+
+        public object this[Column column]
+        {
+            get { return column.GetValue(this); }
+            set { column.SetValue(this, value); }
+        }
     }
 }

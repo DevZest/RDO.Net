@@ -285,5 +285,9 @@ namespace DevZest.Data
         }
 
         public event DataValueChangedEventHandler ValueChanged;
+
+        public abstract object GetValue(DataRow dataRow);
+
+        public abstract void SetValue(DataRow dataRow, object value);
     }
 }

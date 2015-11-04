@@ -561,5 +561,15 @@ namespace DevZest.Data
         {
             return From((Column<T>)column);
         }
+
+        public sealed override object GetValue(DataRow dataRow)
+        {
+            return this[dataRow];
+        }
+
+        public sealed override void SetValue(DataRow dataRow, object value)
+        {
+            this[dataRow] = (T)value;
+        }
     }
 }
