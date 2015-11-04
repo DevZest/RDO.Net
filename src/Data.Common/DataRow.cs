@@ -183,5 +183,11 @@ namespace DevZest.Data
             get { return column.GetValue(this); }
             set { column.SetValue(this, value); }
         }
+
+        public object this[string columnName]
+        {
+            get { return Model.Columns[columnName].GetValue(this); }
+            set { Model.Columns[columnName].SetValue(this, value); }
+        }
     }
 }

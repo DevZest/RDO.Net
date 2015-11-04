@@ -53,6 +53,11 @@ namespace DevZest.Data
             get { return _columns.ContainsKey(columnKey) ? _columns[columnKey] : null; }
         }
 
+        public Column this[string columnName]
+        {
+            get { return ((InnerCollection)Items)[columnName]; }
+        }
+
         internal void Seal()
         {
             _columnNameSuffixes = null;
