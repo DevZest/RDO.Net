@@ -643,5 +643,57 @@ namespace DevZest.Data
                 return parentDataRowModel == null ? DataSet : parentDataRow[this];
             }
         }
+
+        private sealed class CustomValidation : DataValidation
+        {
+            internal CustomValidation(string name, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column[] columns)
+                : base(name)
+            {
+                Debug.Assert(condition != null);
+                Debug.Assert(errorMessageFunc != null);
+
+                _condition = condition;
+                _errorMessageFunc = errorMessageFunc;
+                _columns = columns;
+            }
+
+            _Boolean _condition;
+            Func<DataRow, string> _errorMessageFunc;
+            Column[] _columns;
+
+            public override bool IsValid(DataRow dataRow)
+            {
+                return (_condition.Eval(dataRow) == true);
+            }
+
+            public override string GetErrorMessage(DataRow dataRow)
+            {
+                return _errorMessageFunc(dataRow);
+            }
+
+            public override int ColumnCount
+            {
+                get { return _columns == null ? 0 : _columns.Length; }
+            }
+
+            public override Column this[int index]
+            {
+                get
+                {
+                    if (index < 0 || index >= ColumnCount)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    return _columns[index];
+                }
+            }
+        }
+
+        public void AddValidation(string name, _Boolean condition, Func<DataRow, string> errorMessageFunc, params Column[] columns)
+        {
+            Utilities.Check.NotEmpty(name, nameof(name));
+            Utilities.Check.NotNull(condition, nameof(condition));
+            Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
+
+            Validations.Add(new CustomValidation(name, condition, errorMessageFunc, columns));
+        }
     }
 }
