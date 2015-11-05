@@ -11,9 +11,9 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Accessor<SimpleModel, _Int32> Column1Accessor = RegisterColumn((SimpleModel x) => x.Column1);
+            public static readonly Accessor<SimpleModel, _Int32> Column1Accessor = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
 
-            public static readonly Accessor<SimpleModel, _Int32> Column2Accessor = RegisterColumn((SimpleModel x) => x.Column2);
+            public static readonly Accessor<SimpleModel, _Int32> Column2Accessor = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
 
             public _Int32 Column1 { get; private set; }
 
@@ -280,5 +280,25 @@ namespace DevZest.Data
         }
 
         #endregion
+
+        [TestMethod]
+        public void Model_Columns_DbColumnName_suffix_assigned()
+        {
+            var model = new SimpleModel();
+            model.Columns.Seal();
+            Assert.AreEqual("DbColumnName", model.Columns[0].DbColumnName);
+            Assert.AreEqual("DbColumnName1", model.Columns[1].DbColumnName);
+        }
+
+        [TestMethod]
+        public void Model_Columns_indexer_by_name()
+        {
+            var model = new SimpleModel();
+            model.Columns.Seal();
+            Assert.AreSame(model.Column1, model.Columns["Column1"]);
+            Assert.AreSame(model.Column2, model.Columns["Column2"]);
+            Assert.IsNull(model.Columns["DbColumnName"]);
+            Assert.IsNull(model.Columns["DbColumnName1"]);
+        }
     }
 }

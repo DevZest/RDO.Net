@@ -204,7 +204,7 @@ namespace DevZest.Data.SqlServer
         {
             var column = new T();
             column.ConstructModelMember(parentModel, typeof(TestModel), columnName);
-            column.ColumnName = columnName;
+            column.DbColumnName = columnName;
             return column;
         }
 

@@ -170,8 +170,6 @@ namespace DevZest.Data
 
         internal sealed override void Seal()
         {
-            base.Seal();
-
             var dataSet = ParentModel.DataSet;
             if (dataSet != null)
                 _valueManager = CreateValueManager(dataSet, this);

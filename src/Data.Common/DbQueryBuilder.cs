@@ -260,7 +260,7 @@ namespace DevZest.Data
         public DbQueryBuilder Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
             where T : Column, new()
         {
-            return Select(sourceColumn, adhoc.AddColumn(sourceColumn, false, c => c.ColumnName = string.IsNullOrEmpty(name) ? sourceColumn.ColumnName : name));
+            return Select(sourceColumn, adhoc.AddColumn(sourceColumn, false, c => c.DbColumnName = string.IsNullOrEmpty(name) ? sourceColumn.DbColumnName : name));
         }
 
         private void VerifyTargetColumn(Column target)

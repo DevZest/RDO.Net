@@ -68,7 +68,7 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
-    <Compile Include="ColumnNameAttribute.cs" />
+    <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />

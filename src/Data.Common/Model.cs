@@ -613,7 +613,7 @@ namespace DevZest.Data
 
         public override string ToString()
         {
-            return this.GetType().Name + ": [" + string.Join(", ", Columns.Select(x => x.ColumnName)) + "]";
+            return this.GetType().Name + ": [" + string.Join(", ", Columns.Select(x => x.Name)) + "]";
         }
 
         public DataSet this[DataRow parentDataRow]

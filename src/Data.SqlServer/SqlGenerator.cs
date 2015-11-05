@@ -33,9 +33,9 @@ namespace DevZest.Data.SqlServer
             {
                 Column identityColumn = model.GetIdentity(false).Column;
                 sqlBuilder.AppendLine(string.Format("OUTPUT INSERTED.{0} INTO {1} ({2})",
-                    identityColumn.ColumnName.ToQuotedIdentifier(),
+                    identityColumn.DbColumnName.ToQuotedIdentifier(),
                     identityOutput.Name.ToQuotedIdentifier(),
-                    identityOutput._.NewValue.ColumnName.ToQuotedIdentifier()));
+                    identityOutput._.NewValue.DbColumnName.ToQuotedIdentifier()));
             }
 
             if (statement.Select == null)
@@ -55,7 +55,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append('(');
             for (int i = 0; i < insertList.Count; i++)
             {
-                sqlBuilder.Append(insertList[i].ColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(insertList[i].DbColumnName.ToQuotedIdentifier());
                 if (i != insertList.Count - 1)
                     sqlBuilder.Append(", ");
             }
@@ -106,7 +106,7 @@ namespace DevZest.Data.SqlServer
             for (int i = 0; i < selectList.Count; i++)
             {
                 var select = selectList[i];
-                sqlBuilder.Append(select.Target.ColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(select.Target.DbColumnName.ToQuotedIdentifier());
                 sqlBuilder.Append(" = ");
                 select.SourceExpression.Accept(result._expressionGenerator);
                 if (i != selectList.Count - 1)
@@ -218,7 +218,7 @@ namespace DevZest.Data.SqlServer
 
         private void GenerateSql(Column column)
         {
-            SqlBuilder.Append(ModelAliasManager[column.GetParentModel()].ToQuotedIdentifier()).Append('.').Append(column.ColumnName.ToQuotedIdentifier());
+            SqlBuilder.Append(ModelAliasManager[column.GetParentModel()].ToQuotedIdentifier()).Append('.').Append(column.DbColumnName.ToQuotedIdentifier());
         }
 
         private IModelAliasManager ModelAliasManager
@@ -327,7 +327,7 @@ namespace DevZest.Data.SqlServer
                 {
                     var targetColumn = getTargetColumn(i);
                     if (targetColumn != null)
-                        SqlBuilder.Append(" AS ").Append(targetColumn.ColumnName.ToQuotedIdentifier());
+                        SqlBuilder.Append(" AS ").Append(targetColumn.DbColumnName.ToQuotedIdentifier());
                 }
                 bool isLast = (i == count - 1);
                 if (!isLast)

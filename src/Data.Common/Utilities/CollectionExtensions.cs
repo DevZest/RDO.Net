@@ -34,7 +34,7 @@ namespace DevZest.Data.Utilities
                 var mapping = parentMappings[i];
                 var source = GetSource(mapping.Source, columnMappings);
                 if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source.ColumnName));
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source.Name));
                 result[i] = new ColumnMapping(source, mapping.Target);
             }
 

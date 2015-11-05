@@ -89,7 +89,7 @@ namespace DevZest.Data.SqlServer
 
         public override void Visit(DbColumnExpression e)
         {
-            var columnName = e.ColumnName.ToQuotedIdentifier();
+            var columnName = e.DbColumnName.ToQuotedIdentifier();
             if (ModelAliasManager != null)
             {
                 var modelAlias = ModelAliasManager[e.Column.GetParentModel()].ToQuotedIdentifier();

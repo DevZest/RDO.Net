@@ -9,21 +9,23 @@ namespace DevZest.Data
     /// <summary>Represents a collection of <see cref="Column"/> objects contained by <see cref="Model"/>.</summary>
     public sealed class ColumnCollection : ReadOnlyCollection<Column>
     {
-        private class InnerCollection : KeyedCollection<string, Column>
+        private class InnerCollection : KeyedCollection<ColumnKey, Column>
         {
-            protected override string GetKeyForItem(Column item)
+            protected override ColumnKey GetKeyForItem(Column item)
             {
-                return item.ColumnName;
+                return item.Key;
             }
         }
-
-        Dictionary<string, int> _columnNameSuffixes = new Dictionary<string, int>();
-        Dictionary<ColumnKey, Column> _columns = new Dictionary<ColumnKey, Column>();
 
         internal ColumnCollection(Model model)
             : base(new InnerCollection())
         {
             Model = model;
+        }
+
+        private InnerCollection Columns
+        {
+            get { return (InnerCollection)Items; }
         }
 
         private Model Model { get; set; }
@@ -34,13 +36,12 @@ namespace DevZest.Data
         {
             Debug.Assert(Model.DataSource == null);
 
+            var columns = Columns;
             var columnKey = item.Key;
-            if (_columns.ContainsKey(columnKey))
+            if (columns.Contains(columnKey))
                 throw new InvalidOperationException(Strings.ColumnCollection_DuplicateColumnKey(columnKey.OriginalOwnerType, columnKey.OriginalName));
 
-            item.ColumnName = _columnNameSuffixes.GetUniqueName(item.ColumnName); // Ensure ColumnName is unique
-            _columns.Add(columnKey, item);
-            base.Items.Add(item);
+            columns.Add(item);
             if (item.IsSystem)
                 SystemColumnCount ++;
         }
@@ -50,7 +51,11 @@ namespace DevZest.Data
         /// <returns>Column with the specified <see cref="ColumnKey"/>, <see langword="null"/> if no column found.</returns>
         public Column this[ColumnKey columnKey]
         {
-            get { return _columns.ContainsKey(columnKey) ? _columns[columnKey] : null; }
+            get
+            {
+                var columns = Columns;
+                return columns.Contains(columnKey) ? columns[columnKey] : null;
+            }
         }
 
         public Column this[string name]
@@ -64,11 +69,10 @@ namespace DevZest.Data
 
         internal void Seal()
         {
-            _columnNameSuffixes = null;
-            foreach (var column in _columns.Values)
-            {
-                column.Seal();
-            }
+            var columnNameSuffixes = new Dictionary<string, int>();
+            var columns = Columns;
+            foreach (var column in columns)
+                column.Seal(columnNameSuffixes);
         }
     }
 }

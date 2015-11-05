@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -55,17 +56,17 @@ namespace DevZest.Data
             private set { _ordinal = value; }
         }
 
-        private string _columnName;
-        /// <summary>Gets or sets the column name in <see cref="Model.Columns"/> collection.</summary>
-        /// <remarks>If not set, the property name will be used; numeric suffix will be appended automatically when duplicate column names exist.</remarks>
+        private string _dbColumnName;
+        /// <summary>Gets or sets the column name in database.</summary>
+        /// <remarks>If not set, the property name will be used; numeric suffix will be appended automatically when duplicate database column names exist.</remarks>
         /// <inheritdoc cref="ModelMember.VerifyDesignMode" select="exception"/>
-        public string ColumnName
+        public string DbColumnName
         {
-            get { return _columnName ?? Name; }
+            get { return _dbColumnName ?? Name; }
             set
             {
                 VerifyDesignMode();
-                _columnName = value;
+                _dbColumnName = value;
             }
         }
 
@@ -134,7 +135,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public override string ToString()
         {
-            return ColumnName;
+            return Name;
         }
 
         /// <summary>Gets the set of parent <see cref="Model"/> objects related to this <see cref="Column"/>.</summary>
@@ -159,14 +160,19 @@ namespace DevZest.Data
         {
             var result = (Column)Activator.CreateInstance(this.GetType());
             result.OriginalOwnerType = parentModel.GetType();
-            result.OriginalName = this.ColumnName;
-            result.Initialize(parentModel, parentModel.GetType(), this.ColumnName, this.Kind, this._initializer);
+            result.OriginalName = this.Name;
+            result.Initialize(parentModel, parentModel.GetType(), this.Name, this.Kind, this._initializer);
             return result;
         }
 
-        internal virtual void Seal()
+        internal void Seal(Dictionary<string, int> dbColumnNameSuffixes)
         {
+            if (_dbColumnName != null)
+                _dbColumnName = dbColumnNameSuffixes.GetUniqueName(_dbColumnName);
+            Seal();
         }
+
+        internal abstract void Seal();
 
         internal abstract bool ShouldSerialize { get; }
 

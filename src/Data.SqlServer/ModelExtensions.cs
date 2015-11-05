@@ -31,7 +31,7 @@ namespace DevZest.Data.SqlServer
 
         private static void GenerateColumnDefinitionSql(this Column column, IndentedStringBuilder sqlBuilder, SqlVersion sqlVersion, bool isTempTable, bool isLastColumn)
         {
-            var columnName = column.ColumnName.ToQuotedIdentifier();
+            var columnName = column.DbColumnName.ToQuotedIdentifier();
             sqlBuilder.Append(columnName).Append(' ');
             column.GetMapper().GenerateColumnDefinitionSql(sqlBuilder, isTempTable, sqlVersion);
             if (!isLastColumn)
@@ -89,7 +89,7 @@ namespace DevZest.Data.SqlServer
             {
                 var column = primaryKey[i].Column;
                 var sort = primaryKey[i].Direction;
-                sqlBuilder.Append(column.ColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
                 if (sort == SortDirection.Ascending)
                     sqlBuilder.Append(" ASC");
                 else if (sort == SortDirection.Descending)
@@ -114,7 +114,7 @@ namespace DevZest.Data.SqlServer
             {
                 var column = columns[i].Column;
                 var sort = columns[i].Direction;
-                sqlBuilder.Append(column.ColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(column.DbColumnName.ToQuotedIdentifier());
                 if (sort == SortDirection.Ascending)
                     sqlBuilder.Append(" ASC");
                 else if (sort == SortDirection.Descending)
@@ -146,7 +146,7 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append(" (");
             for (int i = 0; i < key.Count(); i++)
             {
-                sqlBuilder.Append(key[i].Column.ColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(key[i].Column.DbColumnName.ToQuotedIdentifier());
                 if (i != key.Count() - 1)
                     sqlBuilder.Append(", ");
             }

@@ -13,9 +13,9 @@ namespace DevZest.Data.Primitives
 
         public Column Column { get; private set; }
 
-        public string ColumnName
+        public string DbColumnName
         {
-            get { return Column.ColumnName; }
+            get { return Column.DbColumnName; }
         }
 
         public override void Accept(DbExpressionVisitor visitor)
