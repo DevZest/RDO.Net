@@ -683,6 +683,22 @@ namespace DevZest.Data
             get { return GetString("DataSet_InvalidNewDataRow"); }
         }
 
+        /// <summary>
+        /// Value is required for column '{column}'.
+        /// </summary>
+        public static string RequiredAttribute_DefaultErrorMessage(object column)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("RequiredAttribute_DefaultErrorMessage", "column"), column);
+        }
+
+        /// <summary>
+        /// Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
+        /// </summary>
+        public static string ColumnValidationAttribute_InvalidErrorMessageFunc(object funcType, object funcName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValidationAttribute_InvalidErrorMessageFunc", "funcType", "funcName"), funcType, funcName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

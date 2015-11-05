@@ -369,4 +369,10 @@
   <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
     <value>Cannot add DataRow into multiple DataSet.</value>
   </data>
+  <data name="RequiredAttribute_DefaultErrorMessage" xml:space="preserve">
+    <value>Value is required for column '{column}'.</value>
+  </data>
+  <data name="ColumnValidationAttribute_InvalidErrorMessageFunc" xml:space="preserve">
+    <value>Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
+  </data>
 </root>

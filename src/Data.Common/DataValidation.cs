@@ -16,6 +16,8 @@ namespace DevZest.Data
 
         public abstract Column this[int index] { get; }
 
-        public abstract string Validate(DataRow dataRow);
+        public abstract bool IsValid(DataRow dataRow);
+
+        public abstract string GetErrorMessage(DataRow dataRow);
     }
 }
