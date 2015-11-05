@@ -70,25 +70,24 @@ namespace DevZest.Samples.AdventureWorksLT
         [Identity(1, 1)]
         public _Int32 SalesOrderID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public _Byte RevisionNumber { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsDateTime]
         public _DateTime OrderDate { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsDateTime]
         public _DateTime DueDate { get; private set; }
 
-        [Nullable(true)]
         [AsDateTime]
         public _DateTime ShipDate { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public SalesOrderStatusColumn Status { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public _Boolean OnlineOrderFlag { get; private set; }
 
         [UdtOrderNumber]
@@ -100,40 +99,36 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtAccountNumber]
         public _String AccountNumber { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public _Int32 CustomerID { get; private set; }
         
-        [Nullable(true)]
         public _Int32 ShipToAddressID { get; private set; }
 
-        [Nullable(true)]
         public _Int32 BillToAddressID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(50)]
         public _String ShipMethod { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(15)]
         public _String CreditCardApprovalCode { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal SubTotal { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal TaxAmt { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal Freight { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal TotalDue { get; private set; }
 
-        [Nullable(true)]
         [AsNVarCharMax]
         public _String Comment { get; private set; }
     }

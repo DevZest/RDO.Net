@@ -46,7 +46,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtNameStyle]
         public _Boolean NameStyle { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(8)]
         public _String Title { get; private set; }
 
@@ -59,30 +58,26 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         public _String LastName { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(10)]
         public _String Suffix { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(128)]
         public _String CompanyName { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(256)]
         public _String SalesPerson { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(256)]
         public _String EmailAddress { get; private set; }
 
         [UdtPhone]
         public _String Phone { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsVarChar(128)]
         public _String PasswordHash { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsVarChar(10)]
         public _String PasswordSalt { get; private set; }
     }

@@ -54,53 +54,44 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         public _String Name { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(25)]
         public _String ProductNumber { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(15)]
         public _String Color { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney()]
         public _Decimal StandardCost { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney()]
         public _Decimal ListPrice { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(5)]
         public _String Size { get; private set; }
 
-        [Nullable(true)]
         [AsDecimal(8, 2)]
         public _Decimal Weight { get; private set; }
 
-        [Nullable(true)]
         public _Int32 ProductCategoryID { get; private set; }
 
-        [Nullable(true)]
         public _Int32 ProductModelID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsDateTime]
         public _DateTime SellStartDate { get; private set; }
 
-        [Nullable(true)]
         [AsDateTime]
         public _DateTime SellEndDate { get; private set; }
 
-        [Nullable(true)]
         [AsDateTime]
         public _DateTime DiscontinuedDate { get; private set; }
 
-        [Nullable(true)]
         [AsVarBinaryMax]
         public _Binary ThumbNailPhoto { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(50)]
         public _String ThumbnailPhotoFileName { get; private set; }
     }

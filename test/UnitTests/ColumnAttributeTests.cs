@@ -38,7 +38,7 @@ namespace DevZest.Data
             [Identity(1, 1)]
             public _Int32 Id { get; private set; }
 
-            [Nullable(false)]
+            [Required]
             public _Boolean IsActive { get; private set; }
         }
 

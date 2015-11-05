@@ -8,7 +8,7 @@ namespace DevZest.Data.SqlServer
             RegisterColumn((IdentityOutput x) => x.NewValue);
         }
 
-        [Nullable(false)]
+        [Required]
         public _Int32 NewValue { get; private set; }
     }
 }

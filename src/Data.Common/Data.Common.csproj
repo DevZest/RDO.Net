@@ -103,6 +103,8 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
+    <Compile Include="DataValidation.cs" />
+    <Compile Include="Primitives\IColumnValidationFactory.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="JasonValueType.cs" />
     <Compile Include="JsonValue.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="ModelKey.cs" />
     <Compile Include="ModelSet.cs" />
     <Compile Include="Model_T.cs" />
-    <Compile Include="NullableAttribute.cs" />
+    <Compile Include="RequiredAttribute.cs" />
     <Compile Include="Primitives\AccessorManager.cs" />
     <Compile Include="Primitives\AggregateFunctionExpression.cs" />
     <Compile Include="Primitives\BinaryExpression.cs" />

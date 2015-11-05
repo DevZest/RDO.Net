@@ -32,7 +32,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [Identity(1, 1)]
         public _Int32 ProductDescriptionID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(400)]
         public _String Description { get; private set; }
     }

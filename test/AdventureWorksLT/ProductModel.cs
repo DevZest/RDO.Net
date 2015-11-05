@@ -36,7 +36,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         public _String Name { get; private set; }
 
-        [Nullable(true)]
         public _SqlXml CatalogDescription { get; private set; }
     }
 }

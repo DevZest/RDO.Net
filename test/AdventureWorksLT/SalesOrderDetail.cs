@@ -49,21 +49,21 @@ namespace DevZest.Samples.AdventureWorksLT
         [Identity(1, 1)]
         public _Int32 SalesOrderDetailID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public _Int16 OrderQty { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         public _Int32 ProductID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal UnitPrice { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal UnitPriceDiscount { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsMoney]
         public _Decimal LineTotal { get; private set; }
     }

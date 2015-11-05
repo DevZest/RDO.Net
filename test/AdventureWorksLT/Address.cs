@@ -38,15 +38,14 @@ namespace DevZest.Samples.AdventureWorksLT
         [Identity(1, 1)]
         public _Int32 AddressID { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(60)]
         public _String AddressLine1 { get; private set; }
 
-        [Nullable(true)]
         [AsNVarChar(60)]
         public _String AddressLine2 { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(30)]
         public _String City { get; private set; }
 
@@ -56,7 +55,7 @@ namespace DevZest.Samples.AdventureWorksLT
         [UdtName]
         public _String CountryRegion { get; private set; }
 
-        [Nullable(false)]
+        [Required]
         [AsNVarChar(15)]
         public _String PostalCode { get; private set; }
     }

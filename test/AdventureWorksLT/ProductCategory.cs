@@ -41,7 +41,6 @@ namespace DevZest.Samples.AdventureWorksLT
         [Identity(1, 1)]
         public _Int32 ProductCategoryID { get; private set; }
 
-        [Nullable(true)]
         public _Int32 ParentProductCategoryID { get; private set; }
 
         public Key ParentProductCategory { get; private set; }
