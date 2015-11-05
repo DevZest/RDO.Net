@@ -108,7 +108,19 @@ namespace DevZest.Data
             if (columnAttributes == null)
                 return;
             foreach (var columnAttribute in columnAttributes)
+            {
                 columnAttribute.Initialize(column);
+
+                var validationFactory = columnAttribute as IColumnValidationFactory;
+                if (validationFactory != null)
+                {
+                    var validations = validationFactory.GetValidations(column);
+                    var model = column.ParentModel;
+                    Debug.Assert(model != null);
+                    foreach (var validation in validations)
+                        model.Validations.Add(validation);
+                }
+            }
         }
 
         private static T CreateColumn<TModel, TModelFrom, T>(Accessor<TModel, T> accessor, Accessor<TModelFrom, T> fromAccessor, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
@@ -211,6 +223,7 @@ namespace DevZest.Data
         {
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
+            Validations = new DataValidationCollection(this);
 
             Initialize(s_columnManager);
             Initialize(s_columnListManager);
@@ -285,6 +298,8 @@ namespace DevZest.Data
         protected internal ColumnCollection Columns { get; private set; }
 
         protected internal ModelCollection ChildModels { get; private set; }
+
+        protected internal DataValidationCollection Validations { get; private set; }
 
         public ModelKey PrimaryKey
         {

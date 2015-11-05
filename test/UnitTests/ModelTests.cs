@@ -15,8 +15,10 @@ namespace DevZest.Data
 
             public static readonly Accessor<SimpleModel, _Int32> Column2Accessor = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
 
+            [Required]
             public _Int32 Column1 { get; private set; }
 
+            [Required]
             public _Int32 Column2 { get; private set; }
         }
 
@@ -299,6 +301,13 @@ namespace DevZest.Data
             Assert.AreSame(model.Column2, model.Columns["Column2"]);
             Assert.IsNull(model.Columns["DbColumnName"]);
             Assert.IsNull(model.Columns["DbColumnName1"]);
+        }
+
+        [TestMethod]
+        public void Model_Validations_correctly_initialized()
+        {
+            var model = new SimpleModel();
+            Assert.AreEqual(2, model.Validations.Count);
         }
     }
 }
