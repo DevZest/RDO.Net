@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -188,6 +189,24 @@ namespace DevZest.Data
         {
             get { return Model.Columns[columnName].GetValue(this); }
             set { Model.Columns[columnName].SetValue(this, value); }
+        }
+
+        public IEnumerable<DataValidation> Validate(Column column = null)
+        {
+            foreach (var validation in Model.Validations)
+            {
+                if (column != null)
+                {
+                    var dependentColumns = validation.DependentColumns;
+                    if (dependentColumns.Count != 1 || dependentColumns[0] != column)
+                        continue;
+                }
+
+                if (validation.IsValid(this))
+                    continue;
+
+                yield return validation;
+            }
         }
     }
 }

@@ -199,5 +199,14 @@ namespace DevZest.Data
             if (Changed != null)
                 Changed(this, dataRow);
         }
+
+        public IEnumerable<DataValidationError> Validate()
+        {
+            foreach (var dataRow in this)
+            {
+                foreach (var validation in dataRow.Validate())
+                    yield return new DataValidationError(dataRow, validation);
+            }
+        }
     }
 }
