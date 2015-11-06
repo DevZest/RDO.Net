@@ -2,6 +2,7 @@
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevZest.Data
 {
@@ -174,6 +175,15 @@ namespace DevZest.Data
             var dataSet = GetDataSet(count);
 
             Assert.AreEqual(count, dataSet[0][dataSet._.Child].Count);
+        }
+
+        [TestMethod]
+        public void DataSet_Validate()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+
+            Assert.IsTrue(dataSet.Validate().FirstOrDefault().IsEmpty);
         }
     }
 }

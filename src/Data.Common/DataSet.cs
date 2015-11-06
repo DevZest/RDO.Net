@@ -200,12 +200,22 @@ namespace DevZest.Data
                 Changed(this, dataRow);
         }
 
-        public IEnumerable<DataValidationError> Validate()
+        public IEnumerable<DataValidationError> Validate(bool recursive = true)
         {
             foreach (var dataRow in this)
             {
                 foreach (var validation in dataRow.Validate())
                     yield return new DataValidationError(dataRow, validation);
+
+                if (recursive)
+                {
+                    foreach (var childModel in Model.ChildModels)
+                    {
+                        var childDataSet = childModel[dataRow];
+                        foreach (var validationError in childDataSet.Validate(true))
+                            yield return validationError;
+                    }
+                }
             }
         }
     }
