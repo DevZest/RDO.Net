@@ -223,7 +223,7 @@ namespace DevZest.Data
         {
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
-            Validations = new DataValidationCollection(this);
+            Validations = new DataValidationCollection();
 
             Initialize(s_columnManager);
             Initialize(s_columnListManager);
