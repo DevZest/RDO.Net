@@ -46,28 +46,17 @@ namespace DevZest.Data
             Assert.AreEqual(1, salesOrder._.SalesOrderID[0]);
         }
 
-        private static DataSet<SalesOrder> GetSalesOrders_Insert_DataSet_update_identity()
+        private static DataSet<SalesOrder> NewSalesOrdersTestData()
         {
-            var salesOrder = DataSet<SalesOrder>.New();
-            salesOrder.AddRow();
-            salesOrder.AddRow();
-
-            for (int i = 0; i < salesOrder.Count; i++)
-            {
-                salesOrder._.DueDate[i] = new DateTime(2015, 9, 30);
-                salesOrder._.SalesOrderNumber[i] = "SalesOrderNumber" + (i + 1).ToString();
-                salesOrder._.CustomerID[i] = i + 1;
-                salesOrder._.ShipMethod[i] = "TRUCK" + (i + 1).ToString();
-                salesOrder._.TotalDue[0] = 0;
-            }
-
-            return salesOrder;
+            var result = DataSet<SalesOrder>.New();
+            result.AddTestDataRows();
+            return result;
         }
 
         [TestMethod]
         public void DbTable_Insert_DataSet_update_identity()
         {
-            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var salesOrders = NewSalesOrdersTestData();
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
             {
@@ -81,7 +70,7 @@ namespace DevZest.Data
         [TestMethod]
         public async Task DbTable_InsertAsync_DataSet_update_identity()
         {
-            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var salesOrders = NewSalesOrdersTestData();
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(await OpenDbAsync(log, LogCategory.All)))
             {
@@ -95,7 +84,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbTable_Insert_temp_table_update_identity()
         {
-            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var salesOrders = NewSalesOrdersTestData();
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
             {
@@ -112,7 +101,7 @@ namespace DevZest.Data
         [TestMethod]
         public async Task DbTable_InsertAsync_temp_table_update_identity()
         {
-            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var salesOrders = NewSalesOrdersTestData();
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
             {

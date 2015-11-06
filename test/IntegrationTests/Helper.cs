@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.SqlServer;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 
 namespace DevZest.Data
@@ -27,6 +28,20 @@ namespace DevZest.Data
             Assert.AreEqual(expectedCount, list.Count);
             for (int i = 0; i < list.Count; i++)
                 Assert.AreEqual(expectedValues[i], list[i]);
+        }
+
+        internal static void AddTestDataRows(this DataSet<SalesOrder> salesOrder, int count = 2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var ordinal = salesOrder.AddRow().Ordinal;
+
+                salesOrder._.DueDate[ordinal] = new DateTime(2015, 9, 30);
+                salesOrder._.SalesOrderNumber[ordinal] = "SalesOrderNumber" + (ordinal + 1).ToString();
+                salesOrder._.CustomerID[ordinal] = ordinal + 1;
+                salesOrder._.ShipMethod[ordinal] = "TRUCK" + (ordinal + 1).ToString();
+                salesOrder._.TotalDue[0] = 0;
+            }
         }
     }
 }
