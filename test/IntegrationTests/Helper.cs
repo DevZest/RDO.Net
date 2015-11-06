@@ -30,7 +30,7 @@ namespace DevZest.Data
                 Assert.AreEqual(expectedValues[i], list[i]);
         }
 
-        internal static void AddTestDataRows(this DataSet<SalesOrder> salesOrder, int count = 2)
+        internal static void AddTestDataRows(this DataSet<SalesOrder> salesOrder, int count)
         {
             for (int i = 0; i < count; i++)
             {
