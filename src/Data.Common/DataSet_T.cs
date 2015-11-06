@@ -254,7 +254,7 @@ namespace DevZest.Data
         public DbSet<T> ToDbSet(DbSession dbSession)
         {
             Check.NotNull(dbSession, nameof(dbSession));
-            return dbSession.CreateDbSet(this);
+            return dbSession.ImportDataSet(this);
         }
 
         public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession)
@@ -265,7 +265,7 @@ namespace DevZest.Data
         public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             Check.NotNull(dbSession, nameof(dbSession));
-            return dbSession.CreateDbSetAsync(this, cancellationToken);
+            return dbSession.ImportDataSetAsync(this, cancellationToken);
         }
     }
 }

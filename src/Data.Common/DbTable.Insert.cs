@@ -144,7 +144,7 @@ namespace DevZest.Data
                 return InsertScalar(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
             else
             {
-                var dbSet = DbSession.CreateDbSet(dataSet);
+                var dbSet = DbSession.ImportDataSet(dataSet);
                 var result = InsertSet(dbSet, columnMappingsBuilder, autoJoin, updateIdentity);
                 UpdateIdentity(dataSet, result);
                 return result.RowCount;
@@ -160,7 +160,7 @@ namespace DevZest.Data
                 return await InsertScalarAsync(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
             else
             {
-                var dbSet = await DbSession.CreateDbSetAsync(dataSet, cancellationToken);
+                var dbSet = await DbSession.ImportDataSetAsync(dataSet, cancellationToken);
                 var result = await InsertSetAsync(dbSet, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
                 await UpdateIdentityAsync(dataSet, result, cancellationToken);
                 return result.RowCount;

@@ -145,14 +145,19 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        protected sealed override DbSet<T> CreateDbSet<T>(DataSet<T> dataSet)
+        protected sealed override bool ImportDataSetAsTempTable
+        {
+            get { return false; }
+        }
+
+        protected sealed override DbSet<T> ImportDataSet<T>(DataSet<T> dataSet)
         {
             return CreateDbSet<T>(GetSqlXml(dataSet));
         }
 
-        protected sealed override Task<DbSet<T>> CreateDbSetAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
+        protected sealed override Task<DbSet<T>> ImportDataSetAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
         {
-            return Task.FromResult(CreateDbSet(dataSet));
+            return Task.FromResult(ImportDataSet(dataSet));
         }
 
         private DbSet<T> CreateDbSet<T>(SqlXml xml)

@@ -159,10 +159,12 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        protected internal abstract DbSet<T> CreateDbSet<T>(DataSet<T> dataSet)
+        protected internal abstract bool ImportDataSetAsTempTable { get; }
+
+        protected internal abstract DbSet<T> ImportDataSet<T>(DataSet<T> dataSet)
             where T : Model, new();
 
-        protected internal abstract Task<DbSet<T>> CreateDbSetAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
+        protected internal abstract Task<DbSet<T>> ImportDataSetAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
             where T : Model, new();
 
         internal DbTable<T> NewTempTable<T>(Action<T> initializer = null, bool addRowId = true)

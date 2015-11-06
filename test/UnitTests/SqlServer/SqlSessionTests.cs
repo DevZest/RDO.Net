@@ -15,7 +15,7 @@ namespace DevZest.Data.SqlServer
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var query = db.CreateDbSet(dataSet);
+                var query = db.ImportDataSet(dataSet);
                 var expectedSql =
 @"DECLARE @p1 XML = N'
 <root>
@@ -72,7 +72,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var commands = db.CreateDbSet(dataSet).GetToTempTableCommands();
+                var commands = db.ImportDataSet(dataSet).GetToTempTableCommands();
 
                 var expectedSql0 =
 @"CREATE TABLE [#ProductCategory] (
@@ -148,7 +148,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var sourceData = db.CreateDbSet(dataSet);
+                var sourceData = db.ImportDataSet(dataSet);
                 var statement = db.ProductCategories.BuildInsertStatement(sourceData, null, false);
                 var tempTable = db.MockTempTable<ProductCategory>(SqlSession.GetTempTableInitializer(sourceData));
                 var identityMappings = db.MockTempTable<IdentityMapping>();
