@@ -266,24 +266,34 @@ namespace DevZest.Data
             model.AllowsKeyUpdate(oldValue);
         }
 
-        private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertSetResult result)
+        private static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertSetResult result)
             where TSource : Model, new()
         {
             var identityOutput = result.IdentityOutput;
             if (identityOutput == null || result.RowCount == 0)
-                return;
+                return null;
 
-            throw new NotImplementedException();
+            var identityColumn = dbTable._.GetIdentity(false).Column;
+            Debug.Assert(!object.ReferenceEquals(identityColumn, null));
+            var keyMappings = new ColumnMapping[] { new ColumnMapping(identityOutput._.OldValue, identityColumn) };
+            var columnMappings = new ColumnMapping[] { new ColumnMapping(identityOutput._.NewValue, identityColumn) };
+            return identityOutput.QueryStatement.BuildUpdateStatement(dbTable, keyMappings, columnMappings);
         }
 
-        private static Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertSetResult result, CancellationToken cancellationToken)
+        private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertSetResult result)
             where TSource : Model, new()
         {
-            //var identityOutput = result.IdentityOutput;
-            //if (identityOutput == null || result.RowCount == 0)
-            //    return;
+            var statement = BuildUpdateIdentityStatement(dbTable, result);
+            if (statement != null)
+               dbTable.DbSession.Update(statement);
+        }
 
-            throw new NotImplementedException();
+        private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertSetResult result, CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            var statement = BuildUpdateIdentityStatement(dbTable, result);
+            if (statement != null)
+                await dbTable.DbSession.UpdateAsync(statement, cancellationToken);
         }
 
         private static void UpdateScalarIdentity(Model model, int? value)
