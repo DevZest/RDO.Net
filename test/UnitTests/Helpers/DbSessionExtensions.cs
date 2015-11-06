@@ -1,17 +1,15 @@
 ﻿
 using DevZest.Data.Primitives;
+using System;
 
 namespace DevZest.Data.Helpers
 {
     internal static class DbSessionExtensions
     {
-        internal static DbTable<T> MockTempTable<T>(this DbSession dbSession)
+        internal static DbTable<T> MockTempTable<T>(this DbSession dbSession, Action<T> initializer = null, bool addRowId = true)
             where T : Model, new()
         {
-            var model = new T();
-            model.AddTempTableIdentity();
-            var tempTableName = dbSession.AssignTempTableName(model);
-            return DbTable<T>.CreateTemp(model, dbSession, tempTableName);
+            return dbSession.NewTempTableObject(initializer, addRowId);
         }
     }
 }

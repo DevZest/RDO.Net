@@ -181,7 +181,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private DbTable<T> NewTempTableObject<T>(Action<T> initializer, bool addRowId)
+        internal DbTable<T> NewTempTableObject<T>(Action<T> initializer = null, bool addRowId = true)
             where T : Model, new()
         {
             var model = new T();

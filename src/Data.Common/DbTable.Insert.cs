@@ -273,6 +273,12 @@ namespace DevZest.Data
             if (identityOutput == null || result.RowCount == 0)
                 return null;
 
+            return BuildUpdateIdentityStatement(dbTable, identityOutput);
+        }
+
+        internal static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, DbTable<IdentityMapping> identityOutput)
+            where TSource : Model, new()
+        {
             var identityColumn = dbTable._.GetIdentity(false).Column;
             Debug.Assert(!object.ReferenceEquals(identityColumn, null));
             var keyMappings = new ColumnMapping[] { new ColumnMapping(identityOutput._.OldValue, identityColumn) };

@@ -3,6 +3,7 @@ using DevZest.Data.Helpers;
 using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
@@ -183,6 +184,28 @@ UNION ALL
     [Product].[ModifiedDate] AS [ModifiedDate]
 FROM [SalesLT].[Product] [Product]
 WHERE ([Product].[ProductID] > 800));
+";
+                Assert.AreEqual(expectedSql, command.ToTraceString());
+            }
+        }
+
+        [TestMethod]
+        public void DbTable_Insert_BuildUpdateIdentityStatement()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var tempSalesOrders = db.MockTempTable<SalesOrder>();
+                var identityOutput = db.MockTempTable<IdentityMapping>();
+                var statement = DbTable<SalesOrder>.BuildUpdateIdentityStatement(tempSalesOrders, identityOutput);
+                var command = db.GetUpdateCommand(statement);
+                var expectedSql =
+@"UPDATE [SalesOrder] SET
+    [SalesOrderID] = [sys_identity_mapping].[NewValue]
+FROM
+    ([#sys_identity_mapping] [sys_identity_mapping]
+    INNER JOIN
+    [#SalesOrder] [SalesOrder]
+    ON [sys_identity_mapping].[OldValue] = [SalesOrder].[SalesOrderID]);
 ";
                 Assert.AreEqual(expectedSql, command.ToTraceString());
             }

@@ -199,7 +199,7 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        private static Action<Model> GetTempTableInitializer<TSource>(DbSet<TSource> sourceData)
+        internal static Action<Model> GetTempTableInitializer<TSource>(DbSet<TSource> sourceData)
             where TSource : Model, new()
         {
             var hasDataSetOrdinal = !ReferenceEquals(sourceData.Model.GetDataSetOrdinalColumn(), null);
@@ -233,7 +233,7 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(GetConnection());
         }
 
-        private IList<SqlCommand> GetInsertCommands<T, TSource>(DbSelectStatement statement, DbSet<TSource> sourceData, DbTable<T> tempTable, DbTable<IdentityOutput> identityOutput, DbTable<IdentityMapping> identityMappings)
+        internal IList<SqlCommand> GetInsertCommands<T, TSource>(DbSelectStatement statement, DbSet<TSource> sourceData, DbTable<T> tempTable, DbTable<IdentityOutput> identityOutput, DbTable<IdentityMapping> identityMappings)
             where T : Model, new()
             where TSource : Model, new()
         {
