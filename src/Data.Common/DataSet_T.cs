@@ -250,5 +250,22 @@ namespace DevZest.Data
             var child = getChild(_);
             return child == null ? null : (DataSet<TChild>)child.DataSource;
         }
+
+        public DbSet<T> ToDbSet(DbSession dbSession)
+        {
+            Check.NotNull(dbSession, nameof(dbSession));
+            return dbSession.CreateDbSet(this);
+        }
+
+        public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession)
+        {
+            return ToDbSetAsync(dbSession, CancellationToken.None);
+        }
+
+        public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession, CancellationToken cancellationToken)
+        {
+            Check.NotNull(dbSession, nameof(dbSession));
+            return dbSession.CreateDbSetAsync(this, cancellationToken);
+        }
     }
 }

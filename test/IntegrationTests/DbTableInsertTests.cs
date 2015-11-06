@@ -1,7 +1,7 @@
-﻿
-using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -90,6 +90,40 @@ namespace DevZest.Data
             }
             Assert.AreEqual(1, salesOrders._.SalesOrderID[0]);
             Assert.AreEqual(2, salesOrders._.SalesOrderID[1]);
+        }
+
+        [TestMethod]
+        public void DbTable_Insert_temp_table_update_identity()
+        {
+            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var log = new StringBuilder();
+            using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
+            {
+                var tempSalesOrders = salesOrders.ToDbSet(db).ToTempTable();
+                tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
+
+                var result = db.SalesOrders.Insert(tempSalesOrders, updateIdentity: true);
+                Assert.AreEqual(2, result);
+                db.SalesOrders.GetSalesOrderIds().Verify(1, 2);
+                tempSalesOrders.GetSalesOrderIds().Verify(1, 2);
+            }
+        }
+
+        [TestMethod]
+        public async Task DbTable_InsertAsync_temp_table_update_identity()
+        {
+            var salesOrders = GetSalesOrders_Insert_DataSet_update_identity();
+            var log = new StringBuilder();
+            using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
+            {
+                var tempSalesOrders = salesOrders.ToDbSet(db).ToTempTable();
+                tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
+
+                var result = await db.SalesOrders.InsertAsync(tempSalesOrders, updateIdentity: true);
+                Assert.AreEqual(2, result);
+                db.SalesOrders.GetSalesOrderIds().Verify(1, 2);
+                tempSalesOrders.GetSalesOrderIds().Verify(1, 2);
+            }
         }
     }
 }

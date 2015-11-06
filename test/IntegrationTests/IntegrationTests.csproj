@@ -52,6 +52,7 @@
     <Compile Include="DbSetTests.cs" />
     <Compile Include="DbSessionTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="MockDbTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataSetTests.cs" />
