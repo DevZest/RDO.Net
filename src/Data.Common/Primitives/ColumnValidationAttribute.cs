@@ -10,8 +10,8 @@ namespace DevZest.Data.Primitives
     {
         private sealed class ColumnValidation : DataValidation
         {
-            internal ColumnValidation(string name, Column column, Func<Column, DataRow, bool> isValid, Func<Column, DataRow, string> getErrorMessage)
-                : base(name)
+            internal ColumnValidation(object id, Column column, Func<Column, DataRow, bool> isValid, Func<Column, DataRow, string> getErrorMessage)
+                : base(id)
             {
                 Debug.Assert(column != null);
                 Debug.Assert(isValid != null);
@@ -27,19 +27,16 @@ namespace DevZest.Data.Primitives
             private Func<Column, DataRow, string> _getErrorMessage;
 
 
-            public override int ColumnCount
+            protected sealed override int DependentColumnsCount
             {
                 get { return 1; }
             }
 
-            public override Column this[int index]
+            protected sealed override Column GetDependentColumn(int index)
             {
-                get
-                {
-                    if (index != 0)
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                    return _column;
-                }
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return _column;
             }
 
             public override bool IsValid(DataRow dataRow)
@@ -53,7 +50,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        protected abstract string ValidationName { get; }
+        protected abstract object GetValidationId();
 
         protected abstract Func<Column, DataRow, bool> IsValidFunc { get; }
 
@@ -112,7 +109,7 @@ namespace DevZest.Data.Primitives
 
         IEnumerable<DataValidation> IColumnValidationFactory.GetValidations(Column column)
         {
-            yield return new ColumnValidation(ValidationName, column, IsValidFunc, ErrorMessageFunc);
+            yield return new ColumnValidation(GetValidationId(), column, IsValidFunc, ErrorMessageFunc);
         }
     }
 }

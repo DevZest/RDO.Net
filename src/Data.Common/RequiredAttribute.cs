@@ -8,6 +8,8 @@ namespace DevZest.Data
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredAttribute : ColumnValidationAttribute
     {
+        public readonly static object ValidationId = new object();
+
         public RequiredAttribute()
         {
         }
@@ -17,9 +19,9 @@ namespace DevZest.Data
             column.Nullable(false);
         }
 
-        protected override string ValidationName
+        protected override object GetValidationId()
         {
-            get { return "DevZest.Data.Required"; }
+            return ValidationId;
         }
 
         protected override Func<Column, DataRow, bool> IsValidFunc

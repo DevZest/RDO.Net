@@ -646,8 +646,8 @@ namespace DevZest.Data
 
         private sealed class CustomValidation : DataValidation
         {
-            internal CustomValidation(string name, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column[] columns)
-                : base(name)
+            internal CustomValidation(object id, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column[] columns)
+                : base(id)
             {
                 Debug.Assert(condition != null);
                 Debug.Assert(errorMessageFunc != null);
@@ -671,29 +671,26 @@ namespace DevZest.Data
                 return _errorMessageFunc(dataRow);
             }
 
-            public override int ColumnCount
+            protected override int DependentColumnsCount
             {
                 get { return _columns == null ? 0 : _columns.Length; }
             }
 
-            public override Column this[int index]
+            protected override Column GetDependentColumn(int index)
             {
-                get
-                {
-                    if (index < 0 || index >= ColumnCount)
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                    return _columns[index];
-                }
+                if (index < 0 || index >= DependentColumnsCount)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return _columns[index];
             }
         }
 
-        public void AddValidation(string name, _Boolean condition, Func<DataRow, string> errorMessageFunc, params Column[] columns)
+        public void AddValidation(object validationId, _Boolean condition, Func<DataRow, string> errorMessageFunc, params Column[] dependentColumns)
         {
-            Utilities.Check.NotEmpty(name, nameof(name));
+            Utilities.Check.NotNull(validationId, nameof(validationId));
             Utilities.Check.NotNull(condition, nameof(condition));
             Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
 
-            Validations.Add(new CustomValidation(name, condition, errorMessageFunc, columns));
+            Validations.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
         }
     }
 }
