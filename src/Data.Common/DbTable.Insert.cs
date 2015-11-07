@@ -84,7 +84,7 @@ namespace DevZest.Data
         private InsertTableResult InsertTable<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            var identityMappings = updateIdentity ? DbSession.NewTempTable<IdentityMapping>(null, false) : null;
+            var identityMappings = updateIdentity ? DbSession.NewTempTable<IdentityMapping>() : null;
             var rowCount = DbSession.Insert(this, dbTable, columnMappingsBuilder, autoJoin, identityMappings);
             return new InsertTableResult(rowCount, identityMappings);
         }
@@ -92,7 +92,7 @@ namespace DevZest.Data
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var identityMappings = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(null, false, cancellationToken) : null;
+            var identityMappings = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(null, true, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(this, dbTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }
@@ -142,7 +142,7 @@ namespace DevZest.Data
                 if (!updateIdentity)
                     return DbSession.Insert(this, dataSet, columnMappingsBuilder, autoJoin);
 
-                var tempTable = dataSet.ToTempTable(DbSession, recursive: false);
+                var tempTable = dataSet.ToTempTable(DbSession);
                 var result = InsertTable(tempTable, columnMappingsBuilder, autoJoin, updateIdentity);
                 UpdateIdentity(dataSet, result);
                 return result.RowCount;
@@ -161,7 +161,7 @@ namespace DevZest.Data
                 if (!updateIdentity)
                     return await DbSession.InsertAsync(this, dataSet, columnMappingsBuilder, autoJoin, cancellationToken);
 
-                var tempTable = await dataSet.ToTempTableAsync(DbSession, false, cancellationToken);
+                var tempTable = await dataSet.ToTempTableAsync(DbSession, cancellationToken);
                 var result = await InsertTableAsync(tempTable, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
                 UpdateIdentity(dataSet, result);
                 return result.RowCount;

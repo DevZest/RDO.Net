@@ -251,23 +251,28 @@ namespace DevZest.Data
             return child == null ? null : (DataSet<TChild>)child.DataSource;
         }
 
-        public DbTable<T> ToTempTable(DbSession dbSession, bool recursive = true)
+        public DbTable<T> ToTempTable(DbSession dbSession)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            throw new NotImplementedException();
+            var result = dbSession.CreateTempTable<T>();
+            result.Insert(this, null, false);
+            return result;
         }
 
-        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, bool recursive = true)
+        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession)
         {
-            return ToTempTableAsync(dbSession, recursive, CancellationToken.None);
+            return ToTempTableAsync(dbSession, CancellationToken.None);
         }
 
-        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, bool recursive, CancellationToken cancellationToken)
+        public async Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            throw new NotImplementedException();
+            Action<T> initializer = null;
+            var result = await dbSession.CreateTempTableAsync<T>(initializer, cancellationToken);
+            await result.InsertAsync(this, null, false, false, cancellationToken);
+            return result;
         }
     }
 }
