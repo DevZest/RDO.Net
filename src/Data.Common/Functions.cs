@@ -8,15 +8,15 @@ namespace DevZest.Data
     {
         #region IsNull
 
-        private sealed class IsNullFunction<T> : ScalarFunctionExpression<bool?>
+        private sealed class IsNullFunction : ScalarFunctionExpression<bool?>
         {
-            public IsNullFunction(Column<T> column)
+            public IsNullFunction(Column column)
                 : base(column)
             {
                 _column = column;
             }
 
-            private Column<T> _column;
+            private Column _column;
 
             protected override FunctionKey FunctionKey
             {
@@ -29,25 +29,25 @@ namespace DevZest.Data
             }
         }
 
-        public static _Boolean IsNull<T>(this Column<T> x)
+        public static _Boolean IsNull(this Column x)
         {
             Check.NotNull(x, nameof(x));
-            return new IsNullFunction<T>(x).MakeColumn<_Boolean>();
+            return new IsNullFunction(x).MakeColumn<_Boolean>();
         }
 
         #endregion
 
         #region IsNotNull
 
-        private sealed class IsNotNullFunction<T> : ScalarFunctionExpression<bool?>
+        private sealed class IsNotNullFunction : ScalarFunctionExpression<bool?>
         {
-            public IsNotNullFunction(Column<T> column)
+            public IsNotNullFunction(Column column)
                 : base(column)
             {
                 _column = column;
             }
 
-            private Column<T> _column;
+            private Column _column;
 
             protected override FunctionKey FunctionKey
             {
@@ -60,10 +60,10 @@ namespace DevZest.Data
             }
         }
 
-        public static _Boolean IsNotNull<T>(this Column<T> x)
+        public static _Boolean IsNotNull(this Column x)
         {
             Check.NotNull(x, nameof(x));
-            return new IsNotNullFunction<T>(x).MakeColumn<_Boolean>();
+            return new IsNotNullFunction(x).MakeColumn<_Boolean>();
         }
 
         #endregion

@@ -223,11 +223,37 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement);
         }
 
-        private static DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
+        private DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
             where T : Model, new()
             where TSource : Model, new()
         {
-            throw new NotImplementedException();
+            var identityMapping = identityMappings._;
+            var source = sourceData.Model;
+            var sourceSysRowId = source.GetIdentity(true).Column;
+
+            var select = new ColumnMapping[]
+            {
+                identityMapping.OldValue.From(source.GetIdentity(false).Column),
+                identityMapping.OriginalSysRowId.From(sourceSysRowId)
+            };
+
+            var from = GetAutoJoinFromClause(sourceData, targetTable);
+            DbExpression where = targetTable == null ? null : targetTable.Model.PrimaryKey[0].Column.IsNull().DbExpression;
+
+            var orderBy = new DbExpressionSort[] { new DbExpressionSort(sourceSysRowId.DbExpression, SortDirection.Ascending) };
+
+            return new DbSelectStatement(identityMapping, select, from, where, orderBy, -1, -1);
+        }
+
+        private static DbFromClause GetAutoJoinFromClause<TSource, TTarget>(DbTable<TSource> source, DbTable<TTarget> target)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            if (target == null)
+                return source.FromClause;
+
+            var mappings = new ColumnMapping[] { target.Model.GetIdentity(false).Column.From(source.Model.GetIdentity(false).Column) };
+            return new DbJoinClause(DbJoinKind.LeftJoin, source.FromClause, target.FromClause, new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
         internal SqlCommand GetUpdateIdentityMappingsCommand(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
@@ -236,9 +262,19 @@ namespace DevZest.Data.SqlServer
             return GetUpdateCommand(statement);
         }
 
-        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
+        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutputs)
         {
-            throw new NotImplementedException();
+            var identityMapping = identityMappings._;
+            var identityOutput = identityOutputs._;
+            var select = new ColumnMapping[]
+            {
+                identityMapping.NewValue.From(identityOutput.NewValue),
+            };
+
+            var mappings = new ColumnMapping[] { identityOutput.GetIdentity(true).Column.From(identityMapping.GetIdentity(true).Column) };
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.FromClause, identityOutputs.FromClause,
+                new ReadOnlyCollection<ColumnMapping>(mappings));
+            return new DbSelectStatement(identityMapping, select, from, null, null, -1, -1);
         }
 
         protected sealed override SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)

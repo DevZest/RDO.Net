@@ -150,25 +150,70 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
                 var identityMappings = db.MockTempTable<IdentityMapping>();
                 var identityOutput = db.MockTempTable<IdentityOutput>();
 
-                var statement = db.ProductCategories.BuildInsertStatement(sourceData, null, false);
-                var insertCommand = db.GetInsertCommand(statement);
-                var insertIntoIdentityMappingsCommand = db.GetInsertIntoIdentityMappingsCommand<ProductCategory, ProductCategory>(sourceData, identityMappings, null);
-                var updateIdentityMappingsCommand = db.GetUpdateIdentityMappingsCommand(identityMappings, identityOutput);
-
-                var expectedSqlInsertCommand =
-@"
+                {
+                    var statement = db.ProductCategories.BuildInsertStatement(sourceData, null, false);
+                    var insertCommand = db.GetInsertCommand(statement);
+                    var expectedSql =
+@"INSERT INTO [SalesLT].[ProductCategory]
+([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
+SELECT
+    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
+    [ProductCategory].[Name] AS [Name],
+    [ProductCategory].[RowGuid] AS [RowGuid],
+    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
+FROM [#ProductCategory] [ProductCategory]
+ORDER BY [ProductCategory].[sys_row_id] ASC;
 ";
-                Assert.AreEqual(expectedSqlInsertCommand, insertCommand.ToTraceString());
+                    Assert.AreEqual(expectedSql, insertCommand.ToTraceString());
+                }
 
-                var expectedSqlInsertIntoIdentityMappingsCommand =
-@"
+                {
+                    var insertIntoIdentityMappingsCommand = db.GetInsertIntoIdentityMappingsCommand<ProductCategory, ProductCategory>(sourceData, identityMappings, null);
+                    var expectedSql =
+@"INSERT INTO [#sys_identity_mapping]
+([OldValue], [OriginalSysRowId])
+SELECT
+    [ProductCategory].[ProductCategoryID] AS [OldValue],
+    [ProductCategory].[sys_row_id] AS [OriginalSysRowId]
+FROM [#ProductCategory] [ProductCategory]
+ORDER BY [ProductCategory].[sys_row_id] ASC;
 ";
-                Assert.AreEqual(expectedSqlInsertIntoIdentityMappingsCommand, insertIntoIdentityMappingsCommand.ToTraceString());
+                    Assert.AreEqual(expectedSql, insertIntoIdentityMappingsCommand.ToTraceString());
+                }
 
-                var expectedSqlUpdateIdentityMappingsCommand =
-@"
+                {
+                    var insertIntoIdentityMappingsCommand = db.GetInsertIntoIdentityMappingsCommand<ProductCategory, ProductCategory>(sourceData, identityMappings, db.ProductCategories);
+                    var expectedSql =
+@"INSERT INTO [#sys_identity_mapping]
+([OldValue], [OriginalSysRowId])
+SELECT
+    [ProductCategory].[ProductCategoryID] AS [OldValue],
+    [ProductCategory].[sys_row_id] AS [OriginalSysRowId]
+FROM
+    ([#ProductCategory] [ProductCategory]
+    LEFT JOIN
+    [SalesLT].[ProductCategory] [ProductCategory1]
+    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
+WHERE ([ProductCategory1].[ProductCategoryID] IS NULL)
+ORDER BY [ProductCategory].[sys_row_id] ASC;
 ";
-                Assert.AreEqual(expectedSqlUpdateIdentityMappingsCommand, updateIdentityMappingsCommand.ToTraceString());
+                    Assert.AreEqual(expectedSql, insertIntoIdentityMappingsCommand.ToTraceString());
+                }
+
+                {
+                    var updateIdentityMappingsCommand = db.GetUpdateIdentityMappingsCommand(identityMappings, identityOutput);
+                    var expectedSql =
+@"UPDATE [sys_identity_mapping] SET
+    [NewValue] = [IdentityOutput].[NewValue]
+FROM
+    ([#sys_identity_mapping] [sys_identity_mapping]
+    INNER JOIN
+    [#IdentityOutput] [IdentityOutput]
+    ON [sys_identity_mapping].[sys_row_id] = [IdentityOutput].[sys_row_id]);
+";
+                    Assert.AreEqual(expectedSql, updateIdentityMappingsCommand.ToTraceString());
+
+                }
             }
         }
     }
