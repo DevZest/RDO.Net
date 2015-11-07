@@ -192,8 +192,8 @@ namespace DevZest.Data.SqlServer
 
             var identityOutput = this.CreateTempTable<IdentityOutput>(null, true);
             var result = ExecuteNonQuery(GetInsertCommand(statement, identityOutput));
-            ExecuteNonQuery(GetInsertCommand(BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, autoJoin ? targetTable : null)));
-            ExecuteNonQuery(GetUpdateCommand(BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput)));
+            ExecuteNonQuery(GetInsertIntoIdentityMappingsCommand(sourceData, identityMappings, autoJoin ? targetTable : null));
+            ExecuteNonQuery(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));
             return result;
         }
 
@@ -205,8 +205,8 @@ namespace DevZest.Data.SqlServer
 
             var identityOutput = await this.CreateTempTableAsync<IdentityOutput>(null, true, cancellationToken);
             var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), cancellationToken);
-            await ExecuteNonQueryAsync(GetInsertCommand(BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, autoJoin ? targetTable : null)), cancellationToken);
-            await ExecuteNonQueryAsync(GetUpdateCommand(BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput)), cancellationToken);
+            await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(sourceData, identityMappings, autoJoin ? targetTable : null), cancellationToken);
+            await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), cancellationToken);
             return result;
         }
 
@@ -215,11 +215,25 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(GetConnection());
         }
 
+        internal SqlCommand GetInsertIntoIdentityMappingsCommand<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
+            where T : Model, new()
+            where TSource : Model, new()
+        {
+            var statement = BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, targetTable);
+            return GetInsertCommand(statement);
+        }
+
         private static DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
             where T : Model, new()
             where TSource : Model, new()
         {
             throw new NotImplementedException();
+        }
+
+        internal SqlCommand GetUpdateIdentityMappingsCommand(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
+        {
+            var statement = BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput);
+            return GetUpdateCommand(statement);
         }
 
         private static DbSelectStatement BuildUpdateIdentityMappingsStatement(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
