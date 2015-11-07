@@ -251,23 +251,23 @@ namespace DevZest.Data
             return child == null ? null : (DataSet<TChild>)child.DataSource;
         }
 
-        public DbTable<T> ToTempTable(DbSession dbSession)
+        public DbTable<T> ToTempTable(DbSession dbSession, bool recursive = true)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            return dbSession.Import(this);
+            throw new NotImplementedException();
         }
 
-        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession)
+        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, bool recursive = true)
         {
-            return ToTempTableAsync(dbSession, CancellationToken.None);
+            return ToTempTableAsync(dbSession, recursive, CancellationToken.None);
         }
 
-        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
+        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, bool recursive, CancellationToken cancellationToken)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            return dbSession.ImportAsync(this, cancellationToken);
+            throw new NotImplementedException();
         }
     }
 }

@@ -145,17 +145,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        protected sealed override DbTable<T> Import<T>(DataSet<T> dataSet)
-        {
-            return GetImportQuery(dataSet).ToTempTable();
-        }
-
-        protected sealed override Task<DbTable<T>> ImportAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
-        {
-            return GetImportQuery(dataSet).ToTempTableAsync(null, cancellationToken);
-        }
-
-        internal DbQuery<T> GetImportQuery<T>(DataSet<T> dataSet)
+        internal DbQuery<T> GetDbQuery<T>(DataSet<T> dataSet)
             where T : Model, new()
         {
             var xml = GetSqlXml(dataSet);
@@ -182,8 +172,21 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        protected sealed override int Insert<T, TSource>(DbTable<T> targetTable, DbSet<TSource> sourceData, DbSelectStatement statement, DbTable<IdentityMapping> identityMappings)
+        protected override int Insert<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin)
         {
+            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
+            return ExecuteNonQuery(GetInsertCommand(statement));
+        }
+
+        protected override Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+        {
+            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
+            return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
+        }
+
+        protected sealed override int Insert<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+        {
+            var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)
                 return ExecuteNonQuery(GetInsertCommand(statement));
 
@@ -201,8 +204,9 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        protected sealed override async Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbSet<TSource> sourceData, DbSelectStatement statement, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+        protected sealed override async Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
+            var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
 

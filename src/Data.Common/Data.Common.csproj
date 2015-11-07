@@ -104,6 +104,7 @@
     <Compile Include="IModelSetExtensions.cs" />
     <Compile Include="DataValidation.cs" />
     <Compile Include="Primitives\ColumnValidationAttribute.cs" />
+    <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\IColumnValidationFactory.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="JasonValueType.cs" />

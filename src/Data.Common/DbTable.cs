@@ -198,7 +198,7 @@ namespace DevZest.Data
             return Task.FromResult(InitialRowCount);
         }
 
-        internal List<ColumnMapping> GetColumnMappings(Model sourceModel)
+        private List<ColumnMapping> GetColumnMappings(Model sourceModel)
         {
             var targetModel = this._;
             var result = new List<ColumnMapping>();

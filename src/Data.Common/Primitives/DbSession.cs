@@ -159,12 +159,6 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        protected internal abstract DbTable<T> Import<T>(DataSet<T> dataSet)
-            where T : Model, new();
-
-        protected internal abstract Task<DbTable<T>> ImportAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
-            where T : Model, new();
-
         internal DbTable<T> NewTempTable<T>(Action<T> initializer = null, bool addRowId = true)
             where T : Model, new()
         {
@@ -197,17 +191,29 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> InsertAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        protected internal abstract int Insert<T, TSource>(DbTable<T> targetTable, DbSet<TSource> sourceData, DbSelectStatement statement, DbTable<IdentityMapping> identityMappings)
-            where T : Model, new()
-            where TSource : Model, new();
-
-        protected internal abstract Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbSet<TSource> sourceData, DbSelectStatement statement, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
-            where T : Model, new()
-            where TSource : Model, new();
-
         internal abstract InsertScalarResult InsertScalar(DbSelectStatement statement, bool outputIdentity);
 
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
+
+        protected internal abstract int Insert<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData,
+            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin)
+            where T : Model, new()
+            where TSource : Model, new();
+
+        protected internal abstract Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData,
+            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+            where T : Model, new()
+            where TSource : Model, new();
+
+        protected internal abstract int Insert<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData,
+            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            where T : Model, new()
+            where TSource : Model, new();
+
+        protected internal abstract Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData,
+            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            where T : Model, new()
+            where TSource : Model, new();
 
         internal abstract int Update(DbSelectStatement statement);
 

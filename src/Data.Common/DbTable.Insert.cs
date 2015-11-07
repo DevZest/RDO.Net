@@ -84,18 +84,16 @@ namespace DevZest.Data
         private InsertTableResult InsertTable<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            var statement = BuildInsertStatement(dbTable, columnMappingsBuilder, autoJoin);
             var identityMappings = updateIdentity ? DbSession.NewTempTable<IdentityMapping>(null, false) : null;
-            var rowCount = DbSession.Insert(this, dbTable, statement, identityMappings);
+            var rowCount = DbSession.Insert(this, dbTable, columnMappingsBuilder, autoJoin, identityMappings);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var statement = BuildInsertStatement(dbTable, columnMappingsBuilder, autoJoin);
             var identityMappings = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(null, false, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(this, dbTable, statement, identityMappings, cancellationToken);
+            var rowCount = await DbSession.InsertAsync(this, dbTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
@@ -138,11 +136,14 @@ namespace DevZest.Data
             if (dataSet.Count == 0)
                 return 0;
             else if (dataSet.Count == 1)
-                return InsertScalar(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
+                return Insert(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
             else
             {
-                var dbTable = DbSession.Import(dataSet);
-                var result = InsertTable(dbTable, columnMappingsBuilder, autoJoin, updateIdentity);
+                if (!updateIdentity)
+                    return DbSession.Insert(this, dataSet, columnMappingsBuilder, autoJoin);
+
+                var tempTable = dataSet.ToTempTable(DbSession, recursive: false);
+                var result = InsertTable(tempTable, columnMappingsBuilder, autoJoin, updateIdentity);
                 UpdateIdentity(dataSet, result);
                 return result.RowCount;
             }
@@ -154,33 +155,42 @@ namespace DevZest.Data
             if (dataSet.Count == 0)
                 return 0;
             else if (dataSet.Count == 1)
-                return await InsertScalarAsync(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
+                return await InsertAsync(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
             else
             {
-                var dbSet = await DbSession.ImportAsync(dataSet, cancellationToken);
-                var result = await InsertTableAsync(dbSet, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
-                await UpdateIdentityAsync(dataSet, result, cancellationToken);
+                if (!updateIdentity)
+                    return await DbSession.InsertAsync(this, dataSet, columnMappingsBuilder, autoJoin, cancellationToken);
+
+                var tempTable = await dataSet.ToTempTableAsync(DbSession, false, cancellationToken);
+                var result = await InsertTableAsync(tempTable, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
+                UpdateIdentity(dataSet, result);
                 return result.RowCount;
             }
         }
 
-        private bool InsertScalar<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        public bool Insert<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
+            Check.NotNull(dataSet, nameof(dataSet));
+            VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
+
             var statement = BuildInsertScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder, autoJoin);
             var result = DbSession.InsertScalar(statement, updateIdentity);
             if (updateIdentity)
-                UpdateScalarIdentity(dataSet._, result.IdentityValue);
+                UpdateIdentity(dataSet, rowOrdinal, result.IdentityValue);
             return result.Success;
         }
 
-        private async Task<bool> InsertScalarAsync<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        public async Task<bool> InsertAsync<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
+            Check.NotNull(dataSet, nameof(dataSet));
+            VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
+
             var statement = BuildInsertScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder, autoJoin);
             var result = await DbSession.InsertScalarAsync(statement, updateIdentity, cancellationToken);
             if (updateIdentity)
-                UpdateScalarIdentity(dataSet._, result.IdentityValue);
+                UpdateIdentity(dataSet, rowOrdinal, result.IdentityValue);
             return result.Success;
         }
 
@@ -299,11 +309,12 @@ namespace DevZest.Data
                 await dbTable.DbSession.UpdateAsync(statement, cancellationToken);
         }
 
-        private static void UpdateScalarIdentity(Model model, int? value)
+        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, int ordinal, int? value)
+            where TSource : Model, new()
         {
-            var oldValue = model.AllowsKeyUpdate(true);
-            model.GetIdentity(false).Column[0] = value;
-            model.AllowsKeyUpdate(oldValue);
+            var oldValue = dataSet.AllowsKeyUpdate(true);
+            dataSet._.GetIdentity(false).Column[ordinal] = value;
+            dataSet.AllowsKeyUpdate(oldValue);
         }
     }
 }
