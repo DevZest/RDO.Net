@@ -699,6 +699,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValidationAttribute_InvalidErrorMessageFunc", "funcType", "funcName"), funcType, funcName);
         }
 
+        /// <summary>
+        /// Target table must be a permanent table and has a identity column.
+        /// </summary>
+        public static string DbTable_VerifyUpdateIdentity
+        {
+            get { return GetString("DbTable_VerifyUpdateIdentity"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -375,4 +375,7 @@
   <data name="ColumnValidationAttribute_InvalidErrorMessageFunc" xml:space="preserve">
     <value>Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.</value>
   </data>
+  <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
+    <value>Target table must be a permanent table and has a identity column.</value>
+  </data>
 </root>
