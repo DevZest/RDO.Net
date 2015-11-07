@@ -75,7 +75,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
             {
-                var tempSalesOrders = salesOrders.ToDbSet(db).ToTempTable();
+                var tempSalesOrders = salesOrders.ToTempTable(db);
                 tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
 
                 var result = db.SalesOrders.Insert(tempSalesOrders, updateIdentity: true);
@@ -92,7 +92,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = new SalesOrderMockDb(null, null).Initialize(OpenDb(log, LogCategory.All)))
             {
-                var tempSalesOrders = salesOrders.ToDbSet(db).ToTempTable();
+                var tempSalesOrders = salesOrders.ToTempTable(db);
                 tempSalesOrders.GetSalesOrderIds().Verify(0, -1);
 
                 var result = await db.SalesOrders.InsertAsync(tempSalesOrders, updateIdentity: true);

@@ -145,27 +145,24 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        protected sealed override bool ImportDataSetAsTempTable
+        protected sealed override DbTable<T> Import<T>(DataSet<T> dataSet)
         {
-            get { return false; }
+            return GetImportQuery(dataSet).ToTempTable();
         }
 
-        protected sealed override DbSet<T> ImportDataSet<T>(DataSet<T> dataSet)
+        protected sealed override Task<DbTable<T>> ImportAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
         {
-            return CreateDbSet<T>(GetSqlXml(dataSet));
+            return GetImportQuery(dataSet).ToTempTableAsync(null, cancellationToken);
         }
 
-        protected sealed override Task<DbSet<T>> ImportDataSetAsync<T>(DataSet<T> dataSet, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(ImportDataSet(dataSet));
-        }
-
-        private DbSet<T> CreateDbSet<T>(SqlXml xml)
+        internal DbQuery<T> GetImportQuery<T>(DataSet<T> dataSet)
             where T : Model, new()
         {
-            return this.CreateQuery<T>((builder, model) =>
+            var xml = GetSqlXml(dataSet);
+            return CreateQuery<T>((builder, model) =>
             {
-                model.GetDataSetOrdinalColumn(createIfNotExist: true);
+                var dataSetOrdinalColumn = new _Int32();
+                model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
 
                 var sourceTable = Nodes(xml, XML_ROW_XPATH);
                 SqlXmlModel xmlModel;
@@ -190,7 +187,7 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return ExecuteNonQuery(GetInsertCommand(statement));
 
-            var tempTable = this.CreateTempTable<T>(GetTempTableInitializer(sourceData), true);
+            var tempTable = this.CreateTempTable<T>(null, true);
             var identityOutput = this.CreateTempTable<IdentityOutput>(null, true);
 
             var commands = GetInsertCommands(statement, sourceData, tempTable, identityOutput, identityMappings);
@@ -204,22 +201,12 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        internal static Action<Model> GetTempTableInitializer<TSource>(DbSet<TSource> sourceData)
-            where TSource : Model, new()
-        {
-            var hasDataSetOrdinal = !ReferenceEquals(sourceData.Model.GetDataSetOrdinalColumn(), null);
-            if (hasDataSetOrdinal)
-                return (Model x) => x.GetDataSetOrdinalColumn(createIfNotExist: true);
-            else
-                return null;
-        }
-
         protected sealed override async Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbSet<TSource> sourceData, DbSelectStatement statement, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
 
-            var tempTable = await this.CreateTempTableAsync<T>(GetTempTableInitializer(sourceData), true, cancellationToken);
+            var tempTable = await this.CreateTempTableAsync<T>(null, true, cancellationToken);
             var identityOutput = await this.CreateTempTableAsync<IdentityOutput>(null, true, cancellationToken);
 
             var commands = GetInsertCommands(statement, sourceData, tempTable, identityOutput, identityMappings);
@@ -267,10 +254,6 @@ namespace DevZest.Data.SqlServer
             Debug.Assert(!ReferenceEquals(identityColumn, null));
             select.Add(identityColumn.From(sourceData.GetSourceColumn(sourceModel.GetIdentity(false).Column)));
 
-            var dataSetOrdinalColumn = tempTableModel.GetDataSetOrdinalColumn();
-            if (!ReferenceEquals(dataSetOrdinalColumn, null))
-                select.Add(dataSetOrdinalColumn.From(sourceData.GetSourceColumn(sourceModel.GetDataSetOrdinalColumn())));
-
             return new DbSelectStatement(tempTableModel, select, statement.From, statement.Where, statement.OrderBy, statement.Offset, statement.Fetch);
         }
 
@@ -302,7 +285,6 @@ namespace DevZest.Data.SqlServer
             var tempTableModel = tempTable.Model;
             var tempTableRowId = tempTableModel.GetIdentity(true).Column;
             var oldValue = tempTableModel.GetIdentity(false).Column;
-            var dataSetOrdinal = tempTableModel.GetDataSetOrdinalColumn();
 
             var outputModel = identityOutput._;
             var outputRowId = outputModel.GetIdentity(true).Column;
@@ -312,8 +294,6 @@ namespace DevZest.Data.SqlServer
             var select = new List<ColumnMapping>();
             select.Add(resultModel.OldValue.From(oldValue));
             select.Add(resultModel.NewValue.From(newValue));
-            if (!ReferenceEquals(dataSetOrdinal, null))
-                select.Add(resultModel.DataSetOrdinal.From(dataSetOrdinal));
 
             var from = new DbJoinClause(DbJoinKind.InnerJoin, tempTable.FromClause, identityOutput.FromClause,
                 new ReadOnlyCollection<ColumnMapping>(new ColumnMapping[] { tempTableRowId.From(outputRowId) }));

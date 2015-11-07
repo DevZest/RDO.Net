@@ -11,27 +11,27 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Insert<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
+        public int Insert<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
-            var result = InsertSet(dbSet, columnMappingsBuilder, autoJoin, false);
+            Check.NotNull(dbQuery, nameof(dbQuery));
+            var result = InsertSet(dbQuery, columnMappingsBuilder, autoJoin, false);
             return result.RowCount;
         }
 
-        public async Task<int> InsertAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+        public async Task<int> InsertAsync<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
+            Check.NotNull(dbQuery, nameof(dbQuery));
 
-            var result = await InsertSetAsync(dbSet, columnMappingsBuilder, autoJoin, false, cancellationToken);
+            var result = await InsertSetAsync(dbQuery, columnMappingsBuilder, autoJoin, false, cancellationToken);
             return result.RowCount;
         }
 
-        public Task<int> InsertAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
         {
-            return InsertAsync(dbSet, columnMappingsBuilder, autoJoin, CancellationToken.None);
+            return InsertAsync(dbQuery, columnMappingsBuilder, autoJoin, CancellationToken.None);
         }
 
         public int Insert<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
@@ -72,15 +72,15 @@ namespace DevZest.Data
 
         private struct InsertSetResult
         {
-            public InsertSetResult(int rowCount, DbTable<IdentityMapping> identityOutput)
+            public InsertSetResult(int rowCount, DbTable<IdentityMapping> identityMappings)
             {
                 RowCount = rowCount;
-                IdentityOutput = identityOutput;
+                IdentityMappings = identityMappings;
             }
 
             public readonly int RowCount;
 
-            public readonly DbTable<IdentityMapping> IdentityOutput;
+            public readonly DbTable<IdentityMapping> IdentityMappings;
         }
 
         private InsertSetResult InsertSet<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
@@ -96,10 +96,9 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             var statement = BuildInsertStatement(dbSet, columnMappingsBuilder, autoJoin);
-            Action<IdentityMapping> identityMappingsInitializer = null;
-            var identityOutput = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(identityMappingsInitializer, false, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(this, dbSet, statement, identityOutput, cancellationToken);
-            return new InsertSetResult(rowCount, identityOutput);
+            var identityMappings = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(null, false, cancellationToken) : null;
+            var rowCount = await DbSession.InsertAsync(this, dbSet, statement, identityMappings, cancellationToken);
+            return new InsertSetResult(rowCount, identityMappings);
         }
 
         internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin)
@@ -144,7 +143,7 @@ namespace DevZest.Data
                 return InsertScalar(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
             else
             {
-                var dbSet = DbSession.ImportDataSet(dataSet);
+                var dbSet = DbSession.Import(dataSet);
                 var result = InsertSet(dbSet, columnMappingsBuilder, autoJoin, updateIdentity);
                 UpdateIdentity(dataSet, result);
                 return result.RowCount;
@@ -160,7 +159,7 @@ namespace DevZest.Data
                 return await InsertScalarAsync(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
             else
             {
-                var dbSet = await DbSession.ImportDataSetAsync(dataSet, cancellationToken);
+                var dbSet = await DbSession.ImportAsync(dataSet, cancellationToken);
                 var result = await InsertSetAsync(dbSet, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
                 await UpdateIdentityAsync(dataSet, result, cancellationToken);
                 return result.RowCount;
@@ -227,19 +226,19 @@ namespace DevZest.Data
         private void UpdateIdentity<TSource>(DataSet<TSource> dataSet, InsertSetResult result)
             where TSource : Model, new()
         {
-            if (result.IdentityOutput == null || result.RowCount == 0)
+            if (result.IdentityMappings == null || result.RowCount == 0)
                 return;
 
-            var identityOutput = result.IdentityOutput;
+            var identityMappings = result.IdentityMappings;
             var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
             var model = dataSet.Model;
             var oldValue = model.AllowsKeyUpdate(true);
-            using (var reader = DbSession.ExecuteDbReader(identityOutput))
+            using (var reader = DbSession.ExecuteDbReader(identityMappings))
             {
+                int ordinal = 0;
                 while (reader.Read())
                 {
-                    var ordinal = identityOutput._.DataSetOrdinal[reader].Value - 1;
-                    identityColumn[ordinal] = identityOutput._.NewValue[reader];
+                    identityColumn[ordinal++] = identityMappings._.NewValue[reader];
                 }
             }
             model.AllowsKeyUpdate(oldValue);
@@ -248,19 +247,19 @@ namespace DevZest.Data
         private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertSetResult result, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            if (result.IdentityOutput == null || result.RowCount == 0)
+            if (result.IdentityMappings == null || result.RowCount == 0)
                 return;
 
-            var identityOutput = result.IdentityOutput;
+            var identityOutput = result.IdentityMappings;
             var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
             var model = dataSet.Model;
             var oldValue = model.AllowsKeyUpdate(true);
             using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, cancellationToken))
             {
+                int ordinal = 0;
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    var ordinal = identityOutput._.DataSetOrdinal[reader].Value - 1;
-                    identityColumn[ordinal] = identityOutput._.NewValue[reader];
+                    identityColumn[ordinal++] = identityOutput._.NewValue[reader];
                 }
             }
             model.AllowsKeyUpdate(oldValue);
@@ -269,21 +268,21 @@ namespace DevZest.Data
         private static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertSetResult result)
             where TSource : Model, new()
         {
-            var identityOutput = result.IdentityOutput;
-            if (identityOutput == null || result.RowCount == 0)
+            var identityMappings = result.IdentityMappings;
+            if (identityMappings == null || result.RowCount == 0)
                 return null;
 
-            return BuildUpdateIdentityStatement(dbTable, identityOutput);
+            return BuildUpdateIdentityStatement(dbTable, identityMappings);
         }
 
-        internal static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, DbTable<IdentityMapping> identityOutput)
+        internal static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
         {
             var identityColumn = dbTable._.GetIdentity(false).Column;
             Debug.Assert(!object.ReferenceEquals(identityColumn, null));
-            var keyMappings = new ColumnMapping[] { new ColumnMapping(identityOutput._.OldValue, identityColumn) };
-            var columnMappings = new ColumnMapping[] { new ColumnMapping(identityOutput._.NewValue, identityColumn) };
-            return identityOutput.QueryStatement.BuildUpdateStatement(dbTable, keyMappings, columnMappings);
+            var keyMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.OldValue, identityColumn) };
+            var columnMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.NewValue, identityColumn) };
+            return identityMappings.QueryStatement.BuildUpdateStatement(dbTable, keyMappings, columnMappings);
         }
 
         private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertSetResult result)

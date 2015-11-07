@@ -175,41 +175,5 @@ namespace DevZest.Data.SqlServer
             sqlBuilder.Append("CHECK ");
             constraint.LogicalExpression.GenerateSql(sqlBuilder, sqlVersion);
         }
-
-        private sealed class DataSetOrdinal : IInterceptor
-        {
-            public DataSetOrdinal(_Int32 column)
-            {
-                Column = column;
-            }
-
-            public string FullName
-            {
-                get { return this.GetType().FullName; }
-            }
-
-            public _Int32 Column { get; private set; }
-        }
-
-        internal static _Int32 GetDataSetOrdinalColumn(this Model model, bool createIfNotExist = false)
-        {
-            var dataSetOrdinal = model.GetInterceptor<DataSetOrdinal>();
-            if (dataSetOrdinal == null)
-            {
-                if (!createIfNotExist)
-                    return null;
-
-                dataSetOrdinal = new DataSetOrdinal(model.AddDataSetOrdinalColumn());
-                model.AddOrUpdateInterceptor(dataSetOrdinal);
-            }
-            return dataSetOrdinal.Column;
-        }
-
-        private static _Int32 AddDataSetOrdinalColumn(this Model model)
-        {
-            _Int32 result = new _Int32();
-            model.AddSystemColumn(result, "sys_dataset_ordinal");
-            return result;
-        }
     }
 }

@@ -251,21 +251,23 @@ namespace DevZest.Data
             return child == null ? null : (DataSet<TChild>)child.DataSource;
         }
 
-        public DbSet<T> ToDbSet(DbSession dbSession)
+        public DbTable<T> ToTempTable(DbSession dbSession)
         {
             Check.NotNull(dbSession, nameof(dbSession));
-            return dbSession.ImportDataSet(this);
+
+            return dbSession.Import(this);
         }
 
-        public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession)
+        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession)
         {
-            return ToDbSetAsync(dbSession, CancellationToken.None);
+            return ToTempTableAsync(dbSession, CancellationToken.None);
         }
 
-        public Task<DbSet<T>> ToDbSetAsync(DbSession dbSession, CancellationToken cancellationToken)
+        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             Check.NotNull(dbSession, nameof(dbSession));
-            return dbSession.ImportDataSetAsync(this, cancellationToken);
+
+            return dbSession.ImportAsync(this, cancellationToken);
         }
     }
 }

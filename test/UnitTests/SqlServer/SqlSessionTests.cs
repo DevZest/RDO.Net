@@ -1,5 +1,4 @@
-﻿
-using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Data.Primitives;
@@ -10,12 +9,12 @@ namespace DevZest.Data.SqlServer
     public class SqlSessionTests
     {
         [TestMethod]
-        public void SqlSession_CreateDbSet()
+        public void SqlSession_GetImportQuery()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var query = db.ImportDataSet(dataSet);
+                var query = db.GetImportQuery(dataSet);
                 var expectedSql =
 @"DECLARE @p1 XML = N'
 <root>
@@ -67,12 +66,12 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         }
 
         [TestMethod]
-        public void SqlSession_CreateDbSet_ToTempTable()
+        public void SqlSession_Import()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var commands = db.ImportDataSet(dataSet).GetToTempTableCommands();
+                var commands = db.GetImportQuery(dataSet).GetToTempTableCommands();
 
                 var expectedSql0 =
 @"CREATE TABLE [#ProductCategory] (
@@ -148,9 +147,9 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var sourceData = db.ImportDataSet(dataSet);
+                var sourceData = db.Import(dataSet);
                 var statement = db.ProductCategories.BuildInsertStatement(sourceData, null, false);
-                var tempTable = db.MockTempTable<ProductCategory>(SqlSession.GetTempTableInitializer(sourceData));
+                var tempTable = db.MockTempTable<ProductCategory>();
                 var identityMappings = db.MockTempTable<IdentityMapping>();
                 var identityOutput = db.MockTempTable<IdentityOutput>();
                 var commands = db.GetInsertCommands(statement, sourceData, tempTable, identityOutput, identityMappings);

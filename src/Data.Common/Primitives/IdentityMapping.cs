@@ -19,7 +19,7 @@ namespace DevZest.Data.Primitives
         {
             RegisterColumn((IdentityMapping x) => x.OldValue);
             RegisterColumn((IdentityMapping x) => x.NewValue);
-            RegisterColumn((IdentityMapping x) => x.DataSetOrdinal);
+            RegisterColumn((IdentityMapping x) => x.OriginalSysRowId);
         }
 
         public IdentityMapping()
@@ -37,7 +37,7 @@ namespace DevZest.Data.Primitives
 
         public _Int32 NewValue { get; private set; }
 
-        public _Int32 DataSetOrdinal { get; private set; }
+        public _Int32 OriginalSysRowId { get; private set; }
 
         protected internal override string DbAlias
         {
