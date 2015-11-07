@@ -190,17 +190,10 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return ExecuteNonQuery(GetInsertCommand(statement));
 
-            var tempTable = this.CreateTempTable<T>(null, true);
             var identityOutput = this.CreateTempTable<IdentityOutput>(null, true);
-
-            var commands = GetInsertCommands(statement, sourceData, tempTable, identityOutput, identityMappings);
-            int result = 0;
-            foreach (var command in commands)
-            {
-                result = ExecuteNonQuery(command);
-                if (result == 0)
-                    break;
-            }
+            var result = ExecuteNonQuery(GetInsertCommand(statement, identityOutput));
+            ExecuteNonQuery(GetInsertCommand(BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, autoJoin ? targetTable : null)));
+            ExecuteNonQuery(GetUpdateCommand(BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput)));
             return result;
         }
 
@@ -210,17 +203,10 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
 
-            var tempTable = await this.CreateTempTableAsync<T>(null, true, cancellationToken);
             var identityOutput = await this.CreateTempTableAsync<IdentityOutput>(null, true, cancellationToken);
-
-            var commands = GetInsertCommands(statement, sourceData, tempTable, identityOutput, identityMappings);
-            int result = 0;
-            foreach (var command in commands)
-            {
-                result = await ExecuteNonQueryAsync(command, cancellationToken);
-                if (result == 0)
-                    break;
-            }
+            var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), cancellationToken);
+            await ExecuteNonQueryAsync(GetInsertCommand(BuildInsertIntoIdentityMappingsStatement(sourceData, identityMappings, autoJoin ? targetTable : null)), cancellationToken);
+            await ExecuteNonQueryAsync(GetUpdateCommand(BuildUpdateIdentityMappingsStatement(identityMappings, identityOutput)), cancellationToken);
             return result;
         }
 
@@ -229,80 +215,16 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Insert(this, statement, identityOutput).CreateCommand(GetConnection());
         }
 
-        internal IList<SqlCommand> GetInsertCommands<T, TSource>(DbSelectStatement statement, DbSet<TSource> sourceData, DbTable<T> tempTable, DbTable<IdentityOutput> identityOutput, DbTable<IdentityMapping> identityMappings)
+        private static DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T, TSource>(DbTable<TSource> sourceData, DbTable<IdentityMapping> identityMappings, DbTable<T> targetTable)
             where T : Model, new()
             where TSource : Model, new()
         {
-            var result = new SqlCommand[3];
-
-            result[0] = GetInsertCommand(BuildSourceDataToTempTableStatement(statement, sourceData, tempTable));
-            result[1] = GetInsertCommand(BuildInsertFromTempTableStatement(statement, tempTable), identityOutput);
-            result[2] = GetInsertCommand(BuildInsertIntoIdentityMappingsStatement(tempTable, identityOutput, identityMappings));
-            return result;
+            throw new NotImplementedException();
         }
 
-        private static DbSelectStatement BuildSourceDataToTempTableStatement<T, TSource>(DbSelectStatement statement, DbSet<TSource> sourceData, DbTable<T> tempTable)
-            where T : Model, new()
-            where TSource : Model, new()
+        private static DbSelectStatement BuildUpdateIdentityMappingsStatement(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
         {
-            var tempTableModel = tempTable.Model;
-            var tempTableColumns = tempTableModel.GetColumns();
-
-            var select = new List<ColumnMapping>();
-            foreach (var mapping in statement.Select)
-                select.Add(tempTableColumns[mapping.Target.Ordinal].From(mapping.Source));
-
-            var sourceModel = sourceData.Model;
-
-            var identityColumn = tempTableModel.GetIdentity(false).Column;
-            Debug.Assert(!ReferenceEquals(identityColumn, null));
-            select.Add(identityColumn.From(sourceData.GetSourceColumn(sourceModel.GetIdentity(false).Column)));
-
-            return new DbSelectStatement(tempTableModel, select, statement.From, statement.Where, statement.OrderBy, statement.Offset, statement.Fetch);
-        }
-
-        private static DbSelectStatement BuildInsertFromTempTableStatement<T>(DbSelectStatement statement, DbTable<T> tempTable)
-            where T : Model, new()
-        {
-            var tempTableModel = tempTable.Model;
-            var tempTableColumns = tempTableModel.GetColumns();
-
-            var select = new List<ColumnMapping>();
-            foreach (var mapping in statement.Select)
-            {
-                var target = mapping.Target;
-                select.Add(target.From(tempTableColumns[target.Ordinal]));
-            }
-
-            var from = tempTable.FromClause;
-
-            var orderBy = new DbExpressionSort[] {
-                new DbExpressionSort(tempTableModel.GetIdentity(true).Column.DbExpression, SortDirection.Ascending)
-            };
-
-            return new DbSelectStatement(statement.Model, select, from, null, orderBy, -1, -1);
-        }
-
-        private static DbSelectStatement BuildInsertIntoIdentityMappingsStatement<T>(DbTable<T> tempTable, DbTable<IdentityOutput> identityOutput, DbTable<IdentityMapping> identityMappings)
-            where T : Model, new()
-        {
-            var tempTableModel = tempTable.Model;
-            var tempTableRowId = tempTableModel.GetIdentity(true).Column;
-            var oldValue = tempTableModel.GetIdentity(false).Column;
-
-            var outputModel = identityOutput._;
-            var outputRowId = outputModel.GetIdentity(true).Column;
-            var newValue = outputModel.NewValue;
-
-            var resultModel = identityMappings._;
-            var select = new List<ColumnMapping>();
-            select.Add(resultModel.OldValue.From(oldValue));
-            select.Add(resultModel.NewValue.From(newValue));
-
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, tempTable.FromClause, identityOutput.FromClause,
-                new ReadOnlyCollection<ColumnMapping>(new ColumnMapping[] { tempTableRowId.From(outputRowId) }));
-
-            return new DbSelectStatement(resultModel, select, from, null, null, -1, -1);
+            throw new NotImplementedException();
         }
 
         protected sealed override SqlCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity)

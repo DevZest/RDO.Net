@@ -81,9 +81,9 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal DbSelectStatement BuildInsertStatement(IDbTable dbTable, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildInsertStatement(IDbTable targetTable, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
         {
-            var statement = TryBuildSimpleSelect(dbTable, columnMappings);
+            var statement = TryBuildSimpleSelect(targetTable, columnMappings);
 
             var select = statement == null ? columnMappings : statement.Select;
             var from = statement == null ? this : statement.From;
@@ -92,11 +92,11 @@ namespace DevZest.Data.Primitives
             var offset = statement == null ? -1 : statement.Offset;
             var fetch = statement == null ? -1 : statement.Fetch;
 
-            var parentMappings = columnMappings.GetParentMappings(dbTable);
+            var parentMappings = columnMappings.GetParentMappings(targetTable);
             if (parentMappings != null)
             {
                 parentMappings = IfTransformSimpleSelect(statement != null, parentMappings);
-                var parentTable = (IDbTable)dbTable.Model.DataSource;
+                var parentTable = (IDbTable)targetTable.Model.DataSource;
                 var parentRowIdSelect = IfTransformSimpleSelect(statement != null, new ColumnMapping[]
                 {
                     new ColumnMapping(Model.GetSysParentRowIdColumn(createIfNotExist: false), parentTable.Model.GetSysRowIdColumn(createIfNotExist: false))
@@ -108,7 +108,7 @@ namespace DevZest.Data.Primitives
             if (keyMappings != null)
             {
                 keyMappings = IfTransformSimpleSelect(statement != null, keyMappings);
-                from = new DbJoinClause(DbJoinKind.LeftJoin, from, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
+                from = new DbJoinClause(DbJoinKind.LeftJoin, from, targetTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
                 var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
                 if (where == null)
                     where = isNullExpr;
@@ -116,9 +116,9 @@ namespace DevZest.Data.Primitives
                     where = new DbBinaryExpression(BinaryExpressionKind.And, where, isNullExpr);
             }
 
-            if (statement == null && ShouldOmitSelectList(dbTable, select))
+            if (statement == null && ShouldOmitSelectList(targetTable, select))
                 select = null;
-            return new DbSelectStatement(dbTable.Model, select, from, where, orderBy, offset, fetch);
+            return new DbSelectStatement(targetTable.Model, select, from, where, orderBy, offset, fetch);
         }
 
         internal DbSelectStatement BuildUpdateStatement(IDbTable dbTable, IList<ColumnMapping> keyMappings, IList<ColumnMapping> columnMappings)
