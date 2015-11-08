@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var command = db.ProductCategories.GetUpdateCommand((builder, x) => builder.Select(x.ModifiedDate, Functions.GetDate()),
+                var command = db.ProductCategories.GetUpdateCommand((builder, x) => builder.Select(Functions.GetDate(), x.ModifiedDate),
                     x => x.ModifiedDate.IsNull());
                 var expectedSql =
 @"UPDATE [ProductCategory] SET

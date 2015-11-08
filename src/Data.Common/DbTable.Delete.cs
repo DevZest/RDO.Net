@@ -34,27 +34,27 @@ namespace DevZest.Data
             return new DbSelectStatement(this._, null, null, where, null, -1, -1);
         }
 
-        public int Delete<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
+        public int Delete<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
             where TSource : Model, new()
         {
             var statement = BuildDeleteStatement(dbSet, keyMappingsBuilder);
             return DbSession.Update(statement);
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder, CancellationToken cancellationToken)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             var statement = BuildDeleteStatement(dbSet, keyMappingsBuilder);
             return DbSession.DeleteAsync(statement, cancellationToken);
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
             where TSource : Model, new()
         {
             return DeleteAsync(dbSet, keyMappingsBuilder, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder)
+        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder)
             where TSource : Model, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
@@ -62,7 +62,7 @@ namespace DevZest.Data
             return dbSet.QueryStatement.BuildDeleteStatement(this, keyMappings);
         }
 
-        public int Delete<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
+        public int Delete<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
             where TSource : Model, new()
         {
             Check.NotNull(dataSet, nameof(dataSet));
@@ -76,7 +76,7 @@ namespace DevZest.Data
             return Delete(dataSet.ToTempTable(DbSession), keyMappingsBuilder);
         }
 
-        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Check.NotNull(dataSet, nameof(dataSet));
@@ -90,13 +90,13 @@ namespace DevZest.Data
             return await DeleteAsync(await dataSet.ToTempTableAsync(DbSession, cancellationToken), keyMappingsBuilder, cancellationToken);
         }
 
-        public Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
+        public Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
             where TSource : Model, new()
         {
             return DeleteAsync(dataSet, keyMappingsBuilder, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder)
+        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder)
             where TSource : Model, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);

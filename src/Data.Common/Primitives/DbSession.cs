@@ -195,25 +195,25 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
-        protected internal abstract int Insert<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData,
-            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin)
-            where T : Model, new()
-            where TSource : Model, new();
+        protected internal abstract int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin)
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
-        protected internal abstract Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData,
-            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
-            where T : Model, new()
-            where TSource : Model, new();
+        protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
-        protected internal abstract int Insert<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData,
-            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
-            where T : Model, new()
-            where TSource : Model, new();
+        protected internal abstract int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
-        protected internal abstract Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData,
-            Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
-            where T : Model, new()
-            where TSource : Model, new();
+        protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+            where TSource : Model, new()
+            where TTarget : Model, new();
 
         internal abstract int Update(DbSelectStatement statement);
 

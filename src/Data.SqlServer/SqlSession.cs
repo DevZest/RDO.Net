@@ -172,19 +172,19 @@ namespace DevZest.Data.SqlServer
             return GetInsertCommand(statement, null);
         }
 
-        protected override int Insert<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin)
+        protected override int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin)
         {
             var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
             return ExecuteNonQuery(GetInsertCommand(statement));
         }
 
-        protected override Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DataSet<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+        protected override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
         {
             var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
             return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
         }
 
-        protected sealed override int Insert<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
+        protected sealed override int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
         {
             var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)
@@ -197,7 +197,7 @@ namespace DevZest.Data.SqlServer
             return result;
         }
 
-        protected sealed override async Task<int> InsertAsync<T, TSource>(DbTable<T> targetTable, DbTable<TSource> sourceData, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
+        protected sealed override async Task<int> InsertAsync<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
             var statement = targetTable.BuildInsertStatement(sourceData, columnMappingsBuilder, autoJoin);
             if (identityMappings == null)

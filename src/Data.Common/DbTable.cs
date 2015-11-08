@@ -215,15 +215,15 @@ namespace DevZest.Data
             return result;
         }
 
-        private IList<ColumnMapping> BuildColumnMappings<TSource>(Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder, TSource sourceModel)
+        private IList<ColumnMapping> BuildColumnMappings<TSource>(Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, TSource sourceModel)
             where TSource : Model, new()
         {
-            return new ColumnMappingsBuilder(_, sourceModel).Build(builder => columnMappingsBuilder(builder, _, sourceModel));
+            return new ColumnMappingsBuilder(sourceModel, _).Build(builder => columnMappingsBuilder(builder, sourceModel, _));
         }
 
         private IList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)
         {
-            return new ColumnMappingsBuilder(_, null).Build(builder => columnMappingsBuilder(builder, _));
+            return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
         private IList<ColumnMapping> GetKeyMappings(Model sourceModel)

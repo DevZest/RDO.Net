@@ -8,17 +8,17 @@ namespace DevZest.Data.Helpers
 {
     internal static class DbTableExtensions
     {
-        internal static SqlCommand GetInsertCommand<T, TSource>(this DbTable<T> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
-            where T : Model, new()
+        internal static SqlCommand GetInsertCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildInsertStatement(dbSet, columnMappingsBuilder, autoJoin);
             return ((SqlSession)dbTable.DbSession).GetInsertCommand(statement);
         }
 
-        internal static SqlCommand GetInsertScalarCommand<T, TSource>(this DbTable<T> dbTable, DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null, bool autoJoin = false)
-            where T : Model, new()
+        internal static SqlCommand GetInsertScalarCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildInsertScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder, autoJoin);
             return ((SqlSession)dbTable.DbSession).GetInsertCommand(statement);
@@ -31,17 +31,17 @@ namespace DevZest.Data.Helpers
             return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
         }
 
-        internal static SqlCommand GetUpdateCommand<T, TSource>(this DbTable<T> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null)
-            where T : Model, new()
+        internal static SqlCommand GetUpdateCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildUpdateStatement(dbSet, columnMappingsBuilder);
             return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
         }
 
-        internal static SqlCommand GetUpdateScalarCommand<T, TSource>(this DbTable<T> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, T, TSource> columnMappingsBuilder = null)
-            where T : Model, new()
+        internal static SqlCommand GetUpdateScalarCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildUpdateScalarStatement(dataSet, ordinal, columnMappingsBuilder);
             return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
@@ -54,17 +54,17 @@ namespace DevZest.Data.Helpers
             return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand GetDeleteCommand<T, TSource>(this DbTable<T> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
-            where T : Model, new()
+        internal static SqlCommand GetDeleteCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, TTarget> keyMappingsBuilder = null)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildDeleteStatement(dbSet, keyMappingsBuilder);
             return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand GetDeleteScalarCommand<T, TSource>(this DbTable<T> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, T, TSource> keyMappingsBuilder = null)
-            where T : Model, new()
+        internal static SqlCommand GetDeleteScalarCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, TTarget> keyMappingsBuilder = null)
             where TSource : Model, new()
+            where TTarget : Model, new()
         {
             var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal, keyMappingsBuilder);
             return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);

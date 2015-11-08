@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// <summary>Class to build a collection of <see cref="ColumnMapping"/> objects.</summary>
     public sealed class ColumnMappingsBuilder
     {
-        internal ColumnMappingsBuilder(Model targetModel, Model sourceModel)
+        internal ColumnMappingsBuilder(Model sourceModel, Model targetModel)
         {
             Debug.Assert(targetModel != null);
 
@@ -36,10 +36,10 @@ namespace DevZest.Data
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>This <see cref="ColumnMappingsBuilder"/>.</returns>
         /// <overloads>Build the <see cref="ColumnMapping"/>.</overloads>
-        public ColumnMappingsBuilder Select<T>(Column<T> targetColumn, Column<T> sourceColumn)
+        public ColumnMappingsBuilder Select<T>(Column<T> sourceColumn, Column<T> targetColumn)
         {
-            VerifyTarget(targetColumn);
             VerifySource(sourceColumn);
+            VerifyTarget(targetColumn);
             _result.Add(targetColumn.From(sourceColumn));
             return this;
         }
@@ -48,7 +48,7 @@ namespace DevZest.Data
         /// <param name="targetColumnOrdinal">The target column ordinal.</param>
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>This <see cref="ColumnMappingsBuilder"/>.</returns>
-        public ColumnMappingsBuilder Select(int targetColumnOrdinal, Column sourceColumn)
+        public ColumnMappingsBuilder Select(Column sourceColumn, int targetColumnOrdinal)
         {
             var targetColumns = _targetModel.Columns;
 
