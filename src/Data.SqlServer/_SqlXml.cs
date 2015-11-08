@@ -3,6 +3,7 @@ using System.Data.SqlTypes;
 using System;
 using System.IO;
 using System.Xml;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data.SqlServer
 {
@@ -79,6 +80,56 @@ namespace DevZest.Data.SqlServer
         public static implicit operator _SqlXml(SqlXml x)
         {
             return Param(x, null);
+        }
+
+        private sealed class XmlValueFunction<T> : ScalarFunctionExpression<T>
+        {
+            public XmlValueFunction(Column<SqlXml> column, Column xPath, Column targetColumn)
+                : base(column, xPath, targetColumn)
+            {
+            }
+
+            protected override FunctionKey FunctionKey
+            {
+                get { return FunctionKeys.XmlValue; }
+            }
+
+            protected override IModelSet GetParentModelSet()
+            {
+                return Parameters[0].ParentModelSet;
+            }
+
+            protected sealed override IModelSet GetAggregateModelSet()
+            {
+                return Parameters[0].AggregateModelSet;
+            }
+
+            public override T Eval(DataRow dataRow)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        internal sealed class ValueFunctionInvoker<T> : GenericInvoker<T, _SqlXml, Column>
+        {
+            public static readonly ValueFunctionInvoker<T> Singleton = new ValueFunctionInvoker<T>();
+
+            private ValueFunctionInvoker()
+                : base(typeof(_SqlXml).GetStaticMethodInfo(nameof(_Value)), () => typeof(T).ResolveColumnDataType())
+            {
+            }
+        }
+
+        private static TColumn _Value<TColumn, TValue>(TColumn targetColumn, _SqlXml xmlColumn, Column xPath)
+            where TColumn : Column<TValue>, new()
+        {
+            return new XmlValueFunction<TValue>(xmlColumn, xPath, targetColumn).MakeColumn<TColumn>();
+        }
+
+        public T Value<T>(string xPath, T asColumn)
+            where T : Column, new()
+        {
+            return ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, this, _String.Param(xPath, null));
         }
     }
 }

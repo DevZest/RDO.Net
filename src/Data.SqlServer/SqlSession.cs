@@ -163,10 +163,10 @@ namespace DevZest.Data.SqlServer
                 for (int i = 0; i < columnMappings.Count; i++)
                 {
                     var targetColumn = columnMappings[i].Target;
-                    builder.SelectColumn(xmlModel.Xml.ValueColumn(GetColumnTagXPath(i), targetColumn), targetColumn);
+                    builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
                 //builder.SelectColumn(xmlModel.Xml.ValueColumn(GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn), dataSetOrdinalColumn);
-                builder.OrderBy(xmlModel.Xml.ValueColumn(GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn).Asc());
+                builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
             });
         }
 

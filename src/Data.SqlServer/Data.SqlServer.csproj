@@ -60,7 +60,6 @@
     <Compile Include="DbJoinKindExtensions.cs" />
     <Compile Include="ExpressionGenerator.cs" />
     <Compile Include="FunctionKeys.cs" />
-    <Compile Include="Functions.cs" />
     <Compile Include="IdentityOutput.cs" />
     <Compile Include="IModelAliasManager.cs" />
     <Compile Include="IndentedStringBuilderExtensions.cs" />
