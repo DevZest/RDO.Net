@@ -58,7 +58,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
-            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(dbSet._) : BuildColumnMappings(keyMappingsBuilder, dbSet._);
+            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(dbSet._) : _.BuildColumnMappings(dbSet._, keyMappingsBuilder);
             return dbSet.QueryStatement.BuildDeleteStatement(this, keyMappings);
         }
 
@@ -101,7 +101,7 @@ namespace DevZest.Data
         {
             Debug.Assert(dataSet != null && dataSet._ != null);
             var sourceModel = dataSet._;
-            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(sourceModel) : BuildColumnMappings(keyMappingsBuilder, sourceModel);
+            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(sourceModel) : _.BuildColumnMappings(sourceModel, keyMappingsBuilder);
             return BuildDeleteScalarStatement(dataSet[ordinal], keyMappings);
         }
 

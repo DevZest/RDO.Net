@@ -63,7 +63,7 @@ namespace DevZest.Data
         {
             Check.NotNull(dbSet, nameof(dbSet));
             var keyMappings = GetKeyMappings(dbSet._);
-            var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(dbSet._) : BuildColumnMappings(columnMappingsBuilder, dbSet._);
+            var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(dbSet._) : _.BuildColumnMappings(dbSet._, columnMappingsBuilder);
             return dbSet.QueryStatement.BuildUpdateStatement(this, keyMappings, columnMappings);
         }
 
@@ -107,7 +107,7 @@ namespace DevZest.Data
             Debug.Assert(dataSet != null && dataSet._ != null);
             var sourceModel = dataSet._;
             var keyMappings = GetKeyMappings(sourceModel);
-            var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : BuildColumnMappings(columnMappingsBuilder, sourceModel);
+            var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : _.BuildColumnMappings(sourceModel, columnMappingsBuilder);
             return BuildUpdateScalarStatement(dataSet[ordinal], keyMappings, columnMappings);
         }
 
@@ -117,6 +117,11 @@ namespace DevZest.Data
             var select = GetScalarMapping(paramManager, columnMappings);
             var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
             return new DbSelectStatement(this._, select, from, null, null, -1, -1);
+        }
+
+        private List<ColumnMapping> GetColumnMappings(Model sourceModel)
+        {
+            return Model.GetColumnMappings(sourceModel);
         }
     }
 }

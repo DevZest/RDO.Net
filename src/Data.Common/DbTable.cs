@@ -198,29 +198,6 @@ namespace DevZest.Data
             return Task.FromResult(InitialRowCount);
         }
 
-        private List<ColumnMapping> GetColumnMappings(Model sourceModel)
-        {
-            var targetModel = this._;
-            var result = new List<ColumnMapping>();
-            var sourceColumns = sourceModel.Columns;
-            foreach (var column in targetModel.GetUpdatableColumns())
-            {
-                if (column.IsSystem)
-                    continue;
-                var sourceColumn = sourceColumns[column.Key];
-                if (sourceColumn != null)
-                    result.Add(column.CreateMapping(sourceColumn));
-            }
-
-            return result;
-        }
-
-        private IList<ColumnMapping> BuildColumnMappings<TSource>(Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, TSource sourceModel)
-            where TSource : Model, new()
-        {
-            return new ColumnMappingsBuilder(sourceModel, _).Build(builder => columnMappingsBuilder(builder, sourceModel, _));
-        }
-
         private IList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)
         {
             return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));

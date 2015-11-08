@@ -9,12 +9,12 @@ namespace DevZest.Data.SqlServer
     public class SqlSessionTests
     {
         [TestMethod]
-        public void SqlSession_GetImportQuery()
+        public void SqlSession_GetDbQuery_from_DataSet()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var query = db.GetDbQuery(dataSet);
+                var query = db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null);
                 var expectedSql =
 @"DECLARE @p1 XML = N'
 <root>
@@ -66,12 +66,12 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         }
 
         [TestMethod]
-        public void SqlSession_Import()
+        public void SqlSession_DataSet_ToTempTable()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var commands = db.GetDbQuery(dataSet).GetToTempTableCommands();
+                var commands = db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null).GetToTempTableCommands();
 
                 var expectedSql0 =
 @"CREATE TABLE [#ProductCategory] (

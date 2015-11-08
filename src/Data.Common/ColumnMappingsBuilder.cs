@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// <summary>Class to build a collection of <see cref="ColumnMapping"/> objects.</summary>
     public sealed class ColumnMappingsBuilder
     {
-        internal ColumnMappingsBuilder(Model sourceModel, Model targetModel)
+        public ColumnMappingsBuilder(Model sourceModel, Model targetModel)
         {
             Debug.Assert(targetModel != null);
 

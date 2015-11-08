@@ -9,6 +9,7 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -100,7 +101,7 @@ namespace DevZest.Data.SqlServer
             return string.Format(NumberFormatInfo.InvariantInfo, XML_COL_TAG_XPATH, index);
         }
 
-        private SqlXml GetSqlXml<T>(DataSet<T> dataSet)
+        private SqlXml GetSqlXml<T>(DataSet<T> dataSet, IList<Column> columns)
             where T : Model, new()
         {
             using (var stream = new MemoryStream())
@@ -114,15 +115,14 @@ namespace DevZest.Data.SqlServer
                 {
                     xmlWriter.WriteStartElement(XML_ROOT_TAG_NAME);
 
-                    var columns = dataSet._.GetColumns();
                     foreach (var row in dataSet)
                     {
                         xmlWriter.WriteStartElement(XML_ROW_TAG_NAME);
 
-                        foreach (var column in columns)
+                        for (int i = 0; i < columns.Count; i++)
                         {
-                            xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, column.Ordinal));
-                            xmlWriter.WriteString(column.GetMapper().GetXmlValue(row.Ordinal, SqlVersion));
+                            xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, i));
+                            xmlWriter.WriteString(columns[i].GetMapper().GetXmlValue(row.Ordinal, SqlVersion));
                             xmlWriter.WriteEndElement();
                         }
 
@@ -145,25 +145,29 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal DbQuery<T> GetDbQuery<T>(DataSet<T> dataSet)
-            where T : Model, new()
+        internal DbQuery<TTarget> GetDbQuery<TSource, TTarget>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            where TSource : Model, new()
+            where TTarget : Model, new()
         {
-            var xml = GetSqlXml(dataSet);
-            return CreateQuery<T>((builder, model) =>
+            return CreateQuery<TTarget>((builder, model) =>
             {
                 var dataSetOrdinalColumn = new _Int32();
                 model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
 
+                var columnMappings = columnMappingsBuilder == null ? model.GetColumnMappings(dataSet._) : model.BuildColumnMappings(dataSet._, columnMappingsBuilder);
+
+                var xml = GetSqlXml(dataSet, columnMappings.Select(x => x.Source).ToList());
+
                 var sourceTable = Nodes(xml, XML_ROW_XPATH);
                 SqlXmlModel xmlModel;
                 builder.From(sourceTable, out xmlModel);
-                var columns = model.GetColumns();
-                for (int i = 0; i < columns.Count; i++)
+                for (int i = 0; i < columnMappings.Count; i++)
                 {
-                    var targetColumn = columns[i];
+                    var targetColumn = columnMappings[i].Target;
                     builder.SelectColumn(xmlModel.Xml.ValueColumn(GetColumnTagXPath(i), targetColumn), targetColumn);
                 }
-                builder.OrderBy(builder.SelectList[columns.Count - 1].Source.Asc());
+                builder.SelectColumn(xmlModel.Xml.ValueColumn(GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn), dataSetOrdinalColumn);
+                builder.OrderBy(builder.SelectList[builder.SelectList.Count - 1].Source.Asc());
             });
         }
 
@@ -174,13 +178,13 @@ namespace DevZest.Data.SqlServer
 
         protected override int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin)
         {
-            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
+            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, columnMappingsBuilder), null, autoJoin);
             return ExecuteNonQuery(GetInsertCommand(statement));
         }
 
         protected override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
         {
-            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData), columnMappingsBuilder, autoJoin);
+            var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, columnMappingsBuilder), null, autoJoin);
             return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
         }
 

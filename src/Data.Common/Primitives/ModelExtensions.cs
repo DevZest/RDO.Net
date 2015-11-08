@@ -53,8 +53,9 @@ namespace DevZest.Data.Primitives
         public static IEnumerable<Column> GetUpdatableColumns(this Model model)
         {
             IDbTable dbTable = (IDbTable)model.DataSource;
-            bool isTempTable = dbTable.Kind == DataSourceKind.DbTempTable;
-            var identity = model.GetIdentity(dbTable.Kind == DataSourceKind.DbTempTable);
+            bool isTempTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTempTable;
+            bool isTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTable;
+            var identity = dbTable == null ? null : model.GetIdentity(isTempTable);
             Column identityColumn = identity == null ? null : identity.Column;
 
             foreach (var column in model.Columns)
@@ -62,7 +63,7 @@ namespace DevZest.Data.Primitives
                 if (column == identityColumn)
                     continue;
 
-                if (!isTempTable && column.GetComputation() != null)
+                if (isTable && column.GetComputation() != null)
                     continue;
 
                 yield return column;
@@ -76,6 +77,36 @@ namespace DevZest.Data.Primitives
                 if (column.Kind != ColumnKind.SystemRowId)
                     yield return column;
             }
+        }
+
+        public static IList<ColumnMapping> BuildColumnMappings<TSource, TTarget>(this TTarget targetModel, TSource sourceModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            Check.NotNull(targetModel, nameof(targetModel));
+            Check.NotNull(sourceModel, nameof(sourceModel));
+            Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
+
+            return new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+        }
+
+        public static List<ColumnMapping> GetColumnMappings(this Model targetModel, Model sourceModel)
+        {
+            Check.NotNull(targetModel, nameof(targetModel));
+            Check.NotNull(sourceModel, nameof(sourceModel));
+
+            var result = new List<ColumnMapping>();
+            var sourceColumns = sourceModel.Columns;
+            foreach (var column in targetModel.GetUpdatableColumns())
+            {
+                if (column.IsSystem)
+                    continue;
+                var sourceColumn = sourceColumns[column.Key];
+                if (sourceColumn != null)
+                    result.Add(column.CreateMapping(sourceColumn));
+            }
+
+            return result;
         }
     }
 }
