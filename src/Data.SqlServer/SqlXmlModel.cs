@@ -1,4 +1,7 @@
 ﻿
+using DevZest.Data.Primitives;
+using System.Data.SqlTypes;
+
 namespace DevZest.Data.SqlServer
 {
     public sealed class SqlXmlModel : Model
@@ -12,15 +15,15 @@ namespace DevZest.Data.SqlServer
         {
         }
 
-        internal void Initialize(_SqlXml source, string xPath)
+        internal void Initialize(SqlXml sourceData, string xPath)
         {
-            Source = source;
+            SourceData = _SqlXml.Param(sourceData).DbExpression;
             XPath = xPath;
         }
 
         public _SqlXml Xml { get; private set; }
 
-        internal _SqlXml Source { get; private set; }
+        internal DbExpression SourceData { get; private set; }
 
         internal string XPath { get; private set; }
     }

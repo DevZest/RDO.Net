@@ -82,11 +82,10 @@ namespace DevZest.Data.SqlServer
             return sqlBuilder.ToString().CreateSqlCommand(this.GetConnection());
         }
 
-        public DbTable<SqlXmlModel> Nodes(SqlXml xml, string xPath)
+        public DbTable<SqlXmlModel> GetTable(SqlXml xml, string xPath)
         {
-            var param = _SqlXml.Param(xml);
             var model = new SqlXmlModel();
-            model.Initialize(param, xPath);
+            model.Initialize(xml, xPath);
             return model.CreateDbTable(this, "sys_xml_nodes");
         }
 
@@ -158,7 +157,7 @@ namespace DevZest.Data.SqlServer
 
                 var xml = GetSqlXml(dataSet, columnMappings.Select(x => x.Source).ToList());
 
-                var sourceTable = Nodes(xml, XML_ROW_XPATH);
+                var sourceTable = GetTable(xml, XML_ROW_XPATH);
                 SqlXmlModel xmlModel;
                 builder.From(sourceTable, out xmlModel);
                 for (int i = 0; i < columnMappings.Count; i++)

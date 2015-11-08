@@ -168,7 +168,7 @@ namespace DevZest.Data.SqlServer
             var xmlModel = model as SqlXmlModel;
             if (xmlModel != null)
             {
-                xmlModel.Source.DbExpression.Accept(_expressionGenerator);
+                xmlModel.SourceData.Accept(_expressionGenerator);
                 SqlBuilder.Append(".nodes(").AppendSingleQuoted(xmlModel.XPath).Append(')');
                 var alias = ModelAliasManager[model].ToQuotedIdentifier();
                 SqlBuilder.Append(' ').Append(alias).Append('(').Append(nameof(SqlXmlModel.Xml).ToQuotedIdentifier()).Append(')');
