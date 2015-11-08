@@ -165,7 +165,6 @@ namespace DevZest.Data.SqlServer
                     var targetColumn = columnMappings[i].Target;
                     builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
-                //builder.SelectColumn(xmlModel.Xml.ValueColumn(GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn), dataSetOrdinalColumn);
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
             });
         }
