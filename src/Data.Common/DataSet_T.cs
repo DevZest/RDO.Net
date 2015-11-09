@@ -212,10 +212,11 @@ namespace DevZest.Data
         private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> mappings)
             where TChild : Model, new()
         {
+            var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
-            var queryBuilder = dbSet.QueryStatement.MakeQueryBuilder(dbSet.DbSession, childModel, false);
+            var queryBuilder = dbSet.QueryStatement.MakeQueryBuilder(childModel, false);
             queryBuilder.Where(parentRow, mappings);
-            return queryBuilder.ToQuery(childModel);
+            return dbSession.CreateQuery(childModel, queryBuilder);
         }
 
         public async Task<DataSet<TChild>> CreateChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<DbQuery<TChild>> childQueryInitializer, CancellationToken cancellationToken)

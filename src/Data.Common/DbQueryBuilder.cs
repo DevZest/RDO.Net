@@ -5,16 +5,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DevZest.Data
 {
     public class DbQueryBuilder
     {
-        internal static DbQueryBuilder SelectAll(DbSession dbSession, Model model, Model sourceModel)
+        internal static DbQueryBuilder SelectAll(Model model, Model sourceModel)
         {
-            var result = new DbQueryBuilder(dbSession, model);
+            var result = new DbQueryBuilder(model);
             result.From(sourceModel);
             var sourceColumns = sourceModel.Columns;
             var columns = model.Columns;
@@ -28,18 +26,18 @@ namespace DevZest.Data
             return result;
         }
 
-        internal static DbQueryBuilder SelectAll(DbSession dbSession, Model model, DbUnionStatement query, Identity sequentialKeyIdentity)
+        internal static DbQueryBuilder SelectAll(Model model, DbUnionStatement query, Identity sequentialKeyIdentity)
         {
             var sourceModel = query.Model;
             Debug.Assert(model.GetType() == sourceModel.GetType());
 
-            var result = SelectAll(dbSession, model, sourceModel);
+            var result = SelectAll(model, sourceModel);
             result._sequentialKeyIdentity = sequentialKeyIdentity;
             return result;
         }
 
-        internal DbQueryBuilder(DbSession dbSession, Model model, DbSelectStatement query, Identity sequentialKeyIdentity)
-            : this(dbSession, model)
+        internal DbQueryBuilder(Model model, DbSelectStatement query, Identity sequentialKeyIdentity)
+            : this(model)
         {
             _sequentialKeyIdentity = sequentialKeyIdentity;
 
@@ -63,18 +61,14 @@ namespace DevZest.Data
             OrderByList = query.OrderBy;
         }
 
-        internal DbQueryBuilder(DbSession dbSession, Model model)
+        internal DbQueryBuilder(Model model)
         {
-            Debug.Assert(dbSession != null);
             Debug.Assert(model != null && model.DataSource == null);
 
-            DbSession = dbSession;
             Model = model;
             Offset = -1;
             Fetch = -1;
         }
-
-        private DbSession DbSession { get; set; }
 
         internal Model Model { get; private set; }
 
@@ -626,28 +620,6 @@ namespace DevZest.Data
         internal virtual DbSelectStatement BuildSelectStatement(IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
-        }
-
-        private void VerifyToSet(DataSourceKind dataSourceKind)
-        {
-            if (Model.DataSource != null)
-                throw new InvalidOperationException(Strings.DbQueryBuilder_VerifyToSet_DataSourceNotNull);
-
-            var parentModel = Model.ParentModel;
-            if (parentModel == null)
-                return;
-            var dataSource = parentModel.DataSource;
-            if (dataSource == null || dataSource.Kind != dataSourceKind)
-                throw new InvalidOperationException(Strings.DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(dataSourceKind));
-        }
-
-        internal DbQuery<T> ToQuery<T>(T model)
-            where T : Model, new()
-        {
-            VerifyToSet(DataSourceKind.DbQuery);
-
-            var selectStatement = BuildQueryStatement();
-            return new DbQuery<T>(model, DbSession, selectStatement);
         }
 
         internal void Where(DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship)

@@ -428,22 +428,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The DataSource must be null.
-        /// </summary>
-        public static string DbQueryBuilder_VerifyToSet_DataSourceNotNull
-        {
-            get { return GetString("DbQueryBuilder_VerifyToSet_DataSourceNotNull"); }
-        }
-
-        /// <summary>
-        /// The DataSourceKind of the parent model must be '{expectedDataSourceKind}'.
-        /// </summary>
-        public static string DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(object expectedDataSourceKind)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind", "expectedDataSourceKind"), expectedDataSourceKind);
-        }
-
-        /// <summary>
         /// The child DbSet has been created already.
         /// </summary>
         public static string DbSet_VerifyCreateChild_AlreadyCreated

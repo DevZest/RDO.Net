@@ -37,7 +37,7 @@ namespace DevZest.Data
             T newModel;
             var queryBuilder = GetSimpleQueryBuilder(out newModel);
             queryBuilder.Where(predicate(_));
-            return queryBuilder.ToQuery(newModel);
+            return DbSession.CreateQuery(newModel, queryBuilder);
         }
 
         public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
@@ -55,7 +55,7 @@ namespace DevZest.Data
             for (int i = 0; i < fnOrderByList.Length; i++)
                 orderByList[i] = fnOrderByList[i](_);
             queryBuilder.OrderBy(offset, fetch, orderByList);
-            return queryBuilder.ToQuery(newModel);
+            return DbSession.CreateQuery(newModel, queryBuilder);
         }
 
         internal DbQueryBuilder GetSimpleQueryBuilder()
@@ -68,7 +68,7 @@ namespace DevZest.Data
         {
             var oldModel = _;
             newModel = Data.Model.Clone(oldModel, false);
-            return DbQueryBuilder.SelectAll(DbSession, newModel, oldModel);
+            return DbQueryBuilder.SelectAll(newModel, oldModel);
         }
 
         internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)

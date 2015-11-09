@@ -273,12 +273,6 @@
   <data name="Model_InvalidRefTableModel" xml:space="preserve">
     <value>The reference table model is invalid. It must either be a self reference or a reference to a existing table.</value>
   </data>
-  <data name="DbQueryBuilder_VerifyToSet_DataSourceNotNull" xml:space="preserve">
-    <value>The DataSource must be null.</value>
-  </data>
-  <data name="DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind" xml:space="preserve">
-    <value>The DataSourceKind of the parent model must be '{expectedDataSourceKind}'.</value>
-  </data>
   <data name="DbSet_VerifyCreateChild_AlreadyCreated" xml:space="preserve">
     <value>The child DbSet has been created already.</value>
   </data>

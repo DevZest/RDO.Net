@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Data;
+using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
@@ -76,15 +77,23 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder builder)
+            where T : Model, new()
+        {
+            Debug.Assert(model == builder.Model);
+            var selectStatement = builder.BuildQueryStatement();
+            return new DbQuery<T>(model, this, selectStatement);
+        }
+
         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbQueryBuilder(this, model);
+            var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
-            return builder.ToQuery<T>(model);
+            return CreateQuery(model, builder);
         }
 
         public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
@@ -93,9 +102,9 @@ namespace DevZest.Data.Primitives
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbAggregateQueryBuilder(this, model);
+            var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
-            return builder.ToQuery<T>(model);
+            return CreateQuery(model, builder);
         }
 
         internal abstract void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet);

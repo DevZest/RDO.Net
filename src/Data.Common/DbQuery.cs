@@ -48,7 +48,7 @@ namespace DevZest.Data
                     if (QueryStatement.SequentialKeyTempTable == null)
                         _sequentialQueryStatement = _originalQueryStatement;
                     else
-                        _sequentialQueryStatement = _originalQueryStatement.MakeQueryBuilder(DbSession, Model.Clone(false), true).BuildQueryStatement();
+                        _sequentialQueryStatement = _originalQueryStatement.MakeQueryBuilder(Model.Clone(false), true).BuildQueryStatement();
                 }
                 return _sequentialQueryStatement;
             }
@@ -66,7 +66,7 @@ namespace DevZest.Data
             var model = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            return sourceData.QueryStatement.MakeQueryBuilder(DbSession, model, false).ToQuery<TChild>(model);
+            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeQueryBuilder(model, false));
         }
 
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
@@ -82,7 +82,7 @@ namespace DevZest.Data
             var model = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            return sourceData.QueryStatement.MakeQueryBuilder(DbSession, model, false).ToQuery<TChild>(model);
+            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeQueryBuilder(model, false));
         }
 
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
@@ -92,9 +92,9 @@ namespace DevZest.Data
             var childModel = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            var queryBuilder = new DbQueryBuilder(DbSession, childModel);
+            var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToQuery<TChild>(childModel);
+            return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
@@ -104,9 +104,9 @@ namespace DevZest.Data
             var childModel = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            var queryBuilder = new DbAggregateQueryBuilder(DbSession, childModel);
+            var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToQuery<TChild>(childModel);
+            return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
@@ -128,9 +128,9 @@ namespace DevZest.Data
             var childModel = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            var queryBuilder = new DbQueryBuilder(DbSession, childModel);
+            var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToQuery<TChild>(childModel);
+            return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
         public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
@@ -140,9 +140,9 @@ namespace DevZest.Data
             var childModel = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            var queryBuilder = new DbAggregateQueryBuilder(DbSession, childModel);
+            var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToQuery<TChild>(childModel);
+            return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
         public DbQuery<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)

@@ -23,14 +23,14 @@ namespace DevZest.Data
             }
         }
 
-        internal DbAggregateQueryBuilder(DbSession dbSession, Model model)
-            : base(dbSession, model)
+        internal DbAggregateQueryBuilder(Model model)
+            : base(model)
         {
             AutoGroupBy = true;
         }
 
-        internal DbAggregateQueryBuilder(DbSession dbSession, Model model, DbSelectStatement sourceData, Identity sequentialKeyIdentity)
-            : base(dbSession, model, sourceData, sequentialKeyIdentity)
+        internal DbAggregateQueryBuilder(Model model, DbSelectStatement sourceData, Identity sequentialKeyIdentity)
+            : base(model, sourceData, sequentialKeyIdentity)
         {
             Debug.Assert(sourceData.IsAggregate);
             foreach (var groupBy in sourceData.GroupBy)
