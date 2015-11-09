@@ -194,7 +194,7 @@ namespace DevZest.Data
 
             model = MakeAlias(model);
             AddSourceModel(model);
-            FromClause = new DbJoinClause(kind, FromClause, model.FromClause, left.GetColumnMappings(right));
+            FromClause = new DbJoinClause(kind, FromClause, model.FromClause, left.GetRelationship(right));
         }
 
         public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
@@ -525,31 +525,31 @@ namespace DevZest.Data
                 var parentSequentialKeyTempTable = GetParentSequentialKeyTempTable(parentModel);
                 if (parentSequentialKeyTempTable != null)
                     from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentSequentialKeyTempTable.FromClause,
-                        GetParentRelationshipJoin(normalizedSelectList, parentSequentialKeyTempTable.Model));
+                        GetParentRelationship(normalizedSelectList, parentSequentialKeyTempTable.Model));
                 else
-                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentModel.FromClause, GetParentRelationshipJoin(normalizedSelectList, parentModel));
+                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentModel.FromClause, GetParentRelationship(normalizedSelectList, parentModel));
             }
 
             if (JoinTable != null)
-                from = new DbJoinClause(DbJoinKind.InnerJoin, from, JoinTable.FromClause, GetSequentialRelationshipJoin(normalizedSelectList, JoinTable));
+                from = new DbJoinClause(DbJoinKind.InnerJoin, from, JoinTable.FromClause, GetSequentialRelationship(normalizedSelectList, JoinTable));
 
             return from;
         }
 
-        private ReadOnlyCollection<ColumnMapping> GetParentRelationshipJoin(IList<ColumnMapping> normalizedSelectList, Model targetModel)
+        private ReadOnlyCollection<ColumnMapping> GetParentRelationship(IList<ColumnMapping> normalizedSelectList, Model targetModel)
         {
-            var mappings = Model.ParentModelColumnMappings;
-            return GetRelationshipJoin(mappings, normalizedSelectList, targetModel);
+            var mappings = Model.ParentRelationship;
+            return GetRelationship(mappings, normalizedSelectList, targetModel);
         }
 
-        private ReadOnlyCollection<ColumnMapping> GetSequentialRelationshipJoin(IList<ColumnMapping> normalizedSelectList, IDbTable sequentialKeyTempTable)
+        private ReadOnlyCollection<ColumnMapping> GetSequentialRelationship(IList<ColumnMapping> normalizedSelectList, IDbTable sequentialKeyTempTable)
         {
             var targetModel = sequentialKeyTempTable.Model;
-            var relationship = Model.PrimaryKey.GetColumnMappings(targetModel.PrimaryKey);
-            return GetRelationshipJoin(relationship, normalizedSelectList, targetModel);
+            var relationship = Model.PrimaryKey.GetRelationship(targetModel.PrimaryKey);
+            return GetRelationship(relationship, normalizedSelectList, targetModel);
         }
 
-        private static ReadOnlyCollection<ColumnMapping> GetRelationshipJoin(ReadOnlyCollection<ColumnMapping> relationship, IList<ColumnMapping> normalizedSelectList, Model targetModel)
+        private static ReadOnlyCollection<ColumnMapping> GetRelationship(ReadOnlyCollection<ColumnMapping> relationship, IList<ColumnMapping> normalizedSelectList, Model targetModel)
         {
             var result = new ColumnMapping[relationship.Count];
             for (int i = 0; i < relationship.Count; i++)

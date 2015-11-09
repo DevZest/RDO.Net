@@ -177,45 +177,45 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the child model is registered on.</typeparam>
         /// <typeparam name="TChildModel">The type of the child model.</typeparam>
         /// <param name="getter">The lambda expression of the child model getter.</param>
-        /// <param name="relationship">The relationship between child model and parent model.</param>
+        /// <param name="childRefGetter">The relationship between child model and parent model.</param>
         /// <returns>Accessor of the child model.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="relationship"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="childRefGetter"/> is <see langword="null"/>.</exception>
         public static Accessor<TModel, TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, TModelKey> relationship)
+            Func<TChildModel, TModelKey> childRefGetter)
             where TModel : Model<TModelKey>
             where TModelKey : ModelKey
             where TChildModel : Model, new()
         {
             Utilities.Check.NotNull(getter, nameof(getter));
-            Utilities.Check.NotNull(relationship, nameof(relationship));
+            Utilities.Check.NotNull(childRefGetter, nameof(childRefGetter));
 
-            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationship), null);
+            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, childRefGetter), null);
         }
 
-        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Accessor<TModel, TChildModel> accessor, Func<TChildModel, TModelKey> relationship)
+        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Accessor<TModel, TChildModel> accessor, Func<TChildModel, TModelKey> childRefGetter)
             where TModel : Model<TModelKey>
             where TModelKey : ModelKey
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
             var parentModel = accessor.Parent;
-            var parentModelColumnMappings = relationship(result).GetColumnMappings(parentModel.PrimaryKey);
-            result.Construct(parentModel, accessor.OwnerType, accessor.Name, parentModelColumnMappings);
+            var parentRelationship = childRefGetter(result).GetRelationship(parentModel.PrimaryKey);
+            result.Construct(parentModel, accessor.OwnerType, accessor.Name, parentRelationship);
             return result;
         }
 
-        private void Construct(Model parentModel, Type ownerType, string name, ReadOnlyCollection<ColumnMapping> parentModelColumnMappings)
+        private void Construct(Model parentModel, Type ownerType, string name, ReadOnlyCollection<ColumnMapping> parentRelationship)
         {
             this.ConstructModelMember(parentModel, ownerType, name);
-            ParentModelColumnMappings = parentModelColumnMappings;
+            ParentRelationship = parentRelationship;
         }
 
         /// <summary>
         /// Gets the column mappings between its parent model and this model.
         /// </summary>
-        internal ReadOnlyCollection<ColumnMapping> ParentModelColumnMappings { get; private set; }
+        internal ReadOnlyCollection<ColumnMapping> ParentRelationship { get; private set; }
 
         #endregion
 

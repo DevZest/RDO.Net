@@ -264,7 +264,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC;
         }
 
         [TestMethod]
-        public void DbSet_CreateChild()
+        public void DataSet_CreateChild()
         {
             var log = new StringBuilder();
             using (var db = OpenDb(log))
@@ -277,7 +277,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC;
         }
 
         [TestMethod]
-        public async Task DbSet_CreateChildAsync()
+        public async Task DataSet_CreateChildAsync()
         {
             var log = new StringBuilder();
             using (var db = await OpenDbAsync(log))

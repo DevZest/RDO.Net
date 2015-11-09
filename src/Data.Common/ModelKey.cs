@@ -23,12 +23,12 @@ namespace DevZest.Data
             public SortDirection Direction { get; private set; }
         }
 
-        internal ReadOnlyCollection<ColumnMapping> GetColumnMappings(ModelKey target)
+        internal ReadOnlyCollection<ColumnMapping> GetRelationship(ModelKey target)
         {
-            return new ReadOnlyCollection<ColumnMapping>(GetColumnMappings(this, target));
+            return new ReadOnlyCollection<ColumnMapping>(GetRelationship(this, target));
         }
 
-        private static IList<ColumnMapping> GetColumnMappings(ModelKey source, ModelKey target)
+        private static IList<ColumnMapping> GetRelationship(ModelKey source, ModelKey target)
         {
             Debug.Assert(source != null);
             Debug.Assert(target != null);

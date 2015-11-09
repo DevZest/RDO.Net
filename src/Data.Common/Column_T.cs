@@ -187,7 +187,7 @@ namespace DevZest.Data
         private static Column<T> GetParentColumn(Column<T> column)
         {
             var model = column.ParentModel;
-            var columnMappings = model.ParentModelColumnMappings;
+            var columnMappings = model.ParentRelationship;
             if (columnMappings == null)
                 return null;
             foreach (var columnMapping in columnMappings)

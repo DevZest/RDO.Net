@@ -25,7 +25,7 @@ namespace DevZest.Data.Utilities
 
         internal static IList<ColumnMapping> GetParentMappings(this IList<ColumnMapping> columnMappings, IDbTable dbTable)
         {
-            var parentMappings = dbTable.Model.ParentModelColumnMappings;
+            var parentMappings = dbTable.Model.ParentRelationship;
             if (parentMappings == null)
                 return null;
 
