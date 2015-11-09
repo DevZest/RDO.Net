@@ -55,7 +55,9 @@ namespace DevZest.Data.Primitives
 
         internal abstract DbQueryBuilder MakeQueryBuilder(Model model, bool isSequential);
 
-        internal DbTable<T> ToTempTable<T>(T model, DbSession dbSession)
+        internal abstract DbSelectStatement BuildToTempTableStatement(IDbTable dbTable);
+
+        private DbTable<T> ToTempTable<T>(T model, DbSession dbSession)
             where T : Model, new()
         {
             Debug.Assert(model == this.Model);
@@ -67,9 +69,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal abstract DbSelectStatement BuildToTempTableStatement(IDbTable dbTable);
-
-        internal async Task<DbTable<T>> ToTempTableAsync<T>(T model, DbSession dbSession, CancellationToken cancellationToken)
+        private async Task<DbTable<T>> ToTempTableAsync<T>(T model, DbSession dbSession, CancellationToken cancellationToken)
             where T : Model, new()
         {
             Debug.Assert(model == this.Model);
