@@ -48,7 +48,7 @@ namespace DevZest.Data
                     if (QueryStatement.SequentialKeyTempTable == null)
                         _sequentialQueryStatement = _originalQueryStatement;
                     else
-                        _sequentialQueryStatement = _originalQueryStatement.MakeQueryBuilder(DbSession, Model.Clone(false), true).BuildQueryStatement(false);
+                        _sequentialQueryStatement = _originalQueryStatement.MakeQueryBuilder(DbSession, Model.Clone(false), true).BuildQueryStatement();
                 }
                 return _sequentialQueryStatement;
             }

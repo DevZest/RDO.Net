@@ -355,7 +355,7 @@ namespace DevZest.Data
 
         #endregion
 
-        internal DbQueryStatement BuildQueryStatement(bool makeTempTable)
+        internal DbQueryStatement BuildQueryStatement()
         {
             var normalizedSelectList = NormalizeSelectList();
 
@@ -367,10 +367,6 @@ namespace DevZest.Data
                     throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
                 result = BuildSelectStatement(normalizedSelectList, from, WhereExpression, GetOrderBy());
             }
-
-            if (makeTempTable)
-                Model.AddTempTableIdentity();
-
             return result;
         }
 
@@ -653,7 +649,8 @@ namespace DevZest.Data
         {
             Debug.Assert(SequentialKeyColumn == null);
             VerifyToSet(DataSourceKind.DbTempTable);
-            var queryStatement = BuildQueryStatement(true);
+            var queryStatement = BuildQueryStatement();
+            model.AddTempTableIdentity();
             return queryStatement.ToTempTable(model, DbSession);
         }
 
@@ -662,7 +659,8 @@ namespace DevZest.Data
         {
             Debug.Assert(SequentialKeyColumn == null);
             VerifyToSet(DataSourceKind.DbTempTable);
-            var queryStatement = BuildQueryStatement(true);
+            var queryStatement = BuildQueryStatement();
+            model.AddTempTableIdentity();
             return await queryStatement.ToTempTableAsync(model, DbSession, cancellationToken);
         }
 
@@ -671,7 +669,7 @@ namespace DevZest.Data
         {
             VerifyToSet(DataSourceKind.DbQuery);
 
-            var selectStatement = BuildQueryStatement(false);
+            var selectStatement = BuildQueryStatement();
             return new DbQuery<T>(model, DbSession, selectStatement);
         }
 

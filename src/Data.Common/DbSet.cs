@@ -169,8 +169,8 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
 
             var model = Data.Model.Clone(_, false);
-            var queryStatement1 = this.GetSimpleQueryBuilder().BuildQueryStatement(false);
-            var queryStatement2 = dbSet.GetSimpleQueryBuilder().BuildQueryStatement(false);
+            var queryStatement1 = this.GetSimpleQueryBuilder().BuildQueryStatement();
+            var queryStatement2 = dbSet.GetSimpleQueryBuilder().BuildQueryStatement();
             return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
         }
 
