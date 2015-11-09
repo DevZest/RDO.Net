@@ -392,7 +392,7 @@ namespace DevZest.Data
 
             for (int i = 0; i < selectList.Count; i++)
             {
-                if (selectList[i].Source != fromColumns[i])
+                if (selectList[i].Source != fromColumns[i].DbExpression)
                     return null;
             }
 
@@ -415,28 +415,18 @@ namespace DevZest.Data
                 return null;
 
             var fromModel = fromQuery.Model;
+            var columnReplacer = new ColumnReplacer(fromQuery);
             var replacedSelectList = new ColumnMapping[selectList.Count];
             for (int i = 0; i < selectList.Count; i++)
             {
                 var selectItem = selectList[i];
-                var sourceColumn = selectItem.Source;
-                var targetColumn = selectItem.Target;
+                var source = selectItem.Source;
+                var target = selectItem.TargetColumn;
 
-                Debug.Assert(targetColumn.ParentModel == Model);
-
-                if (sourceColumn == null)
-                {
-                    replacedSelectList[i] = targetColumn.CreateMapping(null);
-                    continue;
-                }
-
-                if (sourceColumn.ParentModel != fromModel)
-                    replacedSelectList[i] = selectItem;
-                else
-                    replacedSelectList[i] = targetColumn.CreateMapping(fromQuery.Select[sourceColumn.Ordinal].Source);
+                Debug.Assert(target.ParentModel == Model);
+                replacedSelectList[i] = target.CreateMapping(columnReplacer.Replace(source));
             }
 
-            var columnReplacer = new ColumnReplacer(fromQuery);
             var where = GetSimpleQueryWhere(columnReplacer, fromQuery.Where, WhereExpression);
             var orderBy = GetSimpleQueryOrderBy(columnReplacer, OrderByList);
             return new DbSelectStatement(Model, replacedSelectList, fromQuery.From, where, orderBy, Offset, Fetch);
@@ -496,12 +486,12 @@ namespace DevZest.Data
             var result = new ColumnMapping[indexRowId + countRowId];
 
             foreach (var selectItem in SelectList)
-                result[selectItem.Target.Ordinal] = selectItem;
+                result[selectItem.TargetColumn.Ordinal] = selectItem;
 
             for (int i = 0; i < allColumns.Count; i++)
             {
-                if (result[i].Target == null)
-                    result[i] = allColumns[i].CreateMapping(null);
+                if (result[i].TargetColumn == null)
+                    result[i] = allColumns[i].CreateMapping(DbConstantExpression.Null);
             }
 
             if (parentSequentialKeyTempTable != null)
@@ -569,9 +559,9 @@ namespace DevZest.Data
             for (int i = 0; i < mappings.Count; i++)
             {
                 var mapping = mappings[i];
-                var sourceColumn = transformedSelectList[mapping.Source.Ordinal].Source;
-                var targetColumn = TransformPrimaryKeyColumn(mapping.Target, targetModel);
-                result[i] = targetColumn.CreateMapping(sourceColumn);
+                var source = transformedSelectList[mapping.SourceColumn.Ordinal].Source;
+                var targetColumn = TransformPrimaryKeyColumn(mapping.TargetColumn, targetModel);
+                result[i] = targetColumn.CreateMapping(source);
             }
             return new ReadOnlyCollection<ColumnMapping>(result);
         }
@@ -694,7 +684,7 @@ namespace DevZest.Data
                 var column = columnSort.Column;
                 var param = column.CreateParam(parentRow).DbExpression;
                 var sourceColumnOrdinal = GetSourceColumnOrdinal(columnMappings, column.Ordinal);
-                var sourceExpression = SelectList[sourceColumnOrdinal].SourceExpression;
+                var sourceExpression = SelectList[sourceColumnOrdinal].Source;
                 var equalCondition = new DbBinaryExpression(BinaryExpressionKind.Equal, sourceExpression, param);
                 WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(BinaryExpressionKind.And, equalCondition, WhereExpression);
             }
@@ -704,8 +694,8 @@ namespace DevZest.Data
         {
             foreach (var mapping in columnMappings)
             {
-                if (mapping.Target.Ordinal == targetColumnOrdinal)
-                    return mapping.Source.Ordinal;
+                if (mapping.TargetColumn.Ordinal == targetColumnOrdinal)
+                    return mapping.SourceColumn.Ordinal;
             }
             Debug.Fail("Cannot find source column ordinal");
             return -1;

@@ -224,7 +224,7 @@ namespace DevZest.Data
                 if (keyMappings != null)
                 {
                     from = new DbJoinClause(DbJoinKind.LeftJoin, from, FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-                    where = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
+                    where = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].TargetColumn.DbExpression });
                 }
             }
 

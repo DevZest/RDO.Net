@@ -41,16 +41,11 @@ namespace DevZest.Data.Primitives
             return new DbCastExpression(expression.Operand.Accept(this), expression.SourceDataType, expression.TargetColumn);
         }
 
-        private Column Replace(Column column)
-        {
-            Debug.Assert(column.ParentModel == _selectStatement.Model);
-
-            return _selectStatement.Select[column.Ordinal].Source;
-        }
-
         public override DbExpression Visit(DbColumnExpression expression)
         {
-            return new DbColumnExpression(Replace(expression.Column));
+            var column = expression.Column;
+            Debug.Assert(column.ParentModel == _selectStatement.Model);
+            return _selectStatement.Select[column.Ordinal].Source;
         }
 
         public override DbExpression Visit(DbConstantExpression expression)

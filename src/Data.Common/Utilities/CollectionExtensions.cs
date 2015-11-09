@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -34,14 +35,14 @@ namespace DevZest.Data.Utilities
                 var mapping = parentMappings[i];
                 var source = GetSource(mapping.Source, columnMappings);
                 if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source.Name));
-                result[i] = new ColumnMapping(source, mapping.Target);
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source));
+                result[i] = new ColumnMapping(source, mapping.TargetColumn);
             }
 
             return result;
         }
 
-        private static Column GetSource(Column target, IList<ColumnMapping> mappings)
+        private static DbExpression GetSource(DbExpression target, IList<ColumnMapping> mappings)
         {
             foreach (var mapping in mappings)
             {
@@ -55,7 +56,7 @@ namespace DevZest.Data.Utilities
         {
             foreach (var mapping in columnMappings)
             {
-                if (mapping.Target == target)
+                if (mapping.TargetColumn == target)
                     return true;
             }
             return false;

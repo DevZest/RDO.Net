@@ -55,7 +55,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(Model, null, this, null, null, -1, -1);
         }
 
-        internal override Column GetSourceColumn(int ordinal)
+        internal override DbExpression GetSource(int ordinal)
         {
             return null;
         }

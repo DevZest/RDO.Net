@@ -136,13 +136,11 @@ namespace DevZest.Data.Primitives
                 return null;
 
             var result = new ColumnMapping[mappings.Count];
+            var columnReplacer = new ColumnReplacer(this);
             for (int i = 0; i < mappings.Count; i++)
             {
                 var mapping = mappings[i];
-                if (mapping.Source.ParentModel != this.Model)
-                    result[i] = mapping;
-                else
-                    result[i] = new ColumnMapping(this.Select[mapping.Source.Ordinal].Source, mapping.Target);
+                result[i] = mapping.TargetColumn.CreateMapping(columnReplacer.Replace(mapping.Source));
             }
 
             return result;
@@ -162,7 +160,7 @@ namespace DevZest.Data.Primitives
 
             foreach (var select in Select)
             {
-                if (!select.Target.IsSystem)
+                if (!select.TargetColumn.IsSystem)
                     newSelect.Add(select);
             }
 
@@ -170,7 +168,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(Model, newSelect, From, Where, OrderBy, Offset, Fetch);
         }
 
-        internal override Column GetSourceColumn(int ordinal)
+        internal override DbExpression GetSource(int ordinal)
         {
             return Select[ordinal].Source;
         }

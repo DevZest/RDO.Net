@@ -27,5 +27,10 @@ namespace DevZest.Data.Primitives
         {
             return visitor.Visit(this);
         }
+
+        public override string ToString()
+        {
+            return DbColumnName;
+        }
     }
 }

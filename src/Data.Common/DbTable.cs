@@ -265,8 +265,9 @@ namespace DevZest.Data
             for (int i = 0; i < mappings.Count; i++)
             {
                 var mapping = mappings[i];
-                var source = paramManager.GetParam(mapping.Source);
-                result[i] = new ColumnMapping(source, mapToSource ? mapping.Source : mapping.Target);
+                var sourceColumn = mapping.SourceColumn;
+                var source = paramManager.GetParam(sourceColumn);
+                result[i] = new ColumnMapping(source, mapToSource ? sourceColumn : mapping.TargetColumn);
             }
             return result;
         }
@@ -303,9 +304,9 @@ namespace DevZest.Data
             throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(getWhere));
         }
 
-        internal override Column GetSourceColumn(int ordinal)
+        internal override DbExpression GetSource(int ordinal)
         {
-            return Model.Columns[ordinal];
+            return Model.Columns[ordinal].DbExpression;
         }
     }
 }

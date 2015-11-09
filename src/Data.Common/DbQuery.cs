@@ -169,9 +169,9 @@ namespace DevZest.Data
             return select.SequentialKeyTempTable.InitialRowCount;
         }
 
-        internal override Column GetSourceColumn(int ordinal)
+        internal override DbExpression GetSource(int ordinal)
         {
-            return _originalQueryStatement.GetSourceColumn(ordinal);
+            return _originalQueryStatement.GetSource(ordinal);
         }
     }
 }

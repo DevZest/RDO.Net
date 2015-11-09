@@ -109,7 +109,7 @@ namespace DevZest.Data.Primitives
             {
                 keyMappings = IfTransformSimpleSelect(statement != null, keyMappings);
                 from = new DbJoinClause(DbJoinKind.LeftJoin, from, targetTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
+                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].TargetColumn.DbExpression });
                 if (where == null)
                     where = isNullExpr;
                 else
@@ -147,13 +147,13 @@ namespace DevZest.Data.Primitives
                 return false;
 
             var selectColumns = Model.GetSelectColumns().ToList();
-            var sourceColumns = columnMappings.Select(x => x.Source).ToList();
-            if (sourceColumns.Count != selectColumns.Count)
+            var sourceList = columnMappings.Select(x => x.Source).ToList();
+            if (sourceList.Count != selectColumns.Count)
                 return false;
 
-            for (int i = 0; i < sourceColumns.Count; i++)
+            for (int i = 0; i < sourceList.Count; i++)
             {
-                if (sourceColumns[i] != selectColumns[i])
+                if (sourceList[i] != selectColumns[i].DbExpression)
                     return false;
             }
 
@@ -196,6 +196,6 @@ namespace DevZest.Data.Primitives
             return this;
         }
 
-        internal abstract Column GetSourceColumn(int ordinal);
+        internal abstract DbExpression GetSource(int ordinal);
     }
 }
