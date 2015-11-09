@@ -357,7 +357,7 @@ namespace DevZest.Data
 
         internal DbQueryStatement BuildQueryStatement(bool makeTempTable)
         {
-            var transformedSelectList = NormalizeSelectList(makeTempTable);
+            var transformedSelectList = NormalizeSelectList();
 
             var result = TryBuildSimpleQuery(transformedSelectList);
             if (result == null)
@@ -485,7 +485,7 @@ namespace DevZest.Data
             return parentSequentialKeyTempTable;
         }
 
-        private IList<ColumnMapping> NormalizeSelectList(bool makeTempTable)
+        private IList<ColumnMapping> NormalizeSelectList()
         {
             var allColumns = Model.Columns;
             var parentSequentialKeyTempTable = GetParentSequentialKeyTempTable();
