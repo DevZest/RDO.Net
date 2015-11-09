@@ -66,10 +66,7 @@ namespace DevZest.Data
         internal DbQueryBuilder(DbSession dbSession, Model model)
         {
             Debug.Assert(dbSession != null);
-            Debug.Assert(model != null);
-            Debug.Assert(model.DataSource == null
-                || model.DataSource.Kind == DataSourceKind.DbTable
-                || model.DataSource.Kind == DataSourceKind.DbTempTable);
+            Debug.Assert(model != null && model.DataSource == null);
 
             DbSession = dbSession;
             Model = model;
@@ -642,26 +639,6 @@ namespace DevZest.Data
             var dataSource = parentModel.DataSource;
             if (dataSource == null || dataSource.Kind != dataSourceKind)
                 throw new InvalidOperationException(Strings.DbQueryBuilder_VerifyToSet_InvalidParentModelDataSourceKind(dataSourceKind));
-        }
-
-        internal DbTable<T> ToTempTable<T>(T model)
-            where T : Model, new()
-        {
-            Debug.Assert(SequentialKeyColumn == null);
-            VerifyToSet(DataSourceKind.DbTempTable);
-            var queryStatement = BuildQueryStatement();
-            model.AddTempTableIdentity();
-            return queryStatement.ToTempTable(model, DbSession);
-        }
-
-        internal async Task<DbTable<T>> ToTempTableAsync<T>(T model, CancellationToken cancellationToken)
-            where T : Model, new()
-        {
-            Debug.Assert(SequentialKeyColumn == null);
-            VerifyToSet(DataSourceKind.DbTempTable);
-            var queryStatement = BuildQueryStatement();
-            model.AddTempTableIdentity();
-            return await queryStatement.ToTempTableAsync(model, DbSession, cancellationToken);
         }
 
         internal DbQuery<T> ToQuery<T>(T model)

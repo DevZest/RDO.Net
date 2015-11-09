@@ -98,84 +98,34 @@ namespace DevZest.Data
             return Name;
         }
 
-        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
+        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<T> initializer = null)
             where TChild : Model, new()
         {
-            Check.NotNull(sourceData, nameof(sourceData));
             var model = VerifyCreateChild(getChildModel);
 
-            return sourceData.QueryStatement.MakeQueryBuilder(DbSession, model, false).ToTempTable<TChild>(model);
+            var dbSession = DbSession;
+            var name = dbSession.AssignTempTableName(model);
+            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
+            dbSession.CreateTable(model, name, true);
+            return result;
         }
 
-        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
+        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<T> initializer = null)
             where TChild : Model, new()
         {
-            return CreateChildAsync(getChildModel, sourceData, CancellationToken.None);
+            return CreateChildAsync(getChildModel, initializer, CancellationToken.None);
         }
 
-        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
+        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<T> initializer, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
-            Check.NotNull(sourceData, nameof(sourceData));
             var model = VerifyCreateChild(getChildModel);
 
-            return await sourceData.QueryStatement.MakeQueryBuilder(DbSession, model, false).ToTempTableAsync(model, cancellationToken);
-        }
-
-        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
-            where TChild : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
-
-            var queryBuilder = new DbQueryBuilder(DbSession, childModel);
-            buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToTempTable<TChild>(childModel);
-        }
-
-        public DbTable<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
-            where TChild : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
-
-            var queryBuilder = new DbAggregateQueryBuilder(DbSession, childModel);
-            buildQuery(queryBuilder, childModel);
-            return queryBuilder.ToTempTable<TChild>(childModel);
-        }
-
-        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
-            where TChild : Model, new()
-        {
-            return CreateChildAsync(getChildModel, buildQuery, CancellationToken.None);
-        }
-
-        public Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
-            where TChild : Model, new()
-        {
-            return CreateChildAsync(getChildModel, buildQuery, CancellationToken.None);
-        }
-
-        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
-            where TChild : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
-
-            var queryBuilder = new DbQueryBuilder(DbSession, childModel);
-            buildQuery(queryBuilder, childModel);
-            return await queryBuilder.ToTempTableAsync<TChild>(childModel, cancellationToken);
-        }
-
-        public async Task<DbTable<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
-            where TChild : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-            var childModel = VerifyCreateChild(getChildModel);
-
-            var queryBuilder = new DbAggregateQueryBuilder(DbSession, childModel);
-            buildQuery(queryBuilder, childModel);
-            return await queryBuilder.ToTempTableAsync<TChild>(childModel, cancellationToken);
+            var dbSession = DbSession;
+            var name = dbSession.AssignTempTableName(model);
+            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
+            await dbSession.CreateTableAsync(model, name, true, cancellationToken);
+            return result;
         }
 
         public DbTable<TChild> GetChild<TChild>(Func<T, TChild> getChildModel)
