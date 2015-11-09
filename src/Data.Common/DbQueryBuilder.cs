@@ -357,15 +357,15 @@ namespace DevZest.Data
 
         internal DbQueryStatement BuildQueryStatement(bool makeTempTable)
         {
-            var transformedSelectList = NormalizeSelectList();
+            var normalizedSelectList = NormalizeSelectList();
 
-            var result = TryBuildSimpleQuery(transformedSelectList);
+            var result = TryBuildSimpleQuery(normalizedSelectList);
             if (result == null)
             {
-                var from = GetFromClause(transformedSelectList);
+                var from = GetFromClause(normalizedSelectList);
                 if (from == null)
                     throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
-                result = BuildSelectStatement(transformedSelectList, from, WhereExpression, GetOrderBy());
+                result = BuildSelectStatement(normalizedSelectList, from, WhereExpression, GetOrderBy());
             }
 
             if (makeTempTable)
@@ -374,7 +374,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private DbQueryStatement TryBuildSimpleUnionQuery(IList<ColumnMapping> selectList)
+        private DbQueryStatement TryBuildSimpleUnionQuery(IList<ColumnMapping> normalizedSelectList)
         {
             if (Model.ParentModel != null || JoinTable != null)
                 return null;
@@ -387,24 +387,24 @@ namespace DevZest.Data
                 return null;
 
             var fromColumns = fromQuery.Model.Columns;
-            if (selectList.Count != fromColumns.Count)
+            if (normalizedSelectList.Count != fromColumns.Count)
                 return null;
 
-            for (int i = 0; i < selectList.Count; i++)
+            for (int i = 0; i < normalizedSelectList.Count; i++)
             {
-                if (selectList[i].Source != fromColumns[i].DbExpression)
+                if (normalizedSelectList[i].Source != fromColumns[i].DbExpression)
                     return null;
             }
 
             return new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
         }
 
-        internal virtual DbQueryStatement TryBuildSimpleQuery(IList<ColumnMapping> selectList)
+        internal virtual DbQueryStatement TryBuildSimpleQuery(IList<ColumnMapping> normallizedSelectList)
         {
             if (Model.ParentModel != null || SequentialKeyColumn != null)
                 return null;
 
-            var result = TryBuildSimpleUnionQuery(selectList);
+            var result = TryBuildSimpleUnionQuery(normallizedSelectList);
             if (result != null)
                 return result;
 
@@ -416,10 +416,10 @@ namespace DevZest.Data
 
             var fromModel = fromQuery.Model;
             var columnReplacer = new ColumnReplacer(fromQuery);
-            var replacedSelectList = new ColumnMapping[selectList.Count];
-            for (int i = 0; i < selectList.Count; i++)
+            var replacedSelectList = new ColumnMapping[normallizedSelectList.Count];
+            for (int i = 0; i < normallizedSelectList.Count; i++)
             {
-                var selectItem = selectList[i];
+                var selectItem = normallizedSelectList[i];
                 var source = selectItem.Source;
                 var target = selectItem.TargetColumn;
 
@@ -517,7 +517,7 @@ namespace DevZest.Data
             return GetSequentialKeyColumn(GetParentSequentialKeyTempTable());
         }
 
-        private DbFromClause GetFromClause(IList<ColumnMapping> transformedSelectList)
+        private DbFromClause GetFromClause(IList<ColumnMapping> normalizedSelectList)
         {
             Debug.Assert(FromClause != null);
 
@@ -529,44 +529,44 @@ namespace DevZest.Data
                 var parentSequentialKeyTempTable = GetParentSequentialKeyTempTable(parentModel);
                 if (parentSequentialKeyTempTable != null)
                     from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentSequentialKeyTempTable.FromClause,
-                        GetParentColumnMappings(transformedSelectList, parentSequentialKeyTempTable.Model));
+                        GetParentRelationshipJoin(normalizedSelectList, parentSequentialKeyTempTable.Model));
                 else
-                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentModel.FromClause, GetParentColumnMappings(transformedSelectList, parentModel));
+                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentModel.FromClause, GetParentRelationshipJoin(normalizedSelectList, parentModel));
             }
 
             if (JoinTable != null)
-                from = new DbJoinClause(DbJoinKind.InnerJoin, from, JoinTable.FromClause, GetSequentialColumnMappings(transformedSelectList, JoinTable));
+                from = new DbJoinClause(DbJoinKind.InnerJoin, from, JoinTable.FromClause, GetSequentialRelationshipJoin(normalizedSelectList, JoinTable));
 
             return from;
         }
 
-        private ReadOnlyCollection<ColumnMapping> GetParentColumnMappings(IList<ColumnMapping> transformedSelectList, Model targetModel)
+        private ReadOnlyCollection<ColumnMapping> GetParentRelationshipJoin(IList<ColumnMapping> normalizedSelectList, Model targetModel)
         {
             var mappings = Model.ParentModelColumnMappings;
-            return TransformColumnMappings(mappings, transformedSelectList, targetModel);
+            return GetRelationshipJoin(mappings, normalizedSelectList, targetModel);
         }
 
-        private ReadOnlyCollection<ColumnMapping> GetSequentialColumnMappings(IList<ColumnMapping> transformedSelectList, IDbTable sequentialKeyTempTable)
+        private ReadOnlyCollection<ColumnMapping> GetSequentialRelationshipJoin(IList<ColumnMapping> normalizedSelectList, IDbTable sequentialKeyTempTable)
         {
             var targetModel = sequentialKeyTempTable.Model;
-            var mappings = Model.PrimaryKey.GetColumnMappings(targetModel.PrimaryKey);
-            return TransformColumnMappings(mappings, transformedSelectList, targetModel);
+            var relationship = Model.PrimaryKey.GetColumnMappings(targetModel.PrimaryKey);
+            return GetRelationshipJoin(relationship, normalizedSelectList, targetModel);
         }
 
-        private static ReadOnlyCollection<ColumnMapping> TransformColumnMappings(ReadOnlyCollection<ColumnMapping> mappings, IList<ColumnMapping> transformedSelectList, Model targetModel)
+        private static ReadOnlyCollection<ColumnMapping> GetRelationshipJoin(ReadOnlyCollection<ColumnMapping> relationship, IList<ColumnMapping> normalizedSelectList, Model targetModel)
         {
-            var result = new ColumnMapping[mappings.Count];
-            for (int i = 0; i < mappings.Count; i++)
+            var result = new ColumnMapping[relationship.Count];
+            for (int i = 0; i < relationship.Count; i++)
             {
-                var mapping = mappings[i];
-                var source = transformedSelectList[mapping.SourceColumn.Ordinal].Source;
-                var targetColumn = TransformPrimaryKeyColumn(mapping.TargetColumn, targetModel);
+                var mapping = relationship[i];
+                var source = normalizedSelectList[mapping.SourceColumn.Ordinal].Source;
+                var targetColumn = GetCorrespondingPrimaryKeyColumn(mapping.TargetColumn, targetModel);
                 result[i] = targetColumn.CreateMapping(source);
             }
             return new ReadOnlyCollection<ColumnMapping>(result);
         }
 
-        private static Column TransformPrimaryKeyColumn(Column column, Model targetModel)
+        private static Column GetCorrespondingPrimaryKeyColumn(Column column, Model targetModel)
         {
             Debug.Assert(column != null);
             Debug.Assert(targetModel != null);
