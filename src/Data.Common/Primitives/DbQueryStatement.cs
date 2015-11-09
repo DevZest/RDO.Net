@@ -53,7 +53,7 @@ namespace DevZest.Data.Primitives
 
         internal abstract DbSelectStatement GetSequentialKeySelectStatement(SequentialKeyModel sequentialKeyModel);
 
-        internal abstract DbQueryBuilder MakeQueryBuilder(Model model, bool isSequential);
+        internal abstract DbQueryBuilder MakeSelectAllQueryBuilder(Model model, bool isSequential);
 
         internal abstract DbSelectStatement BuildToTempTableStatement(IDbTable dbTable);
 

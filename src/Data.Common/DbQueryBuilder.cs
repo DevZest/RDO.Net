@@ -630,22 +630,11 @@ namespace DevZest.Data
             {
                 var column = columnSort.Column;
                 var param = column.CreateParam(parentRow).DbExpression;
-                var sourceColumnOrdinal = GetSourceColumnOrdinal(parentRelationship, column.Ordinal);
+                var sourceColumnOrdinal = parentRelationship.Where(x => x.TargetColumn.Ordinal == column.Ordinal).Single().SourceColumn.Ordinal;
                 var sourceExpression = SelectList[sourceColumnOrdinal].Source;
                 var equalCondition = new DbBinaryExpression(BinaryExpressionKind.Equal, sourceExpression, param);
                 WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(BinaryExpressionKind.And, equalCondition, WhereExpression);
             }
-        }
-
-        private static int GetSourceColumnOrdinal(ReadOnlyCollection<ColumnMapping> relationship, int targetColumnOrdinal)
-        {
-            foreach (var mapping in relationship)
-            {
-                if (mapping.TargetColumn.Ordinal == targetColumnOrdinal)
-                    return mapping.SourceColumn.Ordinal;
-            }
-            Debug.Fail("Cannot find source column ordinal");
-            return -1;
         }
     }
 }

@@ -209,13 +209,13 @@ namespace DevZest.Data
             return childDataSet;
         }
 
-        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> mappings)
+        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship)
             where TChild : Model, new()
         {
             var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
-            var queryBuilder = dbSet.QueryStatement.MakeQueryBuilder(childModel, false);
-            queryBuilder.Where(parentRow, mappings);
+            var queryBuilder = dbSet.QueryStatement.MakeSelectAllQueryBuilder(childModel, false);
+            queryBuilder.Where(parentRow, parentRelationship);
             return dbSession.CreateQuery(childModel, queryBuilder);
         }
 

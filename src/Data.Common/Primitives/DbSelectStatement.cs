@@ -76,7 +76,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(sequentialKeyModel, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
         }
 
-        internal override DbQueryBuilder MakeQueryBuilder(Model model, bool isSequential)
+        internal override DbQueryBuilder MakeSelectAllQueryBuilder(Model model, bool isSequential)
         {
             var sequentialKeyIdentity = isSequential ? SequentialKeyTempTable.Model.GetIdentity(true) : null;
             if (IsAggregate)
