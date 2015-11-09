@@ -88,27 +88,6 @@ namespace DevZest.Data
             return childModel;
         }
 
-        public DbTable<T> ToTempTable(Action<T> initializer = null)
-        {
-            T model = Data.Model.Clone(_, false);
-            if (initializer != null)
-                initializer(model);
-            return QueryStatement.MakeQueryBuilder(DbSession, model, false).ToTempTable(model);
-        }
-
-        public Task<DbTable<T>> ToTempTableAsync(Action<T> initializer = null)
-        {
-            return ToTempTableAsync(initializer, CancellationToken.None);
-        }
-
-        public async Task<DbTable<T>> ToTempTableAsync(Action<T> initializer, CancellationToken cancellationToken)
-        {
-            T model = Data.Model.Clone(_, false);
-            if (initializer != null)
-                initializer(model);
-            return await QueryStatement.MakeQueryBuilder(DbSession, model, false).ToTempTableAsync(model, cancellationToken);
-        }
-
         public abstract int GetInitialRowCount();
 
         public Task<int> GetInitialRowCountAsync()
