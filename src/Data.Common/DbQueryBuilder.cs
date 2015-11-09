@@ -15,12 +15,12 @@ namespace DevZest.Data
             var result = new DbQueryBuilder(model);
             result.From(sourceModel);
             var sourceColumns = sourceModel.Columns;
-            var columns = model.Columns;
-            Debug.Assert(columns.Count <= sourceColumns.Count);
-            for (int i = 0; i < columns.Count; i++)
+            var targetColumns = model.Columns;
+            Debug.Assert(targetColumns.Count <= sourceColumns.Count);
+            for (int i = 0; i < targetColumns.Count; i++)
             {
-                var newColumn = columns[i];
-                result.SelectCore(sourceColumns[newColumn.Key], newColumn);
+                var targetColumn = targetColumns[i];
+                result.SelectCore(sourceColumns[targetColumn.Key], targetColumn);
             }
 
             return result;
