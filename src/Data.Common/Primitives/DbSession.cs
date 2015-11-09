@@ -57,7 +57,9 @@ namespace DevZest.Data.Primitives
         public DbTable<T> CreateTempTable<T>(Action<T> initializer = null)
             where T : Model, new()
         {
-            return NewTempTable<T>(initializer, true);
+            var result = NewTempTableObject(initializer);
+            CreateTable(result._, result.Name, true);
+            return result;
         }
 
         public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer = null)
@@ -66,67 +68,12 @@ namespace DevZest.Data.Primitives
             return CreateTempTableAsync(initializer, CancellationToken.None);
         }
 
-        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken cancellationToken)
+        public async Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken cancellationToken)
             where T : Model, new()
         {
-            return NewTempTableAsync(initializer, true, cancellationToken);
-        }
-
-        public DbTable<T> CreateTempTable<T>(Action<DbQueryBuilder, T> buildQuery)
-            where T : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-
-            var model = new T();
-            var builder = new DbQueryBuilder(this, model);
-            buildQuery(builder, model);
-            return builder.ToTempTable<T>(model);
-        }
-
-        public DbTable<T> CreateTempTable<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-
-            var model = new T();
-            var builder = new DbAggregateQueryBuilder(this, model);
-            buildQuery(builder, model);
-            return builder.ToTempTable<T>(model);
-        }
-
-
-        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<DbQueryBuilder, T> buildQuery)
-            where T : Model, new()
-        {
-            return CreateTempTableAsync<T>(buildQuery, CancellationToken.None);
-        }
-
-        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
-            where T : Model, new()
-        {
-            return CreateTempTableAsync<T>(buildQuery, CancellationToken.None);
-        }
-
-        public async Task<DbTable<T>> CreateTempTableAsync<T>(Action<DbQueryBuilder, T> buildQuery, CancellationToken cancellationToken)
-            where T : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-
-            var model = new T();
-            var builder = new DbQueryBuilder(this, model);
-            buildQuery(builder, model);
-            return await builder.ToTempTableAsync(model, cancellationToken);
-        }
-
-        public async Task<DbTable<T>> CreateTempTableAsync<T>(Action<DbAggregateQueryBuilder, T> buildQuery, CancellationToken cancellationToken)
-            where T : Model, new()
-        {
-            Check.NotNull(buildQuery, nameof(buildQuery));
-
-            var model = new T();
-            var builder = new DbAggregateQueryBuilder(this, model);
-            buildQuery(builder, model);
-            return await builder.ToTempTableAsync(model, cancellationToken);
+            var result = NewTempTableObject(initializer);
+            await CreateTableAsync(result._, result.Name, true, cancellationToken);
+            return result;
         }
 
         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
@@ -159,30 +106,13 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        internal DbTable<T> NewTempTable<T>(Action<T> initializer = null, bool addRowId = true)
-            where T : Model, new()
-        {
-            var result = NewTempTableObject(initializer, addRowId);
-            CreateTable(result._, result.Name, true);
-            return result;
-        }
-
-        internal async Task<DbTable<T>> NewTempTableAsync<T>(Action<T> initializer, bool addRowId, CancellationToken cancellationToken)
-            where T : Model, new()
-        {
-            var result = NewTempTableObject(initializer, addRowId);
-            await CreateTableAsync(result._, result.Name, true, cancellationToken);
-            return result;
-        }
-
-        internal DbTable<T> NewTempTableObject<T>(Action<T> initializer = null, bool addRowId = true)
+        internal DbTable<T> NewTempTableObject<T>(Action<T> initializer = null)
             where T : Model, new()
         {
             var model = new T();
             if (initializer != null)
                 initializer(model);
-            if (addRowId)
-                model.AddTempTableIdentity();
+            model.AddTempTableIdentity();
             var tableName = AssignTempTableName(model);
             return DbTable<T>.CreateTemp(model, this, tableName);
         }

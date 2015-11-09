@@ -192,7 +192,7 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return ExecuteNonQuery(GetInsertCommand(statement));
 
-            var identityOutput = this.CreateTempTable<IdentityOutput>(null, true);
+            var identityOutput = CreateTempTable<IdentityOutput>();
             var result = ExecuteNonQuery(GetInsertCommand(statement, identityOutput));
             ExecuteNonQuery(GetInsertIntoIdentityMappingsCommand(sourceData, identityMappings, autoJoin ? targetTable : null));
             ExecuteNonQuery(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));
@@ -205,7 +205,7 @@ namespace DevZest.Data.SqlServer
             if (identityMappings == null)
                 return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
 
-            var identityOutput = await this.CreateTempTableAsync<IdentityOutput>(null, true, cancellationToken);
+            var identityOutput = await CreateTempTableAsync<IdentityOutput>(null, cancellationToken);
             var result = await ExecuteNonQueryAsync(GetInsertCommand(statement, identityOutput), cancellationToken);
             await ExecuteNonQueryAsync(GetInsertIntoIdentityMappingsCommand(sourceData, identityMappings, autoJoin ? targetTable : null), cancellationToken);
             await ExecuteNonQueryAsync(GetUpdateIdentityMappingsCommand(identityMappings, identityOutput), cancellationToken);

@@ -156,7 +156,6 @@
     <Compile Include="Primitives\DbReaderInvoker.cs" />
     <Compile Include="Primitives\DbSelectStatement.cs" />
     <Compile Include="Primitives\DbSession.cs" />
-    <Compile Include="Primitives\DbSessionExtensions.cs" />
     <Compile Include="Primitives\DbSession_T.cs" />
     <Compile Include="Primitives\DbSetExtensions.cs" />
     <Compile Include="Primitives\DbTableClause.cs" />

@@ -84,7 +84,7 @@ namespace DevZest.Data
         private InsertTableResult InsertTable<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            var identityMappings = updateIdentity ? DbSession.NewTempTable<IdentityMapping>() : null;
+            var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
             var rowCount = DbSession.Insert(dbTable, this, columnMappingsBuilder, autoJoin, identityMappings);
             return new InsertTableResult(rowCount, identityMappings);
         }
@@ -92,7 +92,7 @@ namespace DevZest.Data
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var identityMappings = updateIdentity ? await DbSession.NewTempTableAsync<IdentityMapping>(null, true, cancellationToken) : null;
+            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(dbTable, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }
