@@ -1,5 +1,4 @@
-﻿
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Concurrent;
@@ -25,13 +24,63 @@ namespace DevZest.Data.SqlServer
             XPath = xPath;
         }
 
-        public _SqlXml Xml { get; private set; }
+        internal _SqlXml Xml { get; private set; }
 
         internal DbExpression SourceData { get; private set; }
 
         internal string XPath { get; private set; }
 
-        private static ConcurrentDictionary<Type, Func<_SqlXml, string, Column, Column>> s_valueColumnInvokers =
+        private sealed class XmlValueFunction<T> : ScalarFunctionExpression<T>
+        {
+            public XmlValueFunction(Column<SqlXml> column, Column xPath, Column targetColumn)
+                : base(column, xPath, targetColumn)
+            {
+            }
+
+            protected override FunctionKey FunctionKey
+            {
+                get { return FunctionKeys.XmlValue; }
+            }
+
+            protected override IModelSet GetParentModelSet()
+            {
+                return Parameters[0].ParentModelSet;
+            }
+
+            protected sealed override IModelSet GetAggregateModelSet()
+            {
+                return Parameters[0].AggregateModelSet;
+            }
+
+            public override T Eval(DataRow dataRow)
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        private sealed class ValueFunctionInvoker<T> : GenericInvoker<T, _SqlXml, Column>
+        {
+            public static readonly ValueFunctionInvoker<T> Singleton = new ValueFunctionInvoker<T>();
+
+            private ValueFunctionInvoker()
+                : base(typeof(SqlXmlModel).GetStaticMethodInfo(nameof(_Value)), () => typeof(T).ResolveColumnDataType())
+            {
+            }
+        }
+
+        private static TColumn _Value<TColumn, TValue>(TColumn targetColumn, _SqlXml xmlColumn, Column xPath)
+            where TColumn : Column<TValue>, new()
+        {
+            return new XmlValueFunction<TValue>(xmlColumn, xPath, targetColumn).MakeColumn<TColumn>();
+        }
+
+        public T Value<T>(string xPath, T asColumn)
+            where T : Column, new()
+        {
+            return ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, Xml, _String.Param(xPath, null));
+        }
+
+        private static ConcurrentDictionary<Type, Func<_SqlXml, string, Column, Column>> s_valueInvokers =
             new ConcurrentDictionary<Type, Func<_SqlXml, string, Column, Column>>();
 
         public Column this[string xPath, Column asColumn]
@@ -39,20 +88,20 @@ namespace DevZest.Data.SqlServer
             get
             {
                 var columnType = asColumn.GetType();
-                var invoker = s_valueColumnInvokers.GetOrAdd(columnType, BuildValueColumnInvoker(columnType));
+                var invoker = s_valueInvokers.GetOrAdd(columnType, BuildValueInvoker(columnType));
                 return invoker(Xml, xPath, asColumn);
             }
         }
 
-        private static T _Value<T>(_SqlXml xmlColumn, string xPath, T asColumn)
+        private static T _InvokeValue<T>(_SqlXml xmlColumn, string xPath, T asColumn)
             where T : Column, new()
         {
-            return _SqlXml.ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, xmlColumn, _String.Const(xPath).AsVarCharMax());
+            return ValueFunctionInvoker<T>.Singleton.Invoke(asColumn, xmlColumn, _String.Const(xPath).AsVarCharMax());
         }
 
-        private static Func<_SqlXml, string, Column, Column> BuildValueColumnInvoker(Type columnType)
+        private static Func<_SqlXml, string, Column, Column> BuildValueInvoker(Type columnType)
         {
-            var methodInfo = typeof(SqlXmlModel).GetStaticMethodInfo(nameof(_Value));
+            var methodInfo = typeof(SqlXmlModel).GetStaticMethodInfo(nameof(_InvokeValue));
             methodInfo = methodInfo.MakeGenericMethod(columnType);
             var param0 = Expression.Parameter(typeof(_SqlXml), methodInfo.GetParameters()[0].Name);
             var param1 = Expression.Parameter(typeof(string), methodInfo.GetParameters()[1].Name);

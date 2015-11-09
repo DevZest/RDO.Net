@@ -76,7 +76,7 @@ namespace DevZest.Data
             if (memberExpr == null)
                 throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(getter));
 
-            var propertyInfo = typeof(TModel).GetProperty(memberExpr.Member.Name, BindingFlags.Public | BindingFlags.Instance);
+            var propertyInfo = typeof(TModel).GetProperty(memberExpr.Member.Name, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo == null)
                 throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(getter));
 
