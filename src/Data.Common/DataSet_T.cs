@@ -200,8 +200,8 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChildModel));
 
             var childDataSet = (DataSet<TChild>)dataRow[childModel];
-            var mappings = childModel.ParentRelationship;
-            var childQuery = GetChildQuery(sourceData, dataRow, mappings);
+            var parentRelationship = childModel.ParentRelationship;
+            var childQuery = GetChildQuery(sourceData, dataRow, parentRelationship);
             if (childQueryInitializer != null)
                 childQueryInitializer(childQuery);
             sourceData.DbSession.FillDataSet(childQuery, childDataSet);

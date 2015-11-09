@@ -81,5 +81,31 @@ namespace DevZest.Data
                 Assert.AreEqual(json.Trim(), dataSet.ToString().Trim());
             }
         }
+
+        [TestMethod]
+        public void DataSet_CreateChild()
+        {
+            var log = new StringBuilder();
+            using (var db = OpenDb(log))
+            {
+                var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSet();
+                Assert.IsTrue(salesOrders.Count == 1);
+                salesOrders.CreateChild(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
+            }
+        }
+
+        [TestMethod]
+        public async Task DataSet_CreateChildAsync()
+        {
+            var log = new StringBuilder();
+            using (var db = await OpenDbAsync(log))
+            {
+                var salesOrders = await db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
+                Assert.IsTrue(salesOrders.Count == 1);
+                await salesOrders.CreateChildAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
+            }
+        }
     }
 }

@@ -673,7 +673,7 @@ namespace DevZest.Data
             return new DbQuery<T>(model, DbSession, selectStatement);
         }
 
-        internal void Where(DataRow parentRow, ReadOnlyCollection<ColumnMapping> columnMappings)
+        internal void Where(DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship)
         {
             var primaryKey = parentRow.Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
@@ -681,16 +681,16 @@ namespace DevZest.Data
             {
                 var column = columnSort.Column;
                 var param = column.CreateParam(parentRow).DbExpression;
-                var sourceColumnOrdinal = GetSourceColumnOrdinal(columnMappings, column.Ordinal);
+                var sourceColumnOrdinal = GetSourceColumnOrdinal(parentRelationship, column.Ordinal);
                 var sourceExpression = SelectList[sourceColumnOrdinal].Source;
                 var equalCondition = new DbBinaryExpression(BinaryExpressionKind.Equal, sourceExpression, param);
                 WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(BinaryExpressionKind.And, equalCondition, WhereExpression);
             }
         }
 
-        private static int GetSourceColumnOrdinal(ReadOnlyCollection<ColumnMapping> columnMappings, int targetColumnOrdinal)
+        private static int GetSourceColumnOrdinal(ReadOnlyCollection<ColumnMapping> relationship, int targetColumnOrdinal)
         {
-            foreach (var mapping in columnMappings)
+            foreach (var mapping in relationship)
             {
                 if (mapping.TargetColumn.Ordinal == targetColumnOrdinal)
                     return mapping.SourceColumn.Ordinal;
