@@ -442,16 +442,16 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, replacedSelectList, fromQuery.From, where, orderBy, Offset, Fetch);
         }
 
-        private static DbExpression GetSimpleQueryWhere(ColumnReplacer modelReplacer, DbExpression where1, DbExpression where2)
+        private static DbExpression GetSimpleQueryWhere(ColumnReplacer columnReplacer, DbExpression where1, DbExpression where2)
         {
             if (where2 == null)
                 return where1;
 
-            where2 = modelReplacer.Replace(where2);
+            where2 = columnReplacer.Replace(where2);
             return where1 == null ? where2 : new DbBinaryExpression(BinaryExpressionKind.And, where1, where2);
         }
 
-        private static IList<DbExpressionSort> GetSimpleQueryOrderBy(ColumnReplacer modelReplacer, ReadOnlyCollection<DbExpressionSort> orderByList)
+        private static IList<DbExpressionSort> GetSimpleQueryOrderBy(ColumnReplacer columnReplacer, ReadOnlyCollection<DbExpressionSort> orderByList)
         {
             if (orderByList == null)
                 return null;
@@ -460,7 +460,7 @@ namespace DevZest.Data
             for (int i = 0; i < orderByList.Count; i++)
             {
                 var orderBy = orderByList[i];
-                result[i] = new DbExpressionSort(modelReplacer.Replace(orderBy.Expression), orderBy.Direction);
+                result[i] = new DbExpressionSort(columnReplacer.Replace(orderBy.Expression), orderBy.Direction);
             }
 
             return result;
