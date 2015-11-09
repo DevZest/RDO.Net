@@ -52,10 +52,7 @@ namespace DevZest.Data
 
             Debug.Assert(columns.Count <= sourceColumns.Count);
             for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                SelectList.Add(column.CreateMapping(query.Select[i].Source));
-            }
+                SelectList.Add(new ColumnMapping(query.Select[i].Source, columns[i]));
             FromClause = query.From;
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
@@ -263,7 +260,7 @@ namespace DevZest.Data
 
         internal virtual void SelectCore(Column source, Column target)
         {
-            SelectList.Add(target.CreateMapping(source));
+            SelectList.Add(new ColumnMapping(source, target));
         }
 
         #endregion
@@ -411,7 +408,7 @@ namespace DevZest.Data
                 var target = selectItem.TargetColumn;
 
                 Debug.Assert(target.ParentModel == Model);
-                replacedSelectList[i] = target.CreateMapping(columnReplacer.Replace(source));
+                replacedSelectList[i] = new ColumnMapping(columnReplacer.Replace(source), target);
             }
 
             var where = GetSimpleQueryWhere(columnReplacer, fromQuery.Where, WhereExpression);
@@ -478,7 +475,7 @@ namespace DevZest.Data
             for (int i = 0; i < allColumns.Count; i++)
             {
                 if (result[i].TargetColumn == null)
-                    result[i] = allColumns[i].CreateMapping(DbConstantExpression.Null);
+                    result[i] = new ColumnMapping(DbConstantExpression.Null, allColumns[i]);
             }
 
             if (parentSequentialKeyTempTable != null)
@@ -486,14 +483,14 @@ namespace DevZest.Data
                 _Int32 targetColumn = Model.GetSysParentRowIdColumn(createIfNotExist: true);
                 var sourceColumn = GetSequentialKeyColumn(parentSequentialKeyTempTable);
                 if (countParentRowId > 0)
-                    result[indexParentRowId] = targetColumn.CreateMapping(sourceColumn);
+                    result[indexParentRowId] = new ColumnMapping(sourceColumn, targetColumn);
             }
 
             if (SequentialKeyColumn != null)
             {
                 var sourceColumn = SequentialKeyColumn;
                 _Int32 targetColumn = Model.GetSysRowIdColumn(createIfNotExist: true);
-                result[indexRowId] = targetColumn.CreateMapping(sourceColumn);
+                result[indexRowId] = new ColumnMapping(sourceColumn, targetColumn);
             }
 
             return result;
@@ -548,7 +545,7 @@ namespace DevZest.Data
                 var mapping = relationship[i];
                 var source = normalizedSelectList[mapping.SourceColumn.Ordinal].Source;
                 var targetColumn = GetCorrespondingPrimaryKeyColumn(mapping.TargetColumn, targetModel);
-                result[i] = targetColumn.CreateMapping(source);
+                result[i] = new ColumnMapping(source, targetColumn);
             }
             return new ReadOnlyCollection<ColumnMapping>(result);
         }

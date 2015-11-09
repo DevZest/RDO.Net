@@ -118,16 +118,6 @@ namespace DevZest.Data
         /// <summary>Gets the <see cref="DbExpression"/> of this column for SQL generation.</summary>
         public abstract DbExpression DbExpression { get; }
 
-        internal ColumnMapping CreateMapping(DbExpression sourceExpression)
-        {
-            return new ColumnMapping(sourceExpression, this);
-        }
-
-        internal ColumnMapping CreateMapping(Column sourceColumn)
-        {
-            return new ColumnMapping(sourceColumn, this);
-        }
-
         /// <summary>Gets the data type of this <see cref="Column"/>.</summary>
         public abstract Type DataType { get; }
 

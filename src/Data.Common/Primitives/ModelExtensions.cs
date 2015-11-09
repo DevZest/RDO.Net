@@ -103,7 +103,7 @@ namespace DevZest.Data.Primitives
                     continue;
                 var sourceColumn = sourceColumns[column.Key];
                 if (sourceColumn != null)
-                    result.Add(column.CreateMapping(sourceColumn));
+                    result.Add(new ColumnMapping(sourceColumn, column));
             }
 
             return result;

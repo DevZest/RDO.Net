@@ -39,7 +39,7 @@ namespace DevZest.Data
             {
                 var sourceColumn = source[i].Column;
                 var targetColumn = target[i].Column;
-                result.Add(targetColumn.CreateMapping(sourceColumn));
+                result.Add(new ColumnMapping(sourceColumn, targetColumn));
             }
 
             return result;

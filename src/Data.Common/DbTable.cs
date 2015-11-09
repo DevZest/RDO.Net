@@ -56,7 +56,7 @@ namespace DevZest.Data
             for (int i = 0; i < selectList.Length; i++)
             {
                 var column = columns[i];
-                selectList[i] = column.CreateMapping(column);
+                selectList[i] = new ColumnMapping(column, column);
             }
             return new DbSelectStatement(this.Model, selectList, this.FromClause, null, GetOrderBy(), -1, -1);
         }
