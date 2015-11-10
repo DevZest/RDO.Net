@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
-    public class DbAggregateQueryBuilder2 : DbQueryBuilder2
+    public class DbAggregateQueryBuilder : DbQueryBuilder
     {
         private class GroupByCollection : ReadOnlyCollection<DbExpression>
         {
@@ -23,13 +23,13 @@ namespace DevZest.Data
             }
         }
 
-        internal DbAggregateQueryBuilder2(Model model)
+        internal DbAggregateQueryBuilder(Model model)
             : base(model)
         {
             AutoGroupBy = true;
         }
 
-        internal DbAggregateQueryBuilder2(Model model, DbSelectStatement sourceData)
+        internal DbAggregateQueryBuilder(Model model, DbSelectStatement sourceData)
             : base(model, sourceData)
         {
             Debug.Assert(sourceData.IsAggregate);
@@ -38,14 +38,14 @@ namespace DevZest.Data
             HavingExpression = sourceData.Having;
         }
 
-        public new DbAggregateQueryBuilder2 From<T>(DbSet<T> dbSet, out T model)
+        public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T model)
             where T : Model, new()
         {
             base.From(dbSet, out model);
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -53,7 +53,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -61,7 +61,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -69,21 +69,21 @@ namespace DevZest.Data
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 CrossJoin<T>(DbSet<T> dbSet, out T model)
+        public new DbAggregateQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
             where T : Model, new()
         {
             base.CrossJoin(dbSet, out model);
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 AutoSelect()
+        public new DbAggregateQueryBuilder AutoSelect()
         {
             base.AutoSelect();
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "For fluent API design")]
-        public new DbAggregateQueryBuilder2 Select<T>(T source, T target)
+        public new DbAggregateQueryBuilder Select<T>(T source, T target)
             where T : Column, new()
         {
             base.Select(source, target);
@@ -91,14 +91,14 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "For fluent API design")]
-        public new DbAggregateQueryBuilder2 Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
+        public new DbAggregateQueryBuilder Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
             where T : Column, new()
         {
             base.Select(sourceColumn, adhoc, name);
             return this;
         }
 
-        public new DbAggregateQueryBuilder2 Where(_Boolean condition)
+        public new DbAggregateQueryBuilder Where(_Boolean condition)
         {
             base.Where(condition);
             return this;
@@ -112,14 +112,14 @@ namespace DevZest.Data
             get { return _groupByList; }
         }
 
-        public DbAggregateQueryBuilder2 GroupBy(Column column)
+        public DbAggregateQueryBuilder GroupBy(Column column)
         {
             VerifyModelSet(column, nameof(column), false);
             _groupByList.Add(EliminateSubQuery(column.DbExpression));
             return this;
         }
 
-        public DbAggregateQueryBuilder2 Having(_Boolean condition)
+        public DbAggregateQueryBuilder Having(_Boolean condition)
         {
             VerifyModelSet(condition, nameof(condition));
             HavingExpression = EliminateSubQuery(condition.DbExpression);
@@ -128,7 +128,7 @@ namespace DevZest.Data
 
         public DbExpression HavingExpression { get; private set; }
 
-        public new DbAggregateQueryBuilder2 OrderBy(params ColumnSort[] orderByList)
+        public new DbAggregateQueryBuilder OrderBy(params ColumnSort[] orderByList)
         {
             base.OrderBy(orderByList);
             return this;

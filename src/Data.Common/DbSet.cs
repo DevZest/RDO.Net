@@ -58,17 +58,17 @@ namespace DevZest.Data
             return DbSession.CreateQuery(newModel, queryBuilder);
         }
 
-        internal DbQueryBuilder2 GetSimpleQueryBuilder()
+        internal DbQueryBuilder GetSimpleQueryBuilder()
         {
             T newModel;
             return GetSimpleQueryBuilder(out newModel);
         }
 
-        private DbQueryBuilder2 GetSimpleQueryBuilder(out T newModel)
+        private DbQueryBuilder GetSimpleQueryBuilder(out T newModel)
         {
             var oldModel = _;
             newModel = Data.Model.Clone(oldModel, false);
-            return new DbQueryBuilder2(newModel, oldModel);
+            return new DbQueryBuilder(newModel, oldModel);
         }
 
         internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)
@@ -167,7 +167,7 @@ namespace DevZest.Data
 
         private DbQuery<Adhoc> BuildCountQuery()
         {
-            return DbSession.CreateQuery((DbAggregateQueryBuilder2 builder, Adhoc adhoc) =>
+            return DbSession.CreateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
             {
                 T m;
                 builder.From(this, out m)

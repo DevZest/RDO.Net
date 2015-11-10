@@ -89,62 +89,62 @@ namespace DevZest.Data
             return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeQueryBuilder(model));
         }
 
-        public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder2, TChild> buildQuery)
+        public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            var queryBuilder = new DbQueryBuilder2(childModel);
+            var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
-        public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder2, TChild> buildQuery)
+        public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            var queryBuilder = new DbAggregateQueryBuilder2(childModel);
+            var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
-        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder2, TChild> buildQuery)
+        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
             return CreateChildAsync(getChildModel, buildQuery, CancellationToken.None);
         }
 
-        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder2, TChild> buildQuery)
+        public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery)
             where TChild : Model, new()
         {
             return CreateChildAsync(getChildModel, buildQuery, CancellationToken.None);
         }
 
-        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder2, TChild> buildQuery, CancellationToken cancellationToken)
+        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            var queryBuilder = new DbQueryBuilder2(childModel);
+            var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder);
         }
 
-        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder2, TChild> buildQuery, CancellationToken cancellationToken)
+        public async Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, Action<DbAggregateQueryBuilder, TChild> buildQuery, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            var queryBuilder = new DbAggregateQueryBuilder2(childModel);
+            var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder);
         }

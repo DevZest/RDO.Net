@@ -8,9 +8,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public class DbQueryBuilder2
+    public class DbQueryBuilder
     {
-        internal DbQueryBuilder2(Model model)
+        internal DbQueryBuilder(Model model)
         {
             Debug.Assert(model != null && model.DataSource == null);
 
@@ -19,7 +19,7 @@ namespace DevZest.Data
             Fetch = -1;
         }
 
-        internal DbQueryBuilder2(Model model, DbSelectStatement query)
+        internal DbQueryBuilder(Model model, DbSelectStatement query)
             : this(model)
         {
             var sourceModel = query.Model;
@@ -40,7 +40,7 @@ namespace DevZest.Data
             OrderByList = query.OrderBy;
         }
 
-        internal DbQueryBuilder2(Model model, Model sourceModel)
+        internal DbQueryBuilder(Model model, Model sourceModel)
             : this(model)
         {
             From(sourceModel);
@@ -64,7 +64,7 @@ namespace DevZest.Data
 
         public DbFromClause FromClause { get; private set; }
 
-        public DbQueryBuilder2 From<T>(DbSet<T> dbSet, out T model)
+        public DbQueryBuilder From<T>(DbSet<T> dbSet, out T model)
             where T : Model, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
@@ -103,7 +103,7 @@ namespace DevZest.Data
             }
         }
 
-        public DbQueryBuilder2 InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -111,7 +111,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder2 LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -119,7 +119,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder2 RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
+        public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
             where TKey : ModelKey
         {
@@ -210,7 +210,7 @@ namespace DevZest.Data
             return result ?? relationship;
         }
 
-        public DbQueryBuilder2 CrossJoin<T>(DbSet<T> dbSet, out T model)
+        public DbQueryBuilder CrossJoin<T>(DbSet<T> dbSet, out T model)
             where T : Model, new()
         {
             Check.NotNull(dbSet, nameof(dbSet));
@@ -263,7 +263,7 @@ namespace DevZest.Data
             get { return _selectList; }
         }
 
-        public DbQueryBuilder2 AutoSelect()
+        public DbQueryBuilder AutoSelect()
         {
             foreach (var targetColumn in Model.Columns)
             {
@@ -280,7 +280,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder2 Select<T>(T source, T target)
+        public DbQueryBuilder Select<T>(T source, T target)
             where T : Column, new()
         {
             VerifyModelSet(source, nameof(source));
@@ -289,7 +289,7 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder2 Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
+        public DbQueryBuilder Select<T>(T sourceColumn, Adhoc adhoc, string name = null)
             where T : Column, new()
         {
             return Select(sourceColumn, adhoc.AddColumn(sourceColumn, false, c => c.DbColumnName = string.IsNullOrEmpty(name) ? sourceColumn.DbColumnName : name));
@@ -330,7 +330,7 @@ namespace DevZest.Data
 
         public DbExpression WhereExpression { get; private set; }
 
-        public DbQueryBuilder2 Where(_Boolean condition)
+        public DbQueryBuilder Where(_Boolean condition)
         {
             Check.NotNull(condition, nameof(condition));
             VerifyModelSet(condition, nameof(condition));
@@ -341,7 +341,7 @@ namespace DevZest.Data
 
         internal void VerifyModelSet(Column column, string exceptionParamName)
         {
-            VerifyModelSet(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder2));
+            VerifyModelSet(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder));
         }
 
         internal void VerifyModelSet(Column column, string paramName, bool allowsAggregate)
@@ -359,12 +359,12 @@ namespace DevZest.Data
 
         public int Fetch { get; private set; }
 
-        public DbQueryBuilder2 OrderBy(params ColumnSort[] orderByList)
+        public DbQueryBuilder OrderBy(params ColumnSort[] orderByList)
         {
             return OrderBy(-1, -1, orderByList);
         }
 
-        public DbQueryBuilder2 OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
+        public DbQueryBuilder OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
         {
             Check.NotNull(orderByList, nameof(orderByList));
             VerifyOrderByList(orderByList);

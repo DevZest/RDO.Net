@@ -60,7 +60,7 @@ namespace DevZest.Data
             var log = new StringBuilder();
             using (var db = OpenDb(log))
             {
-                var json = db.CreateQuery((DbQueryBuilder2 builder, Adhoc adhoc) =>
+                var json = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
                     SalesOrder o;
                     builder.From(db.SalesOrders, out o)

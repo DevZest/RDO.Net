@@ -67,7 +67,7 @@
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="DataValidationCollection.cs" />
     <Compile Include="DataValidationError.cs" />
-    <Compile Include="DbAggregateQueryBuilder2.cs" />
+    <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
@@ -76,7 +76,7 @@
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSourceKind.cs" />
     <Compile Include="DbQuery.cs" />
-    <Compile Include="DbQueryBuilder2.cs" />
+    <Compile Include="DbQueryBuilder.cs" />
     <Compile Include="DbReader.cs" />
     <Compile Include="DbSet.cs" />
     <Compile Include="DbTable.cs" />

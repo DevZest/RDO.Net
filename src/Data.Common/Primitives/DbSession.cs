@@ -77,7 +77,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder2 builder, DbTable<SequentialKeyModel> sequentialKeys = null)
+        internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder builder, DbTable<SequentialKeyModel> sequentialKeys = null)
             where T : Model, new()
         {
             Debug.Assert(model == builder.Model);
@@ -86,24 +86,24 @@ namespace DevZest.Data.Primitives
         }
 
 
-        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder2, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbQueryBuilder2(model);
+            var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder);
         }
 
-        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder2, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbAggregateQueryBuilder2(model);
+            var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder);
         }
