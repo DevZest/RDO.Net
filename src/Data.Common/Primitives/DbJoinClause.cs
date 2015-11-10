@@ -1,17 +1,19 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Primitives
 {
     public sealed class DbJoinClause : DbFromClause
     {
-        public DbJoinClause(DbJoinKind kind, DbFromClause left, DbFromClause right, ReadOnlyCollection<ColumnMapping> on)
+        public DbJoinClause(DbJoinKind kind, DbFromClause left, DbFromClause right, IList<ColumnMapping> on)
         {
             Kind = kind;
             Left = left;
             Right = right;
-            On = on;
+            var readonlyCollection = on as ReadOnlyCollection<ColumnMapping>;
+            On = readonlyCollection != null ? readonlyCollection : new ReadOnlyCollection<ColumnMapping>(on);
         }
 
         public DbJoinKind Kind { get; private set; }

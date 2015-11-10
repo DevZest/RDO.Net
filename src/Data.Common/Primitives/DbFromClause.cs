@@ -8,14 +8,9 @@ namespace DevZest.Data.Primitives
 
         public abstract T Accept<T>(DbFromClauseVisitor<T> visitor);
 
-        internal virtual DbExpression GetSubQueryEliminatedSource(DbExpression source)
+        internal virtual SubQueryEliminator SubQueryEliminator
         {
-            return source;
-        }
-
-        internal virtual DbFromClause SubQueryEliminatedFromClause
-        {
-            get { return this; }
+            get { return null; }
         }
     }
 }

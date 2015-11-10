@@ -692,5 +692,22 @@ namespace DevZest.Data
 
             Validations.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
         }
+
+        internal SequentialKeyModel ParentSequentialKeyModel
+        {
+            get
+            {
+                var parentModel = ParentModel;
+                if (parentModel == null)
+                    return null;
+
+                var parentQuery = parentModel.DataSource as IDbSet;
+                if (parentQuery == null || parentQuery.Kind != DataSourceKind.DbQuery)
+                    return null;
+
+                var result = parentQuery.QueryStatement.SequentialKeyTempTable._;
+                return result;
+            }
+        }
     }
 }

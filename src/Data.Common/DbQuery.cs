@@ -45,10 +45,14 @@ namespace DevZest.Data
             {
                 if (_sequentialQueryStatement == null)
                 {
-                    if (QueryStatement.SequentialKeyTempTable == null)
+                    var sequentialKeys = QueryStatement.SequentialKeyTempTable;
+                    if (sequentialKeys == null)
                         _sequentialQueryStatement = _originalQueryStatement;
                     else
-                        _sequentialQueryStatement = _originalQueryStatement.MakeSelectAllQueryBuilder(Model.Clone(false), true).BuildQueryStatement();
+                    {
+                        var queryBuilder = _originalQueryStatement.MakeQueryBuilder(Model.Clone(false));
+                        _sequentialQueryStatement = queryBuilder.BuildQueryStatement(sequentialKeys);
+                    }
                 }
                 return _sequentialQueryStatement;
             }
@@ -66,7 +70,7 @@ namespace DevZest.Data
             var model = VerifyCreateChild(getChildModel);
 
             QueryStatement.EnsureSequentialTempTableCreated(DbSession);
-            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeSelectAllQueryBuilder(model, false));
+            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeQueryBuilder(model));
         }
 
         public Task<DbQuery<TChild>> CreateChildAsync<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
@@ -82,7 +86,7 @@ namespace DevZest.Data
             var model = VerifyCreateChild(getChildModel);
 
             await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeSelectAllQueryBuilder(model, false));
+            return DbSession.CreateQuery(model, sourceData.QueryStatement.MakeQueryBuilder(model));
         }
 
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, Action<DbQueryBuilder, TChild> buildQuery)

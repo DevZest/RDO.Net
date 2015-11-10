@@ -214,9 +214,9 @@ namespace DevZest.Data
         {
             var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
-            var queryBuilder = dbSet.QueryStatement.MakeSelectAllQueryBuilder(childModel, false);
+            var queryBuilder = dbSet.QueryStatement.MakeQueryBuilder(childModel);
             queryBuilder.Where(parentRow, parentRelationship);
-            return dbSession.CreateQuery(childModel, queryBuilder);
+            return dbSession.CreateQuery(childModel, queryBuilder, null);
         }
 
         public async Task<DataSet<TChild>> CreateChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<DbQuery<TChild>> childQueryInitializer, CancellationToken cancellationToken)

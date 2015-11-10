@@ -238,7 +238,7 @@
     <value>The expression contains parent model '{0}' which does not exist in the source queries.</value>
   </data>
   <data name="DbQueryBuilder_VerifyTargetColumn" xml:space="preserve">
-    <value>The target column has been selected already.</value>
+    <value>Invalid targetColumn. It must be a column of target model, and cannot be selected already.</value>
   </data>
   <data name="InvalidChildModel" xml:space="preserve">
     <value>The child model's ParentModel must be the same as this object's Model.</value>

@@ -67,6 +67,7 @@
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="DataValidationCollection.cs" />
     <Compile Include="DataValidationError.cs" />
+    <Compile Include="DbAggregateQueryBuilder2.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="DataSourceKind.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbQuery.cs" />
+    <Compile Include="DbQueryBuilder2.cs" />
     <Compile Include="DbQueryBuilder.cs" />
     <Compile Include="DbReader.cs" />
     <Compile Include="DbSet.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Primitives\ColumnValidationAttribute.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\IColumnValidationFactory.cs" />
+    <Compile Include="Primitives\SubQueryEliminator.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="JasonValueType.cs" />
     <Compile Include="JsonValue.cs" />

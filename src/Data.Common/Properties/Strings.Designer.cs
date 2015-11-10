@@ -332,7 +332,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The target column has been selected already.
+        /// Invalid targetColumn. It must be a column of target model, and cannot be selected already.
         /// </summary>
         public static string DbQueryBuilder_VerifyTargetColumn
         {

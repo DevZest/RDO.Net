@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Utilities;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Primitives
@@ -13,12 +14,18 @@ namespace DevZest.Data.Primitives
         }
 
         public DbFunctionExpression(FunctionKey functionKey, params DbExpression[] paramList)
+            : this(functionKey, (IList<DbExpression>)paramList)
+        {
+        }
+
+        public DbFunctionExpression(FunctionKey functionKey, IList<DbExpression> paramList)
         {
             Check.NotNull(functionKey, nameof(functionKey));
             Check.NotNull(paramList, nameof(paramList));
 
             FunctionKey = functionKey;
-            ParamList = new ReadOnlyCollection<DbExpression>(paramList);
+            var readonlyCollection = paramList as ReadOnlyCollection<DbExpression>;
+            ParamList = readonlyCollection != null ? readonlyCollection : new ReadOnlyCollection<DbExpression>(paramList);
         }
 
         public FunctionKey FunctionKey { get; private set; }
