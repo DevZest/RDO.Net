@@ -302,7 +302,7 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.DbQueryBuilder_VerifyTargetColumn, nameof(target));
         }
 
-        private void SelectCore(Column source, Column target)
+        internal void SelectCore(Column source, Column target)
         {
             _targetColumns.Add(target);
 
@@ -341,7 +341,7 @@ namespace DevZest.Data
 
         internal void VerifyModelSet(Column column, string exceptionParamName)
         {
-            VerifyModelSet(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder));
+            VerifyModelSet(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder2));
         }
 
         internal void VerifyModelSet(Column column, string paramName, bool allowsAggregate)
@@ -564,7 +564,7 @@ namespace DevZest.Data
 
         private IList<ColumnMapping> NormalizeSelectList()
         {
-            var result = new ColumnMapping[SelectList.Count];
+            var result = new ColumnMapping[Model.Columns.Count];
 
             foreach (var selectItem in SelectList)
                 result[selectItem.TargetColumn.Ordinal] = selectItem;

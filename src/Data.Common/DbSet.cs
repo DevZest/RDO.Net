@@ -58,17 +58,17 @@ namespace DevZest.Data
             return DbSession.CreateQuery(newModel, queryBuilder);
         }
 
-        internal DbQueryBuilder GetSimpleQueryBuilder()
+        internal DbQueryBuilder2 GetSimpleQueryBuilder()
         {
             T newModel;
             return GetSimpleQueryBuilder(out newModel);
         }
 
-        private DbQueryBuilder GetSimpleQueryBuilder(out T newModel)
+        private DbQueryBuilder2 GetSimpleQueryBuilder(out T newModel)
         {
             var oldModel = _;
             newModel = Data.Model.Clone(oldModel, false);
-            return DbQueryBuilder.SelectAll(newModel, oldModel);
+            return new DbQueryBuilder2(newModel, oldModel);
         }
 
         internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)
@@ -148,8 +148,8 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
 
             var model = Data.Model.Clone(_, false);
-            var queryStatement1 = this.GetSimpleQueryBuilder().BuildQueryStatement();
-            var queryStatement2 = dbSet.GetSimpleQueryBuilder().BuildQueryStatement();
+            var queryStatement1 = this.GetSimpleQueryBuilder().BuildQueryStatement(null);
+            var queryStatement2 = dbSet.GetSimpleQueryBuilder().BuildQueryStatement(null);
             return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
         }
 
@@ -167,7 +167,7 @@ namespace DevZest.Data
 
         private DbQuery<Adhoc> BuildCountQuery()
         {
-            return DbSession.CreateQuery((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+            return DbSession.CreateQuery((DbAggregateQueryBuilder2 builder, Adhoc adhoc) =>
             {
                 T m;
                 builder.From(this, out m)

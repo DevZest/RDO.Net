@@ -10,7 +10,7 @@ namespace DevZest.Data
     {
         private static DbQuery<SalesOrder> CreateSalesOrdersQuery(Db db)
         {
-            return db.CreateQuery((DbQueryBuilder builder, SalesOrder model) =>
+            return db.CreateQuery((DbQueryBuilder2 builder, SalesOrder model) =>
             {
                 SalesOrder h;
                 builder.From(db.SalesOrders, out h)
@@ -20,7 +20,7 @@ namespace DevZest.Data
             });
         }
 
-        private static void GetSalesOrderDetails(Db db, DbQueryBuilder queryBuilder, SalesOrderDetail model)
+        private static void GetSalesOrderDetails(Db db, DbQueryBuilder2 queryBuilder, SalesOrderDetail model)
         {
             SalesOrderDetail d;
             queryBuilder.From(db.SalesOrderDetails, out d)
@@ -35,7 +35,7 @@ namespace DevZest.Data
             using (var db = OpenDb(log))
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
+                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbQueryBuilder2 builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
 
                 Assert.AreEqual(2, salesOrders.GetInitialRowCount());
                 Assert.AreEqual(3, salesOrderDetails.GetInitialRowCount());
@@ -88,7 +88,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
                 var salesOrderDetails = await salesOrders.CreateChildAsync(x => x.SalesOrderDetails,
-                    (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
+                    (DbQueryBuilder2 builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
 
                 Assert.AreEqual(2, await salesOrders.GetInitialRowCountAsync());
                 Assert.AreEqual(3, await salesOrderDetails.GetInitialRowCountAsync());
@@ -133,7 +133,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
 
-        private static void GetDistinctSalesOrderDetails(Db db, DbAggregateQueryBuilder queryBuilder, SalesOrderDetail model)
+        private static void GetDistinctSalesOrderDetails(Db db, DbAggregateQueryBuilder2 queryBuilder, SalesOrderDetail model)
         {
             SalesOrderDetail d;
             queryBuilder.From(db.SalesOrderDetails, out d)
@@ -148,7 +148,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             using (var db = OpenDb(log))
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) => GetDistinctSalesOrderDetails(db, builder, model));
+                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder2 builder, SalesOrderDetail model) => GetDistinctSalesOrderDetails(db, builder, model));
 
                 Assert.AreEqual(2, salesOrders.GetInitialRowCount());
                 Assert.AreEqual(3, salesOrderDetails.GetInitialRowCount());

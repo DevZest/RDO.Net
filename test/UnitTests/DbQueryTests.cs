@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery((DbQueryBuilder builder, ProductDescription model) =>
+                var query = db.CreateQuery((DbQueryBuilder2 builder, ProductDescription model) =>
                 {
                     ProductDescription d;
                     builder.From(db.ProductDescriptions, out d)
@@ -43,7 +43,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID] DESC;
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateQuery((DbQueryBuilder2 builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
                     builder.From(db.ProductDescriptions, out d)
@@ -62,7 +62,7 @@ FROM [SalesLT].[ProductDescription] [ProductDescription];
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateQuery((DbQueryBuilder2 builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
                     builder.From(db.ProductDescriptions, out d)
@@ -87,7 +87,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateQuery((DbQueryBuilder2 builder, Adhoc adhoc) =>
                 {
                     ProductDescription d;
                     builder.From(db.ProductDescriptions, out d)
@@ -101,7 +101,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateQuery<Adhoc>((DbAggregateQueryBuilder2 builder, Adhoc adhoc) =>
                 {
                     SalesOrder h;
                     SalesOrderDetail d;
@@ -135,7 +135,7 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrder
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
+                var query = db.CreateQuery((DbQueryBuilder2 builder, Adhoc adhoc) =>
                 {
                     SalesOrderDetail d;
                     SalesOrder h;
@@ -179,7 +179,7 @@ ORDER BY [SalesOrderDetail].[SalesOrderID], [SalesOrderDetail].[SalesOrderDetail
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var query = db.Products.Where(x => x.ProductID > _Int32.Const(500));
-                var query2 = db.CreateQuery((DbQueryBuilder builder, Product model) =>
+                var query2 = db.CreateQuery((DbQueryBuilder2 builder, Product model) =>
                 {
                     Product p;
                     builder.From(query, out p)
@@ -248,7 +248,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) =>
+                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder2 builder, SalesOrderDetail model) =>
                 {
                     SalesOrderDetail d;
                     builder.From(db.SalesOrderDetails, out d)
@@ -483,7 +483,7 @@ ORDER BY [SalesOrder].[SalesOrderID];
             var sqlVersion = SqlVersion.Sql11;
             using (var db = Db.Create(sqlVersion))
             {
-                var salesOrders = db.CreateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
+                var salesOrders = db.CreateQuery((DbAggregateQueryBuilder2 queryBuilder, SalesOrder model) =>
                 {
                     SalesOrder h;
                     queryBuilder.From(db.SalesOrders, out h)

@@ -94,24 +94,24 @@ namespace DevZest.Data.Primitives
         }
 
 
-        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder2, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbQueryBuilder(model);
+            var builder = new DbQueryBuilder2(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder);
         }
 
-        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder2, T> buildQuery)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = new T();
-            var builder = new DbAggregateQueryBuilder(model);
+            var builder = new DbAggregateQueryBuilder2(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder);
         }
