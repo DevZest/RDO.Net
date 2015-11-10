@@ -172,5 +172,99 @@ namespace DevZest.Data.Primitives
         {
             return Select[ordinal].Source;
         }
+
+        private class SubQueryEliminator : DbExpressionVisitor<DbExpression>
+        {
+            public SubQueryEliminator(DbSelectStatement selectStatement)
+            {
+                Debug.Assert(selectStatement != null);
+                _selectStatement = selectStatement;
+            }
+
+            private readonly DbSelectStatement _selectStatement;
+
+            public DbExpression GetSource(DbExpression source)
+            {
+                return source.Accept(this);
+            }
+
+            public DbFromClause FromClause
+            {
+                get { return _selectStatement.From; }
+            }
+
+            public override DbExpression Visit(DbBinaryExpression expression)
+            {
+                return new DbBinaryExpression(expression.Kind, expression.Left.Accept(this), expression.Right.Accept(this));
+            }
+
+            DbExpression[] Replace(IList<DbExpression> expressions)
+            {
+                var result = new DbExpression[expressions.Count];
+                for (int i = 0; i < expressions.Count; i++)
+                    result[i] = expressions[i].Accept(this);
+                return result;
+            }
+
+            public override DbExpression Visit(DbCaseExpression expression)
+            {
+                return new DbCaseExpression(expression.On.Accept(this), Replace(expression.When), Replace(expression.Then), expression.Else.Accept(this));
+            }
+
+            public override DbExpression Visit(DbCastExpression expression)
+            {
+                return new DbCastExpression(expression.Operand.Accept(this), expression.SourceDataType, expression.TargetColumn);
+            }
+
+            public override DbExpression Visit(DbColumnExpression expression)
+            {
+                var column = expression.Column;
+                Debug.Assert(column.ParentModel == _selectStatement.Model);
+                return _selectStatement.Select[column.Ordinal].Source;
+            }
+
+            public override DbExpression Visit(DbConstantExpression expression)
+            {
+                return expression;
+            }
+
+            public override DbExpression Visit(DbFunctionExpression expression)
+            {
+                return expression.ParamList.Count == 0 ? expression : new DbFunctionExpression(expression.FunctionKey, Replace(expression.ParamList));
+            }
+
+            public override DbExpression Visit(DbParamExpression expression)
+            {
+                return expression;
+            }
+
+            public override DbExpression Visit(DbUnaryExpression expression)
+            {
+                return new DbUnaryExpression(expression.Kind, expression.Operand.Accept(this));
+            }
+        }
+
+        private SubQueryEliminator _subQueryEliminator;
+        
+        private void InitSubQueryEliminator()
+        {
+            if (IsSimple && _subQueryEliminator == null)
+                _subQueryEliminator = new SubQueryEliminator(this);
+        }
+
+        internal override DbExpression GetSubQueryEliminatedSource(DbExpression source)
+        {
+            InitSubQueryEliminator();
+            return _subQueryEliminator == null ? base.GetSubQueryEliminatedSource(source) : _subQueryEliminator.GetSource(source);
+        }
+
+        internal override DbFromClause SubQueryEliminatedFromClause
+        {
+            get
+            {
+                InitSubQueryEliminator();
+                return _subQueryEliminator == null ? base.SubQueryEliminatedFromClause : _subQueryEliminator.FromClause;
+            }
+        }
     }
 }
