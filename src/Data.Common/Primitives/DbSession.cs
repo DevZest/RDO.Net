@@ -77,14 +77,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder builder)
-            where T : Model, new()
-        {
-            Debug.Assert(model == builder.Model);
-            var selectStatement = builder.BuildQueryStatement();
-            return new DbQuery<T>(model, this, selectStatement);
-        }
-
         internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder2 builder, DbTable<SequentialKeyModel> sequentialKeys = null)
             where T : Model, new()
         {

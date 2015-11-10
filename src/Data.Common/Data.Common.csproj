@@ -75,10 +75,8 @@
     <Compile Include="DataSet_T.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSourceKind.cs" />
-    <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbQuery.cs" />
     <Compile Include="DbQueryBuilder2.cs" />
-    <Compile Include="DbQueryBuilder.cs" />
     <Compile Include="DbReader.cs" />
     <Compile Include="DbSet.cs" />
     <Compile Include="DbTable.cs" />
