@@ -26,7 +26,7 @@ namespace DevZest.Data
             Debug.Assert(model.GetType() == sourceModel.GetType());
 
             Column sysParentRowId = sourceModel.GetSysParentRowIdColumn(createIfNotExist: false);
-            if (sysParentRowId != null)
+            if (sysParentRowId != null && sysParentRowId.Ordinal < query.Select.Count)
                 model.GetSysParentRowIdColumn(createIfNotExist: true);
 
             var columns = model.Columns;
