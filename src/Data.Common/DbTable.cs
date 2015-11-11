@@ -155,7 +155,7 @@ namespace DevZest.Data
 
         private IList<ColumnMapping> GetKeyMappings(Model sourceModel)
         {
-            var targetKey = this._.PrimaryKey;
+            var targetKey = Model.PrimaryKey;
             if (targetKey == null)
                 throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(Model));
 
@@ -163,10 +163,10 @@ namespace DevZest.Data
             if (sourceKey == null)
                 throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(sourceModel));
 
-            if (targetKey.Count() != sourceKey.Count())
+            if (targetKey.Count != sourceKey.Count)
                 throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
 
-            var result = new ColumnMapping[targetKey.Count()];
+            var result = new ColumnMapping[targetKey.Count];
             for (int i = 0; i < result.Length; i++)
             {
                 var targetColumn = targetKey[i].Column;

@@ -8,38 +8,20 @@ namespace DevZest.Data
 {
     partial class DbQueryBuilder
     {
-        internal static DbQueryStatement BuildQueryStatement(Model model, DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
-        {
-            var result = new DbQueryBuilder(model, query);
-            if (action != null)
-                action(result);
-            return result.BuildQueryStatement(sequentialKeys);
-        }
-
-        internal static DbQueryStatement BuildQueryStatement(Model model, Model sourceModel, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
-        {
-            var result = new DbQueryBuilder(model, sourceModel);
-            if (action != null)
-                action(result);
-            return result.BuildQueryStatement(sequentialKeys);
-        }
-
-
-        internal DbQueryBuilder(Model model, DbSelectStatement query)
-            : this(model)
+        internal virtual DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
             var sourceModel = query.Model;
-            Debug.Assert(model.GetType() == sourceModel.GetType());
+            Debug.Assert(Model.GetType() == sourceModel.GetType());
 
             Column sysParentRowId = sourceModel.GetSysParentRowIdColumn(createIfNotExist: false);
             if (sysParentRowId != null && sysParentRowId.Ordinal < query.Select.Count)
-                model.GetSysParentRowIdColumn(createIfNotExist: true);
+                Model.GetSysParentRowIdColumn(createIfNotExist: true);
 
             Column sysRowId = sourceModel.GetSysRowIdColumn(createIfNotExist: false);
             if (sysRowId != null && sysRowId.Ordinal < query.Select.Count)
-                model.GetSysRowIdColumn(createIfNotExist: true);
+                Model.GetSysRowIdColumn(createIfNotExist: true);
 
-            var columns = model.Columns;
+            var columns = Model.Columns;
             var sourceColumns = sourceModel.Columns;
 
             Debug.Assert(columns.Count <= sourceColumns.Count);
@@ -49,20 +31,29 @@ namespace DevZest.Data
             FromClause = query.From;
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
+
+            if (action != null)
+                action(this);
+
+            return BuildQueryStatement(sequentialKeys);
         }
 
-        private DbQueryBuilder(Model model, Model sourceModel)
-            : this(model)
+        internal DbQueryStatement BuildQueryStatement(Model sourceModel, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
             From(sourceModel);
             var sourceColumns = sourceModel.Columns;
-            var targetColumns = model.Columns;
+            var targetColumns = Model.Columns;
             Debug.Assert(targetColumns.Count <= sourceColumns.Count);
             for (int i = 0; i < targetColumns.Count; i++)
             {
                 var targetColumn = targetColumns[i];
                 SelectCore(sourceColumns[targetColumn.Key], targetColumn);
             }
+
+            if (action != null)
+                action(this);
+
+            return BuildQueryStatement(sequentialKeys);
         }
 
         internal DbQueryStatement BuildQueryStatement(DbTable<SequentialKeyModel> sequentialKeys)

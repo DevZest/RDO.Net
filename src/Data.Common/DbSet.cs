@@ -67,7 +67,7 @@ namespace DevZest.Data
         {
             var oldModel = _;
             newModel = Data.Model.Clone(oldModel, false);
-            return DbQueryBuilder.BuildQueryStatement(newModel, oldModel, action, null);
+            return new DbQueryBuilder(newModel).BuildQueryStatement(oldModel, action, null);
         }
 
         internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)

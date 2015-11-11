@@ -709,5 +709,34 @@ namespace DevZest.Data
                 return result;
             }
         }
+
+        internal IList<ColumnMapping> GetParentRelationship(IList<ColumnMapping> columnMappings)
+        {
+            var parentRelationship = ParentRelationship;
+            if (parentRelationship == null)
+                return null;
+
+            var result = new ColumnMapping[parentRelationship.Count];
+            for (int i = 0; i < result.Length; i++)
+            {
+                var mapping = parentRelationship[i];
+                var source = GetSource(mapping.Source, columnMappings);
+                if (source == null)
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source));
+                result[i] = new ColumnMapping(source, mapping.TargetColumn);
+            }
+
+            return result;
+        }
+
+        private static DbExpression GetSource(DbExpression target, IList<ColumnMapping> relationship)
+        {
+            foreach (var mapping in relationship)
+            {
+                if (mapping.Target == target)
+                    return mapping.Source;
+            }
+            return null;
+        }
     }
 }

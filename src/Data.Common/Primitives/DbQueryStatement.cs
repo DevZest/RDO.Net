@@ -53,9 +53,9 @@ namespace DevZest.Data.Primitives
 
         internal abstract DbSelectStatement GetSequentialKeySelectStatement(SequentialKeyModel sequentialKeyModel);
 
-        internal virtual DbQueryStatement MakeQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
-            return DbQueryBuilder.BuildQueryStatement(model, this.Model, action, sequentialKeys);
+            return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }
 
         internal abstract DbSelectStatement BuildToTempTableStatement(IDbTable dbTable);
@@ -95,7 +95,7 @@ namespace DevZest.Data.Primitives
             var offset = statement == null ? -1 : statement.Offset;
             var fetch = statement == null ? -1 : statement.Fetch;
 
-            var parentMappings = columnMappings.GetParentMappings(targetTable);
+            var parentMappings = columnMappings.GetParentRelationship(targetTable);
             if (parentMappings != null)
             {
                 parentMappings = IfTransformSimpleSelect(statement != null, parentMappings);

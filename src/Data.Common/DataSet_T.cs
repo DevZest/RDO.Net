@@ -214,7 +214,7 @@ namespace DevZest.Data
         {
             var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
-            var queryStatement = dbSet.QueryStatement.MakeQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
+            var queryStatement = dbSet.QueryStatement.BuildQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
             return dbSession.CreateQuery(childModel, queryStatement);
         }
 

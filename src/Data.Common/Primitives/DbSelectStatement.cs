@@ -76,12 +76,10 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(sequentialKeyModel, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
         }
 
-        internal override DbQueryStatement MakeQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal override DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
-            if (IsAggregate)
-                return DbAggregateQueryBuilder.BuildQueryStatement(model, this, action, sequentialKeys);
-            else
-                return DbQueryBuilder.BuildQueryStatement(model, this, action, sequentialKeys);
+            var queryBuilder = IsAggregate ? new DbAggregateQueryBuilder(model) : new DbQueryBuilder(model);
+            return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);
         }
 
         internal sealed override DbSelectStatement TryBuildSimpleSelect(IDbTable dbTable, IList<ColumnMapping> columnMappings)

@@ -15,7 +15,7 @@ namespace DevZest.Data.Helpers
 
             var model = Model.Clone(dbSet._, false);
             var tempTableName = sqlSession.AssignTempTableName(model);
-            var insertStatement = dbSet.QueryStatement.MakeQueryStatement(model, null, null);
+            var insertStatement = dbSet.QueryStatement.BuildQueryStatement(model, null, null);
             model.AddTempTableIdentity();
             var tempTable = DbTable<T>.CreateTemp(model, sqlSession, tempTableName);
             result[0] = sqlSession.GetCreateTableCommand(model, tempTableName, true);

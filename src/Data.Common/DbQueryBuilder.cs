@@ -11,7 +11,10 @@ namespace DevZest.Data
     {
         internal DbQueryBuilder(Model model)
         {
-            Debug.Assert(model != null && model.DataSource == null);
+            Debug.Assert(model != null && (
+                model.DataSource == null || 
+                model.DataSource.Kind == DataSourceKind.DbTable ||
+                model.DataSource.Kind == DataSourceKind.DbTempTable));
 
             Model = model;
             Offset = -1;
@@ -41,7 +44,7 @@ namespace DevZest.Data
             return this;
         }
 
-        internal void From(Model model)
+        private void From(Model model)
         {
             InitSubQueryEliminator(model);
             AddSourceModel(model);
@@ -382,6 +385,13 @@ namespace DevZest.Data
         internal virtual DbSelectStatement BuildSelectStatement(IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
+        }
+
+        private void SelectFrom(IList<ColumnMapping> select, Model from)
+        {
+            From(from);
+            foreach (var columnMapping in select)
+                SelectCore(null, columnMapping.Source, columnMapping.TargetColumn);
         }
     }
 }

@@ -1,0 +1,28 @@
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
+using System;
+using System.Collections.Generic;
+
+namespace DevZest.Data
+{
+    partial class DbQueryBuilder
+    {
+        internal DbSelectStatement BuildInsertStatement(Model sourceDataModel, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            SelectFrom(columnMappings, sourceDataModel);
+
+            var parentRelationship = Model.GetParentRelationship(columnMappings);
+            if (parentRelationship != null)
+                Join(Model.ParentModel, DbJoinKind.InnerJoin, parentRelationship);
+
+            if (keyMappings != null)
+            {
+                Join(Model, DbJoinKind.LeftJoin, keyMappings);
+                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].TargetColumn.DbExpression });
+                WhereExpression = And(WhereExpression, isNullExpr);
+            }
+
+            return new DbSelectStatement(Model, SelectList, FromClause, WhereExpression, OrderByList, Offset, Fetch);
+        }
+    }
+}

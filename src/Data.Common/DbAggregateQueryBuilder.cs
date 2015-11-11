@@ -29,21 +29,13 @@ namespace DevZest.Data
             AutoGroupBy = true;
         }
 
-        internal new static DbQueryStatement BuildQueryStatement(Model model, DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal override DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
-            var result = new DbAggregateQueryBuilder(model, query);
-            if (action != null)
-                action(result);
-            return result.BuildQueryStatement(sequentialKeys);
-        }
-
-        private DbAggregateQueryBuilder(Model model, DbSelectStatement sourceData)
-            : base(model, sourceData)
-        {
-            Debug.Assert(sourceData.IsAggregate);
-            foreach (var groupBy in sourceData.GroupBy)
+            Debug.Assert(query.IsAggregate);
+            foreach (var groupBy in query.GroupBy)
                 _groupByList.Add(groupBy);
-            HavingExpression = sourceData.Having;
+            HavingExpression = query.Having;
+            return base.BuildQueryStatement(query, action, sequentialKeys);
         }
 
         public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T model)
