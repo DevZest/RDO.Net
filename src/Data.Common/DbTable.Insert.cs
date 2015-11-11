@@ -228,7 +228,7 @@ namespace DevZest.Data
                 }
             }
 
-            return new DbSelectStatement(this._, select, from, where, null, -1, -1);
+            return new DbSelectStatement(Model, select, from, where, null, -1, -1);
         }
 
         private void UpdateIdentity<TSource>(DataSet<TSource> dataSet, InsertTableResult result)

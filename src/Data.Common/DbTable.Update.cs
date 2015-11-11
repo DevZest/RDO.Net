@@ -35,7 +35,7 @@ namespace DevZest.Data
             Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
             var columnMappings = BuildColumnMappings(columnMappingsBuilder);
             var where = VerifyWhere(getWhere);
-            return new DbSelectStatement(this._, columnMappings, null, where, null, -1, -1);
+            return new DbSelectStatement(Model, columnMappings, null, where, null, -1, -1);
         }
 
         public int Update<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
@@ -116,7 +116,7 @@ namespace DevZest.Data
             var paramManager = new ScalarParamManager(dataRow);
             var select = GetScalarMapping(paramManager, columnMappings);
             var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-            return new DbSelectStatement(this._, select, from, null, null, -1, -1);
+            return new DbSelectStatement(Model, select, from, null, null, -1, -1);
         }
 
         private List<ColumnMapping> GetColumnMappings(Model sourceModel)

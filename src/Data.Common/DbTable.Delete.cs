@@ -31,7 +31,7 @@ namespace DevZest.Data
         internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> getWhere)
         {
             var where = VerifyWhere(getWhere);
-            return new DbSelectStatement(this._, null, null, where, null, -1, -1);
+            return new DbSelectStatement(Model, null, null, where, null, -1, -1);
         }
 
         public int Delete<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
@@ -109,7 +109,7 @@ namespace DevZest.Data
         {
             var paramManager = new ScalarParamManager(dataRow);
             var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-            return new DbSelectStatement(this._, null, from, null, null, -1, -1);
+            return new DbSelectStatement(Model, null, from, null, null, -1, -1);
         }
     }
 }
