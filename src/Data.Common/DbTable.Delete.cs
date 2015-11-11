@@ -59,7 +59,7 @@ namespace DevZest.Data
         {
             Check.NotNull(dbSet, nameof(dbSet));
             var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(dbSet._) : _.BuildColumnMappings(dbSet._, keyMappingsBuilder);
-            return dbSet.QueryStatement.BuildDeleteStatement(this, keyMappings);
+            return dbSet.QueryStatement.BuildDeleteStatement(Model, keyMappings);
         }
 
         public int Delete<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)

@@ -51,19 +51,13 @@ FROM
                 var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.GetDeleteCommand(query);
                 var expectedSql =
-@"DELETE [ProductCategory1]
+@"DELETE [ProductCategory]
 FROM
-    ((SELECT
-        [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-        [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-        [ProductCategory].[Name] AS [Name],
-        [ProductCategory].[RowGuid] AS [RowGuid],
-        [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-    FROM [SalesLT].[ProductCategory] [ProductCategory]
-    WHERE ([ProductCategory].[ModifiedDate] IS NULL)) [ProductCategory]
+    ([SalesLT].[ProductCategory] [ProductCategory]
     INNER JOIN
     [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
+WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
                 Assert.AreEqual(expectedSql, command.ToTraceString());
             }

@@ -94,65 +94,10 @@ namespace DevZest.Data.Primitives
                 : base.BuildUpdateStatement(model, columnMappings, keyMappings);
         }
 
-        internal sealed override DbSelectStatement TryBuildSimpleSelect(IDbTable dbTable, IList<ColumnMapping> columnMappings)
+        internal override DbSelectStatement BuildDeleteStatement(Model model, IList<ColumnMapping> keyMappings)
         {
-            if (!IsSimple || FromClauseContains(dbTable))
-                return null;
-            var transformedColumnMappings = TransformSimpleSelect(columnMappings);
-            return new DbSelectStatement(dbTable.Model, transformedColumnMappings, From, Where, OrderBy, Offset, Fetch);
-        }
-
-        private sealed class FromClauseContainsVisitor : DbFromClauseVisitor<bool>
-        {
-            public FromClauseContainsVisitor(IDbTable dbTable)
-            {
-                _dbTable = dbTable;
-            }
-
-            private IDbTable _dbTable;
-
-            public override bool Visit(DbJoinClause join)
-            {
-                return join.Left.Accept(this) || join.Right.Accept(this);
-            }
-
-            public override bool Visit(DbSelectStatement select)
-            {
-                return false;
-            }
-
-            public override bool Visit(DbTableClause table)
-            {
-                return table.Name == _dbTable.Name;
-            }
-
-            public override bool Visit(DbUnionStatement union)
-            {
-                return false;
-            }
-        }
-
-        private bool FromClauseContains(IDbTable dbTable)
-        {
-            return From.Accept(new FromClauseContainsVisitor(dbTable));
-        }
-
-        internal sealed override IList<ColumnMapping> TransformSimpleSelect(IList<ColumnMapping> mappings)
-        {
-            Debug.Assert(IsSimple);
-
-            if (mappings == null)
-                return null;
-
-            var result = new ColumnMapping[mappings.Count];
-            var columnReplacer = new ColumnReplacer(this);
-            for (int i = 0; i < mappings.Count; i++)
-            {
-                var mapping = mappings[i];
-                result[i] = new ColumnMapping(columnReplacer.Replace(mapping.Source), mapping.TargetColumn);
-            }
-
-            return result;
+            return IsSimple ? new DbQueryBuilder(model).BuildDeleteStatement(this, keyMappings)
+                : base.BuildDeleteStatement(model, keyMappings);
         }
 
         internal override DbSelectStatement BuildToTempTableStatement(IDbTable dbTable)

@@ -94,74 +94,9 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
-        internal DbSelectStatement BuildUpdateStatement(IDbTable dbTable, IList<ColumnMapping> keyMappings, IList<ColumnMapping> columnMappings)
+        internal virtual DbSelectStatement BuildDeleteStatement(Model model, IList<ColumnMapping> keyMappings)
         {
-            var statement = TryBuildSimpleSelect(dbTable, columnMappings);
-
-            var select = statement == null ? columnMappings : statement.Select;
-            var from = statement == null ? this : statement.From;
-            var where = statement == null ? null : statement.Where;
-            var orderBy = statement == null ? null : statement.OrderBy;
-            var offset = statement == null ? -1 : statement.Offset;
-            var fetch = statement == null ? -1 : statement.Fetch;
-
-            keyMappings = IfTransformSimpleSelect(statement != null, keyMappings);
-            from = new DbJoinClause(DbJoinKind.InnerJoin, from, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-
-            if (statement == null && ShouldOmitSelectList(dbTable, select))
-                select = null;
-            return new DbSelectStatement(dbTable.Model, select, from, where, orderBy, offset, fetch);
-        }
-
-        private bool ShouldOmitSelectList(IDbTable dbTable, IList<ColumnMapping> columnMappings)
-        {
-            var updatableColumns = dbTable.Model.GetUpdatableColumns().ToList();
-            if (columnMappings.Count != updatableColumns.Count)
-                return false;
-
-            var selectColumns = Model.GetSelectColumns().ToList();
-            var sourceList = columnMappings.Select(x => x.Source).ToList();
-            if (sourceList.Count != selectColumns.Count)
-                return false;
-
-            for (int i = 0; i < sourceList.Count; i++)
-            {
-                if (sourceList[i] != selectColumns[i].DbExpression)
-                    return false;
-            }
-
-            return true;
-        }
-
-        internal DbSelectStatement BuildDeleteStatement(IDbTable dbTable, IList<ColumnMapping> keyMappings)
-        {
-            var statement = TryBuildSimpleSelect(dbTable, null);
-
-            var from = statement == null ? this : statement.From;
-            var where = statement == null ? null : statement.Where;
-            var orderBy = statement == null ? null : statement.OrderBy;
-            var offset = statement == null ? -1 : statement.Offset;
-            var fetch = statement == null ? -1 : statement.Fetch;
-
-            keyMappings = IfTransformSimpleSelect(statement != null, keyMappings);
-            from = new DbJoinClause(DbJoinKind.InnerJoin, from, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-
-            return new DbSelectStatement(dbTable.Model, null, from, where, orderBy, offset, fetch);
-        }
-
-        internal virtual DbSelectStatement TryBuildSimpleSelect(IDbTable dbTable, IList<ColumnMapping> columnMappings)
-        {
-            return null;
-        }
-
-        internal IList<ColumnMapping> IfTransformSimpleSelect(bool isSimpleSelect, IList<ColumnMapping> mappings)
-        {
-            return isSimpleSelect ? TransformSimpleSelect(mappings) : mappings;
-        }
-
-        internal virtual IList<ColumnMapping> TransformSimpleSelect(IList<ColumnMapping> mappings)
-        {
-            throw new NotSupportedException();
+            return new DbQueryBuilder(model).BuildDeleteStatement(Model, keyMappings);
         }
 
         internal virtual DbQueryStatement RemoveSystemColumns()
