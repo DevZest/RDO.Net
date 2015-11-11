@@ -29,10 +29,15 @@ namespace DevZest.Data
             if (sysParentRowId != null && sysParentRowId.Ordinal < query.Select.Count)
                 model.GetSysParentRowIdColumn(createIfNotExist: true);
 
+            Column sysRowId = sourceModel.GetSysRowIdColumn(createIfNotExist: false);
+            if (sysRowId != null && sysRowId.Ordinal < query.Select.Count)
+                model.GetSysRowIdColumn(createIfNotExist: true);
+
             var columns = model.Columns;
             var sourceColumns = sourceModel.Columns;
 
             Debug.Assert(columns.Count <= sourceColumns.Count);
+            Debug.Assert(columns.Count <= query.Select.Count);
             for (int i = 0; i < columns.Count; i++)
                 SelectList.Add(new ColumnMapping(query.Select[i].Source, columns[i]));
             FromClause = query.From;
