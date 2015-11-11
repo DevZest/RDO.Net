@@ -56,9 +56,7 @@ namespace DevZest.Data
 
         internal virtual void Initialize(DbSelectStatement query)
         {
-            var subQueryEliminator = query.SubQueryEliminator;
-            if (subQueryEliminator != null)
-                _subQueryEliminators.Add(query.Model, subQueryEliminator);
+            _subQueryEliminator = query.SubQueryEliminator;
             FromClause = query.From;
             FromClause.Accept(new SourceModelResolver(_sourceModelSet));
             WhereExpression = query.Where;
@@ -79,7 +77,7 @@ namespace DevZest.Data
         #region FROM
 
         ModelSet _sourceModelSet = new ModelSet();
-        Dictionary<Model, SubQueryEliminator> _subQueryEliminators = new Dictionary<Model, SubQueryEliminator>();
+        SubQueryEliminator _subQueryEliminator;
         Dictionary<ColumnKey, List<Column>> _sourceColumnsByKey = new Dictionary<ColumnKey, List<Column>>();
 
         public DbFromClause FromClause { get; private set; }
@@ -99,9 +97,11 @@ namespace DevZest.Data
 
         private void From(Model model)
         {
-            InitSubQueryEliminator(model);
+            _subQueryEliminator = model.FromClause.SubQueryEliminator;
+            if (_subQueryEliminator != null)
+                WhereExpression = And(WhereExpression, _subQueryEliminator.WhereExpression);
             AddSourceModel(model);
-            FromClause = EliminateSubQuery(model);
+            FromClause =_subQueryEliminator == null ? model.FromClause : _subQueryEliminator.FromClause;
             Debug.Assert(FromClause != null);
         }
 
@@ -185,20 +185,9 @@ namespace DevZest.Data
             return result;
         }
 
-        private DbFromClause EliminateSubQuery(Model model)
-        {
-            SubQueryEliminator subQueryEliminator;
-            if (_subQueryEliminators.TryGetValue(model, out subQueryEliminator))
-                return subQueryEliminator.FromClause;
-            else
-                return model.FromClause;
-        }
-
         internal DbExpression EliminateSubQuery(DbExpression expression)
         {
-            foreach (var subQueryEliminator in _subQueryEliminators.Values)
-                expression = subQueryEliminator.GetExpressioin(expression);
-            return expression;
+            return _subQueryEliminator == null ? expression : _subQueryEliminator.GetExpressioin(expression);
         }
 
         private Column EliminateSubQuery(Column column)
@@ -253,16 +242,6 @@ namespace DevZest.Data
                 return model;
 
             return model.Clone(true);
-        }
-
-        private void InitSubQueryEliminator(Model model)
-        {
-            var subQueryEliminator = model.FromClause.SubQueryEliminator;
-            if (subQueryEliminator != null)
-            {
-                _subQueryEliminators.Add(model, subQueryEliminator);
-                WhereExpression = And(WhereExpression, subQueryEliminator.WhereExpression);
-            }
         }
 
         private static DbExpression And(DbExpression where1, DbExpression where2)
