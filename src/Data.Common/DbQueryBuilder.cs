@@ -23,12 +23,15 @@ namespace DevZest.Data
 
         internal virtual void Initialize(DbSelectStatement query)
         {
+            var subQueryEliminator = query.SubQueryEliminator;
+            if (subQueryEliminator != null)
+                _subQueryEliminators.Add(query.Model, subQueryEliminator);
             FromClause = query.From;
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
         }
 
-        private void Initialize(IList<ColumnMapping> select)
+        private void Select(IList<ColumnMapping> select)
         {
             foreach (var columnMapping in select)
                 SelectCore(null, columnMapping.Source, columnMapping.TargetColumn);
@@ -398,6 +401,28 @@ namespace DevZest.Data
         internal virtual DbSelectStatement BuildSelectStatement(IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
+        }
+
+        private DbQueryStatement EliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        {
+            var fromQuery = FromClause as DbUnionStatement;
+            if (fromQuery == null)
+                return null;
+
+            if (WhereExpression != null || OrderByList != null)
+                return null;
+
+            var fromColumns = fromQuery.Model.Columns;
+            if (selectList.Count != fromColumns.Count)
+                return null;
+
+            for (int i = 0; i < selectList.Count; i++)
+            {
+                if (selectList[i].Source != fromColumns[i].DbExpression)
+                    return null;
+            }
+
+            return new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
         }
     }
 }

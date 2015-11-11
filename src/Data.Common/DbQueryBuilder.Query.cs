@@ -72,28 +72,6 @@ namespace DevZest.Data
             return BuildSelectStatement(select, FromClause, WhereExpression, orderBy);
         }
 
-        private DbQueryStatement EliminateUnionSubQuery(IList<ColumnMapping> normalizedSelectList)
-        {
-            var fromQuery = FromClause as DbUnionStatement;
-            if (fromQuery == null)
-                return null;
-
-            if (WhereExpression != null || OrderByList != null)
-                return null;
-
-            var fromColumns = fromQuery.Model.Columns;
-            if (normalizedSelectList.Count != fromColumns.Count)
-                return null;
-
-            for (int i = 0; i < normalizedSelectList.Count; i++)
-            {
-                if (normalizedSelectList[i].Source != fromColumns[i].DbExpression)
-                    return null;
-            }
-
-            return new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
-        }
-
         private IList<DbExpressionSort> GetOrderBy(Identity parentRowIdIdentity, Identity rowIdIdentity)
         {
             if (rowIdIdentity != null)

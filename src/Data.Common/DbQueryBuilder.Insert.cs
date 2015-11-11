@@ -10,14 +10,14 @@ namespace DevZest.Data
         internal DbSelectStatement BuildInsertStatement(Model sourceDataModel, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
         {
             From(sourceDataModel);
-            Initialize(columnMappings);
+            Select(columnMappings);
             return BuildInsertSelect(columnMappings, keyMappings);
         }
 
         internal DbSelectStatement BuildInsertStatement(DbSelectStatement selectStatement, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
         {
             Initialize(selectStatement);
-            Initialize(columnMappings);
+            Select(columnMappings);
             return BuildInsertSelect(columnMappings, keyMappings);
         }
 
