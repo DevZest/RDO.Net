@@ -88,6 +88,12 @@ namespace DevZest.Data.Primitives
                 : base.BuildInsertStatement(model, columnMappings, keyMappings);
         }
 
+        internal override DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            return IsSimple ? new DbQueryBuilder(model).BuildUpdateStatement(this, columnMappings, keyMappings)
+                : base.BuildUpdateStatement(model, columnMappings, keyMappings);
+        }
+
         internal sealed override DbSelectStatement TryBuildSimpleSelect(IDbTable dbTable, IList<ColumnMapping> columnMappings)
         {
             if (!IsSimple || FromClauseContains(dbTable))

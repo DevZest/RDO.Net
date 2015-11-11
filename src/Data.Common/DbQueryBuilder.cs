@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data
 {
@@ -21,12 +22,45 @@ namespace DevZest.Data
             Fetch = -1;
         }
 
+        private sealed class SourceModelResolver : DbFromClauseVisitor
+        {
+            public SourceModelResolver(ModelSet sourceModelSet)
+            {
+                _sourceModelSet = sourceModelSet;
+            }
+
+            private ModelSet _sourceModelSet;
+
+            public override void Visit(DbUnionStatement union)
+            {
+                union.Query1.Accept(this);
+                union.Query2.Accept(this);
+            }
+
+            public override void Visit(DbJoinClause join)
+            {
+                join.Left.Accept(this);
+                join.Right.Accept(this);
+            }
+
+            public override void Visit(DbSelectStatement select)
+            {
+                _sourceModelSet.Add(select.Model);
+            }
+
+            public override void Visit(DbTableClause table)
+            {
+                _sourceModelSet.Add(table.Model);
+            }
+        }
+
         internal virtual void Initialize(DbSelectStatement query)
         {
             var subQueryEliminator = query.SubQueryEliminator;
             if (subQueryEliminator != null)
                 _subQueryEliminators.Add(query.Model, subQueryEliminator);
             FromClause = query.From;
+            FromClause.Accept(new SourceModelResolver(_sourceModelSet));
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
         }
@@ -131,15 +165,24 @@ namespace DevZest.Data
         private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IList<ColumnMapping> relationship, out T model)
             where T : Model, new()
         {
-            model = dbSet._;
-            model = MakeAlias(model);
-            Join(model, kind, relationship);
+            model = (T)Join(dbSet.Model, kind, relationship);
         }
 
-        private void Join(Model model, DbJoinKind kind, IList<ColumnMapping> relationship)
+        private Model Join(Model model, DbJoinKind kind, IList<ColumnMapping> relationship)
         {
-            AddSourceModel(model);
-            FromClause = new DbJoinClause(kind, FromClause, EliminateSubQuery(model), EliminateSubQuery(relationship));
+            Debug.Assert(relationship[0].TargetColumn.ParentModel == model);
+
+            var result = MakeAlias(model);
+            var resultFromClause = result.FromClause;
+            if (result != model)
+            {
+                resultFromClause = resultFromClause.Clone(result);
+                relationship = relationship.Select(x => new ColumnMapping(x.Source, result.Columns[x.TargetColumn.Ordinal])).ToList();
+            }
+
+            AddSourceModel(result);
+            FromClause = new DbJoinClause(kind, FromClause, resultFromClause, EliminateSubQuery(relationship));
+            return result;
         }
 
         private DbFromClause EliminateSubQuery(Model model)
@@ -181,17 +224,15 @@ namespace DevZest.Data
             {
                 var mapping = relationship[i];
                 var source = mapping.Source;
-                var target = mapping.Target.Column;
                 var replacedSource = EliminateSubQuery(source);
-                var replacedTarget = EliminateSubQuery(target);
-                if ((source != replacedSource || target != replacedTarget) && result == null)
+                if (source != replacedSource  && result == null)
                 {
                     result = new ColumnMapping[relationship.Count];
                     for (int j = 0; j < i; j++)
                         result[j] = relationship[j];
                 }
                 if (result != null)
-                    result[i] = new ColumnMapping(replacedSource, replacedTarget);
+                    result[i] = new ColumnMapping(replacedSource, mapping.Target.Column);
             }
             return result ?? relationship;
         }
@@ -204,18 +245,14 @@ namespace DevZest.Data
             return this;
         }
 
-        private T MakeAlias<T>(T model)
-            where T : Model, new()
+        private Model MakeAlias(Model model)
         {
             Debug.Assert(model != null);
 
             if (!_sourceModelSet.Contains(model))
-            {
-                InitSubQueryEliminator(model);
                 return model;
-            }
 
-            return Data.Model.Clone<T>(model, true);
+            return model.Clone(true);
         }
 
         private void InitSubQueryEliminator(Model model)

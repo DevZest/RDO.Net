@@ -57,23 +57,17 @@ FROM
                 var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.GetUpdateCommand(query);
                 var expectedSql =
-@"UPDATE [ProductCategory1] SET
+@"UPDATE [ProductCategory] SET
     [ParentProductCategoryID] = [ProductCategory].[ParentProductCategoryID],
     [Name] = [ProductCategory].[Name],
     [RowGuid] = [ProductCategory].[RowGuid],
     [ModifiedDate] = [ProductCategory].[ModifiedDate]
 FROM
-    ((SELECT
-        [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
-        [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
-        [ProductCategory].[Name] AS [Name],
-        [ProductCategory].[RowGuid] AS [RowGuid],
-        [ProductCategory].[ModifiedDate] AS [ModifiedDate]
-    FROM [SalesLT].[ProductCategory] [ProductCategory]
-    WHERE ([ProductCategory].[ModifiedDate] IS NULL)) [ProductCategory]
+    ([SalesLT].[ProductCategory] [ProductCategory]
     INNER JOIN
     [SalesLT].[ProductCategory] [ProductCategory1]
-    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
+    ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
+WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
                 Assert.AreEqual(expectedSql, command.ToTraceString());
             }

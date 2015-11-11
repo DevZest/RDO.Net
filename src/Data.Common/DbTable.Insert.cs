@@ -286,11 +286,12 @@ namespace DevZest.Data
         internal static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
         {
-            var identityColumn = dbTable._.GetIdentity(false).Column;
+            var dbTableModel = dbTable._;
+            var identityColumn = dbTableModel.GetIdentity(false).Column;
             Debug.Assert(!object.ReferenceEquals(identityColumn, null));
             var keyMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.OldValue, identityColumn) };
             var columnMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.NewValue, identityColumn) };
-            return identityMappings.QueryStatement.BuildUpdateStatement(dbTable, keyMappings, columnMappings);
+            return identityMappings.QueryStatement.BuildUpdateStatement(dbTableModel, columnMappings, keyMappings);
         }
 
         private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertTableResult result)

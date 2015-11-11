@@ -33,5 +33,9 @@ namespace DevZest.Data.Primitives
         {
             return visitor.Visit(this);
         }
+
+        internal override void OnClone(Model model)
+        {
+        }
     }
 }

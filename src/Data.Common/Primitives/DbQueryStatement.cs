@@ -89,6 +89,11 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings);
         }
 
+        internal virtual DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            return new DbQueryBuilder(model).BuildUpdateStatement(Model, columnMappings, keyMappings);
+        }
+
         internal DbSelectStatement BuildUpdateStatement(IDbTable dbTable, IList<ColumnMapping> keyMappings, IList<ColumnMapping> columnMappings)
         {
             var statement = TryBuildSimpleSelect(dbTable, columnMappings);
@@ -165,5 +170,10 @@ namespace DevZest.Data.Primitives
         }
 
         internal abstract DbExpression GetSource(int ordinal);
+
+        internal sealed override void OnClone(Model model)
+        {
+            Model = model;
+        }
     }
 }

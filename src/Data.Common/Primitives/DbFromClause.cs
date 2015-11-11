@@ -12,5 +12,14 @@ namespace DevZest.Data.Primitives
         {
             get { return null; }
         }
+
+        internal DbFromClause Clone(Model model)
+        {
+            var result = (DbFromClause)MemberwiseClone();
+            result.OnClone(model);
+            return result;
+        }
+
+        internal abstract void OnClone(Model model);
     }
 }

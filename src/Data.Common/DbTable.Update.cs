@@ -64,7 +64,7 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
             var keyMappings = GetKeyMappings(dbSet._);
             var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(dbSet._) : _.BuildColumnMappings(dbSet._, columnMappingsBuilder);
-            return dbSet.QueryStatement.BuildUpdateStatement(this, keyMappings, columnMappings);
+            return dbSet.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
         public int Update<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
