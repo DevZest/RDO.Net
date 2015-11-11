@@ -82,6 +82,12 @@ namespace DevZest.Data.Primitives
             return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);
         }
 
+        internal override DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            return IsSimple ? new DbQueryBuilder(model).BuildInsertStatement(this, columnMappings, keyMappings)
+                : base.BuildInsertStatement(model, columnMappings, keyMappings);
+        }
+
         internal sealed override DbSelectStatement TryBuildSimpleSelect(IDbTable dbTable, IList<ColumnMapping> columnMappings)
         {
             if (!IsSimple || FromClauseContains(dbTable))
@@ -172,7 +178,16 @@ namespace DevZest.Data.Primitives
 
         internal override SubQueryEliminator SubQueryEliminator
         {
-            get { return IsSimple ? new SubQueryEliminator(this) : null; }
+            get { return IsSimple && IsDbQuery ? new SubQueryEliminator(this) : null; }
+        }
+
+        private bool IsDbQuery
+        {
+            get
+            {
+                var dataSource = Model.DataSource;
+                return dataSource == null ? false : dataSource.Kind == DataSourceKind.DbQuery;
+            }
         }
     }
 }

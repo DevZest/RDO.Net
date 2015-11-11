@@ -84,6 +84,11 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
+        internal virtual DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings);
+        }
+
         internal DbSelectStatement BuildInsertStatement(IDbTable targetTable, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
         {
             var statement = TryBuildSimpleSelect(targetTable, columnMappings);

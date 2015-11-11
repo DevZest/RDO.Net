@@ -9,8 +9,20 @@ namespace DevZest.Data
     {
         internal DbSelectStatement BuildInsertStatement(Model sourceDataModel, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
         {
-            SelectFrom(columnMappings, sourceDataModel);
+            From(sourceDataModel);
+            Initialize(columnMappings);
+            return BuildInsertSelect(columnMappings, keyMappings);
+        }
 
+        internal DbSelectStatement BuildInsertStatement(DbSelectStatement selectStatement, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
+            Initialize(selectStatement);
+            Initialize(columnMappings);
+            return BuildInsertSelect(columnMappings, keyMappings);
+        }
+
+        private DbSelectStatement BuildInsertSelect(IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        {
             var parentRelationship = Model.GetParentRelationship(columnMappings);
             if (parentRelationship != null)
                 Join(Model.ParentModel, DbJoinKind.InnerJoin, parentRelationship);

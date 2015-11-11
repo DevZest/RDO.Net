@@ -8,7 +8,7 @@ namespace DevZest.Data.Primitives
     {
         public SubQueryEliminator(DbSelectStatement selectStatement)
         {
-            Debug.Assert(selectStatement != null);
+            Debug.Assert(selectStatement != null && selectStatement.Model.DataSource.Kind == DataSourceKind.DbQuery);
             _selectStatement = selectStatement;
         }
 

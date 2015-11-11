@@ -21,6 +21,19 @@ namespace DevZest.Data
             Fetch = -1;
         }
 
+        internal virtual void Initialize(DbSelectStatement query)
+        {
+            FromClause = query.From;
+            WhereExpression = query.Where;
+            OrderByList = query.OrderBy;
+        }
+
+        private void Initialize(IList<ColumnMapping> select)
+        {
+            foreach (var columnMapping in select)
+                SelectCore(null, columnMapping.Source, columnMapping.TargetColumn);
+        }
+
         internal Model Model { get; private set; }
 
         #region FROM
@@ -385,13 +398,6 @@ namespace DevZest.Data
         internal virtual DbSelectStatement BuildSelectStatement(IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
-        }
-
-        private void SelectFrom(IList<ColumnMapping> select, Model from)
-        {
-            From(from);
-            foreach (var columnMapping in select)
-                SelectCore(null, columnMapping.Source, columnMapping.TargetColumn);
         }
     }
 }

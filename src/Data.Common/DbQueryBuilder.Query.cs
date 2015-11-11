@@ -10,6 +10,9 @@ namespace DevZest.Data
     {
         internal virtual DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
         {
+
+            Initialize(query);
+
             var sourceModel = query.Model;
             Debug.Assert(Model.GetType() == sourceModel.GetType());
 
@@ -28,9 +31,6 @@ namespace DevZest.Data
             Debug.Assert(columns.Count <= query.Select.Count);
             for (int i = 0; i < columns.Count; i++)
                 SelectList.Add(new ColumnMapping(query.Select[i].Source, columns[i]));
-            FromClause = query.From;
-            WhereExpression = query.Where;
-            OrderByList = query.OrderBy;
 
             if (action != null)
                 action(this);

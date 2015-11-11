@@ -29,13 +29,15 @@ namespace DevZest.Data
             AutoGroupBy = true;
         }
 
-        internal override DbQueryStatement BuildQueryStatement(DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal override void Initialize(DbSelectStatement query)
         {
             Debug.Assert(query.IsAggregate);
+
+            base.Initialize(query);
+
             foreach (var groupBy in query.GroupBy)
                 _groupByList.Add(groupBy);
             HavingExpression = query.Having;
-            return base.BuildQueryStatement(query, action, sequentialKeys);
         }
 
         public new DbAggregateQueryBuilder From<T>(DbSet<T> dbSet, out T model)
