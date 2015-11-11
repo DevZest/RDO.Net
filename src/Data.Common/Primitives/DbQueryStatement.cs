@@ -89,46 +89,6 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings);
         }
 
-        internal DbSelectStatement BuildInsertStatement(IDbTable targetTable, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
-        {
-            var statement = TryBuildSimpleSelect(targetTable, columnMappings);
-
-            var select = statement == null ? columnMappings : statement.Select;
-            var from = statement == null ? this : statement.From;
-            var where = statement == null ? null : statement.Where;
-            var orderBy = statement == null ? null : statement.OrderBy;
-            var offset = statement == null ? -1 : statement.Offset;
-            var fetch = statement == null ? -1 : statement.Fetch;
-
-            var parentMappings = columnMappings.GetParentRelationship(targetTable);
-            if (parentMappings != null)
-            {
-                parentMappings = IfTransformSimpleSelect(statement != null, parentMappings);
-                var parentTable = (IDbTable)targetTable.Model.DataSource;
-                var parentRowIdSelect = IfTransformSimpleSelect(statement != null, new ColumnMapping[]
-                {
-                    new ColumnMapping(Model.GetSysParentRowIdColumn(createIfNotExist: false), parentTable.Model.GetSysRowIdColumn(createIfNotExist: false))
-                });
-                select = select.Concat(parentRowIdSelect).ToList();
-                from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentTable.FromClause, new ReadOnlyCollection<ColumnMapping>(parentMappings));
-            }
-
-            if (keyMappings != null)
-            {
-                keyMappings = IfTransformSimpleSelect(statement != null, keyMappings);
-                from = new DbJoinClause(DbJoinKind.LeftJoin, from, targetTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
-                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].TargetColumn.DbExpression });
-                if (where == null)
-                    where = isNullExpr;
-                else
-                    where = new DbBinaryExpression(BinaryExpressionKind.And, where, isNullExpr);
-            }
-
-            if (statement == null && ShouldOmitSelectList(targetTable, select))
-                select = null;
-            return new DbSelectStatement(targetTable.Model, select, from, where, orderBy, offset, fetch);
-        }
-
         internal DbSelectStatement BuildUpdateStatement(IDbTable dbTable, IList<ColumnMapping> keyMappings, IList<ColumnMapping> columnMappings)
         {
             var statement = TryBuildSimpleSelect(dbTable, columnMappings);

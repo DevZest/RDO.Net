@@ -34,7 +34,8 @@ namespace DevZest.Data
                 WhereExpression = And(WhereExpression, isNullExpr);
             }
 
-            return new DbSelectStatement(Model, SelectList, FromClause, WhereExpression, OrderByList, Offset, Fetch);
+            var selectList = CanEliminateUnionSubQuery(SelectList) ? null : SelectList;
+            return new DbSelectStatement(Model, selectList, FromClause, WhereExpression, OrderByList, Offset, Fetch);
         }
     }
 }

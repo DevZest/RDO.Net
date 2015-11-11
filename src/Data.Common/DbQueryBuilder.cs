@@ -34,7 +34,10 @@ namespace DevZest.Data
         private void Select(IList<ColumnMapping> select)
         {
             foreach (var columnMapping in select)
-                SelectCore(null, columnMapping.Source, columnMapping.TargetColumn);
+            {
+                var source = EliminateSubQuery(columnMapping.Source);
+                SelectCore(null, source, columnMapping.TargetColumn);
+            }
         }
 
         internal Model Model { get; private set; }
@@ -403,7 +406,7 @@ namespace DevZest.Data
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
         }
 
-        private DbQueryStatement EliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        private DbUnionStatement GetEliminatableUnionStatement(IList<ColumnMapping> selectList)
         {
             var fromQuery = FromClause as DbUnionStatement;
             if (fromQuery == null)
@@ -421,8 +424,18 @@ namespace DevZest.Data
                 if (selectList[i].Source != fromColumns[i].DbExpression)
                     return null;
             }
+            return fromQuery;
+        }
 
-            return new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
+        private DbUnionStatement EliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        {
+            var fromQuery = GetEliminatableUnionStatement(selectList);
+            return fromQuery == null ? null : new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
+        }
+
+        private bool CanEliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        {
+            return GetEliminatableUnionStatement(selectList) != null;
         }
     }
 }

@@ -103,8 +103,7 @@ namespace DevZest.Data
             var sourceModel = dbSet._;
             var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : _.BuildColumnMappings(sourceModel, columnMappingsBuilder);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
-            //return dbSet.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings);
-            return dbSet.QueryStatement.BuildInsertStatement(this, columnMappings, keyMappings);
+            return dbSet.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings);
         }
 
         public int Insert<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
