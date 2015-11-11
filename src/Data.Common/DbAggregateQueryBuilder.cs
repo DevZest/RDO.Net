@@ -29,7 +29,15 @@ namespace DevZest.Data
             AutoGroupBy = true;
         }
 
-        internal DbAggregateQueryBuilder(Model model, DbSelectStatement sourceData)
+        internal new static DbQueryStatement BuildQueryStatement(Model model, DbSelectStatement query, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        {
+            var result = new DbAggregateQueryBuilder(model, query);
+            if (action != null)
+                action(result);
+            return result.BuildQueryStatement(sequentialKeys);
+        }
+
+        private DbAggregateQueryBuilder(Model model, DbSelectStatement sourceData)
             : base(model, sourceData)
         {
             Debug.Assert(sourceData.IsAggregate);

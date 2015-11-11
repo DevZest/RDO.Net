@@ -77,12 +77,10 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal DbQuery<T> CreateQuery<T>(T model, DbQueryBuilder builder, DbTable<SequentialKeyModel> sequentialKeys = null)
+        internal DbQuery<T> CreateQuery<T>(T model, DbQueryStatement queryStatement)
             where T : Model, new()
         {
-            Debug.Assert(model == builder.Model);
-            var selectStatement = builder.BuildQueryStatement(sequentialKeys);
-            return new DbQuery<T>(model, this, selectStatement);
+            return new DbQuery<T>(model, this, queryStatement);
         }
 
 
@@ -94,7 +92,7 @@ namespace DevZest.Data.Primitives
             var model = new T();
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
-            return CreateQuery(model, builder);
+            return CreateQuery(model, builder.BuildQueryStatement(null));
         }
 
         public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
@@ -105,7 +103,7 @@ namespace DevZest.Data.Primitives
             var model = new T();
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
-            return CreateQuery(model, builder);
+            return CreateQuery(model, builder.BuildQueryStatement(null));
         }
 
         internal abstract void RecursiveFillDataSet(IDbSet dbSet, DataSet dataSet);

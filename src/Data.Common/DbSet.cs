@@ -35,9 +35,8 @@ namespace DevZest.Data
             Check.NotNull(predicate, nameof(predicate));
 
             T newModel;
-            var queryBuilder = GetSimpleQueryBuilder(out newModel);
-            queryBuilder.Where(predicate(_));
-            return DbSession.CreateQuery(newModel, queryBuilder);
+            var queryStatement = GetSimpleQueryStatement(queryBuilder => queryBuilder.Where(predicate(_)), out newModel);
+            return DbSession.CreateQuery(newModel, queryStatement);
         }
 
         public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
@@ -49,26 +48,26 @@ namespace DevZest.Data
         {
             Check.NotNull(fnOrderByList, nameof(fnOrderByList));
 
-            T newModel;
-            var queryBuilder = GetSimpleQueryBuilder(out newModel);
             var orderByList = new ColumnSort[fnOrderByList.Length];
             for (int i = 0; i < fnOrderByList.Length; i++)
                 orderByList[i] = fnOrderByList[i](_);
-            queryBuilder.OrderBy(offset, fetch, orderByList);
-            return DbSession.CreateQuery(newModel, queryBuilder);
+
+            T newModel;
+            var queryStatement = GetSimpleQueryStatement(builder => builder.OrderBy(offset, fetch, orderByList), out newModel);
+            return DbSession.CreateQuery(newModel, queryStatement);
         }
 
-        internal DbQueryBuilder GetSimpleQueryBuilder()
+        internal DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action = null)
         {
             T newModel;
-            return GetSimpleQueryBuilder(out newModel);
+            return GetSimpleQueryStatement(action, out newModel);
         }
 
-        private DbQueryBuilder GetSimpleQueryBuilder(out T newModel)
+        private DbQueryStatement GetSimpleQueryStatement(Action<DbQueryBuilder> action, out T newModel)
         {
             var oldModel = _;
             newModel = Data.Model.Clone(oldModel, false);
-            return new DbQueryBuilder(newModel, oldModel);
+            return DbQueryBuilder.BuildQueryStatement(newModel, oldModel, action, null);
         }
 
         internal TChild VerifyCreateChild<TChild>(Func<T, TChild> getChildModel)
@@ -148,8 +147,8 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
 
             var model = Data.Model.Clone(_, false);
-            var queryStatement1 = this.GetSimpleQueryBuilder().BuildQueryStatement(null);
-            var queryStatement2 = dbSet.GetSimpleQueryBuilder().BuildQueryStatement(null);
+            var queryStatement1 = this.GetSimpleQueryStatement();
+            var queryStatement2 = dbSet.GetSimpleQueryStatement();
             return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
         }
 
