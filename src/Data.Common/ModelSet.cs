@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DevZest.Data.Primitives;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DevZest.Data
@@ -37,6 +38,43 @@ namespace DevZest.Data
         public ModelSet(IModelSet modelSet)
             : base(modelSet)
         {
+        }
+
+        private sealed class SourceModelResolver : DbFromClauseVisitor
+        {
+            public SourceModelResolver(ModelSet sourceModelSet)
+            {
+                _sourceModelSet = sourceModelSet;
+            }
+
+            private ModelSet _sourceModelSet;
+
+            public override void Visit(DbUnionStatement union)
+            {
+                union.Query1.Accept(this);
+                union.Query2.Accept(this);
+            }
+
+            public override void Visit(DbJoinClause join)
+            {
+                join.Left.Accept(this);
+                join.Right.Accept(this);
+            }
+
+            public override void Visit(DbSelectStatement select)
+            {
+                _sourceModelSet.Add(select.Model);
+            }
+
+            public override void Visit(DbTableClause table)
+            {
+                _sourceModelSet.Add(table.Model);
+            }
+        }
+
+        public void Add(DbFromClause dbFromClause)
+        {
+            dbFromClause.Accept(new SourceModelResolver(this));
         }
     }
 }

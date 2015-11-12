@@ -22,43 +22,11 @@ namespace DevZest.Data
             Fetch = -1;
         }
 
-        private sealed class SourceModelResolver : DbFromClauseVisitor
-        {
-            public SourceModelResolver(ModelSet sourceModelSet)
-            {
-                _sourceModelSet = sourceModelSet;
-            }
-
-            private ModelSet _sourceModelSet;
-
-            public override void Visit(DbUnionStatement union)
-            {
-                union.Query1.Accept(this);
-                union.Query2.Accept(this);
-            }
-
-            public override void Visit(DbJoinClause join)
-            {
-                join.Left.Accept(this);
-                join.Right.Accept(this);
-            }
-
-            public override void Visit(DbSelectStatement select)
-            {
-                _sourceModelSet.Add(select.Model);
-            }
-
-            public override void Visit(DbTableClause table)
-            {
-                _sourceModelSet.Add(table.Model);
-            }
-        }
-
         internal virtual void Initialize(DbSelectStatement query)
         {
             _subQueryEliminator = query.SubQueryEliminator;
             FromClause = query.From;
-            FromClause.Accept(new SourceModelResolver(_sourceModelSet));
+            _sourceModelSet.Add(FromClause);
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
         }
