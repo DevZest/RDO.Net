@@ -210,7 +210,5 @@ namespace DevZest.Data
         {
             return new DbJoinClause(DbJoinKind.InnerJoin, FromClause, dbTable.FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
         }
-
-        internal abstract DbExpression GetSource(int ordinal);
     }
 }

@@ -253,10 +253,5 @@ namespace DevZest.Data
 
             throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(getWhere));
         }
-
-        internal override DbExpression GetSource(int ordinal)
-        {
-            return Model.Columns[ordinal].DbExpression;
-        }
     }
 }

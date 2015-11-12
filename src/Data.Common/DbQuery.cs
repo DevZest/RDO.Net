@@ -169,10 +169,5 @@ namespace DevZest.Data
             await select.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
             return select.SequentialKeyTempTable.InitialRowCount;
         }
-
-        internal override DbExpression GetSource(int ordinal)
-        {
-            return _originalQueryStatement.GetSource(ordinal);
-        }
     }
 }
