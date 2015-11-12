@@ -273,41 +273,36 @@ namespace DevZest.Data
             model.AllowsKeyUpdate(oldValue);
         }
 
-        private static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
+        private static IList<DbSelectStatement> BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
             where TSource : Model, new()
         {
             var identityMappings = result.IdentityMappings;
             if (identityMappings == null || result.RowCount == 0)
                 return null;
 
-            return BuildUpdateIdentityStatement(dbTable, identityMappings);
-        }
-
-        internal static DbSelectStatement BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, DbTable<IdentityMapping> identityMappings)
-            where TSource : Model, new()
-        {
-            var dbTableModel = dbTable._;
-            var identityColumn = dbTableModel.GetIdentity(false).Column;
-            Debug.Assert(!object.ReferenceEquals(identityColumn, null));
-            var keyMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.OldValue, identityColumn) };
-            var columnMappings = new ColumnMapping[] { new ColumnMapping(identityMappings._.NewValue, identityColumn) };
-            return identityMappings.QueryStatement.BuildUpdateStatement(dbTableModel, columnMappings, keyMappings);
+            return dbTable.BuildUpdateIdentityStatement(identityMappings);
         }
 
         private static void UpdateIdentity<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
             where TSource : Model, new()
         {
-            var statement = BuildUpdateIdentityStatement(dbTable, result);
-            if (statement != null)
-               dbTable.DbSession.Update(statement);
+            var statements = BuildUpdateIdentityStatement(dbTable, result);
+            if (statements != null)
+            {
+                foreach (var statement in statements)
+                    dbTable.DbSession.Update(statement);
+            }
         }
 
         private static async Task UpdateIdentityAsync<TSource>(DbTable<TSource> dbTable, InsertTableResult result, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var statement = BuildUpdateIdentityStatement(dbTable, result);
-            if (statement != null)
-                await dbTable.DbSession.UpdateAsync(statement, cancellationToken);
+            var statements = BuildUpdateIdentityStatement(dbTable, result);
+            if (statements != null)
+            {
+                foreach (var statement in statements)
+                    await dbTable.DbSession.UpdateAsync(statement, cancellationToken);
+            }
         }
 
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, int ordinal, int? value)

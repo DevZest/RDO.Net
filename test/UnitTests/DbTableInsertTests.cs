@@ -259,14 +259,15 @@ WHERE ([Product].[ProductID] > 800));
         }
 
         [TestMethod]
-        public void DbTable_Insert_BuildUpdateIdentityStatement()
+        public void DbTable_BuildUpdateIdentityStatement()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
                 var identityOutput = db.MockTempTable<IdentityMapping>();
-                var statement = DbTable<SalesOrder>.BuildUpdateIdentityStatement(tempSalesOrders, identityOutput);
-                var command = db.GetUpdateCommand(statement);
+                var statements = tempSalesOrders.BuildUpdateIdentityStatement(identityOutput);
+                Assert.AreEqual(1, statements.Count);
+                var command = db.GetUpdateCommand(statements[0]);
                 var expectedSql =
 @"UPDATE [SalesOrder] SET
     [SalesOrderID] = [sys_identity_mapping].[NewValue]
