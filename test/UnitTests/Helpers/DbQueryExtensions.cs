@@ -12,7 +12,7 @@ namespace DevZest.Data.Helpers
             Assert.AreEqual(expectedSql, dbQuery.ToString());
         }
 
-        internal static DbQuery<T> MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery)
+        internal static DbQuery<T> MockSequentialKeyTempTable<T>(this DbQuery<T> dbQuery, int initialRowCount = 1)
             where T : Model, new()
         {
             // Create DbTable object for SequentialKeyTempTable without actually creating the temp table in the database.
@@ -21,6 +21,7 @@ namespace DevZest.Data.Helpers
             var sequentialSelect = select.GetSequentialKeySelectStatement(sequentialKeyModel);
             var tempTableName = dbQuery.DbSession.AssignTempTableName(sequentialKeyModel);
             select.SequentialKeyTempTable = DbTable<SequentialKeyModel>.CreateTemp(sequentialKeyModel, dbQuery.DbSession, tempTableName);
+            select.SequentialKeyTempTable.InitialRowCount = initialRowCount;  // this value (zero or non-zero) determines whether child query should be created.
 
             return dbQuery;
         }

@@ -60,13 +60,42 @@ namespace DevZest.Data
             return DbSession.GetSqlString(QueryStatement);
         }
 
+        private void EnsureSequentialTempTableCreated(DbSession dbSession)
+        {
+            QueryStatement.EnsureSequentialTempTableCreated(dbSession);
+        }
+
+        private Task EnsureSequentialTempTableCreatedAsync(DbSession dbSession, CancellationToken cancellationToken)
+        {
+            return QueryStatement.EnsureSequentialTempTableCreatedAsync(dbSession, cancellationToken);
+        }
+
+        private DbTable<SequentialKeyModel> SequentialKeyTempTable
+        {
+            get { return QueryStatement.SequentialKeyTempTable; }
+        }
+
+        public override int Count()
+        {
+            // If SequentialKeyTempTable created, return its InitialRowCount directly. This will save one database query.
+            return SequentialKeyTempTable == null ? base.Count() : SequentialKeyTempTable.InitialRowCount;
+        }
+
+        public override Task<int> CountAsync(CancellationToken cancellationToken)
+        {
+            // If SequentialKeyTempTable created, return its InitialRowCount directly. This will save one database query.
+            return SequentialKeyTempTable == null ? base.CountAsync(cancellationToken) : Task.FromResult(SequentialKeyTempTable.InitialRowCount);
+        }
+
         public DbQuery<TChild> CreateChild<TChild>(Func<T, TChild> getChildModel, DbSet<TChild> sourceData)
             where TChild : Model, new()
         {
             Check.NotNull(sourceData, nameof(sourceData));
             var model = VerifyCreateChild(getChildModel);
 
-            QueryStatement.EnsureSequentialTempTableCreated(DbSession);
+            EnsureSequentialTempTableCreated(DbSession);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             return DbSession.CreateQuery(model, sourceData.QueryStatement.BuildQueryStatement(model, null, null));
         }
 
@@ -82,7 +111,9 @@ namespace DevZest.Data
             Check.NotNull(sourceData, nameof(sourceData));
             var model = VerifyCreateChild(getChildModel);
 
-            await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             return DbSession.CreateQuery(model, sourceData.QueryStatement.BuildQueryStatement(model, null, null));
         }
 
@@ -92,7 +123,9 @@ namespace DevZest.Data
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
-            QueryStatement.EnsureSequentialTempTableCreated(DbSession);
+            EnsureSequentialTempTableCreated(DbSession);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
@@ -104,7 +137,9 @@ namespace DevZest.Data
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
-            QueryStatement.EnsureSequentialTempTableCreated(DbSession);
+            EnsureSequentialTempTableCreated(DbSession);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
@@ -128,7 +163,9 @@ namespace DevZest.Data
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
-            await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             var queryBuilder = new DbQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
@@ -140,7 +177,9 @@ namespace DevZest.Data
             Check.NotNull(buildQuery, nameof(buildQuery));
             var childModel = VerifyCreateChild(getChildModel);
 
-            await QueryStatement.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            await EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
+            if (SequentialKeyTempTable.InitialRowCount == 0)
+                return null;
             var queryBuilder = new DbAggregateQueryBuilder(childModel);
             buildQuery(queryBuilder, childModel);
             return DbSession.CreateQuery(childModel, queryBuilder.BuildQueryStatement(null));
@@ -154,20 +193,6 @@ namespace DevZest.Data
             if (childModel == null)
                 return null;
             return childModel.DataSource as DbQuery<TChild>;
-        }
-
-        public override int GetInitialRowCount()
-        {
-            var select = QueryStatement;
-            select.EnsureSequentialTempTableCreated(DbSession);
-            return select.SequentialKeyTempTable.InitialRowCount;
-        }
-
-        public override async Task<int> GetInitialRowCountAsync(CancellationToken cancellationToken)
-        {
-            var select = QueryStatement;
-            await select.EnsureSequentialTempTableCreatedAsync(DbSession, cancellationToken);
-            return select.SequentialKeyTempTable.InitialRowCount;
         }
     }
 }

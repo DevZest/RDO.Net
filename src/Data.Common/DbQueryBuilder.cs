@@ -36,7 +36,7 @@ namespace DevZest.Data
             foreach (var columnMapping in select)
             {
                 var source = EliminateSubQuery(columnMapping.Source);
-                SelectCore(null, source, columnMapping.TargetColumn);
+                SelectCore(source, columnMapping.TargetColumn);
             }
         }
 
@@ -158,19 +158,6 @@ namespace DevZest.Data
             return _subQueryEliminator == null ? expression : _subQueryEliminator.GetExpressioin(expression);
         }
 
-        private Column EliminateSubQuery(Column column)
-        {
-            if (column == null)
-                return null;
-
-            var expression = EliminateSubQuery(column.DbExpression);
-            if (expression == column.DbExpression)
-                return column;
-
-            var dbColumnExpression = expression as DbColumnExpression;
-            return dbColumnExpression == null ? null : dbColumnExpression.Column;
-        }
-
         private IList<ColumnMapping> EliminateSubQuery(IList<ColumnMapping> relationship)
         {
             if (relationship == null)
@@ -278,20 +265,27 @@ namespace DevZest.Data
 
             if (source == null)
             {
-                SelectCore(null, DbConstantExpression.Null, target);
+                SelectCore(source, DbConstantExpression.Null, target);
                 return;
             }
 
-            var replacedSource = EliminateSubQuery(source);
-            if (replacedSource == null)
-                SelectCore(null, EliminateSubQuery(source.DbExpression), target);
-            else
-                SelectCore(replacedSource.AggregateModelSet, replacedSource.DbExpression, target);
+            var sourceExpression = EliminateSubQuery(source.DbExpression);
+            SelectCore(source, sourceExpression, target);
         }
 
-        internal virtual void SelectCore(IModelSet sourceAggregateModelSet, DbExpression source, Column target)
+        private void SelectCore(Column source, DbExpression sourceExpression, Column target)
+        {
+            SelectCore(sourceExpression, target);
+            OnSelect(source, sourceExpression, target);
+        }
+
+        private void SelectCore(DbExpression source, Column target)
         {
             SelectList.Add(new ColumnMapping(source, target));
+        }
+
+        internal virtual void OnSelect(Column source, DbExpression sourceExpression, Column target)
+        {
         }
 
         #endregion

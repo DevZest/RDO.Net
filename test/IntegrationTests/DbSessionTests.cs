@@ -36,9 +36,6 @@ namespace DevZest.Data
             {
                 var salesOrders = CreateSalesOrdersQuery(db);
                 var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
-
-                Assert.AreEqual(2, salesOrders.GetInitialRowCount());
-                Assert.AreEqual(3, salesOrderDetails.GetInitialRowCount());
             }
             var expectedSql =
 @"CREATE TABLE [#sys_sequential_SalesOrder] (
@@ -55,27 +52,6 @@ SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
 FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
 WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
 ORDER BY [SalesOrder].[SalesOrderID];
-
-CREATE TABLE [#sys_sequential_SalesOrderDetail] (
-    [SalesOrderID] INT NOT NULL,
-    [SalesOrderDetailID] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    PRIMARY KEY NONCLUSTERED ([SalesOrderID], [SalesOrderDetailID]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-
-INSERT INTO [#sys_sequential_SalesOrderDetail]
-([SalesOrderID], [SalesOrderDetailID])
-SELECT
-    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID]
-FROM
-    ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    INNER JOIN
-    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
@@ -89,9 +65,6 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
                 var salesOrders = CreateSalesOrdersQuery(db);
                 var salesOrderDetails = await salesOrders.CreateChildAsync(x => x.SalesOrderDetails,
                     (DbQueryBuilder builder, SalesOrderDetail model) => GetSalesOrderDetails(db, builder, model));
-
-                Assert.AreEqual(2, await salesOrders.GetInitialRowCountAsync());
-                Assert.AreEqual(3, await salesOrderDetails.GetInitialRowCountAsync());
             }
             var expectedSql =
 @"CREATE TABLE [#sys_sequential_SalesOrder] (
@@ -108,27 +81,6 @@ SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
 FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
 WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
 ORDER BY [SalesOrder].[SalesOrderID];
-
-CREATE TABLE [#sys_sequential_SalesOrderDetail] (
-    [SalesOrderID] INT NOT NULL,
-    [SalesOrderDetailID] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    PRIMARY KEY NONCLUSTERED ([SalesOrderID], [SalesOrderDetailID]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-
-INSERT INTO [#sys_sequential_SalesOrderDetail]
-([SalesOrderID], [SalesOrderDetailID])
-SELECT
-    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID]
-FROM
-    ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    INNER JOIN
-    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
 ";
             Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
@@ -139,69 +91,6 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
             queryBuilder.From(db.SalesOrderDetails, out d)
                 .AutoSelect()
                 .OrderBy(d.SalesOrderDetailID);
-        }
-
-        [TestMethod]
-        public void DbSession_CreateQuery_aggregate_child()
-        {
-            var log = new StringBuilder();
-            using (var db = OpenDb(log))
-            {
-                var salesOrders = CreateSalesOrdersQuery(db);
-                var salesOrderDetails = salesOrders.CreateChild(x => x.SalesOrderDetails, (DbAggregateQueryBuilder builder, SalesOrderDetail model) => GetDistinctSalesOrderDetails(db, builder, model));
-
-                Assert.AreEqual(2, salesOrders.GetInitialRowCount());
-                Assert.AreEqual(3, salesOrderDetails.GetInitialRowCount());
-            }
-            var expectedSql =
-@"CREATE TABLE [#sys_sequential_SalesOrder] (
-    [SalesOrderID] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-
-INSERT INTO [#sys_sequential_SalesOrder]
-([SalesOrderID])
-SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
-FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
-WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];
-
-CREATE TABLE [#sys_sequential_SalesOrderDetail] (
-    [SalesOrderID] INT NOT NULL,
-    [SalesOrderDetailID] INT NOT NULL,
-    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
-
-    PRIMARY KEY NONCLUSTERED ([SalesOrderID], [SalesOrderDetailID]),
-    UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-
-INSERT INTO [#sys_sequential_SalesOrderDetail]
-([SalesOrderID], [SalesOrderDetailID])
-SELECT
-    [SalesOrderDetail].[SalesOrderID] AS [SalesOrderID],
-    [SalesOrderDetail].[SalesOrderDetailID] AS [SalesOrderDetailID]
-FROM
-    ([SalesLT].[SalesOrderDetail] [SalesOrderDetail]
-    INNER JOIN
-    [#sys_sequential_SalesOrder] [sys_sequential_SalesOrder]
-    ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
-GROUP BY
-    [SalesOrderDetail].[SalesOrderID],
-    [SalesOrderDetail].[SalesOrderDetailID],
-    [SalesOrderDetail].[OrderQty],
-    [SalesOrderDetail].[ProductID],
-    [SalesOrderDetail].[UnitPrice],
-    [SalesOrderDetail].[UnitPriceDiscount],
-    [SalesOrderDetail].[LineTotal],
-    [SalesOrderDetail].[RowGuid],
-    [SalesOrderDetail].[ModifiedDate],
-    [sys_sequential_SalesOrder].[sys_row_id]
-ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
-";
-            Assert.AreEqual(expectedSql.Trim(), log.ToString().Trim());
         }
 
         [TestMethod]

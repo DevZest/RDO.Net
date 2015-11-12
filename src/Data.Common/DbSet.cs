@@ -102,15 +102,6 @@ namespace DevZest.Data
             return childModel;
         }
 
-        public abstract int GetInitialRowCount();
-
-        public Task<int> GetInitialRowCountAsync()
-        {
-            return GetInitialRowCountAsync(CancellationToken.None);
-        }
-
-        public abstract Task<int> GetInitialRowCountAsync(CancellationToken cancellationToken);
-
         public DataSet<T> ToDataSet()
         {
             T model = Data.Model.Clone(this._, false);
@@ -167,7 +158,7 @@ namespace DevZest.Data
             return new DbQuery<T>(model, DbSession, new DbUnionStatement(model, queryStatement1, queryStatement2, kind));
         }
 
-        public int Count()
+        public virtual int Count()
         {
             var query = BuildCountQuery();
             using (var reader = DbSession.ExecuteDbReader(query))
@@ -194,7 +185,7 @@ namespace DevZest.Data
             return CountAsync(CancellationToken.None);
         }
 
-        public async Task<int> CountAsync(CancellationToken cancellationToken)
+        public virtual async Task<int> CountAsync(CancellationToken cancellationToken)
         {
             var query = BuildCountQuery();
             using (var reader = await DbSession.ExecuteDbReaderAsync(query, cancellationToken))

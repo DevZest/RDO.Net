@@ -33,7 +33,7 @@ namespace DevZest.Data
             model.SetDataSource(this);
         }
 
-        public int InitialRowCount { get; internal set; }
+        internal int InitialRowCount { get; set; }
 
         public string Name { get; private set; }
 
@@ -136,16 +136,6 @@ namespace DevZest.Data
             if (childModel == null)
                 return null;
             return childModel.DataSource as DbTable<TChild>;
-        }
-
-        public override int GetInitialRowCount()
-        {
-            return InitialRowCount;
-        }
-
-        public override Task<int> GetInitialRowCountAsync(CancellationToken cancellationToken)
-        {
-            return Task.FromResult(InitialRowCount);
         }
 
         private IList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)

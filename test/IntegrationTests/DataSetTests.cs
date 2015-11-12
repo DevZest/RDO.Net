@@ -16,7 +16,7 @@ namespace DevZest.Data
             {
                 var productCategories = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
-                while (children.GetInitialRowCount() > 0)
+                while (children != null)
                     children = children.CreateChild(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID));
 
                 var result = productCategories.ToDataSet();
@@ -39,7 +39,7 @@ namespace DevZest.Data
             {
                 var productCategories = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).OrderBy(x => x.ProductCategoryID);
                 var children = productCategories;
-                while (children.GetInitialRowCount() > 0)
+                while (children != null)
                     children = await children.CreateChildAsync(x => x.SubCategories, db.ProductCategories.OrderBy(x => x.ProductCategoryID));
 
                 var result = await productCategories.ToDataSetAsync();

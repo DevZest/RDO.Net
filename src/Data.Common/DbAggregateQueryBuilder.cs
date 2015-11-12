@@ -136,12 +136,13 @@ namespace DevZest.Data
             return this;
         }
 
-        internal override void SelectCore(IModelSet sourceAggregateModelSet, DbExpression source, Column target)
+        internal override void OnSelect(Column source, DbExpression sourceExpression, Column target)
         {
-            base.SelectCore(sourceAggregateModelSet, source, target);
+            if (source == null)
+                return;
 
-            if (AutoGroupBy && sourceAggregateModelSet.Count == 0)
-                _groupByList.Add(source);
+            if (target.IsSystem || (AutoGroupBy && source.AggregateModelSet.Count == 0))
+                _groupByList.Add(sourceExpression);
         }
 
         internal override DbSelectStatement BuildSelectStatement(IList<ColumnMapping> selectList, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
