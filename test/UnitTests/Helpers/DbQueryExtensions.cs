@@ -38,7 +38,7 @@ namespace DevZest.Data.Helpers
             var model = (SequentialKeyModel)query.Model;
             result[0] = sqlSession.GetCreateTableCommand(model, tempTableName, true);
             var tempTable = DbTable<SequentialKeyModel>.CreateTemp(model, sqlSession, tempTableName);
-            result[1] = sqlSession.GetInsertCommand(query.BuildToTempTableStatement(tempTable));
+            result[1] = sqlSession.GetInsertCommand(query.BuildToTempTableStatement());
             return result;
         }
     }

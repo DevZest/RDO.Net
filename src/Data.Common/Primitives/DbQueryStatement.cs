@@ -58,7 +58,7 @@ namespace DevZest.Data.Primitives
             return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }
 
-        internal abstract DbSelectStatement BuildToTempTableStatement(IDbTable dbTable);
+        internal abstract DbSelectStatement BuildToTempTableStatement();
 
         private DbTable<T> ToTempTable<T>(T model, DbSession dbSession)
             where T : Model, new()
@@ -68,7 +68,7 @@ namespace DevZest.Data.Primitives
             var name = dbSession.AssignTempTableName(model);
             var result = DbTable<T>.CreateTemp(model, dbSession, name);
             dbSession.CreateTable(model, name, true);
-            result.InitialRowCount = dbSession.Insert(BuildToTempTableStatement(result));
+            result.InitialRowCount = dbSession.Insert(BuildToTempTableStatement());
             return result;
         }
 
@@ -80,7 +80,7 @@ namespace DevZest.Data.Primitives
             var name = dbSession.AssignTempTableName(model);
             var result = DbTable<T>.CreateTemp(model, dbSession, name);
             await dbSession.CreateTableAsync(model, name, true, cancellationToken);
-            result.InitialRowCount = await dbSession.InsertAsync(BuildToTempTableStatement(result), cancellationToken);
+            result.InitialRowCount = await dbSession.InsertAsync(BuildToTempTableStatement(), cancellationToken);
             return result;
         }
 

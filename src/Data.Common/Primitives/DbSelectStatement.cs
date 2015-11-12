@@ -100,7 +100,7 @@ namespace DevZest.Data.Primitives
                 : base.BuildDeleteStatement(model, keyMappings);
         }
 
-        internal override DbSelectStatement BuildToTempTableStatement(IDbTable dbTable)
+        internal override DbSelectStatement BuildToTempTableStatement()
         {
             return this;
         }

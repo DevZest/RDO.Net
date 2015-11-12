@@ -19,7 +19,7 @@ namespace DevZest.Data.Helpers
             model.AddTempTableIdentity();
             var tempTable = DbTable<T>.CreateTemp(model, sqlSession, tempTableName);
             result[0] = sqlSession.GetCreateTableCommand(model, tempTableName, true);
-            result[1] = sqlSession.GetInsertCommand(insertStatement.BuildToTempTableStatement(tempTable));
+            result[1] = sqlSession.GetInsertCommand(insertStatement.BuildToTempTableStatement());
 
             return result;
         }

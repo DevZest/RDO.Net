@@ -44,7 +44,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(sequentialKeyModel, select, this, null, null, null, null, -1, -1);
         }
 
-        internal override DbSelectStatement BuildToTempTableStatement(IDbTable dbTable)
+        internal override DbSelectStatement BuildToTempTableStatement()
         {
             return new DbSelectStatement(Model, null, this, null, null, -1, -1);
         }
