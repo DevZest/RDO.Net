@@ -252,10 +252,10 @@ namespace DevZest.Data.SqlServer
             where TTarget : Model, new()
         {
             if (target == null)
-                return source.FromClause;
+                return source.GetFromClause();
 
             var mappings = new ColumnMapping[] { target.Model.GetIdentity(false).Column.From(source.Model.GetIdentity(false).Column) };
-            return new DbJoinClause(DbJoinKind.LeftJoin, source.FromClause, target.FromClause, new ReadOnlyCollection<ColumnMapping>(mappings));
+            return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
         internal SqlCommand GetUpdateIdentityMappingsCommand(DbTable<IdentityMapping> identityMappings, DbTable<IdentityOutput> identityOutput)
@@ -274,7 +274,7 @@ namespace DevZest.Data.SqlServer
             };
 
             var mappings = new ColumnMapping[] { identityOutput.GetIdentity(true).Column.From(identityMapping.GetIdentity(true).Column) };
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.FromClause, identityOutputs.FromClause,
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.GetFromClause(), identityOutputs.GetFromClause(),
                 new ReadOnlyCollection<ColumnMapping>(mappings));
             return new DbSelectStatement(identityMapping, select, from, null, null, -1, -1);
         }

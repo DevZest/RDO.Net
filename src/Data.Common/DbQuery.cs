@@ -18,7 +18,7 @@ namespace DevZest.Data
 
         private DbQueryStatement _originalQueryStatement;
         private DbQueryStatement _queryStatement;
-        public override DbQueryStatement QueryStatement
+        internal override DbQueryStatement QueryStatement
         {
             get
             {
@@ -33,13 +33,13 @@ namespace DevZest.Data
             get { return DataSourceKind.DbQuery; }
         }
 
-        public override DbFromClause FromClause
+        internal override DbFromClause FromClause
         {
             get { return QueryStatement; }
         }
 
         private DbQueryStatement _sequentialQueryStatement;
-        public override DbQueryStatement SequentialQueryStatement
+        internal override DbQueryStatement SequentialQueryStatement
         {
             get
             {

@@ -77,18 +77,18 @@ namespace DevZest.Data
         }
 
         private DbQueryStatement _queryStatement;
-        public override DbQueryStatement QueryStatement
+        internal override DbQueryStatement QueryStatement
         {
             get { return _queryStatement ?? (_queryStatement = SelectStatement.RemoveSystemColumns()); }
         }
 
-        public override DbQueryStatement SequentialQueryStatement
+        internal override DbQueryStatement SequentialQueryStatement
         {
             get { return SelectStatement; }
         }
 
         private DbFromClause _fromClause;
-        public override DbFromClause FromClause
+        internal override DbFromClause FromClause
         {
             get { return _fromClause ?? (_fromClause = new DbTableClause(Model, Name)); }
         }

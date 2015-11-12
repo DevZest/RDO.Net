@@ -24,11 +24,26 @@ namespace DevZest.Data
 
         public T _ { get; private set; }
 
-        public abstract DbQueryStatement QueryStatement { get; }
+        internal abstract DbQueryStatement QueryStatement { get; }
 
-        public abstract DbQueryStatement SequentialQueryStatement { get; }
+        internal abstract DbQueryStatement SequentialQueryStatement { get; }
 
-        public abstract DbFromClause FromClause { get; }
+        internal abstract DbFromClause FromClause { get; }
+
+        DbQueryStatement IDbSet.QueryStatement
+        {
+            get { return QueryStatement; }
+        }
+
+        DbFromClause IDbSet.FromClause
+        {
+            get { return FromClause; }
+        }
+
+        DbQueryStatement IDbSet.SequentialQueryStatement
+        {
+            get { return SequentialQueryStatement; }
+        }
 
         public DbQuery<T> Where(Func<T, _Boolean> predicate)
         {
