@@ -228,9 +228,6 @@
   <data name="DbQueryBuilder_Join_InvalidRightKey" xml:space="preserve">
     <value>Invalid right key. Its ParentModel must be the same as the provided model parameter.</value>
   </data>
-  <data name="DbQueryBuilder_VerifyModel" xml:space="preserve">
-    <value>The model is invalid. Its DataSource.Kind must be DbTable, DbTempTable or DbQuery.</value>
-  </data>
   <data name="DbQueryBuilder_VerifySourceColumnAggregateModels" xml:space="preserve">
     <value>Aggregate expression is not supported.</value>
   </data>
@@ -266,9 +263,6 @@
   </data>
   <data name="Model_EmptyColumns" xml:space="preserve">
     <value>The columns cannot be empty.</value>
-  </data>
-  <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
-    <value>The FROM clause is empty.</value>
   </data>
   <data name="Model_InvalidRefTableModel" xml:space="preserve">
     <value>The reference table model is invalid. It must either be a self reference or a reference to a existing table.</value>

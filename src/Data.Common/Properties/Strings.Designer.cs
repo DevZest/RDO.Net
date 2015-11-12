@@ -308,14 +308,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The model is invalid. Its DataSource.Kind must be DbTable, DbTempTable or DbQuery.
-        /// </summary>
-        public static string DbQueryBuilder_VerifyModel
-        {
-            get { return GetString("DbQueryBuilder_VerifyModel"); }
-        }
-
-        /// <summary>
         /// Aggregate expression is not supported.
         /// </summary>
         public static string DbQueryBuilder_VerifySourceColumnAggregateModels
@@ -409,14 +401,6 @@ namespace DevZest.Data
         public static string Model_EmptyColumns
         {
             get { return GetString("Model_EmptyColumns"); }
-        }
-
-        /// <summary>
-        /// The FROM clause is empty.
-        /// </summary>
-        public static string DbQueryBuilder_EmptyFrom
-        {
-            get { return GetString("DbQueryBuilder_EmptyFrom"); }
         }
 
         /// <summary>
