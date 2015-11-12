@@ -48,10 +48,5 @@ namespace DevZest.Data.Primitives
         {
             return new DbSelectStatement(Model, null, this, null, null, -1, -1);
         }
-
-        internal override DbExpression GetSource(int ordinal)
-        {
-            return null;
-        }
     }
 }

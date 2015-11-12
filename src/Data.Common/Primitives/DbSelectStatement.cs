@@ -122,11 +122,6 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(Model, newSelect, From, Where, OrderBy, Offset, Fetch);
         }
 
-        internal override DbExpression GetSource(int ordinal)
-        {
-            return Select[ordinal].Source;
-        }
-
         internal override SubQueryEliminator SubQueryEliminator
         {
             get { return IsSimple && IsDbQuery ? new SubQueryEliminator(this) : null; }

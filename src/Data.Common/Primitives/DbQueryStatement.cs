@@ -104,8 +104,6 @@ namespace DevZest.Data.Primitives
             return this;
         }
 
-        internal abstract DbExpression GetSource(int ordinal);
-
         internal sealed override void OnClone(Model model)
         {
             Model = model;
