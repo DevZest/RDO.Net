@@ -81,7 +81,6 @@
     <Compile Include="CaseTests.cs" />
     <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="Helpers\DbSessionExtensions.cs" />
-    <Compile Include="Helpers\DbSetExtensions.cs" />
     <Compile Include="Helpers\DbTableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="_CharTests.cs" />

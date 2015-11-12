@@ -31,7 +31,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var tempTable = db.ProductCategories.MockTempTable();
+                var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategories.GetUpdateCommand(tempTable);
                 var expectedSql =
 @"UPDATE [ProductCategory1] SET
@@ -78,7 +78,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.ProductCategories.MockTempTable().Where(x => x.ModifiedDate.IsNull());
+                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.GetUpdateCommand(query);
                 var expectedSql =
 @"UPDATE [ProductCategory1] SET

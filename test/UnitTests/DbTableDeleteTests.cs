@@ -29,7 +29,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var tempTable = db.ProductCategories.MockTempTable();
+                var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategories.GetDeleteCommand(tempTable);
                 var expectedSql =
 @"DELETE [ProductCategory1]
@@ -68,7 +68,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var query = db.ProductCategories.MockTempTable().Where(x => x.ModifiedDate.IsNull());
+                var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.GetDeleteCommand(query);
                 var expectedSql =
 @"DELETE [ProductCategory1]
