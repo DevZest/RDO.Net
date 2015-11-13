@@ -16,7 +16,7 @@ namespace DevZest.Data
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<Product>();
-                var command = table.GetInsertCommand(db.Products);
+                var commands = table.MockInsert(0, db.Products);
                 var expectedSql =
 @"INSERT INTO [#Product]
 ([ProductID], [Name], [ProductNumber], [Color], [StandardCost], [ListPrice], [Size], [Weight], [ProductCategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [ThumbNailPhoto], [ThumbnailPhotoFileName], [RowGuid], [ModifiedDate])
@@ -40,7 +40,7 @@ SELECT
     [Product].[ModifiedDate] AS [ModifiedDate]
 FROM [SalesLT].[Product] [Product];
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                commands.Verify(expectedSql);
             }
         }
 
@@ -50,7 +50,7 @@ FROM [SalesLT].[Product] [Product];
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var command = table.GetInsertCommand(db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()));
+                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()));
                 var expectedSql =
 @"INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -73,7 +73,7 @@ WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var table = db.MockTempTable<ProductCategory>();
-                var command = table.GetInsertCommand(db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), autoJoin: true);
+                var command = table.MockInsert(0, db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()), autoJoin: true);
                 var expectedSql =
 @"INSERT INTO [#ProductCategory]
 ([ProductCategoryID], [ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
@@ -103,7 +103,7 @@ WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCatego
                 salesOrders.MockSequentialKeyTempTable();
                 var childQuery = salesOrders.CreateChild(x => x.SalesOrderDetails, db.SalesOrderDetails.OrderBy(x => x.SalesOrderDetailID));
                 var tempTable = db.MockTempTable<SalesOrderDetail>();
-                var command = tempTable.GetInsertCommand(childQuery);
+                var command = tempTable.MockInsert(0, childQuery);
 
                 var expectedSql =
 @"INSERT INTO [#SalesOrderDetail]
@@ -141,7 +141,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
                 dataSet._.ParentProductCategoryID[dataRow] = null;
                 dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
                 dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-                var command = table.GetInsertScalarCommand(dataSet, 0);
+                var command = table.MockInsert(true, dataSet, 0);
                 var expectedSql =
 @"DECLARE @p1 INT = 0;
 DECLARE @p2 INT = NULL;
@@ -174,7 +174,7 @@ SELECT
                 dataSet._.ParentProductCategoryID[dataRow] = null;
                 dataSet._.RowGuid[dataRow] = new Guid("040D9B64-05FD-4464-B398-74679C427980");
                 dataSet._.ModifiedDate[dataRow] = new DateTime(2015, 9, 8);
-                var command = table.GetInsertScalarCommand(dataSet, 0, autoJoin: true);
+                var command = table.MockInsert(true, dataSet, 0, autoJoin: true);
                 var expectedSql =
 @"DECLARE @p1 INT = 0;
 DECLARE @p2 INT = NULL;
@@ -202,13 +202,13 @@ WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
         }
 
         [TestMethod]
-        public void DbTable_Insert_union_query_into_temp_table()
+        public void DbTable_Insert_union_query()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<Product>();
                 var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
-                var command = tempTable.GetInsertCommand(unionQuery);
+                var command = tempTable.MockInsert(0, unionQuery);
                 var expectedSql =
 @"INSERT INTO [#Product]
 ([ProductID], [Name], [ProductNumber], [Color], [StandardCost], [ListPrice], [Size], [Weight], [ProductCategoryID], [ProductModelID], [SellStartDate], [SellEndDate], [DiscontinuedDate], [ThumbNailPhoto], [ThumbnailPhotoFileName], [RowGuid], [ModifiedDate])
@@ -288,7 +288,7 @@ FROM
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = tempTable.GetInsertCommand(db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null));
+                var command = tempTable.MockInsert(0, db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null));
 
                 var expectedSql =
 @"DECLARE @p1 XML = N'
