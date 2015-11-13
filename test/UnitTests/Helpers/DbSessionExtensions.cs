@@ -12,7 +12,7 @@ namespace DevZest.Data.Helpers
         internal static DbTable<T> MockTempTable<T>(this DbSession dbSession, Action<T> initializer = null)
             where T : Model, new()
         {
-            return dbSession.NewTempTableObject(initializer);
+            return dbSession.CreateTempTableInstance(initializer);
         }
 
         internal static DbTable<T> MockTempTable<T>(this SqlSession sqlSession, IList<SqlCommand> commands)

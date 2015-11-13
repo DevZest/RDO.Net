@@ -122,7 +122,6 @@
     <Compile Include="Helpers\SimpleModelBase.cs" />
     <Compile Include="Helpers\SimpleModelKey.cs" />
     <Compile Include="Helpers\ModelCollectionExtensions.cs" />
-    <Compile Include="Helpers\ColumnCollectionExtensions.cs" />
     <Compile Include="Helpers\ColumnExtensions.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="Primitives\AccessorManagerTests.cs" />

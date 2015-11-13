@@ -58,7 +58,7 @@ namespace DevZest.Data.Primitives
         public DbTable<T> CreateTempTable<T>(Action<T> initializer = null)
             where T : Model, new()
         {
-            var result = NewTempTableObject(initializer);
+            var result = CreateTempTableInstance(initializer);
             CreateTable(result._, result.Name, true);
             return result;
         }
@@ -72,7 +72,24 @@ namespace DevZest.Data.Primitives
         public async Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken cancellationToken)
             where T : Model, new()
         {
-            var result = NewTempTableObject(initializer);
+            var result = CreateTempTableInstance(initializer);
+            await CreateTableAsync(result._, result.Name, true, cancellationToken);
+            return result;
+        }
+
+        internal DbTable<T> CreateTempTable<T>(T sourceModel)
+            where T : Model, new()
+        {
+            Debug.Assert(sourceModel != null);
+            var result = CreateTempTableInstance(sourceModel);
+            CreateTable(result._, result.Name, true);
+            return result;
+        }
+
+        internal async Task<DbTable<T>> CreateTempTableAsync<T>(T sourceModel, CancellationToken cancellationToken)
+            where T : Model, new()
+        {
+            var result = CreateTempTableInstance(sourceModel);
             await CreateTableAsync(result._, result.Name, true, cancellationToken);
             return result;
         }
@@ -114,12 +131,25 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        internal DbTable<T> NewTempTableObject<T>(Action<T> initializer = null)
+        internal DbTable<T> CreateTempTableInstance<T>(Action<T> initializer = null)
             where T : Model, new()
         {
             var model = new T();
             if (initializer != null)
                 initializer(model);
+            return InitTempTableModel(model);
+        }
+
+        private DbTable<T> CreateTempTableInstance<T>(T sourceModel)
+            where T : Model, new()
+        {
+            var model = Model.Clone(sourceModel, false);
+            return InitTempTableModel(model);
+        }
+
+        private DbTable<T> InitTempTableModel<T>(T model)
+            where T : Model, new()
+        {
             model.AddTempTableIdentity();
             var tableName = AssignTempTableName(model);
             return DbTable<T>.CreateTemp(model, this, tableName);

@@ -133,7 +133,8 @@ namespace DevZest.Data
         private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, cancellationToken) : null;
+            Action<IdentityMapping> initializer = null;
+            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }

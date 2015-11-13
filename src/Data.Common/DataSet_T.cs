@@ -251,26 +251,20 @@ namespace DevZest.Data
             return child == null ? null : (DataSet<TChild>)child.DataSource;
         }
 
-        public DbTable<T> ToTempTable(DbSession dbSession)
+        internal DbTable<T> ToTempTable(DbSession dbSession)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            var result = dbSession.CreateTempTable<T>();
-            result.Insert(this, null, false);
+            var result = dbSession.CreateTempTable<T>(_);
+            result.Insert(this);
             return result;
         }
 
-        public Task<DbTable<T>> ToTempTableAsync(DbSession dbSession)
-        {
-            return ToTempTableAsync(dbSession, CancellationToken.None);
-        }
-
-        public async Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
+        internal async Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             Check.NotNull(dbSession, nameof(dbSession));
 
-            Action<T> initializer = null;
-            var result = await dbSession.CreateTempTableAsync<T>(initializer, cancellationToken);
+            var result = await dbSession.CreateTempTableAsync<T>(_, cancellationToken);
             await result.InsertAsync(this, null, false, false, cancellationToken);
             return result;
         }
