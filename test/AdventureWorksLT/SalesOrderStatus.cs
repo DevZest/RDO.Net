@@ -76,7 +76,7 @@ namespace DevZest.Samples.AdventureWorksLT
         }
     }
 
-    public sealed class SalesOrderStatusColumn : ByteEnum<SalesOrderStatus>
+    public sealed class _SalesOrderStatus : ByteEnum<SalesOrderStatus>
     {
         protected override Column<SalesOrderStatus> CreateParam(SalesOrderStatus value)
         {
@@ -88,17 +88,17 @@ namespace DevZest.Samples.AdventureWorksLT
             return Const(value);
         }
 
-        public static SalesOrderStatusColumn Param(SalesOrderStatus x, SalesOrderStatusColumn sourceColumn = null)
+        public static _SalesOrderStatus Param(SalesOrderStatus x, _SalesOrderStatus sourceColumn = null)
         {
-            return new ParamExpression<SalesOrderStatus>(x, sourceColumn).MakeColumn<SalesOrderStatusColumn>();
+            return new ParamExpression<SalesOrderStatus>(x, sourceColumn).MakeColumn<_SalesOrderStatus>();
         }
 
-        public static SalesOrderStatusColumn Const(SalesOrderStatus x)
+        public static _SalesOrderStatus Const(SalesOrderStatus x)
         {
-            return new ConstantExpression<SalesOrderStatus>(x).MakeColumn<SalesOrderStatusColumn>();
+            return new ConstantExpression<SalesOrderStatus>(x).MakeColumn<_SalesOrderStatus>();
         }
 
-        public static implicit operator SalesOrderStatusColumn(SalesOrderStatus x)
+        public static implicit operator _SalesOrderStatus(SalesOrderStatus x)
         {
             return Param(x);
         }

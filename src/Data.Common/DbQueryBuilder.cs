@@ -298,7 +298,7 @@ namespace DevZest.Data
         {
             Check.NotNull(condition, nameof(condition));
             VerifyModelSet(condition, nameof(condition));
-            WhereExpression = EliminateSubQuery(condition.DbExpression);
+            WhereExpression = And(WhereExpression, EliminateSubQuery(condition.DbExpression));
 
             return this;
         }

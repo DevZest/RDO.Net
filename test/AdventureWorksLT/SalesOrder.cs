@@ -21,7 +21,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public static readonly Accessor<SalesOrder, _DateTime> OrderDateAccessor = RegisterColumn((SalesOrder x) => x.OrderDate, x => x.Default(DevZest.Data.Functions.GetDate()));
         public static readonly Accessor<SalesOrder, _DateTime> DueDateAccessor = RegisterColumn((SalesOrder x) => x.DueDate);
         public static readonly Accessor<SalesOrder, _DateTime> ShipDateAccessor = RegisterColumn((SalesOrder x) => x.ShipDate);
-        public static readonly Accessor<SalesOrder, SalesOrderStatusColumn> StatusAccessor = RegisterColumn((SalesOrder x) => x.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
+        public static readonly Accessor<SalesOrder, _SalesOrderStatus> StatusAccessor = RegisterColumn((SalesOrder x) => x.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
         public static readonly Accessor<SalesOrder, _Boolean> OnlineOrderFlagAccessor = RegisterColumn((SalesOrder x) => x.OnlineOrderFlag, x => x.DefaultValue(true));
         public static readonly Accessor<SalesOrder, _String> SalesOrderNumberAccessor = RegisterColumn((SalesOrder x) => x.SalesOrderNumber);
         public static readonly Accessor<SalesOrder, _String> PurchaseOrderNumberAccessor = RegisterColumn((SalesOrder x) => x.PurchaseOrderNumber);
@@ -85,7 +85,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public _DateTime ShipDate { get; private set; }
 
         [Required]
-        public SalesOrderStatusColumn Status { get; private set; }
+        public _SalesOrderStatus Status { get; private set; }
 
         [Required]
         public _Boolean OnlineOrderFlag { get; private set; }

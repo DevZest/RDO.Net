@@ -2,6 +2,7 @@
 using DevZest.Data.Helpers;
 using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DevZest.Data
 {
@@ -41,6 +42,26 @@ namespace DevZest.Data
 FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
 WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
 ORDER BY [SalesOrder].[SalesOrderID];
+";
+                Assert.AreEqual(expectedSql, query.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void DbSet_Where_multi_level()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var query = db.ProductCategories.Where(x => x.ParentProductCategoryID.IsNull()).Where(x => x.Name.IsNotNull());
+                var expectedSql =
+@"SELECT
+    [ProductCategory].[ProductCategoryID] AS [ProductCategoryID],
+    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
+    [ProductCategory].[Name] AS [Name],
+    [ProductCategory].[RowGuid] AS [RowGuid],
+    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
+FROM [SalesLT].[ProductCategory] [ProductCategory]
+WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCategory].[Name] IS NOT NULL));
 ";
                 Assert.AreEqual(expectedSql, query.ToString());
             }
