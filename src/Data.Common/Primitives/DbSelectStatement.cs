@@ -82,10 +82,10 @@ namespace DevZest.Data.Primitives
             return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);
         }
 
-        internal override DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal override DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
         {
-            return IsSimple ? new DbQueryBuilder(model).BuildInsertStatement(this, columnMappings, keyMappings)
-                : base.BuildInsertStatement(model, columnMappings, keyMappings);
+            return IsSimple ? new DbQueryBuilder(model).BuildInsertStatement(this, columnMappings, keyMappings, joinParent)
+                : base.BuildInsertStatement(model, columnMappings, keyMappings, joinParent);
         }
 
         internal override DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)

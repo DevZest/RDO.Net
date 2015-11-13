@@ -11,52 +11,85 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Insert<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
-            where TSource : Model, new()
+        private DataSourceRevision _source;
+
+        DataSourceRevision IDbTable.Source
         {
-            Check.NotNull(dbQuery, nameof(dbQuery));
-            return dbQuery.DbSession.Insert(BuildInsertStatement(dbQuery, columnMappingsBuilder, autoJoin));
+            get { return _source; }
         }
 
-        public Task<int> InsertAsync<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
-            where TSource : Model, new()
+        private int SetSource(DataSource source, int rowsAffected)
         {
-            Check.NotNull(dbQuery, nameof(dbQuery));
-            return dbQuery.DbSession.InsertAsync(BuildInsertStatement(dbQuery, columnMappingsBuilder, autoJoin), cancellationToken);
+            Debug.Assert(source != null);
+
+            if (rowsAffected == 0)
+                return rowsAffected;
+
+            if (_source.IsEmpty)
+                _source = new DataSourceRevision(source);
+            else
+                _source = new DataSourceRevision(null);
+
+            return rowsAffected;
         }
 
-        public Task<int> InsertAsync<TSource>(DbQuery<TSource> dbQuery, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
+        private bool SetSource<TSource>(DataSet<TSource> source, bool scalarInsertSuccess)
             where TSource : Model, new()
         {
-            return InsertAsync(dbQuery, columnMappingsBuilder, autoJoin, CancellationToken.None);
+            Debug.Assert(source != null);
+
+            if (scalarInsertSuccess)
+                _source = new DataSourceRevision(source.Count == 1 ? source : null);
+
+            return scalarInsertSuccess;
         }
 
-        public int Insert<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+        public int Insert<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
         {
-            Check.NotNull(dbTable, nameof(dbTable));
+            Check.NotNull(source, nameof(source));
+            return SetSource(source, DbSession.Insert(BuildInsertStatement(source, columnMappingsBuilder, autoJoin)));
+        }
+
+        public async Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+            return SetSource(source, await DbSession.InsertAsync(BuildInsertStatement(source, columnMappingsBuilder, autoJoin), cancellationToken));
+        }
+
+        public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
+            where TSource : Model, new()
+        {
+            return InsertAsync(source, columnMappingsBuilder, autoJoin, CancellationToken.None);
+        }
+
+        public int Insert<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = InsertTable(dbTable, columnMappingsBuilder, autoJoin, updateIdentity);
-            UpdateIdentity(dbTable, result);
-            return result.RowCount;
+            var result = InsertTable(source, columnMappingsBuilder, autoJoin, updateIdentity);
+            UpdateIdentity(source, result);
+            return SetSource(source, result.RowCount);
         }
 
-        public async Task<int> InsertAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        public async Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dbTable, nameof(dbTable));
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = await InsertTableAsync(dbTable, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
-            await UpdateIdentityAsync(dbTable, result, cancellationToken);
-            return result.RowCount;
+            var result = await InsertTableAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
+            await UpdateIdentityAsync(source, result, cancellationToken);
+            return SetSource(source, result.RowCount);
         }
 
-        public Task<int> InsertAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
         {
-            return InsertAsync(dbTable, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
+            return InsertAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
         }
 
         private void VerifyUpdateIdentity(bool updateIdentity, string paramName)
@@ -81,70 +114,87 @@ namespace DevZest.Data
             public readonly DbTable<IdentityMapping> IdentityMappings;
         }
 
-        private InsertTableResult InsertTable<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        private InsertTableResult InsertTable<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
             var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
-            var rowCount = DbSession.Insert(dbTable, this, columnMappingsBuilder, autoJoin, identityMappings);
+            var rowCount = DbSession.Insert(source, this, columnMappingsBuilder, autoJoin, identityMappings);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> dbTable, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        private async Task<InsertTableResult> InsertTableAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, cancellationToken) : null;
-            var rowCount = await DbSession.InsertAsync(dbTable, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
+            var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin)
+        internal DbSelectStatement BuildInsertStatement<TSource>(DbSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin)
             where TSource : Model, new()
         {
-            var sourceModel = dbSet._;
+            var sourceModel = source._;
             var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : _.BuildColumnMappings(sourceModel, columnMappingsBuilder);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
-            return dbSet.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings);
+            return source.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings, ShouldJoinParent(source));
         }
 
-        public int Insert<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+        private bool ShouldJoinParent<TSource>(DbSet<TSource> source)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            var parentModel = Model.ParentModel;
+            if (parentModel == null)
+                return false;
+
+            var sourceParentModel = source.Model.ParentModel;
+            if (sourceParentModel == null)
+                return true;
+            var sourceParentSource = sourceParentModel.DataSource;
+            if (sourceParentSource == null)
+                return true;
+
+            return parentModel.DataSource.Source != sourceParentSource.Source;
+        }
+
+        public int Insert<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return InsertDataSet(dataSet, columnMappingsBuilder, autoJoin, updateIdentity);
+            return SetSource(source, InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity));
         }
 
-        public Task<int> InsertAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        public async Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return InsertDataSetAsync(dataSet, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
+            return SetSource(source, await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken));
         }
 
-        public Task<int> InsertAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
+        public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
         {
-            return InsertAsync(dataSet, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
+            return InsertAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
         }
 
-        private int InsertDataSet<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        private int InsertDataSet<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            if (dataSet.Count == 0)
+            if (source.Count == 0)
                 return 0;
-            else if (dataSet.Count == 1)
-                return Insert(dataSet, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
+            else if (source.Count == 1)
+                return Insert(source, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
             else
             {
                 if (!updateIdentity)
-                    return DbSession.Insert(dataSet, this, columnMappingsBuilder, autoJoin);
+                    return DbSession.Insert(source, this, columnMappingsBuilder, autoJoin);
 
-                var tempTable = dataSet.ToTempTable(DbSession);
+                var tempTable = source.ToTempTable(DbSession);
                 var result = InsertTable(tempTable, columnMappingsBuilder, autoJoin, updateIdentity);
-                UpdateIdentity(dataSet, result);
+                UpdateIdentity(source, result);
                 return result.RowCount;
             }
         }
@@ -168,30 +218,30 @@ namespace DevZest.Data
             }
         }
 
-        public bool Insert<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        public bool Insert<TSource>(DataSet<TSource> source, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var statement = BuildInsertScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder, autoJoin);
+            var statement = BuildInsertScalarStatement(source, rowOrdinal, columnMappingsBuilder, autoJoin);
             var result = DbSession.InsertScalar(statement, updateIdentity);
             if (updateIdentity)
-                UpdateIdentity(dataSet, rowOrdinal, result.IdentityValue);
-            return result.Success;
+                UpdateIdentity(source, rowOrdinal, result.IdentityValue);
+            return SetSource(source, result.Success);
         }
 
-        public async Task<bool> InsertAsync<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        public async Task<bool> InsertAsync<TSource>(DataSet<TSource> source, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var statement = BuildInsertScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder, autoJoin);
+            var statement = BuildInsertScalarStatement(source, rowOrdinal, columnMappingsBuilder, autoJoin);
             var result = await DbSession.InsertScalarAsync(statement, updateIdentity, cancellationToken);
             if (updateIdentity)
-                UpdateIdentity(dataSet, rowOrdinal, result.IdentityValue);
-            return result.Success;
+                UpdateIdentity(source, rowOrdinal, result.IdentityValue);
+            return SetSource(source, result.Success);
         }
 
         internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin)

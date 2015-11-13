@@ -401,38 +401,56 @@ namespace DevZest.Data.Primitives
 
         protected abstract TCommand GetInsertScalarCommand(DbSelectStatement statement, bool outputIdentity);
 
+        private int ExecuteTableEdit(DbSelectStatement statement, Func<DbSelectStatement, TCommand> getCommand)
+        {
+            var command = getCommand(statement);
+            var result = ExecuteNonQuery(command);
+            if (result != 0)
+                statement.Model.DataSource.UpdateRevision();
+            return result;
+        }
+
+        private async Task<int> ExecuteTableEditAsync(DbSelectStatement statement, Func<DbSelectStatement, TCommand> getCommand, CancellationToken cancellationToken)
+        {
+            var command = getCommand(statement);
+            var result = await ExecuteNonQueryAsync(command, cancellationToken);
+            if (result != 0)
+                statement.Model.DataSource.UpdateRevision();
+            return result;
+        }
+
         internal sealed override int Insert(DbSelectStatement statement)
         {
-            return ExecuteNonQuery(GetInsertCommand(statement));
+            return ExecuteTableEdit(statement, GetInsertCommand);
         }
 
         internal sealed override Task<int> InsertAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {
-            return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
+            return ExecuteTableEditAsync(statement, GetInsertCommand, cancellationToken);
         }
 
         protected abstract TCommand GetInsertCommand(DbSelectStatement statement);
 
         internal sealed override int Update(DbSelectStatement statement)
         {
-            return ExecuteNonQuery(GetUpdateCommand(statement));
+            return ExecuteTableEdit(statement, GetUpdateCommand);
         }
 
         internal sealed override Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {
-            return ExecuteNonQueryAsync(GetUpdateCommand(statement), cancellationToken);
+            return ExecuteTableEditAsync(statement, GetUpdateCommand, cancellationToken);
         }
 
         protected internal abstract TCommand GetUpdateCommand(DbSelectStatement statement);
 
         internal sealed override int Delete(DbSelectStatement statement)
         {
-            return ExecuteNonQuery(GetDeleteCommand(statement));
+            return ExecuteTableEdit(statement, GetDeleteCommand);
         }
 
         internal sealed override Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken)
         {
-            return ExecuteNonQueryAsync(GetDeleteCommand(statement), cancellationToken);
+            return ExecuteTableEditAsync(statement, GetDeleteCommand, cancellationToken);
         }
 
         protected internal abstract TCommand GetDeleteCommand(DbSelectStatement statement);

@@ -84,9 +84,9 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal virtual DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal virtual DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
         {
-            return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings);
+            return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings, joinParent);
         }
 
         internal virtual DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
