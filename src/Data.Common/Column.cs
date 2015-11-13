@@ -281,13 +281,6 @@ namespace DevZest.Data
 
         internal void OnValueChanged(DataRow dataRow)
         {
-            var model = ParentModel;
-            if (model != null)
-            {
-                var dataSource = model.DataSource;
-                dataSource.UpdateRevision();
-            }
-
             if (ValueChanged != null)
                 ValueChanged(this, dataRow);
         }

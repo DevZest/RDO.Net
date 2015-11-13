@@ -173,6 +173,10 @@ namespace DevZest.Data
 
         internal void OnValueChanged(Column column)
         {
+            Model.DataSource.UpdateRevision();
+            if (Parent != null)
+                Parent[Model.Ordinal].UpdateRevision();
+
             if (ValueChanged != null)
                 ValueChanged(column, this);
         }

@@ -196,6 +196,8 @@ namespace DevZest.Data
 
         private void OnChanged(DataRow dataRow)
         {
+            UpdateRevision();
+
             if (Changed != null)
                 Changed(this, dataRow);
         }
