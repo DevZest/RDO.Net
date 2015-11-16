@@ -148,7 +148,7 @@ namespace DevZest.Data.SqlServer
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            return CreateQuery<TTarget>((builder, model) =>
+            var result = CreateQuery<TTarget>((builder, model) =>
             {
                 var dataSetOrdinalColumn = new _Int32();
                 model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
@@ -167,6 +167,8 @@ namespace DevZest.Data.SqlServer
                 }
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
             });
+            result.SetOriginalDataSource(dataSet, false);
+            return result;
         }
 
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Primitives;
+using System;
+using System.Diagnostics;
 
 namespace DevZest.Data
 {
@@ -21,27 +23,47 @@ namespace DevZest.Data
             Revision++;
         }
 
-        private DataSource ChildSource
+        private DataSource _originalDataSource;
+        private int? _originalDataSourceRevision;
+
+        private DataSource OriginalDataSource
         {
             get
             {
-                var dbTable = this as IDbTable;
-                if (dbTable == null)
-                    return null;
+                var result = _originalDataSource;
+                if (result == null || !_originalDataSourceRevision.HasValue)
+                    return result;
 
-                var source = dbTable.Source;
-                var result = source.DataSource;
-                return result == null || result.Revision != source.Revision ? null : result;
+                return result.Revision != _originalDataSourceRevision.GetValueOrDefault() ? null : result;
             }
         }
 
-        internal DataSource Source
+        internal void SetOriginalDataSource(DataSource originalDataSource, bool isSnapshot)
+        {
+            Debug.Assert(originalDataSource != null);
+
+            if (_originalDataSourceRevision == -1)
+                return;
+
+            if (_originalDataSource != null)
+            {
+                _originalDataSource = null;
+                _originalDataSourceRevision = -1;
+                return;
+            }
+
+            _originalDataSource = originalDataSource;
+            if (isSnapshot)
+                _originalDataSourceRevision = originalDataSource.Revision;
+        }
+
+        internal DataSource UltimateOriginalDataSource
         {
             get
             {
                 var result = this;
-                for (var childSource = ChildSource; childSource != null;)
-                    result = childSource;
+                for (var origin = OriginalDataSource; origin != null; origin = origin.OriginalDataSource)
+                    result = origin;
                 return result;
             }
         }

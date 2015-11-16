@@ -11,44 +11,18 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        private DataSourceRevision _source;
-
-        DataSourceRevision IDbTable.Source
+        internal int SetOrigin(DataSource origin, int rowsAffected)
         {
-            get { return _source; }
-        }
-
-        internal int SetSource(DataSource source, int rowsAffected)
-        {
-            if (source == null)
-            {
-                _source = new DataSourceRevision(null);
-                return rowsAffected;
-            }
-
-            if (rowsAffected == 0)
-                return rowsAffected;
-
-            if (_source.IsEmpty)
-                _source = new DataSourceRevision(source);
-            else
-                _source = new DataSourceRevision(null);
-
+            if (rowsAffected != 0)
+                SetOriginalDataSource(origin, true);
             return rowsAffected;
         }
 
-        internal bool SetSource<TSource>(DataSet<TSource> source, bool scalarInsertSuccess)
+        internal bool SetOrigin<TSource>(DataSet<TSource> source, bool scalarInsertSuccess)
             where TSource : Model, new()
         {
-            if (source == null)
-            {
-                _source = new DataSourceRevision(null);
-                return scalarInsertSuccess;
-            }
-
             if (scalarInsertSuccess)
-                _source = new DataSourceRevision(source.Count == 1 ? source : null);
-
+                SetOriginalDataSource(source, true);
             return scalarInsertSuccess;
         }
 
@@ -56,14 +30,14 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             Check.NotNull(source, nameof(source));
-            return SetSource(source, DbSession.Insert(BuildInsertStatement(source, columnMappingsBuilder, autoJoin)));
+            return SetOrigin(source, DbSession.Insert(BuildInsertStatement(source, columnMappingsBuilder, autoJoin)));
         }
 
         public async Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Check.NotNull(source, nameof(source));
-            return SetSource(source, await DbSession.InsertAsync(BuildInsertStatement(source, columnMappingsBuilder, autoJoin), cancellationToken));
+            return SetOrigin(source, await DbSession.InsertAsync(BuildInsertStatement(source, columnMappingsBuilder, autoJoin), cancellationToken));
         }
 
         public Task<int> InsertAsync<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
@@ -80,7 +54,7 @@ namespace DevZest.Data
 
             var result = InsertTable(source, columnMappingsBuilder, autoJoin, updateIdentity);
             UpdateIdentity(source, result);
-            return SetSource(source, result.RowCount);
+            return SetOrigin(source, result.RowCount);
         }
 
         public async Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
@@ -91,7 +65,7 @@ namespace DevZest.Data
 
             var result = await InsertTableAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
             await UpdateIdentityAsync(source, result, cancellationToken);
-            return SetSource(source, result.RowCount);
+            return SetOrigin(source, result.RowCount);
         }
 
         public Task<int> InsertAsync<TSource>(DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
@@ -145,23 +119,28 @@ namespace DevZest.Data
             var sourceModel = source._;
             var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : _.BuildColumnMappings(sourceModel, columnMappingsBuilder);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
-            return source.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings, ShouldJoinParent(sourceModel));
+            return source.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings, ShouldJoinParent(source));
         }
 
-        private bool ShouldJoinParent(Model sourceModel)
+        private bool ShouldJoinParent(DataSource sourceData)
         {
+            Debug.Assert(sourceData != null);
+
             var parentModel = Model.ParentModel;
             if (parentModel == null)
                 return false;
 
-            var sourceParentModel = sourceModel.ParentModel;
+            sourceData = sourceData.UltimateOriginalDataSource;
+            if (sourceData == null)
+                return true;
+            var sourceParentModel = sourceData.Model.ParentModel;
             if (sourceParentModel == null)
                 return true;
-            var sourceParentSource = sourceParentModel.DataSource;
-            if (sourceParentSource == null)
+            var parentDataSource = sourceParentModel.DataSource;
+            if (parentDataSource == null)
                 return true;
 
-            return parentModel.DataSource.Source != sourceParentSource.Source;
+            return parentModel.DataSource.UltimateOriginalDataSource != parentDataSource.UltimateOriginalDataSource;
         }
 
         public int Insert<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
@@ -170,7 +149,7 @@ namespace DevZest.Data
             Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return SetSource(source, InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity));
+            return SetOrigin(source, InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity));
         }
 
         public async Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
@@ -179,7 +158,7 @@ namespace DevZest.Data
             Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return SetSource(source, await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken));
+            return SetOrigin(source, await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken));
         }
 
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
@@ -235,7 +214,7 @@ namespace DevZest.Data
             var result = DbSession.InsertScalar(statement, updateIdentity);
             if (updateIdentity)
                 UpdateIdentity(source, rowOrdinal, result.IdentityValue);
-            return SetSource(source, result.Success);
+            return SetOrigin(source, result.Success);
         }
 
         public async Task<bool> InsertAsync<TSource>(DataSet<TSource> source, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
@@ -248,7 +227,7 @@ namespace DevZest.Data
             var result = await DbSession.InsertScalarAsync(statement, updateIdentity, cancellationToken);
             if (updateIdentity)
                 UpdateIdentity(source, rowOrdinal, result.IdentityValue);
-            return SetSource(source, result.Success);
+            return SetOrigin(source, result.Success);
         }
 
         internal DbSelectStatement BuildInsertScalarStatement<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin)
@@ -257,7 +236,7 @@ namespace DevZest.Data
             var sourceModel = dataSet._;
             var columnMappings = columnMappingsBuilder == null ? GetColumnMappings(sourceModel) : _.BuildColumnMappings(sourceModel, columnMappingsBuilder);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
-            var parentMappings = ShouldJoinParent(sourceModel) ? columnMappings.GetParentRelationship(this) : null;
+            var parentMappings = ShouldJoinParent(dataSet) ? columnMappings.GetParentRelationship(this) : null;
 
             var paramManager = new ScalarParamManager(dataSet[rowOrdinal]);
             var select = GetScalarMapping(paramManager, columnMappings);

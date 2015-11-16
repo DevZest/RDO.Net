@@ -342,5 +342,64 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
                 Assert.AreEqual(expectedSql, command.ToTraceString());
             }
         }
+
+        [TestMethod]
+        public void DbTable_Insert_into_child_temp_table_optimized()
+        {
+            var salesOrders = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var tempSalesOrders = db.MockTempTable<SalesOrder>();
+                var tempSalesOrderDetails = tempSalesOrders.MockCreateChild(x => x.SalesOrderDetails);
+                tempSalesOrders.MockInsert(true, salesOrders, 0);
+                var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
+                var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
+                var expectedSql =
+@"DECLARE @p1 XML = N'
+<root>
+  <row>
+    <col_0>71774</col_0>
+    <col_1>110562</col_1>
+    <col_2>1</col_2>
+    <col_3>836</col_3>
+    <col_4>356.8980</col_4>
+    <col_5>0.0000</col_5>
+    <col_6>356.898000</col_6>
+    <col_7>e3a1994c-7a68-4ce8-96a3-77fdd3bbd730</col_7>
+    <col_8>2008-06-01 00:00:00.000</col_8>
+    <col_9>1</col_9>
+  </row>
+  <row>
+    <col_0>71774</col_0>
+    <col_1>110563</col_1>
+    <col_2>1</col_2>
+    <col_3>822</col_3>
+    <col_4>356.8980</col_4>
+    <col_5>0.0000</col_5>
+    <col_6>356.898000</col_6>
+    <col_7>5c77f557-fdb6-43ba-90b9-9a7aec55ca32</col_7>
+    <col_8>2008-06-01 00:00:00.000</col_8>
+    <col_9>2</col_9>
+  </row>
+</root>';
+
+INSERT INTO [#SalesOrderDetail]
+([SalesOrderID], [SalesOrderDetailID], [OrderQty], [ProductID], [UnitPrice], [UnitPriceDiscount], [LineTotal], [RowGuid], [ModifiedDate])
+SELECT
+    [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') AS [SalesOrderID],
+    [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') AS [SalesOrderDetailID],
+    [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'SMALLINT') AS [OrderQty],
+    [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'INT') AS [ProductID],
+    [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'MONEY') AS [UnitPrice],
+    [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'MONEY') AS [UnitPriceDiscount],
+    [SqlXmlModel].[Xml].value('col_6[1]/text()[1]', 'MONEY') AS [LineTotal],
+    [SqlXmlModel].[Xml].value('col_7[1]/text()[1]', 'UNIQUEIDENTIFIER') AS [RowGuid],
+    [SqlXmlModel].[Xml].value('col_8[1]/text()[1]', 'DATETIME') AS [ModifiedDate]
+FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
+ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
+";
+                command.Verify(expectedSql);
+            }
+        }
     }
 }

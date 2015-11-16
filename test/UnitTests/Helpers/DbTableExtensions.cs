@@ -10,6 +10,18 @@ namespace DevZest.Data.Helpers
 {
     internal static class DbTableExtensions
     {
+        internal static DbTable<TChild> MockCreateChild<T, TChild>(this DbTable<T> dbTable, Func<T, TChild> getChildModel, Action<T> initializer = null)
+            where T : Model, new()
+            where TChild : Model, new()
+        {
+            var model = dbTable.VerifyCreateChild(getChildModel);
+
+            var dbSession = dbTable.DbSession;
+            var name = dbSession.AssignTempTableName(model);
+            var result = DbTable<TChild>.CreateTemp(model, dbSession, name);
+            return result;
+        }
+
         internal static void Verify(this IList<SqlCommand> commands, params string[] commandTextList)
         {
             Assert.AreEqual(commandTextList.Length, commands.Count);
@@ -52,7 +64,7 @@ namespace DevZest.Data.Helpers
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, rowOrdinal, columnMappingsBuilder, autoJoin));
-            dbTable.SetSource(source, success);
+            dbTable.SetOrigin(source, success);
 
             return result;
         }
@@ -65,7 +77,7 @@ namespace DevZest.Data.Helpers
             Check.NotNull(source, nameof(source));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappingsBuilder, autoJoin));
-            dbTable.SetSource(source, rowsAffected);
+            dbTable.SetOrigin(source, rowsAffected);
             return result;
         }
 
@@ -75,7 +87,7 @@ namespace DevZest.Data.Helpers
             where TTarget : Model, new()
         {
             var result = dbTable.MockInsertTable(rowsAffected, source, columnMappingsBuilder, autoJoin, updateIdentity);
-            dbTable.SetSource(source, rowsAffected);
+            dbTable.SetOrigin(source, rowsAffected);
             return result;
         }
 
@@ -135,7 +147,7 @@ namespace DevZest.Data.Helpers
 
             var tempTable = sqlSession.MockTempTable<TSource>(result);
             result.AddRange(dbTable.MockInsertTable(rowsAffected, tempTable, columnMappingsBuilder, autoJoin, updateIdentity));
-            dbTable.SetSource(source, rowsAffected);
+            dbTable.SetOrigin(source, rowsAffected);
             return result;
         }
 
