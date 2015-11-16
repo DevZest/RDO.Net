@@ -185,5 +185,40 @@ namespace DevZest.Data
 
             Assert.IsTrue(dataSet.Validate().FirstOrDefault().IsEmpty);
         }
+
+        [TestMethod]
+        public void DataSet_Revision()
+        {
+            var dataSet = DataSet<SimpleModel>.New();
+
+            {
+                var revision0 = dataSet.Revision;
+                dataSet.AddRow();
+                var revision1 = dataSet.Revision;
+                Assert.IsTrue(revision1 > revision0);
+
+                dataSet._.Id[0] = 1;
+                Assert.IsTrue(dataSet.Revision > revision1);
+            }
+
+            {
+                var childMainSet = dataSet.Children(x => x.Child);
+                var revisionMainSet0 = childMainSet.Revision;
+
+                var childSet = dataSet.Children(x => x.Child, 0);
+                var revisionChildSet0 = childSet.Revision;
+
+                childSet.AddRow();
+                var revisionMainSet1 = childMainSet.Revision;
+                var revisionChildSet1 = childSet.Revision;
+
+                Assert.IsTrue(revisionMainSet1 > revisionMainSet0);
+                Assert.IsTrue(revisionChildSet1 > revisionChildSet0);
+
+                childSet._.Id[0] = 2;
+                Assert.IsTrue(childMainSet.Revision > revisionMainSet1);
+                Assert.IsTrue(childSet.Revision > revisionChildSet1);
+            }
+        }
     }
 }

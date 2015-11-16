@@ -191,7 +191,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public DataSet<TChild> CreateChild<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<DbQuery<TChild>> childQueryInitializer = null)
+        public DataSet<TChild> Fill<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
             where TChild : Model, new()
         {
             var dataRow = this[dataRowOrdinal];
@@ -199,26 +199,26 @@ namespace DevZest.Data
             if (childModel.ParentModel != this._)
                 throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChildModel));
 
-            var childDataSet = (DataSet<TChild>)dataRow[childModel];
+            var childDataSet = dataRow.Children(childModel);
             var parentRelationship = childModel.ParentRelationship;
-            var childQuery = GetChildQuery(sourceData, dataRow, parentRelationship);
-            if (childQueryInitializer != null)
-                childQueryInitializer(childQuery);
+            var childQuery = GetChildQuery(sourceData, dataRow, parentRelationship, initializer);
             sourceData.DbSession.FillDataSet(childQuery, childDataSet);
 
             return childDataSet;
         }
 
-        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship)
+        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship, Action<TChild> initializer)
             where TChild : Model, new()
         {
             var dbSession = dbSet.DbSession;
             var childModel = Model.Clone(dbSet._, false);
+            if (initializer != null)
+                initializer(childModel);
             var queryStatement = dbSet.QueryStatement.BuildQueryStatement(childModel, builder => builder.Where(parentRow, parentRelationship), null);
             return dbSession.CreateQuery(childModel, queryStatement);
         }
 
-        public async Task<DataSet<TChild>> CreateChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<DbQuery<TChild>> childQueryInitializer, CancellationToken cancellationToken)
+        public async Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer, CancellationToken cancellationToken)
             where TChild : Model, new()
         {
             var dataRow = this[dataRowOrdinal];
@@ -228,27 +228,38 @@ namespace DevZest.Data
 
             var childDataSet = (DataSet<TChild>)dataRow[childModel];
             var mappings = childModel.ParentRelationship;
-            var childQuery = GetChildQuery(sourceData, dataRow, mappings);
-            if (childQueryInitializer != null)
-                childQueryInitializer(childQuery);
+            var childQuery = GetChildQuery(sourceData, dataRow, mappings, initializer);
             await sourceData.DbSession.FillDataSetAsync(childQuery, childDataSet, cancellationToken);
 
             return childDataSet;
         }
 
-        public Task<DataSet<TChild>> CreateChildAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<DbQuery<TChild>> childQueryInitializer = null)
+        public Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)
             where TChild : Model, new()
         {
-            return CreateChildAsync(dataRowOrdinal, getChildModel, sourceData, childQueryInitializer, CancellationToken.None);
+            return FillAsync(dataRowOrdinal, getChildModel, sourceData, initializer, CancellationToken.None);
         }
 
-        public DataSet<TChild> GetChildren<TChild>(Func<T, TChild> getChild)
+        public Task<DataSet<TChild>> FillAsync<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, CancellationToken cancellationToken)
+            where TChild : Model, new()
+        {
+            return FillAsync(dataRowOrdinal, getChildModel, sourceData, null, cancellationToken);
+        }
+
+        public DataSet<TChild> Children<TChild>(Func<T, TChild> getChild, int ordinal)
+            where TChild : Model, new()
+        {
+            return Children(getChild, this[ordinal]);
+        }
+
+        public DataSet<TChild> Children<TChild>(Func<T, TChild> getChild, DataRow dataRow = null)
             where TChild : Model, new()
         {
             Check.NotNull(getChild, nameof(getChild));
-
-            var child = getChild(_);
-            return child == null ? null : (DataSet<TChild>)child.DataSource;
+            var childModel = getChild(_);
+            if (childModel == null || childModel.ParentModel != this.Model)
+                throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChild));
+            return dataRow == null ? (DataSet<TChild>)childModel.DataSet : dataRow.Children(childModel);
         }
 
         internal DbTable<T> ToTempTable(DbSession dbSession)

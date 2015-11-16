@@ -90,7 +90,7 @@ namespace DevZest.Data
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSet();
                 Assert.IsTrue(salesOrders.Count == 1);
-                salesOrders.CreateChild(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                salesOrders.Fill(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
             }
         }
@@ -103,7 +103,7 @@ namespace DevZest.Data
             {
                 var salesOrders = await db.SalesOrders.Where(x => x.SalesOrderID == 71774).ToDataSetAsync();
                 Assert.IsTrue(salesOrders.Count == 1);
-                await salesOrders.CreateChildAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
+                await salesOrders.FillAsync(0, x => x.SalesOrderDetails, db.SalesOrderDetails);
                 Assert.AreEqual(Strings.ExpectedJSON_SalesOrder_71774, salesOrders.ToString());
             }
         }

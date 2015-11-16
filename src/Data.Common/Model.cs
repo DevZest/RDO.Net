@@ -635,12 +635,15 @@ namespace DevZest.Data
         {
             get
             {
+                if (parentDataRow == null)
+                    return DataSet;
+
                 var parentModel = ParentModel;
-                var parentDataRowModel = parentDataRow == null ? null : parentDataRow.Model;
+                var parentDataRowModel = parentDataRow.Model;
                 if (parentModel != parentDataRowModel)
                     throw new ArgumentException(Strings.InvalidChildModel, nameof(parentDataRow));
 
-                return parentDataRowModel == null ? DataSet : parentDataRow[this];
+                return parentDataRow[this];
             }
         }
 
