@@ -39,6 +39,13 @@ namespace DevZest.Data.Utilities
                     }
                 }
 
+                if (ch == '[' && chars[i + 1] == ']')
+                {
+                    output.Append(ch);
+                    output.Append(chars[++i]);
+                    continue;
+                }
+
                 switch (ch)
                 {
                     case '{':

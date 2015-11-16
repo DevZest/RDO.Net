@@ -74,9 +74,9 @@ namespace DevZest.Data {
         ///            &quot;Name&quot; : &quot;Mountain Bikes&quot;,
         ///            &quot;RowGuid&quot; : &quot;2d364ade-264a-433c-b092-4fcbf3804e01&quot;,
         ///            &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
-        ///            &quot;SubCategories&quot; : [
-        ///               
-        ///       [rest of string was truncated]&quot;;.
+        ///            &quot;SubCategories&quot; : []
+        ///         },
+        ///          [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_ProductCategories {
             get {
