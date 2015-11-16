@@ -64,7 +64,7 @@ namespace DevZest.Data.Helpers
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, rowOrdinal, columnMappingsBuilder, autoJoin));
-            dbTable.SetOrigin(source, success);
+            dbTable.UpdateOrigin(source, success);
 
             return result;
         }
@@ -77,7 +77,7 @@ namespace DevZest.Data.Helpers
             Check.NotNull(source, nameof(source));
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappingsBuilder, autoJoin));
-            dbTable.SetOrigin(source, rowsAffected);
+            dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 
@@ -87,7 +87,7 @@ namespace DevZest.Data.Helpers
             where TTarget : Model, new()
         {
             var result = dbTable.MockInsertTable(rowsAffected, source, columnMappingsBuilder, autoJoin, updateIdentity);
-            dbTable.SetOrigin(source, rowsAffected);
+            dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 
@@ -147,7 +147,7 @@ namespace DevZest.Data.Helpers
 
             var tempTable = sqlSession.MockTempTable<TSource>(result);
             result.AddRange(dbTable.MockInsertTable(rowsAffected, tempTable, columnMappingsBuilder, autoJoin, updateIdentity));
-            dbTable.SetOrigin(source, rowsAffected);
+            dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 

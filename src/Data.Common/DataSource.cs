@@ -38,7 +38,7 @@ namespace DevZest.Data
             }
         }
 
-        internal void SetOriginalDataSource(DataSource originalDataSource, bool isSnapshot)
+        internal void UpdateOriginalDataSource(DataSource originalDataSource, bool isSnapshot)
         {
             Debug.Assert(originalDataSource != null);
 
