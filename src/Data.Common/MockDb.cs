@@ -86,6 +86,13 @@ namespace DevZest.Data
 
         private Dictionary<IDbTable, Action> _pendingMockTables = new Dictionary<IDbTable, Action>();
 
+        protected void Mock<TModel>(DbTable<TModel> dbTable)
+            where TModel : Model, new()
+        {
+            Action action = null;
+            Mock(dbTable, action);
+        }
+
         protected void Mock<TModel>(DbTable<TModel> dbTable, params DataSet<TModel>[] dataSets)
             where TModel : Model, new()
         {
