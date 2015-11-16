@@ -1,5 +1,4 @@
-﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Samples.AdventureWorksLT;
 using System.Text;
 
@@ -9,21 +8,6 @@ namespace DevZest.Data
     public class MockDbTests : AdventureWorksTestsBase
     {
         /// <remarks><see cref="ProductCategory"/> is chosen for only having self referencing foreign key.</remarks>
-        private sealed class ProductCategoryMockDb : MockDb<Db>
-        {
-            public ProductCategoryMockDb(DataSet<ProductCategory> productCategories)
-            {
-                _productCategories = productCategories;
-            }
-
-            DataSet<ProductCategory> _productCategories;
-
-            protected override void Initialize()
-            {
-                Mock(Db.ProductCategories, _productCategories);
-            }
-        }
-
         [TestMethod]
         public void MockDb_ProductCategory()
         {

@@ -53,6 +53,7 @@
     <Compile Include="DbTableInsertTests.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="MockDbTests.cs" />
+    <Compile Include="ProductCategoryMockDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataSetTests.cs" />
     <Compile Include="SalesOrderMockDb.cs" />
