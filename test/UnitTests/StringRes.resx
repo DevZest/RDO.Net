@@ -117,6 +117,107 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MultiLevelProductCategoryJson" xml:space="preserve">
+    <value>[
+   {
+      "ProductCategoryID" : 0,
+      "ParentProductCategoryID" : null,
+      "Name" : "Bikes",
+      "RowGuid" : "cfbda25c-df71-47a7-b81b-64ee161aa37c",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : -2,
+            "Name" : "Mountain Bikes",
+            "RowGuid" : "2d364ade-264a-433c-b092-4fcbf3804e01",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : -3,
+            "Name" : "Road Bikes",
+            "RowGuid" : "000310c0-bcc8-42c4-b0c3-45ae611af06b",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         },
+         {
+            "ProductCategoryID" : -4,
+            "Name" : "Touring Bikes",
+            "RowGuid" : "02c5061d-ecdc-4274-b5f1-e91d76bc3f37",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : []
+         }
+      ]
+   },
+   {
+      "ProductCategoryID" : -1,
+      "ParentProductCategoryID" : null,
+      "Name" : "Other",
+      "RowGuid" : "09e91437-ba4f-4b1a-8215-74184fd95db8",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : [
+         {
+            "ProductCategoryID" : -5,
+            "Name" : "Components",
+            "RowGuid" : "c657828d-d808-4aba-91a3-af2ce02300e9",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : [
+               {
+                  "ProductCategoryID" : -7,
+                  "Name" : "Handlebars",
+                  "RowGuid" : "3ef2c725-7135-4c85-9ae6-ae9a3bdd9283",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               },
+               {
+                  "ProductCategoryID" : -8,
+                  "Name" : "Bottom Brackets",
+                  "RowGuid" : "a9e54089-8a1e-4cf5-8646-e3801f685934",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               },
+               {
+                  "ProductCategoryID" : -9,
+                  "Name" : "Brakes",
+                  "RowGuid" : "d43ba4a3-ef0d-426b-90eb-4be4547dd30c",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               }
+            ]
+         },
+         {
+            "ProductCategoryID" : -6,
+            "Name" : "Clothing",
+            "RowGuid" : "10a7c342-ca82-48d4-8a38-46a2eb089b74",
+            "ModifiedDate" : "2002-06-01T00:00:00.000",
+            "SubCategories" : [
+               {
+                  "ProductCategoryID" : -10,
+                  "Name" : "Bib-Shorts",
+                  "RowGuid" : "67b58d2b-5798-4a90-8c6c-5ddacf057171",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               },
+               {
+                  "ProductCategoryID" : -11,
+                  "Name" : "Caps",
+                  "RowGuid" : "430dd6a8-a755-4b23-bb05-52520107da5f",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               },
+               {
+                  "ProductCategoryID" : -12,
+                  "Name" : "Gloves",
+                  "RowGuid" : "92d5657b-0032-4e49-bad5-41a441a70942",
+                  "ModifiedDate" : "2002-06-01T00:00:00.000",
+                  "SubCategories" : []
+               }
+            ]
+         }
+      ]
+   }
+]</value>
+  </data>
   <data name="ProductCategoriesJson" xml:space="preserve">
     <value>[
    {

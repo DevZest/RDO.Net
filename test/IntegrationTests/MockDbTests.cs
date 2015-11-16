@@ -11,17 +11,10 @@ namespace DevZest.Data
         [TestMethod]
         public void MockDb_ProductCategory()
         {
-            var productCategories = DataSet<ProductCategory>.New();
-            for (int i = 0; i < 3; i++)
-            {
-                var row = productCategories.AddRow();
-                productCategories._.Name[row] = "Name" + i.ToString();
-            }
-
             var log = new StringBuilder();
-            using (var db = new ProductCategoryMockDb(productCategories).Initialize(OpenDb(log)))
+            using (var db = new ProductCategoryMockDb().Initialize(OpenDb(log)))
             {
-                Assert.AreEqual(productCategories.Count, db.ProductCategories.Count());
+                Assert.AreEqual(13, db.ProductCategories.Count());
             }
         }
 

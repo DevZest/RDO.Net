@@ -86,7 +86,19 @@ namespace DevZest.Data
 
         private Dictionary<IDbTable, Action> _pendingMockTables = new Dictionary<IDbTable, Action>();
 
-        protected void Mock<TModel>(DbTable<TModel> dbTable, DataSet<TModel> dataSet)
+        protected void Mock<TModel>(DbTable<TModel> dbTable, params DataSet<TModel>[] dataSets)
+            where TModel : Model, new()
+        {
+            Mock(dbTable, () => {
+                foreach (var dataSet in dataSets)
+                {
+                    if (dataSet != null)
+                        dbTable.Insert(dataSet);
+                }
+            });
+        }
+
+        private void Mock<TModel>(DbTable<TModel> dbTable, Action action)
             where TModel : Model, new()
         {
             Check.NotNull(dbTable, nameof(dbTable));
@@ -97,11 +109,6 @@ namespace DevZest.Data
             if (_pendingMockTables.ContainsKey(dbTable))
                 throw new ArgumentException(Strings.MockDb_DuplicateTable(dbTable.Name), nameof(dbTable));
 
-            Action action;
-            if (dataSet == null)
-                action = null;
-            else
-                action = () => dbTable.Insert(dataSet);
             _pendingMockTables.Add(dbTable, action);
         }
 

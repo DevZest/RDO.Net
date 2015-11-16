@@ -4,12 +4,23 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     internal sealed class ProductCategoryMockDb : MockDb<Db>
     {
-        public ProductCategoryMockDb(DataSet<ProductCategory> productCategories)
+        private static DataSet<ProductCategory>[] s_productCategories = new DataSet<ProductCategory>[] {
+            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level1),
+            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level2),
+            DataSet<ProductCategory>.ParseJson(Strings.Mock_ProductCategories_Level3),
+        };
+
+        public ProductCategoryMockDb()
+            : this(s_productCategories)
+        {
+        }
+
+        public ProductCategoryMockDb(DataSet<ProductCategory>[] productCategories)
         {
             _productCategories = productCategories;
         }
 
-        DataSet<ProductCategory> _productCategories;
+        DataSet<ProductCategory>[] _productCategories;
 
         protected override void Initialize()
         {

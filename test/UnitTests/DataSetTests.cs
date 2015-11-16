@@ -220,5 +220,17 @@ namespace DevZest.Data
                 Assert.IsTrue(childSet.Revision > revisionChildSet1);
             }
         }
+
+        [TestMethod]
+        public void DataSet_MultiLevelProductCategories()
+        {
+            var productCategories = DataSet<ProductCategory>.ParseJson(StringRes.MultiLevelProductCategoryJson);
+            Assert.AreEqual(StringRes.MultiLevelProductCategoryJson, productCategories.ToJsonString(true));
+            Assert.AreEqual(2, productCategories.Count);
+            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 0).Count);
+            Assert.AreEqual(2, productCategories.Children(x => x.SubCategories, 1).Count);
+            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 0).Count);
+            Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 1).Count);
+        }
     }
 }
