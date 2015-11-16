@@ -503,9 +503,7 @@
       "Comment" : null,
       "RowGuid" : "89e42cdc-8506-48a2-b89b-eb3e64e3554e",
       "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "SalesOrderDetails" : [
-         
-      ]
+      "SalesOrderDetails" : []
    },
    {
       "SalesOrderID" : 2,
@@ -530,9 +528,7 @@
       "Comment" : null,
       "RowGuid" : "8a3448c5-e677-4158-a29b-dd33069be0b0",
       "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "SalesOrderDetails" : [
-         
-      ]
+      "SalesOrderDetails" : []
    },
    {
       "SalesOrderID" : 3,
@@ -557,9 +553,7 @@
       "Comment" : null,
       "RowGuid" : "a47665d2-7ac9-4cf3-8a8b-2a3883554284",
       "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "SalesOrderDetails" : [
-         
-      ]
+      "SalesOrderDetails" : []
    },
    {
       "SalesOrderID" : 4,
@@ -584,9 +578,7 @@
       "Comment" : null,
       "RowGuid" : "f1be45a5-5c57-4a50-93c6-5f8be44cb7cb",
       "ModifiedDate" : "2008-06-08T00:00:00.000",
-      "SalesOrderDetails" : [
-         
-      ]
+      "SalesOrderDetails" : []
    }
 ]</value>
   </data>
