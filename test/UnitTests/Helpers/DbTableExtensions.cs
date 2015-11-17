@@ -207,25 +207,28 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetUpdateCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
+        internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, int rowsAffected, Func<T, _Boolean> where)
             where T : Model, new()
         {
+            dbTable.UpdateOrigin(null, rowsAffected);
             var statement = dbTable.BuildDeleteStatement(where);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> source)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            dbTable.UpdateOrigin(null, rowsAffected);
             var statement = dbTable.BuildDeleteStatement(source);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            dbTable.UpdateOrigin<TSource>(null, success);
             var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
