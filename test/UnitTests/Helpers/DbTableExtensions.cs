@@ -207,27 +207,27 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetUpdateCommand(statement);
         }
 
-        internal static SqlCommand GetDeleteCommand<T>(this DbTable<T> dbTable, Func<T, _Boolean> getWhere = null)
+        internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, Func<T, _Boolean> where)
             where T : Model, new()
         {
-            var statement = dbTable.BuildDeleteStatement(getWhere);
-            return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);
+            var statement = dbTable.BuildDeleteStatement(where);
+            return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand GetDeleteCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, TTarget> keyMappingsBuilder = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> source)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = dbTable.BuildDeleteStatement(dbSet, keyMappingsBuilder);
-            return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);
+            var statement = dbTable.BuildDeleteStatement(source);
+            return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand GetDeleteScalarCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, TTarget> keyMappingsBuilder = null)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal, keyMappingsBuilder);
-            return ((SqlSession)dbTable.DbSession).GetDeleteCommand(statement);
+            var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal);
+            return dbTable.SqlSession().GetDeleteCommand(statement);
         }
     }
 }

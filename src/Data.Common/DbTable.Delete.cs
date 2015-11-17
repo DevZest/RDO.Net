@@ -11,97 +11,121 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        public int Delete(Func<T, _Boolean> getWhere = null)
+        public int Delete(Func<T, _Boolean> where)
         {
-            var statement = BuildDeleteStatement(getWhere);
-            return DbSession.Delete(statement);
+            var statement = BuildDeleteStatement(where);
+            return UpdateOrigin(null, DbSession.Delete(statement));
         }
 
-        public Task<int> DeleteAsync(Func<T, _Boolean> getWhere, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync(Func<T, _Boolean> where, CancellationToken cancellationToken)
         {
-            var statement = BuildDeleteStatement(getWhere);
-            return DbSession.DeleteAsync(statement, cancellationToken);
+            var statement = BuildDeleteStatement(where);
+            return UpdateOrigin(null, await DbSession.DeleteAsync(statement, cancellationToken));
         }
 
-        public Task<int> DeleteAsync(Func<T, _Boolean> getWhere = null)
+        public Task<int> DeleteAsync(Func<T, _Boolean> where)
         {
-            return DeleteAsync(getWhere, CancellationToken.None);
+            return DeleteAsync(where, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> getWhere)
+        internal DbSelectStatement BuildDeleteStatement(Func<T, _Boolean> where)
         {
-            var where = VerifyWhere(getWhere);
-            return new DbSelectStatement(Model, null, null, where, null, -1, -1);
+            var whereExpr = VerifyWhere(where);
+            return new DbSelectStatement(Model, null, null, whereExpr, null, -1, -1);
         }
 
-        public int Delete<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
+        public int Delete<TSource>(DbSet<TSource> source)
             where TSource : Model, new()
         {
-            var statement = BuildDeleteStatement(dbSet, keyMappingsBuilder);
-            return DbSession.Update(statement);
+            var statement = BuildDeleteStatement(source);
+            return UpdateOrigin(null, DbSession.Update(statement));
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync<TSource>(DbSet<TSource> source, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            var statement = BuildDeleteStatement(dbSet, keyMappingsBuilder);
-            return DbSession.DeleteAsync(statement, cancellationToken);
+            var statement = BuildDeleteStatement(source);
+            return UpdateOrigin(null, await DbSession.DeleteAsync(statement, cancellationToken));
         }
 
-        public Task<int> DeleteAsync<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
+        public Task<int> DeleteAsync<TSource>(DbSet<TSource> source)
             where TSource : Model, new()
         {
-            return DeleteAsync(dbSet, keyMappingsBuilder, CancellationToken.None);
+            return DeleteAsync(source, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder)
+        public bool Delete<TSource>(DataSet<TSource> source, int ordinal)
             where TSource : Model, new()
         {
-            Check.NotNull(dbSet, nameof(dbSet));
-            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(dbSet._) : _.BuildColumnMappings(dbSet._, keyMappingsBuilder);
-            return dbSet.QueryStatement.BuildDeleteStatement(Model, keyMappings);
+            Check.NotNull(source, nameof(source));
+
+            var statement = BuildDeleteScalarStatement(source, ordinal);
+            return UpdateOrigin<TSource>(null, DbSession.Delete(statement) > 0);
         }
 
-        public int Delete<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
+        public async Task<bool> DeleteAsync<TSource>(DataSet<TSource> source,  int ordinal, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
 
-            if (dataSet.Count == 0)
+            var statement = BuildDeleteScalarStatement(source, ordinal);
+            return UpdateOrigin<TSource>(null, await DbSession.DeleteAsync(statement, cancellationToken) > 0);
+        }
+
+        public Task<bool> DeleteAsync<TSource>(DataSet<TSource> source, int ordinal)
+            where TSource : Model, new()
+        {
+            return DeleteAsync(source, ordinal, CancellationToken.None);
+        }
+
+        internal DbSelectStatement BuildDeleteStatement<TSource>(DbSet<TSource> source)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+            var keyMappings = GetKeyMappings(source._);
+            return source.QueryStatement.BuildDeleteStatement(Model, keyMappings);
+        }
+
+        public int Delete<TSource>(DataSet<TSource> source)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+
+            if (source.Count == 0)
                 return 0;
 
-            if (dataSet.Count == 1)
-                return DbSession.Update(BuildDeleteScalarStatement(dataSet, 0, keyMappingsBuilder));
+            if (source.Count == 1)
+                return Delete(source, 0) ? 1 : 0;
 
-            return Delete(DbSession.CreateTempTable(dataSet), keyMappingsBuilder);
+            return Delete(DbSession.CreateTempTable(source));
         }
 
-        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> DeleteAsync<TSource>(DataSet<TSource> source, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
 
-            if (dataSet.Count == 0)
+            if (source.Count == 0)
                 return 0;
 
-            if (dataSet.Count == 1)
-                return await DbSession.UpdateAsync(BuildDeleteScalarStatement(dataSet, 0, keyMappingsBuilder), cancellationToken);
+            if (source.Count == 1)
+                return await DeleteAsync(source, 0, cancellationToken) ? 1 : 0;
 
-            return await DeleteAsync(await DbSession.CreateTempTableAsync(dataSet, cancellationToken), keyMappingsBuilder, cancellationToken);
+            return await DeleteAsync(await DbSession.CreateTempTableAsync(source, cancellationToken), cancellationToken);
         }
 
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
             where TSource : Model, new()
         {
-            return DeleteAsync(dataSet, keyMappingsBuilder, CancellationToken.None);
+            return DeleteAsync(dataSet, CancellationToken.None);
         }
 
-        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder)
+        internal DbSelectStatement BuildDeleteScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal)
             where TSource : Model, new()
         {
             Debug.Assert(dataSet != null && dataSet._ != null);
             var sourceModel = dataSet._;
-            var keyMappings = keyMappingsBuilder == null ? GetKeyMappings(sourceModel) : _.BuildColumnMappings(sourceModel, keyMappingsBuilder);
+            var keyMappings = GetKeyMappings(sourceModel);
             return BuildDeleteScalarStatement(dataSet[ordinal], keyMappings);
         }
 

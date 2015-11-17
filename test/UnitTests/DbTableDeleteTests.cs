@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
-                var command = db.ProductCategories.GetDeleteCommand(x => x.ModifiedDate.IsNull());
+                var command = db.ProductCategories.MockDelete(x => x.ModifiedDate.IsNull());
                 var expectedSql =
 @"DELETE [ProductCategory]
 FROM [SalesLT].[ProductCategory] [ProductCategory]
@@ -30,7 +30,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = db.ProductCategories.GetDeleteCommand(tempTable);
+                var command = db.ProductCategories.MockDelete(tempTable);
                 var expectedSql =
 @"DELETE [ProductCategory1]
 FROM
@@ -49,7 +49,7 @@ FROM
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
-                var command = db.ProductCategories.GetDeleteCommand(query);
+                var command = db.ProductCategories.MockDelete(query);
                 var expectedSql =
 @"DELETE [ProductCategory]
 FROM
@@ -69,7 +69,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
-                var command = db.ProductCategories.GetDeleteCommand(query);
+                var command = db.ProductCategories.MockDelete(query);
                 var expectedSql =
 @"DELETE [ProductCategory1]
 FROM
@@ -93,7 +93,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
                 dataSet._.Name[index] = "Name";
                 dataSet._.RowGuid[index] = new Guid("EC359D7D-AE3A-4A9D-BDCB-03F0A7799514");
                 dataSet._.ModifiedDate[index] = new DateTime(2015, 9, 23);
-                var command = db.ProductCategories.GetDeleteScalarCommand(dataSet, 0);
+                var command = db.ProductCategories.MockDelete(dataSet, 0);
                 var expectedSql =
 @"DECLARE @p1 INT = 0;
 
