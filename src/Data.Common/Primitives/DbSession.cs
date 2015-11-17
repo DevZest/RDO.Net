@@ -77,7 +77,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected internal DbTable<T> CreateTempTable<T>(DataSet<T> source)
+        private DbTable<T> CreateTempTable<T>(DataSet<T> source)
             where T : Model, new()
         {
             Check.NotNull(source, nameof(source));
@@ -88,7 +88,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected internal async Task<DbTable<T>> CreateTempTableAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
+        private async Task<DbTable<T>> CreateTempTableAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : Model, new()
         {
             var result = CreateTempTableInstance(source._);
@@ -219,6 +219,22 @@ namespace DevZest.Data.Primitives
         internal abstract int Delete(DbSelectStatement statement);
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
+
+        internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var tempTable = CreateTempTable(sourceData);
+            return Delete(targetTable.BuildDeleteStatement(tempTable));
+        }
+
+        internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, CancellationToken cancellationToken)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            return await DeleteAsync(targetTable.BuildDeleteStatement(tempTable), cancellationToken);
+        }
 
         internal abstract DbReader ExecuteDbReader<T>(DbSet<T> dbSet)
             where T : Model, new();

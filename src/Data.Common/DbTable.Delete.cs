@@ -97,7 +97,7 @@ namespace DevZest.Data
             if (source.Count == 1)
                 return Delete(source, 0) ? 1 : 0;
 
-            return Delete(DbSession.CreateTempTable(source));
+            return UpdateOrigin(null, DbSession.Delete(source, this));
         }
 
         public async Task<int> DeleteAsync<TSource>(DataSet<TSource> source, CancellationToken cancellationToken)
@@ -111,7 +111,7 @@ namespace DevZest.Data
             if (source.Count == 1)
                 return await DeleteAsync(source, 0, cancellationToken) ? 1 : 0;
 
-            return await DeleteAsync(await DbSession.CreateTempTableAsync(source, cancellationToken), cancellationToken);
+            return UpdateOrigin(null, await DbSession.DeleteAsync(source, this, cancellationToken));
         }
 
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)
