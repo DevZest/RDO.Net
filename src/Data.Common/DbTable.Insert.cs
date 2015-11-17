@@ -134,7 +134,15 @@ namespace DevZest.Data
             Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return UpdateOrigin(source, InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity));
+            if (source.Count == 0)
+                return 0;
+
+            if (source.Count == 1)
+                return Insert(source, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
+
+            var result = InsertDataSet(source, columnMappingsBuilder, autoJoin, updateIdentity);
+            UpdateIdentity(source, result);
+            return UpdateOrigin(source, result.RowCount);
         }
 
         public async Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
@@ -143,7 +151,15 @@ namespace DevZest.Data
             Check.NotNull(source, nameof(source));
             VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            return UpdateOrigin(source, await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken));
+            if (source.Count == 0)
+                return 0;
+
+            if (source.Count == 1)
+                return await InsertAsync(source, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
+
+            var result = await InsertDataSetAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
+            UpdateIdentity(source, result);
+            return UpdateOrigin(source, result.RowCount);
         }
 
         public Task<int> InsertAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
@@ -152,21 +168,7 @@ namespace DevZest.Data
             return InsertAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, CancellationToken.None);
         }
 
-        private int InsertDataSet<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
-            where TSource : Model, new()
-        {
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                return Insert(source, 0, columnMappingsBuilder, autoJoin, updateIdentity) ? 1 : 0;
-
-            var result = InsertDataSetBatch(source, columnMappingsBuilder, autoJoin, updateIdentity);
-            UpdateIdentity(source, result);
-            return result.RowCount;
-        }
-
-        private InsertTableResult InsertDataSetBatch<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
+        private InsertTableResult InsertDataSet<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)
             where TSource : Model, new()
         {
             var identityMappings = updateIdentity ? DbSession.CreateTempTable<IdentityMapping>() : null;
@@ -174,27 +176,13 @@ namespace DevZest.Data
             return new InsertTableResult(rowCount, identityMappings);
         }
 
-        private async Task<InsertTableResult> InsertDataSetBatchAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
+        private async Task<InsertTableResult> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
             Action<IdentityMapping> initializer = null;
             var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
-        }
-
-        private async Task<int> InsertDataSetAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity, CancellationToken cancellationToken)
-            where TSource : Model, new()
-        {
-            if (source.Count == 0)
-                return 0;
-
-            if (source.Count == 1)
-                return await InsertAsync(source, 0, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken) ? 1 : 0;
-
-            var result = await InsertDataSetBatchAsync(source, columnMappingsBuilder, autoJoin, updateIdentity, cancellationToken);
-            UpdateIdentity(source, result);
-            return result.RowCount;
         }
 
         public bool Insert<TSource>(DataSet<TSource> source, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool autoJoin, bool updateIdentity)

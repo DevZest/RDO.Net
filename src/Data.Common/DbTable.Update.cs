@@ -67,6 +67,31 @@ namespace DevZest.Data
             return dbSet.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
+        public bool Update<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+            where TSource : Model, new()
+        {
+            var statement = BuildUpdateScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder);
+            var result = DbSession.Update(statement);
+            UpdateOrigin(null, result);
+            return result == 1;
+        }
+
+        public async Task<bool> UpdateAsync<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder,
+            CancellationToken cancellationToken)
+            where TSource : Model, new()
+        {
+            var statement = BuildUpdateScalarStatement(dataSet, rowOrdinal, columnMappingsBuilder);
+            var result = await DbSession.UpdateAsync(statement, cancellationToken);
+            UpdateOrigin(null, result);
+            return result == 1;
+        }
+
+        public Task<bool> UpdateAsync<TSource>(DataSet<TSource> dataSet, int rowOrdinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+            where TSource : Model, new()
+        {
+            return UpdateAsync(dataSet, rowOrdinal, columnMappingsBuilder, CancellationToken.None);
+        }
+
         public int Update<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
@@ -76,7 +101,7 @@ namespace DevZest.Data
                 return 0;
 
             if (dataSet.Count == 1)
-                return DbSession.Update(BuildUpdateScalarStatement(dataSet, 0, columnMappingsBuilder));
+                return Update(dataSet, 0, columnMappingsBuilder) ? 1 : 0;
 
             return Update(DbSession.CreateTempTable(dataSet), columnMappingsBuilder);
         }
@@ -90,7 +115,7 @@ namespace DevZest.Data
                 return 0;
 
             if (dataSet.Count == 1)
-                return await DbSession.UpdateAsync(BuildUpdateScalarStatement(dataSet, 0, columnMappingsBuilder), cancellationToken);
+                return await UpdateAsync(dataSet, 0, columnMappingsBuilder, cancellationToken) ? 1 : 0;
 
             return await UpdateAsync(await DbSession.CreateTempTableAsync(dataSet, cancellationToken), columnMappingsBuilder, cancellationToken);
         }
