@@ -40,12 +40,10 @@ namespace DevZest.Data
 
         internal void UpdateOriginalDataSource(DataSource originalDataSource, bool isSnapshot)
         {
-            Debug.Assert(originalDataSource != null);
-
             if (_originalDataSourceRevision == -1)
                 return;
 
-            if (_originalDataSource != null)
+            if (_originalDataSource != null || originalDataSource == null)
             {
                 _originalDataSource = null;
                 _originalDataSourceRevision = -1;

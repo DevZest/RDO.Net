@@ -243,5 +243,26 @@ namespace DevZest.Data
 
             throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(getWhere));
         }
+
+        private List<ColumnMapping> GetColumnMappings(Model sourceModel)
+        {
+            return Model.GetColumnMappings(sourceModel);
+        }
+
+        internal int UpdateOrigin(DataSource origin, int rowsAffected)
+        {
+            if (rowsAffected != 0)
+                UpdateOriginalDataSource(origin, true);
+            return rowsAffected;
+        }
+
+        internal bool UpdateOrigin<TSource>(DataSet<TSource> origin, bool scalarInsertSuccess)
+            where TSource : Model, new()
+        {
+            if (scalarInsertSuccess)
+                UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin, true);
+
+            return scalarInsertSuccess;
+        }
     }
 }

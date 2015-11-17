@@ -11,25 +11,6 @@ namespace DevZest.Data
 {
     partial class DbTable<T>
     {
-        internal int UpdateOrigin(DataSource origin, int rowsAffected)
-        {
-            if (rowsAffected != 0)
-                UpdateOriginalDataSource(origin, true);
-            return rowsAffected;
-        }
-
-        internal bool UpdateOrigin<TSource>(DataSet<TSource> origin, bool scalarInsertSuccess)
-            where TSource : Model, new()
-        {
-            if (scalarInsertSuccess)
-            {
-                UpdateOriginalDataSource(origin, true);
-                if (origin.Count != 1)
-                    UpdateOriginalDataSource(origin, true);  // SetOriginalDataSource again will clear the OriginalDataSource.
-            }
-            return scalarInsertSuccess;
-        }
-
         public int Insert<TSource>(DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
         {
