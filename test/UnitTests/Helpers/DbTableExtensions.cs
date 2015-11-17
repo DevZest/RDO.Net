@@ -141,7 +141,7 @@ namespace DevZest.Data.Helpers
             var sqlSession = dbTable.SqlSession();
             if (!updateIdentity)
             {
-                result.Add(dbTable.MockInsert(rowsAffected, sqlSession.GetDbQuery(source, columnMappingsBuilder), null, autoJoin));
+                result.Add(dbTable.MockInsert(rowsAffected, sqlSession.GetDbQuery(source, dbTable._, columnMappingsBuilder), null, autoJoin));
                 return result;
             }
 

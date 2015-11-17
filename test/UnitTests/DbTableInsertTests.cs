@@ -288,7 +288,7 @@ FROM
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = tempTable.MockInsert(4, db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null));
+                var command = tempTable.MockInsert(4, db.GetDbQuery(dataSet, tempTable._, null));
 
                 var expectedSql =
 @"DECLARE @p1 XML = N'

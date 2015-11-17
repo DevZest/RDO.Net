@@ -144,7 +144,7 @@ namespace DevZest.Data.SqlServer
             }
         }
 
-        internal DbQuery<TTarget> GetDbQuery<TSource, TTarget>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+        internal DbQuery<TTarget> GetDbQuery<TSource, TTarget>(DataSet<TSource> dataSet, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -166,7 +166,7 @@ namespace DevZest.Data.SqlServer
                     builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());
-            });
+            }, targetModel);
             result.UpdateOriginalDataSource(dataSet, false);
             return result;
         }
@@ -181,7 +181,7 @@ namespace DevZest.Data.SqlServer
         {
             if (identityMappings == null)
             {
-                var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, columnMappingsBuilder), null, autoJoin);
+                var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, targetTable._, columnMappingsBuilder), null, autoJoin);
                 return ExecuteNonQuery(GetInsertCommand(statement));
             }
 
@@ -194,7 +194,7 @@ namespace DevZest.Data.SqlServer
         {
             if (identityMappings == null)
             {
-                var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, columnMappingsBuilder), null, autoJoin);
+                var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, targetTable._, columnMappingsBuilder), null, autoJoin);
                 return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
             }
 

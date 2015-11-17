@@ -14,7 +14,7 @@ namespace DevZest.Data.SqlServer
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var query = db.GetDbQuery<ProductCategory, ProductCategory>(dataSet, null);
+                var query = db.GetDbQuery(dataSet, dataSet._, null);
                 var expectedSql =
 @"DECLARE @p1 XML = N'
 <root>
@@ -147,7 +147,7 @@ FROM
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
-                var query = db.GetDbQuery(dataSet, (ColumnMappingsBuilder builder, ProductCategory source, Adhoc target) =>
+                var query = db.GetDbQuery(dataSet, null, (ColumnMappingsBuilder builder, ProductCategory source, Adhoc target) =>
                 {
                     builder.Select(source.Name, target.AddColumn(source.Name, initializer: x => x.DbColumnName = source.Name.DbColumnName));
                 });
