@@ -517,6 +517,26 @@
    }
 ]</value>
   </data>
+  <data name="ProductCategoriesLevel1Json" xml:space="preserve">
+    <value>[
+   {
+      "ProductCategoryID" : 1,
+      "ParentProductCategoryID" : null,
+      "Name" : "Bikes",
+      "RowGuid" : "CFBDA25C-DF71-47A7-B81B-64EE161AA37C",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : []
+   },
+   {
+      "ProductCategoryID" : 2,
+      "ParentProductCategoryID" : null,
+      "Name" : "Other",
+      "RowGuid" : "C657828D-D808-4ABA-91A3-AF2CE02300E9",
+      "ModifiedDate" : "2002-06-01T00:00:00.000",
+      "SubCategories" : []
+   }
+]</value>
+  </data>
   <data name="Sales_Order_71774" xml:space="preserve">
     <value>[
    {

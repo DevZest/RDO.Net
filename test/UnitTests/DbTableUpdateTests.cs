@@ -129,5 +129,47 @@ FROM
                 Assert.AreEqual(expectedSql, command.ToTraceString());
             }
         }
+
+        [TestMethod]
+        public void DbTable_Update_from_DataSet()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesLevel1Json);
+                var expectedSql =
+@"DECLARE @p1 XML = N'
+<root>
+  <row>
+    <col_0>1</col_0>
+    <col_1></col_1>
+    <col_2>Bikes</col_2>
+    <col_3>cfbda25c-df71-47a7-b81b-64ee161aa37c</col_3>
+    <col_4>2002-06-01 00:00:00.000</col_4>
+    <col_5>1</col_5>
+  </row>
+  <row>
+    <col_0>2</col_0>
+    <col_1></col_1>
+    <col_2>Other</col_2>
+    <col_3>c657828d-d808-4aba-91a3-af2ce02300e9</col_3>
+    <col_4>2002-06-01 00:00:00.000</col_4>
+    <col_5>2</col_5>
+  </row>
+</root>';
+
+UPDATE [ProductCategory] SET
+    [ParentProductCategoryID] = [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT'),
+    [Name] = [SqlXmlModel].[Xml].value('col_2[1]/text()[1]', 'NVARCHAR(50)'),
+    [RowGuid] = [SqlXmlModel].[Xml].value('col_3[1]/text()[1]', 'UNIQUEIDENTIFIER'),
+    [ModifiedDate] = [SqlXmlModel].[Xml].value('col_4[1]/text()[1]', 'DATETIME')
+FROM
+    (@p1.nodes('/root/row') [SqlXmlModel]([Xml])
+    INNER JOIN
+    [SalesLT].[ProductCategory] [ProductCategory]
+    ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
+";
+                Assert.AreEqual(expectedSql, db.ProductCategories.MockUpdate(dataSet.Count, dataSet).ToTraceString());
+            }
+        }
     }
 }

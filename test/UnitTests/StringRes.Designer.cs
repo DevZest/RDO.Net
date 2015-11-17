@@ -111,6 +111,32 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
+        ///      &quot;ProductCategoryID&quot; : 1,
+        ///      &quot;ParentProductCategoryID&quot; : null,
+        ///      &quot;Name&quot; : &quot;Bikes&quot;,
+        ///      &quot;RowGuid&quot; : &quot;CFBDA25C-DF71-47A7-B81B-64EE161AA37C&quot;,
+        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///      &quot;SubCategories&quot; : []
+        ///   },
+        ///   {
+        ///      &quot;ProductCategoryID&quot; : 2,
+        ///      &quot;ParentProductCategoryID&quot; : null,
+        ///      &quot;Name&quot; : &quot;Other&quot;,
+        ///      &quot;RowGuid&quot; : &quot;C657828D-D808-4ABA-91A3-AF2CE02300E9&quot;,
+        ///      &quot;ModifiedDate&quot; : &quot;2002-06-01T00:00:00.000&quot;,
+        ///      &quot;SubCategories&quot; : []
+        ///   }
+        ///].
+        /// </summary>
+        internal static string ProductCategoriesLevel1Json {
+            get {
+                return ResourceManager.GetString("ProductCategoriesLevel1Json", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
         ///      &quot;SalesOrderID&quot; : 71774,
         ///      &quot;RevisionNumber&quot; : 2,
         ///      &quot;OrderDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
