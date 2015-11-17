@@ -305,6 +305,18 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Update(this, statement).CreateCommand(GetConnection());
         }
 
+        protected sealed override int Update<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+        {
+            var statement = targetTable.BuildUpdateStatement(GetDbQuery(sourceData, sourceData._, null), columnMappingsBuilder);
+            return ExecuteNonQuery(GetUpdateCommand(statement));
+        }
+
+        protected sealed override Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+        {
+            var statement = targetTable.BuildUpdateStatement(GetDbQuery(sourceData, sourceData._, null), columnMappingsBuilder);
+            return ExecuteNonQueryAsync(GetUpdateCommand(statement), cancellationToken);
+        }
+
         protected sealed override SqlCommand GetDeleteCommand(DbSelectStatement statement)
         {
             return SqlGenerator.Delete(this, statement).CreateCommand(GetConnection());

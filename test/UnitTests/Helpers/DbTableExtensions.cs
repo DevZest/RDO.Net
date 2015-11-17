@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace DevZest.Data.Helpers
 {
@@ -181,6 +182,29 @@ namespace DevZest.Data.Helpers
             var result = dbTable.SqlSession().GetUpdateCommand(statement);
             dbTable.UpdateOrigin<TSource>(null, success);
             return result;
+        }
+
+        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DataSet<TSource> source,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+
+            if (source.Count == 0)
+                return null;
+
+            if (source.Count == 1)
+            {
+                Debug.Assert(rowsAffected == 1 || rowsAffected == 0);
+                return dbTable.MockUpdate(rowsAffected != 0, source, 0, columnMappingsBuilder);
+            }
+
+            dbTable.UpdateOrigin(null, rowsAffected);
+            var sqlSession = dbTable.SqlSession();
+            var dbQuery = sqlSession.GetDbQuery(source, source._, null);
+            var statement = dbTable.BuildUpdateStatement(dbQuery, columnMappingsBuilder);
+            return dbTable.SqlSession().GetUpdateCommand(statement);
         }
 
         internal static SqlCommand GetDeleteCommand<T>(this DbTable<T> dbTable, Func<T, _Boolean> getWhere = null)
