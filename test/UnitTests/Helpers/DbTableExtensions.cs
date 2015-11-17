@@ -151,27 +151,36 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static SqlCommand GetUpdateCommand<T>(this DbTable<T> dbTable, Action<ColumnMappingsBuilder, T> columnMappingsBuilder, Func<T, _Boolean> getWhere = null)
+        internal static SqlCommand MockUpdate<T>(this DbTable<T> dbTable, int rowsAffected, Action<ColumnMappingsBuilder, T> columnMappingsBuilder,
+            Func<T, _Boolean> getWhere = null)
             where T : Model, new()
         {
             var statement = dbTable.BuildUpdateStatement(columnMappingsBuilder, getWhere);
-            return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
+            var result = dbTable.SqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin(null, rowsAffected);
+            return result;
         }
 
-        internal static SqlCommand GetUpdateCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DbSet<TSource> dbSet, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> dbSet,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var statement = dbTable.BuildUpdateStatement(dbSet, columnMappingsBuilder);
-            return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
+            var result = dbTable.SqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin(null, rowsAffected);
+            return result;
         }
 
-        internal static SqlCommand GetUpdateScalarCommand<TSource, TTarget>(this DbTable<TTarget> dbTable, DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
+        internal static SqlCommand MockUpdate<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             var statement = dbTable.BuildUpdateScalarStatement(dataSet, ordinal, columnMappingsBuilder);
-            return ((SqlSession)dbTable.DbSession).GetUpdateCommand(statement);
+            var result = dbTable.SqlSession().GetUpdateCommand(statement);
+            dbTable.UpdateOrigin<TSource>(null, success);
+            return result;
         }
 
         internal static SqlCommand GetDeleteCommand<T>(this DbTable<T> dbTable, Func<T, _Boolean> getWhere = null)

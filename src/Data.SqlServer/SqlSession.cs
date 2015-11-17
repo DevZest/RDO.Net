@@ -185,22 +185,20 @@ namespace DevZest.Data.SqlServer
                 return ExecuteNonQuery(GetInsertCommand(statement));
             }
 
-            var tempTable = CreateTempTable(sourceData);
-            return Insert(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings);
+            return base.Insert(sourceData, targetTable, columnMappingsBuilder, autoJoin, identityMappings);
         }
 
-        protected override async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+        protected override Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin,
             DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
         {
             if (identityMappings == null)
             {
                 var statement = targetTable.BuildInsertStatement(GetDbQuery(sourceData, columnMappingsBuilder), null, autoJoin);
-                return await ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
+                return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
             }
 
-            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
-            return await InsertAsync(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
+            return base.InsertAsync(sourceData, targetTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
         }
 
         protected sealed override int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)

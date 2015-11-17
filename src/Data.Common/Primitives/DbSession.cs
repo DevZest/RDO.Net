@@ -166,15 +166,23 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
-        protected internal abstract int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+        protected internal virtual int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
-            where TTarget : Model, new();
+            where TTarget : Model, new()
+        {
+            var tempTable = CreateTempTable(sourceData);
+            return Insert(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings);
+        }
 
-        protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+        protected internal virtual async Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
-            where TTarget : Model, new();
+            where TTarget : Model, new()
+        {
+            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            return await InsertAsync(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
+        }
 
         protected internal abstract int Insert<TSource, TTarget>(DbTable<TSource> sourceData, DbTable<TTarget> targetTable,
             Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
