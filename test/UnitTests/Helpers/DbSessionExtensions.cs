@@ -9,16 +9,16 @@ namespace DevZest.Data.Helpers
 {
     internal static class DbSessionExtensions
     {
-        internal static DbTable<T> MockTempTable<T>(this DbSession dbSession, Action<T> initializer = null)
+        internal static DbTable<T> MockTempTable<T>(this DbSession dbSession, T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
-            return dbSession.CreateTempTableInstance(initializer);
+            return dbSession.CreateTempTableInstance(fromModel, initializer);
         }
 
-        internal static DbTable<T> MockTempTable<T>(this SqlSession sqlSession, IList<SqlCommand> commands)
+        internal static DbTable<T> MockTempTable<T>(this SqlSession sqlSession, IList<SqlCommand> commands, T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
-            var result = sqlSession.MockTempTable<T>();
+            var result = sqlSession.MockTempTable<T>(fromModel, initializer);
             commands.Add(sqlSession.GetCreateTableCommand(result.Model, result.Name, true));
             return result;
         }

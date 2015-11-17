@@ -93,7 +93,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(initializer, cancellationToken) : null;
+            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }
@@ -180,7 +180,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             Action<IdentityMapping> initializer = null;
-            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(initializer, cancellationToken) : null;
+            var identityMappings = updateIdentity ? await DbSession.CreateTempTableAsync<IdentityMapping>(null, initializer, cancellationToken) : null;
             var rowCount = await DbSession.InsertAsync(source, this, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
             return new InsertTableResult(rowCount, identityMappings);
         }

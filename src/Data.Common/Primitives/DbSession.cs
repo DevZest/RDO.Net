@@ -55,24 +55,24 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        public DbTable<T> CreateTempTable<T>(Action<T> initializer = null)
+        public DbTable<T> CreateTempTable<T>(T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
-            var result = CreateTempTableInstance(initializer);
+            var result = CreateTempTableInstance(fromModel, initializer);
             CreateTable(result._, result.Name, true);
             return result;
         }
 
-        public Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer = null)
+        public Task<DbTable<T>> CreateTempTableAsync<T>(T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
-            return CreateTempTableAsync(initializer, CancellationToken.None);
+            return CreateTempTableAsync(fromModel, initializer, CancellationToken.None);
         }
 
-        public async Task<DbTable<T>> CreateTempTableAsync<T>(Action<T> initializer, CancellationToken cancellationToken)
+        public async Task<DbTable<T>> CreateTempTableAsync<T>(T fromModel, Action<T> initializer, CancellationToken cancellationToken)
             where T : Model, new()
         {
-            var result = CreateTempTableInstance(initializer);
+            var result = CreateTempTableInstance(fromModel, initializer);
             await CreateTableAsync(result._, result.Name, true, cancellationToken);
             return result;
         }
@@ -104,23 +104,23 @@ namespace DevZest.Data.Primitives
         }
 
 
-        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery, T fromModel = null)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
-            var model = new T();
+            var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
         }
 
-        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery)
+        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery, T fromModel = null)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
-            var model = new T();
+            var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
@@ -134,10 +134,10 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task FillDataSetAsync(IDbSet dbSet, DataSet dataSet, CancellationToken cancellationToken);
 
-        internal DbTable<T> CreateTempTableInstance<T>(Action<T> initializer = null)
+        internal DbTable<T> CreateTempTableInstance<T>(T fromModel, Action<T> initializer)
             where T : Model, new()
         {
-            var model = new T();
+            var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
             if (initializer != null)
                 initializer(model);
             return InitTempTableModel(model);
