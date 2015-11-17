@@ -92,38 +92,38 @@ namespace DevZest.Data
             return UpdateAsync(dataSet, rowOrdinal, columnMappingsBuilder, CancellationToken.None);
         }
 
-        public int Update<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public int Update<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
 
-            if (dataSet.Count == 0)
+            if (source.Count == 0)
                 return 0;
 
-            if (dataSet.Count == 1)
-                return Update(dataSet, 0, columnMappingsBuilder) ? 1 : 0;
+            if (source.Count == 1)
+                return Update(source, 0, columnMappingsBuilder) ? 1 : 0;
 
-            return Update(DbSession.CreateTempTable(dataSet), columnMappingsBuilder);
+            return UpdateOrigin(null, DbSession.Update(source, this, columnMappingsBuilder));
         }
 
-        public async Task<int> UpdateAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
+        public async Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, CancellationToken cancellationToken)
             where TSource : Model, new()
         {
-            Check.NotNull(dataSet, nameof(dataSet));
+            Check.NotNull(source, nameof(source));
 
-            if (dataSet.Count == 0)
+            if (source.Count == 0)
                 return 0;
 
-            if (dataSet.Count == 1)
-                return await UpdateAsync(dataSet, 0, columnMappingsBuilder, cancellationToken) ? 1 : 0;
+            if (source.Count == 1)
+                return await UpdateAsync(source, 0, columnMappingsBuilder, cancellationToken) ? 1 : 0;
 
-            return await UpdateAsync(await DbSession.CreateTempTableAsync(dataSet, cancellationToken), columnMappingsBuilder, cancellationToken);
+            return UpdateOrigin(null, await DbSession.UpdateAsync(source, this, columnMappingsBuilder, cancellationToken));
         }
 
-        public Task<int> UpdateAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
+        public Task<int> UpdateAsync<TSource>(DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder = null)
             where TSource : Model, new()
         {
-            return UpdateAsync(dataSet, columnMappingsBuilder, CancellationToken.None);
+            return UpdateAsync(source, columnMappingsBuilder, CancellationToken.None);
         }
 
         internal DbSelectStatement BuildUpdateScalarStatement<TSource>(DataSet<TSource> dataSet, int ordinal, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder)

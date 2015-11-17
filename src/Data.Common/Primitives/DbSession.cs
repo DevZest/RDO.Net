@@ -198,6 +198,24 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> UpdateAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
+        protected internal virtual int Update<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var tempTable = CreateTempTable(sourceData);
+            return Update(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder));
+        }
+
+        protected internal virtual async Task<int> UpdateAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, CancellationToken cancellationToken)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            return await UpdateAsync(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder), cancellationToken);
+        }
+
         internal abstract int Delete(DbSelectStatement statement);
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
