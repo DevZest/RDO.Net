@@ -73,7 +73,7 @@ namespace DevZest.Data
             if (dataSet.Count == 1)
                 return DbSession.Update(BuildDeleteScalarStatement(dataSet, 0, keyMappingsBuilder));
 
-            return Delete(dataSet.ToTempTable(DbSession), keyMappingsBuilder);
+            return Delete(DbSession.CreateTempTable(dataSet), keyMappingsBuilder);
         }
 
         public async Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder, CancellationToken cancellationToken)
@@ -87,7 +87,7 @@ namespace DevZest.Data
             if (dataSet.Count == 1)
                 return await DbSession.UpdateAsync(BuildDeleteScalarStatement(dataSet, 0, keyMappingsBuilder), cancellationToken);
 
-            return await DeleteAsync(await dataSet.ToTempTableAsync(DbSession, cancellationToken), keyMappingsBuilder, cancellationToken);
+            return await DeleteAsync(await DbSession.CreateTempTableAsync(dataSet, cancellationToken), keyMappingsBuilder, cancellationToken);
         }
 
         public Task<int> DeleteAsync<TSource>(DataSet<TSource> dataSet, Action<ColumnMappingsBuilder, TSource, T> keyMappingsBuilder = null)

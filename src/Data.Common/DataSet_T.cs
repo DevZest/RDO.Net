@@ -261,23 +261,5 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChild));
             return dataRow == null ? (DataSet<TChild>)childModel.DataSet : dataRow.Children(childModel);
         }
-
-        internal DbTable<T> ToTempTable(DbSession dbSession)
-        {
-            Check.NotNull(dbSession, nameof(dbSession));
-
-            var result = dbSession.CreateTempTable<T>(_);
-            result.Insert(this);
-            return result;
-        }
-
-        internal async Task<DbTable<T>> ToTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
-        {
-            Check.NotNull(dbSession, nameof(dbSession));
-
-            var result = await dbSession.CreateTempTableAsync<T>(_, cancellationToken);
-            await result.InsertAsync(this, null, false, false, cancellationToken);
-            return result;
-        }
     }
 }

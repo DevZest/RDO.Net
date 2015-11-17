@@ -77,20 +77,23 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal DbTable<T> CreateTempTable<T>(T sourceModel)
+        protected internal DbTable<T> CreateTempTable<T>(DataSet<T> source)
             where T : Model, new()
         {
-            Debug.Assert(sourceModel != null);
-            var result = CreateTempTableInstance(sourceModel);
+            Check.NotNull(source, nameof(source));
+            
+            var result = CreateTempTableInstance(source._);
             CreateTable(result._, result.Name, true);
+            result.Insert(source);
             return result;
         }
 
-        internal async Task<DbTable<T>> CreateTempTableAsync<T>(T sourceModel, CancellationToken cancellationToken)
+        protected internal async Task<DbTable<T>> CreateTempTableAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : Model, new()
         {
-            var result = CreateTempTableInstance(sourceModel);
+            var result = CreateTempTableInstance(source._);
             await CreateTableAsync(result._, result.Name, true, cancellationToken);
+            await result.InsertAsync(source, null, false, false, cancellationToken);
             return result;
         }
 
@@ -164,12 +167,12 @@ namespace DevZest.Data.Primitives
         internal abstract Task<InsertScalarResult> InsertScalarAsync(DbSelectStatement statement, bool outputIdentity, CancellationToken cancellationToken);
 
         protected internal abstract int Insert<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin)
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings)
             where TSource : Model, new()
             where TTarget : Model, new();
 
         protected internal abstract Task<int> InsertAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
-            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, CancellationToken cancellationToken)
+            Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool autoJoin, DbTable<IdentityMapping> identityMappings, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new();
 
