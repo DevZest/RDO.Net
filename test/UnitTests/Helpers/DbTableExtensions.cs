@@ -215,21 +215,21 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected, DbSet<TSource> source, Func<TTarget, ModelKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.UpdateOrigin(null, rowsAffected);
-            var statement = dbTable.BuildDeleteStatement(source);
+            var statement = dbTable.BuildDeleteStatement(source, joinOn);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal)
+        internal static SqlCommand MockDelete<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success, DataSet<TSource> dataSet, int ordinal, Func<TTarget, ModelKey> joinOn = null)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             dbTable.UpdateOrigin<TSource>(null, success);
-            var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal);
+            var statement = dbTable.BuildDeleteScalarStatement(dataSet, ordinal, joinOn);
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
     }

@@ -80,10 +80,7 @@ namespace DevZest.Data.Primitives
         private DbTable<T> Import<T>(DataSet<T> source)
             where T : Model, new()
         {
-            Check.NotNull(source, nameof(source));
-            
-            var result = CreateTempTableInstance(source._);
-            CreateTable(result._, result.Name, true);
+            var result = CreateTempTable(source._);
             Import(source, result);
             return result;
         }
@@ -94,13 +91,34 @@ namespace DevZest.Data.Primitives
         private async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : Model, new()
         {
-            var result = CreateTempTableInstance(source._);
-            await CreateTableAsync(result._, result.Name, true, cancellationToken);
+            var result = await CreateTempTableAsync(source._, null, cancellationToken);
             await ImportAsync(source, result, cancellationToken);
             return result;
         }
 
         protected abstract Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
+            where T : Model, new();
+
+        private DbTable<KeyOutput> ImportKey<T>(DataSet<T> source)
+            where T : Model, new()
+        {
+            var result = CreateKeyOutput(source._);
+            ImportKey(source, result);
+            return result;
+        }
+
+        protected abstract int ImportKey<T>(DataSet<T> source, DbTable<KeyOutput> target)
+            where T : Model, new();
+
+        private async Task<DbTable<KeyOutput>> ImportKeyAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
+            where T : Model, new()
+        {
+            var result = await CreateKeyOutputAsync(source.Model, cancellationToken);
+            await ImportKeyAsync(source, result, cancellationToken);
+            return result;
+        }
+
+        protected abstract Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
             where T : Model, new();
 
         internal DbQuery<T> CreateQuery<T>(T model, DbQueryStatement queryStatement)
@@ -146,22 +164,35 @@ namespace DevZest.Data.Primitives
             var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
             if (initializer != null)
                 initializer(model);
-            return InitTempTableModel(model);
-        }
-
-        private DbTable<T> CreateTempTableInstance<T>(T sourceModel)
-            where T : Model, new()
-        {
-            var model = Model.Clone(sourceModel, false);
-            return InitTempTableModel(model);
-        }
-
-        private DbTable<T> InitTempTableModel<T>(T model)
-            where T : Model, new()
-        {
             model.AddTempTableIdentity();
+            return CreateTempTableInstance(model);
+        }
+
+        private DbTable<T> CreateTempTableInstance<T>(T model)
+            where T : Model, new()
+        {
             var tableName = AssignTempTableName(model);
             return DbTable<T>.CreateTemp(model, this, tableName);
+        }
+
+        internal DbTable<KeyOutput> CreateKeyOutputInstance(Model sourceModel)
+        {
+            var model = new KeyOutput().Initialize(sourceModel, false);
+            return CreateTempTableInstance(model);
+        }
+
+        private DbTable<KeyOutput> CreateKeyOutput(Model sourceModel)
+        {
+            var result = CreateKeyOutputInstance(sourceModel);
+            CreateTable(result.Model, result.Name, true);
+            return result;
+        }
+
+        private async Task<DbTable<KeyOutput>> CreateKeyOutputAsync(Model sourceModel, CancellationToken cancellationToken)
+        {
+            var result = CreateKeyOutputInstance(sourceModel);
+            await CreateTableAsync(result.Model, result.Name, true, cancellationToken);
+            return result;
         }
 
         internal abstract int Insert(DbSelectStatement statement);
@@ -226,20 +257,21 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable)
+        internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = Import(sourceData);
-            return Delete(targetTable.BuildDeleteStatement(tempTable));
+            var keys = ImportKey(sourceData);
+            return Delete(targetTable.BuildDeleteStatement(keys, joinOn));
         }
 
-        internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, CancellationToken cancellationToken)
+        internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+            Func<TTarget, ModelKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = await ImportAsync(sourceData, cancellationToken);
-            return await DeleteAsync(targetTable.BuildDeleteStatement(tempTable), cancellationToken);
+            var keys = await ImportKeyAsync(sourceData, cancellationToken);
+            return await DeleteAsync(targetTable.BuildDeleteStatement(keys, joinOn), cancellationToken);
         }
 
         internal abstract DbReader ExecuteDbReader<T>(DbSet<T> dbSet)

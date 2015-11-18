@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
@@ -38,6 +39,31 @@ namespace DevZest.Data.Primitives
         protected internal override string DbAlias
         {
             get { return (GetIdentity(true) == null ? "sys_key_" : "sys_sequential_") + _sourceDbAlias; }
+        }
+
+        public static void BuildKeyMappings<T>(ColumnMappingsBuilder builder, T source, KeyOutput target)
+            where T : Model, new()
+        {
+            var sourceKey = source.PrimaryKey;
+            if (sourceKey == null)
+                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(source));
+
+            var targetKey = target.PrimaryKey;
+            if (targetKey == null)
+                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(target));
+
+            if (targetKey.Count != sourceKey.Count)
+                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+
+            for (int i = 0; i < targetKey.Count; i++)
+            {
+                var targetColumn = targetKey[i].Column;
+                var sourceColumn = sourceKey[i].Column;
+                if (targetColumn.DataType != sourceColumn.DataType)
+                    throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+
+                builder.Select(sourceColumn, i);
+            }
         }
     }
 }

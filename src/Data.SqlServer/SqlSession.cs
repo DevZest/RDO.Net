@@ -183,6 +183,18 @@ namespace DevZest.Data.SqlServer
             return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
         }
 
+        protected sealed override int ImportKey<T>(DataSet<T> source, DbTable<KeyOutput> target)
+        {
+            var statement = target.BuildInsertStatement(GetDbQuery(source, target._, KeyOutput.BuildKeyMappings), null, false);
+            return ExecuteNonQuery(GetInsertCommand(statement));
+        }
+
+        protected sealed override Task<int> ImportKeyAsync<T>(DataSet<T> source, DbTable<KeyOutput> target, CancellationToken cancellationToken)
+        {
+            var statement = target.BuildInsertStatement(GetDbQuery(source, target._, KeyOutput.BuildKeyMappings), null, false);
+            return ExecuteNonQueryAsync(GetInsertCommand(statement), cancellationToken);
+        }
+
         protected sealed override SqlCommand GetInsertCommand(DbSelectStatement statement)
         {
             return GetInsertCommand(statement, null);

@@ -143,9 +143,9 @@ namespace DevZest.Data
             return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
-        private IList<ColumnMapping> GetKeyMappings(Model sourceModel)
+        private IList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, ModelKey> joinOn = null)
         {
-            var targetKey = Model.PrimaryKey;
+            var targetKey = joinOn == null ? Model.PrimaryKey : joinOn(_);
             if (targetKey == null)
                 throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(Model));
 
