@@ -111,12 +111,14 @@ namespace DevZest.Data.Helpers
                 var identityOutput = sqlSession.MockTempTable<IdentityOutput>(result);
                 var statement = dbTable.BuildInsertStatement(source, columnMappingsBuilder, autoJoin);
                 result.Add(sqlSession.GetInsertCommand(statement, identityOutput));
+                result.Add(sqlSession.GetInsertIntoIdentityMappingsCommand(source, identityMappings, autoJoin ? dbTable : null));
+                result.Add(sqlSession.GetUpdateIdentityMappingsCommand(identityMappings, identityOutput));
             }
 
             if (identityMappings == null || rowsAffected == 0)
                 return result;
 
-            var statements = dbTable.BuildUpdateIdentityStatement(identityMappings);
+            var statements = source.BuildUpdateIdentityStatement(identityMappings);
             foreach (var statement in statements)
                 result.Add(sqlSession.GetUpdateCommand(statement));
 

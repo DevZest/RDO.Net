@@ -465,5 +465,72 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
                 command.Verify(expectedSql);
             }
         }
+
+        [TestMethod]
+        public void DbTable_Insert_from_tem_table_updateIdentity()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var sourceData = db.MockTempTable<ProductCategory>();
+                var commands = db.ProductCategories.MockInsert(10, sourceData, null, false, true);
+
+                var expectedSql = new string[]
+                {
+@"CREATE TABLE [#sys_identity_mapping] (
+    [OldValue] INT NOT NULL,
+    [NewValue] INT NULL,
+    [OriginalSysRowId] INT NULL,
+    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+
+    PRIMARY KEY NONCLUSTERED ([OldValue]),
+    UNIQUE CLUSTERED ([sys_row_id] ASC)
+);",
+
+@"CREATE TABLE [#IdentityOutput] (
+    [NewValue] INT NOT NULL,
+    [sys_row_id] INT NOT NULL IDENTITY(1, 1)
+
+    PRIMARY KEY CLUSTERED ([sys_row_id] ASC)
+);",
+
+@"INSERT INTO [SalesLT].[ProductCategory]
+([ParentProductCategoryID], [Name], [RowGuid], [ModifiedDate])
+OUTPUT INSERTED.[ProductCategoryID] INTO [#IdentityOutput] ([NewValue])
+SELECT
+    [ProductCategory].[ParentProductCategoryID] AS [ParentProductCategoryID],
+    [ProductCategory].[Name] AS [Name],
+    [ProductCategory].[RowGuid] AS [RowGuid],
+    [ProductCategory].[ModifiedDate] AS [ModifiedDate]
+FROM [#ProductCategory] [ProductCategory]
+ORDER BY [ProductCategory].[sys_row_id] ASC;",
+
+@"INSERT INTO [#sys_identity_mapping]
+([OldValue], [OriginalSysRowId])
+SELECT
+    [ProductCategory].[ProductCategoryID] AS [OldValue],
+    [ProductCategory].[sys_row_id] AS [OriginalSysRowId]
+FROM [#ProductCategory] [ProductCategory]
+ORDER BY [ProductCategory].[sys_row_id] ASC;",
+
+@"UPDATE [sys_identity_mapping] SET
+    [NewValue] = [IdentityOutput].[NewValue]
+FROM
+    ([#sys_identity_mapping] [sys_identity_mapping]
+    INNER JOIN
+    [#IdentityOutput] [IdentityOutput]
+    ON [sys_identity_mapping].[sys_row_id] = [IdentityOutput].[sys_row_id]);",
+
+@"UPDATE [ProductCategory] SET
+    [ProductCategoryID] = [sys_identity_mapping].[NewValue]
+FROM
+    ([#sys_identity_mapping] [sys_identity_mapping]
+    INNER JOIN
+    [#ProductCategory] [ProductCategory]
+    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ProductCategoryID]);"
+            };
+
+                commands.Verify(expectedSql);
+            }
+        }
     }
 }
