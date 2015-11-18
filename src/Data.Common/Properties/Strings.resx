@@ -366,4 +366,10 @@
   <data name="DbTable_VerifyUpdateIdentity" xml:space="preserve">
     <value>Target table must be a permanent table and has a identity column.</value>
   </data>
+  <data name="DbTable_DeleteNotSupportedForParentTable" xml:space="preserve">
+    <value>Delete is not supported for parent table.</value>
+  </data>
+  <data name="DbTable_InvalidDbSetSource" xml:space="preserve">
+    <value>The source is invalid: cross DbSession is not supported.</value>
+  </data>
 </root>

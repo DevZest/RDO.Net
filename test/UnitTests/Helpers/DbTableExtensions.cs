@@ -54,39 +54,42 @@ namespace DevZest.Data.Helpers
             return dbTable.SqlSession().GetDeleteCommand(statement);
         }
 
-        internal static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success,
-            DataSet<TSource> source, int rowOrdinal,
+        public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, bool success,
+            DataSet<TSource> source, int ordinal,
             Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null,
             bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            dbTable.VerifySource(source, ordinal);
             dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
 
-            var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, rowOrdinal, columnMappingsBuilder, autoJoin));
+            var result = dbTable.GetInsertCommand(dbTable.BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin));
             dbTable.UpdateOrigin(source, success);
 
             return result;
         }
 
-        internal static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
+        public static SqlCommand MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
             DbQuery<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            Check.NotNull(source, nameof(source));
+            dbTable.VerifySource(source);
 
             var result = dbTable.GetInsertCommand(dbTable.BuildInsertStatement(source, columnMappingsBuilder, autoJoin));
             dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 
-        internal static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
+        public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
             DbTable<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            dbTable.VerifySource(source);
+            dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
+
             var result = dbTable.MockInsertTable(rowsAffected, source, columnMappingsBuilder, autoJoin, updateIdentity);
             dbTable.UpdateOrigin(source, rowsAffected);
             return result;
@@ -97,9 +100,6 @@ namespace DevZest.Data.Helpers
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            Check.NotNull(source, nameof(source));
-            dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
-
             var result = new List<SqlCommand>();
             var sqlSession = dbTable.SqlSession();
 
@@ -123,11 +123,14 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
+        public static IList<SqlCommand> MockInsert<TSource, TTarget>(this DbTable<TTarget> dbTable, int rowsAffected,
             DataSet<TSource> source, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder = null, bool autoJoin = false, bool updateIdentity = false)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
+            dbTable.VerifySource(source);
+            dbTable.VerifyUpdateIdentity(updateIdentity, nameof(updateIdentity));
+
             var result = new List<SqlCommand>();
 
             if (source.Count == 0)

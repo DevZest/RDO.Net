@@ -145,15 +145,15 @@ namespace DevZest.Data
 
         private IList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, ModelKey> joinOn = null)
         {
-            var targetKey = joinOn == null ? Model.PrimaryKey : joinOn(_);
-            if (targetKey == null)
-                throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(Model));
-
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)
                 throw new InvalidOperationException(Strings.DbTable_NoPrimaryKey(sourceModel));
 
-            if (targetKey.Count != sourceKey.Count)
+            var targetKey = joinOn == null ? Model.PrimaryKey : joinOn(_);
+            if (targetKey == null)
+                throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
+
+            if (targetKey.GetType() != sourceKey.GetType() || targetKey.Count != sourceKey.Count)
                 throw new InvalidOperationException(Strings.DbTable_GetKeyMappings_CannotMatch);
 
             var result = new ColumnMapping[targetKey.Count];
@@ -228,20 +228,20 @@ namespace DevZest.Data
             return new DbSelectStatement(paramManager.Model, select, null, null, null, -1, -1);
         }
 
-        private DbExpression VerifyWhere(Func<T, _Boolean> getWhere)
+        private DbExpression VerifyWhere(Func<T, _Boolean> where)
         {
-            if (getWhere == null)
-                return null;
-
-            var where = getWhere(_);
             if (where == null)
                 return null;
 
-            var parentModelSet = where.ParentModelSet;
-            if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_)))
-                return where.DbExpression;
+            var whereExpr = where(_);
+            if (whereExpr == null)
+                return null;
 
-            throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(getWhere));
+            var parentModelSet = whereExpr.ParentModelSet;
+            if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_)))
+                return whereExpr.DbExpression;
+
+            throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(where));
         }
 
         private List<ColumnMapping> GetColumnMappings(Model sourceModel)
@@ -263,6 +263,28 @@ namespace DevZest.Data
                 UpdateOriginalDataSource(origin == null || origin.Count != 1 ? null : origin, true);
 
             return scalarInsertSuccess;
+        }
+
+        internal void VerifySource<TSource>(DbSet<TSource> source)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+            if (source.DbSession != DbSession)
+                throw new ArgumentException(Strings.DbTable_InvalidDbSetSource);
+        }
+
+        internal void VerifySource<TSource>(DataSet<TSource> source)
+            where TSource : Model, new()
+        {
+            Check.NotNull(source, nameof(source));
+        }
+
+        internal void VerifySource<TSource>(DataSet<TSource> source, int ordinal)
+            where TSource : Model, new()
+        {
+            VerifySource(source);
+            if (ordinal < 0 || ordinal >= source.Count)
+                throw new ArgumentOutOfRangeException(nameof(ordinal));
         }
     }
 }

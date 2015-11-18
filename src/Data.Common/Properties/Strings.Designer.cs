@@ -675,6 +675,22 @@ namespace DevZest.Data
             get { return GetString("DbTable_VerifyUpdateIdentity"); }
         }
 
+        /// <summary>
+        /// Delete is not supported for parent table.
+        /// </summary>
+        public static string DbTable_DeleteNotSupportedForParentTable
+        {
+            get { return GetString("DbTable_DeleteNotSupportedForParentTable"); }
+        }
+
+        /// <summary>
+        /// The source is invalid: cross DbSession is not supported.
+        /// </summary>
+        public static string DbTable_InvalidDbSetSource
+        {
+            get { return GetString("DbTable_InvalidDbSetSource"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
