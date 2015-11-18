@@ -77,25 +77,31 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private DbTable<T> CreateTempTable<T>(DataSet<T> source)
+        private DbTable<T> Import<T>(DataSet<T> source)
             where T : Model, new()
         {
             Check.NotNull(source, nameof(source));
             
             var result = CreateTempTableInstance(source._);
             CreateTable(result._, result.Name, true);
-            result.Insert(source);
+            Import(source, result);
             return result;
         }
 
-        private async Task<DbTable<T>> CreateTempTableAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
+        protected abstract int Import<T>(DataSet<T> source, DbTable<T> target)
+            where T : Model, new();
+
+        private async Task<DbTable<T>> ImportAsync<T>(DataSet<T> source, CancellationToken cancellationToken)
             where T : Model, new()
         {
             var result = CreateTempTableInstance(source._);
             await CreateTableAsync(result._, result.Name, true, cancellationToken);
-            await result.InsertAsync(source, null, false, false, cancellationToken);
+            await ImportAsync(source, result, cancellationToken);
             return result;
         }
+
+        protected abstract Task<int> ImportAsync<T>(DataSet<T> source, DbTable<T> target, CancellationToken cancellationToken)
+            where T : Model, new();
 
         internal DbQuery<T> CreateQuery<T>(T model, DbQueryStatement queryStatement)
             where T : Model, new()
@@ -171,7 +177,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = CreateTempTable(sourceData);
+            var tempTable = Import(sourceData);
             return Insert(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings);
         }
 
@@ -180,7 +186,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            var tempTable = await ImportAsync(sourceData, cancellationToken);
             return await InsertAsync(tempTable, targetTable, columnMappingsBuilder, autoJoin, identityMappings, cancellationToken);
         }
 
@@ -203,7 +209,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = CreateTempTable(sourceData);
+            var tempTable = Import(sourceData);
             return Update(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder));
         }
 
@@ -212,7 +218,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            var tempTable = await ImportAsync(sourceData, cancellationToken);
             return await UpdateAsync(targetTable.BuildUpdateStatement(tempTable, columnMappingsBuilder), cancellationToken);
         }
 
@@ -224,7 +230,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = CreateTempTable(sourceData);
+            var tempTable = Import(sourceData);
             return Delete(targetTable.BuildDeleteStatement(tempTable));
         }
 
@@ -232,7 +238,7 @@ namespace DevZest.Data.Primitives
             where TSource : Model, new()
             where TTarget : Model, new()
         {
-            var tempTable = await CreateTempTableAsync(sourceData, cancellationToken);
+            var tempTable = await ImportAsync(sourceData, cancellationToken);
             return await DeleteAsync(targetTable.BuildDeleteStatement(tempTable), cancellationToken);
         }
 
