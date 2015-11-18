@@ -1,8 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using System.Diagnostics;
-using System;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     internal sealed class SequentialKeyModel : Model
     {
