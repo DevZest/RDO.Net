@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class KeyOutput : Model
+    public sealed class KeyOutput : Model
     {
         public KeyOutput()
         {
