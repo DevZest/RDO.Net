@@ -439,7 +439,7 @@ namespace DevZest.Data
 
         internal KeyOutput CreateSequentialKey()
         {
-            return new KeyOutput().Initialize(this, true);
+            return new KeyOutput(this, true);
         }
 
         protected internal virtual string DbAlias

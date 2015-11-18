@@ -288,7 +288,7 @@ FROM
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var tempTable = db.MockTempTable<ProductCategory>();
-                var command = tempTable.MockInsert(4, db.GetDbQuery(dataSet, tempTable._, null));
+                var commands = tempTable.MockInsert(4, dataSet);
 
                 var expectedSql =
 @"DECLARE @p1 XML = N'
@@ -339,7 +339,7 @@ FROM @p1.nodes('/root/row') [SqlXmlModel]([Xml])
 ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
 ";
 
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                commands.Verify(expectedSql);
             }
         }
 

@@ -9,13 +9,14 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        internal KeyOutput Initialize(Model model, bool addTempTableIdentity)
+        public KeyOutput(Model model, bool addTempTableIdentity)
         {
-            _sourceDbAlias = model.DbAlias;
-
+            Utilities.Check.NotNull(model, nameof(model));
             var primaryKey = model.PrimaryKey;
-            Debug.Assert(primaryKey != null);
+            if (primaryKey == null)
+                throw new ArgumentException(Strings.DbTable_NoPrimaryKey(model), nameof(model));
 
+            _sourceDbAlias = model.DbAlias;
             _primaryKey = primaryKey.Clone(this);
             var sortKeys = new ColumnSort[primaryKey.Count];
             for (int i = 0; i < sortKeys.Length; i++)
@@ -23,8 +24,6 @@ namespace DevZest.Data.Primitives
             AddDbTableConstraint(new PrimaryKeyConstraint(this, null, false, () => { return sortKeys; }), true);
             if (addTempTableIdentity)
                 this.AddTempTableIdentity();
-
-            return this;
         }
 
 

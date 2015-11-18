@@ -142,16 +142,18 @@ namespace DevZest.Data.Helpers
                 return result;
             }
 
+            dbTable.UpdateOrigin(source, rowsAffected);
             var sqlSession = dbTable.SqlSession();
+
             if (!updateIdentity)
             {
-                result.Add(dbTable.MockInsert(rowsAffected, sqlSession.GetDbQuery(source, dbTable._, columnMappingsBuilder), null, autoJoin));
+                result.Add(sqlSession.BuildInsertCommand(source, dbTable, columnMappingsBuilder, autoJoin));
                 return result;
             }
 
             var tempTable = sqlSession.MockTempTable<TSource>(result);
+            result.Add(sqlSession.BuildImportCommand(source, tempTable));
             result.AddRange(dbTable.MockInsertTable(rowsAffected, tempTable, columnMappingsBuilder, autoJoin, updateIdentity));
-            dbTable.UpdateOrigin(source, rowsAffected);
             return result;
         }
 
@@ -204,10 +206,7 @@ namespace DevZest.Data.Helpers
             }
 
             dbTable.UpdateOrigin(null, rowsAffected);
-            var sqlSession = dbTable.SqlSession();
-            var dbQuery = sqlSession.GetDbQuery(source, source._, null);
-            var statement = dbTable.BuildUpdateStatement(dbQuery, columnMappingsBuilder);
-            return dbTable.SqlSession().GetUpdateCommand(statement);
+            return dbTable.SqlSession().BuildUpdateCommand(source, dbTable, columnMappingsBuilder);
         }
 
         internal static SqlCommand MockDelete<T>(this DbTable<T> dbTable, int rowsAffected, Func<T, _Boolean> where)

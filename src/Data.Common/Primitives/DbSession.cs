@@ -177,7 +177,7 @@ namespace DevZest.Data.Primitives
 
         internal DbTable<KeyOutput> CreateKeyOutputInstance(Model sourceModel)
         {
-            var model = new KeyOutput().Initialize(sourceModel, false);
+            var model = new KeyOutput(sourceModel, false);
             return CreateTempTableInstance(model);
         }
 
