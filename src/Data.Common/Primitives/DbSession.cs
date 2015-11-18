@@ -133,7 +133,7 @@ namespace DevZest.Data.Primitives
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
-            var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
+            var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
@@ -144,7 +144,7 @@ namespace DevZest.Data.Primitives
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
-            var model = fromModel == null ? new T() : Model.Clone(fromModel, false);
+            var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
@@ -257,7 +257,7 @@ namespace DevZest.Data.Primitives
 
         internal abstract Task<int> DeleteAsync(DbSelectStatement statement, CancellationToken cancellationToken);
 
-        internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn)
+        protected internal virtual int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
@@ -265,7 +265,7 @@ namespace DevZest.Data.Primitives
             return Delete(targetTable.BuildDeleteStatement(keys, joinOn));
         }
 
-        internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
+        protected internal async virtual Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable,
             Func<TTarget, ModelKey> joinOn, CancellationToken cancellationToken)
             where TSource : Model, new()
             where TTarget : Model, new()

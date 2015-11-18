@@ -346,6 +346,16 @@ namespace DevZest.Data.SqlServer
             return SqlGenerator.Delete(this, statement).CreateCommand(GetConnection());
         }
 
+        protected sealed override int Delete<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn)
+        {
+            return base.Delete<TSource, TTarget>(sourceData, targetTable, joinOn);
+        }
+
+        protected sealed override Task<int> DeleteAsync<TSource, TTarget>(DataSet<TSource> sourceData, DbTable<TTarget> targetTable, Func<TTarget, ModelKey> joinOn, CancellationToken cancellationToken)
+        {
+            return base.DeleteAsync<TSource, TTarget>(sourceData, targetTable, joinOn, cancellationToken);
+        }
+
         protected sealed override object CreateMockDb()
         {
             var sqlCommandText =
