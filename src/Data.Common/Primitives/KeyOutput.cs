@@ -1,18 +1,16 @@
-﻿using DevZest.Data.Primitives;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class SequentialKeyModel : Model
+    internal sealed class KeyOutput : Model
     {
-        public SequentialKeyModel()
+        public KeyOutput()
         {
-            Debug.Fail("This class is for internal use only. This constructor should not be called.");
         }
 
-        public SequentialKeyModel(Model model)
+        internal KeyOutput Initialize(Model model, bool addTempTableIdentity)
         {
-            _dbAlias = "sys_sequential_" + model.DbAlias;
+            _sourceDbAlias = model.DbAlias;
 
             var primaryKey = model.PrimaryKey;
             Debug.Assert(primaryKey != null);
@@ -22,7 +20,10 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < sortKeys.Length; i++)
                 sortKeys[i] = primaryKey[i];
             AddDbTableConstraint(new PrimaryKeyConstraint(this, null, false, () => { return sortKeys; }), true);
-            this.AddTempTableIdentity();
+            if (addTempTableIdentity)
+                this.AddTempTableIdentity();
+
+            return this;
         }
 
 
@@ -31,10 +32,12 @@ namespace DevZest.Data.Primitives
         {
             return _primaryKey;
         }
-        private string _dbAlias;
+
+        private string _sourceDbAlias;
+
         protected internal override string DbAlias
         {
-            get { return _dbAlias; }
+            get { return (GetIdentity(true) == null ? "sys_key_" : "sys_sequential_") + _sourceDbAlias; }
         }
     }
 }

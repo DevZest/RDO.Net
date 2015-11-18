@@ -207,7 +207,7 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.Resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\SequentailKeyModel.cs" />
+    <Compile Include="Primitives\KeyOutput.cs" />
     <Compile Include="SortDirection.cs" />
     <Compile Include="UdtAttribute.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />

@@ -19,7 +19,7 @@ namespace DevZest.Data.Primitives
 
         public Model Model { get; private set; }
 
-        internal DbTable<SequentialKeyModel> SequentialKeyTempTable
+        internal DbTable<KeyOutput> SequentialKeyTempTable
         {
             get { return Model.SequentialKeyTempTable; }
             set { Model.SequentialKeyTempTable = value; }
@@ -37,23 +37,23 @@ namespace DevZest.Data.Primitives
                 SequentialKeyTempTable = await CreateSequentialKeyTempTableAsync(dbSession, cancellationToken);
         }
 
-        private DbTable<SequentialKeyModel> CreateSequentialKeyTempTable(DbSession dbSession)
+        private DbTable<KeyOutput> CreateSequentialKeyTempTable(DbSession dbSession)
         {
             var sequentialKeyModel = Model.CreateSequentialKey();
             var selectStatement = GetSequentialKeySelectStatement(sequentialKeyModel);
             return selectStatement.ToTempTable(sequentialKeyModel, dbSession);
         }
 
-        private async Task<DbTable<SequentialKeyModel>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
+        private async Task<DbTable<KeyOutput>> CreateSequentialKeyTempTableAsync(DbSession dbSession, CancellationToken cancellationToken)
         {
             var sequentialKeyModel = Model.CreateSequentialKey();
             var selectStatement = GetSequentialKeySelectStatement(sequentialKeyModel);
             return await selectStatement.ToTempTableAsync(sequentialKeyModel, dbSession, cancellationToken);
         }
 
-        internal abstract DbSelectStatement GetSequentialKeySelectStatement(SequentialKeyModel sequentialKeyModel);
+        internal abstract DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel);
 
-        internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal virtual DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
         {
             return new DbQueryBuilder(model).BuildQueryStatement(this.Model, action, sequentialKeys);
         }

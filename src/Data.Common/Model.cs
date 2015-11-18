@@ -437,10 +437,9 @@ namespace DevZest.Data
             this.AddOrUpdateInterceptor(constraint);
         }
 
-        internal SequentialKeyModel CreateSequentialKey()
+        internal KeyOutput CreateSequentialKey()
         {
-            var result = new SequentialKeyModel(this);
-            return result;
+            return new KeyOutput().Initialize(this, true);
         }
 
         protected internal virtual string DbAlias
@@ -624,7 +623,7 @@ namespace DevZest.Data
 
         internal bool IsIdentityGenerationDisabled { get; private set; }
 
-        internal DbTable<SequentialKeyModel> SequentialKeyTempTable { get; set; }
+        internal DbTable<KeyOutput> SequentialKeyTempTable { get; set; }
 
         public override string ToString()
         {
@@ -696,7 +695,7 @@ namespace DevZest.Data
             Validations.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
         }
 
-        internal SequentialKeyModel ParentSequentialKeyModel
+        internal KeyOutput ParentSequentialKeyModel
         {
             get
             {

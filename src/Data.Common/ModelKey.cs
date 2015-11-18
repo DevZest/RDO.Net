@@ -45,7 +45,7 @@ namespace DevZest.Data
             return result;
         }
 
-        internal ModelKey Clone(SequentialKeyModel model)
+        internal ModelKey Clone(KeyOutput model)
         {
             EnsureIntialized();
             var result = (ModelKey)this.MemberwiseClone();

@@ -64,7 +64,7 @@ namespace DevZest.Data.Primitives
             return visitor.Visit(this);
         }
 
-        internal override DbSelectStatement GetSequentialKeySelectStatement(SequentialKeyModel sequentialKeyModel)
+        internal override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
         {
             var primaryKey = Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
@@ -76,7 +76,7 @@ namespace DevZest.Data.Primitives
             return new DbSelectStatement(sequentialKeyModel, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
         }
 
-        internal override DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<SequentialKeyModel> sequentialKeys)
+        internal override DbQueryStatement BuildQueryStatement(Model model, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
         {
             var queryBuilder = IsAggregate ? new DbAggregateQueryBuilder(model) : new DbQueryBuilder(model);
             return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);

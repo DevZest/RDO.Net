@@ -32,7 +32,7 @@ namespace DevZest.Data.Primitives
             return visitor.Visit(this);
         }
 
-        internal override DbSelectStatement GetSequentialKeySelectStatement(SequentialKeyModel sequentialKeyModel)
+        internal override DbSelectStatement GetSequentialKeySelectStatement(KeyOutput sequentialKeyModel)
         {
             var primaryKey = Model.PrimaryKey;
             Debug.Assert(primaryKey != null);

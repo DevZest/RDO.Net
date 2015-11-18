@@ -21,7 +21,7 @@ namespace DevZest.Data.Helpers
             var sequentialKeyModel = select.Model.CreateSequentialKey();
             var sequentialSelect = select.GetSequentialKeySelectStatement(sequentialKeyModel);
             var tempTableName = dbQuery.DbSession.AssignTempTableName(sequentialKeyModel);
-            select.SequentialKeyTempTable = DbTable<SequentialKeyModel>.CreateTemp(sequentialKeyModel, dbQuery.DbSession, tempTableName);
+            select.SequentialKeyTempTable = DbTable<KeyOutput>.CreateTemp(sequentialKeyModel, dbQuery.DbSession, tempTableName);
             select.SequentialKeyTempTable.InitialRowCount = initialRowCount;  // this value (zero or non-zero) determines whether child query should be created.
 
             return dbQuery;
@@ -37,9 +37,9 @@ namespace DevZest.Data.Helpers
 
             var select = dbQuery.QueryStatement;
             var query = select.GetSequentialKeySelectStatement(select.Model.CreateSequentialKey());
-            var model = (SequentialKeyModel)query.Model;
+            var model = (KeyOutput)query.Model;
             result[0] = sqlSession.GetCreateTableCommand(model, tempTableName, true);
-            var tempTable = DbTable<SequentialKeyModel>.CreateTemp(model, sqlSession, tempTableName);
+            var tempTable = DbTable<KeyOutput>.CreateTemp(model, sqlSession, tempTableName);
             result[1] = sqlSession.GetInsertCommand(query.BuildToTempTableStatement());
             return result;
         }
