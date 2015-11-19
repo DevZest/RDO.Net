@@ -244,9 +244,10 @@ namespace DevZest.Data
             throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(where));
         }
 
-        private List<ColumnMapping> GetColumnMappings(Model sourceModel)
+        private IList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder)
+            where TSource : Model, new()
         {
-            return Model.GetColumnMappings(sourceModel);
+            return _.GetColumnMappings(sourceModel, columnMappingsBuilder);
         }
 
         internal int UpdateOrigin(DataSource origin, int rowsAffected)

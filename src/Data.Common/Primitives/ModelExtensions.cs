@@ -70,27 +70,20 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        internal static IEnumerable<Column> GetSelectColumns(this Model model)
-        {
-            foreach (var column in model.Columns)
-            {
-                if (column.Kind != ColumnKind.SystemRowId)
-                    yield return column;
-            }
-        }
-
-        public static IList<ColumnMapping> BuildColumnMappings<TSource, TTarget>(this TTarget targetModel, TSource sourceModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+        public static IList<ColumnMapping> GetColumnMappings<TSource, TTarget>(this TTarget targetModel, TSource sourceModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             Check.NotNull(targetModel, nameof(targetModel));
             Check.NotNull(sourceModel, nameof(sourceModel));
-            Check.NotNull(columnMappingsBuilder, nameof(columnMappingsBuilder));
 
-            return new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            return columnMappingsBuilder == null
+                ? targetModel.GetColumnMappings(sourceModel)
+                : new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+
         }
 
-        public static List<ColumnMapping> GetColumnMappings(this Model targetModel, Model sourceModel)
+        private static List<ColumnMapping> GetColumnMappings(this Model targetModel, Model sourceModel)
         {
             Check.NotNull(targetModel, nameof(targetModel));
             Check.NotNull(sourceModel, nameof(sourceModel));
