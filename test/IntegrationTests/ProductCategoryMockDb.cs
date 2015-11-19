@@ -1,6 +1,6 @@
-﻿using DevZest.Data;
+﻿using DevZest.Samples.AdventureWorksLT;
 
-namespace DevZest.Samples.AdventureWorksLT
+namespace DevZest.Data
 {
     internal sealed class ProductCategoryMockDb : MockDb<Db>
     {

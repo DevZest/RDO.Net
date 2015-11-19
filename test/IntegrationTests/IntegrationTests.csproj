@@ -50,7 +50,9 @@
   <ItemGroup>
     <Compile Include="AdventureWorksTestsBase.cs" />
     <Compile Include="DbSessionTests.cs" />
+    <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="DbTableInsertTests.cs" />
+    <Compile Include="DbTableUpdateTests.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="MockDbTests.cs" />
     <Compile Include="ProductCategoryMockDb.cs" />

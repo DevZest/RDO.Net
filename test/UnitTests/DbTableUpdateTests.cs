@@ -10,7 +10,7 @@ namespace DevZest.Data
     public class DbTableUpdateTests
     {
         [TestMethod]
-        public void DbTable_Update_without_from()
+        public void DbTable_Update_without_source()
         {
             using (var db = Db.Create(SqlVersion.Sql11))
             {
