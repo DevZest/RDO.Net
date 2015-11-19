@@ -130,7 +130,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public override string ToString()
         {
-            return Name;
+            return IsExpression ? "[Expression]" : Name;
         }
 
         /// <summary>Gets the set of parent <see cref="Model"/> objects related to this <see cref="Column"/>.</summary>

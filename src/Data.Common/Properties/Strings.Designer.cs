@@ -524,11 +524,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The target column is invalid.
+        /// The target column '{targetColumn}' is invalid.
         /// </summary>
-        public static string ColumnMappingsBuilder_InvalidTarget
+        public static string ColumnMappingsBuilder_InvalidTarget(object targetColumn)
         {
-            get { return GetString("ColumnMappingsBuilder_InvalidTarget"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnMappingsBuilder_InvalidTarget", "targetColumn"), targetColumn);
         }
 
         /// <summary>

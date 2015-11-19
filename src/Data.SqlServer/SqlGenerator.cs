@@ -67,7 +67,7 @@ namespace DevZest.Data.SqlServer
             if (select != null)
                 return select.Select(x => x.TargetColumn).ToList();
             else
-                return model.GetUpdatableColumns().ToList();
+                return model.GetInsertableColumns().ToList();
         }
 
         internal static SqlGenerator InsertScalar(SqlSession sqlSession, DbSelectStatement statement, bool outputIdentity)

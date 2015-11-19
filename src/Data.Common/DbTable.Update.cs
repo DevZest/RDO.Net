@@ -67,7 +67,7 @@ namespace DevZest.Data
         {
             Debug.Assert(source != null);
             var keyMappings = GetKeyMappings(source._);
-            var columnMappings = GetColumnMappings(source._, columnMappingsBuilder);
+            var columnMappings = GetColumnMappings(source._, columnMappingsBuilder, false);
             return source.QueryStatement.BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
@@ -140,7 +140,7 @@ namespace DevZest.Data
             Debug.Assert(dataSet != null && dataSet._ != null);
             var sourceModel = dataSet._;
             var keyMappings = GetKeyMappings(sourceModel);
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder);
+            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, false);
             return BuildUpdateScalarStatement(dataSet[ordinal], keyMappings, columnMappings);
         }
 

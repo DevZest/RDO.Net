@@ -69,7 +69,7 @@ namespace DevZest.Data
         {
             Check.NotNull(targetColumn, nameof(targetColumn));
             if (targetColumn.ParentModel != _targetModel)
-                throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidTarget, nameof(targetColumn));
+                throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidTarget(targetColumn), nameof(targetColumn));
         }
 
         private void VerifySource(Column sourceColumn)

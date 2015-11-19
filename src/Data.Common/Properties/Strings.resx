@@ -310,7 +310,7 @@
     <value>The source column derives from invalid model '{model}'.</value>
   </data>
   <data name="ColumnMappingsBuilder_InvalidTarget" xml:space="preserve">
-    <value>The target column is invalid.</value>
+    <value>The target column '{targetColumn}' is invalid.</value>
   </data>
   <data name="DbTable_GetKeyMappings_CannotMatch" xml:space="preserve">
     <value>Cannot match primary key of current table and the source Model.</value>

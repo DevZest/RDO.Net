@@ -52,6 +52,16 @@ namespace DevZest.Data.Utilities
             return null;
         }
 
+        internal static bool ContainsSource(this IList<ColumnMapping> columnMappings, Column source)
+        {
+            foreach (var mapping in columnMappings)
+            {
+                if (mapping.SourceColumn == source)
+                    return true;
+            }
+            return false;
+        }
+
         internal static bool ContainsTarget(this IList<ColumnMapping> columnMappings, Column target)
         {
             foreach (var mapping in columnMappings)

@@ -166,7 +166,7 @@ namespace DevZest.Data.SqlServer
                 var dataSetOrdinalColumn = new _Int32();
                 model.AddSystemColumn(dataSetOrdinalColumn, "sys_dataset_ordinal");
 
-                var columnMappings = model.GetColumnMappings(dataSet._, columnMappingsBuilder);
+                var columnMappings = model.GetColumnMappings(dataSet._, columnMappingsBuilder, true);
 
                 var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.Source).Column).ToList());
 

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevZest.Data.Primitives
 {
@@ -50,8 +51,10 @@ namespace DevZest.Data.Primitives
             return result ?? DbTable<T>.Create(model, dbSession, name);
         }
 
-        public static IEnumerable<Column> GetUpdatableColumns(this Model model)
+        public static IEnumerable<Column> GetInsertableColumns(this Model model)
         {
+            Check.NotNull(model, nameof(model));
+
             IDbTable dbTable = (IDbTable)model.DataSource;
             bool isTempTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTempTable;
             bool isTable = dbTable == null ? false : dbTable.Kind == DataSourceKind.DbTable;
@@ -70,27 +73,54 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public static IList<ColumnMapping> GetColumnMappings<TSource, TTarget>(this TTarget targetModel, TSource sourceModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder)
+        public static IEnumerable<Column> GetUpdatableColumns(this Model model)
+        {
+            Check.NotNull(model, nameof(model));
+            if (model.DataSource == null || model.DataSource.Kind != DataSourceKind.DbTempTable || model.ParentModel == null)
+                return model.GetInsertableColumns();
+            return model.GetUpdatableColumns(model.ParentRelationship);
+        }
+
+        private static IEnumerable<Column> GetUpdatableColumns(this Model model, IList<ColumnMapping> parentRelationship)
+        {
+            foreach (var column in model.GetInsertableColumns())
+            {
+                if (!parentRelationship.ContainsSource(column))
+                    yield return column;
+            }
+        }
+
+        public static IList<ColumnMapping> GetColumnMappings<TSource, TTarget>(this TTarget targetModel, TSource sourceModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
             where TTarget : Model, new()
         {
             Check.NotNull(targetModel, nameof(targetModel));
             Check.NotNull(sourceModel, nameof(sourceModel));
 
-            return columnMappingsBuilder == null
-                ? targetModel.GetColumnMappings(sourceModel)
-                : new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            if (columnMappingsBuilder == null)
+                return targetModel.GetColumnMappings(sourceModel, isInsertable);
 
+            var result = new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
+            var columnKeys = new HashSet<ColumnKey>(columns.Select(x => x.Key));
+            foreach (var resultItem in result)
+            {
+                if (!columnKeys.Contains(resultItem.TargetColumn.Key))
+                    throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.TargetColumn));
+            }
+
+            return result;
         }
 
-        private static List<ColumnMapping> GetColumnMappings(this Model targetModel, Model sourceModel)
+        private static List<ColumnMapping> GetColumnMappings(this Model targetModel, Model sourceModel, bool isInsertable)
         {
             Check.NotNull(targetModel, nameof(targetModel));
             Check.NotNull(sourceModel, nameof(sourceModel));
 
             var result = new List<ColumnMapping>();
             var sourceColumns = sourceModel.Columns;
-            foreach (var column in targetModel.GetUpdatableColumns())
+            var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
+            foreach (var column in columns)
             {
                 if (column.IsSystem)
                     continue;

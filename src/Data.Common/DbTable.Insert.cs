@@ -102,7 +102,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             var sourceModel = source._;
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder);
+            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, true);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
             return source.QueryStatement.BuildInsertStatement(Model, columnMappings, keyMappings, ShouldJoinParent(source));
         }
@@ -215,7 +215,7 @@ namespace DevZest.Data
             where TSource : Model, new()
         {
             var sourceModel = dataSet._;
-            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder);
+            var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, true);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
             var parentMappings = ShouldJoinParent(dataSet) ? columnMappings.GetParentRelationship(this) : null;
 
