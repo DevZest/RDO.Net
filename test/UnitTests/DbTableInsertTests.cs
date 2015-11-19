@@ -472,6 +472,8 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
             using (var db = Db.Create(SqlVersion.Sql11))
             {
                 var sourceData = db.MockTempTable<ProductCategory>();
+                var children = sourceData.MockCreateChild(x => x.SubCategories);
+                var grandChildren = children.MockCreateChild(x => x.SubCategories);
                 var commands = db.ProductCategories.MockInsert(10, sourceData, null, false, true);
 
                 var expectedSql = new string[]
@@ -526,7 +528,15 @@ FROM
     ([#sys_identity_mapping] [sys_identity_mapping]
     INNER JOIN
     [#ProductCategory] [ProductCategory]
-    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ProductCategoryID]);"
+    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ProductCategoryID]);",
+
+@"UPDATE [ProductCategory] SET
+    [ParentProductCategoryID] = [sys_identity_mapping].[NewValue]
+FROM
+    ([#sys_identity_mapping] [sys_identity_mapping]
+    INNER JOIN
+    [#ProductCategory1] [ProductCategory]
+    ON [sys_identity_mapping].[OldValue] = [ProductCategory].[ParentProductCategoryID]);"
             };
 
                 commands.Verify(expectedSql);
