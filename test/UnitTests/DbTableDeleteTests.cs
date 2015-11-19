@@ -107,5 +107,39 @@ FROM
                 command.Verify(expectedSql);
             }
         }
+
+        [TestMethod]
+        public void DbTable_Delete_from_DataSet()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var salesOrder = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+                var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
+                var command = db.SalesOrderDetails.MockDelete(0, salesOrderDetails);
+                var expectedSql =
+@"DECLARE @p1 XML = N'
+<root>
+  <row>
+    <col_0>71774</col_0>
+    <col_1>110562</col_1>
+    <col_2>1</col_2>
+  </row>
+  <row>
+    <col_0>71774</col_0>
+    <col_1>110563</col_1>
+    <col_2>2</col_2>
+  </row>
+</root>';
+
+DELETE [SalesOrderDetail]
+FROM
+    (@p1.nodes('/root/row') [SqlXmlModel]([Xml])
+    INNER JOIN
+    [SalesLT].[SalesOrderDetail] [SalesOrderDetail]
+    ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderID] AND [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') = [SalesOrderDetail].[SalesOrderDetailID]);
+";
+                command.Verify(expectedSql);
+            }
+        }
     }
 }
