@@ -63,7 +63,7 @@ SELECT
 FROM [SalesLT].[ProductCategory] [ProductCategory]
 WHERE ([ProductCategory].[ParentProductCategoryID] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -90,7 +90,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE (([ProductCategory].[ParentProductCategoryID] IS NULL) AND ([ProductCategory1].[ProductCategoryID] IS NULL));
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -125,7 +125,7 @@ FROM
     ON [SalesOrderDetail].[SalesOrderID] = [sys_sequential_SalesOrder].[SalesOrderID])
 ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[SalesOrderDetailID];
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -158,7 +158,7 @@ SELECT
     @p4 AS [RowGuid],
     @p5 AS [ModifiedDate];
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -197,7 +197,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE ([ProductCategory1].[ProductCategoryID] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -254,7 +254,7 @@ UNION ALL
 FROM [SalesLT].[Product] [Product]
 WHERE ([Product].[ProductID] > 800));
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -277,7 +277,7 @@ FROM
     [#SalesOrder] [SalesOrder]
     ON [sys_identity_mapping].[OldValue] = [SalesOrder].[SalesOrderID]);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 

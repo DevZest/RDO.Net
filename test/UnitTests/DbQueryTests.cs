@@ -455,25 +455,24 @@ ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
-                var expectedSql1 =
+                var expectedSql = new string[]
+                {
 @"CREATE TABLE [#sys_sequential_SalesOrder] (
     [SalesOrderID] INT NOT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
     PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
     UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-";
-                var expectedSql2 =
+);",
+
 @"INSERT INTO [#sys_sequential_SalesOrder]
 ([SalesOrderID])
 SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
 FROM [SalesLT].[SalesOrderHeader] [SalesOrder]
 WHERE (([SalesOrder].[SalesOrderID] = 71774) OR ([SalesOrder].[SalesOrderID] = 71776))
-ORDER BY [SalesOrder].[SalesOrderID];
-";
-                Assert.AreEqual(expectedSql1, commands[0].ToTraceString());
-                Assert.AreEqual(expectedSql2, commands[1].ToTraceString());
+ORDER BY [SalesOrder].[SalesOrderID];"
+                };
+                commands.Verify(expectedSql);
             }
         }
 
@@ -494,16 +493,16 @@ ORDER BY [SalesOrder].[SalesOrderID];
 
                 var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
 
-                var expectedSql1 =
+                var expectedSql = new string[]
+                {
 @"CREATE TABLE [#sys_sequential_SalesOrder] (
     [SalesOrderID] INT NOT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
     PRIMARY KEY NONCLUSTERED ([SalesOrderID]),
     UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-";
-                var expectedSql2 =
+);",
+
 @"INSERT INTO [#sys_sequential_SalesOrder]
 ([SalesOrderID])
 SELECT [SalesOrder].[SalesOrderID] AS [SalesOrderID]
@@ -532,10 +531,10 @@ GROUP BY
     [SalesOrder].[Comment],
     [SalesOrder].[RowGuid],
     [SalesOrder].[ModifiedDate]
-ORDER BY [SalesOrder].[SalesOrderNumber] DESC;
-";
-                Assert.AreEqual(expectedSql1, commands[0].ToTraceString());
-                Assert.AreEqual(expectedSql2, commands[1].ToTraceString());
+ORDER BY [SalesOrder].[SalesOrderNumber] DESC;"
+                };
+
+                commands.Verify(expectedSql);
             }
         }
 
@@ -548,16 +547,16 @@ ORDER BY [SalesOrder].[SalesOrderNumber] DESC;
                 var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
                 var commands = unionQuery.GetCreateSequentialKeyTempTableCommands();
 
-                var expectedSql1 =
+                var expectedSql = new string[]
+                {
 @"CREATE TABLE [#sys_sequential_Product] (
     [ProductID] INT NOT NULL,
     [sys_row_id] INT NOT NULL IDENTITY(1, 1)
 
     PRIMARY KEY NONCLUSTERED ([ProductID]),
     UNIQUE CLUSTERED ([sys_row_id] ASC)
-);
-";
-                var expectedSql2 =
+);",
+
 @"INSERT INTO [#sys_sequential_Product]
 ([ProductID])
 SELECT [Product].[ProductID] AS [ProductID]
@@ -602,10 +601,10 @@ FROM
         [Product].[RowGuid] AS [RowGuid],
         [Product].[ModifiedDate] AS [ModifiedDate]
     FROM [SalesLT].[Product] [Product]
-    WHERE ([Product].[ProductID] > 800))) [Product];
-";
-                Assert.AreEqual(expectedSql1, commands[0].ToTraceString());
-                Assert.AreEqual(expectedSql2, commands[1].ToTraceString());
+    WHERE ([Product].[ProductID] > 800))) [Product];"
+                };
+
+                commands.Verify(expectedSql);
             }
         }
     }

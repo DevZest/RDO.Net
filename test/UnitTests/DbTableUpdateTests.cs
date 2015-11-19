@@ -22,7 +22,7 @@ namespace DevZest.Data
 FROM [SalesLT].[ProductCategory] [ProductCategory]
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -45,7 +45,7 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory1]
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -69,7 +69,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -93,7 +93,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -126,7 +126,7 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory1]
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -168,7 +168,39 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory]
     ON [SqlXmlModel].[Xml].value('col_0[1]/text()[1]', 'INT') = [ProductCategory].[ProductCategoryID]);
 ";
-                Assert.AreEqual(expectedSql, db.ProductCategories.MockUpdate(dataSet.Count, dataSet).ToTraceString());
+                var command = db.ProductCategories.MockUpdate(dataSet.Count, dataSet);
+                command.Verify(expectedSql);
+            }
+        }
+
+        [TestMethod]
+        public void DbTable_Update_child_temp_table()
+        {
+            using (var db = Db.Create(SqlVersion.Sql11))
+            {
+                var salesOrders = db.MockTempTable<SalesOrder>();
+                var salesOrderDetails = salesOrders.MockCreateChild(x => x.SalesOrderDetails);
+
+                var source = db.MockTempTable<SalesOrderDetail>();
+
+                var command = salesOrderDetails.MockUpdate(0, source);
+                var expectedSql =
+@"UPDATE [SalesOrderDetail1] SET
+    [SalesOrderDetailID] = [SalesOrderDetail].[SalesOrderDetailID],
+    [OrderQty] = [SalesOrderDetail].[OrderQty],
+    [ProductID] = [SalesOrderDetail].[ProductID],
+    [UnitPrice] = [SalesOrderDetail].[UnitPrice],
+    [UnitPriceDiscount] = [SalesOrderDetail].[UnitPriceDiscount],
+    [LineTotal] = [SalesOrderDetail].[LineTotal],
+    [RowGuid] = [SalesOrderDetail].[RowGuid],
+    [ModifiedDate] = [SalesOrderDetail].[ModifiedDate]
+FROM
+    ([#SalesOrderDetail1] [SalesOrderDetail]
+    INNER JOIN
+    [#SalesOrderDetail] [SalesOrderDetail1]
+    ON [SalesOrderDetail].[SalesOrderID] = [SalesOrderDetail1].[SalesOrderID] AND [SalesOrderDetail].[SalesOrderDetailID] = [SalesOrderDetail1].[SalesOrderDetailID]);
+";
+                command.Verify(expectedSql);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace DevZest.Data
 FROM [SalesLT].[ProductCategory] [ProductCategory]
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -39,7 +39,7 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory1]
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -59,7 +59,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -79,7 +79,7 @@ FROM
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID])
 WHERE ([ProductCategory].[ModifiedDate] IS NULL);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
 
@@ -104,7 +104,7 @@ FROM
     [SalesLT].[ProductCategory] [ProductCategory1]
     ON [ProductCategory].[ProductCategoryID] = [ProductCategory1].[ProductCategoryID]);
 ";
-                Assert.AreEqual(expectedSql, command.ToTraceString());
+                command.Verify(expectedSql);
             }
         }
     }

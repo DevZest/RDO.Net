@@ -82,6 +82,7 @@
     <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="Helpers\DbSessionExtensions.cs" />
     <Compile Include="Helpers\DbTableExtensions.cs" />
+    <Compile Include="Helpers\SqlCommandExtensions.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="_CharTests.cs" />
     <Compile Include="ColumnTests.cs" />

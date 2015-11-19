@@ -23,13 +23,6 @@ namespace DevZest.Data.Helpers
             return result;
         }
 
-        internal static void Verify(this IList<SqlCommand> commands, params string[] commandTextList)
-        {
-            Assert.AreEqual(commandTextList.Length, commands.Count);
-            for (int i = 0; i < commands.Count; i++)
-                Assert.AreEqual(commandTextList[i].Trim(), commands[i].ToTraceString().Trim());
-        }
-
         private static SqlSession SqlSession<T>(this DbTable<T> dbTable)
             where T : Model, new()
         {
