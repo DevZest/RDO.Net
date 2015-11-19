@@ -31,7 +31,7 @@
     },
     "dotnet": {
       "dependencies": {
-        "System.Data.SqlClient": "4.0.0-*"
+        "System.Data.SqlClient": "4.0.0-beta-23409"
       }
     }
   }
