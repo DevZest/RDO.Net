@@ -65,6 +65,7 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
+    <Compile Include="ColumnValueChangedEventArgs.cs" />
     <Compile Include="DataValidationCollection.cs" />
     <Compile Include="DataValidationError.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
@@ -208,6 +209,7 @@
       <DependentUpon>Strings.Resx</DependentUpon>
     </Compile>
     <Compile Include="Primitives\KeyOutput.cs" />
+    <Compile Include="RowCollectionChangedEventArgs.cs" />
     <Compile Include="SortDirection.cs" />
     <Compile Include="UdtAttribute.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />

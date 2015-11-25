@@ -41,11 +41,7 @@ namespace DevZest.Data
 
             public override int IndexOf(DataRow dataRow)
             {
-                if (dataRow == null)
-                    return -1;
-                if (dataRow.Model != Model)
-                    return -1;
-                return dataRow.Ordinal;
+                return dataRow == null || dataRow.Model != Model ? -1 : dataRow.Ordinal;
             }
 
             internal override void InternalRemoveAtCore(int index, DataRow dataRow)
@@ -97,13 +93,7 @@ namespace DevZest.Data
 
             public override int IndexOf(DataRow dataRow)
             {
-                if (dataRow == null)
-                    return -1;
-
-                if (dataRow.Model != Model)
-                    return -1;
-
-                return dataRow.ChildOrdinal;
+                return dataRow == null || dataRow.Model != Model ? -1 : dataRow.ChildOrdinal;
             }
 
             internal override void InternalRemoveAtCore(int index, DataRow dataRow)

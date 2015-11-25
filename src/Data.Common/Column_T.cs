@@ -6,8 +6,6 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public delegate void DataValueChangedEventHandler(Column column, DataRow dataRow);
-
     /// <summary>
     /// Represents a column with strongly typed data.
     /// </summary>
@@ -273,7 +271,26 @@ namespace DevZest.Data
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
             ValueManager[ordinal] = value;
             OnValueChanged(dataRow);
-            dataRow.OnValueChanged(this);
+        }
+
+        private void OnValueChanged(DataRow dataRow)
+        {
+            var model = dataRow.Model;
+            Debug.Assert(model == ParentModel);
+
+            var parentDataRow = dataRow.Parent;
+            if (parentDataRow != null)
+                OnValueChanged(parentDataRow, dataRow);
+
+            OnValueChanged(null, dataRow);
+        }
+
+        private void OnValueChanged(DataRow parentDataRow, DataRow dataRow)
+        {
+            var model = dataRow.Model;
+            var dataSet = model[parentDataRow];
+            Debug.Assert(dataSet != null);
+            dataSet.OnColumnValueChanged(dataRow, this);
         }
 
         private void VerifyDataRow(DataRow dataRow)

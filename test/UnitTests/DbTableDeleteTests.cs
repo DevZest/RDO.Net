@@ -117,7 +117,7 @@ FROM
                 var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
                 var command = db.SalesOrderDetails.MockDelete(0, salesOrderDetails);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>71774</col_0>

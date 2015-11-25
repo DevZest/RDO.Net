@@ -279,14 +279,6 @@ namespace DevZest.Data
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
         public abstract ColumnMapping From(Column column);
 
-        internal void OnValueChanged(DataRow dataRow)
-        {
-            if (ValueChanged != null)
-                ValueChanged(this, dataRow);
-        }
-
-        public event DataValueChangedEventHandler ValueChanged;
-
         public abstract object GetValue(DataRow dataRow);
 
         public abstract void SetValue(DataRow dataRow, object value);

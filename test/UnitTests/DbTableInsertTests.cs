@@ -291,7 +291,7 @@ FROM
                 var commands = tempTable.MockInsert(4, dataSet);
 
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>1</col_0>
@@ -355,7 +355,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
                 var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
                 var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>71774</col_0>
@@ -415,7 +415,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
                 var salesOrderDetails = salesOrders.Children(x => x.SalesOrderDetails, 0);
                 var command = tempSalesOrderDetails.MockInsert(salesOrderDetails.Count, salesOrderDetails);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>71774</col_0>

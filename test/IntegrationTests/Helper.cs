@@ -34,7 +34,7 @@ namespace DevZest.Data
         {
             for (int i = 0; i < count; i++)
             {
-                var ordinal = salesOrder.AddRow().Ordinal;
+                var ordinal = salesOrder.IndexOf(salesOrder.AddRow());
 
                 salesOrder._.DueDate[ordinal] = new DateTime(2015, 9, 30);
                 salesOrder._.SalesOrderNumber[ordinal] = "SalesOrderNumber" + (ordinal + 1).ToString();

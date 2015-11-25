@@ -137,7 +137,7 @@ FROM
             {
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesLevel1Json);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>1</col_0>

@@ -7,8 +7,6 @@ using System.Text;
 
 namespace DevZest.Data
 {
-    public delegate void DataSetChangedEventHandler(DataSet dataSet, DataRow dataRow);
-
     public abstract class DataSet : DataSource, IList<DataRow>
     {
         internal DataSet(Model model)
@@ -89,7 +87,7 @@ namespace DevZest.Data
         internal void InternalInsert(int index, DataRow dataRow)
         {
             InternalInsertCore(index, dataRow);
-            OnChanged(dataRow);
+            OnRowCollectionChanged(-1, dataRow);
         }
 
         internal abstract void InternalInsertCore(int index, DataRow dataRow);
@@ -121,7 +119,7 @@ namespace DevZest.Data
 
             var dataRow = this[index];
             InternalRemoveAtCore(index, dataRow);
-            OnChanged(dataRow);
+            OnRowCollectionChanged(index, dataRow);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -192,14 +190,26 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public event DataSetChangedEventHandler Changed;
+        public event EventHandler<RowCollectionChangedEventArgs> RowCollectionChanged;
 
-        private void OnChanged(DataRow dataRow)
+        private void OnRowCollectionChanged(int oldIndex, DataRow dataRow)
         {
             UpdateRevision();
 
-            if (Changed != null)
-                Changed(this, dataRow);
+            var rowCollectionChanged = RowCollectionChanged;
+            if (rowCollectionChanged != null)
+                rowCollectionChanged(this, new RowCollectionChangedEventArgs(this, oldIndex, dataRow));
+        }
+
+        public event EventHandler<ColumnValueChangedEventArgs> ColumnValueChanged;
+
+        internal void OnColumnValueChanged(DataRow dataRow, Column column)
+        {
+            UpdateRevision();
+
+            var columnValueChanged = ColumnValueChanged;
+            if (columnValueChanged != null)
+                columnValueChanged(this, new ColumnValueChangedEventArgs(this, dataRow, column));
         }
 
         public IEnumerable<DataValidationError> Validate(bool recursive = true)

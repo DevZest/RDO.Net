@@ -19,7 +19,7 @@ namespace DevZest.Data.SqlServer
                     builder.Select(source.Name, target.AddColumn(source.Name, initializer: x => x.DbColumnName = source.Name.DbColumnName));
                 });
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>Bikes</col_0>
@@ -55,7 +55,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var query = db.BuildImportQuery(dataSet);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>1</col_0>
@@ -112,7 +112,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
                 var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
                 var query = db.BuildImportKeyQuery(dataSet);
                 var expectedSql =
-@"DECLARE @p1 XML = N'
+@"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>
   <row>
     <col_0>1</col_0>

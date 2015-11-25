@@ -23,8 +23,7 @@ namespace DevZest.Data
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
 
-        /// <summary>Gets the ordinal of this <see cref="DataRow"/> in the data set.</summary>
-        public int Ordinal { get; private set; }
+        internal int Ordinal { get; private set; }
 
         internal int ChildOrdinal { get; private set; }
 
@@ -165,23 +164,6 @@ namespace DevZest.Data
             stringBuilder.Append("\"");
             stringBuilder.Append(":");
         }
-
-        public bool IsDeleted
-        {
-            get { return Model == null; }
-        }
-
-        internal void OnValueChanged(Column column)
-        {
-            Model.DataSource.UpdateRevision();
-            if (Parent != null)
-                Parent[Model.Ordinal].UpdateRevision();
-
-            if (ValueChanged != null)
-                ValueChanged(column, this);
-        }
-
-        public event DataValueChangedEventHandler ValueChanged;
 
         public object this[Column column]
         {

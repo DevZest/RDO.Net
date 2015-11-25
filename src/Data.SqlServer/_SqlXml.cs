@@ -34,12 +34,9 @@ namespace DevZest.Data.SqlServer
 
         public static SqlXml CreateSqlXml(string s)
         {
-            using (var reader = new StringReader(s))
+            using (var xmlreader = XmlReader.Create(new StringReader(s)))
             {
-                using (var xmlreader = XmlReader.Create(reader))
-                {
-                    return new SqlXml(xmlreader);
-                }
+                return new SqlXml(xmlreader);
             }
         }
 

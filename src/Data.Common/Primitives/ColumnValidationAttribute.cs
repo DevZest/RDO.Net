@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace DevZest.Data.Primitives
@@ -107,6 +108,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerable<DataValidation> IColumnValidationFactory.GetValidations(Column column)
         {
             yield return new ColumnValidation(GetValidationId(), column, IsValidFunc, ErrorMessageFunc);

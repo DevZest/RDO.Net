@@ -103,44 +103,42 @@ namespace DevZest.Data.SqlServer
         private SqlXml GetSqlXml<T>(DataSet<T> dataSet, IList<Column> columns)
             where T : Model, new()
         {
-            using (var stream = new MemoryStream())
+            var stream = new MemoryStream();
+            using (var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings()
             {
-                using (var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings()
-                {
-                    Indent = true,
-                    IndentChars = "  ",
-                    Encoding = Encoding.UTF8,
-                }))
-                {
-                    xmlWriter.WriteStartElement(XML_ROOT_TAG_NAME);
+                Indent = true,
+                IndentChars = "  ",
+                Encoding = Encoding.UTF8,
+            }))
+            {
+                xmlWriter.WriteStartElement(XML_ROOT_TAG_NAME);
 
-                    foreach (var row in dataSet)
+                foreach (var row in dataSet)
+                {
+                    xmlWriter.WriteStartElement(XML_ROW_TAG_NAME);
+
+                    for (int i = 0; i < columns.Count; i++)
                     {
-                        xmlWriter.WriteStartElement(XML_ROW_TAG_NAME);
-
-                        for (int i = 0; i < columns.Count; i++)
-                        {
-                            xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, i));
-                            xmlWriter.WriteString(columns[i].GetMapper().GetXmlValue(row.Ordinal, SqlVersion));
-                            xmlWriter.WriteEndElement();
-                        }
-
-                        // Write an extra column as the sequential id (row.Ordinal + 1) of current row
-                        xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, columns.Count));
-                        xmlWriter.WriteString((row.Ordinal + 1).ToString(NumberFormatInfo.InvariantInfo));
-                        xmlWriter.WriteEndElement();
-
+                        xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, i));
+                        xmlWriter.WriteString(columns[i].GetMapper().GetXmlValue(dataSet.IndexOf(row), SqlVersion));
                         xmlWriter.WriteEndElement();
                     }
+
+                    // Write an extra column as the sequential id (row.Ordinal + 1) of current row
+                    xmlWriter.WriteStartElement(string.Format(CultureInfo.InvariantCulture, XML_COL_TAG_NAME, columns.Count));
+                    xmlWriter.WriteString((dataSet.IndexOf(row) + 1).ToString(NumberFormatInfo.InvariantInfo));
                     xmlWriter.WriteEndElement();
-                    xmlWriter.Flush();
+
+                    xmlWriter.WriteEndElement();
                 }
+                xmlWriter.WriteEndElement();
+                xmlWriter.Flush();
 
                 stream.Position = 0;
-                using (var xmlReader = XmlReader.Create(stream))
-                {
-                    return new SqlXml(xmlReader);
-                }
+                //using (var xmlReader = XmlReader.Create(stream))
+                //{
+                    return new SqlXml(stream);
+                //}
             }
         }
 

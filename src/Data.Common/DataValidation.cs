@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
@@ -21,11 +22,13 @@ namespace DevZest.Data
 
         protected abstract int DependentColumnsCount { get; }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Functionality exposed via property DependentColumnsCount.")]
         int IReadOnlyCollection<Column>.Count
         {
             get { return DependentColumnsCount; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Functionality exposed via method GetDependentColumn.")]
         Column IReadOnlyList<Column>.this[int index]
         {
             get { return GetDependentColumn(index); }
@@ -37,12 +40,14 @@ namespace DevZest.Data
 
         public abstract string GetErrorMessage(DataRow dataRow);
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
         {
             for (int i = 0; i < DependentColumnsCount; i++)
                 yield return GetDependentColumn(i);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             for (int i = 0; i < DependentColumnsCount; i++)
