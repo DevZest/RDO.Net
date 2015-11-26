@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows
             VerifyFormatExceptionExpected("10; min: 5; max: 20;;"); // last empty pair
         }
 
-        private void VerifyFormatExceptionExpected(string input)
+        private static void VerifyFormatExceptionExpected(string input)
         {
             try
             {
