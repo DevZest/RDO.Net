@@ -65,6 +65,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DataSetViewSelectionTests.cs" />
     <Compile Include="GridLengthParserTests.cs" />
     <Compile Include="GridTemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

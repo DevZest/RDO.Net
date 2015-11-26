@@ -142,5 +142,15 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(index));
             _selection = _selection.Select(index, selectionMode);
         }
+
+        private void RefreshScalarItems()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void RefreshSetItems()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

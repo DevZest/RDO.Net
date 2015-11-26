@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
 
             protected override DataSetViewSelection SelectMultiple(int index)
             {
-                throw new NotImplementedException();
+                return new MultipleSelection(this, index);
             }
 
             protected override DataSetViewSelection SelectExtended(int index)
@@ -223,6 +223,7 @@ namespace DevZest.Data.Windows
             {
                 for (int i = 0; i < selection.Count; i++)
                     SelectMultiple(selection[i]);
+                SelectMultiple(index);
             }
 
             private int _current;
