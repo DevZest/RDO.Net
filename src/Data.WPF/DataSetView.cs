@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
 using System;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataSetView : IReadOnlyList<DataRowView>
+    public sealed partial class DataSetView : IReadOnlyList<DataRowView>
     {
         internal DataSetView(DataRowView owner, GridTemplate template)
         {
@@ -28,14 +29,30 @@ namespace DevZest.Data.Windows
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
-        }
 
-        private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
-        {
-            throw new NotImplementedException();
+            CoerceSelection();
         }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
+        {
+            var oldIndex = e.OldIndex;
+            var isDelete = oldIndex >= 0;
+            if (isDelete)
+            {
+                _dataRowViews[oldIndex].Dispose();
+                _dataRowViews.RemoveAt(oldIndex);
+            }
+            else
+            {
+                var dataRow = e.DataRow;
+                var dataRowView = new DataRowView(this, dataRow);
+                _dataRowViews.Insert(DataSet.IndexOf(dataRow), dataRowView);
+            }
+
+            CoerceSelection();
+        }
+
+        private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
         {
             throw new NotImplementedException();
         }
@@ -89,63 +106,41 @@ namespace DevZest.Data.Windows
         public DataRowView this[int index]
         {
             get { return _dataRowViews[index]; }
-            //set
-            //{
-            //    if (this[index] == value)
-            //        return;
-
-            //    RemoveAt(index);
-            //    Insert(index, value);
-            //}
         }
         #endregion
 
-        //public bool IsReadOnly
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
+        private DataSetViewSelection _selection = DataSetViewSelection.Empty;
 
-        //public void Insert(int index, DataRowView item)
-        //{
-        //    if (item == null)
-        //        throw new ArgumentNullException(nameof(item));
-        //    if (item.Owner != null)
-        //        throw new ArgumentException(nameof(item));
-        //    if (index < 0 || index >= Count)
-        //        throw new ArgumentOutOfRangeException(nameof(item));
+        private void CoerceSelection()
+        {
+            _selection.Coerce(DataSet.Count);
+        }
 
-        //    var dataRow = new DataRow();
-        //    _dataSet.Insert(index, dataRow);
-        //    item.Initialize(this, dataRow);
-        //    _dataRowViews.Insert(index, item);
-        //}
+        public int Current
+        {
+            get { return _selection.Current; }
+        }
 
-        //public void RemoveAt(int index)
-        //{
-        //    _dataSet.RemoveAt(index);
-        //    _dataRowViews.RemoveAt(index);
-        //}
+        internal bool IsCurrent(int index)
+        {
+            return index != -1 && Current == index;
+        }
 
-        //public void Add(DataRowView item)
-        //{
-        //    Insert(Count, item);
-        //}
+        public IReadOnlyList<int> Selection
+        {
+            get { return _selection; }
+        }
 
-        //public void Clear()
-        //{
-        //    _dataSet.Clear();
-        //    _dataRowViews.Clear();
-        //}
+        internal bool IsSelected(int index)
+        {
+            return _selection.IsSelected(index);
+        }
 
-        //public bool Remove(DataRowView item)
-        //{
-        //    var index = IndexOf(item);
-        //    if (index == -1)
-        //        return false;
-        //    RemoveAt(index);
-        //    return true;
-        //}
-
-
+        public void Select(int index, SelectionMode selectionMode)
+        {
+            if (index < 0 || index >= Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            _selection = _selection.Select(index, selectionMode);
+        }
     }
 }

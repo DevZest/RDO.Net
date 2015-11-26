@@ -15,6 +15,11 @@ namespace DevZest.Data.Windows
             InitChildDataSetViews();
         }
 
+        internal void Dispose()
+        {
+            Owner = null;
+        }
+
         public DataSetView Owner { get; private set; }
 
         public GridTemplate Template
@@ -66,6 +71,16 @@ namespace DevZest.Data.Windows
         public DataSetView this[int index]
         {
             get { return _childDataSetViews[index]; }
+        }
+
+        public bool IsCurrent
+        {
+            get { return Owner == null ? false : Owner.IsCurrent(Owner.IndexOf(this)); }
+        }
+
+        public bool IsSelected
+        {
+            get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
         }
     }
 }
