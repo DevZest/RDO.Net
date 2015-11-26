@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows
         {
             var newValue = (DataSetView)e.NewValue;
             Debug.Assert(newValue != null);
-            ((DataSetGrid)d).ScrollMode = newValue.ScrollMode;
+            ((DataSetGrid)d).ScrollMode = newValue.Template.ScrollMode;
         }
 
         public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;

@@ -14,44 +14,20 @@ namespace DevZest.Data.Windows
             Debug.Assert(owner == null || template.Model.GetParentModel() == owner.Model);
             Owner = owner;
             Template = template;
-            Initialize();
-        }
 
-        public DataRowView Owner { get; private set; }
+            DataRow parentDataRow = owner != null ? Owner.DataRow : null;
+            DataSet = Model[parentDataRow];
+            Debug.Assert(DataSet != null);
 
-        public GridTemplate Template { get; private set; }
-
-        public Model Model
-        {
-            get { return Template.Model; }
-        }
-
-        public ScrollMode ScrollMode
-        {
-            get { return Template.ScrollMode; }
-        }
-
-        #region IReadOnlyList<DataRowView>
-
-        DataSet _dataSet;
-        List<DataRowView> _dataRowViews;
-
-        private void Initialize()
-        {
-            DataRow parentDataRow = Owner != null ? Owner.DataRow : null;
-            _dataSet = Model[parentDataRow];
-            Debug.Assert(_dataSet != null);
-
-            _dataRowViews = new List<DataRowView>(_dataSet.Count);
-            foreach (var dataRow in _dataSet)
+            _dataRowViews = new List<DataRowView>(DataSet.Count);
+            foreach (var dataRow in DataSet)
             {
-                var dataRowView = new DataRowView();
-                dataRowView.Initialize(this, dataRow);
+                var dataRowView = new DataRowView(this, dataRow);
                 _dataRowViews.Add(dataRowView);
             }
 
-            _dataSet.RowCollectionChanged += OnRowCollectionChanged;
-            _dataSet.ColumnValueChanged += OnColumnValueChanged;
+            DataSet.RowCollectionChanged += OnRowCollectionChanged;
+            DataSet.ColumnValueChanged += OnColumnValueChanged;
         }
 
         private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
@@ -63,6 +39,21 @@ namespace DevZest.Data.Windows
         {
             throw new NotImplementedException();
         }
+
+        public DataRowView Owner { get; private set; }
+
+        public GridTemplate Template { get; private set; }
+
+        public DataSet DataSet { get; private set; }
+
+        public Model Model
+        {
+            get { return Template.Model; }
+        }
+
+        #region IReadOnlyList<DataRowView>
+
+        List<DataRowView> _dataRowViews;
 
         public IEnumerator<DataRowView> GetEnumerator()
         {
@@ -77,7 +68,7 @@ namespace DevZest.Data.Windows
 
         public int IndexOf(DataRowView item)
         {
-            return item.Owner != this ? -1 : _dataSet.IndexOf(item.DataRow);
+            return item.Owner != this ? -1 : DataSet.IndexOf(item.DataRow);
         }
 
         public bool Contains(DataRowView item)

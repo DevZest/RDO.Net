@@ -6,20 +6,20 @@ namespace DevZest.Data.Windows
 {
     public sealed class DataRowView : IReadOnlyList<DataSetView>
     {
-        public DataSetView Owner { get; private set; }
-
-        public GridTemplate Template
-        {
-            get { return Owner.Template; }
-        }
-
-        internal void Initialize(DataSetView owner, DataRow dataRow)
+        internal DataRowView(DataSetView owner, DataRow dataRow)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow != null && owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
             InitChildDataSetViews();
+        }
+
+        public DataSetView Owner { get; private set; }
+
+        public GridTemplate Template
+        {
+            get { return Owner.Template; }
         }
 
         public DataRow DataRow { get; private set; }
