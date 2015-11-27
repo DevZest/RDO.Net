@@ -80,20 +80,20 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private bool _isReadOnly;
-        public bool IsReadOnly
+        private bool _canAddNew;
+        public bool CanAddNew
         {
-            get { return _isReadOnly; }
+            get { return _canAddNew; }
             set
             {
                 VerifyIsSealed();
-                _isReadOnly = value;
+                _canAddNew = value;
             }
         }
 
-        public GridTemplate SetIsReadOnly(bool value)
+        public GridTemplate SetCanAddNew(bool value)
         {
-            IsReadOnly = value;
+            CanAddNew = value;
             return this;
         }
 
