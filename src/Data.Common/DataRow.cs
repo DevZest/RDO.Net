@@ -177,17 +177,10 @@ namespace DevZest.Data
             set { Model.Columns[columnName].SetValue(this, value); }
         }
 
-        public IEnumerable<DataValidation> Validate(Column column = null)
+        public IEnumerable<DataValidation> Validate()
         {
             foreach (var validation in Model.Validations)
             {
-                if (column != null)
-                {
-                    var dependentColumns = validation.DependentColumns;
-                    if (dependentColumns.Count != 1 || dependentColumns[0] != column)
-                        continue;
-                }
-
                 if (validation.IsValid(this))
                     continue;
 
