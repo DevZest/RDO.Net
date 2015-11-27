@@ -78,6 +78,11 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? false : Owner.IsCurrent(Owner.IndexOf(this)); }
         }
 
+        public bool IsEof
+        {
+            get { return DataRow == null; }
+        }
+
         public bool IsSelected
         {
             get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }

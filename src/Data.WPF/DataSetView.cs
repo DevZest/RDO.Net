@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Collections;
 using System;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace DevZest.Data.Windows
 {
@@ -26,6 +27,8 @@ namespace DevZest.Data.Windows
                 var dataRowView = new DataRowView(this, dataRow);
                 _dataRowViews.Add(dataRowView);
             }
+            if (template.CanAddNew)
+                _eof = new DataRowView(this, null);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
@@ -71,6 +74,7 @@ namespace DevZest.Data.Windows
         #region IReadOnlyList<DataRowView>
 
         List<DataRowView> _dataRowViews;
+        DataRowView _eof;
 
         public IEnumerator<DataRowView> GetEnumerator()
         {
@@ -85,27 +89,29 @@ namespace DevZest.Data.Windows
 
         public int IndexOf(DataRowView item)
         {
-            return item.Owner != this ? -1 : DataSet.IndexOf(item.DataRow);
-        }
-
-        public bool Contains(DataRowView item)
-        {
-            return IndexOf(item) != -1;
-        }
-
-        public void CopyTo(DataRowView[] array, int arrayIndex)
-        {
-            _dataRowViews.CopyTo(array, arrayIndex);
+            return item == null || item.Owner != this ? -1 : (item == _eof ? Count - 1 : DataSet.IndexOf(item.DataRow));
         }
 
         public int Count
         {
-            get { return _dataRowViews.Count; }
+            get
+            {
+                var result = _dataRowViews.Count;
+                if (_eof != null)
+                    result++;
+                return result;
+            }
         }
 
         public DataRowView this[int index]
         {
-            get { return _dataRowViews[index]; }
+            get
+            {
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return _eof != null && index == Count - 1 ? _eof : _dataRowViews[index];
+            }
         }
         #endregion
 
@@ -113,7 +119,7 @@ namespace DevZest.Data.Windows
 
         private void CoerceSelection()
         {
-            _selection.Coerce(DataSet.Count);
+            _selection.Coerce(Count);
         }
 
         public int Current
@@ -128,12 +134,36 @@ namespace DevZest.Data.Windows
 
         public IReadOnlyList<int> Selection
         {
-            get { return _selection; }
+            get
+            {
+                if (_eof == null)
+                    return _selection;
+
+                var eofIndex = EofIndex;
+                if (_selection.IsSelected(eofIndex))
+                    return _selection.Where(x => x != eofIndex).ToArray();
+
+                return _selection;
+            }
+        }
+
+        private int EofIndex
+        {
+            get
+            {
+                Debug.Assert(_eof != null);
+                return DataSet.Count;
+            }
+        }
+
+        private bool IsEof(int index)
+        {
+            return _eof != null && EofIndex == index;
         }
 
         internal bool IsSelected(int index)
         {
-            return _selection.IsSelected(index);
+            return !IsEof(index) && _selection.IsSelected(index);
         }
 
         public void Select(int index, SelectionMode selectionMode)
