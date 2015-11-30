@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -77,6 +78,52 @@ namespace DevZest.Data.Windows
                 Top.Ordinal < gridRange.Top.Ordinal ? Top : gridRange.Top,
                 Right.Ordinal > gridRange.Right.Ordinal ? Right : gridRange.Right,
                 Bottom.Ordinal > gridRange.Bottom.Ordinal ? Bottom : gridRange.Bottom);
+        }
+
+        private void VerifyIsEmpty()
+        {
+            if (IsEmpty)
+                throw new InvalidOperationException(Strings.GridRange_VerifyIsEmpty);
+        }
+
+        private void VerifyDefineGridItem(GridItem gridItem, string paramGridItemName)
+        {
+            VerifyIsEmpty();
+            if (gridItem == null)
+                throw new ArgumentNullException(paramGridItemName);
+        }
+
+        public GridTemplate DefineScalar<T>(ScalarGridItem<T> scalarItem)
+            where T : UIElement, new()
+        {
+            VerifyDefineGridItem(scalarItem, nameof(scalarItem));
+            return Owner.AddScalarItem(this, scalarItem);
+        }
+
+        public GridTemplate DefineList<T>(ListGridItem<T> listItem)
+            where T : UIElement, new()
+        {
+            VerifyDefineGridItem(listItem, nameof(listItem));
+            return Owner.AddListItem(this, listItem);
+        }
+
+        public GridTemplate DefineChild<TModel, T>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<T> initializer = null)
+            where TModel : Model
+            where T : DataSetGrid, new()
+        {
+            VerifyIsEmpty();
+
+            if (childModel == null)
+                throw new ArgumentNullException(nameof(childModel));
+            if (templateInitializer == null)
+                throw new ArgumentNullException(nameof(templateInitializer));
+
+            var template = new GridTemplate(childModel);
+            templateInitializer(template, childModel);
+            template.Seal();
+            ChildGridItem<T> childItem = new ChildGridItem<T>(template, initializer);
+
+            return Owner.AddChildItem(this, childItem);
         }
     }
 }

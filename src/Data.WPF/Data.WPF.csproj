@@ -38,7 +38,7 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\tools\Resources.cs">
+    <Compile Include="..\tools\Resources.cs">
       <Link>Properties\Resources.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -49,7 +49,6 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowGrid.cs" />
     <Compile Include="DataRowView.cs" />
-    <Compile Include="DataSetGridFactory.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />

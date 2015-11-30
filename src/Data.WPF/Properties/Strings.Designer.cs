@@ -28,6 +28,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The GridRange is empty.
+        /// </summary>
+        public static string GridRange_VerifyIsEmpty
+        {
+            get { return GetString("GridRange_VerifyIsEmpty"); }
+        }
+
+        /// <summary>
         /// Invalid GridColumn.Width/Orientation combination: GridColumns[{0}]="{1}", Orientation="{2}".
         /// </summary>
         public static string GridTemplate_InvalidGridColumnWidthOrientation(object p0, object p1, object p2)

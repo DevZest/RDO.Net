@@ -247,21 +247,23 @@ namespace DevZest.Data.Windows
             return orentation != DataRowOrientation.XY;
         }
 
-        internal void AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
+        internal GridTemplate AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, scalarItem, nameof(scalarItem));
             ScalarItems.Add(scalarItem, gridRange);
+            return this;
         }
 
-        internal void AddListItem<T>(GridRange gridRange, ListGridItem<T> listItem)
+        internal GridTemplate AddListItem<T>(GridRange gridRange, ListGridItem<T> listItem)
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, listItem, nameof(listItem));
             ListItems.Add(listItem, gridRange);
+            return this;
         }
 
-        internal void AddChildItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
+        internal GridTemplate AddChildItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
             where T : DataSetGrid, new()
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem));
@@ -269,6 +271,7 @@ namespace DevZest.Data.Windows
             var childTemplate = childItem.Template;
             childTemplate.ChildOrdinal = ChildTemplates.Count;
             ChildTemplates.Add(childTemplate);
+            return this;
         }
 
         private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName)
@@ -277,7 +280,7 @@ namespace DevZest.Data.Windows
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
-                throw new ArgumentNullException(nameof(gridItem), paramGridItemName);
+                throw new ArgumentNullException(paramGridItemName);
             if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
                 throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, paramGridItemName);
         }
@@ -312,7 +315,7 @@ namespace DevZest.Data.Windows
 
         public GridRange Range(int left, int top, int right, int bottom)
         {
-                VerifyGridColumn(left, nameof(left));
+            VerifyGridColumn(left, nameof(left));
             VerifyGridRow(top, nameof(top));
             VerifyGridColumn(right, nameof(right));
             VerifyGridRow(bottom, nameof(bottom));

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildGridItem<T> : GridItem<T>
+    internal sealed class ChildGridItem<T> : GridItem<T>
         where T : DataSetGrid, new()
     {
         internal ChildGridItem(GridTemplate template, Action<T> initializer)
