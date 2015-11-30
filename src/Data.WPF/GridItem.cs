@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -18,7 +16,7 @@ namespace DevZest.Data.Windows
 
         public GridRange GridRange { get; private set; }
 
-        internal void Initialize(GridTemplate owner, GridRange gridRange)
+        internal void Seal(GridTemplate owner, GridRange gridRange)
         {
             Owner = owner;
             GridRange = gridRange;
@@ -35,25 +33,12 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
         }
 
-        internal static T GetOrCreate<T>(List<T> cachedUIElements)
-            where T : UIElement, new()
-        {
-            if (cachedUIElements == null || cachedUIElements.Count == 0)
-                return new T();
+        internal abstract UIElement Generate();
 
-            var last = cachedUIElements.Count - 1;
-            var result = cachedUIElements[last];
-            cachedUIElements.RemoveAt(last);
-            return result;
-        }
+        internal abstract void Initialize(UIElement uiElement);
 
-        internal static void Recycle<T>(List<T> cachedUIElements, T uiElement)
-            where T : UIElement, new()
-        {
-            Debug.Assert(uiElement != null);
-            if (cachedUIElements == null)
-                cachedUIElements = new List<T>();
-            cachedUIElements.Add(uiElement);
-        }
+        internal abstract void RefreshData(UIElement uiElement);
+
+        internal abstract void Recycle(UIElement uiElement);
     }
 }

@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="BooleanBoxes.cs" />
+    <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowGrid.cs" />
     <Compile Include="DataRowView.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />
     <Compile Include="GridItemFactory.cs" />
+    <Compile Include="GridItem_T.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
@@ -73,7 +75,7 @@
     <Compile Include="ScalarGridItem.cs" />
     <Compile Include="ScrollMode.cs" />
     <Compile Include="DataSetViewSelection.cs" />
-    <Compile Include="SetGridItem.cs" />
+    <Compile Include="ListGridItem.cs" />
     <Compile Include="TextBlockFactory.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="GridItem.cs" />

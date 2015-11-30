@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -12,15 +14,13 @@ namespace DevZest.Data.Windows
             Model = model;
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            ScalarItems = new GridItemCollection<ScalarGridItem>(this);
-            SetItems = new GridItemCollection<SetGridItem>(this);
+            ScalarItems = new GridItemCollection(this);
+            ListItems = new GridItemCollection(this);
+            ChildTemplates = new List<GridTemplate>();
         }
 
         internal void Seal()
         {
-            ChildTemplates = SetItems.Where(x => x.Template != null).Select(x => x.Template).ToArray();
-            for (int i = 0; i < ChildTemplates.Length; i++)
-                ChildTemplates[i].ChildOrdinal = i;
             _isSealed = true;
         }
 
@@ -113,7 +113,7 @@ namespace DevZest.Data.Windows
 
         private GridRange CalculatedDataRowRange
         {
-            get { return SetItems.Range; }
+            get { return ListItems.Range; }
         }
 
         public GridTemplate SetDataRowRange(GridRange value)
@@ -145,11 +145,11 @@ namespace DevZest.Data.Windows
 
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
 
-        public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
+        public GridItemCollection ScalarItems { get; private set; }
 
-        public GridItemCollection<SetGridItem> SetItems { get; private set; }
+        public GridItemCollection ListItems { get; private set; }
 
-        internal GridTemplate[] ChildTemplates { get; private set; }
+        internal List<GridTemplate> ChildTemplates { get; private set; }
 
         public GridTemplate AddGridRows(params string[] heights)
         {
@@ -247,29 +247,39 @@ namespace DevZest.Data.Windows
             return orentation != DataRowOrientation.XY;
         }
 
-        public GridTemplate AddItem(GridRange gridRange, ScalarGridItem gridItem)
+        internal void AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
+            where T : UIElement, new()
         {
-            VerifyAddItem(gridRange, gridItem);
-            ScalarItems.Add(gridItem, gridRange);
-            return this;
+            VerifyAddItem(gridRange, scalarItem, nameof(scalarItem));
+            ScalarItems.Add(scalarItem, gridRange);
         }
 
-        public GridTemplate AddItem(GridRange gridRange, SetGridItem gridItem)
+        internal void AddListItem<T>(GridRange gridRange, ListGridItem<T> listItem)
+            where T : UIElement, new()
         {
-            VerifyAddItem(gridRange, gridItem);
-            SetItems.Add(gridItem, gridRange);
-            return this;
+            VerifyAddItem(gridRange, listItem, nameof(listItem));
+            ListItems.Add(listItem, gridRange);
         }
 
-        private void VerifyAddItem(GridRange gridRange, GridItem gridItem)
+        internal void AddChildItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
+            where T : DataSetGrid, new()
+        {
+            VerifyAddItem(gridRange, childItem, nameof(childItem));
+            ListItems.Add(childItem, gridRange);
+            var childTemplate = childItem.Template;
+            childTemplate.ChildOrdinal = ChildTemplates.Count;
+            ChildTemplates.Add(childTemplate);
+        }
+
+        private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName)
         {
             VerifyIsSealed();
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
-                throw new ArgumentNullException(nameof(gridItem));
+                throw new ArgumentNullException(nameof(gridItem), paramGridItemName);
             if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
-                throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, nameof(gridItem));
+                throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, paramGridItemName);
         }
 
 
@@ -293,30 +303,24 @@ namespace DevZest.Data.Windows
             return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
         }
 
-        public GridRange this[int column, int row]
+        public GridRange Range(int column, int row)
         {
-            get
-            {
-                VerifyGridColumn(column, nameof(column));
-                VerifyGridRow(row, nameof(row));
-                return new GridRange(GridColumns[column], GridRows[row]);
-            }
+            VerifyGridColumn(column, nameof(column));
+            VerifyGridRow(row, nameof(row));
+            return new GridRange(GridColumns[column], GridRows[row]);
         }
 
-        public GridRange this[int left, int top, int right, int bottom]
+        public GridRange Range(int left, int top, int right, int bottom)
         {
-            get
-            {
                 VerifyGridColumn(left, nameof(left));
-                VerifyGridRow(top, nameof(top));
-                VerifyGridColumn(right, nameof(right));
-                VerifyGridRow(bottom, nameof(bottom));
-                if (right < left)
-                    throw new ArgumentOutOfRangeException(nameof(right));
-                if (bottom < top)
-                    throw new ArgumentOutOfRangeException(nameof(bottom));
-                return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
-            }
+            VerifyGridRow(top, nameof(top));
+            VerifyGridColumn(right, nameof(right));
+            VerifyGridRow(bottom, nameof(bottom));
+            if (right < left)
+                throw new ArgumentOutOfRangeException(nameof(right));
+            if (bottom < top)
+                throw new ArgumentOutOfRangeException(nameof(bottom));
+            return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
         internal void DefaultInitialize()
@@ -325,7 +329,7 @@ namespace DevZest.Data.Windows
 
             this.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
-                .SetDataRowRange(this[0, 1, columns.Count - 1, 1]);
+                .SetDataRowRange(Range(0, 1, columns.Count - 1, 1));
 
             for (int i = 0; i < columns.Count; i++)
             {

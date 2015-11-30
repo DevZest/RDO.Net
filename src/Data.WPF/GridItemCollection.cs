@@ -4,11 +4,10 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridItemCollection<T> : ReadOnlyCollection<T>
-        where T : GridItem
+    public sealed class GridItemCollection : ReadOnlyCollection<GridItem>
     {
         internal GridItemCollection(GridTemplate owner)
-            : base(new List<T>())
+            : base(new List<GridItem>())
         {
             Debug.Assert(owner != null);
             _owner = owner;
@@ -18,10 +17,10 @@ namespace DevZest.Data.Windows
 
         internal GridRange Range { get; private set; }
 
-        internal void Add(T gridItem, GridRange gridRange)
+        internal void Add(GridItem gridItem, GridRange gridRange)
         {
             Debug.Assert(gridItem != null && gridItem.Owner == null);
-            gridItem.Initialize(_owner, gridRange);
+            gridItem.Seal(_owner, gridRange);
             Items.Add(gridItem);
             Range = Range.Union(gridRange);
         }

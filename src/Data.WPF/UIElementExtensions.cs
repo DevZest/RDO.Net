@@ -6,13 +6,13 @@ namespace DevZest.Data.Windows
 {
     public static class UIElementExtensions
     {
-        public static DataSetView GetDataSetView(this UIElement uiElement)
+        internal static DataSetView GetDataSetView(this UIElement uiElement)
         {
             var dataSetGrid = uiElement.GetParent<DataSetGrid>();
             return dataSetGrid == null ? null : dataSetGrid.View;
         }
 
-        public static DataRowView GetDataRowView(this UIElement uiElement)
+        internal static DataRowView GetDataRowView(this UIElement uiElement)
         {
             var dataRowGrid = uiElement.GetParent<DataRowGrid>();
             return dataRowGrid == null ? null : dataRowGrid.View;

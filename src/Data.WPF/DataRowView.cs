@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -9,7 +10,7 @@ namespace DevZest.Data.Windows
         internal DataRowView(DataSetView owner, DataRow dataRow)
         {
             Debug.Assert(owner != null);
-            Debug.Assert(dataRow != null && owner.Model == dataRow.Model);
+            Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
             InitChildDataSetViews();
@@ -18,20 +19,21 @@ namespace DevZest.Data.Windows
         internal void Dispose()
         {
             Owner = null;
+            _childDataSetViews = s_emptyChildSetViews;
         }
 
         public DataSetView Owner { get; private set; }
 
         public GridTemplate Template
         {
-            get { return Owner.Template; }
+            get { return Owner == null ? null : Owner.Template; }
         }
 
         public DataRow DataRow { get; private set; }
 
         public Model Model
         {
-            get { return Owner.Model; }
+            get { return Owner == null ? null : Owner.Model; }
         }
 
         private static DataSetView[] s_emptyChildSetViews = new DataSetView[0];
@@ -41,14 +43,14 @@ namespace DevZest.Data.Windows
         private void InitChildDataSetViews()
         {
             var childTemplates = Template.ChildTemplates;
-            if (childTemplates == null || childTemplates.Length == 0)
+            if (childTemplates == null || childTemplates.Count == 0)
             {
                 _childDataSetViews = s_emptyChildSetViews;
                 return;
             }
 
-            _childDataSetViews = new DataSetView[childTemplates.Length];
-            for (int i = 0; i < childTemplates.Length; i++)
+            _childDataSetViews = new DataSetView[childTemplates.Count];
+            for (int i = 0; i < childTemplates.Count; i++)
                 _childDataSetViews[i] = new DataSetView(this, childTemplates[i]);
         }
 
@@ -86,6 +88,22 @@ namespace DevZest.Data.Windows
         public bool IsSelected
         {
             get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
+        }
+
+        public T GetValue<T>(Column<T> column)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            return IsEof ? default(T) : column[DataRow];
+        }
+
+        public void SetValue<T>(Column<T> column, T value)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            throw new NotImplementedException();
         }
     }
 }
