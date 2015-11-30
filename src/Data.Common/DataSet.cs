@@ -212,12 +212,12 @@ namespace DevZest.Data
                 columnValueChanged(this, new ColumnValueChangedEventArgs(this, dataRow, column));
         }
 
-        public IEnumerable<DataValidationError> Validate(bool recursive = true)
+        public IEnumerable<ValidationError> Validate(bool recursive = true)
         {
             foreach (var dataRow in this)
             {
                 foreach (var validation in dataRow.Validate())
-                    yield return new DataValidationError(dataRow, validation);
+                    yield return new ValidationError(dataRow, validation);
 
                 if (recursive)
                 {

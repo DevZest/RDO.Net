@@ -304,10 +304,10 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Model_Validations_correctly_initialized()
+        public void Model_ValidationRules_correctly_initialized()
         {
             var model = new SimpleModel();
-            Assert.AreEqual(2, model.Validations.Count);
+            Assert.AreEqual(2, model.ValidationRules.Count);
         }
     }
 }

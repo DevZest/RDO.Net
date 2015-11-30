@@ -111,14 +111,14 @@ namespace DevZest.Data
             {
                 columnAttribute.Initialize(column);
 
-                var validationFactory = columnAttribute as IColumnValidationFactory;
+                var validationFactory = columnAttribute as IColumnValidationRuleFactory;
                 if (validationFactory != null)
                 {
-                    var validations = validationFactory.GetValidations(column);
+                    var validations = validationFactory.GetValidationRules(column);
                     var model = column.ParentModel;
                     Debug.Assert(model != null);
                     foreach (var validation in validations)
-                        model.Validations.Add(validation);
+                        model.ValidationRules.Add(validation);
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace DevZest.Data
         {
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
-            Validations = new DataValidationCollection();
+            ValidationRules = new ValidationRuleCollection();
 
             Initialize(s_columnManager);
             Initialize(s_columnListManager);
@@ -299,7 +299,7 @@ namespace DevZest.Data
 
         protected internal ModelCollection ChildModels { get; private set; }
 
-        protected internal DataValidationCollection Validations { get; private set; }
+        protected internal ValidationRuleCollection ValidationRules { get; private set; }
 
         public ModelKey PrimaryKey
         {
@@ -646,7 +646,7 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class CustomValidation : DataValidation
+        private sealed class CustomValidation : ValidationRule
         {
             internal CustomValidation(object id, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column[] columns)
                 : base(id)
@@ -673,14 +673,14 @@ namespace DevZest.Data
                 return _errorMessageFunc(dataRow);
             }
 
-            protected override int DependentColumnsCount
+            protected override int ColumnsCount
             {
                 get { return _columns == null ? 0 : _columns.Length; }
             }
 
-            protected override Column GetDependentColumn(int index)
+            protected override Column GetColumn(int index)
             {
-                if (index < 0 || index >= DependentColumnsCount)
+                if (index < 0 || index >= ColumnsCount)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 return _columns[index];
             }
@@ -692,7 +692,7 @@ namespace DevZest.Data
             Utilities.Check.NotNull(condition, nameof(condition));
             Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
 
-            Validations.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
+            ValidationRules.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
         }
 
         internal KeyOutput ParentSequentialKeyModel

@@ -66,8 +66,8 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="ColumnValueChangedEventArgs.cs" />
-    <Compile Include="DataValidationCollection.cs" />
-    <Compile Include="DataValidationError.cs" />
+    <Compile Include="ValidationRuleCollection.cs" />
+    <Compile Include="ValidationError.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
@@ -107,11 +107,12 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
-    <Compile Include="DataValidation.cs" />
+    <Compile Include="ValidationErrorLevel.cs" />
+    <Compile Include="ValidationRule.cs" />
     <Compile Include="Primitives\ColumnValidationAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
-    <Compile Include="Primitives\IColumnValidationFactory.cs" />
+    <Compile Include="Primitives\IColumnValidationRuleFactory.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="JasonValueType.cs" />

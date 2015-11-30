@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ColumnValidationAttribute : ColumnAttribute, IColumnValidationFactory
+    public abstract class ColumnValidationAttribute : ColumnAttribute, IColumnValidationRuleFactory
     {
-        private sealed class ColumnValidation : DataValidation
+        private sealed class ColumnValidation : ValidationRule
         {
             internal ColumnValidation(object id, Column column, Func<Column, DataRow, bool> isValid, Func<Column, DataRow, string> getErrorMessage)
                 : base(id)
@@ -28,12 +28,12 @@ namespace DevZest.Data.Primitives
             private Func<Column, DataRow, string> _getErrorMessage;
 
 
-            protected sealed override int DependentColumnsCount
+            protected sealed override int ColumnsCount
             {
                 get { return 1; }
             }
 
-            protected sealed override Column GetDependentColumn(int index)
+            protected sealed override Column GetColumn(int index)
             {
                 if (index != 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
@@ -109,7 +109,7 @@ namespace DevZest.Data.Primitives
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerable<DataValidation> IColumnValidationFactory.GetValidations(Column column)
+        IEnumerable<ValidationRule> IColumnValidationRuleFactory.GetValidationRules(Column column)
         {
             yield return new ColumnValidation(GetValidationId(), column, IsValidFunc, ErrorMessageFunc);
         }

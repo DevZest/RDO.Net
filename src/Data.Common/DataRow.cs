@@ -177,9 +177,9 @@ namespace DevZest.Data
             set { Model.Columns[columnName].SetValue(this, value); }
         }
 
-        public IEnumerable<DataValidation> Validate()
+        public IEnumerable<ValidationRule> Validate()
         {
-            foreach (var validation in Model.Validations)
+            foreach (var validation in Model.ValidationRules)
             {
                 if (validation.IsValid(this))
                     continue;
