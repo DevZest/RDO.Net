@@ -66,8 +66,9 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="ColumnValueChangedEventArgs.cs" />
+    <Compile Include="IColumnValidator.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="ValidationResult.cs" />
+    <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
+    <Compile Include="ValidationResult.cs" />
     <Compile Include="ValidatorId.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />

@@ -111,9 +111,10 @@ namespace DevZest.Data
             {
                 columnAttribute.Initialize(column);
 
-                var validator = columnAttribute as IValidator;
-                if (validator != null)
+                var columnValidator = columnAttribute as IColumnValidator;
+                if (columnValidator != null)
                 {
+                    var validator = columnValidator.GetValidator(column);
                     var model = column.ParentModel;
                     Debug.Assert(model != null);
                     model._validators.Add(validator);

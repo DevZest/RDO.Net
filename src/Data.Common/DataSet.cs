@@ -212,23 +212,69 @@ namespace DevZest.Data
                 columnValueChanged(this, new ColumnValueChangedEventArgs(this, dataRow, column));
         }
 
-        public IEnumerable<ValidationResult> Validate(bool recursive = true)
+        public bool Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
         {
-            foreach (var dataRow in this)
+            return Validate(this, validationLevel, recursive) == 0;
+        }
+
+        private static int Validate(DataSet dataSet, ValidationLevel validationLevel, bool recursive)
+        {
+            int result = 0;
+            foreach (var dataRow in dataSet)
             {
-                foreach (var result in dataRow.Validate())
-                    yield return result;
+                dataRow.Validate();
+                foreach (var message in dataRow.ValidationMessages)
+                {
+                    if (message.Level >= validationLevel)
+                        result++;
+                }
 
                 if (recursive)
                 {
-                    foreach (var childModel in Model.ChildModels)
+                    var childModels = dataSet.Model.ChildModels;
+                    foreach (var childModel in childModels)
                     {
                         var childDataSet = childModel[dataRow];
-                        foreach (var validationError in childDataSet.Validate(true))
-                            yield return validationError;
+                        result += Validate(childDataSet, validationLevel, recursive);
                     }
                 }
             }
+
+            return result;
+        }
+
+        public ValidationResult GetValidationResult(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
+        {
+            var result = ValidationResult.New();
+            FillValidationResult(result, this, validationLevel, recursive);
+            return result;
+        }
+
+        private static void FillValidationResult(ValidationResult result, DataSet dataSet, ValidationLevel validationLevel, bool recursive)
+        {
+            foreach (var dataRow in dataSet)
+            {
+                foreach (var message in dataRow.ValidationMessages)
+                {
+                    if (message.Level >= validationLevel)
+                        result.Add(dataRow, message);
+                }
+
+                if (recursive)
+                {
+                    var childModels = dataSet.Model.ChildModels;
+                    foreach (var childModel in childModels)
+                    {
+                        var childDataSet = childModel[dataRow];
+                        FillValidationResult(result, childDataSet, validationLevel, recursive);
+                    }
+                }
+            }
+        }
+
+        public void Refresh(ValidationResult result)
+        {
+            throw new NotImplementedException();
         }
     }
 }

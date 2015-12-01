@@ -1,20 +1,49 @@
 ﻿using DevZest.Data.Utilities;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class ColumnValidatorAttribute : ColumnAttribute, IValidator
+    public abstract class ColumnValidatorAttribute : ColumnAttribute, IColumnValidator
     {
-        private Column _column;
-        protected internal sealed override void Initialize(Column column)
+        private sealed class Validator : IValidator
         {
-            _column = column;
-            OnInitialize(column);
+            internal Validator(ColumnValidatorAttribute owner, Column column)
+            {
+                Debug.Assert(owner != null);
+                Debug.Assert(column != null);
+
+                _owner = owner;
+                _column = column;
+            }
+
+            private ColumnValidatorAttribute _owner;
+            private Column _column;
+
+            public ValidatorId Id
+            {
+                get { return _owner.Id; }
+            }
+
+            private ValidationLevel ValidationLevel
+            {
+                get { return _owner.ValidationLevel; }
+            }
+
+            private string GetMessage(DataRow dataRow)
+            {
+                return _owner.GetMessage(_column, dataRow);
+            }
+
+            public ValidationMessage Validate(DataRow dataRow)
+            {
+                return _owner.IsValid(_column, dataRow) ? null : new ValidationMessage(Id, ValidationLevel, GetMessage(dataRow), _column);
+            }
         }
 
-        protected virtual void OnInitialize(Column column)
+        public IValidator GetValidator(Column column)
         {
+            return new Validator(this, column);
         }
 
         public abstract ValidatorId Id { get; }
@@ -31,16 +60,16 @@ namespace DevZest.Data
 
         public string MessageFuncName { get; set; }
 
-        private string FormatMessage(DataRow dataRow)
+        private string GetMessage(Column column, DataRow dataRow)
         {
             var messageFunc = MessageFunc;
             if (messageFunc != null)
-                return messageFunc(_column, dataRow);
+                return messageFunc(column, dataRow);
 
             if (Message != null)
                 return Message;
 
-            return FormatMessage(_column, dataRow);
+            return FormatMessage(column, dataRow);
         }
 
         private Func<Column, DataRow, string> _messageFunc;
@@ -71,12 +100,6 @@ namespace DevZest.Data
             {
                 throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName), ex);
             }
-        }
-
-        public IEnumerable<ValidationResult> Validate(DataRow dataRow)
-        {
-            if (!IsValid(_column, dataRow))
-                yield return new ValidationResult(Id, ValidationLevel, FormatMessage(dataRow), _column);
         }
     }
 }

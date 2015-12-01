@@ -88,10 +88,9 @@ namespace DevZest.Data
 
             protected abstract string GetMessage(DataRow dataRow);
 
-            public IEnumerable<ValidationResult> Validate(DataRow dataRow)
+            public ValidationMessage Validate(DataRow dataRow)
             {
-                if (!IsValid(dataRow))
-                    yield return new ValidationResult(Id, Level, GetMessage(dataRow), Columns);
+                return IsValid(dataRow) ? null : new ValidationMessage(Id, Level, GetMessage(dataRow), Columns);
             }
         }
     }

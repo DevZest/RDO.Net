@@ -6,6 +6,6 @@ namespace DevZest.Data
     {
         ValidatorId Id { get; }
 
-        IEnumerable<ValidationResult> Validate(DataRow dataRow);
+        ValidationMessage Validate(DataRow dataRow);
     }
 }

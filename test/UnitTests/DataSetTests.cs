@@ -182,8 +182,8 @@ namespace DevZest.Data
         {
             int count = 3;
             var dataSet = GetDataSet(count);
-            Assert.AreEqual(1, dataSet.Model.Validators.Count);
-            //Assert.IsTrue(dataSet.Validate().Count() == 0);
+            Assert.IsTrue(dataSet.Model.Validators.Count > 0);
+            Assert.IsTrue(dataSet.Validate());
         }
 
         [TestMethod]

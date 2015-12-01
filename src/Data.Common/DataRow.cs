@@ -177,12 +177,25 @@ namespace DevZest.Data
             set { Model.Columns[columnName].SetValue(this, value); }
         }
 
-        public IEnumerable<ValidationResult> Validate()
+        private static List<ValidationMessage> s_emptyValidationMessages = new List<ValidationMessage>();
+        private List<ValidationMessage> _validationMessages = s_emptyValidationMessages;
+        public IReadOnlyList<ValidationMessage> ValidationMessages
         {
+            get { return _validationMessages; }
+        }
+
+        public void Validate()
+        {
+            _validationMessages = s_emptyValidationMessages;
             foreach (var validator in Model.Validators)
             {
-                foreach (var result in validator.Validate(this))
-                    yield return result;
+                var message = validator.Validate(this);
+                if (message != null)
+                {
+                    if (_validationMessages == s_emptyValidationMessages)
+                        _validationMessages = new List<ValidationMessage>();
+                    _validationMessages.Add(message);
+                }
             }
         }
     }

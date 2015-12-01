@@ -10,7 +10,7 @@ namespace DevZest.Data
     {
         public readonly static ValidatorId ValidatorId = new ValidatorId(typeof(RequiredAttribute), nameof(ValidatorId));
 
-        protected sealed override void OnInitialize(Column column)
+        protected internal sealed override void Initialize(Column column)
         {
             column.Nullable(false);
         }
