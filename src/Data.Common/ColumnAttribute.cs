@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
     /// <summary>Base class for attributes which can be decorated with a column.</summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]

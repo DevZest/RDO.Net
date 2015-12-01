@@ -109,7 +109,7 @@
     <Compile Include="IModelSetExtensions.cs" />
     <Compile Include="ValidationLevel.cs" />
     <Compile Include="IValidator.cs" />
-    <Compile Include="Primitives\ColumnValidatorAttribute.cs" />
+    <Compile Include="ColumnValidatorAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="Primitives\CaseOnExpression.cs" />
     <Compile Include="Primitives\CastExpression.cs" />
     <Compile Include="Primitives\CheckConstraint.cs" />
-    <Compile Include="Primitives\ColumnAttribute.cs" />
+    <Compile Include="ColumnAttribute.cs" />
     <Compile Include="Primitives\ColumnExpression.cs" />
     <Compile Include="Primitives\ColumnReplacer.cs" />
     <Compile Include="Primitives\ColumnUnaryExpression.cs" />
