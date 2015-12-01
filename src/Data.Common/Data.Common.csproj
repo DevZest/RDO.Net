@@ -66,8 +66,8 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="ColumnValueChangedEventArgs.cs" />
-    <Compile Include="ValidationRuleCollection.cs" />
-    <Compile Include="ValidationError.cs" />
+    <Compile Include="Validator.cs" />
+    <Compile Include="ValidationResult.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
@@ -107,12 +107,11 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
-    <Compile Include="ValidationErrorLevel.cs" />
-    <Compile Include="ValidationRule.cs" />
-    <Compile Include="Primitives\ColumnValidationAttribute.cs" />
+    <Compile Include="ValidationLevel.cs" />
+    <Compile Include="IValidator.cs" />
+    <Compile Include="Primitives\ColumnValidatorAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />
     <Compile Include="Primitives\DbTableExtensions.cs" />
-    <Compile Include="Primitives\IColumnValidationRuleFactory.cs" />
     <Compile Include="Primitives\SubQueryEliminator.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="JasonValueType.cs" />
@@ -223,6 +222,7 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
+    <Compile Include="ValidatorId.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />
     <Compile Include="_Byte.cs" />

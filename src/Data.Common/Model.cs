@@ -111,14 +111,12 @@ namespace DevZest.Data
             {
                 columnAttribute.Initialize(column);
 
-                var validationFactory = columnAttribute as IColumnValidationRuleFactory;
-                if (validationFactory != null)
+                var validator = columnAttribute as IValidator;
+                if (validator != null)
                 {
-                    var validations = validationFactory.GetValidationRules(column);
                     var model = column.ParentModel;
                     Debug.Assert(model != null);
-                    foreach (var validation in validations)
-                        model.ValidationRules.Add(validation);
+                    model._validators.Add(validator);
                 }
             }
         }
@@ -223,7 +221,6 @@ namespace DevZest.Data
         {
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
-            ValidationRules = new ValidationRuleCollection();
 
             Initialize(s_columnManager);
             Initialize(s_columnListManager);
@@ -299,7 +296,11 @@ namespace DevZest.Data
 
         protected internal ModelCollection ChildModels { get; private set; }
 
-        protected internal ValidationRuleCollection ValidationRules { get; private set; }
+        private List<IValidator> _validators = new List<IValidator>();
+        protected internal IList<IValidator> Validators
+        {
+            get { return _validators; }
+        }
 
         public ModelKey PrimaryKey
         {
@@ -644,55 +645,6 @@ namespace DevZest.Data
 
                 return parentDataRow[this];
             }
-        }
-
-        private sealed class CustomValidation : ValidationRule
-        {
-            internal CustomValidation(object id, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column[] columns)
-                : base(id)
-            {
-                Debug.Assert(condition != null);
-                Debug.Assert(errorMessageFunc != null);
-
-                _condition = condition;
-                _errorMessageFunc = errorMessageFunc;
-                _columns = columns;
-            }
-
-            _Boolean _condition;
-            Func<DataRow, string> _errorMessageFunc;
-            Column[] _columns;
-
-            public override bool IsValid(DataRow dataRow)
-            {
-                return (_condition.Eval(dataRow) == true);
-            }
-
-            public override string GetErrorMessage(DataRow dataRow)
-            {
-                return _errorMessageFunc(dataRow);
-            }
-
-            protected override int ColumnsCount
-            {
-                get { return _columns == null ? 0 : _columns.Length; }
-            }
-
-            protected override Column GetColumn(int index)
-            {
-                if (index < 0 || index >= ColumnsCount)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return _columns[index];
-            }
-        }
-
-        public void AddValidation(object validationId, _Boolean condition, Func<DataRow, string> errorMessageFunc, params Column[] dependentColumns)
-        {
-            Utilities.Check.NotNull(validationId, nameof(validationId));
-            Utilities.Check.NotNull(condition, nameof(condition));
-            Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
-
-            ValidationRules.Add(new CustomValidation(validationId, condition, errorMessageFunc, dependentColumns));
         }
 
         internal KeyOutput ParentSequentialKeyModel

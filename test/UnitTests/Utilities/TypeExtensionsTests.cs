@@ -8,7 +8,7 @@ namespace DevZest.Data.Utilities
         [TestMethod]
         public void Type_GetErrorMessageFunc()
         {
-            var func = GetType().GetErrorMessageFunc(nameof(GetErrorMessage));
+            var func = GetType().GetMessageFunc(nameof(GetErrorMessage));
             Assert.AreSame(ErrorMessage, func(null, null));
         }
 

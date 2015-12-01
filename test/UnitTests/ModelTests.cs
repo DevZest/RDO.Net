@@ -307,7 +307,7 @@ namespace DevZest.Data
         public void Model_ValidationRules_correctly_initialized()
         {
             var model = new SimpleModel();
-            Assert.AreEqual(2, model.ValidationRules.Count);
+            Assert.AreEqual(2, model.Validators.Count);
         }
     }
 }

@@ -6,32 +6,33 @@ using System.Diagnostics;
 namespace DevZest.Data
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class RequiredAttribute : ColumnValidationAttribute
+    public sealed class RequiredAttribute : ColumnValidatorAttribute
     {
-        public readonly static object ValidationId = new object();
+        public readonly static ValidatorId ValidatorId = new ValidatorId(typeof(RequiredAttribute), nameof(ValidatorId));
 
-        public RequiredAttribute()
-        {
-        }
-
-        protected internal sealed override void Initialize(Column column)
+        protected sealed override void OnInitialize(Column column)
         {
             column.Nullable(false);
         }
 
-        protected override object GetValidationId()
+        public override ValidatorId Id
         {
-            return ValidationId;
+            get { return ValidatorId; }
         }
 
-        protected override Func<Column, DataRow, bool> IsValidFunc
+        protected override ValidationLevel ValidationLevel
         {
-            get {  return (Column column, DataRow dataRow) => !column.IsNull(dataRow); }
+            get { return ValidationLevel.Error; }
         }
 
-        protected override Func<Column, DataRow, string> DefaultErrorMessageFunc
+        protected override bool Validate(Column column, DataRow dataRow)
         {
-            get { return (Column column, DataRow dataRow) => Strings.RequiredAttribute_DefaultErrorMessage(column); }
+            return !column.IsNull(dataRow);
+        }
+
+        protected override string FormatMessage(Column column, DataRow dataRow)
+        {
+            return Strings.RequiredAttribute_DefaultErrorMessage(column);
         }
     }
 }

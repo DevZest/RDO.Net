@@ -2,13 +2,15 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
     /// <summary>
     /// Represents a column of <see cref="Model"/>.
     /// </summary>
-    public abstract class Column : ModelMember
+    public abstract class Column : ModelMember, IReadOnlyList<Column>
     {
         /// <summary>
         /// Gets the original owner type of this <see cref="Column"/>.
@@ -282,5 +284,38 @@ namespace DevZest.Data
         public abstract object GetValue(DataRow dataRow);
 
         public abstract void SetValue(DataRow dataRow, object value);
+
+        #region IReadOnlyList<Column>
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        int IReadOnlyCollection<Column>.Count
+        {
+            get { return 1; }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        Column IReadOnlyList<Column>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        #endregion
     }
 }

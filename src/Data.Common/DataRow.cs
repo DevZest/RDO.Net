@@ -177,14 +177,12 @@ namespace DevZest.Data
             set { Model.Columns[columnName].SetValue(this, value); }
         }
 
-        public IEnumerable<ValidationRule> Validate()
+        public IEnumerable<ValidationResult> Validate()
         {
-            foreach (var validation in Model.ValidationRules)
+            foreach (var validator in Model.Validators)
             {
-                if (validation.IsValid(this))
-                    continue;
-
-                yield return validation;
+                foreach (var result in validator.Validate(this))
+                    yield return result;
             }
         }
     }

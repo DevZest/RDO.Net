@@ -662,9 +662,9 @@ namespace DevZest.Data
         /// <summary>
         /// Cannot resolve static method of Func&lt;Column, DataRow, string&gt; from provided type '{funcType}' and method name '{funcName}'.
         /// </summary>
-        public static string ColumnValidationAttribute_InvalidErrorMessageFunc(object funcType, object funcName)
+        public static string ColumnValidatorAttribute_InvalidMessageFunc(object funcType, object funcName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValidationAttribute_InvalidErrorMessageFunc", "funcType", "funcName"), funcType, funcName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnValidatorAttribute_InvalidMessageFunc", "funcType", "funcName"), funcType, funcName);
         }
 
         /// <summary>

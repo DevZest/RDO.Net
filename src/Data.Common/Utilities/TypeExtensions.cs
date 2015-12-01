@@ -46,7 +46,7 @@ namespace DevZest.Data.Utilities
             return type.GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
         }
 
-        internal static Func<Column, DataRow, string> GetErrorMessageFunc(this Type funcType, string funcName)
+        internal static Func<Column, DataRow, string> GetMessageFunc(this Type funcType, string funcName)
         {
             Debug.Assert(funcType != null);
             Debug.Assert(!string.IsNullOrWhiteSpace(funcName));
