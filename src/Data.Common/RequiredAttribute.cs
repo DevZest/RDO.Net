@@ -25,7 +25,7 @@ namespace DevZest.Data
             get { return ValidationLevel.Error; }
         }
 
-        protected override bool Validate(Column column, DataRow dataRow)
+        protected override bool IsValid(Column column, DataRow dataRow)
         {
             return !column.IsNull(dataRow);
         }

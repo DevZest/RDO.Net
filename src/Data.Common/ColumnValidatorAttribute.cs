@@ -21,7 +21,7 @@ namespace DevZest.Data
 
         protected abstract ValidationLevel ValidationLevel { get; }
 
-        protected abstract bool Validate(Column column, DataRow dataRow);
+        protected abstract bool IsValid(Column column, DataRow dataRow);
 
         protected abstract string FormatMessage(Column column, DataRow dataRow);
 
@@ -75,7 +75,7 @@ namespace DevZest.Data
 
         public IEnumerable<ValidationResult> Validate(DataRow dataRow)
         {
-            if (!Validate(_column, dataRow))
+            if (!IsValid(_column, dataRow))
                 yield return new ValidationResult(Id, ValidationLevel, FormatMessage(dataRow), _column);
         }
     }
