@@ -66,7 +66,7 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="ColumnValueChangedEventArgs.cs" />
-    <Compile Include="Validator.cs" />
+    <Compile Include="Model.Validator.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />

@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace DevZest.Data
 {
-    public abstract class Model : ModelMember, IModelSet
+    public abstract partial class Model : ModelMember, IModelSet
     {
         #region RegisterColumn
 
