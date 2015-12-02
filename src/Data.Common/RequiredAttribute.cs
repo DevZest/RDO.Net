@@ -25,12 +25,12 @@ namespace DevZest.Data
             get { return ValidationLevel.Error; }
         }
 
-        protected override bool IsValid(Column column, DataRow dataRow)
+        protected override _Boolean GetIsValidCondition(Column column)
         {
-            return !column.IsNull(dataRow);
+            return !column.IsNull();
         }
 
-        protected override string FormatMessage(Column column, DataRow dataRow)
+        protected override _String FormatMessage(Column column)
         {
             return Strings.RequiredAttribute_DefaultErrorMessage(column);
         }

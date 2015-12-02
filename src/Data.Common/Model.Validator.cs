@@ -12,66 +12,65 @@ namespace DevZest.Data
             {
                 private static Column[] s_emptyColumns = new Column[0];
 
-                internal ValidatorImpl(ValidatorId id, ValidationLevel level, IReadOnlyList<Column> columns, _Boolean condition, Func<DataRow, string> messageFunc)
+                internal ValidatorImpl(ValidatorId id, ValidationLevel level, IReadOnlyList<Column> columns, _Boolean isValidCondition, _String message)
                     : base(id)
                 {
                     _level = level;
                     _columns = columns ?? s_emptyColumns;
-                    _condition = condition;
-                    _messageFunc = messageFunc;
+                    _isValidCondition = isValidCondition;
+                    _message = message;
                 }
 
-                ValidationLevel _level;
-                _Boolean _condition;
-                Func<DataRow, string> _messageFunc;
-                IReadOnlyList<Column> _columns;
+                _String _message;
 
-                protected override ValidationLevel Level
+                ValidationLevel _level;
+                public override ValidationLevel Level
                 {
                     get { return _level; }
                 }
 
-                protected override IReadOnlyList<Column> Columns
+                IReadOnlyList<Column> _columns;
+                public override IReadOnlyList<Column> Columns
                 {
                     get { return _columns; }
                 }
 
-                protected override bool IsValid(DataRow dataRow)
+                _Boolean _isValidCondition;
+                public override _Boolean IsValidCondition
                 {
-                    return _condition.Eval(dataRow) == true;
+                    get { return _isValidCondition; }
                 }
 
-                protected override string GetMessage(DataRow dataRow)
+                public override _String Message
                 {
-                    return _messageFunc(dataRow);
+                    get { return _message; }
                 }
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean condition, Func<DataRow, string> errorMessageFunc, Column column)
+            public static Validator Create(ValidatorId validatorId, ValidationLevel level, Column columns, _Boolean isValidCondition, _String message)
             {
-                Utilities.Check.NotNull(condition, nameof(condition));
-                Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
-                Utilities.Check.NotNull(column, nameof(column));
+                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
+                Utilities.Check.NotNull(columns, nameof(columns));
+                Utilities.Check.NotNull(message, nameof(message));
 
-                return new ValidatorImpl(validatorId, level, column, condition, errorMessageFunc);
+                return new ValidatorImpl(validatorId, level, columns, isValidCondition, message);
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean condition, Func<DataRow, string> errorMessageFunc, params Column[] columns)
+            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean isValidCondition, _String message, params Column[] columns)
             {
-                Utilities.Check.NotNull(condition, nameof(condition));
-                Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
+                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
+                Utilities.Check.NotNull(message, nameof(message));
 
-                return new ValidatorImpl(validatorId, level, columns, condition, errorMessageFunc);
+                return new ValidatorImpl(validatorId, level, columns, isValidCondition, message);
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean condition, Func<DataRow, string> errorMessageFunc)
+            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean isValidCondition, _String message)
             {
-                Utilities.Check.NotNull(condition, nameof(condition));
-                Utilities.Check.NotNull(errorMessageFunc, nameof(errorMessageFunc));
+                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
+                Utilities.Check.NotNull(message, nameof(message));
 
-                return new ValidatorImpl(validatorId, level, null, condition, errorMessageFunc);
+                return new ValidatorImpl(validatorId, level, null, isValidCondition, message);
             }
-
 
             protected Validator(ValidatorId id)
             {
@@ -80,18 +79,13 @@ namespace DevZest.Data
 
             public ValidatorId Id { get; private set; }
 
-            protected abstract ValidationLevel Level { get; }
+            public abstract ValidationLevel Level { get; }
 
-            protected abstract IReadOnlyList<Column> Columns { get; }
+            public abstract IReadOnlyList<Column> Columns { get; }
 
-            protected abstract bool IsValid(DataRow dataRow);
+            public abstract _Boolean IsValidCondition { get; }
 
-            protected abstract string GetMessage(DataRow dataRow);
-
-            public ValidationMessage Validate(DataRow dataRow)
-            {
-                return IsValid(dataRow) ? null : new ValidationMessage(Id, Level, GetMessage(dataRow), Columns);
-            }
+            public abstract _String Message { get; }
         }
     }
 }

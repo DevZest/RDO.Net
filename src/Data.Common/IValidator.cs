@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -6,6 +7,12 @@ namespace DevZest.Data
     {
         ValidatorId Id { get; }
 
-        ValidationMessage Validate(DataRow dataRow);
+        ValidationLevel Level { get; }
+
+        IReadOnlyList<Column> Columns { get; }
+
+        _Boolean IsValidCondition { get; }
+
+        _String Message { get; }
     }
 }

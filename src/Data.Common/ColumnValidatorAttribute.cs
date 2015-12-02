@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -25,19 +26,24 @@ namespace DevZest.Data
                 get { return _owner.Id; }
             }
 
-            private ValidationLevel ValidationLevel
+            public ValidationLevel Level
             {
                 get { return _owner.ValidationLevel; }
             }
 
-            private string GetMessage(DataRow dataRow)
+            public IReadOnlyList<Column> Columns
             {
-                return _owner.GetMessage(_column, dataRow);
+                get { return _column; }
             }
 
-            public ValidationMessage Validate(DataRow dataRow)
+            public _Boolean IsValidCondition
             {
-                return _owner.IsValid(_column, dataRow) ? null : new ValidationMessage(Id, ValidationLevel, GetMessage(dataRow), _column);
+                get { return _owner.GetIsValidCondition(_column); }
+            }
+
+            public _String Message
+            {
+                get { return _owner.GetMessage(_column); }
             }
         }
 
@@ -50,9 +56,9 @@ namespace DevZest.Data
 
         protected abstract ValidationLevel ValidationLevel { get; }
 
-        protected abstract bool IsValid(Column column, DataRow dataRow);
+        protected abstract _Boolean GetIsValidCondition(Column column);
 
-        protected abstract string FormatMessage(Column column, DataRow dataRow);
+        protected abstract _String FormatMessage(Column column);
 
         public string Message { get; set; }
 
@@ -60,20 +66,20 @@ namespace DevZest.Data
 
         public string MessageFuncName { get; set; }
 
-        private string GetMessage(Column column, DataRow dataRow)
+        private _String GetMessage(Column column)
         {
             var messageFunc = MessageFunc;
             if (messageFunc != null)
-                return messageFunc(column, dataRow);
+                return messageFunc(column);
 
             if (Message != null)
                 return Message;
 
-            return FormatMessage(column, dataRow);
+            return FormatMessage(column);
         }
 
-        private Func<Column, DataRow, string> _messageFunc;
-        private Func<Column, DataRow, string> MessageFunc
+        private Func<Column, _String> _messageFunc;
+        private Func<Column, _String> MessageFunc
         {
             get
             {
@@ -87,7 +93,7 @@ namespace DevZest.Data
             }
         }
 
-        private static Func<Column, DataRow, string> GetMessageFunc(Type funcType, string funcName)
+        private static Func<Column, _String> GetMessageFunc(Type funcType, string funcName)
         {
             if (!(funcType != null && funcName != null))
                 throw new InvalidOperationException(Strings.ColumnValidatorAttribute_InvalidMessageFunc(funcType, funcName));

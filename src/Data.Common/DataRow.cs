@@ -190,13 +190,13 @@ namespace DevZest.Data
             _validationMessages = s_emptyValidationMessages;
             foreach (var validator in Model.Validators)
             {
-                var message = validator.Validate(this);
-                if (message != null)
-                {
-                    if (_validationMessages == s_emptyValidationMessages)
-                        _validationMessages = new List<ValidationMessage>();
-                    _validationMessages.Add(message);
-                }
+                var isValid = validator.IsValidCondition.Eval(this);
+                if (isValid == true)
+                    continue;
+                var message = validator.Message.Eval(this);
+                if (_validationMessages == s_emptyValidationMessages)
+                    _validationMessages = new List<ValidationMessage>();
+                _validationMessages.Add(new ValidationMessage(validator.Id, validator.Level, message, validator.Columns));
             }
         }
 
