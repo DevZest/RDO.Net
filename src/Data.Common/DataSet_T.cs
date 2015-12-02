@@ -131,20 +131,20 @@ namespace DevZest.Data
                         return this[dataRow.ChildOrdinal + 1].Ordinal - 1;  // before the next DataRow
                 }
 
-                return BinarySearchMainDataSetIndex(_mainDataSet[0], _mainDataSet[_mainDataSet.Count - 1], dataRow.Parent.Ordinal);
+                return BinarySearchMainDataSetIndex(_mainDataSet[0], _mainDataSet[_mainDataSet.Count - 1], dataRow.parentDataRow.Ordinal);
             }
 
             private int BinarySearchMainDataSetIndex(DataRow startRow, DataRow endRow, int parentOrdinal)
             {
-                if (parentOrdinal > endRow.Parent.Ordinal)
+                if (parentOrdinal > endRow.parentDataRow.Ordinal)
                     return endRow.Ordinal + 1;  // after the end DataRow
 
-                if (parentOrdinal < startRow.Parent.Ordinal)
+                if (parentOrdinal < startRow.parentDataRow.Ordinal)
                     return startRow.Ordinal;  // before the start DataRow
 
                 var midOrdinal = (startRow.Ordinal + endRow.Ordinal) >> 1;
                 var midRow = _mainDataSet[midOrdinal];
-                if (parentOrdinal < midRow.Parent.Ordinal)
+                if (parentOrdinal < midRow.parentDataRow.Ordinal)
                     return BinarySearchMainDataSetIndex(startRow, midRow, parentOrdinal);
                 else
                     return BinarySearchMainDataSetIndex(midRow, endRow, parentOrdinal);

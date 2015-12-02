@@ -372,4 +372,16 @@
   <data name="DbTable_InvalidDbSetSource" xml:space="preserve">
     <value>The source is invalid: cross DbSession is not supported.</value>
   </data>
+  <data name="DataRow_FromString_ExpectChar" xml:space="preserve">
+    <value>Char '{ch}' expected after '{prevInput}'.</value>
+  </data>
+  <data name="DataRow_FromString_InvalidChildModelName" xml:space="preserve">
+    <value>The child model name '{childModelName}' is invalid for DataRow '{dataRowPath}'.</value>
+  </data>
+  <data name="DataRow_FromString_InvalidDataRowOrdinal" xml:space="preserve">
+    <value>The DataRow ordinal '{dataRowOrdinal}' is invalid for DataSet '{dataSetPath}'.</value>
+  </data>
+  <data name="DataRow_FromString_ParseInt" xml:space="preserve">
+    <value>Cannot parse string '{input}' into an integer value.</value>
+  </data>
 </root>

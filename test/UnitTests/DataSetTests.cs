@@ -113,7 +113,7 @@ namespace DevZest.Data
                     var grandChildren = child.Children(model.Child.Child);
                     foreach (var grandChild in grandChildren)
                     {
-                        Assert.AreEqual(child, grandChild.Parent);
+                        Assert.AreEqual(child, grandChild.parentDataRow);
                         grandChildModelRows.Add(grandChild);
                     }
                 }
@@ -149,7 +149,7 @@ namespace DevZest.Data
             foreach (var row in rows)
             {
                 Assert.AreEqual(null, row.Model);
-                Assert.AreEqual(null, row.Parent);
+                Assert.AreEqual(null, row.parentDataRow);
             }
         }
 

@@ -49,21 +49,11 @@ namespace DevZest.Data
             Debug.Assert(_validationMessages != null);
 
             var index = _validationMessages.AddRow().Ordinal;
-            _validationMessages._.DataRow[index] = SerializeDataRow(dataRow);
+            _validationMessages._.DataRow[index] = dataRow.ToString();
             _validationMessages._.ValidatorId[index] = validationMessage.ValidatorId.ToString();
             _validationMessages._.ValidationLevel[index] = (int)validationMessage.Level;
             _validationMessages._.Columns[index] = SerializeColumns(validationMessage.Columns);
             _validationMessages._.Description[index] = validationMessage.Description;
-        }
-
-        private static string SerializeDataRow(DataRow dataRow)
-        {
-            var parentDataRow = dataRow.Parent;
-            if (dataRow.Parent == null)
-                return string.Format(CultureInfo.InvariantCulture, "[{0}]", dataRow.Ordinal);
-
-            var result = string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", dataRow.Model.Name, dataRow.ChildOrdinal);
-            return SerializeDataRow(parentDataRow) + "/" + result;
         }
 
         private static string SerializeColumns(IReadOnlyList<Column> columns)

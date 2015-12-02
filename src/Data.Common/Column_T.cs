@@ -60,7 +60,7 @@ namespace DevZest.Data
 
             public T this[int ordinal]
             {
-                get { return _parentColumn[_dataSet[ordinal].Parent.Ordinal]; }
+                get { return _parentColumn[_dataSet[ordinal].parentDataRow.Ordinal]; }
                 set { Debug.Fail("Column in child relationship is readonly."); }
             }
 
@@ -278,7 +278,7 @@ namespace DevZest.Data
             var model = dataRow.Model;
             Debug.Assert(model == ParentModel);
 
-            var parentDataRow = dataRow.Parent;
+            var parentDataRow = dataRow.parentDataRow;
             if (parentDataRow != null)
                 OnValueChanged(parentDataRow, dataRow);
 

@@ -691,6 +691,38 @@ namespace DevZest.Data
             get { return GetString("DbTable_InvalidDbSetSource"); }
         }
 
+        /// <summary>
+        /// Char '{ch}' expected after '{prevInput}'.
+        /// </summary>
+        public static string DataRow_FromString_ExpectChar(object ch, object prevInput)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_FromString_ExpectChar", "ch", "prevInput"), ch, prevInput);
+        }
+
+        /// <summary>
+        /// The child model name '{childModelName}' is invalid for DataRow '{dataRowPath}'.
+        /// </summary>
+        public static string DataRow_FromString_InvalidChildModelName(object childModelName, object dataRowPath)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_FromString_InvalidChildModelName", "childModelName", "dataRowPath"), childModelName, dataRowPath);
+        }
+
+        /// <summary>
+        /// The DataRow ordinal '{dataRowOrdinal}' is invalid for DataSet '{dataSetPath}'.
+        /// </summary>
+        public static string DataRow_FromString_InvalidDataRowOrdinal(object dataRowOrdinal, object dataSetPath)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_FromString_InvalidDataRowOrdinal", "dataRowOrdinal", "dataSetPath"), dataRowOrdinal, dataSetPath);
+        }
+
+        /// <summary>
+        /// Cannot parse string '{input}' into an integer value.
+        /// </summary>
+        public static string DataRow_FromString_ParseInt(object input)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_FromString_ParseInt", "input"), input);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

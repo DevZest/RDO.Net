@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 
 namespace DevZest.Data
@@ -28,20 +29,20 @@ namespace DevZest.Data
         internal int ChildOrdinal { get; private set; }
 
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
-        public DataRow Parent { get; private set; }
+        public DataRow parentDataRow { get; private set; }
 
         internal void InitializeBySubDataSet(DataRow parent, int childOrdinal)
         {
-            Debug.Assert(Parent == null);
+            Debug.Assert(parentDataRow == null);
             Debug.Assert(parent != null);
 
-            Parent = parent;
+            parentDataRow = parent;
             ChildOrdinal = childOrdinal;
         }
 
         internal void DisposeBySubDataSet()
         {
-            Parent = null;
+            parentDataRow = null;
         }
 
         internal void InitializeByMainDataSet(Model model, int ordinal)
@@ -197,6 +198,91 @@ namespace DevZest.Data
                     _validationMessages.Add(message);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            var parentDataRow = this.parentDataRow;
+            if (this.parentDataRow == null)
+                return string.Format(CultureInfo.InvariantCulture, "/[{0}]", Ordinal);
+
+            var result = string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", Model.Name, ChildOrdinal);
+            return parentDataRow.ToString() + "/" + result;
+        }
+
+        internal static DataRow FromString(DataSet dataSet, string input)
+        {
+            Debug.Assert(dataSet.Model.ParentModel == null);
+
+            var inputIndex = 0;
+            ExpectString(input, ref inputIndex, '/');
+            var leftSquareBracketIndex = inputIndex;
+            var dataRowOrdinal = ExpectInt(input, ref inputIndex, '[', ']');
+            var dataRow = GetDataRow(dataSet, dataRowOrdinal, input, leftSquareBracketIndex);
+            return inputIndex == input.Length ? dataRow : Deserialize(dataRow, input, inputIndex);
+        }
+
+        private static DataRow GetDataRow(DataSet dataSet, int ordinal, string input, int leftSquareBracketIndex)
+        {
+            if (ordinal < 0 || ordinal >= dataSet.Count)
+                throw new FormatException(Strings.DataRow_FromString_InvalidDataRowOrdinal(ordinal, input.Substring(0, leftSquareBracketIndex)));
+            return dataSet[ordinal];
+        }
+
+        private static DataRow Deserialize(DataRow parentDataRow, string input, int inputIndex)
+        {
+            var dataRowPathEndIndex = inputIndex;
+            var childModelName = ExpectString(input, ref inputIndex, '/', '[');
+            var leftSquareBracketIndex = inputIndex - 1;
+            var dataRowOrdinal = ExpectInt(input, ref inputIndex, ']');
+
+            var childModel = parentDataRow.Model[childModelName] as Model;
+            if (childModel == null)
+                throw new FormatException(Strings.DataRow_FromString_InvalidChildModelName(childModelName, input.Substring(0, dataRowPathEndIndex)));
+
+            var result = GetDataRow(parentDataRow[childModel], dataRowOrdinal, input, leftSquareBracketIndex);
+            return inputIndex == input.Length ? result : Deserialize(result, input, inputIndex);
+        }
+
+        private static string ExpectString(string input, ref int inputIndex, char startChar, char endChar)
+        {
+            if (input[inputIndex] != startChar)
+                throw new FormatException(Strings.DataRow_FromString_ExpectChar(startChar, input.Substring(0, inputIndex)));
+
+            inputIndex++;
+            return ExpectString(input, ref inputIndex, endChar);
+        }
+
+        private static string ExpectString(string input, ref int inputIndex, char endChar)
+        {
+            var startIndex = inputIndex;
+            while (inputIndex < input.Length && input[inputIndex] != endChar)
+                inputIndex++;
+
+            if (inputIndex == input.Length)
+                throw new FormatException(Strings.DataRow_FromString_ExpectChar(endChar, input.Substring(0, startIndex)));
+
+            var result = input.Substring(startIndex, inputIndex - startIndex);
+            inputIndex++;
+            return result;
+        }
+
+        private static int ExpectInt(string input, ref int inputIndex, char endChar)
+        {
+            return ParseInt(ExpectString(input, ref inputIndex, endChar));
+        }
+
+        private static int ExpectInt(string input, ref int inputIndex, char startChar, char endChar)
+        {
+            return ParseInt(ExpectString(input, ref inputIndex, startChar, endChar));
+        }
+
+        private static int ParseInt(string input)
+        {
+            int result;
+            if (!Int32.TryParse(input, out result))
+                throw new FormatException(Strings.DataRow_FromString_ParseInt(input));
+            return result;
         }
     }
 }
