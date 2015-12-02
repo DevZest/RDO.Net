@@ -7,16 +7,8 @@ using System.Linq;
 namespace DevZest.Data
 {
     [TestClass]
-    public class DataSetTests
+    public class DataSetTests : SimpleModelDataSetHelper
     {
-        private class SimpleModel : SimpleModelBase
-        {
-            public static readonly Accessor<SimpleModel, SimpleModel> ChildAccessor = RegisterChildModel((SimpleModel x) => x.Child,
-                x => x.ParentKey);
-
-            public SimpleModel Child { get; private set; }
-        }
-
         [TestMethod]
         public void DataSet_new_row()
         {
@@ -50,21 +42,6 @@ namespace DevZest.Data
             var model = dataSet._;
             for (int i = 0; i < count; i++)
                 Assert.AreEqual(i, model.Id[dataSet[i]]);
-        }
-
-        private DataSet<SimpleModel> GetDataSet(int count)
-        {
-            return SimpleModelBase.GetDataSet<SimpleModel>(count, x => x.Child, AddRows);
-        }
-
-        private void AddRows(DataSet<SimpleModel> dataSet, int count)
-        {
-            var model = dataSet._;
-            for (int i = 0; i < count; i++)
-            {
-                var dataRow = dataSet.AddRow();
-                model.Id[dataRow] = i;
-            }
         }
 
         [TestMethod]
