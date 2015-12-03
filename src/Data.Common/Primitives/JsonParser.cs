@@ -65,21 +65,35 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public static void Parse(string json, DataSet dataSet)
-        {
-            var parser = new JsonParser(json);
-            parser.Parse(dataSet, true);
-        }
-
         readonly string _json;
         int _index;
         readonly StringBuilder s = new StringBuilder();
         Token? _lookAhead;
 
-        private JsonParser(string json)
+        internal JsonParser(string json)
         {
             Debug.Assert(!string.IsNullOrEmpty(json));
             _json = json;
+        }
+
+        internal DataSet Parse(Func<DataSet> dataSetCreator)
+        {
+            return Parse(dataSetCreator, true);
+        }
+
+        private DataSet Parse(Func<DataSet> dataSetCreator, bool isTopLevel)
+        {
+            if (PeekToken().Kind == TokenKind.Null)
+            {
+                ConsumeToken();
+                if (isTopLevel)
+                    ExpectToken(TokenKind.Eof);
+                return null;
+            }
+
+            var result = dataSetCreator();
+            Parse(result, isTopLevel);
+            return result;
         }
 
         private void Parse(DataSet dataSet, bool isTopLevel)
@@ -146,6 +160,15 @@ namespace DevZest.Data.Primitives
         private void Parse(Column column, int ordinal)
         {
             Debug.Assert(column != null);
+
+            var dataSetColumn = column as IDataSetColumn;
+            if (dataSetColumn != null)
+            {
+                var dataSet = Parse(() => dataSetColumn.NewValue(ordinal), false);
+                if (column.ShouldSerialize)
+                    dataSetColumn.Deserialize(ordinal, dataSet);
+                return;
+            }
 
             var token = ExpectToken(TokenKind.ColumnValues);
             if (column.ShouldSerialize)

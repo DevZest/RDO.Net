@@ -68,6 +68,7 @@
     <Compile Include="ColumnValueChangedEventArgs.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="Model.Validator.cs" />
+    <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="_Boolean.cs" />
     <Compile Include="_Byte.cs" />
     <Compile Include="_Char.cs" />
+    <Compile Include="_DataSet.cs" />
     <Compile Include="_DateTime.cs" />
     <Compile Include="_Decimal.cs" />
     <Compile Include="_Double.cs" />

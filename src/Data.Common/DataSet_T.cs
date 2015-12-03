@@ -176,9 +176,7 @@ namespace DevZest.Data
 
         public static DataSet<T> ParseJson(string json, Action<T> initializer = null)
         {
-            var result = New(initializer);
-            JsonParser.Parse(json, result);
-            return result;
+            return (DataSet<T>)(new JsonParser(json).Parse(() => New(initializer)));
         }
 
         public DataSet<TChild> Fill<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)

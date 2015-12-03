@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -142,7 +143,11 @@ namespace DevZest.Data
                 if (count > 0)
                     stringBuilder.Append(',');
                 BuildJsonObjectName(stringBuilder, column.Name);
-                column.Serialize(Ordinal).Write(stringBuilder);
+                var dataSetColumn = column as IDataSetColumn;
+                if (dataSetColumn != null)
+                    dataSetColumn.Serialize(Ordinal, stringBuilder);
+                else
+                    column.Serialize(Ordinal).Write(stringBuilder);
                 count++;
             }
 

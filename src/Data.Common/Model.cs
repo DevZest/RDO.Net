@@ -693,5 +693,11 @@ namespace DevZest.Data
             }
             return null;
         }
+
+        protected internal virtual DataSet<T> NewDataSetValue<T>(_DataSet<T> dataSetColumn, int rowOrdinal)
+            where T : Model, new()
+        {
+            return DataSet<T>.New();
+        }
     }
 }
