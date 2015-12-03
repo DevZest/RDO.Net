@@ -96,7 +96,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private void Parse(DataSet dataSet, bool isTopLevel)
+        internal void Parse(DataSet dataSet, bool isTopLevel)
         {
             ExpectToken(TokenKind.SquaredOpen);
 

@@ -85,6 +85,7 @@
     <Compile Include="Helpers\DbTableExtensions.cs" />
     <Compile Include="Helpers\SimpleModelDataSetHelper.cs" />
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
+    <Compile Include="PagedDataSetTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="_CharTests.cs" />
     <Compile Include="ColumnTests.cs" />

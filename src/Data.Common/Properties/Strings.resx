@@ -384,4 +384,7 @@
   <data name="DataRow_FromString_ParseInt" xml:space="preserve">
     <value>Cannot parse string '{input}' into an integer value.</value>
   </data>
+  <data name="ScalarData_InvalidAccessor" xml:space="preserve">
+    <value>The accessor is invalid. It must be created by calling CreateAccessor method.</value>
+  </data>
 </root>

@@ -723,6 +723,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_FromString_ParseInt", "input"), input);
         }
 
+        /// <summary>
+        /// The accessor is invalid. It must be created by calling CreateAccessor method.
+        /// </summary>
+        public static string ScalarData_InvalidAccessor
+        {
+            get { return GetString("ScalarData_InvalidAccessor"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

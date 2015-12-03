@@ -68,7 +68,10 @@
     <Compile Include="ColumnValueChangedEventArgs.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="Model.Validator.cs" />
+    <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
+    <Compile Include="Primitives\ScalarDataExtensions.cs" />
+    <Compile Include="ScalarData.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
