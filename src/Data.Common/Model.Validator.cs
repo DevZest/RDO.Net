@@ -16,7 +16,12 @@ namespace DevZest.Data
                     : base(id)
                 {
                     _level = level;
-                    _columns = columns ?? s_emptyColumns;
+                    if (columns == null)
+                        _columns = s_emptyColumns;
+                    else if (columns.Count == 1 && columns[0] != null)
+                        _columns = columns[0];
+                    else
+                        _columns = columns;
                     _isValidCondition = isValidCondition;
                     _message = message;
                 }
@@ -47,29 +52,12 @@ namespace DevZest.Data
                 }
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, Column columns, _Boolean isValidCondition, _String message)
-            {
-                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
-                Utilities.Check.NotNull(columns, nameof(columns));
-                Utilities.Check.NotNull(message, nameof(message));
-
-                return new ValidatorImpl(validatorId, level, columns, isValidCondition, message);
-            }
-
             public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean isValidCondition, _String message, params Column[] columns)
             {
                 Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 
                 return new ValidatorImpl(validatorId, level, columns, isValidCondition, message);
-            }
-
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean isValidCondition, _String message)
-            {
-                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
-                Utilities.Check.NotNull(message, nameof(message));
-
-                return new ValidatorImpl(validatorId, level, null, isValidCondition, message);
             }
 
             protected Validator(ValidatorId id)

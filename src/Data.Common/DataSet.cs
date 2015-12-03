@@ -272,9 +272,28 @@ namespace DevZest.Data
             }
         }
 
-        public void Refresh(ValidationResult result)
+        public void UpdateValidationMessages(ValidationResult result, bool recursive = true)
         {
-            throw new NotImplementedException();
+            ClearValidationMessages(this, recursive);
+            result.UpdateValidationMessages(this);
+        }
+
+        private static void ClearValidationMessages(DataSet dataSet, bool recursive)
+        {
+            foreach (var dataRow in dataSet)
+            {
+                dataRow.ClearValidationMessages();
+
+                if (recursive)
+                {
+                    var childModels = dataSet.Model.ChildModels;
+                    foreach (var childModel in childModels)
+                    {
+                        var childDataSet = childModel[dataRow];
+                        ClearValidationMessages(childDataSet, recursive);
+                    }
+                }
+            }
         }
     }
 }

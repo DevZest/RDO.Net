@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Helpers
+﻿using System;
+
+namespace DevZest.Data.Helpers
 {
     public abstract class SimpleModelDataSetHelper
     {
@@ -6,6 +8,13 @@
         {
             public static readonly Accessor<SimpleModel, SimpleModel> ChildAccessor = RegisterChildModel((SimpleModel x) => x.Child,
                 x => x.ParentKey);
+
+            public static ValidatorId ValidatorId = new ValidatorId(typeof(SimpleModel), "IdMustBeEven");
+
+            public SimpleModel()
+            {
+                Validators.Add(Model.Validator.Create(ValidatorId, ValidationLevel.Error, Id % 2 == 0, "The Id must be even.", Id));
+            }
 
             public SimpleModel Child { get; private set; }
         }

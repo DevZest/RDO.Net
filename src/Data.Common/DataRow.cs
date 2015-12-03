@@ -190,6 +190,11 @@ namespace DevZest.Data
             get { return _validationMessages; }
         }
 
+        internal void ClearValidationMessages()
+        {
+            _validationMessages = s_emptyValidationMessages;
+        }
+
         public void Validate()
         {
             _validationMessages = s_emptyValidationMessages;
@@ -199,10 +204,16 @@ namespace DevZest.Data
                 if (isValid == true)
                     continue;
                 var message = validator.Message.Eval(this);
-                if (_validationMessages == s_emptyValidationMessages)
-                    _validationMessages = new List<ValidationMessage>();
-                _validationMessages.Add(new ValidationMessage(validator.Id, validator.Level, message, validator.Columns));
+                AddValidationMessage(new ValidationMessage(validator.Id, validator.Level, message, validator.Columns));
             }
+        }
+
+        internal void AddValidationMessage(ValidationMessage validationMessage)
+        {
+            Debug.Assert(validationMessage != null);
+            if (_validationMessages == s_emptyValidationMessages)
+                _validationMessages = new List<ValidationMessage>();
+            _validationMessages.Add(validationMessage);
         }
 
         public override string ToString()
@@ -225,6 +236,17 @@ namespace DevZest.Data
             var dataRowOrdinal = ExpectInt(input, ref inputIndex, '[', ']');
             var dataRow = GetDataRow(dataSet, dataRowOrdinal, input, leftSquareBracketIndex);
             return inputIndex == input.Length ? dataRow : Deserialize(dataRow, input, inputIndex);
+        }
+
+        internal Column DeserializeColumn(string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(columnName))
+                return null;
+
+            var result = Model.Columns[columnName];
+            if (result == null)
+                throw new FormatException();
+            return result;
         }
 
         private static DataRow GetDataRow(DataSet dataSet, int ordinal, string input, int leftSquareBracketIndex)

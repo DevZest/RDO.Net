@@ -731,6 +731,14 @@ namespace DevZest.Data
             get { return GetString("ScalarData_InvalidAccessor"); }
         }
 
+        /// <summary>
+        /// The column name '{columnName}' is invalid for DataRow '{dataRowString}'.
+        /// </summary>
+        public static string DataRow_DeserializeColumn_InvalidColumnName(object columnName, object dataRowString)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_DeserializeColumn_InvalidColumnName", "columnName", "dataRowString"), columnName, dataRowString);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -387,4 +387,7 @@
   <data name="ScalarData_InvalidAccessor" xml:space="preserve">
     <value>The accessor is invalid. It must be created by calling CreateAccessor method.</value>
   </data>
+  <data name="DataRow_DeserializeColumn_InvalidColumnName" xml:space="preserve">
+    <value>The column name '{columnName}' is invalid for DataRow '{dataRowString}'.</value>
+  </data>
 </root>

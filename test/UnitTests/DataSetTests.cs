@@ -157,10 +157,111 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_Validate()
         {
-            int count = 3;
-            var dataSet = GetDataSet(count);
-            Assert.IsTrue(dataSet.Model.Validators.Count > 0);
-            Assert.IsTrue(dataSet.Validate());
+            var dataSet = GetDataSet(3);
+            Assert.IsTrue(dataSet.Model.Validators.Count == 2);
+            Assert.IsFalse(dataSet.Validate());
+
+            var validationResult = dataSet.GetValidationResult();
+            var expectedJson =
+@"[
+   {
+      ""DataRow"" : ""/[0]/Child[0]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[0]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[0]/Child[1]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[0]/Child[2]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[1]/Child[0]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[1]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[1]/Child[1]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[1]/Child[2]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[2]/Child[0]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[2]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[2]/Child[1]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   },
+   {
+      ""DataRow"" : ""/[2]/Child[2]/Child[1]"",
+      ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
+      ""ValidationLevel"" : 2,
+      ""Columns"" : ""Id"",
+      ""Description"" : ""The Id must be even.""
+   }
+]";
+            Assert.AreEqual(expectedJson, validationResult.ToString());
+
+            dataSet.UpdateValidationMessages(new ValidationResult());
+            Assert.AreEqual("[]", dataSet.GetValidationResult().ToString());
+            dataSet.UpdateValidationMessages(validationResult);
+            Assert.AreEqual(expectedJson, dataSet.GetValidationResult().ToString());
         }
 
         [TestMethod]
