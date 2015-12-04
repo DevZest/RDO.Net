@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,68 +9,45 @@ namespace DevZest.Data
 {
     public struct ValidationResult
     {
-        private sealed class _ValidationMessage : Model
+        internal static ValidationResult New(IEnumerable<ValidationEntry> entries)
         {
-            public static readonly Accessor<_ValidationMessage, _String> DataRowAccessor = RegisterColumn((_ValidationMessage x) => x.DataRow);
-            public static readonly Accessor<_ValidationMessage, _String> ValidatorIdAccessor = RegisterColumn((_ValidationMessage x) => x.ValidatorId);
-            public static readonly Accessor<_ValidationMessage, _Int32> ValidationLevelAccessor = RegisterColumn((_ValidationMessage x) => x.ValidationLevel);
-            public static readonly Accessor<_ValidationMessage, _String> ColumnsAccessor = RegisterColumn((_ValidationMessage x) => x.Columns);
-            public static readonly Accessor<_ValidationMessage, _String> DescriptionAccessor = RegisterColumn((_ValidationMessage x) => x.Description);
-
-            public _String DataRow { get; private set; }
-
-            public _String ValidatorId { get; private set; }
-
-            public _Int32 ValidationLevel { get; private set; }
-
-            public new _String Columns { get; private set; }
-
-            public _String Description { get; private set; }
+            var array = entries == null ? null : entries.ToArray();
+            return array == null || array.Length == 0 ? new ValidationResult() : new ValidationResult(array);
         }
 
-        internal static ValidationResult New()
+        public static ValidationResult ParseJson(DataSet dataSet, string json)
         {
-            return new ValidationResult(DataSet<_ValidationMessage>.New());
+            var validationMessages = DataSet<_ValidationMessage>.ParseJson(json);
+            return Deserialize(dataSet, validationMessages);
         }
 
-        public static ValidationResult ParseJson(string json)
+        public static ValidationResult Deserialize(DataSet dataSet, DataSet<_ValidationMessage> validationMessages)
         {
-            return new ValidationResult(DataSet<_ValidationMessage>.ParseJson(json));
-        }
+            Check.NotNull(dataSet, nameof(dataSet));
 
-        private readonly DataSet<_ValidationMessage> _validationMessages;
+            if (validationMessages == null || validationMessages.Count == 0)
+                return new ValidationResult();
 
-        private ValidationResult(DataSet<_ValidationMessage> validationMessages)
-        {
-            _validationMessages = validationMessages;
-        }
-
-        internal void Add(DataRow dataRow, ValidationMessage validationMessage)
-        {
-            Debug.Assert(_validationMessages != null);
-
-            var index = _validationMessages.AddRow().Ordinal;
-            _validationMessages._.DataRow[index] = dataRow.ToString();
-            _validationMessages._.ValidatorId[index] = validationMessage.ValidatorId.ToString();
-            _validationMessages._.ValidationLevel[index] = (int)validationMessage.Level;
-            _validationMessages._.Columns[index] = SerializeColumns(validationMessage.Columns);
-            _validationMessages._.Description[index] = validationMessage.Description;
-        }
-
-        internal void UpdateValidationMessages(DataSet dataSet)
-        {
-            if (_validationMessages == null)
-                return;
-
-            for (int i = 0; i < _validationMessages.Count; i++)
+            var entries = new ValidationEntry[validationMessages.Count];
+            for (int i = 0; i < validationMessages.Count; i++)
             {
-                var dataRow = DataRow.FromString(dataSet, _validationMessages._.DataRow[i]);
-                var validatorId = ValidatorId.Deserialize(_validationMessages._.ValidatorId[i]);
-                var validationLevel = (ValidationLevel)_validationMessages._.ValidationLevel[i];
-                var columns = DeserializeColumns(dataRow, _validationMessages._.Columns[i]);
-                var description = _validationMessages._.Description[i];
-                dataRow.AddValidationMessage(new ValidationMessage(validatorId, validationLevel, description, columns));
+                var dataRow = DataRow.FromString(dataSet, validationMessages._.DataRow[i]);
+                var validatorId = ValidatorId.Deserialize(validationMessages._.ValidatorId[i]);
+                var validationLevel = (ValidationLevel)validationMessages._.ValidationLevel[i];
+                var columns = DeserializeColumns(dataRow, validationMessages._.Columns[i]);
+                var description = validationMessages._.Description[i];
+                entries[i] = new ValidationEntry(dataRow, new ValidationMessage(validatorId, validationLevel, description, columns));
             }
+
+            return new ValidationResult(entries);
+        }
+
+        private readonly IReadOnlyList<ValidationEntry> _entries;
+
+        private ValidationResult(IReadOnlyList<ValidationEntry> entries)
+        {
+            Debug.Assert(entries != null && entries.Count > 0);
+            _entries = entries;
         }
 
         private static string SerializeColumns(IReadOnlyList<Column> columns)
@@ -109,7 +87,52 @@ namespace DevZest.Data
 
         public string ToJsonString(bool isPretty)
         {
-            return _validationMessages.ToJsonString(isPretty);
+            return DataSet.ToJsonString(ToDataSet(), isPretty);
+        }
+
+        public DataSet<_ValidationMessage> ToDataSet()
+        {
+            if (_entries == null)
+                return null;
+
+            var result = DataSet<_ValidationMessage>.New();
+            foreach (var entry in _entries)
+            {
+                var dataRow = entry.DataRow;
+                var validationMessage = entry.Message;
+                var index = result.AddRow().Ordinal;
+                result._.DataRow[index] = dataRow.ToString();
+                result._.ValidatorId[index] = validationMessage.ValidatorId.ToString();
+                result._.ValidationLevel[index] = (int)validationMessage.Level;
+                result._.Columns[index] = SerializeColumns(validationMessage.Columns);
+                result._.Description[index] = validationMessage.Description;
+            }
+            return result;
+        }
+
+        internal DataSet NewDataSet()
+        {
+            return DataSet<_ValidationMessage>.New();
+        }
+
+        public int Count
+        {
+            get { return _entries == null ? 0 : _entries.Count; }
+        }
+
+        public ValidationEntry this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return _entries[index];
+            }
+        }
+
+        public bool IsValid
+        {
+            get { return Count == 0; }
         }
     }
 }

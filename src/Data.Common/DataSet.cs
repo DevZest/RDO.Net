@@ -160,6 +160,11 @@ namespace DevZest.Data
             return ToJsonString(isPretty: true);
         }
 
+        public static string ToJsonString(DataSet dataSet, bool isPretty)
+        {
+            return dataSet == null ? JsonValue.Null.Text : dataSet.ToJsonString(isPretty);
+        }
+
         public string ToJsonString(bool isPretty)
         {
             var result = new StringBuilder();
@@ -171,7 +176,15 @@ namespace DevZest.Data
                 return result.ToString();
         }
 
-        public void BuildJsonString(StringBuilder stringBuilder)
+        internal static void BuildJsonString(DataSet dataSet, StringBuilder stringBuilder)
+        {
+            if (dataSet == null)
+                stringBuilder.Append(JsonValue.Null.Text);
+            else
+                dataSet.BuildJsonString(stringBuilder);
+        }
+
+        internal void BuildJsonString(StringBuilder stringBuilder)
         {
             stringBuilder.Append('[');
             int count = 0;
@@ -212,21 +225,19 @@ namespace DevZest.Data
                 columnValueChanged(this, new ColumnValueChangedEventArgs(this, dataRow, column));
         }
 
-        public bool Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
+        public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
         {
-            return Validate(this, validationLevel, recursive) == 0;
+            return ValidationResult.New(Validate(this, validationLevel, recursive));
         }
 
-        private static int Validate(DataSet dataSet, ValidationLevel validationLevel, bool recursive)
+        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationLevel validationLevel, bool recursive)
         {
-            int result = 0;
             foreach (var dataRow in dataSet)
             {
-                dataRow.Validate();
-                foreach (var message in dataRow.ValidationMessages)
+                foreach (var message in dataRow.Validate())
                 {
                     if (message.Level >= validationLevel)
-                        result++;
+                        yield return new ValidationEntry(dataRow, message);
                 }
 
                 if (recursive)
@@ -235,62 +246,8 @@ namespace DevZest.Data
                     foreach (var childModel in childModels)
                     {
                         var childDataSet = childModel[dataRow];
-                        result += Validate(childDataSet, validationLevel, recursive);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        public ValidationResult GetValidationResult(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
-        {
-            var result = ValidationResult.New();
-            FillValidationResult(result, this, validationLevel, recursive);
-            return result;
-        }
-
-        private static void FillValidationResult(ValidationResult result, DataSet dataSet, ValidationLevel validationLevel, bool recursive)
-        {
-            foreach (var dataRow in dataSet)
-            {
-                foreach (var message in dataRow.ValidationMessages)
-                {
-                    if (message.Level >= validationLevel)
-                        result.Add(dataRow, message);
-                }
-
-                if (recursive)
-                {
-                    var childModels = dataSet.Model.ChildModels;
-                    foreach (var childModel in childModels)
-                    {
-                        var childDataSet = childModel[dataRow];
-                        FillValidationResult(result, childDataSet, validationLevel, recursive);
-                    }
-                }
-            }
-        }
-
-        public void UpdateValidationMessages(ValidationResult result, bool recursive = true)
-        {
-            ClearValidationMessages(this, recursive);
-            result.UpdateValidationMessages(this);
-        }
-
-        private static void ClearValidationMessages(DataSet dataSet, bool recursive)
-        {
-            foreach (var dataRow in dataSet)
-            {
-                dataRow.ClearValidationMessages();
-
-                if (recursive)
-                {
-                    var childModels = dataSet.Model.ChildModels;
-                    foreach (var childModel in childModels)
-                    {
-                        var childDataSet = childModel[dataRow];
-                        ClearValidationMessages(childDataSet, recursive);
+                        foreach (var entry in Validate(childDataSet, validationLevel, recursive))
+                            yield return entry;
                     }
                 }
             }

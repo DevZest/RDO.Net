@@ -159,9 +159,9 @@ namespace DevZest.Data
         {
             var dataSet = GetDataSet(3);
             Assert.IsTrue(dataSet.Model.Validators.Count == 2);
-            Assert.IsFalse(dataSet.Validate());
 
-            var validationResult = dataSet.GetValidationResult();
+            var validationResult = dataSet.Validate();
+            Assert.IsFalse(validationResult.IsValid);
             var expectedJson =
 @"[
    {
@@ -257,11 +257,6 @@ namespace DevZest.Data
    }
 ]";
             Assert.AreEqual(expectedJson, validationResult.ToString());
-
-            dataSet.UpdateValidationMessages(new ValidationResult());
-            Assert.AreEqual("[]", dataSet.GetValidationResult().ToString());
-            dataSet.UpdateValidationMessages(validationResult);
-            Assert.AreEqual(expectedJson, dataSet.GetValidationResult().ToString());
         }
 
         [TestMethod]

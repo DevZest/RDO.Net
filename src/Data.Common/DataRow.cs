@@ -183,37 +183,16 @@ namespace DevZest.Data
             set { Model.Columns[columnName].SetValue(this, value); }
         }
 
-        private static List<ValidationMessage> s_emptyValidationMessages = new List<ValidationMessage>();
-        private List<ValidationMessage> _validationMessages = s_emptyValidationMessages;
-        public IReadOnlyList<ValidationMessage> ValidationMessages
+        public IEnumerable<ValidationMessage> Validate()
         {
-            get { return _validationMessages; }
-        }
-
-        internal void ClearValidationMessages()
-        {
-            _validationMessages = s_emptyValidationMessages;
-        }
-
-        public void Validate()
-        {
-            _validationMessages = s_emptyValidationMessages;
             foreach (var validator in Model.Validators)
             {
                 var isValid = validator.IsValidCondition.Eval(this);
                 if (isValid == true)
                     continue;
                 var message = validator.Message.Eval(this);
-                AddValidationMessage(new ValidationMessage(validator.Id, validator.Level, message, validator.Columns));
+                yield return new ValidationMessage(validator.Id, validator.Level, message, validator.Columns);
             }
-        }
-
-        internal void AddValidationMessage(ValidationMessage validationMessage)
-        {
-            Debug.Assert(validationMessage != null);
-            if (_validationMessages == s_emptyValidationMessages)
-                _validationMessages = new List<ValidationMessage>();
-            _validationMessages.Add(validationMessage);
         }
 
         public override string ToString()

@@ -72,6 +72,7 @@
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
+    <Compile Include="ValidationEntry.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="_Int64.cs" />
     <Compile Include="_Single.cs" />
     <Compile Include="_String.cs" />
+    <Compile Include="_ValidationMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Strings.resx">
