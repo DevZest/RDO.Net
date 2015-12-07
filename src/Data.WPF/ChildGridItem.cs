@@ -16,17 +16,25 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Template { get; private set; }
 
-        protected override void Initialize(T uiElement)
+        protected override void OnMounted(T uiElement)
         {
             uiElement.View = uiElement.GetDataRowView()[Template.ChildOrdinal];
             Debug.Assert(uiElement.View.Template == Template);
         }
 
-        protected override void Refresh(T uiElement)
+        protected override void UpdateSource(T element)
         {
         }
 
-        protected override void Cleanup(T uiElement)
+        protected override void UpdateTarget(T uiElement)
+        {
+        }
+
+        protected override void UpdateValidation(T uiElement)
+        {
+        }
+
+        protected override void OnUnmounting(T uiElement)
         {
             uiElement.View = null;
         }

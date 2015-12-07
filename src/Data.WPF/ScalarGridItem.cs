@@ -11,5 +11,11 @@ namespace DevZest.Data.Windows
             : base(parentModel)
         {
         }
+
+        protected Model GetModel(T uiElement)
+        {
+            var dataSetView = uiElement.GetDataSetView();
+            return dataSetView == null ? null : dataSetView.Model;
+        }
     }
 }

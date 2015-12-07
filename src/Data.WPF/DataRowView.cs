@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -22,7 +23,19 @@ namespace DevZest.Data.Windows
             _childDataSetViews = s_emptyChildSetViews;
         }
 
-        public DataSetView Owner { get; private set; }
+        private DataSetView _owner;
+        public DataSetView Owner
+        {
+            get { return _owner; }
+            private set
+            {
+                if (value == null)
+                    DisposeUIElements();
+                _owner = value;
+                if (value != null)
+                    InitUIElements();
+            }
+        }
 
         public GridTemplate Template
         {
@@ -104,6 +117,34 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(column));
 
             throw new NotImplementedException();
+        }
+
+        private static UIElement[] s_emptyUIElements = new UIElement[0];
+        private UIElement[] _uiElements = s_emptyUIElements;
+        private void DisposeUIElements()
+        {
+            var template = Template;
+            if (template == null)
+                return;
+            for (int i = 0; i < _uiElements.Length; i++)
+            {
+                var uiElement = _uiElements[i];
+                if (uiElement != null)
+                    template.ListItems[i].Recycle(uiElement);
+            }
+            _uiElements = s_emptyUIElements;
+        }
+
+        private void InitUIElements()
+        {
+            var listItems = Template.ListItems;
+            if (listItems == null || listItems.Count == 0)
+            {
+                _uiElements = s_emptyUIElements;
+                return;
+            }
+
+            _uiElements = new UIElement[listItems.Count];
         }
     }
 }

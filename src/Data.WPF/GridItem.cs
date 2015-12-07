@@ -37,7 +37,11 @@ namespace DevZest.Data.Windows
 
         internal abstract void Initialize(UIElement uiElement);
 
-        internal abstract void RefreshData(UIElement uiElement);
+        internal abstract void UpdateSource(UIElement uiElement);
+
+        internal abstract void UpdateTarget(UIElement uiElement);
+
+        internal abstract void UpdateValidation(UIElement uiElement);
 
         internal abstract void Recycle(UIElement uiElement);
     }

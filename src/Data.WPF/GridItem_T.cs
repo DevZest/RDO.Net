@@ -54,29 +54,45 @@ namespace DevZest.Data.Windows
             var element = (T)uiElement;
             if (Initializer != null)
                 Initializer(element);
-            Initialize(uiElement);
+            OnMounted(element);
         }
 
-        protected virtual void Initialize(T uiElement)
+        protected virtual void OnMounted(T uiElement)
         {
         }
 
-        internal sealed override void RefreshData(UIElement uiElement)
+        internal sealed override void UpdateSource(UIElement uiElement)
         {
             var element = (T)uiElement;
-            Refresh(element);
+            UpdateSource(element);
         }
 
-        protected abstract void Refresh(T uiElement);
+        internal override void UpdateTarget(UIElement uiElement)
+        {
+            var element = (T)uiElement;
+            UpdateTarget(element);
+        }
+
+        internal sealed override void UpdateValidation(UIElement uiElement)
+        {
+            var element = (T)uiElement;
+            UpdateValidation(element);
+        }
+
+        protected abstract void UpdateSource(T element);
+
+        protected abstract void UpdateTarget(T element);
+
+        protected abstract void UpdateValidation(T uiElement);
 
         internal sealed override void Recycle(UIElement uiElement)
         {
             var element = (T)uiElement;
-            Cleanup(element);
+            OnUnmounting(element);
             Recycle(element);
         }
 
-        protected virtual void Cleanup(T uiElement)
+        protected virtual void OnUnmounting(T uiElement)
         {
         }
     }
