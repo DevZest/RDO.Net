@@ -107,9 +107,8 @@ namespace DevZest.Data.Windows
             return Owner.AddListItem(this, listItem);
         }
 
-        public GridTemplate DefineChild<TModel, T>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<T> initializer = null)
+        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetGrid> initializer = null)
             where TModel : Model
-            where T : DataSetGrid, new()
         {
             VerifyIsEmpty();
 
@@ -121,7 +120,7 @@ namespace DevZest.Data.Windows
             var template = new GridTemplate(childModel);
             templateInitializer(template, childModel);
             template.Seal();
-            ChildGridItem<T> childItem = new ChildGridItem<T>(template, initializer);
+            var childItem = new ChildGridItem(template, initializer);
 
             return Owner.AddChildItem(this, childItem);
         }

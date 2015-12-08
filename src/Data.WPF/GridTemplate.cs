@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows
             GridColumns = new GridDefinitionCollection<GridColumn>();
             ScalarItems = new GridItemCollection(this);
             ListItems = new GridItemCollection(this);
-            ChildTemplates = new List<GridTemplate>();
+            ChildItems = new GridItemCollection(this);
         }
 
         internal void Seal()
@@ -149,7 +149,7 @@ namespace DevZest.Data.Windows
 
         public GridItemCollection ListItems { get; private set; }
 
-        internal List<GridTemplate> ChildTemplates { get; private set; }
+        public GridItemCollection ChildItems { get; private set; }
 
         public GridTemplate AddGridRows(params string[] heights)
         {
@@ -263,14 +263,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        internal GridTemplate AddChildItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
-            where T : DataSetGrid, new()
+        internal GridTemplate AddChildItem(GridRange gridRange, ChildGridItem childItem)
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem));
-            ListItems.Add(childItem, gridRange);
             var childTemplate = childItem.Template;
-            childTemplate.ChildOrdinal = ChildTemplates.Count;
-            ChildTemplates.Add(childTemplate);
+            childTemplate.ChildOrdinal = ChildItems.Count;
+            ChildItems.Add(childItem, gridRange);
             return this;
         }
 

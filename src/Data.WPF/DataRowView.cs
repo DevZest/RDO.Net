@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataRowView : IReadOnlyList<DataSetView>
+    public sealed class DataRowView
     {
         internal DataRowView(DataSetView owner, DataRow dataRow)
         {
@@ -14,28 +14,17 @@ namespace DevZest.Data.Windows
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
-            InitChildDataSetViews();
+            ChildDataSetViews = InitChildDataSetViews();
         }
 
         internal void Dispose()
         {
             Owner = null;
-            _childDataSetViews = s_emptyChildSetViews;
+            ChildDataSetViews = null;
+            EnsureUIElementsRecycled();
         }
 
-        private DataSetView _owner;
-        public DataSetView Owner
-        {
-            get { return _owner; }
-            private set
-            {
-                if (value == null)
-                    DisposeUIElements();
-                _owner = value;
-                if (value != null)
-                    InitUIElements();
-            }
-        }
+        public DataSetView Owner { get; private set; }
 
         public GridTemplate Template
         {
@@ -50,42 +39,18 @@ namespace DevZest.Data.Windows
         }
 
         private static DataSetView[] s_emptyChildSetViews = new DataSetView[0];
-
-        DataSetView[] _childDataSetViews;
-
-        private void InitChildDataSetViews()
+        public IReadOnlyList<DataSetView> ChildDataSetViews { get; private set; }
+        private IReadOnlyList<DataSetView> InitChildDataSetViews()
         {
-            var childTemplates = Template.ChildTemplates;
-            if (childTemplates == null || childTemplates.Count == 0)
-            {
-                _childDataSetViews = s_emptyChildSetViews;
-                return;
-            }
+            var childItems = Template.ChildItems;
+            if (childItems.Count == 0)
+                return s_emptyChildSetViews;
 
-            _childDataSetViews = new DataSetView[childTemplates.Count];
-            for (int i = 0; i < childTemplates.Count; i++)
-                _childDataSetViews[i] = new DataSetView(this, childTemplates[i]);
-        }
+            var result = new DataSetView[childItems.Count];
+            for (int i = 0; i < childItems.Count; i++)
+                result[i] = new DataSetView(this, ((ChildGridItem)childItems[i]).Template);
 
-        public IEnumerator<DataSetView> GetEnumerator()
-        {
-            foreach (var dataSetView in _childDataSetViews)
-                yield return dataSetView;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _childDataSetViews.GetEnumerator();
-        }
-
-        public int Count
-        {
-            get { return _childDataSetViews.Length; }
-        }
-
-        public DataSetView this[int index]
-        {
-            get { return _childDataSetViews[index]; }
+            return result;
         }
 
         public bool IsCurrent
@@ -93,15 +58,77 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? false : Owner.IsCurrent(Owner.IndexOf(this)); }
         }
 
+        public bool IsSelected
+        {
+            get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
+        }
+
         public bool IsEof
         {
             get { return DataRow == null; }
         }
 
-        public bool IsSelected
+        private static UIElement[] s_emptyUIElements = new UIElement[0];
+        private UIElement[] _uiElements = null;
+
+        private GridItem GridItemOf(int index)
         {
-            get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
+            Debug.Assert(_uiElements != null && index >= 0 && index < _uiElements.Length);
+            var template = Template;
+            Debug.Assert(template != null);
+            var listItems = template.ListItems;
+            var listItemsCount = listItems.Count;
+            return index < listItemsCount ? listItems[index] : template.ChildItems[index - listItemsCount];
         }
+
+        private int UIElementsCount
+        {
+            get
+            {
+                var template = Template;
+                return template.ListItems.Count + template.ChildItems.Count;
+            }
+        }
+
+        private void EnsureUIElementsGenerated()
+        {
+            if (_uiElements != null)
+                return;
+
+            var uiElementsCount = UIElementsCount;
+            if (uiElementsCount == 0)
+            {
+                _uiElements = s_emptyUIElements;
+                return;
+            }
+
+            _uiElements = new UIElement[uiElementsCount];
+
+            for (int i = 0; i < uiElementsCount; i++)
+            {
+                var gridItem = GridItemOf(i);
+                _uiElements[i] = gridItem.Generate();
+                Debug.Assert(_uiElements[i] != null);
+            }
+
+        }
+
+        private void EnsureUIElementsRecycled()
+        {
+            if (_uiElements == null)
+                return;
+
+            for (int i = 0; i < _uiElements.Length; i++)
+            {
+                var gridItem = GridItemOf(i);
+                var uiElement = _uiElements[i];
+                Debug.Assert(uiElement != null);
+                gridItem.Recycle(uiElement);
+            }
+            _uiElements = null;
+        }
+
+
 
         public T GetValue<T>(Column<T> column)
         {
@@ -117,34 +144,6 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(column));
 
             throw new NotImplementedException();
-        }
-
-        private static UIElement[] s_emptyUIElements = new UIElement[0];
-        private UIElement[] _uiElements = s_emptyUIElements;
-        private void DisposeUIElements()
-        {
-            var template = Template;
-            if (template == null)
-                return;
-            for (int i = 0; i < _uiElements.Length; i++)
-            {
-                var uiElement = _uiElements[i];
-                if (uiElement != null)
-                    template.ListItems[i].Recycle(uiElement);
-            }
-            _uiElements = s_emptyUIElements;
-        }
-
-        private void InitUIElements()
-        {
-            var listItems = Template.ListItems;
-            if (listItems == null || listItems.Count == 0)
-            {
-                _uiElements = s_emptyUIElements;
-                return;
-            }
-
-            _uiElements = new UIElement[listItems.Count];
         }
     }
 }

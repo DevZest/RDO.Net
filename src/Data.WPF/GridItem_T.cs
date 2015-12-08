@@ -61,30 +61,6 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal sealed override void UpdateSource(UIElement uiElement)
-        {
-            var element = (T)uiElement;
-            UpdateSource(element);
-        }
-
-        internal override void UpdateTarget(UIElement uiElement)
-        {
-            var element = (T)uiElement;
-            UpdateTarget(element);
-        }
-
-        internal sealed override void UpdateValidation(UIElement uiElement)
-        {
-            var element = (T)uiElement;
-            UpdateValidation(element);
-        }
-
-        protected abstract void UpdateSource(T element);
-
-        protected abstract void UpdateTarget(T element);
-
-        protected abstract void UpdateValidation(T uiElement);
-
         internal sealed override void Recycle(UIElement uiElement)
         {
             var element = (T)uiElement;

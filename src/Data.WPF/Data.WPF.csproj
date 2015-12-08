@@ -58,6 +58,7 @@
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
     <Compile Include="DataSetView.cs" />
+    <Compile Include="IListGridItem.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataSetGrid.cs" />
     <Compile Include="GridColumn.cs" />

@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class ListGridItem<T> : GridItem<T>
+    public abstract class ListGridItem<T> : GridItem<T>, IListGridItem
         where T : UIElement, new()
     {
         protected ListGridItem(Model parentModel)
@@ -12,10 +12,19 @@ namespace DevZest.Data.Windows
         {
         }
 
-        protected DataRowView GetDataRowView(T element)
+        void IListGridItem.UpdateTarget(DataRowView dataRowView, UIElement uiElement)
         {
-            return element.GetDataRowView();
+            UpdateTarget(dataRowView, (T)uiElement);
         }
+
+        void IListGridItem.UpdateSource(UIElement uiElement, DataRowView dataRowView)
+        {
+            UpdateSource((T)uiElement, dataRowView);
+        }
+
+        protected abstract void UpdateTarget(DataRowView dataRowView, T element);
+
+        protected abstract void UpdateSource(T element, DataRowView dataRowView);
 
         protected TValue GetValue<TValue>(Column<TValue> column, DataRowView dataRowView)
         {
@@ -47,12 +56,6 @@ namespace DevZest.Data.Windows
             {
                 _isSettingValue = false;
             }
-        }
-
-        internal override void UpdateTarget(UIElement element)
-        {
-            if (!_isSettingValue)
-                base.UpdateTarget(element);
         }
     }
 }
