@@ -107,7 +107,7 @@ namespace DevZest.Data.Windows
             return Owner.AddListItem(this, listItem);
         }
 
-        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetGrid> initializer = null)
+        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetControl> initializer = null)
             where TModel : Model
         {
             VerifyIsEmpty();

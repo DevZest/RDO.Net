@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows
 {
-    public class DataRowGrid : Control
+    public class DataRowControl : Control
     {
         public DataRowView View { get; private set; }
     }

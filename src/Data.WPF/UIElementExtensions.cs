@@ -8,13 +8,13 @@ namespace DevZest.Data.Windows
     {
         internal static DataSetView GetDataSetView(this UIElement uiElement)
         {
-            var dataSetGrid = uiElement.GetParent<DataSetGrid>();
+            var dataSetGrid = uiElement.GetParent<DataSetControl>();
             return dataSetGrid == null ? null : dataSetGrid.View;
         }
 
         internal static DataRowView GetDataRowView(this UIElement uiElement)
         {
-            var dataRowGrid = uiElement.GetParent<DataRowGrid>();
+            var dataRowGrid = uiElement.GetParent<DataRowControl>();
             return dataRowGrid == null ? null : dataRowGrid.View;
         }
 

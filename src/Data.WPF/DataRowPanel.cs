@@ -4,9 +4,9 @@ namespace DevZest.Data.Windows
 {
     public class DataRowPanel : Panel
     {
-        DataRowGrid DataRowControl
+        DataRowControl DataRowGrid
         {
-            get { return TemplatedParent as DataRowGrid; }
+            get { return TemplatedParent as DataRowControl; }
         }
     }
 }

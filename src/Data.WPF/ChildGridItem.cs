@@ -4,9 +4,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    internal sealed class ChildGridItem : GridItem<DataSetGrid>
+    internal sealed class ChildGridItem : GridItem<DataSetControl>
     {
-        internal ChildGridItem(GridTemplate template, Action<DataSetGrid> initializer)
+        internal ChildGridItem(GridTemplate template, Action<DataSetControl> initializer)
                 : base(template.Model.GetParentModel())
         {
             Template = template;
@@ -15,16 +15,16 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Template { get; private set; }
 
-        protected override void OnMounted(DataSetGrid dataSetGrid)
+        protected override void OnMounted(DataSetControl dataSetControl)
         {
-            var parentDataRowView = dataSetGrid.GetDataRowView();
-            dataSetGrid.View = parentDataRowView.ChildDataSetViews[Template.ChildOrdinal];
-            Debug.Assert(dataSetGrid.View.Template == Template);
+            var parentDataRowView = dataSetControl.GetDataRowView();
+            dataSetControl.View = parentDataRowView.ChildDataSetViews[Template.ChildOrdinal];
+            Debug.Assert(dataSetControl.View.Template == Template);
         }
 
-        protected override void OnUnmounting(DataSetGrid dataSetGrid)
+        protected override void OnUnmounting(DataSetControl dataSetControl)
         {
-            dataSetGrid.View = null;
+            dataSetControl.View = null;
         }
     }
 }

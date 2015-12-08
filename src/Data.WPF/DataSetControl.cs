@@ -7,22 +7,22 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public class DataSetGrid : Control
+    public class DataSetControl : Control
     {
         private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
-            typeof(DataSetView), typeof(DataSetGrid), new FrameworkPropertyMetadata(null, OnViewChanged));
+            typeof(DataSetView), typeof(DataSetControl), new FrameworkPropertyMetadata(null, OnViewChanged));
 
         private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var newValue = (DataSetView)e.NewValue;
             Debug.Assert(newValue != null);
-            ((DataSetGrid)d).ScrollMode = newValue.Template.ScrollMode;
+            ((DataSetControl)d).ScrollMode = newValue.Template.ScrollMode;
         }
 
         public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey ScrollModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollMode),
-            typeof(ScrollMode), typeof(DataSetGrid), new FrameworkPropertyMetadata(ScrollMode.None));
+            typeof(ScrollMode), typeof(DataSetControl), new FrameworkPropertyMetadata(ScrollMode.None));
 
         public static readonly DependencyProperty ScrollModeProperty = ScrollModePropertyKey.DependencyProperty;
 

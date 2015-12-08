@@ -47,7 +47,7 @@
     <Compile Include="BooleanBoxes.cs" />
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
-    <Compile Include="DataRowGrid.cs" />
+    <Compile Include="DataRowControl.cs" />
     <Compile Include="DataRowView.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="DataSetView.cs" />
     <Compile Include="IListGridItem.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataSetGrid.cs" />
+    <Compile Include="DataSetControl.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />
