@@ -5,6 +5,8 @@ using System.Collections;
 using System;
 using System.Windows.Controls;
 using System.Linq;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -34,6 +36,13 @@ namespace DevZest.Data.Windows
             DataSet.ColumnValueChanged += OnColumnValueChanged;
 
             CoerceSelection();
+
+            ScalarUIElements = new ObservableCollection<UIElement>();
+            DataRowClient = new DataRowClient()
+            {
+                ItemsSource = _visibleRows
+            };
+            _visibleRows = new ObservableCollection<DataRowView>();
         }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
@@ -173,14 +182,10 @@ namespace DevZest.Data.Windows
             _selection = _selection.Select(index, selectionMode);
         }
 
-        private void RefreshScalarItems()
-        {
-            throw new NotImplementedException();
-        }
+        private ObservableCollection<DataRowView> _visibleRows;
 
-        private void RefreshSetItems()
-        {
-            throw new NotImplementedException();
-        }
+        internal DataRowClient DataRowClient { get; private set; }
+
+        internal ObservableCollection<UIElement> ScalarUIElements { get; private set; }
     }
 }
