@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Windows.Primitives;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -14,8 +15,8 @@ namespace DevZest.Data.Windows
 
         internal static DataRowManager GetDataRowManager(this UIElement uiElement)
         {
-            var dataRowGrid = uiElement.GetParent<DataRowView>();
-            return dataRowGrid == null ? null : dataRowGrid.Manager;
+            var dataRowView = uiElement.GetParent<DataRowView>();
+            return dataRowView == null ? null : dataRowView.Manager;
         }
 
         private static T GetParent<T>(this UIElement uiElement)
