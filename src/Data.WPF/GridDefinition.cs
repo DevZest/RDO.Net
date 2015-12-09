@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using DevZest.Data.Windows.Primitives;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
