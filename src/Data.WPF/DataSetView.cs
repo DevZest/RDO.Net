@@ -14,9 +14,19 @@ namespace DevZest.Data.Windows
 
         private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            var oldValue = (DataSetManager)e.OldValue;
             var newValue = (DataSetManager)e.NewValue;
+            ((DataSetView)d).OnManagerChanged(oldValue, newValue);
+        }
+
+        private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
+        {
+            if (oldValue != null)
+                oldValue.DataSetView = null;
+
             Debug.Assert(newValue != null);
-            ((DataSetView)d).ScrollMode = newValue.Template.ScrollMode;
+            newValue.DataSetView = this;
+            ScrollMode = newValue.Template.ScrollMode;
         }
 
         public static readonly DependencyProperty ManagerProperty = ManagerPropertyKey.DependencyProperty;

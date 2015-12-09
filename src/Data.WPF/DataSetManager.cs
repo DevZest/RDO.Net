@@ -41,6 +41,8 @@ namespace DevZest.Data.Windows
             LayoutManager = new LayoutManager(this);
         }
 
+        internal DataSetView DataSetView { get; set; }
+
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
         {
             var oldIndex = e.OldIndex;
