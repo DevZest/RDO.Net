@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    internal abstract class DataSetViewSelection : IReadOnlyList<int>
+    internal abstract class Selection : IReadOnlyList<int>
     {
         public abstract int this[int index] { get; }
 
@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows
 
         public abstract int Current { get; }
 
-        public DataSetViewSelection Select(int index, SelectionMode selectionMode)
+        public Selection Select(int index, SelectionMode selectionMode)
         {
             if (selectionMode == SelectionMode.Single)
                 return SelectSingle(index);
@@ -24,18 +24,18 @@ namespace DevZest.Data.Windows
                 return SelectExtended(index);
         }
 
-        protected abstract DataSetViewSelection SelectSingle(int index);
+        protected abstract Selection SelectSingle(int index);
 
-        protected abstract DataSetViewSelection SelectMultiple(int index);
+        protected abstract Selection SelectMultiple(int index);
 
-        protected abstract DataSetViewSelection SelectExtended(int index);
+        protected abstract Selection SelectExtended(int index);
 
-        public DataSetViewSelection Coerce(int totalCount)
+        public Selection Coerce(int totalCount)
         {
             return totalCount == 0 ? Empty : CoerceOverride(totalCount);
         }
 
-        protected abstract DataSetViewSelection CoerceOverride(int totalCount);
+        protected abstract Selection CoerceOverride(int totalCount);
 
         public abstract bool IsSelected(int index);
 
@@ -50,9 +50,9 @@ namespace DevZest.Data.Windows
                 yield return this[i];
         }
 
-        public static DataSetViewSelection Empty = new EmptySelection();
+        public static Selection Empty = new EmptySelection();
 
-        private sealed class EmptySelection : DataSetViewSelection
+        private sealed class EmptySelection : Selection
         {
             public override int Count
             {
@@ -69,22 +69,22 @@ namespace DevZest.Data.Windows
                 get { return -1; }
             }
 
-            protected override DataSetViewSelection SelectSingle(int index)
+            protected override Selection SelectSingle(int index)
             {
                 return new SingleSelection(index);
             }
 
-            protected override DataSetViewSelection SelectMultiple(int index)
+            protected override Selection SelectMultiple(int index)
             {
                 return new MultipleSelection(this, index);
             }
 
-            protected override DataSetViewSelection SelectExtended(int index)
+            protected override Selection SelectExtended(int index)
             {
                 return new ExtendedSelection(index, index);
             }
 
-            protected override DataSetViewSelection CoerceOverride(int totalCount)
+            protected override Selection CoerceOverride(int totalCount)
             {
                 return SelectSingle(0);
             }
@@ -95,7 +95,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class SingleSelection : DataSetViewSelection
+        private sealed class SingleSelection : Selection
         {
             public SingleSelection(int current)
             {
@@ -124,23 +124,23 @@ namespace DevZest.Data.Windows
                 get { return _current; }
             }
 
-            protected override DataSetViewSelection SelectSingle(int index)
+            protected override Selection SelectSingle(int index)
             {
                 _current = index;
                 return this;
             }
 
-            protected override DataSetViewSelection SelectMultiple(int index)
+            protected override Selection SelectMultiple(int index)
             {
                 return new MultipleSelection(this, index);
             }
 
-            protected override DataSetViewSelection SelectExtended(int index)
+            protected override Selection SelectExtended(int index)
             {
                 return new ExtendedSelection(_current, index);
             }
 
-            protected override DataSetViewSelection CoerceOverride(int totalCount)
+            protected override Selection CoerceOverride(int totalCount)
             {
                 if (_current >= totalCount)
                     _current = totalCount - 1;
@@ -153,7 +153,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class ExtendedSelection : DataSetViewSelection
+        private sealed class ExtendedSelection : Selection
         {
             public ExtendedSelection(int current, int extended)
             {
@@ -185,23 +185,23 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            protected override DataSetViewSelection SelectSingle(int index)
+            protected override Selection SelectSingle(int index)
             {
                 return new SingleSelection(index);
             }
 
-            protected override DataSetViewSelection SelectExtended(int index)
+            protected override Selection SelectExtended(int index)
             {
                 _extended = index;
                 return this;
             }
 
-            protected override DataSetViewSelection SelectMultiple(int index)
+            protected override Selection SelectMultiple(int index)
             {
                 return new MultipleSelection(this, index);
             }
 
-            protected override DataSetViewSelection CoerceOverride(int totalCount)
+            protected override Selection CoerceOverride(int totalCount)
             {
                 if (_current >= totalCount)
                     _current = totalCount - 1;
@@ -217,9 +217,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class MultipleSelection : DataSetViewSelection
+        private sealed class MultipleSelection : Selection
         {
-            public MultipleSelection(DataSetViewSelection selection, int index)
+            public MultipleSelection(Selection selection, int index)
             {
                 for (int i = 0; i < selection.Count; i++)
                     SelectMultiple(selection[i]);
@@ -251,12 +251,12 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            protected override DataSetViewSelection SelectSingle(int index)
+            protected override Selection SelectSingle(int index)
             {
                 return new SingleSelection(index);
             }
 
-            protected override DataSetViewSelection SelectMultiple(int index)
+            protected override Selection SelectMultiple(int index)
             {
                 if (_selectedSet.Contains(index))
                 {
@@ -273,12 +273,12 @@ namespace DevZest.Data.Windows
                 return this;
             }
 
-            protected override DataSetViewSelection SelectExtended(int index)
+            protected override Selection SelectExtended(int index)
             {
                 return new ExtendedSelection(_current, index);
             }
 
-            protected override DataSetViewSelection CoerceOverride(int totalCount)
+            protected override Selection CoerceOverride(int totalCount)
             {
                 if (_current >= totalCount)
                     _current = totalCount - 1;

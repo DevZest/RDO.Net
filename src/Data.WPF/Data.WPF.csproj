@@ -75,7 +75,7 @@
     </Compile>
     <Compile Include="ScalarGridItem.cs" />
     <Compile Include="ScrollMode.cs" />
-    <Compile Include="DataSetViewSelection.cs" />
+    <Compile Include="Selection.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="TextBlockFactory.cs" />
     <Compile Include="UIElementExtensions.cs" />

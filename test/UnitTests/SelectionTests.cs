@@ -4,24 +4,24 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataSetViewSelectionTests
+    public class SelectionTests
     {
-        private static void Verify(DataSetViewSelection result, int current, params int[] indexes)
+        private static void Verify(Selection result, int current, params int[] indexes)
         {
             Assert.AreEqual(indexes.Length, result.Count);
             for (int i = 0; i < result.Count; i++)
                 Assert.AreEqual(result[i], indexes[i]);
         }
 
-        private static void VerifyEmpty(DataSetViewSelection result)
+        private static void VerifyEmpty(Selection result)
         {
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        public void DataSetViewSelection_Empty()
+        public void Selection_Empty()
         {
-            var result = DataSetViewSelection.Empty;
+            var result = Selection.Empty;
             VerifyEmpty(result);
             result = result.Coerce(0);
             VerifyEmpty(result);
@@ -30,9 +30,9 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetViewSelection_Single()
+        public void Selection_Single()
         {
-            var result = DataSetViewSelection.Empty.Select(0, SelectionMode.Single);
+            var result = Selection.Empty.Select(0, SelectionMode.Single);
             Verify(result, 0, 0);
             result = result.Select(1, SelectionMode.Single);
             Verify(result, 1, 1);
@@ -41,9 +41,9 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetViewSelection_Extended()
+        public void Selection_Extended()
         {
-            var result = DataSetViewSelection.Empty.Select(10, SelectionMode.Extended);
+            var result = Selection.Empty.Select(10, SelectionMode.Extended);
             Verify(result, 10, 10);
             result = result.Select(12, SelectionMode.Extended);
             Verify(result, 10, 10, 11, 12);
@@ -54,9 +54,9 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetViewSelection_Multiple()
+        public void Selection_Multiple()
         {
-            var result = DataSetViewSelection.Empty.Select(1, SelectionMode.Multiple);
+            var result = Selection.Empty.Select(1, SelectionMode.Multiple);
             Verify(result, 1, 1);
             result = result.Select(3, SelectionMode.Multiple);
             Verify(result, 3, 1, 3);

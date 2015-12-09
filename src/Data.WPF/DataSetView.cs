@@ -124,7 +124,7 @@ namespace DevZest.Data.Windows
         }
         #endregion
 
-        private DataSetViewSelection _selection = DataSetViewSelection.Empty;
+        private Selection _selection = Windows.Selection.Empty;
 
         private void CoerceSelection()
         {
