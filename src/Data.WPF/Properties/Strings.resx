@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GridLengthParser_AutoLengthMustHaveMinValue" xml:space="preserve">
+    <value>Auto GridLength must have valid min value specified.</value>
+  </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{0}" is invalid.</value>
   </data>

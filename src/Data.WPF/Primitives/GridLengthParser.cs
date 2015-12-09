@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal static Result Parse(string value)
         {
-            if (value == null || string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
 
             GridLength? length = null;
@@ -73,9 +73,14 @@ namespace DevZest.Data.Windows.Primitives
                 throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
             double min = minLength.HasValue ? minLength.GetValueOrDefault() : 0.0;
             double max = maxLength.HasValue ? maxLength.GetValueOrDefault() : double.PositiveInfinity;
-            if (min > max)
+            if (min < 0 || min > max)
                 throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
-            return new Result(length.GetValueOrDefault(), min, max);
+
+            var lengthValue = length.GetValueOrDefault();
+            if (lengthValue.IsAuto && min == 0.0)
+                throw new FormatException(Strings.GridLengthParser_AutoLengthMustHaveMinValue);
+
+            return new Result(lengthValue, min, max);
         }
 
         private struct NameGridLengthPair
