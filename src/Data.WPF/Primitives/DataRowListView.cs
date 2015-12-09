@@ -14,5 +14,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             ((DataRowView)element).Manager = (DataRowManager)item;
         }
+
+        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
+        {
+            ((DataRowView)element).Manager = null;
+        }
     }
 }
