@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Media;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     public class DataSetGrid : FrameworkElement
     {
@@ -17,9 +16,9 @@ namespace DevZest.Data.Windows
             get { return Manager == null ? null : Manager.ScalarUIElements; }
         }
 
-        DataRowClient DataRowClient
+        DataRowListView DataRowListView
         {
-            get { return Manager == null ? null : Manager.DataRowClient; }
+            get { return Manager == null ? null : Manager.DataRowListView; }
         }
 
         public override void OnApplyTemplate()
@@ -29,8 +28,8 @@ namespace DevZest.Data.Windows
             if (dataSetView != null)
             {
                 Manager = dataSetView.Manager;
-                AddLogicalChild(DataRowClient);
-                AddVisualChild(DataRowClient);
+                AddLogicalChild(DataRowListView);
+                AddVisualChild(DataRowListView);
                 AddScalarUIElements(ScalarUIElements);
                 ScalarUIElements.CollectionChanged += OnScalarUIElementsChanged;
             }
@@ -77,7 +76,7 @@ namespace DevZest.Data.Windows
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return index == 0 ? DataRowClient : ScalarUIElements[index + 1];
+            return index == 0 ? DataRowListView : ScalarUIElements[index + 1];
         }
 
         protected override Size MeasureOverride(Size availableSize)

@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataRowClient : ItemsControl
+    public sealed class DataRowListView : ItemsControl
     {
         protected override DependencyObject GetContainerForItemOverride()
         {

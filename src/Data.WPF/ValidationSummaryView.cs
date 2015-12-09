@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows
 {
-    public class ValidationMessageControl : Control
+    public class ValidationSummaryView : Control
     {
     }
 }

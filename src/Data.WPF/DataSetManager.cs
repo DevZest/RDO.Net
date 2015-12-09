@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows;
+using DevZest.Data.Windows.Primitives;
 
 namespace DevZest.Data.Windows
 {
@@ -38,7 +39,7 @@ namespace DevZest.Data.Windows
             CoerceSelection();
 
             ScalarUIElements = new ObservableCollection<UIElement>();
-            DataRowClient = new DataRowClient()
+            DataRowListView = new DataRowListView()
             {
                 ItemsSource = _visibleRows
             };
@@ -184,7 +185,7 @@ namespace DevZest.Data.Windows
 
         private ObservableCollection<DataRowManager> _visibleRows;
 
-        internal DataRowClient DataRowClient { get; private set; }
+        internal DataRowListView DataRowListView { get; private set; }
 
         internal ObservableCollection<UIElement> ScalarUIElements { get; private set; }
     }
