@@ -34,6 +34,21 @@ namespace DevZest.Data.Windows.Primitives
                 var result = GridLengthParser.Parse("10; MIN: 5; MAX: 20;");
                 Verify(result, new GridLength(10), 5.0, 20.0);
             }
+
+            {
+                var result = GridLengthParser.Parse("*; MIN: 5; MAX: 20;");
+                Verify(result, new GridLength(1, GridUnitType.Star), 5.0, 20.0);
+            }
+
+            {
+                var result = GridLengthParser.Parse("2*; MIN: 5; MAX: 20;");
+                Verify(result, new GridLength(2, GridUnitType.Star), 5.0, 20.0);
+            }
+
+            {
+                var result = GridLengthParser.Parse("Auto; MIN: 5; MAX: 20;");
+                Verify(result, GridLength.Auto, 5.0, 20.0);
+            }
         }
 
         private static void Verify(GridLengthParser.Result result, GridLength expectedLength, double expectedMinLength, double expectedMaxLength)
@@ -55,9 +70,15 @@ namespace DevZest.Data.Windows.Primitives
             VerifyFormatExceptionExpected("10; unknown: 5;");    // unknown name
             VerifyFormatExceptionExpected("10; min: 5;; max: 20;"); // empty pair
             VerifyFormatExceptionExpected("10; min: 5; max: 20;;"); // last empty pair
+            VerifyFormatExceptionExpected("auto", Strings.GridLengthParser_AutoLengthMustHaveMinValue);  // Auto length must have min value
         }
 
         private static void VerifyFormatExceptionExpected(string input)
+        {
+            VerifyFormatExceptionExpected(input, Strings.GridLengthParser_InvalidInput(input));
+        }
+
+        private static void VerifyFormatExceptionExpected(string input, string errorMessage)
         {
             try
             {
@@ -66,7 +87,7 @@ namespace DevZest.Data.Windows.Primitives
             }
             catch (FormatException ex)
             {
-                Assert.AreEqual(ex.Message, Strings.GridLengthParser_InvalidInput(input));
+                Assert.AreEqual(ex.Message, errorMessage);
             }
         }
     }

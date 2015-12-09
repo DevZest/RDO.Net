@@ -38,12 +38,12 @@ namespace DevZest.Data.Windows
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.X).AddGridColumns("*"));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridColumns("*"));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridColumns("Auto"));
+            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridColumns("Auto; min: 10"));
 
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.X));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.XY));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.YX));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("Auto").SetOrientation(DataRowOrientation.XY));
+            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("Auto; min: 10").SetOrientation(DataRowOrientation.XY));
         }
 
         [TestMethod]
@@ -52,12 +52,12 @@ namespace DevZest.Data.Windows
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Y).AddGridRows("*"));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridRows("*"));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridRows("Auto"));
+            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridRows("Auto; min: 10"));
 
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.Y));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.XY));
             ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.YX));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("Auto").SetOrientation(DataRowOrientation.YX));
+            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("Auto; min: 10").SetOrientation(DataRowOrientation.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)
