@@ -59,7 +59,6 @@
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetManager.cs" />
     <Compile Include="IListGridItem.cs" />
-    <Compile Include="Primitives\DataSetClient.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataSetView.cs" />
     <Compile Include="GridColumn.cs" />
@@ -83,6 +82,7 @@
     <Compile Include="GridItemCollection.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
+    <Compile Include="Primitives\LayoutManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">

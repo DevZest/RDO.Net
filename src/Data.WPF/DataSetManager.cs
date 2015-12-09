@@ -38,12 +38,7 @@ namespace DevZest.Data.Windows
 
             CoerceSelection();
 
-            ScalarUIElements = new ObservableCollection<UIElement>();
-            DataRowListView = new DataRowListView()
-            {
-                ItemsSource = _visibleRows
-            };
-            _visibleRows = new ObservableCollection<DataRowManager>();
+            LayoutManager = new LayoutManager(this);
         }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
@@ -183,10 +178,6 @@ namespace DevZest.Data.Windows
             _selection = _selection.Select(index, selectionMode);
         }
 
-        private ObservableCollection<DataRowManager> _visibleRows;
-
-        internal DataRowListView DataRowListView { get; private set; }
-
-        internal ObservableCollection<UIElement> ScalarUIElements { get; private set; }
+        internal LayoutManager LayoutManager { get; private set; }
     }
 }

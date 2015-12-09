@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
@@ -13,12 +14,12 @@ namespace DevZest.Data.Windows.Primitives
 
         ObservableCollection<UIElement> ScalarUIElements
         {
-            get { return Manager == null ? null : Manager.ScalarUIElements; }
+            get { return Manager == null ? null : Manager.LayoutManager.ScalarUIElements; }
         }
 
         DataRowListView DataRowListView
         {
-            get { return Manager == null ? null : Manager.DataRowListView; }
+            get { return Manager == null ? null : Manager.LayoutManager.DataRowListView; }
         }
 
         public override void OnApplyTemplate()
