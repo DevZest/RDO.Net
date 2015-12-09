@@ -14,8 +14,8 @@ namespace DevZest.Data.Windows
 
         internal static DataRowManager GetDataRowManager(this UIElement uiElement)
         {
-            var dataRowGrid = uiElement.GetParent<DataRowControl>();
-            return dataRowGrid == null ? null : dataRowGrid.View;
+            var dataRowGrid = uiElement.GetParent<DataRowView>();
+            return dataRowGrid == null ? null : dataRowGrid.Manager;
         }
 
         private static T GetParent<T>(this UIElement uiElement)

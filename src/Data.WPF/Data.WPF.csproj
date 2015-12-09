@@ -48,7 +48,7 @@
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowClient.cs" />
-    <Compile Include="DataRowControl.cs" />
+    <Compile Include="DataRowView.cs" />
     <Compile Include="DataRowManager.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
