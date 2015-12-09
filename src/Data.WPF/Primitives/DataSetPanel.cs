@@ -34,6 +34,24 @@ namespace DevZest.Data.Windows.Primitives
             get { return (DataSetManager)GetValue(ManagerProperty); }
         }
 
+        private DataSetView _dataSetView;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _dataSetView = TemplatedParent as DataSetView;
+        }
+
+        private double ScrollLineHeight
+        {
+            get { return _dataSetView.ScrollLineHeight; }
+        }
+
+        private double ScrollLineWidth
+        {
+            get { return _dataSetView.ScrollLineWidth; }
+        }
+
         private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
         {
             if (oldValue != null)
@@ -178,62 +196,62 @@ namespace DevZest.Data.Windows.Primitives
 
         void IScrollInfo.LineUp()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset -= ScrollLineHeight;
         }
 
         void IScrollInfo.LineDown()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset += ScrollLineHeight;
         }
 
         void IScrollInfo.LineLeft()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset -= ScrollLineWidth;
         }
 
         void IScrollInfo.LineRight()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset += ScrollLineWidth;
         }
 
         void IScrollInfo.PageUp()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset -= LayoutManager.ViewportSize.Height;
         }
 
         void IScrollInfo.PageDown()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset += LayoutManager.ViewportSize.Height;
         }
 
         void IScrollInfo.PageLeft()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset -= LayoutManager.ViewportSize.Width;
         }
 
         void IScrollInfo.PageRight()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset += LayoutManager.ViewportSize.Width;
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset -= SystemParameters.WheelScrollLines * ScrollLineHeight;
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            throw new NotImplementedException();
+            LayoutManager.VerticalOffset += SystemParameters.WheelScrollLines * ScrollLineHeight;
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset -= SystemParameters.WheelScrollLines * ScrollLineWidth;
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            throw new NotImplementedException();
+            LayoutManager.HorizontalOffset += SystemParameters.WheelScrollLines * ScrollLineWidth;
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
@@ -248,7 +266,7 @@ namespace DevZest.Data.Windows.Primitives
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
         {
-            throw new NotImplementedException();
+            return LayoutManager.MakeVisible(visual, rectangle);
         }
 
         #endregion

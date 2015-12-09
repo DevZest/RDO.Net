@@ -1,7 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -43,5 +45,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal ScrollViewer ScrollOwner { get; set; }
 
+        internal Rect MakeVisible(Visual visual, Rect rectangle)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

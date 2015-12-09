@@ -26,6 +26,12 @@ namespace DevZest.Data.Windows
 
         public static readonly DependencyProperty ScrollModeProperty = ScrollModePropertyKey.DependencyProperty;
 
+        public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+
+        public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+
         public DataSetManager Manager
         {
             get { return (DataSetManager)GetValue(ManagerProperty); }
@@ -36,6 +42,18 @@ namespace DevZest.Data.Windows
         {
             get { return (ScrollMode)GetValue(ScrollModeProperty); }
             private set { SetValue(ScrollModePropertyKey, value); }
+        }
+
+        public double ScrollLineHeight
+        {
+            get { return (double)GetValue(ScrollLineHeightProperty); }
+            set { SetValue(ScrollLineHeightProperty, value); }
+        }
+
+        public double ScrollLineWidth
+        {
+            get { return (double)GetValue(ScrollLineWidthProperty); }
+            set { SetValue(ScrollLineWidthProperty, value); }
         }
 
         public void Initialize<TModel>(DataSet<TModel> dataSet, Action<GridTemplate, TModel> templateInitializer = null)
