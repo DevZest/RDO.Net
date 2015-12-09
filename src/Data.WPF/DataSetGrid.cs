@@ -10,25 +10,25 @@ namespace DevZest.Data.Windows
 {
     public class DataSetGrid : FrameworkElement
     {
-        DataSetManager View { get; set; }
+        DataSetManager Manager { get; set; }
 
         ObservableCollection<UIElement> ScalarUIElements
         {
-            get { return View == null ? null : View.ScalarUIElements; }
+            get { return Manager == null ? null : Manager.ScalarUIElements; }
         }
 
         DataRowClient DataRowClient
         {
-            get { return View == null ? null : View.DataRowClient; }
+            get { return Manager == null ? null : Manager.DataRowClient; }
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            var dataSetControl = TemplatedParent as DataSetControl;
-            if (dataSetControl != null)
+            var dataSetView = TemplatedParent as DataSetView;
+            if (dataSetView != null)
             {
-                View = dataSetControl.Manager;
+                Manager = dataSetView.Manager;
                 AddLogicalChild(DataRowClient);
                 AddVisualChild(DataRowClient);
                 AddScalarUIElements(ScalarUIElements);
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows
 
         protected override int VisualChildrenCount
         {
-            get { return View == null ? 0: ScalarUIElements.Count + 1; }
+            get { return Manager == null ? 0: ScalarUIElements.Count + 1; }
         }
 
         protected override Visual GetVisualChild(int index)

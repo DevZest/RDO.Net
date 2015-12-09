@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows
                 return gridRange;
 
             if (Owner != gridRange.Owner)
-                throw new ArgumentException(Strings.GridRange_InvalidDataSetControl, nameof(gridRange));
+                throw new ArgumentException(Strings.GridRange_InvalidOwner, nameof(gridRange));
 
             return new GridRange(
                 Left.Ordinal < gridRange.Left.Ordinal ? Left : gridRange.Left,
@@ -107,7 +107,7 @@ namespace DevZest.Data.Windows
             return Owner.AddListItem(this, listItem);
         }
 
-        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetControl> initializer = null)
+        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetView> initializer = null)
             where TModel : Model
         {
             VerifyIsEmpty();

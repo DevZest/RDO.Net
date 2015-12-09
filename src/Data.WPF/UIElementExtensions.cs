@@ -8,8 +8,8 @@ namespace DevZest.Data.Windows
     {
         internal static DataSetManager GetDataSetManager(this UIElement uiElement)
         {
-            var dataSetControl = uiElement.GetParent<DataSetControl>();
-            return dataSetControl == null ? null : dataSetControl.Manager;
+            var dataSetView = uiElement.GetParent<DataSetView>();
+            return dataSetView == null ? null : dataSetView.Manager;
         }
 
         internal static DataRowManager GetDataRowManager(this UIElement uiElement)

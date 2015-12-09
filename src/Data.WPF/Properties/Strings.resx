@@ -120,8 +120,8 @@
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{0}" is invalid.</value>
   </data>
-  <data name="GridRange_InvalidDataSetControl" xml:space="preserve">
-    <value>The GridRange does not belong to the same DataSetControl.</value>
+  <data name="GridRange_InvalidOwner" xml:space="preserve">
+    <value>The GridRange does not belong to the same GridTemplate.</value>
   </data>
   <data name="GridRange_VerifyIsEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>

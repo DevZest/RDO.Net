@@ -20,11 +20,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The GridRange does not belong to the same DataSetControl.
+        /// The GridRange does not belong to the same GridTemplate.
         /// </summary>
-        public static string GridRange_InvalidDataSetControl
+        public static string GridRange_InvalidOwner
         {
-            get { return GetString("GridRange_InvalidDataSetControl"); }
+            get { return GetString("GridRange_InvalidOwner"); }
         }
 
         /// <summary>
