@@ -5,12 +5,12 @@ namespace DevZest.Data.Windows
 {
     public class DataRowControl : Control
     {
-        public static readonly DependencyProperty ViewProperty = DependencyProperty.Register(nameof(View), typeof(DataRowView), typeof(DataRowControl),
+        public static readonly DependencyProperty ViewProperty = DependencyProperty.Register(nameof(View), typeof(DataRowManager), typeof(DataRowControl),
             new FrameworkPropertyMetadata(null));
 
-        public DataRowView View
+        public DataRowManager View
         {
-            get { return (DataRowView)GetValue(ViewProperty); }
+            get { return (DataRowManager)GetValue(ViewProperty); }
             set { SetValue(ViewProperty, value); }
         }
     }

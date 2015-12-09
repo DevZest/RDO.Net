@@ -17,14 +17,14 @@ namespace DevZest.Data.Windows
 
         protected override void OnMounted(DataSetControl dataSetControl)
         {
-            var parentDataRowView = dataSetControl.GetDataRowView();
-            dataSetControl.View = parentDataRowView.ChildDataSetViews[Template.ChildOrdinal];
-            Debug.Assert(dataSetControl.View.Template == Template);
+            var parentDataRowManager = dataSetControl.GetDataRowManager();
+            dataSetControl.Manager = parentDataRowManager.Children[Template.ChildOrdinal];
+            Debug.Assert(dataSetControl.Manager.Template == Template);
         }
 
         protected override void OnUnmounting(DataSetControl dataSetControl)
         {
-            dataSetControl.View = null;
+            dataSetControl.Manager = null;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
 {
     public class DataSetGrid : FrameworkElement
     {
-        DataSetView View { get; set; }
+        DataSetManager View { get; set; }
 
         ObservableCollection<UIElement> ScalarUIElements
         {
@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows
             var dataSetControl = TemplatedParent as DataSetControl;
             if (dataSetControl != null)
             {
-                View = dataSetControl.View;
+                View = dataSetControl.Manager;
                 AddLogicalChild(DataRowClient);
                 AddVisualChild(DataRowClient);
                 AddScalarUIElements(ScalarUIElements);

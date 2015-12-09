@@ -10,9 +10,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class DataSetView : IReadOnlyList<DataRowView>
+    public sealed partial class DataSetManager : IReadOnlyList<DataRowManager>
     {
-        internal DataSetView(DataRowView owner, GridTemplate template)
+        internal DataSetManager(DataRowManager owner, GridTemplate template)
         {
             Debug.Assert(template != null);
             Debug.Assert(owner == null || template.Model.GetParentModel() == owner.Model);
@@ -23,14 +23,14 @@ namespace DevZest.Data.Windows
             DataSet = Model[parentDataRow];
             Debug.Assert(DataSet != null);
 
-            _dataRowViews = new List<DataRowView>(DataSet.Count);
+            _dataRowManagers = new List<DataRowManager>(DataSet.Count);
             foreach (var dataRow in DataSet)
             {
-                var dataRowView = new DataRowView(this, dataRow);
-                _dataRowViews.Add(dataRowView);
+                var dataRowManager = new DataRowManager(this, dataRow);
+                _dataRowManagers.Add(dataRowManager);
             }
             if (template.CanAddNew)
-                _eof = new DataRowView(this, null);
+                _eof = new DataRowManager(this, null);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
             {
                 ItemsSource = _visibleRows
             };
-            _visibleRows = new ObservableCollection<DataRowView>();
+            _visibleRows = new ObservableCollection<DataRowManager>();
         }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
@@ -51,14 +51,14 @@ namespace DevZest.Data.Windows
             var isDelete = oldIndex >= 0;
             if (isDelete)
             {
-                _dataRowViews[oldIndex].Dispose();
-                _dataRowViews.RemoveAt(oldIndex);
+                _dataRowManagers[oldIndex].Dispose();
+                _dataRowManagers.RemoveAt(oldIndex);
             }
             else
             {
                 var dataRow = e.DataRow;
-                var dataRowView = new DataRowView(this, dataRow);
-                _dataRowViews.Insert(DataSet.IndexOf(dataRow), dataRowView);
+                var dataRowManager = new DataRowManager(this, dataRow);
+                _dataRowManagers.Insert(DataSet.IndexOf(dataRow), dataRowManager);
             }
 
             CoerceSelection();
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        public DataRowView Owner { get; private set; }
+        public DataRowManager Owner { get; private set; }
 
         public GridTemplate Template { get; private set; }
 
@@ -80,23 +80,23 @@ namespace DevZest.Data.Windows
             get { return Template.Model; }
         }
 
-        #region IReadOnlyList<DataRowView>
+        #region IReadOnlyList<DataRowManager>
 
-        List<DataRowView> _dataRowViews;
-        DataRowView _eof;
+        List<DataRowManager> _dataRowManagers;
+        DataRowManager _eof;
 
-        public IEnumerator<DataRowView> GetEnumerator()
+        public IEnumerator<DataRowManager> GetEnumerator()
         {
-            foreach (var dataRowView in _dataRowViews)
-                yield return dataRowView;
+            foreach (var dataRowManager in _dataRowManagers)
+                yield return dataRowManager;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _dataRowViews.GetEnumerator();
+            return _dataRowManagers.GetEnumerator();
         }
 
-        public int IndexOf(DataRowView item)
+        public int IndexOf(DataRowManager item)
         {
             return item == null || item.Owner != this ? -1 : (item == _eof ? Count - 1 : DataSet.IndexOf(item.DataRow));
         }
@@ -105,21 +105,21 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                var result = _dataRowViews.Count;
+                var result = _dataRowManagers.Count;
                 if (_eof != null)
                     result++;
                 return result;
             }
         }
 
-        public DataRowView this[int index]
+        public DataRowManager this[int index]
         {
             get
             {
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return _eof != null && index == Count - 1 ? _eof : _dataRowViews[index];
+                return _eof != null && index == Count - 1 ? _eof : _dataRowManagers[index];
             }
         }
         #endregion
@@ -182,7 +182,7 @@ namespace DevZest.Data.Windows
             _selection = _selection.Select(index, selectionMode);
         }
 
-        private ObservableCollection<DataRowView> _visibleRows;
+        private ObservableCollection<DataRowManager> _visibleRows;
 
         internal DataRowClient DataRowClient { get; private set; }
 

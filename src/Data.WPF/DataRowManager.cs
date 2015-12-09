@@ -6,25 +6,25 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataRowView
+    public sealed class DataRowManager
     {
-        internal DataRowView(DataSetView owner, DataRow dataRow)
+        internal DataRowManager(DataSetManager owner, DataRow dataRow)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
-            ChildDataSetViews = InitChildDataSetViews();
+            Children = InitChildDataSetManagers();
         }
 
         internal void Dispose()
         {
             Owner = null;
-            ChildDataSetViews = null;
+            Children = null;
             EnsureUIElementsRecycled();
         }
 
-        public DataSetView Owner { get; private set; }
+        public DataSetManager Owner { get; private set; }
 
         public GridTemplate Template
         {
@@ -38,17 +38,17 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? null : Owner.Model; }
         }
 
-        private static DataSetView[] s_emptyChildSetViews = new DataSetView[0];
-        public IReadOnlyList<DataSetView> ChildDataSetViews { get; private set; }
-        private IReadOnlyList<DataSetView> InitChildDataSetViews()
+        private static DataSetManager[] s_emptyChildren = new DataSetManager[0];
+        public IReadOnlyList<DataSetManager> Children { get; private set; }
+        private IReadOnlyList<DataSetManager> InitChildDataSetManagers()
         {
             var childItems = Template.ChildItems;
             if (childItems.Count == 0)
-                return s_emptyChildSetViews;
+                return s_emptyChildren;
 
-            var result = new DataSetView[childItems.Count];
+            var result = new DataSetManager[childItems.Count];
             for (int i = 0; i < childItems.Count; i++)
-                result[i] = new DataSetView(this, ((ChildGridItem)childItems[i]).Template);
+                result[i] = new DataSetManager(this, ((ChildGridItem)childItems[i]).Template);
 
             return result;
         }

@@ -9,27 +9,27 @@ namespace DevZest.Data.Windows
 {
     public class DataSetControl : Control
     {
-        private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
-            typeof(DataSetView), typeof(DataSetControl), new FrameworkPropertyMetadata(null, OnViewChanged));
+        private static readonly DependencyPropertyKey ManagerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Manager),
+            typeof(DataSetManager), typeof(DataSetControl), new FrameworkPropertyMetadata(null, OnManagerChanged));
 
-        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var newValue = (DataSetView)e.NewValue;
+            var newValue = (DataSetManager)e.NewValue;
             Debug.Assert(newValue != null);
             ((DataSetControl)d).ScrollMode = newValue.Template.ScrollMode;
         }
 
-        public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ManagerProperty = ManagerPropertyKey.DependencyProperty;
 
         private static readonly DependencyPropertyKey ScrollModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollMode),
             typeof(ScrollMode), typeof(DataSetControl), new FrameworkPropertyMetadata(ScrollMode.None));
 
         public static readonly DependencyProperty ScrollModeProperty = ScrollModePropertyKey.DependencyProperty;
 
-        public DataSetView View
+        public DataSetManager Manager
         {
-            get { return (DataSetView)GetValue(ViewProperty); }
-            internal set { SetValue(ViewPropertyKey, value); }
+            get { return (DataSetManager)GetValue(ManagerProperty); }
+            internal set { SetValue(ManagerPropertyKey, value); }
         }
 
         public ScrollMode ScrollMode
@@ -50,7 +50,7 @@ namespace DevZest.Data.Windows
             else
                 gridTemplate.DefaultInitialize();
             gridTemplate.Seal();
-            View = new DataSetView(null, gridTemplate);
+            Manager = new DataSetManager(null, gridTemplate);
         }
     }
 }

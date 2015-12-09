@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
-            ((DataRowControl)element).View = (DataRowView)item;
+            ((DataRowControl)element).View = (DataRowManager)item;
         }
     }
 }

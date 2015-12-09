@@ -49,7 +49,7 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="DataRowClient.cs" />
     <Compile Include="DataRowControl.cs" />
-    <Compile Include="DataRowView.cs" />
+    <Compile Include="DataRowManager.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="GridExpander.cs" />
@@ -58,7 +58,7 @@
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetSelector.cs" />
-    <Compile Include="DataSetView.cs" />
+    <Compile Include="DataSetManager.cs" />
     <Compile Include="IListGridItem.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataSetControl.cs" />

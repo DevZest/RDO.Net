@@ -4,8 +4,8 @@ namespace DevZest.Data.Windows
 {
     internal interface IListGridItem
     {
-        void UpdateTarget(DataRowView dataRowView, UIElement uiElement);
+        void UpdateTarget(DataRowManager dataRowManager, UIElement uiElement);
 
-        void UpdateSource(UIElement uiElement, DataRowView dataRowView);
+        void UpdateSource(UIElement uiElement, DataRowManager dataRowManager);
     }
 }

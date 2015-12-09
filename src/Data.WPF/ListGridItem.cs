@@ -12,45 +12,45 @@ namespace DevZest.Data.Windows
         {
         }
 
-        void IListGridItem.UpdateTarget(DataRowView dataRowView, UIElement uiElement)
+        void IListGridItem.UpdateTarget(DataRowManager dataRowManager, UIElement uiElement)
         {
-            UpdateTarget(dataRowView, (T)uiElement);
+            UpdateTarget(dataRowManager, (T)uiElement);
         }
 
-        void IListGridItem.UpdateSource(UIElement uiElement, DataRowView dataRowView)
+        void IListGridItem.UpdateSource(UIElement uiElement, DataRowManager dataRowManager)
         {
-            UpdateSource((T)uiElement, dataRowView);
+            UpdateSource((T)uiElement, dataRowManager);
         }
 
-        protected abstract void UpdateTarget(DataRowView dataRowView, T element);
+        protected abstract void UpdateTarget(DataRowManager dataRowManager, T element);
 
-        protected abstract void UpdateSource(T element, DataRowView dataRowView);
+        protected abstract void UpdateSource(T element, DataRowManager dataRowManager);
 
-        protected TValue GetValue<TValue>(Column<TValue> column, DataRowView dataRowView)
+        protected TValue GetValue<TValue>(Column<TValue> column, DataRowManager dataRowManager)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            if (dataRowView == null)
-                throw new ArgumentNullException(nameof(dataRowView));
+            if (dataRowManager == null)
+                throw new ArgumentNullException(nameof(dataRowManager));
 
-            return column[dataRowView.DataRow];
+            return column[dataRowManager.DataRow];
         }
 
 
         private bool _isSettingValue;
-        protected void SetValue<TValue>(DataRowView dataRowView, Column<TValue> column, TValue value)
+        protected void SetValue<TValue>(DataRowManager dataRowManager, Column<TValue> column, TValue value)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            if (dataRowView == null)
-                throw new ArgumentNullException(nameof(dataRowView));
+            if (dataRowManager == null)
+                throw new ArgumentNullException(nameof(dataRowManager));
 
             _isSettingValue = true;
             try
             {
-                column[dataRowView.DataRow] = value;
+                column[dataRowManager.DataRow] = value;
             }
             finally
             {

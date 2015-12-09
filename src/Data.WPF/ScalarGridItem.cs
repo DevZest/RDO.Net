@@ -14,8 +14,8 @@ namespace DevZest.Data.Windows
 
         protected Model GetModel(T uiElement)
         {
-            var dataSetView = uiElement.GetDataSetView();
-            return dataSetView == null ? null : dataSetView.Model;
+            var dataSetManager = uiElement.GetDataSetManager();
+            return dataSetManager == null ? null : dataSetManager.Model;
         }
     }
 }
