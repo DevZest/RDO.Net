@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class DataSetGrid : FrameworkElement
+    public class DataSetPanel : FrameworkElement
     {
         DataSetManager Manager { get; set; }
 

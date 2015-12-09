@@ -64,7 +64,7 @@
     <Compile Include="GridRow.cs" />
     <Compile Include="DataRowOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
-    <Compile Include="Primitives\DataSetGrid.cs" />
+    <Compile Include="Primitives\DataSetPanel.cs" />
     <Compile Include="GridTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
