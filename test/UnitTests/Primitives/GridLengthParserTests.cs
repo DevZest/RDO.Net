@@ -70,15 +70,9 @@ namespace DevZest.Data.Windows.Primitives
             VerifyFormatExceptionExpected("10; unknown: 5;");    // unknown name
             VerifyFormatExceptionExpected("10; min: 5;; max: 20;"); // empty pair
             VerifyFormatExceptionExpected("10; min: 5; max: 20;;"); // last empty pair
-            VerifyFormatExceptionExpected("auto", Strings.GridLengthParser_AutoLengthMustHaveMinValue);  // Auto length must have min value
         }
 
         private static void VerifyFormatExceptionExpected(string input)
-        {
-            VerifyFormatExceptionExpected(input, Strings.GridLengthParser_InvalidInput(input));
-        }
-
-        private static void VerifyFormatExceptionExpected(string input, string errorMessage)
         {
             try
             {
@@ -87,7 +81,7 @@ namespace DevZest.Data.Windows.Primitives
             }
             catch (FormatException ex)
             {
-                Assert.AreEqual(ex.Message, errorMessage);
+                Assert.AreEqual(ex.Message, Strings.GridLengthParser_InvalidInput(input));
             }
         }
     }

@@ -12,14 +12,6 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// Auto GridLength must have valid min value specified.
-        /// </summary>
-        public static string GridLengthParser_AutoLengthMustHaveMinValue
-        {
-            get { return GetString("GridLengthParser_AutoLengthMustHaveMinValue"); }
-        }
-
-        /// <summary>
         /// The input string "{0}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object p0)

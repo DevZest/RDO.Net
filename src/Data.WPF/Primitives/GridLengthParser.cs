@@ -76,11 +76,7 @@ namespace DevZest.Data.Windows.Primitives
             if (min < 0 || min > max)
                 throw new FormatException(Strings.GridLengthParser_InvalidInput(value));
 
-            var lengthValue = length.GetValueOrDefault();
-            if (lengthValue.IsAuto && min == 0.0)
-                throw new FormatException(Strings.GridLengthParser_AutoLengthMustHaveMinValue);
-
-            return new Result(lengthValue, min, max);
+            return new Result(length.GetValueOrDefault(), min, max);
         }
 
         private struct NameGridLengthPair
