@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataRowListView : ItemsControl
+    internal sealed class DataRowListView : ItemsControl
     {
         protected override DependencyObject GetContainerForItemOverride()
         {
@@ -12,12 +12,22 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
-            ((DataRowView)element).Manager = (DataRowManager)item;
+            var dataRowView = element as DataRowView;
+            var dataRowManager = item as DataRowManager;
+            if (dataRowView != null && dataRowManager != null)
+                dataRowView.Manager = dataRowManager;
+            else
+                base.PrepareContainerForItemOverride(element, item);
         }
 
         protected override void ClearContainerForItemOverride(DependencyObject element, object item)
         {
-            ((DataRowView)element).Manager = null;
+            var dataRowView = element as DataRowView;
+            var dataRowManager = item as DataRowManager;
+            if (dataRowView != null && dataRowManager != null)
+                dataRowView.Manager = null;
+            else
+                base.ClearContainerForItemOverride(element, item);
         }
     }
 }
