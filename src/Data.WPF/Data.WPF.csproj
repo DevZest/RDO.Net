@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DevZest.Data.Windows</RootNamespace>
-    <AssemblyName>DevZest.Data.PresentationFramework</AssemblyName>
+    <AssemblyName>DevZest.Data.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
