@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Windows
 {
-    public enum DataRowOrientation
+    public enum GridFlow
     {
         Y,
         X,

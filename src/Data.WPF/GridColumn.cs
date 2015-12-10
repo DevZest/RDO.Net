@@ -25,5 +25,11 @@ namespace DevZest.Data.Windows
         {
             get { return MaxWidth; }
         }
+
+        public double ActualWidth
+        {
+            get { return ActualLength; }
+            internal set { ActualLength = value; }
+        }
     }
 }

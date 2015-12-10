@@ -23,5 +23,7 @@ namespace DevZest.Data.Windows
         public double MinLength { get; private set; }
 
         public double MaxLength { get; private set; }
+
+        public double ActualLength { get; internal set; }
     }
 }

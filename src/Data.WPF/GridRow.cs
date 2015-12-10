@@ -24,5 +24,11 @@ namespace DevZest.Data.Windows
         {
             get { return MaxLength; }
         }
+
+        public double ActualHeight
+        {
+            get { return ActualLength; }
+            internal set { ActualLength = value; }
+        }
     }
 }

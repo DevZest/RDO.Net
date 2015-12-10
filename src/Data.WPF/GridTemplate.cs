@@ -40,8 +40,8 @@ namespace DevZest.Data.Windows
 
         public Model Model { get; private set; }
 
-        private DataRowOrientation _orientation = DataRowOrientation.Y;
-        public DataRowOrientation Orientation
+        private GridFlow _orientation = GridFlow.Y;
+        public GridFlow Orientation
         {
             get { return _orientation; }
             set
@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public GridTemplate SetOrientation(DataRowOrientation value)
+        public GridTemplate SetOrientation(GridFlow value)
         {
             Orientation = value;
             return this;
@@ -72,7 +72,7 @@ namespace DevZest.Data.Windows
 
         private ScrollMode DefaultScrollMode
         {
-            get { return Orientation == DataRowOrientation.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
+            get { return Orientation == GridFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
         }
 
         public GridTemplate SetScrollMode(ScrollMode value)
@@ -202,7 +202,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private void VerifyGridRowHeight(DataRowOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(GridFlow orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -211,7 +211,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, DataRowOrientation orentation)
+        private static bool IsValidGridRowHeight(GridRow gridRow, GridFlow orentation)
         {
             var height = gridRow.Height;
 
@@ -219,13 +219,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (height.IsStar)
-                return orentation != DataRowOrientation.Y && orentation != DataRowOrientation.YX && orentation != DataRowOrientation.XY;
+                return orentation != GridFlow.Y && orentation != GridFlow.YX && orentation != GridFlow.XY;
 
             Debug.Assert(height.IsAuto);
-            return orentation != DataRowOrientation.YX;
+            return orentation != GridFlow.YX;
         }
 
-        private void VerifyGridColumnWidth(DataRowOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(GridFlow orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -234,7 +234,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, DataRowOrientation orentation)
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, GridFlow orentation)
         {
             var width = gridColumn.Width;
 
@@ -242,10 +242,10 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (width.IsStar)
-                return orentation != DataRowOrientation.X && orentation != DataRowOrientation.YX && orentation != DataRowOrientation.XY;
+                return orentation != GridFlow.X && orentation != GridFlow.YX && orentation != GridFlow.XY;
 
             Debug.Assert(width.IsAuto);
-            return orentation != DataRowOrientation.XY;
+            return orentation != GridFlow.XY;
         }
 
         internal GridTemplate AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)

@@ -35,29 +35,29 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.X).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridColumns("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.X).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridColumns("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.X));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.XY));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("*").SetOrientation(DataRowOrientation.YX));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridColumns("Auto; min: 10").SetOrientation(DataRowOrientation.XY));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.X));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.XY));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.YX));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("Auto; min: 10").SetOrientation(GridFlow.XY));
         }
 
         [TestMethod]
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Y).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.XY).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.YX).AddGridRows("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Y).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridRows("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.Y));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.XY));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("*").SetOrientation(DataRowOrientation.YX));
-            ExpectArgumentException(x => x.SetOrientation(DataRowOrientation.Z).AddGridRows("Auto; min: 10").SetOrientation(DataRowOrientation.YX));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.Y));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.XY));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.YX));
+            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("Auto; min: 10").SetOrientation(GridFlow.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)
@@ -77,9 +77,9 @@ namespace DevZest.Data.Windows
         public void GridTemplate_ScrollMode()
         {
             var template = new GridTemplate(null);
-            template.SetOrientation(DataRowOrientation.Z);
+            template.SetOrientation(GridFlow.Z);
             Assert.AreEqual(ScrollMode.None, template.ScrollMode);
-            template.SetOrientation(DataRowOrientation.Y);
+            template.SetOrientation(GridFlow.Y);
             Assert.AreEqual(ScrollMode.Virtualizing, template.ScrollMode);
             template.SetScrollMode(ScrollMode.Normal);
             Assert.AreEqual(ScrollMode.Normal, template.ScrollMode);
