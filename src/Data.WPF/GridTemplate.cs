@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Windows.Primitives;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -40,22 +39,22 @@ namespace DevZest.Data.Windows
 
         public Model Model { get; private set; }
 
-        private GridFlow _orientation = GridFlow.Y;
-        public GridFlow Orientation
+        private GridFlow _flow = GridFlow.Y;
+        public GridFlow Flow
         {
-            get { return _orientation; }
+            get { return _flow; }
             set
             {
                 VerifyIsSealed();
                 VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
                 VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
-                _orientation = value;
+                _flow = value;
             }
         }
 
-        public GridTemplate SetOrientation(GridFlow value)
+        public GridTemplate SetFlow(GridFlow value)
         {
-            Orientation = value;
+            Flow = value;
             return this;
         }
 
@@ -72,7 +71,7 @@ namespace DevZest.Data.Windows
 
         private ScrollMode DefaultScrollMode
         {
-            get { return Orientation == GridFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
+            get { return Flow == GridFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
         }
 
         public GridTemplate SetScrollMode(ScrollMode value)
@@ -177,7 +176,7 @@ namespace DevZest.Data.Windows
             VerifyIsSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
-            VerifyGridColumnWidth(Orientation, result, result, nameof(width));
+            VerifyGridColumnWidth(Flow, result, result, nameof(width));
             return result;
         }
 
@@ -192,7 +191,7 @@ namespace DevZest.Data.Windows
             VerifyIsSealed();
             GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
-            VerifyGridRowHeight(Orientation, result, result, nameof(height));
+            VerifyGridRowHeight(Flow, result, result, nameof(height));
             return result;
         }
 
@@ -202,12 +201,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private void VerifyGridRowHeight(GridFlow orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(GridFlow flow, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
-                if (!IsValidGridRowHeight(GridRows[i], orientation))
-                    throw new ArgumentException(Strings.GridTemplate_InvalidGridRowHeightOrientation(i, GridRows[i].Height, orientation), paramName);
+                if (!IsValidGridRowHeight(GridRows[i], flow))
+                    throw new ArgumentException(Strings.GridTemplate_InvalidGridRowHeightFlow(i, GridRows[i].Height, flow), paramName);
             }
         }
 
@@ -225,12 +224,12 @@ namespace DevZest.Data.Windows
             return orentation != GridFlow.YX;
         }
 
-        private void VerifyGridColumnWidth(GridFlow orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(GridFlow flow, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
-                if (!IsValidGridColumnWidth(GridColumns[i], orientation))
-                    throw new ArgumentException(Strings.GridTemplate_InvalidGridColumnWidthOrientation(i, GridColumns[i].Width, orientation), paramName);
+                if (!IsValidGridColumnWidth(GridColumns[i], flow))
+                    throw new ArgumentException(Strings.GridTemplate_InvalidGridColumnWidthFlow(i, GridColumns[i].Width, flow), paramName);
             }
         }
 

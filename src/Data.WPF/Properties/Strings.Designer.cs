@@ -12,11 +12,11 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// The input string "{0}" is invalid.
+        /// The input string "{input}" is invalid.
         /// </summary>
-        public static string GridLengthParser_InvalidInput(object p0)
+        public static string GridLengthParser_InvalidInput(object input)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridLengthParser_InvalidInput"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridLengthParser_InvalidInput", "input"), input);
         }
 
         /// <summary>
@@ -36,11 +36,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridColumn.Width/Orientation combination: GridColumns[{0}]="{1}", Orientation="{2}".
+        /// Invalid GridColumn.Width/Flow combination: GridColumns[{index}]="{gridColumnWidth}", Flow="{flow}".
         /// </summary>
-        public static string GridTemplate_InvalidGridColumnWidthOrientation(object p0, object p1, object p2)
+        public static string GridTemplate_InvalidGridColumnWidthFlow(object index, object gridColumnWidth, object flow)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthOrientation"), p0, p1, p2);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthFlow", "index", "gridColumnWidth", "flow"), index, gridColumnWidth, flow);
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridRow.Height/Orientation combination: GridRows[{0}]="{1}", Orientation="{2}".
+        /// Invalid GridRow.Height/Flow combination: GridRows[{index}]="{gridRowHeight}", Flow="{flow}".
         /// </summary>
-        public static string GridTemplate_InvalidGridRowHeightOrientation(object p0, object p1, object p2)
+        public static string GridTemplate_InvalidGridRowHeightFlow(object index, object gridRowHeight, object flow)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightOrientation"), p0, p1, p2);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightFlow", "index", "gridRowHeight", "flow"), index, gridRowHeight, flow);
         }
 
         /// <summary>

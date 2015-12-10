@@ -35,29 +35,29 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.X).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridColumns("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.X).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.XY).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.YX).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.XY).AddGridColumns("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.X));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.XY));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("*").SetOrientation(GridFlow.YX));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridColumns("Auto; min: 10").SetOrientation(GridFlow.XY));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridColumns("*").SetFlow(GridFlow.X));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridColumns("*").SetFlow(GridFlow.XY));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridColumns("*").SetFlow(GridFlow.YX));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridColumns("Auto; min: 10").SetFlow(GridFlow.XY));
         }
 
         [TestMethod]
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Y).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.XY).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.YX).AddGridRows("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Y).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.XY).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.YX).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.YX).AddGridRows("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.Y));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.XY));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("*").SetOrientation(GridFlow.YX));
-            ExpectArgumentException(x => x.SetOrientation(GridFlow.Z).AddGridRows("Auto; min: 10").SetOrientation(GridFlow.YX));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridRows("*").SetFlow(GridFlow.Y));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridRows("*").SetFlow(GridFlow.XY));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridRows("*").SetFlow(GridFlow.YX));
+            ExpectArgumentException(x => x.SetFlow(GridFlow.Z).AddGridRows("Auto; min: 10").SetFlow(GridFlow.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)
@@ -77,9 +77,9 @@ namespace DevZest.Data.Windows
         public void GridTemplate_ScrollMode()
         {
             var template = new GridTemplate(null);
-            template.SetOrientation(GridFlow.Z);
+            template.SetFlow(GridFlow.Z);
             Assert.AreEqual(ScrollMode.None, template.ScrollMode);
-            template.SetOrientation(GridFlow.Y);
+            template.SetFlow(GridFlow.Y);
             Assert.AreEqual(ScrollMode.Virtualizing, template.ScrollMode);
             template.SetScrollMode(ScrollMode.Normal);
             Assert.AreEqual(ScrollMode.Normal, template.ScrollMode);
