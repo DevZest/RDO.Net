@@ -35,19 +35,96 @@ namespace DevZest.Data.Windows.Primitives
 
         internal ObservableCollection<DataRowManager> VisibleRows { get; private set; }
 
-        internal Size ExtentSize { get; private set; }
+        private Size _extentSize;
+        internal Size ExtentSize
+        {
+            get { return _extentSize; }
+            private set
+            {
+                if (_extentSize.IsClose(value))
+                    return;
+                _extentSize = value;
+                InvalidateScrollInfo();
+            }
+        }
 
-        internal Size ViewportSize { get; set; }
+        private Size _viewportSize;
+        internal Size ViewportSize
+        {
+            get { return _viewportSize; }
+            set
+            {
+                if (_viewportSize.IsClose(value))
+                    return;
 
-        internal double HorizontalOffset { get; set; }
+                _viewportSize = value;
+                InvalidateScrollInfo();
+                Invalidate();
+            }
+        }
 
-        internal double VerticalOffset { get; set; }
+        private double _horizontalOffset;
+        internal double HorizontalOffset
+        {
+            get { return _horizontalOffset; }
+            set
+            {
+                if (_horizontalOffset.IsClose(value))
+                    return;
+
+                _horizontalOffset = value;
+                InvalidateScrollInfo();
+                Invalidate();
+            }
+        }
+
+        private double _verticalOffset;
+        internal double VerticalOffset
+        {
+            get { return _verticalOffset; }
+            set
+            {
+                if (_verticalOffset.IsClose(value))
+                    return;
+
+                _verticalOffset = value;
+                InvalidateScrollInfo();
+                Invalidate();
+            }
+        }
 
         internal ScrollViewer ScrollOwner { get; set; }
+
+        private void InvalidateScrollInfo()
+        {
+            if (ScrollOwner != null)
+                ScrollOwner.InvalidateScrollInfo();
+        }
 
         internal Rect MakeVisible(Visual visual, Rect rectangle)
         {
             throw new NotImplementedException();
+        }
+
+        private bool _isDirty;
+
+        private void Invalidate()
+        {
+            _isDirty = true;
+            var dataSetView = _owner.DataSetView;
+            if (dataSetView != null)
+            {
+                dataSetView.InvalidateMeasure();
+                dataSetView.InvalidateVisual();
+            }
+        }
+
+        internal void Refresh()
+        {
+            if (!_isDirty)
+                return;
+
+            _isDirty = false;
         }
     }
 }
