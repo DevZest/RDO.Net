@@ -20,6 +20,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 ItemsSource = VisibleRows
             };
+            Invalidate();
         }
 
         private DataSetManager _owner;

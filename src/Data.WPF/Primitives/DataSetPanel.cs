@@ -263,6 +263,8 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            LayoutManager.Refresh();
+
             return base.MeasureOverride(availableSize);
         }
 
