@@ -151,6 +151,25 @@ namespace DevZest.Data.Windows
 
         public GridItemCollection ChildItems { get; private set; }
 
+        private GridRange? _listPanelRange;
+        public GridRange ListPanelRange
+        {
+            get { return _listPanelRange.HasValue ? _listPanelRange.GetValueOrDefault() : AutoListPanelRange; }
+            set
+            {
+                VerifyIsSealed();
+                if (!value.Contains(AutoListPanelRange))
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                _listPanelRange = value;
+            }
+        }
+
+        private GridRange AutoListPanelRange
+        {
+            get { return ListItems.Range.Union(ChildItems.Range); }
+        }
+
         public GridTemplate AddGridRows(params string[] heights)
         {
             if (heights == null)
@@ -250,7 +269,7 @@ namespace DevZest.Data.Windows
         internal GridTemplate AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
             where T : UIElement, new()
         {
-            VerifyAddItem(gridRange, scalarItem, nameof(scalarItem));
+            VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
             ScalarItems.Add(scalarItem, gridRange);
             return this;
         }
@@ -258,24 +277,26 @@ namespace DevZest.Data.Windows
         internal GridTemplate AddListItem<T>(GridRange gridRange, ListGridItem<T> listItem)
             where T : UIElement, new()
         {
-            VerifyAddItem(gridRange, listItem, nameof(listItem));
+            VerifyAddItem(gridRange, listItem, nameof(listItem), true);
             ListItems.Add(listItem, gridRange);
             return this;
         }
 
         internal GridTemplate AddChildItem(GridRange gridRange, ChildGridItem childItem)
         {
-            VerifyAddItem(gridRange, childItem, nameof(childItem));
+            VerifyAddItem(gridRange, childItem, nameof(childItem), false);
             var childTemplate = childItem.Template;
             childTemplate.ChildOrdinal = ChildItems.Count;
             ChildItems.Add(childItem, gridRange);
             return this;
         }
 
-        private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName)
+        private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName, bool isScalar)
         {
             VerifyIsSealed();
             if (!GetGridRangeAll().Contains(gridRange))
+                throw new ArgumentOutOfRangeException(nameof(gridRange));
+            if (!isScalar && _listPanelRange.HasValue && !_listPanelRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
                 throw new ArgumentNullException(paramGridItemName);

@@ -12,6 +12,23 @@ namespace DevZest.Data.Windows
         private static readonly DependencyPropertyKey ManagerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Manager),
             typeof(DataSetManager), typeof(DataSetView), new FrameworkPropertyMetadata(null, OnManagerChanged));
 
+        public static readonly DependencyProperty ManagerProperty = ManagerPropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
+            typeof(bool), typeof(DataSetView), new FrameworkPropertyMetadata(BooleanBoxes.True));
+
+        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibilityProperty),
+            typeof(ScrollBarVisibility), typeof(DataSetView), new PropertyMetadata(ScrollBarVisibility.Auto));
+
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
+            typeof(ScrollBarVisibility), typeof(DataSetView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
+
+        public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+
+        public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+
         private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var oldValue = (DataSetManager)e.OldValue;
@@ -26,21 +43,7 @@ namespace DevZest.Data.Windows
 
             Debug.Assert(newValue != null);
             newValue.DataSetView = this;
-            ScrollMode = newValue.Template.ScrollMode;
         }
-
-        public static readonly DependencyProperty ManagerProperty = ManagerPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey ScrollModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(ScrollMode),
-            typeof(ScrollMode), typeof(DataSetView), new FrameworkPropertyMetadata(ScrollMode.None));
-
-        public static readonly DependencyProperty ScrollModeProperty = ScrollModePropertyKey.DependencyProperty;
-
-        public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
-
-        public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
 
         public DataSetManager Manager
         {
@@ -48,10 +51,22 @@ namespace DevZest.Data.Windows
             internal set { SetValue(ManagerPropertyKey, value); }
         }
 
-        public ScrollMode ScrollMode
+        public bool Scrollable
         {
-            get { return (ScrollMode)GetValue(ScrollModeProperty); }
-            private set { SetValue(ScrollModePropertyKey, value); }
+            get { return (bool)GetValue(ScrollableProperty); }
+            set { SetValue(ScrollableProperty, value); }
+        }
+
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty); }
+            set { SetValue(HorizontalScrollBarVisibilityProperty, value); }
+        }
+
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty); }
+            set { SetValue(VerticalScrollBarVisibilityProperty, value); }
         }
 
         public double ScrollLineHeight
