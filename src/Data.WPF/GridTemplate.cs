@@ -151,21 +151,21 @@ namespace DevZest.Data.Windows
 
         public GridItemCollection ChildItems { get; private set; }
 
-        private GridRange? _listPanelRange;
-        public GridRange ListPanelRange
+        private GridRange? _repeatRange;
+        public GridRange RepeatRange
         {
-            get { return _listPanelRange.HasValue ? _listPanelRange.GetValueOrDefault() : AutoListPanelRange; }
+            get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
             set
             {
                 VerifyIsSealed();
-                if (!value.Contains(AutoListPanelRange))
+                if (!value.Contains(AutoRepeatRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                _listPanelRange = value;
+                _repeatRange = value;
             }
         }
 
-        private GridRange AutoListPanelRange
+        private GridRange AutoRepeatRange
         {
             get { return ListItems.Range.Union(ChildItems.Range); }
         }
@@ -296,7 +296,7 @@ namespace DevZest.Data.Windows
             VerifyIsSealed();
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _listPanelRange.HasValue && !_listPanelRange.GetValueOrDefault().Contains(gridRange))
+            if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
                 throw new ArgumentNullException(paramGridItemName);
