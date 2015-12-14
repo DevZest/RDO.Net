@@ -35,29 +35,29 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.X).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.XY).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.XY).AddGridColumns("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.X).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.XY).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.YX).AddGridColumns("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.XY).AddGridColumns("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridColumns("*").SetFlow(RepeatFlow.X));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridColumns("*").SetFlow(RepeatFlow.XY));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridColumns("*").SetFlow(RepeatFlow.YX));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridColumns("Auto; min: 10").SetFlow(RepeatFlow.XY));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridColumns("*").SetRepeatFlow(RepeatFlow.X));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridColumns("*").SetRepeatFlow(RepeatFlow.XY));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridColumns("*").SetRepeatFlow(RepeatFlow.YX));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridColumns("Auto; min: 10").SetRepeatFlow(RepeatFlow.XY));
         }
 
         [TestMethod]
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Y).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.XY).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.YX).AddGridRows("Auto; min: 10"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Y).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.XY).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.YX).AddGridRows("*"));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.YX).AddGridRows("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridRows("*").SetFlow(RepeatFlow.Y));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridRows("*").SetFlow(RepeatFlow.XY));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridRows("*").SetFlow(RepeatFlow.YX));
-            ExpectArgumentException(x => x.SetFlow(RepeatFlow.Z).AddGridRows("Auto; min: 10").SetFlow(RepeatFlow.YX));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridRows("*").SetRepeatFlow(RepeatFlow.Y));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridRows("*").SetRepeatFlow(RepeatFlow.XY));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridRows("*").SetRepeatFlow(RepeatFlow.YX));
+            ExpectArgumentException(x => x.SetRepeatFlow(RepeatFlow.Z).AddGridRows("Auto; min: 10").SetRepeatFlow(RepeatFlow.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)

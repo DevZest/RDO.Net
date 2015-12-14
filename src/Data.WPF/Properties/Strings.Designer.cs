@@ -36,11 +36,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridColumn.Width/Flow combination: GridColumns[{index}]="{gridColumnWidth}", Flow="{flow}".
+        /// Invalid GridColumn.Width/RepeatFlow combination: GridColumns[{index}]="{gridColumnWidth}", RepeatFlow="{repeatFlow}".
         /// </summary>
-        public static string GridTemplate_InvalidGridColumnWidthFlow(object index, object gridColumnWidth, object flow)
+        public static string GridTemplate_InvalidGridColumnWidthFlow(object index, object gridColumnWidth, object repeatFlow)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthFlow", "index", "gridColumnWidth", "flow"), index, gridColumnWidth, flow);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthFlow", "index", "gridColumnWidth", "repeatFlow"), index, gridColumnWidth, repeatFlow);
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridRow.Height/Flow combination: GridRows[{index}]="{gridRowHeight}", Flow="{flow}".
+        /// Invalid GridRow.Height/RepeatFlow combination: GridRows[{index}]="{gridRowHeight}", RepeatFlow="{repeatFlow}".
         /// </summary>
-        public static string GridTemplate_InvalidGridRowHeightFlow(object index, object gridRowHeight, object flow)
+        public static string GridTemplate_InvalidGridRowHeightFlow(object index, object gridRowHeight, object repeatFlow)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightFlow", "index", "gridRowHeight", "flow"), index, gridRowHeight, flow);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightFlow", "index", "gridRowHeight", "repeatFlow"), index, gridRowHeight, repeatFlow);
         }
 
         /// <summary>

@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows
                 Bottom.Ordinal > gridRange.Bottom.Ordinal ? Bottom : gridRange.Bottom);
         }
 
-        private void VerifyIsEmpty()
+        private void VerifyNotEmpty()
         {
             if (IsEmpty)
                 throw new InvalidOperationException(Strings.GridRange_VerifyIsEmpty);
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows
 
         private void VerifyDefineGridItem(GridItem gridItem, string paramGridItemName)
         {
-            VerifyIsEmpty();
+            VerifyNotEmpty();
             if (gridItem == null)
                 throw new ArgumentNullException(paramGridItemName);
         }
@@ -110,7 +110,7 @@ namespace DevZest.Data.Windows
         public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetView> initializer = null)
             where TModel : Model
         {
-            VerifyIsEmpty();
+            VerifyNotEmpty();
 
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
@@ -123,6 +123,14 @@ namespace DevZest.Data.Windows
             var childItem = new ChildGridItem(template, initializer);
 
             return Owner.AddChildItem(this, childItem);
+        }
+
+        public GridTemplate Repeat()
+        {
+            VerifyNotEmpty();
+
+            Owner.RepeatRange = this;
+            return Owner;
         }
     }
 }

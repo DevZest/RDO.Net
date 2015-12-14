@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows
         {
             get { return _isSealed; }
         }
-        private void VerifyIsSealed()
+        private void VerifyNotSealed()
         {
             if (_isSealed)
                 throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
@@ -45,14 +45,14 @@ namespace DevZest.Data.Windows
             get { return _repeatFlow; }
             set
             {
-                VerifyIsSealed();
+                VerifyNotSealed();
                 VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
                 VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
                 _repeatFlow = value;
             }
         }
 
-        public GridTemplate SetFlow(RepeatFlow value)
+        public GridTemplate SetRepeatFlow(RepeatFlow value)
         {
             RepeatFlow = value;
             return this;
@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows
             get { return _canAddNew; }
             set
             {
-                VerifyIsSealed();
+                VerifyNotSealed();
                 _canAddNew = value;
             }
         }
@@ -75,38 +75,13 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private GridRange? _dataRowRange;
-        public GridRange DataRowRange
-        {
-            get { return _dataRowRange.HasValue ? _dataRowRange.GetValueOrDefault() : GetGridRangeAll(); }
-            set
-            {
-                VerifyIsSealed();
-                if (!GetGridRangeAll().Contains(value) || !value.Contains(CalculatedDataRowRange))
-                    throw new ArgumentOutOfRangeException(nameof(value));
-
-                _dataRowRange = value;
-            }
-        }
-
-        private GridRange CalculatedDataRowRange
-        {
-            get { return ListItems.Range; }
-        }
-
-        public GridTemplate SetDataRowRange(GridRange value)
-        {
-            DataRowRange = value;
-            return this;
-        }
-
         private int _frozenCount;
         public int FrozenCount
         {
             get { return _frozenCount; }
             set
             {
-                VerifyIsSealed();
+                VerifyNotSealed();
                 if (value < 0)
                     throw new ArgumentOutOfRangeException();
                 _frozenCount = value;
@@ -135,7 +110,7 @@ namespace DevZest.Data.Windows
             get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
             set
             {
-                VerifyIsSealed();
+                VerifyNotSealed();
                 if (!value.Contains(AutoRepeatRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
@@ -170,7 +145,7 @@ namespace DevZest.Data.Windows
 
         private int AddGridColumn(string width)
         {
-            VerifyIsSealed();
+            VerifyNotSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(RepeatFlow, result, result, nameof(width));
@@ -185,7 +160,7 @@ namespace DevZest.Data.Windows
 
         private int AddGridRow(string height)
         {
-            VerifyIsSealed();
+            VerifyNotSealed();
             GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(RepeatFlow, result, result, nameof(height));
@@ -271,7 +246,7 @@ namespace DevZest.Data.Windows
 
         private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName, bool isScalar)
         {
-            VerifyIsSealed();
+            VerifyNotSealed();
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
@@ -329,7 +304,7 @@ namespace DevZest.Data.Windows
 
             this.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
-                .SetDataRowRange(Range(0, 1, columns.Count - 1, 1));
+                .Range(0, 1, columns.Count - 1, 1).Repeat();
 
             for (int i = 0; i < columns.Count; i++)
             {
