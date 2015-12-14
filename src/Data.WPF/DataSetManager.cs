@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
                 var dataRowManager = new DataRowManager(this, dataRow);
                 _dataRowManagers.Add(dataRowManager);
             }
-            if (template.CanAddNew)
+            if (template.Appendable)
                 _eof = new DataRowManager(this, null);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;

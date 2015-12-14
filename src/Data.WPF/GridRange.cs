@@ -132,5 +132,12 @@ namespace DevZest.Data.Windows
             Owner.RepeatRange = this;
             return Owner;
         }
+
+        public GridTemplate Repeat(RepeatFlow value)
+        {
+            Repeat();
+            Owner.WithRepeatFlow(value);
+            return Owner;
+        }
     }
 }

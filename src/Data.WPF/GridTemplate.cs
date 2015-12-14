@@ -52,45 +52,29 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public GridTemplate SetRepeatFlow(RepeatFlow value)
+        public GridTemplate WithRepeatFlow(RepeatFlow value)
         {
-            RepeatFlow = value;
+            VerifyNotSealed();
+            VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
+            VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
+            _repeatFlow = value;
             return this;
         }
 
-        private bool _canAddNew;
-        public bool CanAddNew
+        private bool _appendable;
+        public bool Appendable
         {
-            get { return _canAddNew; }
+            get { return _appendable; }
             set
             {
                 VerifyNotSealed();
-                _canAddNew = value;
+                _appendable = value;
             }
         }
 
-        public GridTemplate SetCanAddNew(bool value)
+        public GridTemplate WithAppendable(bool value)
         {
-            CanAddNew = value;
-            return this;
-        }
-
-        private int _frozenCount;
-        public int FrozenCount
-        {
-            get { return _frozenCount; }
-            set
-            {
-                VerifyNotSealed();
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException();
-                _frozenCount = value;
-            }
-        }
-
-        public GridTemplate SetFrozenCount(int value)
-        {
-            FrozenCount = value;
+            Appendable = value;
             return this;
         }
 
@@ -108,7 +92,7 @@ namespace DevZest.Data.Windows
         public GridRange RepeatRange
         {
             get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
-            set
+            internal set
             {
                 VerifyNotSealed();
                 if (!value.Contains(AutoRepeatRange))
@@ -296,6 +280,24 @@ namespace DevZest.Data.Windows
             if (bottom < top)
                 throw new ArgumentOutOfRangeException(nameof(bottom));
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
+        }
+
+        public int PinnedLeft { get; private set; }
+
+        public int PinnedTop { get; private set; }
+
+        public int PinnedRight { get; private set; }
+
+        public int PinnedBottom { get; private set; }
+
+        public GridTemplate Pin(int left, int top, int right, int bottom)
+        {
+            VerifyNotSealed();
+            PinnedLeft = left;
+            PinnedTop = top;
+            PinnedRight = right;
+            PinnedBottom = bottom;
+            return this;
         }
 
         internal void DefaultInitialize()
