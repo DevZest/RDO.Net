@@ -58,28 +58,6 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private ScrollMode? _scrollMode;
-        public ScrollMode ScrollMode
-        {
-            get { return _scrollMode.HasValue ? _scrollMode.GetValueOrDefault() : DefaultScrollMode; }
-            set
-            {
-                VerifyIsSealed();
-                _scrollMode = value;
-            }
-        }
-
-        private ScrollMode DefaultScrollMode
-        {
-            get { return RepeatFlow == RepeatFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
-        }
-
-        public GridTemplate SetScrollMode(ScrollMode value)
-        {
-            ScrollMode = value;
-            return this;
-        }
-
         private bool _canAddNew;
         public bool CanAddNew
         {

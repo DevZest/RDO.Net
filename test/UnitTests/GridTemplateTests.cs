@@ -72,17 +72,5 @@ namespace DevZest.Data.Windows
             {
             }
         }
-
-        [TestMethod]
-        public void GridTemplate_ScrollMode()
-        {
-            var template = new GridTemplate(null);
-            template.SetFlow(RepeatFlow.Z);
-            Assert.AreEqual(ScrollMode.None, template.ScrollMode);
-            template.SetFlow(RepeatFlow.Y);
-            Assert.AreEqual(ScrollMode.Virtualizing, template.ScrollMode);
-            template.SetScrollMode(ScrollMode.Normal);
-            Assert.AreEqual(ScrollMode.Normal, template.ScrollMode);
-        }
     }
 }
