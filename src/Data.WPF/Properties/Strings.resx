@@ -127,13 +127,13 @@
     <value>The GridRange is empty.</value>
   </data>
   <data name="GridTemplate_InvalidGridColumnWidthFlow" xml:space="preserve">
-    <value>Invalid GridColumn.Width/Flow combination: GridColumns[{index}]="{gridColumnWidth}", Flow="{flow}".</value>
+    <value>Invalid GridColumn.Width/RepeatFlow combination: GridColumns[{index}]="{gridColumnWidth}", RepeatFlow="{repeatFlow}".</value>
   </data>
   <data name="GridTemplate_InvalidGridItem" xml:space="preserve">
     <value>Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property.</value>
   </data>
   <data name="GridTemplate_InvalidGridRowHeightFlow" xml:space="preserve">
-    <value>Invalid GridRow.Height/Flow combination: GridRows[{index}]="{gridRowHeight}", Flow="{flow}".</value>
+    <value>Invalid GridRow.Height/RepeatFlow combination: GridRows[{index}]="{gridRowHeight}", RepeatFlow="{repeatFlow}".</value>
   </data>
   <data name="GridTemplate_VerifyIsSealed" xml:space="preserve">
     <value>The GridTemplate is currently sealed (read-only).</value>

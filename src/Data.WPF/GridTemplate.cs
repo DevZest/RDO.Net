@@ -39,22 +39,22 @@ namespace DevZest.Data.Windows
 
         public Model Model { get; private set; }
 
-        private GridFlow _flow = GridFlow.Y;
-        public GridFlow Flow
+        private RepeatFlow _repeatFlow = RepeatFlow.Y;
+        public RepeatFlow RepeatFlow
         {
-            get { return _flow; }
+            get { return _repeatFlow; }
             set
             {
                 VerifyIsSealed();
                 VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
                 VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
-                _flow = value;
+                _repeatFlow = value;
             }
         }
 
-        public GridTemplate SetFlow(GridFlow value)
+        public GridTemplate SetFlow(RepeatFlow value)
         {
-            Flow = value;
+            RepeatFlow = value;
             return this;
         }
 
@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows
 
         private ScrollMode DefaultScrollMode
         {
-            get { return Flow == GridFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
+            get { return RepeatFlow == RepeatFlow.Z ? ScrollMode.None : ScrollMode.Virtualizing; }
         }
 
         public GridTemplate SetScrollMode(ScrollMode value)
@@ -195,7 +195,7 @@ namespace DevZest.Data.Windows
             VerifyIsSealed();
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
-            VerifyGridColumnWidth(Flow, result, result, nameof(width));
+            VerifyGridColumnWidth(RepeatFlow, result, result, nameof(width));
             return result;
         }
 
@@ -210,7 +210,7 @@ namespace DevZest.Data.Windows
             VerifyIsSealed();
             GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
-            VerifyGridRowHeight(Flow, result, result, nameof(height));
+            VerifyGridRowHeight(RepeatFlow, result, result, nameof(height));
             return result;
         }
 
@@ -220,7 +220,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private void VerifyGridRowHeight(GridFlow flow, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(RepeatFlow flow, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -229,7 +229,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, GridFlow orentation)
+        private static bool IsValidGridRowHeight(GridRow gridRow, RepeatFlow orentation)
         {
             var height = gridRow.Height;
 
@@ -237,13 +237,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (height.IsStar)
-                return orentation != GridFlow.Y && orentation != GridFlow.YX && orentation != GridFlow.XY;
+                return orentation != RepeatFlow.Y && orentation != RepeatFlow.YX && orentation != RepeatFlow.XY;
 
             Debug.Assert(height.IsAuto);
-            return orentation != GridFlow.YX;
+            return orentation != RepeatFlow.YX;
         }
 
-        private void VerifyGridColumnWidth(GridFlow flow, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(RepeatFlow flow, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -252,7 +252,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, GridFlow orentation)
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, RepeatFlow orentation)
         {
             var width = gridColumn.Width;
 
@@ -260,10 +260,10 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (width.IsStar)
-                return orentation != GridFlow.X && orentation != GridFlow.YX && orentation != GridFlow.XY;
+                return orentation != RepeatFlow.X && orentation != RepeatFlow.YX && orentation != RepeatFlow.XY;
 
             Debug.Assert(width.IsAuto);
-            return orentation != GridFlow.XY;
+            return orentation != RepeatFlow.XY;
         }
 
         internal GridTemplate AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)

@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Windows
 {
-    public enum GridFlow
+    public enum RepeatFlow
     {
         Y,
         X,
