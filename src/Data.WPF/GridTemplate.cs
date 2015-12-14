@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows
         public GridRange RepeatRange
         {
             get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
-            internal set
+            set
             {
                 VerifyNotSealed();
                 if (!value.Contains(AutoRepeatRange))
@@ -260,6 +260,11 @@ namespace DevZest.Data.Windows
                 return new GridRange();
 
             return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
+        }
+
+        public GridRange Range()
+        {
+            return GridColumns.Count == 0 || GridRows.Count == 0 ? new GridRange() : Range(0, 0, GridColumns.Count - 1, GridRows.Count - 1);
         }
 
         public GridRange Range(int column, int row)
