@@ -47,11 +47,5 @@ namespace DevZest.Data.Windows
         protected virtual void OnUnmounting(T uiElement)
         {
         }
-
-        protected Model GetModel(T uiElement)
-        {
-            var dataSetManager = uiElement.GetDataSetManager();
-            return dataSetManager == null ? null : dataSetManager.Model;
-        }
     }
 }

@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
 
         internal GridRange Range { get; private set; }
 
-        internal void Add(T gridItem, GridRange gridRange)
+        internal void Add(GridRange gridRange, T gridItem)
         {
             Debug.Assert(gridItem != null && gridItem.Owner == null);
             gridItem.Seal(_owner, gridRange);

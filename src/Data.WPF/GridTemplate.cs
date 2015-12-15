@@ -206,7 +206,7 @@ namespace DevZest.Data.Windows
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
-            ScalarItems.Add(scalarItem, gridRange);
+            ScalarItems.Add(gridRange, scalarItem);
             return this;
         }
 
@@ -214,7 +214,7 @@ namespace DevZest.Data.Windows
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, listItem, nameof(listItem), true);
-            ListItems.Add(listItem, gridRange);
+            ListItems.Add(gridRange, listItem);
             return this;
         }
 
@@ -224,7 +224,7 @@ namespace DevZest.Data.Windows
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
             var childTemplate = childItem.Template;
             childTemplate.ChildOrdinal = ChildItems.Count;
-            ChildItems.Add(childItem, gridRange);
+            ChildItems.Add(gridRange, childItem);
             return this;
         }
 
