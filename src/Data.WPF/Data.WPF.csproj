@@ -49,12 +49,12 @@
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
-    <Compile Include="Primitives\DataRowPanel.cs" />
-    <Compile Include="Primitives\DataRowControl.cs" />
+    <Compile Include="DataRowPanel.cs" />
+    <Compile Include="DataRowControl.cs" />
     <Compile Include="DataRowManager.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="GridItem_T.cs" />
-    <Compile Include="Primitives\GridLengthParser.cs" />
+    <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetManager.cs" />
     <Compile Include="IListGridItem.cs" />
@@ -65,7 +65,7 @@
     <Compile Include="GridRow.cs" />
     <Compile Include="RepeatFlow.cs" />
     <Compile Include="DataRowSelector.cs" />
-    <Compile Include="Primitives\DataSetPanel.cs" />
+    <Compile Include="DataSetPanel.cs" />
     <Compile Include="GridTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
@@ -75,12 +75,12 @@
     <Compile Include="Selection.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="TextBlockFactory.cs" />
-    <Compile Include="Primitives\Helper.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="GridItem.cs" />
     <Compile Include="GridItemCollection.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
-    <Compile Include="Primitives\LayoutManager.cs" />
+    <Compile Include="LayoutManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">

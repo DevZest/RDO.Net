@@ -66,7 +66,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="SelectionTests.cs" />
-    <Compile Include="Primitives\GridLengthParserTests.cs" />
+    <Compile Include="GridLengthParserTests.cs" />
     <Compile Include="GridTemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

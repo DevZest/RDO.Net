@@ -9,7 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace DevZest.Data.Windows.Primitives
+namespace DevZest.Data.Windows
 {
     public sealed class DataSetPanel : FrameworkElement, IScrollInfo
     {

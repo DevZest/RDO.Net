@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows.Primitives
+namespace DevZest.Data.Windows
 {
     public class DataRowControl : Control
     {

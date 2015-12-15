@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows;
-using DevZest.Data.Windows.Primitives;
 
 namespace DevZest.Data.Windows
 {
