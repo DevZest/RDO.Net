@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -25,6 +23,7 @@ namespace DevZest.Data.Windows
             set
             {
                 VerifyNotSealed();
+                _repeatMode = value;
             }
         }
     }
