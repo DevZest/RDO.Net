@@ -13,9 +13,9 @@ namespace DevZest.Data.Windows
             Model = model;
             GridRows = new GridDefinitionCollection<GridRow>();
             GridColumns = new GridDefinitionCollection<GridColumn>();
-            ScalarItems = new GridItemCollection(this);
-            ListItems = new GridItemCollection(this);
-            ChildItems = new GridItemCollection(this);
+            ScalarItems = new GridItemCollection<ScalarGridItem>(this);
+            ListItems = new GridItemCollection<ListGridItem>(this);
+            ChildItems = new GridItemCollection<ChildGridItem>(this);
         }
 
         internal void Seal()
@@ -81,11 +81,11 @@ namespace DevZest.Data.Windows
 
         public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
 
-        public GridItemCollection ScalarItems { get; private set; }
+        public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
 
-        public GridItemCollection ListItems { get; private set; }
+        public GridItemCollection<ListGridItem> ListItems { get; private set; }
 
-        public GridItemCollection ChildItems { get; private set; }
+        public GridItemCollection<ChildGridItem> ChildItems { get; private set; }
 
         private GridRange? _repeatRange;
         public GridRange RepeatRange

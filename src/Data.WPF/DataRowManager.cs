@@ -78,7 +78,10 @@ namespace DevZest.Data.Windows
             Debug.Assert(template != null);
             var listItems = template.ListItems;
             var listItemsCount = listItems.Count;
-            return index < listItemsCount ? listItems[index] : template.ChildItems[index - listItemsCount];
+            if (index < listItemsCount)
+                return listItems[index];
+            else
+                return template.ChildItems[index - listItemsCount];
         }
 
         private int UIElementsCount

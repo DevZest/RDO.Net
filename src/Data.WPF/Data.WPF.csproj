@@ -44,7 +44,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="ListGridItem.cs" />
     <Compile Include="RepeatMode.cs" />
+    <Compile Include="ScalarGridItem_T.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
@@ -53,11 +55,9 @@
     <Compile Include="DataRowControl.cs" />
     <Compile Include="DataRowManager.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
-    <Compile Include="GridItem_T.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetManager.cs" />
-    <Compile Include="IListGridItem.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataSetControl.cs" />
     <Compile Include="GridColumn.cs" />
@@ -73,7 +73,7 @@
     </Compile>
     <Compile Include="ScalarGridItem.cs" />
     <Compile Include="Selection.cs" />
-    <Compile Include="ListGridItem.cs" />
+    <Compile Include="ListGridItem_T.cs" />
     <Compile Include="TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="GridItem.cs" />

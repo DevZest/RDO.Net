@@ -2,18 +2,11 @@
 
 namespace DevZest.Data.Windows
 {
-    public abstract class ScalarGridItem<T> : GridItem
-        where T : UIElement, new()
+    public abstract class ScalarGridItem : GridItem
     {
-        protected ScalarGridItem(Model parentModel)
+        internal ScalarGridItem(Model parentModel)
             : base(parentModel)
         {
-        }
-
-        protected Model GetModel(T uiElement)
-        {
-            var dataSetManager = uiElement.GetDataSetManager();
-            return dataSetManager == null ? null : dataSetManager.Model;
         }
 
         private RepeatMode _repeatMode;

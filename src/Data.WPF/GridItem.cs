@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
     public abstract class GridItem
     {
-        protected GridItem(Model parentModel)
+        internal GridItem(Model parentModel)
         {
             ParentModel = parentModel;
         }
@@ -33,10 +35,37 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridTemplate_VerifyNotSealed);
         }
 
-        internal abstract UIElement Generate();
+        List<UIElement> _cachedUIElements;
+        private UIElement GetOrCreate()
+        {
+            if (_cachedUIElements == null || _cachedUIElements.Count == 0)
+                return Create();
 
-        internal abstract void Initialize(UIElement uiElement);
+            var last = _cachedUIElements.Count - 1;
+            var result = _cachedUIElements[last];
+            _cachedUIElements.RemoveAt(last);
+            return result;
+        }
 
-        internal abstract void Recycle(UIElement uiElement);
+        internal abstract UIElement Create();
+
+        internal UIElement Generate()
+        {
+            return GetOrCreate();
+        }
+
+        internal abstract void OnMounted(UIElement uiElement);
+
+        internal void Recycle(UIElement uiElement)
+        {
+            Debug.Assert(uiElement != null);
+
+            OnUnmounting(uiElement);
+            if (_cachedUIElements == null)
+                _cachedUIElements = new List<UIElement>();
+            _cachedUIElements.Add(uiElement);
+        }
+
+        internal abstract void OnUnmounting(UIElement uiElement);
     }
 }
