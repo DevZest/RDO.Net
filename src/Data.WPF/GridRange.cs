@@ -62,6 +62,17 @@ namespace DevZest.Data.Windows
             return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
         }
 
+        public bool IntersectsWith(GridRange gridRange)
+        {
+            if (IsEmpty || Owner != gridRange.Owner)
+                return false;
+
+            return gridRange.Left.Ordinal <= this.Right.Ordinal
+                && gridRange.Right.Ordinal >= this.Left.Ordinal
+                && gridRange.Top.Ordinal <= this.Bottom.Ordinal
+                && gridRange.Bottom.Ordinal >= this.Top.Ordinal;
+        }
+
         public GridRange Union(GridRange gridRange)
         {
             if (gridRange.IsEmpty)

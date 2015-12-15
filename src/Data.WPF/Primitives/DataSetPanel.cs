@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -10,9 +11,19 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class DataSetPanel : FrameworkElement, IScrollInfo
+    public sealed class DataSetPanel : FrameworkElement, IScrollInfo
     {
         #region IScrollInfo
+
+        private double ScrollLineHeight
+        {
+            get { return DataSetControl.ScrollLineHeight; }
+        }
+
+        private double ScrollLineWidth
+        {
+            get { return DataSetControl.ScrollLineWidth; }
+        }
 
         bool _canVerticallyScroll;
         bool IScrollInfo.CanVerticallyScroll
@@ -141,14 +152,12 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private static readonly DependencyProperty DataSetManagerProperty = DependencyProperty.Register(nameof(DataSetManager),
-            typeof(DataSetManager), typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnManagerChanged));
+        private static readonly DependencyProperty DataSetManagerProperty = DependencyProperty.Register(nameof(DataSetManager), typeof(DataSetManager),
+            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnDataSetManagerChanged));
 
-        private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnDataSetManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var oldValue = (DataSetManager)e.OldValue;
-            var newValue = (DataSetManager)e.NewValue;
-            ((DataSetPanel)d).OnManagerChanged(oldValue, newValue);
+            ((DataSetPanel)d).OnDataSetManagerChanged();
         }
 
         public DataSetPanel()
@@ -158,79 +167,143 @@ namespace DevZest.Data.Windows.Primitives
             BindingOperations.SetBinding(this, DataSetManagerProperty, binding);
         }
 
+        private DataSetPanel(DataSetPanel parent)
+        {
+            Debug.Assert(parent != null && _parent == null);
+            _parent = parent;
+            RefreshElements();
+        }
+
+        private DataSetPanel _parent;
+
+        private DataSetPanel _child;
+        private DataSetPanel Child
+        {
+            get { return _child; }
+            set
+            {
+                if (_child == value)
+                    return;
+
+                if (_child != null)
+                {
+                    _child.Elements = null;
+                    RemoveLogicalChild(_child);
+                    RemoveVisualChild(_child);
+                }
+
+                _child = value;
+
+                if (_child != null)
+                {
+                    Debug.Assert(_child._parent != null && _child.Elements != null);
+                    AddLogicalChild(_child);
+                    AddVisualChild(_child);
+                }
+            }
+        }
+
+        private void RefreshChild()
+        {
+            if (LayoutManager == null || !LayoutManager.IsPinned)
+                Child = null;
+            else if (Child != null)
+                Child.RefreshElements();
+            else
+                Child = new DataSetPanel(this);
+        }
+
         private DataSetManager DataSetManager
         {
-            get { return (DataSetManager)GetValue(DataSetManagerProperty); }
+            get { return _parent != null ? _parent.DataSetManager : (DataSetManager)GetValue(DataSetManagerProperty); }
         }
 
-        private DataSetControl _dataSetControl;
-
-        public override void OnApplyTemplate()
+        private void OnDataSetManagerChanged()
         {
-            base.OnApplyTemplate();
-            _dataSetControl = TemplatedParent as DataSetControl;
+            RefreshElements();
+            RefreshChild();
         }
 
-        private double ScrollLineHeight
+        private DataSetControl DataSetControl
         {
-            get { return _dataSetControl.ScrollLineHeight; }
-        }
-
-        private double ScrollLineWidth
-        {
-            get { return _dataSetControl.ScrollLineWidth; }
-        }
-
-        private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
-        {
-            if (oldValue != null)
+            get
             {
-                var layoutManager = oldValue.LayoutManager;
-                RemoveLogicalChild(layoutManager.DataRowListView);
-                RemoveVisualChild(layoutManager.DataRowListView);
-                RemoveScalarUIElements(layoutManager.ScalarUIElements);
-                layoutManager.ScalarUIElements.CollectionChanged -= OnScalarUIElementsChanged;
-            }
+                if (_parent != null)
+                    return _parent.DataSetControl;
 
-            if (newValue != null)
-            {
-                var layoutManager = newValue.LayoutManager;
-                AddLogicalChild(layoutManager.DataRowListView);
-                AddVisualChild(layoutManager.DataRowListView);
-                AddScalarUIElements(layoutManager.ScalarUIElements);
-                layoutManager.ScalarUIElements.CollectionChanged += OnScalarUIElementsChanged;
+                var dataSetManager = DataSetManager;
+                return dataSetManager == null ? null : dataSetManager.DataSetControl;
             }
         }
 
-        LayoutManager LayoutManager
+        private LayoutManager LayoutManager
         {
-            get { return DataSetManager == null ? null : DataSetManager.LayoutManager; }
+            get
+            {
+                var dataSetManager = DataSetManager;
+                return dataSetManager == null ? null : dataSetManager.LayoutManager;
+            }
         }
 
-        ObservableCollection<UIElement> ScalarUIElements
+        private bool IsPinned
         {
-            get { return LayoutManager == null ? null : LayoutManager.ScalarUIElements; }
+            get
+            {
+                var layoutManager = LayoutManager;
+                return layoutManager == null || _parent != null ? false : layoutManager.IsPinned;
+            }
         }
 
-        DataRowListView DataRowListView
+        private ObservableCollection<UIElement> _elements;
+        private ObservableCollection<UIElement> Elements
         {
-            get { return LayoutManager == null ? null : LayoutManager.DataRowListView; }
+            get { return _elements; }
+            set
+            {
+                if (_elements == value)
+                    return;
+
+                if (_elements != null)
+                {
+                    RemoveElements(_elements);
+                    _elements.CollectionChanged -= OnElementsChanged;
+                }
+                _elements = value;
+                if (_elements != null)
+                {
+                    AddElements(_elements);
+                    _elements.CollectionChanged += OnElementsChanged;
+                }
+            }
+        }
+        private void RefreshElements()
+        {
+            var layoutManager = LayoutManager;
+            if (layoutManager == null)
+                Elements = null;
+            else
+                Elements = IsPinned ? layoutManager.PinnedElements : layoutManager.ScrollableElements;
         }
 
-        private void OnScalarUIElementsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        int ElementsCount
+        {
+            get { return Elements == null ? 0 : Elements.Count; }
+        }
+
+        private void OnElementsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove ||
                 e.Action == NotifyCollectionChangedAction.Replace ||
                 e.Action == NotifyCollectionChangedAction.Reset)
-                RemoveScalarUIElements(e.OldItems);
+                RemoveElements(e.OldItems);
 
             if (e.Action == NotifyCollectionChangedAction.Add ||
                 e.Action == NotifyCollectionChangedAction.Replace ||
                 e.Action == NotifyCollectionChangedAction.Reset)
-                AddScalarUIElements(e.NewItems);
+                AddElements(e.NewItems);
         }
 
-        private void RemoveScalarUIElements(ICollection items)
+        private void RemoveElements(ICollection items)
         {
             foreach (var item in items)
             {
@@ -239,7 +312,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void AddScalarUIElements(ICollection items)
+        private void AddElements(ICollection items)
         {
             foreach (var item in items)
             {
@@ -250,7 +323,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override int VisualChildrenCount
         {
-            get { return LayoutManager == null ? 0: ScalarUIElements.Count + 1; }
+            get { return _child == null ? ElementsCount : ElementsCount + 1; }
         }
 
         protected override Visual GetVisualChild(int index)
@@ -258,7 +331,7 @@ namespace DevZest.Data.Windows.Primitives
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return index == 0 ? DataRowListView : ScalarUIElements[index + 1];
+            return index < ElementsCount ? Elements[index] : _child;
         }
 
         protected override Size MeasureOverride(Size availableSize)

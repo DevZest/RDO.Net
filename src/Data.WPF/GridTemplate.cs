@@ -305,6 +305,11 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        public bool IsPinned
+        {
+            get { return PinnedLeft > 0 || PinnedTop > 0 || PinnedRight > 0 || PinnedBottom > 0; }
+        }
+
         internal void DefaultInitialize()
         {
             var columns = Model.GetColumns();

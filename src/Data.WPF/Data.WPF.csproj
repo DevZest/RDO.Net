@@ -49,8 +49,6 @@
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
-    <Compile Include="Primitives\DataRowListPanel.cs" />
-    <Compile Include="Primitives\DataRowListView.cs" />
     <Compile Include="Primitives\DataRowPanel.cs" />
     <Compile Include="Primitives\DataRowControl.cs" />
     <Compile Include="DataRowManager.cs" />

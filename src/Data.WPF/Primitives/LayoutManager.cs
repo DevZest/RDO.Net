@@ -9,32 +9,36 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal class LayoutManager
     {
-        internal LayoutManager(DataSetManager owner)
+        internal LayoutManager(DataSetManager dataSetManager)
         {
-            Debug.Assert(owner != null);
-            _owner = owner;
+            Debug.Assert(dataSetManager != null);
+            DataSetManager = dataSetManager;
 
-            VisibleRows = new ObservableCollection<DataRowManager>();
-            ScalarUIElements = new ObservableCollection<UIElement>();
-            DataRowListView = new DataRowListView()
-            {
-                ItemsSource = VisibleRows
-            };
+            ScrollableElements = new ObservableCollection<UIElement>();
+            PinnedElements = IsPinned ? new ObservableCollection<UIElement>() : null;
             Invalidate();
         }
 
-        private DataSetManager _owner;
+        internal DataSetManager DataSetManager { get; private set; }
 
-        private GridTemplate Template
+        internal DataSetControl DataSetControl
         {
-            get { return _owner.Template; }
+            get { return DataSetManager == null ? null : DataSetManager.DataSetControl; }
         }
 
-        internal DataRowListView DataRowListView { get; private set; }
+        internal GridTemplate Template
+        {
+            get { return DataSetManager.Template; }
+        }
 
-        internal ObservableCollection<UIElement> ScalarUIElements { get; private set; }
+        internal bool IsPinned
+        {
+            get { return Template.IsPinned; }
+        }
 
-        internal ObservableCollection<DataRowManager> VisibleRows { get; private set; }
+        internal ObservableCollection<UIElement> ScrollableElements { get; private set; }
+
+        internal ObservableCollection<UIElement> PinnedElements { get; private set; }
 
         private Size _extentSize;
         internal Size ExtentSize
@@ -112,7 +116,7 @@ namespace DevZest.Data.Windows.Primitives
         private void Invalidate()
         {
             _isDirty = true;
-            var dataSetControl = _owner.DataSetControl;
+            var dataSetControl = DataSetManager.DataSetControl;
             if (dataSetControl != null)
             {
                 dataSetControl.InvalidateMeasure();
