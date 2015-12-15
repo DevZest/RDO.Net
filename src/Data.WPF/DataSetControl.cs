@@ -7,48 +7,48 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public class DataSetView : Control
+    public class DataSetControl : Control
     {
-        private static readonly DependencyPropertyKey ManagerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Manager),
-            typeof(DataSetManager), typeof(DataSetView), new FrameworkPropertyMetadata(null, OnManagerChanged));
+        private static readonly DependencyPropertyKey DataSetManagerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataSetManager),
+            typeof(DataSetManager), typeof(DataSetControl), new FrameworkPropertyMetadata(null, OnManagerChanged));
 
-        public static readonly DependencyProperty ManagerProperty = ManagerPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty DataSetManagerProperty = DataSetManagerPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
-            typeof(bool), typeof(DataSetView), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            typeof(bool), typeof(DataSetControl), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibilityProperty),
-            typeof(ScrollBarVisibility), typeof(DataSetView), new PropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataSetControl), new PropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataSetView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataSetControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataSetControl), new FrameworkPropertyMetadata(20.0d));
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataSetControl), new FrameworkPropertyMetadata(20.0d));
 
         private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var oldValue = (DataSetManager)e.OldValue;
             var newValue = (DataSetManager)e.NewValue;
-            ((DataSetView)d).OnManagerChanged(oldValue, newValue);
+            ((DataSetControl)d).OnManagerChanged(oldValue, newValue);
         }
 
         private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
         {
             if (oldValue != null)
-                oldValue.DataSetView = null;
+                oldValue.DataSetControl = null;
 
             Debug.Assert(newValue != null);
-            newValue.DataSetView = this;
+            newValue.DataSetControl = this;
         }
 
-        public DataSetManager Manager
+        public DataSetManager DataSetManager
         {
-            get { return (DataSetManager)GetValue(ManagerProperty); }
-            internal set { SetValue(ManagerPropertyKey, value); }
+            get { return (DataSetManager)GetValue(DataSetManagerProperty); }
+            internal set { SetValue(DataSetManagerPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -93,7 +93,7 @@ namespace DevZest.Data.Windows
             else
                 gridTemplate.DefaultInitialize();
             gridTemplate.Seal();
-            Manager = new DataSetManager(null, gridTemplate);
+            DataSetManager = new DataSetManager(null, gridTemplate);
         }
     }
 }

@@ -52,7 +52,7 @@
     <Compile Include="Primitives\DataRowListPanel.cs" />
     <Compile Include="Primitives\DataRowListView.cs" />
     <Compile Include="Primitives\DataRowPanel.cs" />
-    <Compile Include="Primitives\DataRowView.cs" />
+    <Compile Include="Primitives\DataRowControl.cs" />
     <Compile Include="DataRowManager.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="GridItem_T.cs" />
@@ -61,7 +61,7 @@
     <Compile Include="DataSetManager.cs" />
     <Compile Include="IListGridItem.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataSetView.cs" />
+    <Compile Include="DataSetControl.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />

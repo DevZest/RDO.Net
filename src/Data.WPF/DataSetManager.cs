@@ -41,7 +41,7 @@ namespace DevZest.Data.Windows
             LayoutManager = new LayoutManager(this);
         }
 
-        internal DataSetView DataSetView { get; set; }
+        internal DataSetControl DataSetControl { get; set; }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
         {

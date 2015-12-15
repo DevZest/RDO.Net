@@ -9,14 +9,14 @@ namespace DevZest.Data.Windows
     {
         internal static DataSetManager GetDataSetManager(this DependencyObject reference)
         {
-            var dataSetView = reference.GetParent<DataSetView>();
-            return dataSetView == null ? null : dataSetView.Manager;
+            var dataSetControl = reference.GetParent<DataSetControl>();
+            return dataSetControl == null ? null : dataSetControl.DataSetManager;
         }
 
         internal static DataRowManager GetDataRowManager(this DependencyObject reference)
         {
-            var dataRowView = reference.GetParent<DataRowView>();
-            return dataRowView == null ? null : dataRowView.Manager;
+            var dataRowControl = reference.GetParent<DataRowControl>();
+            return dataRowControl == null ? null : dataRowControl.DataRowManager;
         }
 
         private static T GetParent<T>(this DependencyObject reference)

@@ -141,7 +141,7 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private static readonly DependencyProperty ManagerProperty = DependencyProperty.Register(nameof(Manager),
+        private static readonly DependencyProperty DataSetManagerProperty = DependencyProperty.Register(nameof(DataSetManager),
             typeof(DataSetManager), typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnManagerChanged));
 
         private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -153,32 +153,32 @@ namespace DevZest.Data.Windows.Primitives
 
         public DataSetPanel()
         {
-            var binding = new Binding(DataSetView.ManagerProperty.Name);
+            var binding = new Binding(DataSetControl.DataSetManagerProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, ManagerProperty, binding);
+            BindingOperations.SetBinding(this, DataSetManagerProperty, binding);
         }
 
-        private DataSetManager Manager
+        private DataSetManager DataSetManager
         {
-            get { return (DataSetManager)GetValue(ManagerProperty); }
+            get { return (DataSetManager)GetValue(DataSetManagerProperty); }
         }
 
-        private DataSetView _dataSetView;
+        private DataSetControl _dataSetControl;
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _dataSetView = TemplatedParent as DataSetView;
+            _dataSetControl = TemplatedParent as DataSetControl;
         }
 
         private double ScrollLineHeight
         {
-            get { return _dataSetView.ScrollLineHeight; }
+            get { return _dataSetControl.ScrollLineHeight; }
         }
 
         private double ScrollLineWidth
         {
-            get { return _dataSetView.ScrollLineWidth; }
+            get { return _dataSetControl.ScrollLineWidth; }
         }
 
         private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
@@ -204,7 +204,7 @@ namespace DevZest.Data.Windows.Primitives
 
         LayoutManager LayoutManager
         {
-            get { return Manager == null ? null : Manager.LayoutManager; }
+            get { return DataSetManager == null ? null : DataSetManager.LayoutManager; }
         }
 
         ObservableCollection<UIElement> ScalarUIElements

@@ -112,11 +112,11 @@ namespace DevZest.Data.Windows.Primitives
         private void Invalidate()
         {
             _isDirty = true;
-            var dataSetView = _owner.DataSetView;
-            if (dataSetView != null)
+            var dataSetControl = _owner.DataSetControl;
+            if (dataSetControl != null)
             {
-                dataSetView.InvalidateMeasure();
-                dataSetView.InvalidateVisual();
+                dataSetControl.InvalidateMeasure();
+                dataSetControl.InvalidateVisual();
             }
         }
 
