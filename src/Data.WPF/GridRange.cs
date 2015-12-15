@@ -94,7 +94,7 @@ namespace DevZest.Data.Windows
         private void VerifyNotEmpty()
         {
             if (IsEmpty)
-                throw new InvalidOperationException(Strings.GridRange_VerifyIsEmpty);
+                throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
         private void VerifyDefineGridItem(GridItem gridItem, string paramGridItemName)

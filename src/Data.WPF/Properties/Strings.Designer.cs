@@ -30,9 +30,9 @@ namespace DevZest.Data.Windows
         /// <summary>
         /// The GridRange is empty.
         /// </summary>
-        public static string GridRange_VerifyIsEmpty
+        public static string GridRange_VerifyNotEmpty
         {
-            get { return GetString("GridRange_VerifyIsEmpty"); }
+            get { return GetString("GridRange_VerifyNotEmpty"); }
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace DevZest.Data.Windows
         /// <summary>
         /// The GridTemplate is currently sealed (read-only).
         /// </summary>
-        public static string GridTemplate_VerifyIsSealed
+        public static string GridTemplate_VerifyNotSealed
         {
-            get { return GetString("GridTemplate_VerifyIsSealed"); }
+            get { return GetString("GridTemplate_VerifyNotSealed"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

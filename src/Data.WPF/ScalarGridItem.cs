@@ -17,5 +17,15 @@ namespace DevZest.Data.Windows
             var dataSetManager = uiElement.GetDataSetManager();
             return dataSetManager == null ? null : dataSetManager.Model;
         }
+
+        private RepeatMode _repeatMode;
+        public RepeatMode RepeatMode
+        {
+            get { return _repeatMode; }
+            set
+            {
+                VerifyNotSealed();
+            }
+        }
     }
 }

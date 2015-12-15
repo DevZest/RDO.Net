@@ -27,10 +27,10 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? false : Owner.IsSealed; }
         }
 
-        protected void VerifyIsSealed()
+        protected void VerifyNotSealed()
         {
             if (IsSealed)
-                throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
+                throw new InvalidOperationException(Strings.GridTemplate_VerifyNotSealed);
         }
 
         internal abstract UIElement Generate();

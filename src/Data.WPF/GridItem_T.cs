@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
             get { return _initializer; }
             set
             {
-                VerifyIsSealed();
+                VerifyNotSealed();
                 _initializer = value;
             }
         }

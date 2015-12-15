@@ -123,7 +123,7 @@
   <data name="GridRange_InvalidOwner" xml:space="preserve">
     <value>The GridRange does not belong to the same GridTemplate.</value>
   </data>
-  <data name="GridRange_VerifyIsEmpty" xml:space="preserve">
+  <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>
   </data>
   <data name="GridTemplate_InvalidGridColumnWidthFlow" xml:space="preserve">
@@ -135,7 +135,7 @@
   <data name="GridTemplate_InvalidGridRowHeightFlow" xml:space="preserve">
     <value>Invalid GridRow.Height/RepeatFlow combination: GridRows[{index}]="{gridRowHeight}", RepeatFlow="{repeatFlow}".</value>
   </data>
-  <data name="GridTemplate_VerifyIsSealed" xml:space="preserve">
+  <data name="GridTemplate_VerifyNotSealed" xml:space="preserve">
     <value>The GridTemplate is currently sealed (read-only).</value>
   </data>
 </root>

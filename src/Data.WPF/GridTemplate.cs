@@ -33,7 +33,7 @@ namespace DevZest.Data.Windows
         private void VerifyNotSealed()
         {
             if (_isSealed)
-                throw new InvalidOperationException(Strings.GridTemplate_VerifyIsSealed);
+                throw new InvalidOperationException(Strings.GridTemplate_VerifyNotSealed);
         }
 
         public Model Model { get; private set; }
