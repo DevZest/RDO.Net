@@ -44,6 +44,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="ChildGridItem_T.cs" />
+    <Compile Include="DataSetControlFactory.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="RepeatMode.cs" />
     <Compile Include="ScalarGridItem_T.cs" />

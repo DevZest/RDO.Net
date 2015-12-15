@@ -97,43 +97,32 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        private void VerifyDefineGridItem(GridItem gridItem, string paramGridItemName)
+        private void VerifyGridItem(GridItem gridItem, string paramGridItemName)
         {
             VerifyNotEmpty();
             if (gridItem == null)
                 throw new ArgumentNullException(paramGridItemName);
         }
 
-        public GridTemplate DefineScalar<T>(ScalarGridItem<T> scalarItem)
+        public GridTemplate GridItem<T>(ScalarGridItem<T> scalarItem)
             where T : UIElement, new()
         {
-            VerifyDefineGridItem(scalarItem, nameof(scalarItem));
-            return Owner.AddScalarItem(this, scalarItem);
+            VerifyGridItem(scalarItem, nameof(scalarItem));
+            return Owner.AddItem(this, scalarItem);
         }
 
-        public GridTemplate DefineList<T>(ListGridItem<T> listItem)
+        public GridTemplate GridItem<T>(ListGridItem<T> listItem)
             where T : UIElement, new()
         {
-            VerifyDefineGridItem(listItem, nameof(listItem));
-            return Owner.AddListItem(this, listItem);
+            VerifyGridItem(listItem, nameof(listItem));
+            return Owner.AddItem(this, listItem);
         }
 
-        public GridTemplate DefineChild<TModel>(TModel childModel, Action<GridTemplate, TModel> templateInitializer, Action<DataSetControl> initializer = null)
-            where TModel : Model
+        public GridTemplate GridItem<T>(ChildGridItem<T> childItem)
+            where T : DataSetControl, new()
         {
-            VerifyNotEmpty();
-
-            if (childModel == null)
-                throw new ArgumentNullException(nameof(childModel));
-            if (templateInitializer == null)
-                throw new ArgumentNullException(nameof(templateInitializer));
-
-            var template = new GridTemplate(childModel);
-            templateInitializer(template, childModel);
-            template.Seal();
-            var childItem = new ChildGridItem(template, initializer);
-
-            return Owner.AddChildItem(this, childItem);
+            VerifyGridItem(childItem, nameof(childItem));
+            return Owner.AddItem(this, childItem);
         }
 
         public GridTemplate Repeat()

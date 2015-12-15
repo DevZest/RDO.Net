@@ -202,7 +202,7 @@ namespace DevZest.Data.Windows
             return orentation != RepeatFlow.XY;
         }
 
-        internal GridTemplate AddScalarItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
+        internal GridTemplate AddItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
@@ -210,7 +210,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        internal GridTemplate AddListItem<T>(GridRange gridRange, ListGridItem<T> listItem)
+        internal GridTemplate AddItem<T>(GridRange gridRange, ListGridItem<T> listItem)
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, listItem, nameof(listItem), true);
@@ -218,7 +218,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        internal GridTemplate AddChildItem(GridRange gridRange, ChildGridItem childItem)
+        internal GridTemplate AddItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
+            where T : DataSetControl, new()
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
             var childTemplate = childItem.Template;
