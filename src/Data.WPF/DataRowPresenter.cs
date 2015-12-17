@@ -9,11 +9,22 @@ namespace DevZest.Data.Windows
     public sealed class DataRowPresenter
     {
         internal DataRowPresenter(DataSetPresenter owner, DataRow dataRow)
+            : this(owner, dataRow, DataViewRowType.DataRow)
+        {
+        }
+
+        internal DataRowPresenter(DataSetPresenter owner, DataViewRowType rowType)
+            : this(owner, null, rowType)
+        {            
+        }
+
+        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow, DataViewRowType rowType)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
+            RowType = rowType;
             Children = InitChildDataSetPresenters();
         }
 
@@ -42,6 +53,9 @@ namespace DevZest.Data.Windows
         public IReadOnlyList<DataSetPresenter> Children { get; private set; }
         private IReadOnlyList<DataSetPresenter> InitChildDataSetPresenters()
         {
+            if (RowType != DataViewRowType.DataRow)
+                return s_emptyChildren;
+
             var childItems = Template.ChildItems;
             if (childItems.Count == 0)
                 return s_emptyChildren;
@@ -63,10 +77,7 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
         }
 
-        public bool IsEof
-        {
-            get { return DataRow == null; }
-        }
+        public DataViewRowType RowType { get; private set; }
 
         private static UIElement[] s_emptyUIElements = new UIElement[0];
         private UIElement[] _uiElements = null;
@@ -138,7 +149,7 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return IsEof ? default(T) : column[DataRow];
+            return DataRow == null ? default(T) : column[DataRow];
         }
 
         public void SetValue<T>(Column<T> column, T value)

@@ -60,20 +60,37 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private bool _appendable;
-        public bool Appendable
+        private bool _showsEof;
+        public bool ShowsEof
         {
-            get { return _appendable; }
+            get { return _showsEof; }
             set
             {
                 VerifyNotSealed();
-                _appendable = value;
+                _showsEof = value;
             }
         }
 
-        public GridTemplate WithAppendable(bool value)
+        public GridTemplate WithShowsEof(bool value)
         {
-            Appendable = value;
+            ShowsEof = value;
+            return this;
+        }
+
+        private bool _showsEmptyDataRow;
+        public bool ShowsEmptyDataRow
+        {
+            get { return _showsEmptyDataRow; }
+            set
+            {
+                VerifyNotSealed();
+                _showsEmptyDataRow = value;
+            }
+        }
+
+        public GridTemplate WithShowsEmptyDataRow(bool value)
+        {
+            ShowsEmptyDataRow = value;
             return this;
         }
 

@@ -29,8 +29,8 @@ namespace DevZest.Data.Windows
                 var dataRowPresenter = new DataRowPresenter(this, dataRow);
                 _dataRowPresenters.Add(dataRowPresenter);
             }
-            if (template.Appendable)
-                _eof = new DataRowPresenter(this, null);
+            if (template.ShowsEof)
+                _eofOrEmptyDataRow = new DataRowPresenter(this, DataViewRowType.Eof);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
@@ -80,7 +80,18 @@ namespace DevZest.Data.Windows
         #region IReadOnlyList<DataRowPresenter>
 
         List<DataRowPresenter> _dataRowPresenters;
-        DataRowPresenter _eof;
+        DataRowPresenter _eofOrEmptyDataRow { get; set; }
+
+        private void CoerceEmptyDataRow()
+        {
+            if (_eofOrEmptyDataRow != null && _eofOrEmptyDataRow.RowType == DataViewRowType.Eof)
+                return;
+
+            if (_dataRowPresenters.Count == 0 && Template.ShowsEmptyDataRow && _eofOrEmptyDataRow == null)
+                _eofOrEmptyDataRow = new DataRowPresenter(this, DataViewRowType.EmptyDataRow);
+            else if (_dataRowPresenters.Count > 0 && _eofOrEmptyDataRow != null)
+                _eofOrEmptyDataRow = null;
+        }
 
         public IEnumerator<DataRowPresenter> GetEnumerator()
         {
@@ -95,7 +106,7 @@ namespace DevZest.Data.Windows
 
         public int IndexOf(DataRowPresenter item)
         {
-            return item == null || item.Owner != this ? -1 : (item == _eof ? Count - 1 : DataSet.IndexOf(item.DataRow));
+            return item == null || item.Owner != this ? -1 : (item == _eofOrEmptyDataRow ? Count - 1 : DataSet.IndexOf(item.DataRow));
         }
 
         public int Count
@@ -103,7 +114,7 @@ namespace DevZest.Data.Windows
             get
             {
                 var result = _dataRowPresenters.Count;
-                if (_eof != null)
+                if (_eofOrEmptyDataRow != null)
                     result++;
                 return result;
             }
@@ -116,7 +127,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return _eof != null && index == Count - 1 ? _eof : _dataRowPresenters[index];
+                return _eofOrEmptyDataRow != null && index == Count - 1 ? _eofOrEmptyDataRow : _dataRowPresenters[index];
             }
         }
         #endregion
@@ -142,10 +153,10 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (_eof == null)
+                if (_eofOrEmptyDataRow == null)
                     return _selection;
 
-                var eofIndex = EofIndex;
+                var eofIndex = IndexOfEofOrEmptyDataRow;
                 if (_selection.IsSelected(eofIndex))
                     return _selection.Where(x => x != eofIndex).ToArray();
 
@@ -153,23 +164,23 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private int EofIndex
+        private int IndexOfEofOrEmptyDataRow
         {
             get
             {
-                Debug.Assert(_eof != null);
+                Debug.Assert(_eofOrEmptyDataRow != null);
                 return DataSet.Count;
             }
         }
 
-        private bool IsEof(int index)
+        private bool IsEofOrEmptyDataRow(int index)
         {
-            return _eof != null && EofIndex == index;
+            return _eofOrEmptyDataRow != null && IndexOfEofOrEmptyDataRow == index;
         }
 
         internal bool IsSelected(int index)
         {
-            return !IsEof(index) && _selection.IsSelected(index);
+            return !IsEofOrEmptyDataRow(index) && _selection.IsSelected(index);
         }
 
         public void Select(int index, SelectionMode selectionMode)

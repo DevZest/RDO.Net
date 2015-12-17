@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="ChildGridItem_T.cs" />
     <Compile Include="DataSetViewFactory.cs" />
+    <Compile Include="DataViewRowType.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="RepeatMode.cs" />
     <Compile Include="ScalarGridItem_T.cs" />
