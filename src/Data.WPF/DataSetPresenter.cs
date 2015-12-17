@@ -23,21 +23,22 @@ namespace DevZest.Data.Windows
             DataSet = Model[parentDataRow];
             Debug.Assert(DataSet != null);
 
-            _dataRowPresenters = new List<DataRowPresenter>(DataSet.Count);
+            _rows = new List<DataRowPresenter>(DataSet.Count);
             foreach (var dataRow in DataSet)
             {
                 var dataRowPresenter = new DataRowPresenter(this, dataRow);
-                _dataRowPresenters.Add(dataRowPresenter);
+                _rows.Add(dataRowPresenter);
             }
+
             if (template.ShowsEof)
-                _eofOrEmptyDataRow = new DataRowPresenter(this, DataViewRowType.Eof);
+                _virtualRow = new DataRowPresenter(this, DataViewRowType.Eof);
+            else
+                CoerceEmptyDataRow();
+            CoerceSelection();
+            LayoutManager = new LayoutManager(this);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
-
-            CoerceSelection();
-
-            LayoutManager = new LayoutManager(this);
         }
 
         internal DataSetView View { get; set; }
@@ -48,16 +49,17 @@ namespace DevZest.Data.Windows
             var isDelete = oldIndex >= 0;
             if (isDelete)
             {
-                _dataRowPresenters[oldIndex].Dispose();
-                _dataRowPresenters.RemoveAt(oldIndex);
+                _rows[oldIndex].Dispose();
+                _rows.RemoveAt(oldIndex);
             }
             else
             {
                 var dataRow = e.DataRow;
                 var dataRowPresenter = new DataRowPresenter(this, dataRow);
-                _dataRowPresenters.Insert(DataSet.IndexOf(dataRow), dataRowPresenter);
+                _rows.Insert(DataSet.IndexOf(dataRow), dataRowPresenter);
             }
 
+            CoerceEmptyDataRow();
             CoerceSelection();
         }
 
@@ -79,42 +81,45 @@ namespace DevZest.Data.Windows
 
         #region IReadOnlyList<DataRowPresenter>
 
-        List<DataRowPresenter> _dataRowPresenters;
-        DataRowPresenter _eofOrEmptyDataRow { get; set; }
+        List<DataRowPresenter> _rows;
+        DataRowPresenter _virtualRow;
 
         private void CoerceEmptyDataRow()
         {
-            if (_eofOrEmptyDataRow != null && _eofOrEmptyDataRow.RowType == DataViewRowType.Eof)
+            if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.Eof)
                 return;
 
-            if (_dataRowPresenters.Count == 0 && Template.ShowsEmptyDataRow && _eofOrEmptyDataRow == null)
-                _eofOrEmptyDataRow = new DataRowPresenter(this, DataViewRowType.EmptyDataRow);
-            else if (_dataRowPresenters.Count > 0 && _eofOrEmptyDataRow != null)
-                _eofOrEmptyDataRow = null;
+            if (_rows.Count == 0)
+            {
+                if (Template.ShowsEmptyDataRow && _virtualRow == null)
+                    _virtualRow = new DataRowPresenter(this, DataViewRowType.EmptyDataRow);
+            }
+            else if (_virtualRow != null)
+                _virtualRow = null;
         }
 
         public IEnumerator<DataRowPresenter> GetEnumerator()
         {
-            foreach (var dataRowPresenter in _dataRowPresenters)
+            foreach (var dataRowPresenter in _rows)
                 yield return dataRowPresenter;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _dataRowPresenters.GetEnumerator();
+            return _rows.GetEnumerator();
         }
 
         public int IndexOf(DataRowPresenter item)
         {
-            return item == null || item.Owner != this ? -1 : (item == _eofOrEmptyDataRow ? Count - 1 : DataSet.IndexOf(item.DataRow));
+            return item == null || item.Owner != this ? -1 : (item == _virtualRow ? Count - 1 : DataSet.IndexOf(item.DataRow));
         }
 
         public int Count
         {
             get
             {
-                var result = _dataRowPresenters.Count;
-                if (_eofOrEmptyDataRow != null)
+                var result = _rows.Count;
+                if (_virtualRow != null)
                     result++;
                 return result;
             }
@@ -127,7 +132,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return _eofOrEmptyDataRow != null && index == Count - 1 ? _eofOrEmptyDataRow : _dataRowPresenters[index];
+                return _virtualRow != null && index == Count - 1 ? _virtualRow : _rows[index];
             }
         }
         #endregion
@@ -153,34 +158,34 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (_eofOrEmptyDataRow == null)
+                if (_virtualRow == null)
                     return _selection;
 
-                var eofIndex = IndexOfEofOrEmptyDataRow;
-                if (_selection.IsSelected(eofIndex))
-                    return _selection.Where(x => x != eofIndex).ToArray();
+                var virtualRowIndex = VirtualRowIndex;
+                if (_selection.IsSelected(virtualRowIndex))
+                    return _selection.Where(x => x != virtualRowIndex).ToArray();
 
                 return _selection;
             }
         }
 
-        private int IndexOfEofOrEmptyDataRow
+        private int VirtualRowIndex
         {
             get
             {
-                Debug.Assert(_eofOrEmptyDataRow != null);
+                Debug.Assert(_virtualRow != null);
                 return DataSet.Count;
             }
         }
 
-        private bool IsEofOrEmptyDataRow(int index)
+        private bool IsVirtualRow(int index)
         {
-            return _eofOrEmptyDataRow != null && IndexOfEofOrEmptyDataRow == index;
+            return _virtualRow != null && VirtualRowIndex == index;
         }
 
         internal bool IsSelected(int index)
         {
-            return !IsEofOrEmptyDataRow(index) && _selection.IsSelected(index);
+            return !IsVirtualRow(index) && _selection.IsSelected(index);
         }
 
         public void Select(int index, SelectionMode selectionMode)
