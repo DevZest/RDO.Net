@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Windows
 {
-    public static class DataSetControlFactory
+    public static class DataSetViewFactory
     {
-        public static ChildGridItem<DataSetControl> DataSetControl<T>(this T childModel, Action<GridTemplate, T> templateInitializer, Action<DataSetControl> initializer = null)
+        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<GridTemplate, T> templateInitializer, Action<DataSetView> initializer = null)
             where T : Model
         {
             if (childModel == null)
@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows
             var template = new GridTemplate(childModel);
             templateInitializer(template, childModel);
             template.Seal();
-            var result = new ChildGridItem<DataSetControl>(template);
+            var result = new ChildGridItem<DataSetView>(template);
             if (initializer != null)
                 result.Initializer = initializer;
             return result;

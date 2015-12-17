@@ -119,7 +119,7 @@ namespace DevZest.Data.Windows
         }
 
         public GridTemplate GridItem<T>(ChildGridItem<T> childItem)
-            where T : DataSetControl, new()
+            where T : DataSetView, new()
         {
             VerifyGridItem(childItem, nameof(childItem));
             return Owner.AddItem(this, childItem);

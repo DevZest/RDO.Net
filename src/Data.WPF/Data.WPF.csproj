@@ -45,7 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="ChildGridItem_T.cs" />
-    <Compile Include="DataSetControlFactory.cs" />
+    <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="RepeatMode.cs" />
     <Compile Include="ScalarGridItem_T.cs" />
@@ -54,14 +54,14 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
     <Compile Include="DataRowPanel.cs" />
-    <Compile Include="DataRowControl.cs" />
-    <Compile Include="DataRowManager.cs" />
+    <Compile Include="DataRowView.cs" />
+    <Compile Include="DataRowPresenter.cs" />
     <Compile Include="GridDefinitionCollection.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
-    <Compile Include="DataSetManager.cs" />
+    <Compile Include="DataSetPresenter.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataSetControl.cs" />
+    <Compile Include="DataSetView.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />

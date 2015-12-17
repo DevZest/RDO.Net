@@ -49,45 +49,45 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal sealed override void UpdateTarget(DataRowManager dataRowManager, UIElement uiElement)
+        internal sealed override void UpdateTarget(DataRowPresenter dataRowPresenter, UIElement uiElement)
         {
-            UpdateTarget(dataRowManager, (T)uiElement);
+            UpdateTarget(dataRowPresenter, (T)uiElement);
         }
 
-        internal sealed override void UpdateSource(UIElement uiElement, DataRowManager dataRowManager)
+        internal sealed override void UpdateSource(UIElement uiElement, DataRowPresenter dataRowPresenter)
         {
-            UpdateSource((T)uiElement, dataRowManager);
+            UpdateSource((T)uiElement, dataRowPresenter);
         }
 
-        protected abstract void UpdateTarget(DataRowManager dataRowManager, T element);
+        protected abstract void UpdateTarget(DataRowPresenter dataRowPresenter, T element);
 
-        protected abstract void UpdateSource(T element, DataRowManager dataRowManager);
+        protected abstract void UpdateSource(T element, DataRowPresenter dataRowPresenter);
 
-        protected TValue GetValue<TValue>(Column<TValue> column, DataRowManager dataRowManager)
+        protected TValue GetValue<TValue>(Column<TValue> column, DataRowPresenter dataRowPresenter)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            if (dataRowManager == null)
-                throw new ArgumentNullException(nameof(dataRowManager));
+            if (dataRowPresenter == null)
+                throw new ArgumentNullException(nameof(dataRowPresenter));
 
-            return column[dataRowManager.DataRow];
+            return column[dataRowPresenter.DataRow];
         }
 
 
         private bool _isSettingValue;
-        protected void SetValue<TValue>(DataRowManager dataRowManager, Column<TValue> column, TValue value)
+        protected void SetValue<TValue>(DataRowPresenter dataRowPresenter, Column<TValue> column, TValue value)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            if (dataRowManager == null)
-                throw new ArgumentNullException(nameof(dataRowManager));
+            if (dataRowPresenter == null)
+                throw new ArgumentNullException(nameof(dataRowPresenter));
 
             _isSettingValue = true;
             try
             {
-                column[dataRowManager.DataRow] = value;
+                column[dataRowPresenter.DataRow] = value;
             }
             finally
             {

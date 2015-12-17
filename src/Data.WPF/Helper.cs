@@ -6,16 +6,16 @@ namespace DevZest.Data.Windows
 {
     public static class Helper
     {
-        internal static DataSetManager GetDataSetManager(this DependencyObject reference)
+        internal static DataSetPresenter GetDataSetPresenter(this DependencyObject reference)
         {
-            var dataSetControl = reference.GetParent<DataSetControl>();
-            return dataSetControl == null ? null : dataSetControl.DataSetManager;
+            var dataSetView = reference.GetParent<DataSetView>();
+            return dataSetView == null ? null : dataSetView.Presenter;
         }
 
-        internal static DataRowManager GetDataRowManager(this DependencyObject reference)
+        internal static DataRowPresenter GetDataRowPresenter(this DependencyObject reference)
         {
-            var dataRowControl = reference.GetParent<DataRowControl>();
-            return dataRowControl == null ? null : dataRowControl.DataRowManager;
+            var dataRowView = reference.GetParent<DataRowView>();
+            return dataRowView == null ? null : dataRowView.Presenter;
         }
 
         private static T GetParent<T>(this DependencyObject reference)

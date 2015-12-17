@@ -7,48 +7,48 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public class DataSetControl : Control
+    public class DataSetView : Control
     {
-        private static readonly DependencyPropertyKey DataSetManagerPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataSetManager),
-            typeof(DataSetManager), typeof(DataSetControl), new FrameworkPropertyMetadata(null, OnManagerChanged));
+        private static readonly DependencyPropertyKey PresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Presenter),
+            typeof(DataSetPresenter), typeof(DataSetView), new FrameworkPropertyMetadata(null, OnPresenterChanged));
 
-        public static readonly DependencyProperty DataSetManagerProperty = DataSetManagerPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PresenterProperty = PresenterPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
-            typeof(bool), typeof(DataSetControl), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            typeof(bool), typeof(DataSetView), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibilityProperty),
-            typeof(ScrollBarVisibility), typeof(DataSetControl), new PropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataSetView), new PropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataSetControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataSetView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
-            typeof(double), typeof(DataSetControl), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
-            typeof(double), typeof(DataSetControl), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
 
-        private static void OnManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var oldValue = (DataSetManager)e.OldValue;
-            var newValue = (DataSetManager)e.NewValue;
-            ((DataSetControl)d).OnManagerChanged(oldValue, newValue);
+            var oldValue = (DataSetPresenter)e.OldValue;
+            var newValue = (DataSetPresenter)e.NewValue;
+            ((DataSetView)d).OnPresenterChanged(oldValue, newValue);
         }
 
-        private void OnManagerChanged(DataSetManager oldValue, DataSetManager newValue)
+        private void OnPresenterChanged(DataSetPresenter oldValue, DataSetPresenter newValue)
         {
             if (oldValue != null)
-                oldValue.DataSetControl = null;
+                oldValue.View = null;
 
             Debug.Assert(newValue != null);
-            newValue.DataSetControl = this;
+            newValue.View = this;
         }
 
-        public DataSetManager DataSetManager
+        public DataSetPresenter Presenter
         {
-            get { return (DataSetManager)GetValue(DataSetManagerProperty); }
-            internal set { SetValue(DataSetManagerPropertyKey, value); }
+            get { return (DataSetPresenter)GetValue(PresenterProperty); }
+            internal set { SetValue(PresenterPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -93,7 +93,7 @@ namespace DevZest.Data.Windows
             else
                 gridTemplate.DefaultInitialize();
             gridTemplate.Seal();
-            DataSetManager = new DataSetManager(null, gridTemplate);
+            Presenter = new DataSetPresenter(null, gridTemplate);
         }
     }
 }

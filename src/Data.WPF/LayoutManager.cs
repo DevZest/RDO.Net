@@ -9,26 +9,26 @@ namespace DevZest.Data.Windows
 {
     internal class LayoutManager
     {
-        internal LayoutManager(DataSetManager dataSetManager)
+        internal LayoutManager(DataSetPresenter presenter)
         {
-            Debug.Assert(dataSetManager != null);
-            DataSetManager = dataSetManager;
+            Debug.Assert(presenter != null);
+            Presenter = presenter;
 
             ScrollableElements = new ObservableCollection<UIElement>();
             PinnedElements = IsPinned ? new ObservableCollection<UIElement>() : null;
             Invalidate();
         }
 
-        internal DataSetManager DataSetManager { get; private set; }
+        internal DataSetPresenter Presenter { get; private set; }
 
-        internal DataSetControl DataSetControl
+        internal DataSetView View
         {
-            get { return DataSetManager == null ? null : DataSetManager.DataSetControl; }
+            get { return Presenter == null ? null : Presenter.View; }
         }
 
         internal GridTemplate Template
         {
-            get { return DataSetManager.Template; }
+            get { return Presenter.Template; }
         }
 
         internal bool IsPinned
@@ -116,11 +116,11 @@ namespace DevZest.Data.Windows
         private void Invalidate()
         {
             _isDirty = true;
-            var dataSetControl = DataSetManager.DataSetControl;
-            if (dataSetControl != null)
+            var dataSetView = Presenter.View;
+            if (dataSetView != null)
             {
-                dataSetControl.InvalidateMeasure();
-                dataSetControl.InvalidateVisual();
+                dataSetView.InvalidateMeasure();
+                dataSetView.InvalidateVisual();
             }
         }
 

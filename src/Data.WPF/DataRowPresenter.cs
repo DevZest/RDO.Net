@@ -6,15 +6,15 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataRowManager
+    public sealed class DataRowPresenter
     {
-        internal DataRowManager(DataSetManager owner, DataRow dataRow)
+        internal DataRowPresenter(DataSetPresenter owner, DataRow dataRow)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             Owner = owner;
             DataRow = dataRow;
-            Children = InitChildDataSetManagers();
+            Children = InitChildDataSetPresenters();
         }
 
         internal void Dispose()
@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
             EnsureUIElementsRecycled();
         }
 
-        public DataSetManager Owner { get; private set; }
+        public DataSetPresenter Owner { get; private set; }
 
         public GridTemplate Template
         {
@@ -38,17 +38,17 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? null : Owner.Model; }
         }
 
-        private static DataSetManager[] s_emptyChildren = new DataSetManager[0];
-        public IReadOnlyList<DataSetManager> Children { get; private set; }
-        private IReadOnlyList<DataSetManager> InitChildDataSetManagers()
+        private static DataSetPresenter[] s_emptyChildren = new DataSetPresenter[0];
+        public IReadOnlyList<DataSetPresenter> Children { get; private set; }
+        private IReadOnlyList<DataSetPresenter> InitChildDataSetPresenters()
         {
             var childItems = Template.ChildItems;
             if (childItems.Count == 0)
                 return s_emptyChildren;
 
-            var result = new DataSetManager[childItems.Count];
+            var result = new DataSetPresenter[childItems.Count];
             for (int i = 0; i < childItems.Count; i++)
-                result[i] = new DataSetManager(this, ((ChildGridItem)childItems[i]).Template);
+                result[i] = new DataSetPresenter(this, ((ChildGridItem)childItems[i]).Template);
 
             return result;
         }

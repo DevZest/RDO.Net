@@ -10,8 +10,8 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal abstract void UpdateTarget(DataRowManager dataRowManager, UIElement uiElement);
+        internal abstract void UpdateTarget(DataRowPresenter dataRowPresenter, UIElement uiElement);
 
-        internal abstract void UpdateSource(UIElement uiElement, DataRowManager dataRowManager);
+        internal abstract void UpdateSource(UIElement uiElement, DataRowPresenter dataRowPresenter);
     }
 }

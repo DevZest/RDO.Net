@@ -10,9 +10,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class DataSetManager : IReadOnlyList<DataRowManager>
+    public sealed partial class DataSetPresenter : IReadOnlyList<DataRowPresenter>
     {
-        internal DataSetManager(DataRowManager owner, GridTemplate template)
+        internal DataSetPresenter(DataRowPresenter owner, GridTemplate template)
         {
             Debug.Assert(template != null);
             Debug.Assert(owner == null || template.Model.GetParentModel() == owner.Model);
@@ -23,14 +23,14 @@ namespace DevZest.Data.Windows
             DataSet = Model[parentDataRow];
             Debug.Assert(DataSet != null);
 
-            _dataRowManagers = new List<DataRowManager>(DataSet.Count);
+            _dataRowPresenters = new List<DataRowPresenter>(DataSet.Count);
             foreach (var dataRow in DataSet)
             {
-                var dataRowManager = new DataRowManager(this, dataRow);
-                _dataRowManagers.Add(dataRowManager);
+                var dataRowPresenter = new DataRowPresenter(this, dataRow);
+                _dataRowPresenters.Add(dataRowPresenter);
             }
             if (template.Appendable)
-                _eof = new DataRowManager(this, null);
+                _eof = new DataRowPresenter(this, null);
 
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
@@ -40,7 +40,7 @@ namespace DevZest.Data.Windows
             LayoutManager = new LayoutManager(this);
         }
 
-        internal DataSetControl DataSetControl { get; set; }
+        internal DataSetView View { get; set; }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
         {
@@ -48,14 +48,14 @@ namespace DevZest.Data.Windows
             var isDelete = oldIndex >= 0;
             if (isDelete)
             {
-                _dataRowManagers[oldIndex].Dispose();
-                _dataRowManagers.RemoveAt(oldIndex);
+                _dataRowPresenters[oldIndex].Dispose();
+                _dataRowPresenters.RemoveAt(oldIndex);
             }
             else
             {
                 var dataRow = e.DataRow;
-                var dataRowManager = new DataRowManager(this, dataRow);
-                _dataRowManagers.Insert(DataSet.IndexOf(dataRow), dataRowManager);
+                var dataRowPresenter = new DataRowPresenter(this, dataRow);
+                _dataRowPresenters.Insert(DataSet.IndexOf(dataRow), dataRowPresenter);
             }
 
             CoerceSelection();
@@ -66,7 +66,7 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        public DataRowManager Owner { get; private set; }
+        public DataRowPresenter Owner { get; private set; }
 
         public GridTemplate Template { get; private set; }
 
@@ -77,23 +77,23 @@ namespace DevZest.Data.Windows
             get { return Template.Model; }
         }
 
-        #region IReadOnlyList<DataRowManager>
+        #region IReadOnlyList<DataRowPresenter>
 
-        List<DataRowManager> _dataRowManagers;
-        DataRowManager _eof;
+        List<DataRowPresenter> _dataRowPresenters;
+        DataRowPresenter _eof;
 
-        public IEnumerator<DataRowManager> GetEnumerator()
+        public IEnumerator<DataRowPresenter> GetEnumerator()
         {
-            foreach (var dataRowManager in _dataRowManagers)
-                yield return dataRowManager;
+            foreach (var dataRowPresenter in _dataRowPresenters)
+                yield return dataRowPresenter;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _dataRowManagers.GetEnumerator();
+            return _dataRowPresenters.GetEnumerator();
         }
 
-        public int IndexOf(DataRowManager item)
+        public int IndexOf(DataRowPresenter item)
         {
             return item == null || item.Owner != this ? -1 : (item == _eof ? Count - 1 : DataSet.IndexOf(item.DataRow));
         }
@@ -102,21 +102,21 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                var result = _dataRowManagers.Count;
+                var result = _dataRowPresenters.Count;
                 if (_eof != null)
                     result++;
                 return result;
             }
         }
 
-        public DataRowManager this[int index]
+        public DataRowPresenter this[int index]
         {
             get
             {
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return _eof != null && index == Count - 1 ? _eof : _dataRowManagers[index];
+                return _eof != null && index == Count - 1 ? _eof : _dataRowPresenters[index];
             }
         }
         #endregion

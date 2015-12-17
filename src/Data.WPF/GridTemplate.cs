@@ -219,7 +219,7 @@ namespace DevZest.Data.Windows
         }
 
         internal GridTemplate AddItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
-            where T : DataSetControl, new()
+            where T : DataSetView, new()
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
             var childTemplate = childItem.Template;
@@ -240,7 +240,6 @@ namespace DevZest.Data.Windows
             if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
                 throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, paramGridItemName);
         }
-
 
         private void VerifyGridColumn(int index, string paramName)
         {

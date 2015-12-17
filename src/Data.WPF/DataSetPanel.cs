@@ -17,12 +17,12 @@ namespace DevZest.Data.Windows
 
         private double ScrollLineHeight
         {
-            get { return DataSetControl.ScrollLineHeight; }
+            get { return View.ScrollLineHeight; }
         }
 
         private double ScrollLineWidth
         {
-            get { return DataSetControl.ScrollLineWidth; }
+            get { return View.ScrollLineWidth; }
         }
 
         bool _canVerticallyScroll;
@@ -152,19 +152,19 @@ namespace DevZest.Data.Windows
 
         #endregion
 
-        private static readonly DependencyProperty DataSetManagerProperty = DependencyProperty.Register(nameof(DataSetManager), typeof(DataSetManager),
-            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnDataSetManagerChanged));
+        private static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataSetPresenter),
+            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnPresenterChanged));
 
-        private static void OnDataSetManagerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DataSetPanel)d).OnDataSetManagerChanged();
+            ((DataSetPanel)d).OnPresenterChanged();
         }
 
         public DataSetPanel()
         {
-            var binding = new Binding(DataSetControl.DataSetManagerProperty.Name);
+            var binding = new Binding(DataSetView.PresenterProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, DataSetManagerProperty, binding);
+            BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
 
         private DataSetPanel(DataSetPanel parent)
@@ -213,26 +213,26 @@ namespace DevZest.Data.Windows
                 Child = new DataSetPanel(this);
         }
 
-        private DataSetManager DataSetManager
+        private DataSetPresenter Presenter
         {
-            get { return _parent != null ? _parent.DataSetManager : (DataSetManager)GetValue(DataSetManagerProperty); }
+            get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
         }
 
-        private void OnDataSetManagerChanged()
+        private void OnPresenterChanged()
         {
             RefreshElements();
             RefreshChild();
         }
 
-        private DataSetControl DataSetControl
+        private DataSetView View
         {
             get
             {
                 if (_parent != null)
-                    return _parent.DataSetControl;
+                    return _parent.View;
 
-                var dataSetManager = DataSetManager;
-                return dataSetManager == null ? null : dataSetManager.DataSetControl;
+                var presenter = Presenter;
+                return presenter == null ? null : presenter.View;
             }
         }
 
@@ -240,8 +240,8 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                var dataSetManager = DataSetManager;
-                return dataSetManager == null ? null : dataSetManager.LayoutManager;
+                var presenter = Presenter;
+                return presenter == null ? null : presenter.LayoutManager;
             }
         }
 
