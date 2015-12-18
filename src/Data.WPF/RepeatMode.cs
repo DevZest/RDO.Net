@@ -2,9 +2,8 @@
 {
     public enum RepeatMode
     {
-        None,
+        Static,
         Stretch,
-        Header,
-        Row
+        Flow
     }
 }

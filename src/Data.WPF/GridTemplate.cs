@@ -11,8 +11,8 @@ namespace DevZest.Data.Windows
         internal GridTemplate(Model model)
         {
             Model = model;
-            GridRows = new GridDefinitionCollection<GridRow>();
-            GridColumns = new GridDefinitionCollection<GridColumn>();
+            GridRows = new GridSpecCollection<GridRow>();
+            GridColumns = new GridSpecCollection<GridColumn>();
             ScalarItems = new GridItemCollection<ScalarGridItem>(this);
             ListItems = new GridItemCollection<ListGridItem>(this);
             ChildItems = new GridItemCollection<ChildGridItem>(this);
@@ -94,9 +94,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public GridDefinitionCollection<GridRow> GridRows { get; private set; }
+        public GridSpecCollection<GridRow> GridRows { get; private set; }
 
-        public GridDefinitionCollection<GridColumn> GridColumns { get; private set; }
+        public GridSpecCollection<GridColumn> GridColumns { get; private set; }
 
         public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
 

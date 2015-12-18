@@ -4,10 +4,10 @@ using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Windows
 {
-    public class GridDefinitionCollection<T> : ReadOnlyCollection<T>
-        where T : GridDefinition
+    public class GridSpecCollection<T> : ReadOnlyCollection<T>
+        where T : GridSpec
     {
-        internal GridDefinitionCollection()
+        internal GridSpecCollection()
             : base(new List<T>())
         {
         }

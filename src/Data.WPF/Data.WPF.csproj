@@ -58,14 +58,14 @@
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="DataRowView.cs" />
     <Compile Include="DataRowPresenter.cs" />
-    <Compile Include="GridDefinitionCollection.cs" />
+    <Compile Include="GridSpecCollection.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetPresenter.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataSetView.cs" />
     <Compile Include="GridColumn.cs" />
-    <Compile Include="GridDefinition.cs" />
+    <Compile Include="GridSpec.cs" />
     <Compile Include="GridRow.cs" />
     <Compile Include="RepeatOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
