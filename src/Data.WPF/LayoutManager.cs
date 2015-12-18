@@ -40,16 +40,17 @@ namespace DevZest.Data.Windows
 
         internal ObservableCollection<UIElement> PinnedElements { get; private set; }
 
-        private Size _extentSize;
-        internal Size ExtentSize
+        private Size _availableSize;
+        internal Size AvailableSize
         {
-            get { return _extentSize; }
-            private set
+            get { return _availableSize; }
+            set
             {
-                if (_extentSize.IsClose(value))
+                if (_availableSize.IsClose(value))
                     return;
-                _extentSize = value;
-                InvalidateScrollInfo();
+
+                _availableSize = value;
+                Invalidate();
             }
         }
 
@@ -65,6 +66,19 @@ namespace DevZest.Data.Windows
                 _viewportSize = value;
                 InvalidateScrollInfo();
                 Invalidate();
+            }
+        }
+
+        private Size _extentSize;
+        internal Size ExtentSize
+        {
+            get { return _extentSize; }
+            private set
+            {
+                if (_extentSize.IsClose(value))
+                    return;
+                _extentSize = value;
+                InvalidateScrollInfo();
             }
         }
 

@@ -303,13 +303,90 @@ namespace DevZest.Data.Windows
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        public int PinnedLeft { get; private set; }
+        private bool _isVirtualizing = true;
+        public bool IsVirtualizing
+        {
+            get { return _isVirtualizing; }
+            set
+            {
+                VerifyNotSealed();
+                _isVirtualizing = value;
+            }
+        }
 
-        public int PinnedTop { get; private set; }
+        public GridTemplate WithIsVirtualizing(bool value)
+        {
+            IsVirtualizing = value;
+            return this;
+        }
 
-        public int PinnedRight { get; private set; }
+        private int _pinnedLeft;
+        public int PinnedLeft
+        {
+            get { return _pinnedLeft; }
+            set
+            {
+                VerifyNotSealed();
+                _pinnedLeft = value;
+            }
+        }
 
-        public int PinnedBottom { get; private set; }
+        public GridTemplate WithPinnedLeft(int value)
+        {
+            PinnedLeft = value;
+            return this;
+        }
+
+        private int _pinnedTop;
+        public int PinnedTop
+        {
+            get { return _pinnedTop; }
+            set
+            {
+                VerifyNotSealed();
+                _pinnedTop = value;
+            }
+        }
+
+        public GridTemplate WithPinnedTop(int value)
+        {
+            PinnedTop = value;
+            return this;
+        }
+
+        private int _pinnedRight;
+        public int PinnedRight
+        {
+            get { return _pinnedRight; }
+            set
+            {
+                VerifyNotSealed();
+                _pinnedRight = value;
+            }
+        }
+
+        public GridTemplate WithPinnedRight(int value)
+        {
+            PinnedRight = value;
+            return this;
+        }
+
+        private int _pinnedBottom;
+        public int PinnedBottom
+        {
+            get { return _pinnedBottom; }
+            set
+            {
+                VerifyNotSealed();
+                _pinnedBottom = value;
+            }
+        }
+
+        public GridTemplate WithPinnedBottom(int value)
+        {
+            PinnedBottom = value;
+            return this;
+        }
 
         public GridTemplate Pin(int left, int top, int right, int bottom)
         {

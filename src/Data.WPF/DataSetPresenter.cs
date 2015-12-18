@@ -4,9 +4,6 @@ using System.Diagnostics;
 using System.Collections;
 using System;
 using System.Windows.Controls;
-using System.Linq;
-using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace DevZest.Data.Windows
 {
