@@ -35,29 +35,29 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.X).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridColumns("Auto; min: 10"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.X).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.XY).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.YX).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.XY).AddGridColumns("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.X));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.XY));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.YX));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("Auto; min: 10").WithOrientation(LayoutOrientation.XY));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridColumns("*").WithOrientation(RepeatOrientation.X));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridColumns("*").WithOrientation(RepeatOrientation.XY));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridColumns("*").WithOrientation(RepeatOrientation.YX));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridColumns("Auto; min: 10").WithOrientation(RepeatOrientation.XY));
         }
 
         [TestMethod]
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Y).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridRows("Auto; min: 10"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Y).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.XY).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.YX).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.YX).AddGridRows("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.Y));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.XY));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.YX));
-            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("Auto").WithOrientation(LayoutOrientation.YX));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridRows("*").WithOrientation(RepeatOrientation.Y));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridRows("*").WithOrientation(RepeatOrientation.XY));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridRows("*").WithOrientation(RepeatOrientation.YX));
+            ExpectArgumentException(x => x.WithOrientation(RepeatOrientation.Z).AddGridRows("Auto").WithOrientation(RepeatOrientation.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)

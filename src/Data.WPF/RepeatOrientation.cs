@@ -1,11 +1,11 @@
 ﻿
 namespace DevZest.Data.Windows
 {
-    public enum LayoutOrientation
+    public enum RepeatOrientation
     {
         Y,
-        X,
         XY,
+        X,
         YX,
         Z
     }
