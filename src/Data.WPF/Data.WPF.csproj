@@ -58,7 +58,6 @@
     <Compile Include="DataRowPanel.cs" />
     <Compile Include="DataRowView.cs" />
     <Compile Include="DataRowPresenter.cs" />
-    <Compile Include="GridSpecCollection.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataSetPresenter.cs" />

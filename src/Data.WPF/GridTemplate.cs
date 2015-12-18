@@ -1,21 +1,60 @@
 ﻿using DevZest.Data.Primitives;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridTemplate
+    public sealed partial class GridTemplate
     {
+        private class GridSpecCollection<T> : ReadOnlyCollection<T>
+            where T : GridSpec
+        {
+            internal GridSpecCollection()
+                : base(new List<T>())
+            {
+            }
+
+            internal void Add(T item)
+            {
+                Items.Add(item);
+            }
+        }
+
+        private sealed class GridItemCollection<T> : ReadOnlyCollection<T>
+            where T : GridItem
+        {
+            internal GridItemCollection(GridTemplate owner)
+                : base(new List<T>())
+            {
+                Debug.Assert(owner != null);
+                _owner = owner;
+            }
+
+            private GridTemplate _owner;
+
+            internal GridRange Range { get; private set; }
+
+            internal void Add(GridRange gridRange, T gridItem)
+            {
+                Debug.Assert(gridItem != null && gridItem.Owner == null);
+                gridItem.Seal(_owner, gridRange);
+                Items.Add(gridItem);
+                Range = Range.Union(gridRange);
+            }
+        }
+
         internal GridTemplate(Model model)
         {
             Model = model;
-            GridRows = new GridSpecCollection<GridRow>();
-            GridColumns = new GridSpecCollection<GridColumn>();
-            ScalarItems = new GridItemCollection<ScalarGridItem>(this);
-            ListItems = new GridItemCollection<ListGridItem>(this);
-            ChildItems = new GridItemCollection<ChildGridItem>(this);
+            _gridRows = new GridSpecCollection<GridRow>();
+            _gridColumns = new GridSpecCollection<GridColumn>();
+            _scalarItems = new GridItemCollection<ScalarGridItem>(this);
+            _listItems = new GridItemCollection<ListGridItem>(this);
+            _childItems = new GridItemCollection<ChildGridItem>(this);
         }
 
         internal void Seal()
@@ -94,15 +133,35 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public GridSpecCollection<GridRow> GridRows { get; private set; }
+        private GridSpecCollection<GridRow> _gridRows;
+        public ReadOnlyCollection<GridRow> GridRows
+        {
+            get { return _gridRows; }
+        }
 
-        public GridSpecCollection<GridColumn> GridColumns { get; private set; }
+        private GridSpecCollection<GridColumn> _gridColumns;
+        public ReadOnlyCollection<GridColumn> GridColumns
+        {
+            get { return _gridColumns; }
+        }
 
-        public GridItemCollection<ScalarGridItem> ScalarItems { get; private set; }
+        private GridItemCollection<ScalarGridItem> _scalarItems;
+        public ReadOnlyCollection<ScalarGridItem> ScalarItems
+        {
+            get { return _scalarItems; }
+        }
 
-        public GridItemCollection<ListGridItem> ListItems { get; private set; }
+        private GridItemCollection<ListGridItem> _listItems;
+        public ReadOnlyCollection<ListGridItem> ListItems
+        {
+            get { return _listItems; }
+        }
 
-        public GridItemCollection<ChildGridItem> ChildItems { get; private set; }
+        private GridItemCollection<ChildGridItem> _childItems;
+        public ReadOnlyCollection<ChildGridItem> ChildItems
+        {
+            get { return _childItems; }
+        }
 
         private GridRange? _repeatRange;
         public GridRange RepeatRange
@@ -120,7 +179,7 @@ namespace DevZest.Data.Windows
 
         private GridRange AutoRepeatRange
         {
-            get { return ListItems.Range.Union(ChildItems.Range); }
+            get { return _listItems.Range.Union(_childItems.Range); }
         }
 
         public GridTemplate AddGridRows(params string[] heights)
@@ -146,7 +205,7 @@ namespace DevZest.Data.Windows
         private int AddGridColumn(string width)
         {
             VerifyNotSealed();
-            GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
+            _gridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(Orientation, result, result, nameof(width));
             return result;
@@ -161,7 +220,7 @@ namespace DevZest.Data.Windows
         private int AddGridRow(string height)
         {
             VerifyNotSealed();
-            GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
+            _gridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(Orientation, result, result, nameof(height));
             return result;
@@ -223,7 +282,7 @@ namespace DevZest.Data.Windows
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
-            ScalarItems.Add(gridRange, scalarItem);
+            _scalarItems.Add(gridRange, scalarItem);
             return this;
         }
 
@@ -231,7 +290,7 @@ namespace DevZest.Data.Windows
             where T : UIElement, new()
         {
             VerifyAddItem(gridRange, listItem, nameof(listItem), true);
-            ListItems.Add(gridRange, listItem);
+            _listItems.Add(gridRange, listItem);
             return this;
         }
 
@@ -241,7 +300,7 @@ namespace DevZest.Data.Windows
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
             var childTemplate = childItem.Template;
             childTemplate.ChildOrdinal = ChildItems.Count;
-            ChildItems.Add(gridRange, childItem);
+            _childItems.Add(gridRange, childItem);
             return this;
         }
 
