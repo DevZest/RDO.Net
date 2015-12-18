@@ -23,45 +23,13 @@ namespace DevZest.Data.Windows
             DataSet = Model[parentDataRow];
             Debug.Assert(DataSet != null);
 
-            _rows = new List<DataRowPresenter>(DataSet.Count);
-            foreach (var dataRow in DataSet)
-            {
-                var dataRowPresenter = new DataRowPresenter(this, dataRow);
-                _rows.Add(dataRowPresenter);
-            }
-
-            if (template.ShowsEof)
-                _virtualRow = new DataRowPresenter(this, DataViewRowType.Eof);
-            else
-                CoerceEmptyDataRow();
-            CoerceSelection();
+            _rows = new DataRowPresenterCollection(this);
             LayoutManager = new LayoutManager(this);
 
-            DataSet.RowCollectionChanged += OnRowCollectionChanged;
             DataSet.ColumnValueChanged += OnColumnValueChanged;
         }
 
         internal DataSetView View { get; set; }
-
-        private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
-        {
-            var oldIndex = e.OldIndex;
-            var isDelete = oldIndex >= 0;
-            if (isDelete)
-            {
-                _rows[oldIndex].Dispose();
-                _rows.RemoveAt(oldIndex);
-            }
-            else
-            {
-                var dataRow = e.DataRow;
-                var dataRowPresenter = new DataRowPresenter(this, dataRow);
-                _rows.Insert(DataSet.IndexOf(dataRow), dataRowPresenter);
-            }
-
-            CoerceEmptyDataRow();
-            CoerceSelection();
-        }
 
         private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
         {
@@ -81,27 +49,11 @@ namespace DevZest.Data.Windows
 
         #region IReadOnlyList<DataRowPresenter>
 
-        List<DataRowPresenter> _rows;
-        DataRowPresenter _virtualRow;
-
-        private void CoerceEmptyDataRow()
-        {
-            if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.Eof)
-                return;
-
-            if (_rows.Count == 0)
-            {
-                if (Template.ShowsEmptyDataRow && _virtualRow == null)
-                    _virtualRow = new DataRowPresenter(this, DataViewRowType.EmptyDataRow);
-            }
-            else if (_virtualRow != null)
-                _virtualRow = null;
-        }
+        DataRowPresenterCollection _rows;
 
         public IEnumerator<DataRowPresenter> GetEnumerator()
         {
-            foreach (var dataRowPresenter in _rows)
-                yield return dataRowPresenter;
+            return _rows.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -111,88 +63,42 @@ namespace DevZest.Data.Windows
 
         public int IndexOf(DataRowPresenter item)
         {
-            return item == null || item.Owner != this ? -1 : (item == _virtualRow ? Count - 1 : DataSet.IndexOf(item.DataRow));
+            return _rows.IndexOf(item);
         }
 
         public int Count
         {
-            get
-            {
-                var result = _rows.Count;
-                if (_virtualRow != null)
-                    result++;
-                return result;
-            }
+            get { return _rows.Count; }
         }
 
         public DataRowPresenter this[int index]
         {
-            get
-            {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-
-                return _virtualRow != null && index == Count - 1 ? _virtualRow : _rows[index];
-            }
+            get { return _rows[index]; }
         }
         #endregion
 
-        private Selection _selection = Windows.Selection.Empty;
-
-        private void CoerceSelection()
-        {
-            _selection.Coerce(Count);
-        }
-
         public int Current
         {
-            get { return _selection.Current; }
-        }
-
-        internal bool IsCurrent(int index)
-        {
-            return index != -1 && Current == index;
+            get { return _rows.Current; }
         }
 
         public IReadOnlyList<int> Selection
         {
-            get
-            {
-                if (_virtualRow == null)
-                    return _selection;
-
-                var virtualRowIndex = VirtualRowIndex;
-                if (_selection.IsSelected(virtualRowIndex))
-                    return _selection.Where(x => x != virtualRowIndex).ToArray();
-
-                return _selection;
-            }
+            get { return _rows.Selection; }
         }
 
-        private int VirtualRowIndex
+        internal bool IsSelected(DataRowPresenter row)
         {
-            get
-            {
-                Debug.Assert(_virtualRow != null);
-                return DataSet.Count;
-            }
-        }
-
-        private bool IsVirtualRow(int index)
-        {
-            return _virtualRow != null && VirtualRowIndex == index;
-        }
-
-        internal bool IsSelected(int index)
-        {
-            return !IsVirtualRow(index) && _selection.IsSelected(index);
+            Debug.Assert(row.Owner == this);
+            return _rows.IsSelected(row);
         }
 
         public void Select(int index, SelectionMode selectionMode)
         {
             if (index < 0 || index >= Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            _selection = _selection.Select(index, selectionMode);
+
+            _rows.Select(index, selectionMode);
         }
 
         internal LayoutManager LayoutManager { get; private set; }

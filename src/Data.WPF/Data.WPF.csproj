@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="ChildGridItem_T.cs" />
+    <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="ListGridItem.cs" />

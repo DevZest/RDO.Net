@@ -69,12 +69,12 @@ namespace DevZest.Data.Windows
 
         public bool IsCurrent
         {
-            get { return Owner == null ? false : Owner.IsCurrent(Owner.IndexOf(this)); }
+            get { return Owner == null ? false : Owner.IndexOf(this) == Owner.Current; }
         }
 
         public bool IsSelected
         {
-            get { return Owner == null ? false : Owner.IsSelected(Owner.IndexOf(this)); }
+            get { return Owner == null ? false : Owner.IsSelected(this); }
         }
 
         public DataViewRowType RowType { get; private set; }
