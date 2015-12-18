@@ -31,6 +31,10 @@ namespace DevZest.Data.Windows
 
         internal DataSetView View { get; set; }
 
+        internal void OnRowCollectionChanged(int index, bool isDelete)
+        {
+        }
+
         private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
         {
             throw new NotImplementedException();

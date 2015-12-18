@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
             if (Template.ShowsEof)
                 _virtualRow = new DataRowPresenter(Owner, DataViewRowType.Eof);
             else
-                CoerceEmptyDataRow();
+                CoerceEmptyDataRow(false);
 
             CoerceSelection();
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
@@ -89,29 +89,31 @@ namespace DevZest.Data.Windows
             get { return Owner.Template; }
         }
 
-        private DataRowPresenter VirtualRow
+        private void SetVirtualRow(DataRowPresenter value, bool notifyChange)
         {
-            get { return _virtualRow; }
-            set
-            {
-                Debug.Assert(_virtualRow != value);
+            Debug.Assert(_virtualRow != value);
 
-                _virtualRow = value;
-            }
+            if (_virtualRow != null && notifyChange)
+                Owner.OnRowCollectionChanged(DataSet.Count, true);
+
+            _virtualRow = value;
+
+            if (_virtualRow != null && notifyChange)
+                Owner.OnRowCollectionChanged(DataSet.Count, false);
         }
 
-        private void CoerceEmptyDataRow()
+        private void CoerceEmptyDataRow(bool notifyChange)
         {
-            if (VirtualRow != null && VirtualRow.RowType == DataViewRowType.Eof)
+            if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.Eof)
                 return;
 
             if (_rows.Count == 0)
             {
                 if (Template.ShowsEmptyDataRow && _virtualRow == null)
-                    VirtualRow = new DataRowPresenter(Owner, DataViewRowType.EmptyDataRow);
+                    SetVirtualRow(new DataRowPresenter(Owner, DataViewRowType.EmptyDataRow), notifyChange);
             }
             else if (_virtualRow != null)
-                VirtualRow = null;
+                SetVirtualRow(null, notifyChange);
         }
 
         private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
@@ -122,15 +124,18 @@ namespace DevZest.Data.Windows
             {
                 _rows[oldIndex].Dispose();
                 _rows.RemoveAt(oldIndex);
+                Owner.OnRowCollectionChanged(oldIndex, true);
             }
             else
             {
                 var dataRow = e.DataRow;
                 var dataRowPresenter = new DataRowPresenter(Owner, dataRow);
-                _rows.Insert(DataSet.IndexOf(dataRow), dataRowPresenter);
+                var index = DataSet.IndexOf(dataRow);
+                _rows.Insert(index, dataRowPresenter);
+                Owner.OnRowCollectionChanged(index, false);
             }
 
-            CoerceEmptyDataRow();
+            CoerceEmptyDataRow(true);
             CoerceSelection();
         }
 
@@ -138,7 +143,7 @@ namespace DevZest.Data.Windows
 
         private void CoerceSelection()
         {
-            _selection.Coerce(Count);
+            _selection = _selection.Coerce(Count);
         }
 
         public int Current
