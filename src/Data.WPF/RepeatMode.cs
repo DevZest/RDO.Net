@@ -4,7 +4,7 @@
     {
         None,
         Stretch,
-        FlowHeader,
-        Flow
+        Header,
+        Row
     }
 }

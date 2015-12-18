@@ -35,29 +35,29 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.X).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.XY).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.YX).AddGridColumns("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.XY).AddGridColumns("Auto; min: 10"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.X).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridColumns("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridColumns("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridColumns("*").WithRepeatFlow(RepeatFlow.X));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridColumns("*").WithRepeatFlow(RepeatFlow.XY));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridColumns("*").WithRepeatFlow(RepeatFlow.YX));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridColumns("Auto; min: 10").WithRepeatFlow(RepeatFlow.XY));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.X));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.XY));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("*").WithOrientation(LayoutOrientation.YX));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridColumns("Auto; min: 10").WithOrientation(LayoutOrientation.XY));
         }
 
         [TestMethod]
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Y).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.XY).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.YX).AddGridRows("*"));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.YX).AddGridRows("Auto; min: 10"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Y).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.XY).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridRows("*"));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.YX).AddGridRows("Auto; min: 10"));
 
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridRows("*").WithRepeatFlow(RepeatFlow.Y));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridRows("*").WithRepeatFlow(RepeatFlow.XY));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridRows("*").WithRepeatFlow(RepeatFlow.YX));
-            ExpectArgumentException(x => x.WithRepeatFlow(RepeatFlow.Z).AddGridRows("Auto").WithRepeatFlow(RepeatFlow.YX));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.Y));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.XY));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("*").WithOrientation(LayoutOrientation.YX));
+            ExpectArgumentException(x => x.WithOrientation(LayoutOrientation.Z).AddGridRows("Auto").WithOrientation(LayoutOrientation.YX));
         }
 
         private static void ExpectArgumentException(Action<GridTemplate> action)

@@ -36,11 +36,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridColumn.Width/RepeatFlow combination: GridColumns[{index}]="{gridColumnWidth}", RepeatFlow="{repeatFlow}".
+        /// Invalid GridColumn.Width/Orientation combination: GridColumns[{index}]="{gridColumnWidth}", Orientation="{orientation}".
         /// </summary>
-        public static string GridTemplate_InvalidGridColumnWidthFlow(object index, object gridColumnWidth, object repeatFlow)
+        public static string GridTemplate_InvalidGridColumnWidthOrientation(object index, object gridColumnWidth, object orientation)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthFlow", "index", "gridColumnWidth", "repeatFlow"), index, gridColumnWidth, repeatFlow);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthOrientation", "index", "gridColumnWidth", "orientation"), index, gridColumnWidth, orientation);
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridRow.Height/RepeatFlow combination: GridRows[{index}]="{gridRowHeight}", RepeatFlow="{repeatFlow}".
+        /// Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".
         /// </summary>
-        public static string GridTemplate_InvalidGridRowHeightFlow(object index, object gridRowHeight, object repeatFlow)
+        public static string GridTemplate_InvalidGridRowHeightOrientation(object index, object gridRowHeight, object orientation)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightFlow", "index", "gridRowHeight", "repeatFlow"), index, gridRowHeight, repeatFlow);
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightOrientation", "index", "gridRowHeight", "orientation"), index, gridRowHeight, orientation);
         }
 
         /// <summary>

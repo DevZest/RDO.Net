@@ -67,7 +67,7 @@
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridDefinition.cs" />
     <Compile Include="GridRow.cs" />
-    <Compile Include="RepeatFlow.cs" />
+    <Compile Include="LayoutOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
     <Compile Include="DataSetPanel.cs" />
     <Compile Include="GridTemplate.cs" />

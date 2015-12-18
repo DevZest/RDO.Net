@@ -126,14 +126,14 @@
   <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>
   </data>
-  <data name="GridTemplate_InvalidGridColumnWidthFlow" xml:space="preserve">
-    <value>Invalid GridColumn.Width/RepeatFlow combination: GridColumns[{index}]="{gridColumnWidth}", RepeatFlow="{repeatFlow}".</value>
+  <data name="GridTemplate_InvalidGridColumnWidthOrientation" xml:space="preserve">
+    <value>Invalid GridColumn.Width/Orientation combination: GridColumns[{index}]="{gridColumnWidth}", Orientation="{orientation}".</value>
   </data>
   <data name="GridTemplate_InvalidGridItem" xml:space="preserve">
     <value>Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property.</value>
   </data>
-  <data name="GridTemplate_InvalidGridRowHeightFlow" xml:space="preserve">
-    <value>Invalid GridRow.Height/RepeatFlow combination: GridRows[{index}]="{gridRowHeight}", RepeatFlow="{repeatFlow}".</value>
+  <data name="GridTemplate_InvalidGridRowHeightOrientation" xml:space="preserve">
+    <value>Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".</value>
   </data>
   <data name="GridTemplate_VerifyNotSealed" xml:space="preserve">
     <value>The GridTemplate is currently sealed (read-only).</value>

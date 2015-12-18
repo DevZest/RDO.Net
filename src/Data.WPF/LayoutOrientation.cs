@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Windows
 {
-    public enum RepeatFlow
+    public enum LayoutOrientation
     {
         Y,
         X,
