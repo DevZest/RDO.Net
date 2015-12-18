@@ -1,9 +1,9 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum RepeatMode
+    public enum FlowMode
     {
         Static,
         Stretch,
-        Flow
+        Repeat
     }
 }

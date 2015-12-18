@@ -9,14 +9,14 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private RepeatMode _repeatMode;
-        public RepeatMode RepeatMode
+        private FlowMode _flowMode;
+        public FlowMode RepeatMode
         {
-            get { return _repeatMode; }
+            get { return _flowMode; }
             set
             {
                 VerifyNotSealed();
-                _repeatMode = value;
+                _flowMode = value;
             }
         }
     }

@@ -49,7 +49,7 @@
     <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="ListGridItem.cs" />
-    <Compile Include="RepeatMode.cs" />
+    <Compile Include="FlowMode.cs" />
     <Compile Include="ScalarGridItem_T.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildGridItem.cs" />
