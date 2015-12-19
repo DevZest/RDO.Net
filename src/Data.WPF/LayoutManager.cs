@@ -7,11 +7,25 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows
 {
-    internal abstract class LayoutManager
+    internal abstract partial class LayoutManager
     {
         internal static LayoutManager Create(DataSetPresenter presenter)
         {
-            throw new NotImplementedException();
+            var orientation = presenter.Template.Orientation;
+
+            if (orientation == RepeatOrientation.Z)
+                return new RepeatZ(presenter);
+            else if (orientation == RepeatOrientation.Y)
+                return new RepeatY(presenter);
+            else if (orientation == RepeatOrientation.XY)
+                return new RepeatXY(presenter);
+            else if (orientation == RepeatOrientation.X)
+                return new RepeatX(presenter);
+            else
+            {
+                Debug.Assert(orientation == RepeatOrientation.YX);
+                return new RepeatYX(presenter);
+            }
         }
 
         protected LayoutManager(DataSetPresenter presenter)
