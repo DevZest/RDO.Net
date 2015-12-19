@@ -336,7 +336,7 @@ namespace DevZest.Data.Windows
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            LayoutManager.Refresh();
+            LayoutManager.Measure(availableSize);
 
             return base.MeasureOverride(availableSize);
         }

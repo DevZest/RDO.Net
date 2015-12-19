@@ -7,9 +7,14 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows
 {
-    internal class LayoutManager
+    internal abstract class LayoutManager
     {
-        internal LayoutManager(DataSetPresenter presenter)
+        internal static LayoutManager Create(DataSetPresenter presenter)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected LayoutManager(DataSetPresenter presenter)
         {
             Debug.Assert(presenter != null);
             Presenter = presenter;
@@ -125,11 +130,8 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        private bool _isDirty;
-
         private void Invalidate()
         {
-            _isDirty = true;
             var dataSetView = Presenter.View;
             if (dataSetView != null)
             {
@@ -138,12 +140,44 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal void Refresh()
+        internal void Measure(Size availableSize)
         {
-            if (!_isDirty)
-                return;
+        }
 
-            _isDirty = false;
+        private bool IsVirtualizing
+        {
+            get { return Template.IsVirtualizing; }
+        }
+
+        private RepeatOrientation Orientation
+        {
+            get { return Template.Orientation; }
+        }
+
+        private int _flowCount;
+        private int _blockCount;
+
+        private void RefreshRepeatCount()
+        {
+            if (Orientation == RepeatOrientation.Z)
+            {
+                _flowCount = _blockCount = 1;
+                return;
+            }
+
+            if (Orientation == RepeatOrientation.X || Orientation == RepeatOrientation.Y)
+            {
+                _flowCount = 1;
+                _blockCount = Presenter.Count;
+                return;
+            }
+
+            if (Orientation == RepeatOrientation.XY)
+            {
+
+            }
+
+            Debug.Assert(Orientation == RepeatOrientation.YX);
         }
     }
 }

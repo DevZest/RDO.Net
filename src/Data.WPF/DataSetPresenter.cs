@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(DataSet != null);
 
             _rows = new DataRowPresenterCollection(this);
-            LayoutManager = new LayoutManager(this);
+            LayoutManager = LayoutManager.Create(this);
 
             DataSet.ColumnValueChanged += OnColumnValueChanged;
         }
