@@ -168,30 +168,30 @@ namespace DevZest.Data.Windows
             get { return Template.Orientation; }
         }
 
-        private int _flowCount;
-        private int _blockCount;
+        //private int _flowCount;
+        //private int _blockCount;
 
-        private void RefreshRepeatCount()
-        {
-            if (Orientation == RepeatOrientation.Z)
-            {
-                _flowCount = _blockCount = 1;
-                return;
-            }
+        //private void RefreshRepeatCount()
+        //{
+        //    if (Orientation == RepeatOrientation.Z)
+        //    {
+        //        _flowCount = _blockCount = 1;
+        //        return;
+        //    }
 
-            if (Orientation == RepeatOrientation.X || Orientation == RepeatOrientation.Y)
-            {
-                _flowCount = 1;
-                _blockCount = Presenter.Count;
-                return;
-            }
+        //    if (Orientation == RepeatOrientation.X || Orientation == RepeatOrientation.Y)
+        //    {
+        //        _flowCount = 1;
+        //        _blockCount = Presenter.Count;
+        //        return;
+        //    }
 
-            if (Orientation == RepeatOrientation.XY)
-            {
+        //    if (Orientation == RepeatOrientation.XY)
+        //    {
 
-            }
+        //    }
 
-            Debug.Assert(Orientation == RepeatOrientation.YX);
-        }
+        //    Debug.Assert(Orientation == RepeatOrientation.YX);
+        //}
     }
 }
