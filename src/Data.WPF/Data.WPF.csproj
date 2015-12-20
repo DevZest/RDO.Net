@@ -48,11 +48,11 @@
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
-    <Compile Include="LayoutManager.RepeatXY.cs" />
-    <Compile Include="LayoutManager.RepeatYX.cs" />
-    <Compile Include="LayoutManager.RepeatY.cs" />
-    <Compile Include="LayoutManager.RepeatX.cs" />
-    <Compile Include="LayoutManager.RepeatZ.cs" />
+    <Compile Include="LayoutManager.OrientationXY.cs" />
+    <Compile Include="LayoutManager.OrientationYX.cs" />
+    <Compile Include="LayoutManager.OrientationY.cs" />
+    <Compile Include="LayoutManager.OrientationX.cs" />
+    <Compile Include="LayoutManager.OrientationZ.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="ScalarGridItem_T.cs" />
