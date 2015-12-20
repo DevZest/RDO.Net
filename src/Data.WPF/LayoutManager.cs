@@ -14,17 +14,17 @@ namespace DevZest.Data.Windows
             var orientation = presenter.Template.Orientation;
 
             if (orientation == RepeatOrientation.Z)
-                return new OrientationZ(presenter);
+                return new RepeatZ(presenter);
             else if (orientation == RepeatOrientation.Y)
-                return new OrientationY(presenter);
+                return new RepeatY(presenter);
             else if (orientation == RepeatOrientation.XY)
-                return new OrientationXY(presenter);
+                return new RepeatXY(presenter);
             else if (orientation == RepeatOrientation.X)
-                return new OrientationX(presenter);
+                return new RepeatX(presenter);
             else
             {
                 Debug.Assert(orientation == RepeatOrientation.YX);
-                return new OrientationYX(presenter);
+                return new RepeatYX(presenter);
             }
         }
 
