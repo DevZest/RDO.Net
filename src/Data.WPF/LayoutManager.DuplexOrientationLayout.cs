@@ -2,9 +2,9 @@
 {
     partial class LayoutManager
     {
-        private sealed class RepeatYX : LayoutManager
+        private abstract class DuplexOrientationLayout : LayoutManager
         {
-            public RepeatYX(DataSetPresenter presenter)
+            public DuplexOrientationLayout(DataSetPresenter presenter)
                 : base(presenter)
             {
             }

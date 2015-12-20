@@ -2,9 +2,9 @@
 {
     partial class LayoutManager
     {
-        private sealed class RepeatZ : LayoutManager
+        private sealed class LayoutZ : LayoutManager
         {
-            public RepeatZ(DataSetPresenter presenter)
+            public LayoutZ(DataSetPresenter presenter)
                 : base(presenter)
             {
             }

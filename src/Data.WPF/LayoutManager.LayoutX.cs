@@ -2,9 +2,9 @@
 {
     partial class LayoutManager
     {
-        private abstract class SimplexOrientation : LayoutManager
+        private sealed class LayoutX : LayoutManager
         {
-            public SimplexOrientation(DataSetPresenter presenter)
+            public LayoutX(DataSetPresenter presenter)
                 : base(presenter)
             {
             }

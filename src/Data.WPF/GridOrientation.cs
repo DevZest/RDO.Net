@@ -1,7 +1,7 @@
 ﻿
 namespace DevZest.Data.Windows
 {
-    public enum RepeatOrientation
+    public enum GridOrientation
     {
         Y,
         XY,

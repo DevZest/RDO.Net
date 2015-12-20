@@ -2,9 +2,9 @@
 {
     partial class LayoutManager
     {
-        private abstract class DuplexRepeat : LayoutManager
+        private abstract class SimplexOrientationLayout : LayoutManager
         {
-            public DuplexRepeat(DataSetPresenter presenter)
+            public SimplexOrientationLayout(DataSetPresenter presenter)
                 : base(presenter)
             {
             }

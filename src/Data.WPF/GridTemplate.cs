@@ -77,8 +77,8 @@ namespace DevZest.Data.Windows
 
         public Model Model { get; private set; }
 
-        private RepeatOrientation _orientation = RepeatOrientation.Y;
-        public RepeatOrientation Orientation
+        private GridOrientation _orientation = GridOrientation.Y;
+        public GridOrientation Orientation
         {
             get { return _orientation; }
             set
@@ -90,7 +90,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public GridTemplate WithOrientation(RepeatOrientation value)
+        public GridTemplate WithOrientation(GridOrientation value)
         {
             VerifyNotSealed();
             VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
@@ -232,7 +232,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private void VerifyGridRowHeight(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(GridOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -241,7 +241,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, RepeatOrientation orentation)
+        private static bool IsValidGridRowHeight(GridRow gridRow, GridOrientation orentation)
         {
             var height = gridRow.Height;
 
@@ -249,13 +249,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (height.IsStar)
-                return orentation != RepeatOrientation.Y && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
+                return orentation != GridOrientation.Y && orentation != GridOrientation.YX && orentation != GridOrientation.XY;
 
             Debug.Assert(height.IsAuto);
-            return orentation != RepeatOrientation.YX;
+            return orentation != GridOrientation.YX;
         }
 
-        private void VerifyGridColumnWidth(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(GridOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -264,7 +264,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, RepeatOrientation orentation)
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, GridOrientation orentation)
         {
             var width = gridColumn.Width;
 
@@ -272,10 +272,10 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (width.IsStar)
-                return orentation != RepeatOrientation.X && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
+                return orentation != GridOrientation.X && orentation != GridOrientation.YX && orentation != GridOrientation.XY;
 
             Debug.Assert(width.IsAuto);
-            return orentation != RepeatOrientation.XY;
+            return orentation != GridOrientation.XY;
         }
 
         internal GridTemplate AddItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)

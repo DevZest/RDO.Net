@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows
             return Owner;
         }
 
-        public GridTemplate Repeat(RepeatOrientation value)
+        public GridTemplate Repeat(GridOrientation value)
         {
             Repeat();
             Owner.WithOrientation(value);

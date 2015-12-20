@@ -13,18 +13,18 @@ namespace DevZest.Data.Windows
         {
             var orientation = presenter.Template.Orientation;
 
-            if (orientation == RepeatOrientation.Z)
-                return new RepeatZ(presenter);
-            else if (orientation == RepeatOrientation.Y)
-                return new RepeatY(presenter);
-            else if (orientation == RepeatOrientation.XY)
-                return new RepeatXY(presenter);
-            else if (orientation == RepeatOrientation.X)
-                return new RepeatX(presenter);
+            if (orientation == GridOrientation.Z)
+                return new LayoutZ(presenter);
+            else if (orientation == GridOrientation.Y)
+                return new LayoutY(presenter);
+            else if (orientation == GridOrientation.XY)
+                return new LayoutXY(presenter);
+            else if (orientation == GridOrientation.X)
+                return new LayoutX(presenter);
             else
             {
-                Debug.Assert(orientation == RepeatOrientation.YX);
-                return new RepeatYX(presenter);
+                Debug.Assert(orientation == GridOrientation.YX);
+                return new LayoutYX(presenter);
             }
         }
 
@@ -163,35 +163,16 @@ namespace DevZest.Data.Windows
             get { return Template.IsVirtualizing; }
         }
 
-        private RepeatOrientation Orientation
+        private GridOrientation Orientation
         {
             get { return Template.Orientation; }
         }
 
-        //private int _flowCount;
-        //private int _blockCount;
+        //protected abstract int RepeatXCount { get; }
 
-        //private void RefreshRepeatCount()
-        //{
-        //    if (Orientation == RepeatOrientation.Z)
-        //    {
-        //        _flowCount = _blockCount = 1;
-        //        return;
-        //    }
+        //protected abstract int RepeatYCount { get; }
 
-        //    if (Orientation == RepeatOrientation.X || Orientation == RepeatOrientation.Y)
-        //    {
-        //        _flowCount = 1;
-        //        _blockCount = Presenter.Count;
-        //        return;
-        //    }
+        //protected abstract Orientation MainOrientation { get; }
 
-        //    if (Orientation == RepeatOrientation.XY)
-        //    {
-
-        //    }
-
-        //    Debug.Assert(Orientation == RepeatOrientation.YX);
-        //}
     }
 }
