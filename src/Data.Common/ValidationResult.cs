@@ -36,7 +36,7 @@ namespace DevZest.Data
                 var validationLevel = (ValidationLevel)validationMessages._.ValidationLevel[i];
                 var columns = DeserializeColumns(dataRow, validationMessages._.Columns[i]);
                 var description = validationMessages._.Description[i];
-                entries[i] = new ValidationEntry(dataRow, new ValidationMessage(validatorId, validationLevel, description, columns));
+                entries[i] = new ValidationEntry(dataRow, new ValidationMessage(validatorId, validationLevel, columns, description));
             }
 
             return new ValidationResult(entries);

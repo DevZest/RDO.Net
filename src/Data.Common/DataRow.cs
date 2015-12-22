@@ -191,7 +191,7 @@ namespace DevZest.Data
                 if (isValid == true)
                     continue;
                 var message = validator.Message.Eval(this);
-                yield return new ValidationMessage(validator.Id, validator.Level, message, validator.Columns);
+                yield return new ValidationMessage(validator.Id, validator.Level, validator.Columns, message);
             }
         }
 
