@@ -1,10 +1,11 @@
 ﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    internal class ModelSet : HashSet<Model>, IModelSet
+    internal class ModelSet : List<Model>, IModelSet
     {
         private class EmptyModelSet : IModelSet
         {
@@ -16,6 +17,11 @@ namespace DevZest.Data
             public int Count
             {
                 get { return 0; }
+            }
+
+            public Model this[int index]
+            {
+                get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
 
             public IEnumerator<Model> GetEnumerator()

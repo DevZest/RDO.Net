@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    public interface IModelSet : IEnumerable<Model>
+    public interface IModelSet : IReadOnlyList<Model>
     {
         bool Contains(Model model);
-
-        int Count { get; }
     }
 }
