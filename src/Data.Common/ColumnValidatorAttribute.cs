@@ -31,7 +31,7 @@ namespace DevZest.Data
                 get { return _owner.ValidationLevel; }
             }
 
-            public IReadOnlyList<Column> Columns
+            public IColumnSet Columns
             {
                 get { return _column; }
             }

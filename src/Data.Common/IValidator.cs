@@ -9,7 +9,7 @@ namespace DevZest.Data
 
         ValidationLevel Level { get; }
 
-        IReadOnlyList<Column> Columns { get; }
+        IColumnSet Columns { get; }
 
         _Boolean IsValidCondition { get; }
 

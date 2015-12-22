@@ -66,8 +66,10 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="ColumnValueChangedEventArgs.cs" />
+    <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="Model.Validator.cs" />
+    <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />

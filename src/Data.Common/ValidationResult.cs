@@ -55,29 +55,20 @@ namespace DevZest.Data
             return columns == null || columns.Count == 0 ? string.Empty : string.Join(",", columns.Select(x => x.Name));
         }
 
-        private static IReadOnlyList<Column> s_emptyColumns = new Column[0];
-        private static IReadOnlyList<Column> DeserializeColumns(DataRow dataRow, string input)
+        private static IColumnSet DeserializeColumns(DataRow dataRow, string input)
         {
             if (string.IsNullOrEmpty(input))
-                return s_emptyColumns;
+                return ColumnSet.Empty;
 
             var columnNames = input.Split(',');
             if (columnNames == null || columnNames.Length == 0)
-                return s_emptyColumns;
-
-            if (columnNames.Length == 1)
-            {
-                var column = dataRow.DeserializeColumn(columnNames[0]);
-                if (column != null)
-                    return column;
-                return new Column[] { null };
-            }
+                return ColumnSet.Empty;
 
             var result = new Column[columnNames.Length];
             for (int i = 0; i < result.Length; i++)
                 result[i] = dataRow.DeserializeColumn(columnNames[i]);
 
-            return result;
+            return ColumnSet.Create(result);
         }
 
         public override string ToString()

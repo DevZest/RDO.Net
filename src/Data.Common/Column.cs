@@ -10,7 +10,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a column of <see cref="Model"/>.
     /// </summary>
-    public abstract class Column : ModelMember, IReadOnlyList<Column>
+    public abstract class Column : ModelMember, IColumnSet
     {
         /// <summary>
         /// Gets the original owner type of this <see cref="Column"/>.
@@ -285,7 +285,12 @@ namespace DevZest.Data
 
         public abstract void SetValue(DataRow dataRow, object value);
 
-        #region IReadOnlyList<Column>
+        #region IColumnSet
+
+        bool IColumnSet.Contains(Column column)
+        {
+            return column == this;
+        }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<Column>.Count

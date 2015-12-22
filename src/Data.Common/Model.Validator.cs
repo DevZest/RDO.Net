@@ -10,18 +10,11 @@ namespace DevZest.Data
         {
             private sealed class ValidatorImpl : Validator
             {
-                private static Column[] s_emptyColumns = new Column[0];
-
-                internal ValidatorImpl(ValidatorId id, ValidationLevel level, IReadOnlyList<Column> columns, _Boolean isValidCondition, _String message)
+                internal ValidatorImpl(ValidatorId id, ValidationLevel level, Column[] columns, _Boolean isValidCondition, _String message)
                     : base(id)
                 {
                     _level = level;
-                    if (columns == null)
-                        _columns = s_emptyColumns;
-                    else if (columns.Count == 1 && columns[0] != null)
-                        _columns = columns[0];
-                    else
-                        _columns = columns;
+                    _columns = ColumnSet.Create(columns);
                     _isValidCondition = isValidCondition;
                     _message = message;
                 }
@@ -34,8 +27,8 @@ namespace DevZest.Data
                     get { return _level; }
                 }
 
-                IReadOnlyList<Column> _columns;
-                public override IReadOnlyList<Column> Columns
+                IColumnSet _columns;
+                public override IColumnSet Columns
                 {
                     get { return _columns; }
                 }
@@ -69,7 +62,7 @@ namespace DevZest.Data
 
             public abstract ValidationLevel Level { get; }
 
-            public abstract IReadOnlyList<Column> Columns { get; }
+            public abstract IColumnSet Columns { get; }
 
             public abstract _Boolean IsValidCondition { get; }
 
