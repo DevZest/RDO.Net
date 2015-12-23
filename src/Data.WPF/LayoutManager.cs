@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -32,10 +33,6 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(presenter != null);
             Presenter = presenter;
-
-            ScrollableElements = new ObservableCollection<UIElement>();
-            PinnedElements = IsPinned ? new ObservableCollection<UIElement>() : null;
-            Invalidate();
         }
 
         internal DataSetPresenter Presenter { get; private set; }
@@ -55,9 +52,66 @@ namespace DevZest.Data.Windows
             get { return Template.IsPinned; }
         }
 
-        internal ObservableCollection<UIElement> ScrollableElements { get; private set; }
+        private IElementCollection _scrollableElements;
+        internal IReadOnlyList<UIElement> ScrollableElements
+        {
+            get
+            {
+                EnsureElementCollectionInitialized();
+                return _scrollableElements;
+            }
+        }
 
-        internal ObservableCollection<UIElement> PinnedElements { get; private set; }
+        private IElementCollection _pinnedElements;
+        internal IReadOnlyList<UIElement> PinnedElements
+        {
+            get
+            {
+                EnsureElementCollectionInitialized();
+                return _pinnedElements;
+            }
+        }
+
+        private DataSetPanel _panel;
+        internal DataSetPanel Panel
+        {
+            get { return _panel; }
+            set
+            {
+                Debug.Assert(_panel != value);
+
+                _panel = value;
+                if (_pinnedElements != null)
+                    _pinnedElements.Clear();
+                if (_scrollableElements != null)
+                    _scrollableElements.Clear();
+            }
+        }
+
+        private void EnsureElementCollectionInitialized()
+        {
+            if (_scrollableElements != null)
+                return;
+
+            var panel = Panel;
+            DataSetPanel scrollablePanel, pinnedPanel;
+
+            if (panel == null)
+                scrollablePanel = pinnedPanel = null;
+            else if (IsPinned)
+            {
+                pinnedPanel = panel;
+                scrollablePanel = panel.Child;
+            }
+            else
+            {
+                pinnedPanel = null;
+                scrollablePanel = panel;
+            }
+
+            _pinnedElements = IsPinned ? IElementCollectionFactory.Create(pinnedPanel) : null;
+            _scrollableElements = IElementCollectionFactory.Create(scrollablePanel);
+        }
 
         private Size _availableSize;
         internal Size AvailableSize
@@ -69,7 +123,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _availableSize = value;
-                Invalidate();
+                InvalidateMeasure();
             }
         }
 
@@ -84,7 +138,7 @@ namespace DevZest.Data.Windows
 
                 _viewportSize = value;
                 InvalidateScrollInfo();
-                Invalidate();
+                InvalidateMeasure();
             }
         }
 
@@ -112,7 +166,7 @@ namespace DevZest.Data.Windows
 
                 _horizontalOffset = value;
                 InvalidateScrollInfo();
-                Invalidate();
+                InvalidateMeasure();
             }
         }
 
@@ -127,7 +181,7 @@ namespace DevZest.Data.Windows
 
                 _verticalOffset = value;
                 InvalidateScrollInfo();
-                Invalidate();
+                InvalidateMeasure();
             }
         }
 
@@ -144,13 +198,12 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        private void Invalidate()
+        private void InvalidateMeasure()
         {
             var dataSetView = Presenter.View;
             if (dataSetView != null)
             {
                 dataSetView.InvalidateMeasure();
-                dataSetView.InvalidateVisual();
             }
         }
 

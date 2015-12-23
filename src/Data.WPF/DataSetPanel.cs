@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -152,76 +153,45 @@ namespace DevZest.Data.Windows
 
         #endregion
 
-        private static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataSetPresenter),
-            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnPresenterChanged));
-
-        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DataSetPanel)d).OnPresenterChanged();
-        }
-
         public DataSetPanel()
         {
-            var binding = new Binding(DataSetView.PresenterProperty.Name);
-            binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
 
         private DataSetPanel(DataSetPanel parent)
         {
             Debug.Assert(parent != null && _parent == null);
             _parent = parent;
-            RefreshElements();
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            var dataSetView = TemplatedParent as DataSetView;
+            if (dataSetView == null)
+                return;
+
+            _presenter = dataSetView.Presenter;
+            var layoutManager = LayoutManager;
+            if (IsPinned)
+            {
+                Child = new DataSetPanel(this);
+                AddLogicalChild(Child);
+                AddVisualChild(Child);
+            }
+            layoutManager.Panel = this;
+            InitElements();
+            if (Child != null)
+                Child.InitElements();
         }
 
         private DataSetPanel _parent;
 
-        private DataSetPanel _child;
-        private DataSetPanel Child
-        {
-            get { return _child; }
-            set
-            {
-                if (_child == value)
-                    return;
+        internal DataSetPanel Child { get; private set; }
 
-                if (_child != null)
-                {
-                    _child.Elements = null;
-                    RemoveLogicalChild(_child);
-                    RemoveVisualChild(_child);
-                }
-
-                _child = value;
-
-                if (_child != null)
-                {
-                    Debug.Assert(_child._parent != null && _child.Elements != null);
-                    AddLogicalChild(_child);
-                    AddVisualChild(_child);
-                }
-            }
-        }
-
-        private void RefreshChild()
-        {
-            if (LayoutManager == null || !LayoutManager.IsPinned)
-                Child = null;
-            else if (Child != null)
-                Child.RefreshElements();
-            else
-                Child = new DataSetPanel(this);
-        }
-
+        private DataSetPresenter _presenter;
         private DataSetPresenter Presenter
         {
-            get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
-        }
-
-        private void OnPresenterChanged()
-        {
-            RefreshElements();
-            RefreshChild();
+            get { return _parent != null ? _parent.Presenter : _presenter; }
         }
 
         private DataSetView View
@@ -254,35 +224,16 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private ObservableCollection<UIElement> _elements;
-        private ObservableCollection<UIElement> Elements
+        private IReadOnlyList<UIElement> _elements;
+        private IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
-            set
-            {
-                if (_elements == value)
-                    return;
-
-                if (_elements != null)
-                {
-                    RemoveElements(_elements);
-                    _elements.CollectionChanged -= OnElementsChanged;
-                }
-                _elements = value;
-                if (_elements != null)
-                {
-                    AddElements(_elements);
-                    _elements.CollectionChanged += OnElementsChanged;
-                }
-            }
         }
-        private void RefreshElements()
+
+        private void InitElements()
         {
-            var layoutManager = LayoutManager;
-            if (layoutManager == null)
-                Elements = null;
-            else
-                Elements = IsPinned ? layoutManager.PinnedElements : layoutManager.ScrollableElements;
+            Debug.Assert(LayoutManager != null);
+            _elements = IsPinned ? LayoutManager.PinnedElements : LayoutManager.ScrollableElements;
         }
 
         int ElementsCount
@@ -290,40 +241,9 @@ namespace DevZest.Data.Windows
             get { return Elements == null ? 0 : Elements.Count; }
         }
 
-        private void OnElementsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove ||
-                e.Action == NotifyCollectionChangedAction.Replace ||
-                e.Action == NotifyCollectionChangedAction.Reset)
-                RemoveElements(e.OldItems);
-
-            if (e.Action == NotifyCollectionChangedAction.Add ||
-                e.Action == NotifyCollectionChangedAction.Replace ||
-                e.Action == NotifyCollectionChangedAction.Reset)
-                AddElements(e.NewItems);
-        }
-
-        private void RemoveElements(ICollection items)
-        {
-            foreach (var item in items)
-            {
-                RemoveLogicalChild(item);
-                RemoveVisualChild((UIElement)item);
-            }
-        }
-
-        private void AddElements(ICollection items)
-        {
-            foreach (var item in items)
-            {
-                AddLogicalChild(item);
-                AddVisualChild((UIElement)item);
-            }
-        }
-
         protected override int VisualChildrenCount
         {
-            get { return _child == null ? ElementsCount : ElementsCount + 1; }
+            get { return Child == null ? ElementsCount : ElementsCount + 1; }
         }
 
         protected override Visual GetVisualChild(int index)
@@ -331,7 +251,7 @@ namespace DevZest.Data.Windows
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return index < ElementsCount ? Elements[index] : _child;
+            return index < ElementsCount ? Elements[index] : Child;
         }
 
         protected override Size MeasureOverride(Size availableSize)

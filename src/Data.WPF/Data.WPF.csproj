@@ -48,6 +48,7 @@
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
+    <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.SimplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.LayoutXY.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="LayoutManager.LayoutZ.cs" />
     <Compile Include="ListGridItem.cs" />
     <Compile Include="FlowMode.cs" />
+    <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="ScalarGridItem_T.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildGridItem.cs" />
