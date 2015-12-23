@@ -90,7 +90,7 @@ namespace DevZest.Data.Windows
                 _pinnedElements = null;
             }
 
-            if (_scrollableElements == null)
+            if (_scrollableElements != null)
             {
                 _scrollableElements.Clear();
                 _scrollableElements = null;

@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
             typeof(bool), typeof(DataSetView), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
-        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibilityProperty),
+        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility),
             typeof(ScrollBarVisibility), typeof(DataSetView), new PropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
@@ -28,6 +28,12 @@ namespace DevZest.Data.Windows
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
             typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+
+        static DataSetView()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DataSetView), new FrameworkPropertyMetadata(typeof(DataSetView)));
+        }
+
 
         private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

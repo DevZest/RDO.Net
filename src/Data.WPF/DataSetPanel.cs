@@ -42,38 +42,44 @@ namespace DevZest.Data.Windows
 
         double IScrollInfo.ExtentWidth
         {
-            get { return LayoutManager.ExtentSize.Width; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentSize.Width; }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return LayoutManager.ExtentSize.Height; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentSize.Height; }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return LayoutManager.ViewportSize.Width; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportSize.Width; }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return LayoutManager.ViewportSize.Height; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportSize.Height; }
         }
 
         double IScrollInfo.HorizontalOffset
         {
-            get { return LayoutManager.HorizontalOffset; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.HorizontalOffset; }
         }
 
         double IScrollInfo.VerticalOffset
         {
-            get { return LayoutManager.VerticalOffset; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.VerticalOffset; }
         }
 
+        ScrollViewer _scrollOwner;
         ScrollViewer IScrollInfo.ScrollOwner
         {
-            get { return LayoutManager.ScrollOwner; }
-            set { LayoutManager.ScrollOwner = value; }
+            get { return _scrollOwner; }
+            set
+            {
+                _scrollOwner = value;
+                if (LayoutManager != null)
+                    LayoutManager.ScrollOwner = value;
+            }
         }
 
         void IScrollInfo.LineUp()
@@ -163,6 +169,11 @@ namespace DevZest.Data.Windows
 
         public DataSetPanel()
         {
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
             var binding = new Binding(DataSetView.PresenterProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
             BindingOperations.SetBinding(this, PresenterProperty, binding);
@@ -201,7 +212,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataSetPresenter Presenter
+        internal DataSetPresenter Presenter
         {
             get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
         }
@@ -212,9 +223,11 @@ namespace DevZest.Data.Windows
             {
                 var oldLayoutManager = oldValue.LayoutManager;
                 oldLayoutManager.SetElementsParent(null, null);
+                oldLayoutManager.ScrollOwner = null;
             }
 
             var layoutManager = LayoutManager;
+            layoutManager.ScrollOwner = _scrollOwner;
             var isPinned = layoutManager == null ? false : layoutManager.IsPinned;
 
             if (layoutManager == null || !layoutManager.IsPinned)
@@ -258,7 +271,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private LayoutManager LayoutManager
+        internal LayoutManager LayoutManager
         {
             get
             {
@@ -268,7 +281,7 @@ namespace DevZest.Data.Windows
         }
 
         private IReadOnlyList<UIElement> _elements;
-        private IReadOnlyList<UIElement> Elements
+        internal IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
         }
@@ -297,7 +310,7 @@ namespace DevZest.Data.Windows
             if (layoutManager == null)
                 return base.MeasureOverride(availableSize);
 
-            throw new NotImplementedException();
+            return base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -306,7 +319,7 @@ namespace DevZest.Data.Windows
             if (layoutManager == null)
                 return base.ArrangeOverride(finalSize);
 
-            throw new NotImplementedException();
+            return base.ArrangeOverride(finalSize);
         }
     }
 }
