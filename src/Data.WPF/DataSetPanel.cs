@@ -201,16 +201,6 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private void RefreshChild()
-        {
-            if (LayoutManager == null || !LayoutManager.IsPinned)
-                Child = null;
-            else if (Child != null)
-                Child.RefreshElements();
-            else
-                Child = new DataSetPanel(this);
-        }
-
         private DataSetPresenter Presenter
         {
             get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
@@ -221,15 +211,32 @@ namespace DevZest.Data.Windows
             if (oldValue != null)
             {
                 var oldLayoutManager = oldValue.LayoutManager;
-                Debug.Assert(oldLayoutManager.Panel == this);
-                oldLayoutManager.Panel = null;
+                oldLayoutManager.SetElementsParent(null, null);
             }
 
-            RefreshChild();
-            LayoutManager.Panel = this;
-            RefreshElements();
-            if (Child != null)
-                Child.RefreshElements();
+            var layoutManager = LayoutManager;
+
+            if (layoutManager == null || !layoutManager.IsPinned)
+                Child = null;
+            else if (Child == null)
+                Child = new DataSetPanel(this);
+
+            DataSetPanel pinnedPanel, scrollablePanel;
+            if (IsPinned)
+            {
+                pinnedPanel = this;
+                scrollablePanel = Child;
+            }
+            else
+            {
+                pinnedPanel = null;
+                scrollablePanel = this;
+            }
+            LayoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
+            if (pinnedPanel != null)
+                pinnedPanel._elements = layoutManager == null ? null : layoutManager.PinnedElements;
+            Debug.Assert(scrollablePanel != null);
+            scrollablePanel._elements = layoutManager == null ? null : layoutManager.ScrollableElements;
         }
 
         private DataSetView View
@@ -266,15 +273,6 @@ namespace DevZest.Data.Windows
         private IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
-        }
-
-        private void RefreshElements()
-        {
-            var layoutManager = LayoutManager;
-            if (layoutManager == null)
-                _elements = null;
-            else
-                _elements = IsPinned ? layoutManager.PinnedElements : layoutManager.ScrollableElements;
         }
 
         int ElementsCount

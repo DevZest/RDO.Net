@@ -18,6 +18,10 @@ namespace DevZest.Data.Windows
 
         private sealed class ElementList : List<UIElement>, IElementCollection
         {
+            public FrameworkElement Parent
+            {
+                get { return null; }
+            }
         }
 
         private sealed class ChildElementCollection : UIElementCollection, IElementCollection
@@ -25,7 +29,10 @@ namespace DevZest.Data.Windows
             public ChildElementCollection(FrameworkElement parent)
                 : base(parent, parent)
             {
+                Parent = parent;
             }
+
+            public FrameworkElement Parent { get; private set; }
 
             public bool IsReadOnly
             {

@@ -72,28 +72,28 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataSetPanel _panel;
-        internal DataSetPanel Panel
+
+        private FrameworkElement _pinnedElementsParent;
+        private FrameworkElement _scrollableElementsParent;
+
+        internal void SetElementsParent(FrameworkElement pinnedElementsParent, FrameworkElement scrollableElementsParent)
         {
-            get { return _panel; }
-            set
+            Debug.Assert(_pinnedElementsParent != pinnedElementsParent || _scrollableElementsParent != scrollableElementsParent);
+            Debug.Assert(IsPinned || (!IsPinned && pinnedElementsParent == null), "pinnedElementsParent must be null when IsPinned==false");
+
+            _pinnedElementsParent = pinnedElementsParent;
+            _scrollableElementsParent = scrollableElementsParent;
+
+            if (_pinnedElements != null)
             {
-                if (_panel == value)
-                    return;
+                _pinnedElements.Clear();
+                _pinnedElements = null;
+            }
 
-                _panel = value;
-
-                if (_pinnedElements != null)
-                {
-                    _pinnedElements.Clear();
-                    _pinnedElements = null;
-                }
-
-                if (_scrollableElements == null)
-                {
-                    _scrollableElements.Clear();
-                    _scrollableElements = null;
-                }
+            if (_scrollableElements == null)
+            {
+                _scrollableElements.Clear();
+                _scrollableElements = null;
             }
         }
 
@@ -102,24 +102,8 @@ namespace DevZest.Data.Windows
             if (_scrollableElements != null)
                 return;
 
-            var panel = Panel;
-            DataSetPanel scrollablePanel, pinnedPanel;
-
-            if (panel == null)
-                scrollablePanel = pinnedPanel = null;
-            else if (IsPinned)
-            {
-                pinnedPanel = panel;
-                scrollablePanel = panel.Child;
-            }
-            else
-            {
-                pinnedPanel = null;
-                scrollablePanel = panel;
-            }
-
-            _pinnedElements = IsPinned ? IElementCollectionFactory.Create(pinnedPanel) : null;
-            _scrollableElements = IElementCollectionFactory.Create(scrollablePanel);
+            _pinnedElements = IsPinned ? IElementCollectionFactory.Create(_pinnedElementsParent) : null;
+            _scrollableElements = IElementCollectionFactory.Create(_scrollableElementsParent);
         }
 
         private Size _availableSize;
