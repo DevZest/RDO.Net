@@ -215,6 +215,7 @@ namespace DevZest.Data.Windows
             }
 
             var layoutManager = LayoutManager;
+            var isPinned = layoutManager == null ? false : layoutManager.IsPinned;
 
             if (layoutManager == null || !layoutManager.IsPinned)
                 Child = null;
@@ -222,7 +223,7 @@ namespace DevZest.Data.Windows
                 Child = new DataSetPanel(this);
 
             DataSetPanel pinnedPanel, scrollablePanel;
-            if (IsPinned)
+            if (isPinned)
             {
                 pinnedPanel = this;
                 scrollablePanel = Child;
@@ -232,9 +233,15 @@ namespace DevZest.Data.Windows
                 pinnedPanel = null;
                 scrollablePanel = this;
             }
-            LayoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
+
+            if (layoutManager != null)
+                layoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
+
             if (pinnedPanel != null)
-                pinnedPanel._elements = layoutManager == null ? null : layoutManager.PinnedElements;
+            {
+                Debug.Assert(layoutManager != null);
+                pinnedPanel._elements = layoutManager.PinnedElements;
+            }
             Debug.Assert(scrollablePanel != null);
             scrollablePanel._elements = layoutManager == null ? null : layoutManager.ScrollableElements;
         }
@@ -257,15 +264,6 @@ namespace DevZest.Data.Windows
             {
                 var presenter = Presenter;
                 return presenter == null ? null : presenter.LayoutManager;
-            }
-        }
-
-        private bool IsPinned
-        {
-            get
-            {
-                var layoutManager = LayoutManager;
-                return layoutManager == null || _parent != null ? false : layoutManager.IsPinned;
             }
         }
 
