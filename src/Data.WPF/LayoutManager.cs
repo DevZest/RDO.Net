@@ -78,13 +78,22 @@ namespace DevZest.Data.Windows
             get { return _panel; }
             set
             {
-                Debug.Assert(_panel != value);
+                if (_panel == value)
+                    return;
 
                 _panel = value;
+
                 if (_pinnedElements != null)
+                {
                     _pinnedElements.Clear();
-                if (_scrollableElements != null)
+                    _pinnedElements = null;
+                }
+
+                if (_scrollableElements == null)
+                {
                     _scrollableElements.Clear();
+                    _scrollableElements = null;
+                }
             }
         }
 

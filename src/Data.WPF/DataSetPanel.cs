@@ -153,8 +153,19 @@ namespace DevZest.Data.Windows
 
         #endregion
 
+        private static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataSetPresenter),
+            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnPresenterChanged));
+
+        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DataSetPanel)d).OnPresenterChanged((DataSetPresenter)e.OldValue);
+        }
+
         public DataSetPanel()
         {
+            var binding = new Binding(DataSetView.PresenterProperty.Name);
+            binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
+            BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
 
         private DataSetPanel(DataSetPanel parent)
@@ -163,35 +174,62 @@ namespace DevZest.Data.Windows
             _parent = parent;
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            var dataSetView = TemplatedParent as DataSetView;
-            if (dataSetView == null)
-                return;
-
-            _presenter = dataSetView.Presenter;
-            var layoutManager = LayoutManager;
-            if (IsPinned)
-            {
-                Child = new DataSetPanel(this);
-                AddLogicalChild(Child);
-                AddVisualChild(Child);
-            }
-            layoutManager.Panel = this;
-            InitElements();
-            if (Child != null)
-                Child.InitElements();
-        }
-
         private DataSetPanel _parent;
 
-        internal DataSetPanel Child { get; private set; }
+        private DataSetPanel _child;
+        internal DataSetPanel Child
+        {
+            get { return _child; }
+            private set
+            {
+                if (_child == value)
+                    return;
 
-        private DataSetPresenter _presenter;
+                if (_child != null)
+                {
+                    RemoveLogicalChild(_child);
+                    RemoveVisualChild(_child);
+                }
+
+                _child = value;
+
+                if (_child != null)
+                {
+                    AddLogicalChild(_child);
+                    AddVisualChild(_child);
+                }
+            }
+        }
+
+        private void RefreshChild()
+        {
+            if (LayoutManager == null || !LayoutManager.IsPinned)
+                Child = null;
+            else if (Child != null)
+                Child.RefreshElements();
+            else
+                Child = new DataSetPanel(this);
+        }
+
         private DataSetPresenter Presenter
         {
-            get { return _parent != null ? _parent.Presenter : _presenter; }
+            get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
+        }
+
+        private void OnPresenterChanged(DataSetPresenter oldValue)
+        {
+            if (oldValue != null)
+            {
+                var oldLayoutManager = oldValue.LayoutManager;
+                Debug.Assert(oldLayoutManager.Panel == this);
+                oldLayoutManager.Panel = null;
+            }
+
+            RefreshChild();
+            LayoutManager.Panel = this;
+            RefreshElements();
+            if (Child != null)
+                Child.RefreshElements();
         }
 
         private DataSetView View
@@ -230,10 +268,13 @@ namespace DevZest.Data.Windows
             get { return _elements; }
         }
 
-        private void InitElements()
+        private void RefreshElements()
         {
-            Debug.Assert(LayoutManager != null);
-            _elements = IsPinned ? LayoutManager.PinnedElements : LayoutManager.ScrollableElements;
+            var layoutManager = LayoutManager;
+            if (layoutManager == null)
+                _elements = null;
+            else
+                _elements = IsPinned ? layoutManager.PinnedElements : layoutManager.ScrollableElements;
         }
 
         int ElementsCount
