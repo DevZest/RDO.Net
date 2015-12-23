@@ -293,18 +293,20 @@ namespace DevZest.Data.Windows
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            LayoutManager.Measure(availableSize);
+            var layoutManager = LayoutManager;
+            if (layoutManager == null)
+                return base.MeasureOverride(availableSize);
 
-            return base.MeasureOverride(availableSize);
+            throw new NotImplementedException();
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            finalSize = base.ArrangeOverride(finalSize);
+            var layoutManager = LayoutManager;
+            if (layoutManager == null)
+                return base.ArrangeOverride(finalSize);
 
-            if (LayoutManager != null)
-                LayoutManager.ViewportSize = finalSize;
-            return finalSize;
+            throw new NotImplementedException();
         }
     }
 }
