@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4CCACBF3-5775-41B9-885C-F93002789A38}"
 EndProject
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF", "src\Data.WPF\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{0A97428A-730F-4939-BF41-A65AE91BB01E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetGridSample", "test\DataSetGridSample\DataSetGridSample.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetViewSample", "test\SampleApp\DataSetViewSample.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
