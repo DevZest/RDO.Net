@@ -4,11 +4,6 @@ namespace DevZest.Data.Windows
 {
     public abstract class ScalarGridItem : GridItem
     {
-        internal ScalarGridItem(Model parentModel)
-            : base(parentModel)
-        {
-        }
-
         private FlowMode _flowMode;
         public FlowMode RepeatMode
         {

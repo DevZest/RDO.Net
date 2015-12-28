@@ -4,7 +4,7 @@ namespace DevZest.Data.Windows
 {
     public static class DataSetViewFactory
     {
-        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<DataSetPresenterConfig, T> configAction)
+        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> constructor = null)
             where T : Model
         {
             if (childModel == null)

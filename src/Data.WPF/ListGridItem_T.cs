@@ -7,11 +7,6 @@ namespace DevZest.Data.Windows
     public abstract class ListGridItem<T> : ListGridItem
         where T : UIElement, new()
     {
-        protected ListGridItem(Model parentModel)
-            : base(parentModel)
-        {
-        }
-
         private Action<T> _initializer;
         public Action<T> Initializer
         {

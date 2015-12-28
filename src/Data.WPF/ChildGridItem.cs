@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
     public abstract class ChildGridItem : GridItem
     {
         internal ChildGridItem(GridTemplate template)
-                : base(template.Model.GetParentModel())
+                : base()
         {
             Template = template;
         }

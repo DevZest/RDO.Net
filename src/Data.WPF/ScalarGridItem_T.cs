@@ -6,11 +6,6 @@ namespace DevZest.Data.Windows
     public abstract class ScalarGridItem<T> : ScalarGridItem
         where T : UIElement, new()
     {
-        protected ScalarGridItem(Model parentModel)
-            : base(parentModel)
-        {
-        }
-
         private Action<T> _initializer;
         public Action<T> Initializer
         {

@@ -47,9 +47,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridTemplate(Model model)
+        internal GridTemplate(DataSetPresenter owner)
         {
-            Model = model;
+            Owner = owner;
             _gridRows = new GridSpecCollection<GridRow>();
             _gridColumns = new GridSpecCollection<GridColumn>();
             _scalarItems = new GridItemCollection<ScalarGridItem>(this);
@@ -59,7 +59,12 @@ namespace DevZest.Data.Windows
 
         internal int ChildOrdinal { get; private set; }
 
-        public Model Model { get; private set; }
+        public DataSetPresenter Owner { get; private set; }
+
+        public Model Model
+        {
+            get { return Owner.Model; }
+        }
 
         private GridOrientation _orientation = GridOrientation.Y;
         public GridOrientation Orientation
@@ -230,8 +235,6 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (gridItem == null)
                 throw new ArgumentNullException(paramGridItemName);
-            if (gridItem.Owner != null || (gridItem.ParentModel != null && gridItem.ParentModel != Model))
-                throw new ArgumentException(Strings.GridTemplate_InvalidGridItem, paramGridItemName);
         }
 
         private void VerifyGridColumn(int index, string paramName)

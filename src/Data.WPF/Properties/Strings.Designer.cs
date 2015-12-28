@@ -12,6 +12,14 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// This GridItem has its Owner property set already.
+        /// </summary>
+        public static string GridItem_OwnerAlreadySet
+        {
+            get { return GetString("GridItem_OwnerAlreadySet"); }
+        }
+
+        /// <summary>
         /// The GridItem is sealed and cannot be changed.
         /// </summary>
         public static string GridItem_VerifyNotSealed
@@ -49,14 +57,6 @@ namespace DevZest.Data.Windows
         public static string GridTemplate_InvalidGridColumnWidthOrientation(object index, object gridColumnWidth, object orientation)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthOrientation", "index", "gridColumnWidth", "orientation"), index, gridColumnWidth, orientation);
-        }
-
-        /// <summary>
-        /// Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property.
-        /// </summary>
-        public static string GridTemplate_InvalidGridItem
-        {
-            get { return GetString("GridTemplate_InvalidGridItem"); }
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(dataSet));
 
             var model = dataSet._;
-            var result = new DataSetPresenter(null, new GridTemplate(model));
+            var result = new DataSetPresenter(null, dataSet);
             using (var presenterConfig = new DataSetPresenterConfig(result))
             {
                 if (configAction != null)
@@ -47,12 +47,14 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal DataSetPresenter(DataRowPresenter owner, GridTemplate template)
+        internal DataSetPresenter(DataRowPresenter owner, DataSet dataSet)
         {
-            Debug.Assert(template != null);
-            Debug.Assert(owner == null || template.Model.GetParentModel() == owner.Model);
+            Debug.Assert(dataSet != null);
+            Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == owner.DataRow);
+
             Owner = owner;
-            Template = template;
+            DataSet = dataSet;
+            Template = new GridTemplate(this);
             IsVirtualizing = true;
 
             DataRow parentDataRow = owner != null ? Owner.DataRow : null;
@@ -84,7 +86,7 @@ namespace DevZest.Data.Windows
 
         public Model Model
         {
-            get { return Template.Model; }
+            get { return DataSet.Model; }
         }
 
         #region IReadOnlyList<DataRowPresenter>

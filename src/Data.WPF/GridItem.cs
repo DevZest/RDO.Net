@@ -7,19 +7,16 @@ namespace DevZest.Data.Windows
 {
     public abstract class GridItem
     {
-        internal GridItem(Model parentModel)
-        {
-            ParentModel = parentModel;
-        }
-
-        public Model ParentModel { get; private set; }
-
         public GridTemplate Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
         internal void Seal(GridTemplate owner, GridRange gridRange)
         {
+            Debug.Assert(owner != null);
+
+            if (Owner != null)
+                throw new InvalidOperationException(Strings.GridItem_OwnerAlreadySet);
             Owner = owner;
             GridRange = gridRange;
         }

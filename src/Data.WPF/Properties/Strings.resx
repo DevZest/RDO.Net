@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GridItem_OwnerAlreadySet" xml:space="preserve">
+    <value>This GridItem has its Owner property set already.</value>
+  </data>
   <data name="GridItem_VerifyNotSealed" xml:space="preserve">
     <value>The GridItem is sealed and cannot be changed.</value>
   </data>
@@ -131,9 +134,6 @@
   </data>
   <data name="GridTemplate_InvalidGridColumnWidthOrientation" xml:space="preserve">
     <value>Invalid GridColumn.Width/Orientation combination: GridColumns[{index}]="{gridColumnWidth}", Orientation="{orientation}".</value>
-  </data>
-  <data name="GridTemplate_InvalidGridItem" xml:space="preserve">
-    <value>Invalid GridItem for this GridTemplate. Verification failed for GridItem.Owner or GirdItem.ParentModel property.</value>
   </data>
   <data name="GridTemplate_InvalidGridRowHeightOrientation" xml:space="preserve">
     <value>Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".</value>

@@ -62,7 +62,8 @@ namespace DevZest.Data.Windows
 
             var result = new DataSetPresenter[childItems.Count];
             for (int i = 0; i < childItems.Count; i++)
-                result[i] = new DataSetPresenter(this, ((ChildGridItem)childItems[i]).Template);
+                //result[i] = new DataSetPresenter(this, childItems[i].Template);
+                throw new NotImplementedException();
 
             return result;
         }
