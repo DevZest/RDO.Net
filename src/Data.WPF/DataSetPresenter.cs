@@ -47,7 +47,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal DataSetPresenter(DataRowPresenter owner, DataSet dataSet)
+        private DataSetPresenter(DataRowPresenter owner, DataSet dataSet)
         {
             Debug.Assert(dataSet != null);
             Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == owner.DataRow);
