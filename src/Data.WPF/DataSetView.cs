@@ -87,19 +87,12 @@ namespace DevZest.Data.Windows
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
-        public void Initialize<TModel>(DataSet<TModel> dataSet, Action<GridTemplate, TModel> templateInitializer = null)
-            where TModel : Model, new()
+        public void Show(DataSetPresenter presenter)
         {
-            if (dataSet == null)
-                throw new ArgumentNullException(nameof(dataSet));
+            if (presenter == null)
+                throw new ArgumentNullException(nameof(presenter));
 
-            var gridTemplate = new GridTemplate(dataSet.Model);
-            if (templateInitializer != null)
-                templateInitializer(gridTemplate, dataSet._);
-            else
-                gridTemplate.DefaultInitialize();
-            gridTemplate.Seal();
-            Presenter = new DataSetPresenter(null, gridTemplate);
+            Presenter = presenter;
         }
     }
 }

@@ -6,10 +6,10 @@ namespace DevZest.Data.Windows
     [TestClass]
     public class DataRowPresenterCollectionTests
     {
-        private static DataRowPresenterCollection Create<T>(DataSet<T> dataSet, Action<GridTemplate> templateInitializer = null)
+        private static DataRowPresenterCollection Create<T>(DataSet<T> dataSet, Action<DataSetPresenterConfig, T> configAction = null)
             where T : Model, new()
         {
-            var dataSetPresenter = Util.CreateDataSetPresenter(dataSet, templateInitializer);
+            var dataSetPresenter = DataSetPresenter.Create(dataSet, configAction);
             return new DataRowPresenterCollection(dataSetPresenter);
         }
 
@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, t => t.WithShowsEof(false).WithShowsEmptyDataRow(false));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(false).WithShowsEmptyDataRow(false));
 
             Assert.AreEqual(0, dataRowPresenters.Count);
             Assert.AreEqual(-1, dataRowPresenters.Current);
@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, t => t.WithShowsEof(true));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(true));
 
             Assert.AreEqual(1, dataRowPresenters.Count);
             Assert.AreEqual(DataViewRowType.Eof, dataRowPresenters[0].RowType);
@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, t => t.WithShowsEof(false).WithShowsEmptyDataRow(true));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(false).WithShowsEmptyDataRow(true));
 
             Assert.AreEqual(1, dataRowPresenters.Count);
             Assert.AreEqual(DataViewRowType.EmptyDataRow, dataRowPresenters[0].RowType);

@@ -4,21 +4,21 @@ namespace DevZest.Data.Windows
 {
     public static class DataSetViewFactory
     {
-        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<GridTemplate, T> templateInitializer, Action<DataSetView> initializer = null)
+        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<DataSetPresenterConfig, T> configAction)
             where T : Model
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
-            if (templateInitializer == null)
-                throw new ArgumentNullException(nameof(templateInitializer));
+            if (configAction == null)
+                throw new ArgumentNullException(nameof(configAction));
 
-            var template = new GridTemplate(childModel);
-            templateInitializer(template, childModel);
-            template.Seal();
-            var result = new ChildGridItem<DataSetView>(template);
-            if (initializer != null)
-                result.Initializer = initializer;
-            return result;
+            //var template = new GridTemplate(childModel);
+            //configAction(template, childModel);
+            //var result = new ChildGridItem<DataSetView>(template);
+            //if (initializer != null)
+            //    result.Initializer = initializer;
+            //return result;
+            throw new NotImplementedException();
         }
     }
 }

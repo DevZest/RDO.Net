@@ -12,6 +12,14 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// The GridItem is sealed and cannot be changed.
+        /// </summary>
+        public static string GridItem_VerifyNotSealed
+        {
+            get { return GetString("GridItem_VerifyNotSealed"); }
+        }
+
+        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)
@@ -57,14 +65,6 @@ namespace DevZest.Data.Windows
         public static string GridTemplate_InvalidGridRowHeightOrientation(object index, object gridRowHeight, object orientation)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightOrientation", "index", "gridRowHeight", "orientation"), index, gridRowHeight, orientation);
-        }
-
-        /// <summary>
-        /// The GridTemplate is currently sealed (read-only).
-        /// </summary>
-        public static string GridTemplate_VerifyNotSealed
-        {
-            get { return GetString("GridTemplate_VerifyNotSealed"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

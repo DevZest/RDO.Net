@@ -26,13 +26,13 @@ namespace DevZest.Data.Windows
 
         public bool IsSealed
         {
-            get { return Owner == null ? false : Owner.IsSealed; }
+            get { return Owner != null; }
         }
 
         protected void VerifyNotSealed()
         {
             if (IsSealed)
-                throw new InvalidOperationException(Strings.GridTemplate_VerifyNotSealed);
+                throw new InvalidOperationException(Strings.GridItem_VerifyNotSealed);
         }
 
         List<UIElement> _cachedUIElements;

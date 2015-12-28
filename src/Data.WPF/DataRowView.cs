@@ -1,17 +1,30 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
     public class DataRowView : Control
     {
-        public static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter),
-            typeof(DataRowPresenter), typeof(DataRowView), new FrameworkPropertyMetadata(null));
+        public DataRowPresenter Presenter { get; internal set; }
 
-        public DataRowPresenter Presenter
+        protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
-            get { return (DataRowPresenter)GetValue(PresenterProperty); }
-            set { SetValue(PresenterProperty, value); }
+            base.OnPreviewLostKeyboardFocus(e);
+        }
+
+        protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            base.OnLostKeyboardFocus(e);
+            if (Presenter != null)
+                Presenter.IsFocused = false;
+        }
+
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            base.OnPreviewGotKeyboardFocus(e);
+            if (Presenter != null)
+                Presenter.IsFocused = true;
         }
     }
 }

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GridItem_VerifyNotSealed" xml:space="preserve">
+    <value>The GridItem is sealed and cannot be changed.</value>
+  </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
   </data>
@@ -134,8 +137,5 @@
   </data>
   <data name="GridTemplate_InvalidGridRowHeightOrientation" xml:space="preserve">
     <value>Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".</value>
-  </data>
-  <data name="GridTemplate_VerifyNotSealed" xml:space="preserve">
-    <value>The GridTemplate is currently sealed (read-only).</value>
   </data>
 </root>

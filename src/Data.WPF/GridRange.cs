@@ -90,54 +90,5 @@ namespace DevZest.Data.Windows
                 Right.Ordinal > gridRange.Right.Ordinal ? Right : gridRange.Right,
                 Bottom.Ordinal > gridRange.Bottom.Ordinal ? Bottom : gridRange.Bottom);
         }
-
-        private void VerifyNotEmpty()
-        {
-            if (IsEmpty)
-                throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
-        }
-
-        private void VerifyGridItem(GridItem gridItem, string paramGridItemName)
-        {
-            VerifyNotEmpty();
-            if (gridItem == null)
-                throw new ArgumentNullException(paramGridItemName);
-        }
-
-        public GridTemplate GridItem<T>(ScalarGridItem<T> scalarItem)
-            where T : UIElement, new()
-        {
-            VerifyGridItem(scalarItem, nameof(scalarItem));
-            return Owner.AddItem(this, scalarItem);
-        }
-
-        public GridTemplate GridItem<T>(ListGridItem<T> listItem)
-            where T : UIElement, new()
-        {
-            VerifyGridItem(listItem, nameof(listItem));
-            return Owner.AddItem(this, listItem);
-        }
-
-        public GridTemplate GridItem<T>(ChildGridItem<T> childItem)
-            where T : DataSetView, new()
-        {
-            VerifyGridItem(childItem, nameof(childItem));
-            return Owner.AddItem(this, childItem);
-        }
-
-        public GridTemplate Repeat()
-        {
-            VerifyNotEmpty();
-
-            Owner.RepeatRange = this;
-            return Owner;
-        }
-
-        public GridTemplate Repeat(GridOrientation value)
-        {
-            Repeat();
-            Owner.WithOrientation(value);
-            return Owner;
-        }
     }
 }

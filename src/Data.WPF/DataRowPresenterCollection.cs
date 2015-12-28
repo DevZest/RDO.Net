@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows
                 _rows.Add(dataRowPresenter);
             }
 
-            if (Template.ShowsEof)
+            if (Owner.ShowsEof)
                 _virtualRow = new DataRowPresenter(Owner, DataViewRowType.Eof);
             else
                 CoerceEmptyDataRow(false);
@@ -109,7 +109,7 @@ namespace DevZest.Data.Windows
 
             if (_rows.Count == 0)
             {
-                if (Template.ShowsEmptyDataRow && _virtualRow == null)
+                if (Owner.ShowsEmptyDataRow && _virtualRow == null)
                     SetVirtualRow(new DataRowPresenter(Owner, DataViewRowType.EmptyDataRow), notifyChange);
             }
             else if (_virtualRow != null)

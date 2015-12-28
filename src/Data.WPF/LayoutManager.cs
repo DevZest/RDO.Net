@@ -206,7 +206,7 @@ namespace DevZest.Data.Windows
 
         private bool IsVirtualizing
         {
-            get { return Template.IsVirtualizing; }
+            get { return Presenter.IsVirtualizing; }
         }
 
         private GridOrientation Orientation

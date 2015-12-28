@@ -79,6 +79,8 @@ namespace DevZest.Data.Windows
 
         public DataViewRowType RowType { get; private set; }
 
+        public bool IsFocused { get; internal set; }
+
         private static UIElement[] s_emptyUIElements = new UIElement[0];
         private UIElement[] _uiElements = null;
 

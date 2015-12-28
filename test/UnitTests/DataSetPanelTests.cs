@@ -16,9 +16,7 @@ namespace DevZest.Data.Windows
         public void DataSetPanel_properly_initialized()
         {
             var dataSetView = new DataSetView();
-            dataSetView.Initialize(DataSet<Adhoc>.New(), (t, m) =>
-            {
-            });
+            dataSetView.Show(DataSetPresenter.Create(DataSet<Adhoc>.New()));
 
             dataSetView.RunAfterLoaded(x =>
             {
@@ -34,10 +32,10 @@ namespace DevZest.Data.Windows
         public void DataSetPanel_properly_initialized_pinned()
         {
             var dataSetView = new DataSetView();
-            dataSetView.Initialize(DataSet<Adhoc>.New(), (t, m) =>
+            dataSetView.Show(DataSetPresenter.Create(DataSet<Adhoc>.New(), (c, m) =>
             {
-                t.WithPinnedLeft(1);
-            });
+                c.WithPinnedLeft(1);
+            }));
 
             dataSetView.RunAfterLoaded(x =>
             {

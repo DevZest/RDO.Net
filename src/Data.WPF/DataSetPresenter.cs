@@ -4,17 +4,56 @@ using System.Diagnostics;
 using System.Collections;
 using System;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace DevZest.Data.Windows
 {
     public sealed partial class DataSetPresenter : IReadOnlyList<DataRowPresenter>
     {
+        public static DataSetPresenter Create<T>(DataSet<T> dataSet, Action<DataSetPresenterConfig, T> configAction = null)
+            where T : Model, new()
+        {
+            if (dataSet == null)
+                throw new ArgumentNullException(nameof(dataSet));
+
+            var model = dataSet._;
+            var result = new DataSetPresenter(null, new GridTemplate(model));
+            using (var presenterConfig = new DataSetPresenterConfig(result))
+            {
+                if (configAction != null)
+                    configAction(presenterConfig, model);
+                else
+                    DefaultConfig(presenterConfig, model);
+            }
+
+            return result;
+        }
+
+        private static void DefaultConfig(DataSetPresenterConfig config, Model model)
+        {
+            var columns = model.GetColumns();
+            if (columns.Count == 0)
+                return;
+
+            config.AddGridColumns(columns.Select(x => "Auto").ToArray())
+                .AddGridRows("Auto", "Auto")
+                .Range(0, 1, columns.Count - 1, 1).Repeat();
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                //config.Range(i, 0).GridItem(column.ColumnHeader())
+                //    .Range(i, 1).GridItem(column.TextBlock());
+            }
+        }
+
         internal DataSetPresenter(DataRowPresenter owner, GridTemplate template)
         {
             Debug.Assert(template != null);
             Debug.Assert(owner == null || template.Model.GetParentModel() == owner.Model);
             Owner = owner;
             Template = template;
+            IsVirtualizing = true;
 
             DataRow parentDataRow = owner != null ? Owner.DataRow : null;
             DataSet = Model[parentDataRow];
@@ -103,5 +142,11 @@ namespace DevZest.Data.Windows
         }
 
         internal LayoutManager LayoutManager { get; private set; }
+
+        public bool IsVirtualizing { get; internal set; }
+
+        public bool ShowsEof { get; internal set; }
+
+        public bool ShowsEmptyDataRow { get; internal set; }
     }
 }

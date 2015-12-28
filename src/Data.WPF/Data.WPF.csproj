@@ -46,8 +46,10 @@
     </Compile>
     <Compile Include="ChildGridItem_T.cs" />
     <Compile Include="DataRowPresenterCollection.cs" />
+    <Compile Include="DataSetPresenterConfig.cs" />
     <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
+    <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.SimplexOrientationLayout.cs" />
