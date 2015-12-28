@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(false).WithShowsEmptyDataRow(false));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithEofVisible(false).WithEmptySetVisible(false));
 
             Assert.AreEqual(0, dataRowPresenters.Count);
             Assert.AreEqual(-1, dataRowPresenters.Current);
@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(true));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithEofVisible(true));
 
             Assert.AreEqual(1, dataRowPresenters.Count);
             Assert.AreEqual(DataViewRowType.Eof, dataRowPresenters[0].RowType);
@@ -56,10 +56,10 @@ namespace DevZest.Data.Windows
         {
             var dataSet = DataSet<Adhoc>.New();
 
-            var dataRowPresenters = Create(dataSet, (c, m) => c.WithShowsEof(false).WithShowsEmptyDataRow(true));
+            var dataRowPresenters = Create(dataSet, (c, m) => c.WithEofVisible(false).WithEmptySetVisible(true));
 
             Assert.AreEqual(1, dataRowPresenters.Count);
-            Assert.AreEqual(DataViewRowType.EmptyDataRow, dataRowPresenters[0].RowType);
+            Assert.AreEqual(DataViewRowType.EmptySet, dataRowPresenters[0].RowType);
             Assert.AreEqual(0, dataRowPresenters.Current);
             Assert.AreEqual(0, dataRowPresenters.Selection.Count);
 

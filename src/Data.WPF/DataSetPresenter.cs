@@ -145,8 +145,8 @@ namespace DevZest.Data.Windows
 
         public bool IsVirtualizing { get; internal set; }
 
-        public bool ShowsEof { get; internal set; }
+        public bool IsEofVisible { get; internal set; }
 
-        public bool ShowsEmptyDataRow { get; internal set; }
+        public bool IsEmptySetVisible { get; internal set; }
     }
 }

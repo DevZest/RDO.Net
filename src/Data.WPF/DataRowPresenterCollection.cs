@@ -21,10 +21,10 @@ namespace DevZest.Data.Windows
                 _rows.Add(dataRowPresenter);
             }
 
-            if (Owner.ShowsEof)
+            if (Owner.IsEofVisible)
                 _virtualRow = new DataRowPresenter(Owner, DataViewRowType.Eof);
             else
-                CoerceEmptyDataRow(false);
+                CoerceEmptySet(false);
 
             CoerceSelection();
             DataSet.RowCollectionChanged += OnRowCollectionChanged;
@@ -102,15 +102,15 @@ namespace DevZest.Data.Windows
                 Owner.OnRowCollectionChanged(DataSet.Count, false);
         }
 
-        private void CoerceEmptyDataRow(bool notifyChange)
+        private void CoerceEmptySet(bool notifyChange)
         {
             if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.Eof)
                 return;
 
             if (_rows.Count == 0)
             {
-                if (Owner.ShowsEmptyDataRow && _virtualRow == null)
-                    SetVirtualRow(new DataRowPresenter(Owner, DataViewRowType.EmptyDataRow), notifyChange);
+                if (Owner.IsEmptySetVisible && _virtualRow == null)
+                    SetVirtualRow(new DataRowPresenter(Owner, DataViewRowType.EmptySet), notifyChange);
             }
             else if (_virtualRow != null)
                 SetVirtualRow(null, notifyChange);
@@ -135,7 +135,7 @@ namespace DevZest.Data.Windows
                 Owner.OnRowCollectionChanged(index, false);
             }
 
-            CoerceEmptyDataRow(true);
+            CoerceEmptySet(true);
             CoerceSelection();
         }
 

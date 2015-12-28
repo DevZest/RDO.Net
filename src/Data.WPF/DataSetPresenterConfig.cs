@@ -125,17 +125,16 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataSetPresenterConfig WithShowsEof(bool value)
+        public DataSetPresenterConfig WithEofVisible(bool value)
         {
-            Presenter.ShowsEof = value;
+            Presenter.IsEofVisible = value;
             return this;
         }
 
-        public DataSetPresenterConfig WithShowsEmptyDataRow(bool value)
+        public DataSetPresenterConfig WithEmptySetVisible(bool value)
         {
-            Presenter.ShowsEmptyDataRow = value;
+            Presenter.IsEmptySetVisible = value;
             return this;
         }
-
     }
 }
