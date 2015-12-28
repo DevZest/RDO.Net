@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows
         public DataSetPresenter Presenter
         {
             get { return (DataSetPresenter)GetValue(PresenterProperty); }
-            internal set { SetValue(PresenterPropertyKey, value); }
+            private set { SetValue(PresenterPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -93,6 +93,12 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(presenter));
 
             Presenter = presenter;
+        }
+
+        internal void Unmount()
+        {
+            Debug.Assert(Presenter != null);
+            Presenter = null;
         }
     }
 }

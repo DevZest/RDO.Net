@@ -44,7 +44,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="ChildGridItem_T.cs" />
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetPresenterConfig.cs" />
     <Compile Include="DataSetViewFactory.cs" />

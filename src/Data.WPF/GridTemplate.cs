@@ -57,8 +57,6 @@ namespace DevZest.Data.Windows
             _childItems = new GridItemCollection<ChildGridItem>(this);
         }
 
-        internal int ChildOrdinal { get; private set; }
-
         public DataSetPresenter Owner { get; private set; }
 
         public Model Model
@@ -218,12 +216,10 @@ namespace DevZest.Data.Windows
             _listItems.Add(gridRange, listItem);
         }
 
-        internal void AddItem<T>(GridRange gridRange, ChildGridItem<T> childItem)
-            where T : DataSetView, new()
+        internal void AddItem(GridRange gridRange, ChildGridItem childItem)
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
-            var childTemplate = childItem.Template;
-            childTemplate.ChildOrdinal = ChildItems.Count;
+            childItem.Ordinal = ChildItems.Count;
             _childItems.Add(gridRange, childItem);
         }
 

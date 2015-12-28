@@ -49,8 +49,7 @@ namespace DevZest.Data.Windows
             return PresenterConfig;
         }
 
-        public DataSetPresenterConfig GridItem<T>(ChildGridItem<T> childItem)
-            where T : DataSetView, new()
+        public DataSetPresenterConfig GridItem(ChildGridItem childItem)
         {
             VerifyGridItem(childItem, nameof(childItem));
             Template.AddItem(GridRange, childItem);

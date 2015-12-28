@@ -1,24 +1,30 @@
 ﻿using System;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Data.Windows
 {
     public static class DataSetViewFactory
     {
-        public static ChildGridItem<DataSetView> DataSetView<T>(this T childModel, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> constructor = null)
-            where T : Model
+        public static ChildGridItem DataSetView<T>(this T childModel, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> viewConstructor = null)
+            where T : Model, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
             if (configAction == null)
                 throw new ArgumentNullException(nameof(configAction));
 
-            //var template = new GridTemplate(childModel);
-            //configAction(template, childModel);
-            //var result = new ChildGridItem<DataSetView>(template);
-            //if (initializer != null)
-            //    result.Initializer = initializer;
-            //return result;
-            throw new NotImplementedException();
+            return new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), configAction));
+        }
+
+        public static ChildGridItem DataSetView<T>(this _DataSet<T> childDataSet, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> viewConstructor = null)
+            where T : Model, new()
+        {
+            if (childDataSet == null)
+                throw new ArgumentNullException(nameof(childDataSet));
+            if (configAction == null)
+                throw new ArgumentNullException(nameof(configAction));
+
+            return new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], configAction));
         }
     }
 }
