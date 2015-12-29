@@ -5,10 +5,10 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildGridItem : GridItem
+    public sealed class ChildGridItem : ListGridItem
     {
         internal ChildGridItem(Func<DataSetView> viewConstructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
-                : base()
+                : base(viewConstructor, null)
         {
             _viewConstructor = viewConstructor == null ? () => new DataSetView() : viewConstructor;
 
@@ -16,22 +16,23 @@ namespace DevZest.Data.Windows
             ChildPresenterConstructor = childPresenterConstructor;
         }
 
-        internal int Ordinal { get; set; }
+        internal int ChildOrdinal { get; private set; }
+
+        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal, int childOrdinal)
+        {
+            base.Seal(owner, gridRange, ordinal);
+            ChildOrdinal = childOrdinal;
+        }
 
         Func<DataSetView> _viewConstructor;
 
         internal Func<DataRowPresenter, DataSetPresenter> ChildPresenterConstructor { get; private set; }
 
-        internal sealed override UIElement Create()
-        {
-            return _viewConstructor();
-        }
-
         internal sealed override void OnMounted(UIElement uiElement)
         {
             var dataSetView = (DataSetView)uiElement;
             var parentDataRowPresenter = dataSetView.GetDataRowPresenter();
-            dataSetView.Show(parentDataRowPresenter.Children[Ordinal]);
+            dataSetView.Show(parentDataRowPresenter.Children[ChildOrdinal]);
         }
 
         internal sealed override void OnUnmounting(UIElement uiElement)

@@ -27,21 +27,16 @@ namespace DevZest.Data.Windows
         private sealed class GridItemCollection<T> : ReadOnlyCollection<T>
             where T : GridItem
         {
-            internal GridItemCollection(GridTemplate owner)
+            internal GridItemCollection()
                 : base(new List<T>())
             {
-                Debug.Assert(owner != null);
-                _owner = owner;
             }
-
-            private GridTemplate _owner;
 
             internal GridRange Range { get; private set; }
 
             internal void Add(GridRange gridRange, T gridItem)
             {
-                Debug.Assert(gridItem != null && gridItem.Owner == null);
-                gridItem.Seal(_owner, gridRange);
+                Debug.Assert(gridItem != null);
                 Items.Add(gridItem);
                 Range = Range.Union(gridRange);
             }
@@ -50,11 +45,6 @@ namespace DevZest.Data.Windows
         internal GridTemplate(DataSetPresenter owner)
         {
             Owner = owner;
-            _gridRows = new GridSpecCollection<GridRow>();
-            _gridColumns = new GridSpecCollection<GridColumn>();
-            _scalarItems = new GridItemCollection<ScalarGridItem>(this);
-            _listItems = new GridItemCollection<ListGridItem>(this);
-            _childItems = new GridItemCollection<ChildGridItem>(this);
         }
 
         public DataSetPresenter Owner { get; private set; }
@@ -76,31 +66,31 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private GridSpecCollection<GridRow> _gridRows;
-        public ReadOnlyCollection<GridRow> GridRows
-        {
-            get { return _gridRows; }
-        }
-
-        private GridSpecCollection<GridColumn> _gridColumns;
+        private GridSpecCollection<GridColumn> _gridColumns = new GridSpecCollection<GridColumn>();
         public ReadOnlyCollection<GridColumn> GridColumns
         {
             get { return _gridColumns; }
         }
 
-        private GridItemCollection<ScalarGridItem> _scalarItems;
+        private GridSpecCollection<GridRow> _gridRows = new GridSpecCollection<GridRow>();
+        public ReadOnlyCollection<GridRow> GridRows
+        {
+            get { return _gridRows; }
+        }
+
+        private GridItemCollection<ScalarGridItem> _scalarItems = new GridItemCollection<ScalarGridItem>();
         public ReadOnlyCollection<ScalarGridItem> ScalarItems
         {
             get { return _scalarItems; }
         }
 
-        private GridItemCollection<ListGridItem> _listItems;
+        private GridItemCollection<ListGridItem> _listItems = new GridItemCollection<ListGridItem>();
         public ReadOnlyCollection<ListGridItem> ListItems
         {
             get { return _listItems; }
         }
 
-        private GridItemCollection<ChildGridItem> _childItems;
+        private GridItemCollection<ChildGridItem> _childItems = new GridItemCollection<ChildGridItem>();
         public ReadOnlyCollection<ChildGridItem> ChildItems
         {
             get { return _childItems; }
@@ -202,24 +192,25 @@ namespace DevZest.Data.Windows
             return orentation != GridOrientation.XY;
         }
 
-        internal void AddItem<T>(GridRange gridRange, ScalarGridItem<T> scalarItem)
-            where T : UIElement, new()
+        internal void AddScalarItem(GridRange gridRange, ScalarGridItem scalarItem)
         {
             VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
+            scalarItem.Seal(this, gridRange, _scalarItems.Count);
             _scalarItems.Add(gridRange, scalarItem);
         }
 
-        internal void AddItem<T>(GridRange gridRange, ListGridItem<T> listItem)
-            where T : UIElement, new()
+        internal void AddListItem(GridRange gridRange, ListGridItem listItem)
         {
             VerifyAddItem(gridRange, listItem, nameof(listItem), true);
+            listItem.Seal(this, gridRange, _listItems.Count);
             _listItems.Add(gridRange, listItem);
         }
 
-        internal void AddItem(GridRange gridRange, ChildGridItem childItem)
+        internal void AddChildItem(GridRange gridRange, ChildGridItem childItem)
         {
             VerifyAddItem(gridRange, childItem, nameof(childItem), false);
-            childItem.Ordinal = ChildItems.Count;
+            childItem.Seal(this, gridRange, _listItems.Count, _childItems.Count);
+            _listItems.Add(gridRange, childItem);
             _childItems.Add(gridRange, childItem);
         }
 

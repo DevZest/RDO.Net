@@ -33,26 +33,24 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(paramGridItemName);
         }
 
-        public DataSetPresenterConfig GridItem<T>(ScalarGridItem<T> scalarItem)
-            where T : UIElement, new()
+        public DataSetPresenterConfig Scalar(ScalarGridItem scalarItem)
         {
             VerifyGridItem(scalarItem, nameof(scalarItem));
-            Template.AddItem(GridRange, scalarItem);
+            Template.AddScalarItem(GridRange, scalarItem);
             return PresenterConfig;
         }
 
-        public DataSetPresenterConfig GridItem<T>(ListGridItem<T> listItem)
-            where T : UIElement, new()
+        public DataSetPresenterConfig List(ListGridItem listItem)
         {
             VerifyGridItem(listItem, nameof(listItem));
-            Template.AddItem(GridRange, listItem);
+            Template.AddListItem(GridRange, listItem);
             return PresenterConfig;
         }
 
-        public DataSetPresenterConfig GridItem(ChildGridItem childItem)
+        public DataSetPresenterConfig Child(ChildGridItem childItem)
         {
             VerifyGridItem(childItem, nameof(childItem));
-            Template.AddItem(GridRange, childItem);
+            Template.AddChildItem(GridRange, childItem);
             return PresenterConfig;
         }
 

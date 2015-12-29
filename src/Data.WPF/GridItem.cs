@@ -7,11 +7,19 @@ namespace DevZest.Data.Windows
 {
     public abstract class GridItem
     {
+        internal GridItem(Func<UIElement> constructor)
+        {
+            Debug.Assert(constructor != null);
+
+        }
+
         public GridTemplate Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
-        internal void Seal(GridTemplate owner, GridRange gridRange)
+        public int Ordinal { get; private set; }
+
+        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal)
         {
             Debug.Assert(owner != null);
 
@@ -19,6 +27,7 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridItem_OwnerAlreadySet);
             Owner = owner;
             GridRange = gridRange;
+            Ordinal = ordinal;
         }
 
         public bool IsSealed
@@ -32,11 +41,12 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridItem_VerifyNotSealed);
         }
 
+        Func<UIElement> _constructor;
         List<UIElement> _cachedUIElements;
         private UIElement GetOrCreate()
         {
             if (_cachedUIElements == null || _cachedUIElements.Count == 0)
-                return Create();
+                return _constructor();
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
@@ -44,14 +54,18 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        internal abstract UIElement Create();
-
         internal UIElement Generate()
         {
             return GetOrCreate();
         }
 
-        internal abstract void OnMounted(UIElement uiElement);
+        internal virtual void OnMounted(UIElement uiElement)
+        {
+        }
+
+        internal virtual void Refresh(UIElement uiElement)
+        {
+        }
 
         internal void Recycle(UIElement uiElement)
         {
@@ -63,6 +77,8 @@ namespace DevZest.Data.Windows
             _cachedUIElements.Add(uiElement);
         }
 
-        internal abstract void OnUnmounting(UIElement uiElement);
+        internal virtual void OnUnmounting(UIElement uiElement)
+        {
+        }
     }
 }

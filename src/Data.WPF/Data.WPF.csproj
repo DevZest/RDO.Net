@@ -60,7 +60,6 @@
     <Compile Include="ListGridItem.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
-    <Compile Include="ScalarGridItem_T.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildGridItem.cs" />
     <Compile Include="ColumnHeader.cs" />
@@ -86,7 +85,6 @@
     </Compile>
     <Compile Include="ScalarGridItem.cs" />
     <Compile Include="Selection.cs" />
-    <Compile Include="ListGridItem_T.cs" />
     <Compile Include="TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="GridItem.cs" />
