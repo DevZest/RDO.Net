@@ -6,7 +6,7 @@ namespace DevZest.Data.Windows
 {
     public class ListGridItem : GridItem
     {
-        public static ListGridItem Create<T>(Action<DataRowPresenter, UIElement> refresh, Func<T> constructor = null)
+        internal static ListGridItem Create<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
             where T : UIElement, new()
         {
             if (constructor == null)

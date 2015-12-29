@@ -46,7 +46,6 @@
     </Compile>
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetPresenterConfig.cs" />
-    <Compile Include="DataSetViewFactory.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IElementCollection.cs" />

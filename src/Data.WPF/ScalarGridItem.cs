@@ -6,36 +6,23 @@ namespace DevZest.Data.Windows
 {
     public sealed class ScalarGridItem : GridItem
     {
-        public static ScalarGridItem Create<T>(Action<T> initializer, Func<UIElement> constructor = null)
+        internal static ScalarGridItem Create<T>(Action<T> initializer, FlowMode flowMode)
             where T : UIElement, new()
         {
-            if (initializer == null)
-                throw new ArgumentNullException(nameof(initializer));
+            Debug.Assert(initializer != null);
 
-            if (constructor == null)
-                constructor = () => new T();
-
-            return new ScalarGridItem(constructor, x => initializer((T)x));
+            return new ScalarGridItem(() => new T(), x => initializer((T)x), flowMode);
         }
 
-        private ScalarGridItem(Func<UIElement> constructor, Action<UIElement> initializer)
+        private ScalarGridItem(Func<UIElement> constructor, Action<UIElement> initializer, FlowMode flowMode)
             : base(constructor)
         {
             Debug.Assert(initializer != null);
             _initializer = initializer;
-
+            FlowMode = flowMode;
         }
 
-        private FlowMode _flowMode;
-        public FlowMode FlowMode
-        {
-            get { return _flowMode; }
-            set
-            {
-                VerifyNotSealed();
-                _flowMode = value;
-            }
-        }
+        public FlowMode FlowMode { get; private set; }
 
         Action<UIElement> _initializer;
         internal override void OnMounted(UIElement uiElement)

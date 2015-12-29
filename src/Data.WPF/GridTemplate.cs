@@ -220,8 +220,6 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
             if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (gridItem == null)
-                throw new ArgumentNullException(paramGridItemName);
         }
 
         private void VerifyGridColumn(int index, string paramName)
