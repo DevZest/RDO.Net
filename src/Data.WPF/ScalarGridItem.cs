@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows
     public abstract class ScalarGridItem : GridItem
     {
         private FlowMode _flowMode;
-        public FlowMode RepeatMode
+        public FlowMode FlowMode
         {
             get { return _flowMode; }
             set
