@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
     public sealed class ChildEntry : ListEntry
     {
         internal ChildEntry(Func<DataSetView> viewConstructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
-                : base(viewConstructor, null)
+                : base(viewConstructor)
         {
             _viewConstructor = viewConstructor == null ? () => new DataSetView() : viewConstructor;
 
@@ -28,14 +28,14 @@ namespace DevZest.Data.Windows
 
         internal Func<DataRowPresenter, DataSetPresenter> ChildPresenterConstructor { get; private set; }
 
-        internal sealed override void OnMounted(UIElement uiElement)
+        internal sealed override void OnInitialize(UIElement uiElement)
         {
             var dataSetView = (DataSetView)uiElement;
             var parentDataRowPresenter = dataSetView.GetDataRowPresenter();
             dataSetView.Show(parentDataRowPresenter.Children[ChildOrdinal]);
         }
 
-        internal sealed override void OnUnmounting(UIElement uiElement)
+        internal sealed override void OnCleanup(UIElement uiElement)
         {
             var dataSetView = (DataSetView)uiElement;
             dataSetView.Unmount();

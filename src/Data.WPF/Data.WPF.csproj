@@ -49,6 +49,7 @@
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="GridRangeBuilder.cs" />
+    <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.SimplexOrientationLayout.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="ListEntry.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
+    <Compile Include="ListEntryBuilder.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildEntry.cs" />
     <Compile Include="ColumnHeader.cs" />

@@ -7,6 +7,35 @@ namespace DevZest.Data.Windows
 {
     public abstract class GridEntry
     {
+        private sealed class Behavior
+        {
+            internal static Behavior Create<T>(IBehavior<T> behavior)
+                where T : UIElement, new()
+            {
+                return behavior == null ? null : new Behavior(x => behavior.Attach((T)x), x => behavior.Detach((T)x));
+            }
+
+            private Behavior(Action<UIElement> attach, Action<UIElement> detach)
+            {
+                Debug.Assert(attach != null);
+                Debug.Assert(detach != null);
+                _attach = attach;
+                _detach = detach;
+            }
+
+            Action<UIElement> _attach;
+            public void Attach(UIElement element)
+            {
+                _attach(element);
+            }
+
+            Action<UIElement> _detach;
+            public void Detach(UIElement element)
+            {
+                _detach(element);
+            }
+        }
+
         internal GridEntry(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
@@ -48,26 +77,74 @@ namespace DevZest.Data.Windows
             return GetOrCreate();
         }
 
-        internal virtual void OnMounted(UIElement uiElement)
+        private static Behavior[] s_emptyBehaviors = new Behavior[0];
+        private IList<Behavior> _behaviors = s_emptyBehaviors;
+
+        internal void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
+            where T : UIElement, new()
         {
+            Debug.Assert(_behaviors == s_emptyBehaviors);
+
+            if (behaviors == null || behaviors.Count == 0)
+                return;
+
+            _behaviors = new Behavior[behaviors.Count];
+            for (int i = 0; i < _behaviors.Count; i++)
+                _behaviors[i] = Behavior.Create(behaviors[i]);
         }
 
-        internal virtual void Refresh(UIElement uiElement)
+        private Action<UIElement> _initializer;
+        internal void InitInitializer<T>(Action<T> initializer)
+            where T : UIElement
         {
+            if (initializer == null)
+                _initializer = null;
+            else
+                _initializer = x => initializer((T)x);
         }
 
-        internal void Recycle(UIElement uiElement)
+        internal virtual void OnInitialize(UIElement element)
         {
-            Debug.Assert(uiElement != null);
+            if (_initializer != null)
+                _initializer(element);
 
-            OnUnmounting(uiElement);
+            foreach (var behavior in _behaviors)
+            {
+                if (behavior != null)
+                    behavior.Attach(element);
+            }
+        }
+
+        internal void Recycle(UIElement element)
+        {
+            Debug.Assert(element != null);
+
+            OnCleanup(element);
             if (_cachedUIElements == null)
                 _cachedUIElements = new List<UIElement>();
-            _cachedUIElements.Add(uiElement);
+            _cachedUIElements.Add(element);
         }
 
-        internal virtual void OnUnmounting(UIElement uiElement)
+        private Action<UIElement> _cleanup;
+        internal void InitCleanup<T>(Action<T> cleanup)
+            where T : UIElement
         {
+            if (cleanup == null)
+                _cleanup = null;
+            else
+                _cleanup = x => cleanup((T)x);
+        }
+
+        internal virtual void OnCleanup(UIElement element)
+        {
+            if (_cleanup != null)
+                _cleanup(element);
+
+            foreach (var behavior in _behaviors)
+            {
+                if (behavior != null)
+                    behavior.Detach(element);
+            }
         }
     }
 }

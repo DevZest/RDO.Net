@@ -26,27 +26,31 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public DataSetPresenterBuilder Scalar<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Repeat)
+        public DataSetPresenterBuilder Scalar<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Static, Action<T> cleanup = null, params IBehavior<T>[] behaviors)
             where T : UIElement, new()
         {
             VerifyNotEmpty();
             if (initializer == null)
                 throw new ArgumentNullException(nameof(initializer));
 
-            var scalarEntry = ScalarEntry.Create(initializer, flowMode);
+            var scalarEntry = ScalarEntry.Create(initializer, flowMode, cleanup, behaviors);
             Template.AddScalarEntry(GridRange, scalarEntry);
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder List<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
+        public DataSetPresenterBuilder List<T>(Action<ListEntryBuilder<T>> builder)
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            if (refresh == null)
-                throw new ArgumentNullException(nameof(refresh));
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
 
-            var listItem = ListEntry.Create(refresh, constructor);
-            Template.AddListEntry(GridRange, listItem);
+            var listEntry = ListEntry.Create<T>();
+            using (var listEntryBuilder = new ListEntryBuilder<T>(listEntry))
+            {
+                builder(listEntryBuilder);
+            }
+            Template.AddListEntry(GridRange, listEntry);
             return PresenterBuilder;
         }
 
@@ -58,20 +62,35 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildEntry(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), builder));
+            var childItem = new ChildEntry(viewConstructor, owner =>
+            {
+                var dataRow = owner.DataRow;
+                if (dataRow == null)
+                    return null;
+                return DataSetPresenter.Create(dataRow.Children(childModel), builder);
+            });
             Template.AddChildEntry(GridRange, childItem);
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder Child<T>(_DataSet<T> childDataSet, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
+        public DataSetPresenterBuilder Child<T>(_DataSet<T> child, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
             where T : Model, new()
         {
-            if (childDataSet == null)
-                throw new ArgumentNullException(nameof(childDataSet));
+            if (child == null)
+                throw new ArgumentNullException(nameof(child));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildEntry(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], builder));
+            var childItem = new ChildEntry(viewConstructor, owner =>
+            {
+                var dataRow = owner.DataRow;
+                if (dataRow == null)
+                    return null;
+                var childDataSet = child[dataRow];
+                if (childDataSet == null)
+                    return null;
+                return DataSetPresenter.Create(childDataSet, builder);
+            });
             Template.AddChildEntry(GridRange, childItem);
             return PresenterBuilder;
         }
