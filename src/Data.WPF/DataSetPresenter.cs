@@ -42,8 +42,8 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                //builder.Range(i, 0).Scalar<ColumnHeader>()
-                //    .Range(i, 1).List<TextBlock>(column.TextBlock());
+                builder.Range(i, 0).ScalarEntry<ColumnHeader>(t => { })
+                    .Range(i, 1).BeginListEntry<TextBlock>().Bind(TextBlock.TextProperty, row => column.GetValue(row.DataRow).ToString()).End();
             }
         }
 

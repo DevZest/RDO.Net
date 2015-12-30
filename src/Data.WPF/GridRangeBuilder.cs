@@ -26,35 +26,33 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public DataSetPresenterBuilder Scalar<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Static, Action<T> cleanup = null, params IBehavior<T>[] behaviors)
+        public DataSetPresenterBuilder ScalarEntry<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Static, Action<T> cleanup = null,
+            params IBehavior<T>[] behaviors)
             where T : UIElement, new()
         {
             VerifyNotEmpty();
             if (initializer == null)
                 throw new ArgumentNullException(nameof(initializer));
 
-            var scalarEntry = ScalarEntry.Create(initializer, flowMode, cleanup, behaviors);
+            var scalarEntry = Windows.ScalarEntry.Create(initializer, flowMode, cleanup, behaviors);
             Template.AddScalarEntry(GridRange, scalarEntry);
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder List<T>(Action<ListEntryBuilder<T>> builder)
+        public ListEntryBuilder<T> BeginListEntry<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
+            return new ListEntryBuilder<T>(this);
+        }
 
-            var listEntry = ListEntry.Create<T>();
-            using (var listEntryBuilder = new ListEntryBuilder<T>(listEntry))
-            {
-                builder(listEntryBuilder);
-            }
+        internal DataSetPresenterBuilder ListEntry(ListEntry listEntry)
+        {
             Template.AddListEntry(GridRange, listEntry);
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder Child<T>(T childModel, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
+        public DataSetPresenterBuilder ChildEntry<T>(T childModel, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
             where T : Model, new()
         {
             if (childModel == null)

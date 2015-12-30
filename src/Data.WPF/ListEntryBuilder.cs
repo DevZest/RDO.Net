@@ -8,15 +8,22 @@ namespace DevZest.Data.Windows
     public sealed class ListEntryBuilder<T> : IDisposable
         where T : UIElement, new()
     {
-        internal ListEntryBuilder(ListEntry listEntry)
+        internal ListEntryBuilder(GridRangeBuilder gridRangeBuilder)
         {
-            Debug.Assert(listEntry != null);
-            _listEntry = listEntry;
+            _gridRangeBuilder = gridRangeBuilder;
+            _listEntry = ListEntry.Create<T>();
         }
+
+        private GridRangeBuilder _gridRangeBuilder;
 
         public void Dispose()
         {
             _listEntry = null;
+        }
+
+        public DataSetPresenterBuilder End()
+        {
+            return _gridRangeBuilder.ListEntry(ListEntry);
         }
 
         private ListEntry _listEntry;
