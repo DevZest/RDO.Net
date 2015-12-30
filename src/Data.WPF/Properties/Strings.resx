@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GridItem_OwnerAlreadySet" xml:space="preserve">
-    <value>This GridItem has its Owner property set already.</value>
+  <data name="GridEntry_OwnerAlreadySet" xml:space="preserve">
+    <value>This GridEntry has its Owner property set already.</value>
   </data>
-  <data name="GridItem_VerifyNotSealed" xml:space="preserve">
-    <value>The GridItem is sealed and cannot be changed.</value>
+  <data name="GridEntry_VerifyNotSealed" xml:space="preserve">
+    <value>The GridEntry is sealed and cannot be changed.</value>
   </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>

@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildGridItem : ListGridItem
+    public sealed class ChildEntry : ListEntry
     {
-        internal ChildGridItem(Func<DataSetView> viewConstructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+        internal ChildEntry(Func<DataSetView> viewConstructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
                 : base(viewConstructor, null)
         {
             _viewConstructor = viewConstructor == null ? () => new DataSetView() : viewConstructor;

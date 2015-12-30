@@ -4,17 +4,17 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarGridItem : GridItem
+    public sealed class ScalarEntry : GridEntry
     {
-        internal static ScalarGridItem Create<T>(Action<T> initializer, FlowMode flowMode)
+        internal static ScalarEntry Create<T>(Action<T> initializer, FlowMode flowMode)
             where T : UIElement, new()
         {
             Debug.Assert(initializer != null);
 
-            return new ScalarGridItem(() => new T(), x => initializer((T)x), flowMode);
+            return new ScalarEntry(() => new T(), x => initializer((T)x), flowMode);
         }
 
-        private ScalarGridItem(Func<UIElement> constructor, Action<UIElement> initializer, FlowMode flowMode)
+        private ScalarEntry(Func<UIElement> constructor, Action<UIElement> initializer, FlowMode flowMode)
             : base(constructor)
         {
             Debug.Assert(initializer != null);

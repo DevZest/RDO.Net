@@ -24,20 +24,20 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class GridItemCollection<T> : ReadOnlyCollection<T>
-            where T : GridItem
+        private sealed class GridEntryCollection<T> : ReadOnlyCollection<T>
+            where T : GridEntry
         {
-            internal GridItemCollection()
+            internal GridEntryCollection()
                 : base(new List<T>())
             {
             }
 
             internal GridRange Range { get; private set; }
 
-            internal void Add(GridRange gridRange, T gridItem)
+            internal void Add(GridRange gridRange, T gridEntry)
             {
-                Debug.Assert(gridItem != null);
-                Items.Add(gridItem);
+                Debug.Assert(gridEntry != null);
+                Items.Add(gridEntry);
                 Range = Range.Union(gridRange);
             }
         }
@@ -78,22 +78,22 @@ namespace DevZest.Data.Windows
             get { return _gridRows; }
         }
 
-        private GridItemCollection<ScalarGridItem> _scalarItems = new GridItemCollection<ScalarGridItem>();
-        public ReadOnlyCollection<ScalarGridItem> ScalarItems
+        private GridEntryCollection<ScalarEntry> _scalarEntries = new GridEntryCollection<ScalarEntry>();
+        public ReadOnlyCollection<ScalarEntry> ScalarEntries
         {
-            get { return _scalarItems; }
+            get { return _scalarEntries; }
         }
 
-        private GridItemCollection<ListGridItem> _listItems = new GridItemCollection<ListGridItem>();
-        public ReadOnlyCollection<ListGridItem> ListItems
+        private GridEntryCollection<ListEntry> _listEntries = new GridEntryCollection<ListEntry>();
+        public ReadOnlyCollection<ListEntry> ListEntries
         {
-            get { return _listItems; }
+            get { return _listEntries; }
         }
 
-        private GridItemCollection<ChildGridItem> _childItems = new GridItemCollection<ChildGridItem>();
-        public ReadOnlyCollection<ChildGridItem> ChildItems
+        private GridEntryCollection<ChildEntry> _childEntries = new GridEntryCollection<ChildEntry>();
+        public ReadOnlyCollection<ChildEntry> ChildEntries
         {
-            get { return _childItems; }
+            get { return _childEntries; }
         }
 
         private GridRange? _repeatRange;
@@ -111,7 +111,7 @@ namespace DevZest.Data.Windows
 
         private GridRange AutoRepeatRange
         {
-            get { return _listItems.Range.Union(_childItems.Range); }
+            get { return _listEntries.Range.Union(_childEntries.Range); }
         }
 
         internal int AddGridColumn(string width)
@@ -192,29 +192,29 @@ namespace DevZest.Data.Windows
             return orentation != GridOrientation.XY;
         }
 
-        internal void AddScalarItem(GridRange gridRange, ScalarGridItem scalarItem)
+        internal void AddScalarEntry(GridRange gridRange, ScalarEntry scalarEntry)
         {
-            VerifyAddItem(gridRange, scalarItem, nameof(scalarItem), true);
-            scalarItem.Seal(this, gridRange, _scalarItems.Count);
-            _scalarItems.Add(gridRange, scalarItem);
+            VerifyAddEntry(gridRange, scalarEntry, nameof(scalarEntry), true);
+            scalarEntry.Seal(this, gridRange, _scalarEntries.Count);
+            _scalarEntries.Add(gridRange, scalarEntry);
         }
 
-        internal void AddListItem(GridRange gridRange, ListGridItem listItem)
+        internal void AddListEntry(GridRange gridRange, ListEntry listEntry)
         {
-            VerifyAddItem(gridRange, listItem, nameof(listItem), true);
-            listItem.Seal(this, gridRange, _listItems.Count);
-            _listItems.Add(gridRange, listItem);
+            VerifyAddEntry(gridRange, listEntry, nameof(listEntry), true);
+            listEntry.Seal(this, gridRange, _listEntries.Count);
+            _listEntries.Add(gridRange, listEntry);
         }
 
-        internal void AddChildItem(GridRange gridRange, ChildGridItem childItem)
+        internal void AddChildEntry(GridRange gridRange, ChildEntry childEntry)
         {
-            VerifyAddItem(gridRange, childItem, nameof(childItem), false);
-            childItem.Seal(this, gridRange, _listItems.Count, _childItems.Count);
-            _listItems.Add(gridRange, childItem);
-            _childItems.Add(gridRange, childItem);
+            VerifyAddEntry(gridRange, childEntry, nameof(childEntry), false);
+            childEntry.Seal(this, gridRange, _listEntries.Count, _childEntries.Count);
+            _listEntries.Add(gridRange, childEntry);
+            _childEntries.Add(gridRange, childEntry);
         }
 
-        private void VerifyAddItem(GridRange gridRange, GridItem gridItem, string paramGridItemName, bool isScalar)
+        private void VerifyAddEntry(GridRange gridRange, GridEntry gridEntry, string paramGridEntryName, bool isScalar)
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));

@@ -42,8 +42,8 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                //builder.Range(i, 0).GridItem(column.ColumnHeader())
-                //    .Range(i, 1).GridItem(column.TextBlock());
+                //builder.Range(i, 0).Scalar<ColumnHeader>()
+                //    .Range(i, 1).List<TextBlock>(column.TextBlock());
             }
         }
 

@@ -4,18 +4,18 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public class ListGridItem : GridItem
+    public class ListEntry : GridEntry
     {
-        internal static ListGridItem Create<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
+        internal static ListEntry Create<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
             where T : UIElement, new()
         {
             if (constructor == null)
                 constructor = () => new T();
 
-            return new ListGridItem(constructor, (p, e) => refresh(p, (T)e));
+            return new ListEntry(constructor, (p, e) => refresh(p, (T)e));
         }
 
-        internal ListGridItem(Func<UIElement> constructor, Action<DataRowPresenter, UIElement> refresh)
+        internal ListEntry(Func<UIElement> constructor, Action<DataRowPresenter, UIElement> refresh)
             : base(constructor)
         {
             _refresh = refresh;

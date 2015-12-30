@@ -12,19 +12,19 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// This GridItem has its Owner property set already.
+        /// This GridEntry has its Owner property set already.
         /// </summary>
-        public static string GridItem_OwnerAlreadySet
+        public static string GridEntry_OwnerAlreadySet
         {
-            get { return GetString("GridItem_OwnerAlreadySet"); }
+            get { return GetString("GridEntry_OwnerAlreadySet"); }
         }
 
         /// <summary>
-        /// The GridItem is sealed and cannot be changed.
+        /// The GridEntry is sealed and cannot be changed.
         /// </summary>
-        public static string GridItem_VerifyNotSealed
+        public static string GridEntry_VerifyNotSealed
         {
-            get { return GetString("GridItem_VerifyNotSealed"); }
+            get { return GetString("GridEntry_VerifyNotSealed"); }
         }
 
         /// <summary>

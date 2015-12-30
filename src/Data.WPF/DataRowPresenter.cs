@@ -56,13 +56,13 @@ namespace DevZest.Data.Windows
             if (RowType != DataViewRowType.DataRow)
                 return s_emptyChildren;
 
-            var childItems = Template.ChildItems;
-            if (childItems.Count == 0)
+            var childEntries = Template.ChildEntries;
+            if (childEntries.Count == 0)
                 return s_emptyChildren;
 
-            var result = new DataSetPresenter[childItems.Count];
-            for (int i = 0; i < childItems.Count; i++)
-                result[i] = childItems[i].ChildPresenterConstructor(this);
+            var result = new DataSetPresenter[childEntries.Count];
+            for (int i = 0; i < childEntries.Count; i++)
+                result[i] = childEntries[i].ChildPresenterConstructor(this);
 
             return result;
         }
@@ -84,17 +84,17 @@ namespace DevZest.Data.Windows
         private static UIElement[] s_emptyUIElements = new UIElement[0];
         private UIElement[] _uiElements = null;
 
-        private GridItem GridItemOf(int index)
+        private GridEntry GridEntryOf(int index)
         {
             Debug.Assert(_uiElements != null && index >= 0 && index < _uiElements.Length);
             var template = Template;
             Debug.Assert(template != null);
-            var listItems = template.ListItems;
-            var listItemsCount = listItems.Count;
-            if (index < listItemsCount)
-                return listItems[index];
+            var listEntrys = template.ListEntries;
+            var listEntriesCount = listEntrys.Count;
+            if (index < listEntriesCount)
+                return listEntrys[index];
             else
-                return template.ChildItems[index - listItemsCount];
+                return template.ChildEntries[index - listEntriesCount];
         }
 
         private int UIElementsCount
@@ -102,7 +102,7 @@ namespace DevZest.Data.Windows
             get
             {
                 var template = Template;
-                return template.ListItems.Count + template.ChildItems.Count;
+                return template.ListEntries.Count + template.ChildEntries.Count;
             }
         }
 
@@ -122,8 +122,8 @@ namespace DevZest.Data.Windows
 
             for (int i = 0; i < uiElementsCount; i++)
             {
-                var gridItem = GridItemOf(i);
-                _uiElements[i] = gridItem.Generate();
+                var gridEntry = GridEntryOf(i);
+                _uiElements[i] = gridEntry.Generate();
                 Debug.Assert(_uiElements[i] != null);
             }
 
@@ -136,10 +136,10 @@ namespace DevZest.Data.Windows
 
             for (int i = 0; i < _uiElements.Length; i++)
             {
-                var gridItem = GridItemOf(i);
+                var gridEntry = GridEntryOf(i);
                 var uiElement = _uiElements[i];
                 Debug.Assert(uiElement != null);
-                gridItem.Recycle(uiElement);
+                gridEntry.Recycle(uiElement);
             }
             _uiElements = null;
         }

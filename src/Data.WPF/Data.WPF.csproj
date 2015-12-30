@@ -44,6 +44,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBinding.cs" />
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
@@ -56,11 +57,11 @@
     <Compile Include="LayoutManager.LayoutY.cs" />
     <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
-    <Compile Include="ListGridItem.cs" />
+    <Compile Include="ListEntry.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="ChildGridItem.cs" />
+    <Compile Include="ChildEntry.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
     <Compile Include="DataRowPanel.cs" />
@@ -82,11 +83,11 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScalarGridItem.cs" />
+    <Compile Include="ScalarEntry.cs" />
     <Compile Include="Selection.cs" />
     <Compile Include="TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="GridItem.cs" />
+    <Compile Include="GridEntry.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
     <Compile Include="LayoutManager.cs" />

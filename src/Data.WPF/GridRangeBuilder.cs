@@ -33,8 +33,8 @@ namespace DevZest.Data.Windows
             if (initializer == null)
                 throw new ArgumentNullException(nameof(initializer));
 
-            var scalarItem = ScalarGridItem.Create(initializer, flowMode);
-            Template.AddScalarItem(GridRange, scalarItem);
+            var scalarEntry = ScalarEntry.Create(initializer, flowMode);
+            Template.AddScalarEntry(GridRange, scalarEntry);
             return PresenterBuilder;
         }
 
@@ -45,8 +45,8 @@ namespace DevZest.Data.Windows
             if (refresh == null)
                 throw new ArgumentNullException(nameof(refresh));
 
-            var listItem = ListGridItem.Create(refresh, constructor);
-            Template.AddListItem(GridRange, listItem);
+            var listItem = ListEntry.Create(refresh, constructor);
+            Template.AddListEntry(GridRange, listItem);
             return PresenterBuilder;
         }
 
@@ -58,8 +58,8 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), builder));
-            Template.AddChildItem(GridRange, childItem);
+            var childItem = new ChildEntry(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), builder));
+            Template.AddChildEntry(GridRange, childItem);
             return PresenterBuilder;
         }
 
@@ -71,8 +71,8 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], builder));
-            Template.AddChildItem(GridRange, childItem);
+            var childItem = new ChildEntry(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], builder));
+            Template.AddChildEntry(GridRange, childItem);
             return PresenterBuilder;
         }
 

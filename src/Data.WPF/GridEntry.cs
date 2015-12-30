@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class GridItem
+    public abstract class GridEntry
     {
-        internal GridItem(Func<UIElement> constructor)
+        internal GridEntry(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
 
@@ -24,21 +24,10 @@ namespace DevZest.Data.Windows
             Debug.Assert(owner != null);
 
             if (Owner != null)
-                throw new InvalidOperationException(Strings.GridItem_OwnerAlreadySet);
+                throw new InvalidOperationException(Strings.GridEntry_OwnerAlreadySet);
             Owner = owner;
             GridRange = gridRange;
             Ordinal = ordinal;
-        }
-
-        public bool IsSealed
-        {
-            get { return Owner != null; }
-        }
-
-        protected void VerifyNotSealed()
-        {
-            if (IsSealed)
-                throw new InvalidOperationException(Strings.GridItem_VerifyNotSealed);
         }
 
         Func<UIElement> _constructor;
