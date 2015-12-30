@@ -45,9 +45,9 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="DataRowPresenterCollection.cs" />
-    <Compile Include="DataSetPresenterConfig.cs" />
+    <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
-    <Compile Include="GridRangeConfig.cs" />
+    <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.SimplexOrientationLayout.cs" />

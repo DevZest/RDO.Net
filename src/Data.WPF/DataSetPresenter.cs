@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
 {
     public sealed partial class DataSetPresenter : IReadOnlyList<DataRowPresenter>
     {
-        public static DataSetPresenter Create<T>(DataSet<T> dataSet, Action<DataSetPresenterConfig, T> configAction = null)
+        public static DataSetPresenter Create<T>(DataSet<T> dataSet, Action<DataSetPresenterBuilder, T> builder = null)
             where T : Model, new()
         {
             if (dataSet == null)
@@ -18,31 +18,31 @@ namespace DevZest.Data.Windows
 
             var model = dataSet._;
             var result = new DataSetPresenter(null, dataSet);
-            using (var presenterConfig = new DataSetPresenterConfig(result))
+            using (var presenterBuilder = new DataSetPresenterBuilder(result))
             {
-                if (configAction != null)
-                    configAction(presenterConfig, model);
+                if (builder != null)
+                    builder(presenterBuilder, model);
                 else
-                    DefaultConfig(presenterConfig, model);
+                    DefaultBuilder(presenterBuilder, model);
             }
 
             return result;
         }
 
-        private static void DefaultConfig(DataSetPresenterConfig config, Model model)
+        private static void DefaultBuilder(DataSetPresenterBuilder builder, Model model)
         {
             var columns = model.GetColumns();
             if (columns.Count == 0)
                 return;
 
-            config.AddGridColumns(columns.Select(x => "Auto").ToArray())
+            builder.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
                 .Range(0, 1, columns.Count - 1, 1).Repeat();
 
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                //config.Range(i, 0).GridItem(column.ColumnHeader())
+                //builder.Range(i, 0).GridItem(column.ColumnHeader())
                 //    .Range(i, 1).GridItem(column.TextBlock());
             }
         }

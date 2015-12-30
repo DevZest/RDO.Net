@@ -3,21 +3,21 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public struct GridRangeConfig
+    public struct GridRangeBuilder
     {
-        internal GridRangeConfig(DataSetPresenterConfig presenterConfig, GridRange gridRange)
+        internal GridRangeBuilder(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
         {
-            PresenterConfig = presenterConfig;
+            PresenterBuilder = presenterBuilder;
             GridRange = gridRange;
         }
 
-        public readonly DataSetPresenterConfig PresenterConfig;
+        public readonly DataSetPresenterBuilder PresenterBuilder;
 
         public readonly GridRange GridRange;
 
         private GridTemplate Template
         {
-            get { return PresenterConfig.Presenter.Template; }
+            get { return PresenterBuilder.Presenter.Template; }
         }
 
         private void VerifyNotEmpty()
@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public DataSetPresenterConfig Scalar<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Repeat)
+        public DataSetPresenterBuilder Scalar<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Repeat)
             where T : UIElement, new()
         {
             VerifyNotEmpty();
@@ -35,10 +35,10 @@ namespace DevZest.Data.Windows
 
             var scalarItem = ScalarGridItem.Create(initializer, flowMode);
             Template.AddScalarItem(GridRange, scalarItem);
-            return PresenterConfig;
+            return PresenterBuilder;
         }
 
-        public DataSetPresenterConfig List<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
+        public DataSetPresenterBuilder List<T>(Action<DataRowPresenter, T> refresh, Func<T> constructor = null)
             where T : UIElement, new()
         {
             VerifyNotEmpty();
@@ -47,48 +47,48 @@ namespace DevZest.Data.Windows
 
             var listItem = ListGridItem.Create(refresh, constructor);
             Template.AddListItem(GridRange, listItem);
-            return PresenterConfig;
+            return PresenterBuilder;
         }
 
-        public DataSetPresenterConfig Child<T>(T childModel, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> viewConstructor = null)
+        public DataSetPresenterBuilder Child<T>(T childModel, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
             where T : Model, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
-            if (configAction == null)
-                throw new ArgumentNullException(nameof(configAction));
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), configAction));
+            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(owner.DataRow.Children(childModel), builder));
             Template.AddChildItem(GridRange, childItem);
-            return PresenterConfig;
+            return PresenterBuilder;
         }
 
-        public DataSetPresenterConfig Child<T>(_DataSet<T> childDataSet, Action<DataSetPresenterConfig, T> configAction, Func<DataSetView> viewConstructor = null)
+        public DataSetPresenterBuilder Child<T>(_DataSet<T> childDataSet, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
             where T : Model, new()
         {
             if (childDataSet == null)
                 throw new ArgumentNullException(nameof(childDataSet));
-            if (configAction == null)
-                throw new ArgumentNullException(nameof(configAction));
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], configAction));
+            var childItem = new ChildGridItem(viewConstructor, owner => DataSetPresenter.Create(childDataSet[owner.DataRow], builder));
             Template.AddChildItem(GridRange, childItem);
-            return PresenterConfig;
+            return PresenterBuilder;
         }
 
-        public DataSetPresenterConfig Repeat()
+        public DataSetPresenterBuilder Repeat()
         {
             VerifyNotEmpty();
 
             Template.RepeatRange = GridRange;
-            return PresenterConfig;
+            return PresenterBuilder;
         }
 
-        public DataSetPresenterConfig Repeat(GridOrientation value)
+        public DataSetPresenterBuilder Repeat(GridOrientation value)
         {
             Repeat();
             Template.Orientation = value;
-            return PresenterConfig;
+            return PresenterBuilder;
         }
     }
 }

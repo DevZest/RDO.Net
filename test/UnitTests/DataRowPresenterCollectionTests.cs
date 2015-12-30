@@ -6,10 +6,10 @@ namespace DevZest.Data.Windows
     [TestClass]
     public class DataRowPresenterCollectionTests
     {
-        private static DataRowPresenterCollection Create<T>(DataSet<T> dataSet, Action<DataSetPresenterConfig, T> configAction = null)
+        private static DataRowPresenterCollection Create<T>(DataSet<T> dataSet, Action<DataSetPresenterBuilder, T> builder = null)
             where T : Model, new()
         {
-            var dataSetPresenter = DataSetPresenter.Create(dataSet, configAction);
+            var dataSetPresenter = DataSetPresenter.Create(dataSet, builder);
             return new DataRowPresenterCollection(dataSetPresenter);
         }
 
