@@ -49,14 +49,30 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public ListEntryBuilder<T> Bind<TValue>(DependencyProperty property, Column<T> column)
+        public ListEntryBuilder<T> Bind<TValue>(DependencyProperty property, Column<TValue> column)
         {
-            throw new NotImplementedException();
+            ListEntry.AddDataBinding(DataBinding.Create<TValue>(typeof(T), property, column));
+            return this;
         }
 
-        public ListEntryBuilder<T> Bind<TValue>(DependencyProperty property, Column<T> column, BindingMode mode, UpdateSourceTrigger updateSourceTrigger)
+        public ListEntryBuilder<T> Bind<TValue>(DependencyProperty property, Func<DataRowPresenter, TValue> valueGetter)
         {
-            throw new NotImplementedException();
+            ListEntry.AddDataBinding(DataBinding.Create(typeof(T), property, valueGetter));
+            return this;
+        }
+
+        public ListEntryBuilder<T> BindTwoWay<TValue>(DependencyProperty property, Column<TValue> column,
+            UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default)
+        {
+            ListEntry.AddDataBinding(DataBinding.CreateTwoWay<TValue>(typeof(T), property, column, updateSourceTrigger));
+            return this;
+        }
+
+        public ListEntryBuilder<T> BindTwoWay<TValue>(DependencyProperty property, Func<DataRowPresenter, TValue> valueGetter,
+            Action<DataRowPresenter, TValue> valueSetter, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.Default)
+        {
+            ListEntry.AddDataBinding(DataBinding.CreateTwoWay(typeof(T), property, valueGetter, valueSetter, updateSourceTrigger));
+            return this;
         }
     }
 }
