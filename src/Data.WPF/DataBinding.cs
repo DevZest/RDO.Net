@@ -113,6 +113,12 @@ namespace DevZest.Data.Windows
                 UpdateSource((UIElement)sender);
             }
 
+            private void UpdateSource(UIElement target)
+            {
+                var source = target.GetDataRowPresenter();
+                UpdateSource(target, source);
+            }
+
             public sealed override void Attach(UIElement element)
             {
                 if (!IsTwoWay)
@@ -146,24 +152,22 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public sealed override void UpdateTarget(UIElement element)
+            public sealed override void UpdateTarget(DataRowPresenter source, UIElement target)
             {
-                var dataRowPresenter = element.GetDataRowPresenter();
-                element.SetValue(_property, GetValue(dataRowPresenter));
+                target.SetValue(_property, GetValue(source));
             }
 
             protected abstract T GetValue(DataRowPresenter dataRowPresenter);
 
-            public sealed override void UpdateSource(UIElement element)
+            public sealed override void UpdateSource(UIElement target, DataRowPresenter source)
             {
                 if (!IsTwoWay)
                     return;
 
-                var dataRowPresenter = element.GetDataRowPresenter();
-                var dataRow = dataRowPresenter.DataRow;
+                var dataRow = source.DataRow;
                 if (dataRow == null)
                     return;
-                SetValue(dataRowPresenter, (T)element.GetValue(_property));
+                SetValue(source, (T)target.GetValue(_property));
             }
 
             protected abstract void SetValue(DataRowPresenter dataRowPresenter, T value);
@@ -173,9 +177,9 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public abstract void UpdateTarget(UIElement element);
+        public abstract void UpdateTarget(DataRowPresenter source, UIElement target);
 
-        public abstract void UpdateSource(UIElement element);
+        public abstract void UpdateSource(UIElement target,  DataRowPresenter source);
 
         public abstract void Attach(UIElement element);
 

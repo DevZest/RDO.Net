@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows
         internal GridEntry(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
-
+            _constructor = constructor;
         }
 
         public GridTemplate Owner { get; private set; }

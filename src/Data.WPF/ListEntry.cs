@@ -26,19 +26,22 @@ namespace DevZest.Data.Windows
             _dataBindings.Add(dataBinding);
         }
 
-        internal void UpdateTarget(UIElement element)
+        public void UpdateTarget(UIElement target)
         {
+            var source = target.GetDataRowPresenter();
+            Debug.Assert(source != null);
+
             foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateTarget(element);
+                dataBinding.UpdateTarget(source, target);
         }
 
-        internal void UpdateSource(UIElement element)
+        public void UpdateSource(UIElement target)
         {
-            var dataRowPresenter = element.GetDataRowPresenter();
-            Debug.Assert(dataRowPresenter != null);
+            var source = target.GetDataRowPresenter();
+            Debug.Assert(source != null);
 
             foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateSource(element);
+                dataBinding.UpdateSource(target, source);
         }
 
         internal override void OnInitialize(UIElement element)
