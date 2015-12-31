@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="DataRowPresenterCollectionTests.cs" />
     <Compile Include="DataSetPanelTests.cs" />
+    <Compile Include="GridEntryTests.cs" />
     <Compile Include="SelectionTests.cs" />
     <Compile Include="GridLengthParserTests.cs" />
     <Compile Include="GridTemplateTests.cs" />

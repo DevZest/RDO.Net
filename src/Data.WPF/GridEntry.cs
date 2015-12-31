@@ -110,8 +110,13 @@ namespace DevZest.Data.Windows
                 _initializer = x => initializer((T)x);
         }
 
-        internal virtual void OnInitialize(UIElement element)
+        internal virtual void Initialize(UIElement element)
         {
+            Debug.Assert(element != null && element.GetGridEntry() == this);
+
+            if (_initializer != null)
+                _initializer(element);
+
             foreach (var binding in _bindings)
             {
                 foreach (var trigger in binding.Triggers)
@@ -120,16 +125,13 @@ namespace DevZest.Data.Windows
 
             foreach (var behavior in _behaviors)
                 behavior.Attach(element);
-
-            if (_initializer != null)
-                _initializer(element);
         }
 
         internal void Recycle(UIElement element)
         {
-            Debug.Assert(element != null);
+            Debug.Assert(element != null && element.GetGridEntry() == this);
 
-            OnCleanup(element);
+            Cleanup(element);
             if (_cachedUIElements == null)
                 _cachedUIElements = new List<UIElement>();
             _cachedUIElements.Add(element);
@@ -145,7 +147,7 @@ namespace DevZest.Data.Windows
                 _cleanup = x => cleanup((T)x);
         }
 
-        internal virtual void OnCleanup(UIElement element)
+        internal virtual void Cleanup(UIElement element)
         {
             foreach (var binding in _bindings)
             {
@@ -173,14 +175,27 @@ namespace DevZest.Data.Windows
 
         public void UpdateTarget(UIElement element)
         {
+            VerifyElement(element, nameof(element));
+
             foreach (var binding in _bindings)
                 binding.UpdateTarget(element);
         }
 
         public void UpdateSource(UIElement element)
         {
+            VerifyElement(element, nameof(element));
+
             foreach (var binding in _bindings)
                 binding.UpdateSource(element);
+        }
+
+        private void VerifyElement(UIElement element, string paramName)
+        {
+            if (element == null)
+                throw new ArgumentNullException(paramName);
+
+            if (element.GetGridEntry() != this)
+                throw new ArgumentException(Strings.GridEntry_InvalidElement, paramName);
         }
     }
 }

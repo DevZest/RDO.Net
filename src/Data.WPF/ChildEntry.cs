@@ -49,17 +49,17 @@ namespace DevZest.Data.Windows
 
         internal Func<DataRowPresenter, DataSetPresenter> ChildPresenterConstructor { get; private set; }
 
-        internal sealed override void OnInitialize(UIElement element)
+        internal sealed override void Initialize(UIElement element)
         {
-            base.OnInitialize(element);
+            base.Initialize(element);
             var dataSetView = (DataSetView)element;
             var parentDataRowPresenter = dataSetView.GetDataRowPresenter();
             dataSetView.Show(parentDataRowPresenter.Children[ChildOrdinal]);
         }
 
-        internal sealed override void OnCleanup(UIElement element)
+        internal sealed override void Cleanup(UIElement element)
         {
-            base.OnCleanup(element);
+            base.Cleanup(element);
             var dataSetView = (DataSetView)element;
             dataSetView.Cleanup();
         }
