@@ -20,5 +20,11 @@ namespace DevZest.Data.Windows
         {
             return builderRange.ScalarEntry(entry);
         }
+
+        public ScalarEntryBuilder<T> FlowMode(FlowMode value)
+        {
+            Entry.InitFlowMode(value);
+            return this;
+        }
     }
 }
