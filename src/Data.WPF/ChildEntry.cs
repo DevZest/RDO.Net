@@ -7,11 +7,15 @@ namespace DevZest.Data.Windows
 {
     public sealed class ChildEntry : ListEntry
     {
-        internal ChildEntry(Func<DataSetView> viewConstructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
-                : base(viewConstructor)
+        internal static ChildEntry Create<T>(Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+            where T : DataSetView, new()
         {
-            _viewConstructor = viewConstructor == null ? () => new DataSetView() : viewConstructor;
+            return new ChildEntry(() => new T(), childPresenterConstructor);
+        }
 
+        private ChildEntry(Func<UIElement> constructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+                : base(constructor)
+        {
             Debug.Assert(childPresenterConstructor != null);
             ChildPresenterConstructor = childPresenterConstructor;
         }
@@ -24,21 +28,21 @@ namespace DevZest.Data.Windows
             ChildOrdinal = childOrdinal;
         }
 
-        Func<DataSetView> _viewConstructor;
-
         internal Func<DataRowPresenter, DataSetPresenter> ChildPresenterConstructor { get; private set; }
 
-        internal sealed override void OnInitialize(UIElement uiElement)
+        internal sealed override void OnInitialize(UIElement element)
         {
-            var dataSetView = (DataSetView)uiElement;
+            base.OnInitialize(element);
+            var dataSetView = (DataSetView)element;
             var parentDataRowPresenter = dataSetView.GetDataRowPresenter();
             dataSetView.Show(parentDataRowPresenter.Children[ChildOrdinal]);
         }
 
-        internal sealed override void OnCleanup(UIElement uiElement)
+        internal sealed override void OnCleanup(UIElement element)
         {
-            var dataSetView = (DataSetView)uiElement;
-            dataSetView.Unmount();
+            base.OnCleanup(element);
+            var dataSetView = (DataSetView)element;
+            dataSetView.Cleanup();
         }
     }
 }

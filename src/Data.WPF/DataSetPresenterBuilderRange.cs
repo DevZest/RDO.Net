@@ -52,34 +52,34 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder ChildEntry<T>(T childModel, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
+        public ChildEntryBuilder<TView> ChildEntry<T, TView>(T childModel, Action<DataSetPresenterBuilder, T> builder)
             where T : Model, new()
+            where TView : DataSetView, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildEntry(viewConstructor, owner =>
+            return new ChildEntryBuilder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
                     return null;
                 return DataSetPresenter.Create(dataRow.Children(childModel), builder);
             });
-            Template.AddChildEntry(GridRange, childItem);
-            return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder Child<T>(_DataSet<T> child, Action<DataSetPresenterBuilder, T> builder, Func<DataSetView> viewConstructor = null)
-            where T : Model, new()
+        public ChildEntryBuilder<TView> BeginChildEntry<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
+            where TModel : Model, new()
+            where TView : DataSetView, new()
         {
             if (child == null)
                 throw new ArgumentNullException(nameof(child));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            var childItem = new ChildEntry(viewConstructor, owner =>
+            return new ChildEntryBuilder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -89,7 +89,11 @@ namespace DevZest.Data.Windows
                     return null;
                 return DataSetPresenter.Create(childDataSet, builder);
             });
-            Template.AddChildEntry(GridRange, childItem);
+        }
+
+        internal DataSetPresenterBuilder ChildEntry(ChildEntry childEntry)
+        {
+            Template.AddChildEntry(GridRange, childEntry);
             return PresenterBuilder;
         }
 

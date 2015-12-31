@@ -95,7 +95,7 @@ namespace DevZest.Data.Windows
             Presenter = presenter;
         }
 
-        internal void Unmount()
+        internal void Cleanup()
         {
             Debug.Assert(Presenter != null);
             Presenter = null;
