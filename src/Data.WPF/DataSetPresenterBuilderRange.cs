@@ -52,8 +52,8 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public ChildEntryBuilder<TView> ChildEntry<T, TView>(T childModel, Action<DataSetPresenterBuilder, T> builder)
-            where T : Model, new()
+        public ChildEntryBuilder<TView> ChildEntry<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
+            where TModel : Model, new()
             where TView : DataSetView, new()
         {
             if (childModel == null)
