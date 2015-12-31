@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 using System.Windows.Controls;
 using System.Linq;
+using DevZest.Data.Windows.Factories;
 
 namespace DevZest.Data.Windows
 {
@@ -42,8 +43,8 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                //builder.Range(i, 0).ScalarEntry<ColumnHeader>(t => { })
-                //    .Range(i, 1).BeginListEntry<TextBlock>().Bind(e => e.Text = e.GetColumnValue(column).ToString()).End();
+                builder.Range(i, 0).ColumnHeader(column)
+                    .Range(i, 1).TextBlock(column);
             }
         }
 

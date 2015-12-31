@@ -41,7 +41,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public static T GetColumnValue<T>(this UIElement element, Column<T> column)
+        public static T GetSourceValue<T>(this UIElement element, Column<T> column)
         {
             var dataRowPresenter = element.GetDataRowPresenter();
             if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
@@ -49,12 +49,21 @@ namespace DevZest.Data.Windows
             return column[dataRowPresenter.DataRow];
         }
 
-        public static void SetColumnValue<T>(this UIElement element, Column<T> column, T value)
+        public static void SetSourceValue<T>(this UIElement element, Column<T> column, T value)
         {
             var dataRowPresenter = element.GetDataRowPresenter();
             if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
                 return;
             column[dataRowPresenter.DataRow] = value;
+        }
+
+        public static string GetSourceText(this UIElement element, Column column)
+        {
+            var dataRowPresenter = element.GetDataRowPresenter();
+            if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
+                return null;
+
+            return dataRowPresenter.DataRow[column].ToString();
         }
     }
 }

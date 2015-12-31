@@ -50,6 +50,8 @@
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="BindingTrigger.cs" />
+    <Compile Include="Factories\ColumnHeaderFactory.cs" />
+    <Compile Include="Factories\DataSetViewFactory.cs" />
     <Compile Include="GridEntryBuilder.cs" />
     <Compile Include="DataSetPresenterBuilderRange.cs" />
     <Compile Include="IBehavior.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="ListEntryBuilder.cs" />
+    <Compile Include="RowHeader.cs" />
     <Compile Include="ScalarEntryBuilder.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
@@ -92,7 +95,7 @@
     </Compile>
     <Compile Include="ScalarEntry.cs" />
     <Compile Include="Selection.cs" />
-    <Compile Include="TextBlockFactory.cs" />
+    <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="GridEntry.cs" />
     <Compile Include="ValidationMessageView.cs" />
@@ -101,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20151222\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20151231\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -131,7 +134,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Themes\DataSetView.xaml">
       <Generator>MSBuild:Compile</Generator>
