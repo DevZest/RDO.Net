@@ -12,12 +12,6 @@ namespace DevZest.Data.Windows
             return dataSetView == null ? null : dataSetView.Presenter;
         }
 
-        internal static DataRowPresenter GetDataRowPresenter(this DependencyObject reference)
-        {
-            var dataRowView = reference.GetParent<DataRowView>();
-            return dataRowView == null ? null : dataRowView.Presenter;
-        }
-
         private static T GetParent<T>(this DependencyObject reference)
             where T : UIElement
         {

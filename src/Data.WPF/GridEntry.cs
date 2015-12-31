@@ -64,11 +64,18 @@ namespace DevZest.Data.Windows
         private UIElement GetOrCreate()
         {
             if (_cachedUIElements == null || _cachedUIElements.Count == 0)
-                return _constructor();
+                return Create();
 
             var last = _cachedUIElements.Count - 1;
             var result = _cachedUIElements[last];
             _cachedUIElements.RemoveAt(last);
+            return result;
+        }
+
+        private UIElement Create()
+        {
+            var result = _constructor();
+            result.SetGridEntry(this);
             return result;
         }
 
@@ -105,14 +112,17 @@ namespace DevZest.Data.Windows
 
         internal virtual void OnInitialize(UIElement element)
         {
-            if (_initializer != null)
-                _initializer(element);
+            foreach (var dataBinding in _dataBindings)
+            {
+                foreach (var trigger in dataBinding.Triggers)
+                    trigger.Attach(element);
+            }
 
             foreach (var behavior in _behaviors)
-            {
-                if (behavior != null)
-                    behavior.Attach(element);
-            }
+                behavior.Attach(element);
+
+            if (_initializer != null)
+                _initializer(element);
         }
 
         internal void Recycle(UIElement element)
@@ -137,14 +147,40 @@ namespace DevZest.Data.Windows
 
         internal virtual void OnCleanup(UIElement element)
         {
-            if (_cleanup != null)
-                _cleanup(element);
+            foreach (var dataBinding in _dataBindings)
+            {
+                foreach (var trigger in dataBinding.Triggers)
+                    trigger.Detach(element);
+            }
 
             foreach (var behavior in _behaviors)
-            {
-                if (behavior != null)
-                    behavior.Detach(element);
-            }
+                behavior.Detach(element);
+
+            if (_cleanup != null)
+                _cleanup(element);
+        }
+
+        private static List<DataBinding> s_emptyDataBindings = new List<DataBinding>();
+        private List<DataBinding> _dataBindings = s_emptyDataBindings;
+
+        internal void AddDataBinding(DataBinding dataBinding)
+        {
+            Debug.Assert(dataBinding != null);
+            if (_dataBindings == s_emptyDataBindings)
+                _dataBindings = new List<DataBinding>();
+            _dataBindings.Add(dataBinding);
+        }
+
+        public void UpdateTarget(UIElement element)
+        {
+            foreach (var dataBinding in _dataBindings)
+                dataBinding.UpdateTarget(element);
+        }
+
+        public void UpdateSource(UIElement element)
+        {
+            foreach (var dataBinding in _dataBindings)
+                dataBinding.UpdateSource(element);
         }
     }
 }

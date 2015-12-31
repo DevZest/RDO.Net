@@ -18,46 +18,46 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private List<DataBinding> _dataBindings = new List<DataBinding>();
+        //private List<DataBinding> _dataBindings = new List<DataBinding>();
 
-        internal void AddDataBinding(DataBinding dataBinding)
-        {
-            Debug.Assert(dataBinding != null);
-            _dataBindings.Add(dataBinding);
-        }
+        //internal void AddDataBinding(DataBinding dataBinding)
+        //{
+        //    Debug.Assert(dataBinding != null);
+        //    _dataBindings.Add(dataBinding);
+        //}
 
-        public void UpdateTarget(UIElement target)
-        {
-            var source = target.GetDataRowPresenter();
-            Debug.Assert(source != null);
+        //public void UpdateTarget(UIElement target)
+        //{
+        //    var source = target.GetDataRowPresenter();
+        //    Debug.Assert(source != null);
 
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateTarget(source, target);
-        }
+        //    foreach (var dataBinding in _dataBindings)
+        //        dataBinding.UpdateTarget(source, target);
+        //}
 
-        public void UpdateSource(UIElement target)
-        {
-            var source = target.GetDataRowPresenter();
-            Debug.Assert(source != null);
+        //public void UpdateSource(UIElement target)
+        //{
+        //    var source = target.GetDataRowPresenter();
+        //    Debug.Assert(source != null);
 
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateSource(target, source);
-        }
+        //    foreach (var dataBinding in _dataBindings)
+        //        dataBinding.UpdateSource(target, source);
+        //}
 
-        internal override void OnInitialize(UIElement element)
-        {
-            base.OnInitialize(element);
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.Attach(element);
+        //internal override void OnInitialize(UIElement element)
+        //{
+        //    base.OnInitialize(element);
+        //    foreach (var dataBinding in _dataBindings)
+        //        dataBinding.Attach(element);
 
-            UpdateTarget(element);
-        }
+        //    UpdateTarget(element);
+        //}
 
-        internal override void OnCleanup(UIElement element)
-        {
-            base.OnCleanup(element);
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.Detach(element);
-        }
+        //internal override void OnCleanup(UIElement element)
+        //{
+        //    base.OnCleanup(element);
+        //    foreach (var dataBinding in _dataBindings)
+        //        dataBinding.Detach(element);
+        //}
     }
 }
