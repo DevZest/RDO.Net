@@ -71,19 +71,19 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public GridRangeBuilder Range()
+        public DataSetPresenterBuilderRange Range()
         {
-            return new GridRangeBuilder(this, Presenter.Template.Range());
+            return new DataSetPresenterBuilderRange(this, Presenter.Template.Range());
         }
 
-        public GridRangeBuilder Range(int column, int row)
+        public DataSetPresenterBuilderRange Range(int column, int row)
         {
-            return new GridRangeBuilder(this, Presenter.Template.Range(column, row));
+            return new DataSetPresenterBuilderRange(this, Presenter.Template.Range(column, row));
         }
 
-        public GridRangeBuilder Range(int left, int top, int right, int bottom)
+        public DataSetPresenterBuilderRange Range(int left, int top, int right, int bottom)
         {
-            return new GridRangeBuilder(this, Presenter.Template.Range(left, top, right, bottom));
+            return new DataSetPresenterBuilderRange(this, Presenter.Template.Range(left, top, right, bottom));
         }
 
         public DataSetPresenterBuilder WithPinnedLeft(int value)

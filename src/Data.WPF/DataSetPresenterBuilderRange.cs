@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public struct GridRangeBuilder
+    public struct DataSetPresenterBuilderRange
     {
-        internal GridRangeBuilder(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
+        internal DataSetPresenterBuilderRange(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
         {
             PresenterBuilder = presenterBuilder;
             GridRange = gridRange;

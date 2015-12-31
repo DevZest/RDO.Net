@@ -50,7 +50,7 @@
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="ElementTrigger.cs" />
     <Compile Include="GridEntryBuilder.cs" />
-    <Compile Include="GridRangeBuilder.cs" />
+    <Compile Include="DataSetPresenterBuilderRange.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />

@@ -8,10 +8,10 @@ namespace DevZest.Data.Windows
     public sealed class ListEntryBuilder<T> : GridEntryBuilder<T, ListEntry, ListEntryBuilder<T>>
         where T : UIElement, new()
     {
-        internal ListEntryBuilder(GridRangeBuilder gridRangeBuilder)
+        internal ListEntryBuilder(DataSetPresenterBuilderRange builderRange)
             : base(ListEntry.Create<T>())
         {
-            _gridRangeBuilder = gridRangeBuilder;
+            _builderRange = builderRange;
         }
 
         internal override ListEntryBuilder<T> This
@@ -19,10 +19,10 @@ namespace DevZest.Data.Windows
             get { return this; }
         }
 
-        private GridRangeBuilder _gridRangeBuilder;
+        private DataSetPresenterBuilderRange _builderRange;
         public override DataSetPresenterBuilder End()
         {
-            return _gridRangeBuilder.ListEntry(Entry);
+            return _builderRange.ListEntry(Entry);
         }
     }
 }
