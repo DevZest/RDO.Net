@@ -44,11 +44,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="DataBinding.cs" />
+    <Compile Include="Binding.cs" />
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
-    <Compile Include="ElementTrigger.cs" />
+    <Compile Include="BindingTrigger.cs" />
     <Compile Include="GridEntryBuilder.cs" />
     <Compile Include="DataSetPresenterBuilderRange.cs" />
     <Compile Include="IBehavior.cs" />

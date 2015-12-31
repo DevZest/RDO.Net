@@ -4,27 +4,27 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataBinding
+    internal sealed class Binding
     {
-        internal static DataBinding Bind<T>(Action<T> updateTarget)
+        internal static Binding Bind<T>(Action<T> updateTarget)
             where T : UIElement
         {
-            return new DataBinding(x => updateTarget((T)x), null, null);
+            return new Binding(x => updateTarget((T)x), null, null);
         }
 
-        internal static DataBinding BindToSource<T>(Action<T> updateSource, ElementTrigger[] triggers)
+        internal static Binding BindToSource<T>(Action<T> updateSource, BindingTrigger[] triggers)
             where T : UIElement
         {
-            return new DataBinding(null, x => updateSource((T)x), triggers);
+            return new Binding(null, x => updateSource((T)x), triggers);
         }
 
-        internal static DataBinding BindTwoWay<T>(Action<T> updateTarget, Action<T> updateSource, ElementTrigger[] triggers)
+        internal static Binding BindTwoWay<T>(Action<T> updateTarget, Action<T> updateSource, BindingTrigger[] triggers)
             where T : UIElement
         {
-            return new DataBinding(x => updateTarget((T)x), x => updateSource((T)x), triggers);
+            return new Binding(x => updateTarget((T)x), x => updateSource((T)x), triggers);
         }
 
-        private DataBinding(Action<UIElement> updateTarget, Action<UIElement> updateSource, ElementTrigger[] triggers)
+        private Binding(Action<UIElement> updateTarget, Action<UIElement> updateSource, BindingTrigger[] triggers)
         {
             _updateTarget = updateTarget;
             _updateSource = updateSource;
@@ -48,9 +48,9 @@ namespace DevZest.Data.Windows
                 _updateSource(element);
         }
 
-        private static ElementTrigger[] s_emptyTriggers = new ElementTrigger[0];
-        IReadOnlyList<ElementTrigger> _triggers;
-        internal IReadOnlyList<ElementTrigger> Triggers
+        private static BindingTrigger[] s_emptyTriggers = new BindingTrigger[0];
+        IReadOnlyList<BindingTrigger> _triggers;
+        internal IReadOnlyList<BindingTrigger> Triggers
         {
             get { return _triggers; }
         }

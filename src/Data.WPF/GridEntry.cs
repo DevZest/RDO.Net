@@ -112,9 +112,9 @@ namespace DevZest.Data.Windows
 
         internal virtual void OnInitialize(UIElement element)
         {
-            foreach (var dataBinding in _dataBindings)
+            foreach (var binding in _bindings)
             {
-                foreach (var trigger in dataBinding.Triggers)
+                foreach (var trigger in binding.Triggers)
                     trigger.Attach(element);
             }
 
@@ -147,9 +147,9 @@ namespace DevZest.Data.Windows
 
         internal virtual void OnCleanup(UIElement element)
         {
-            foreach (var dataBinding in _dataBindings)
+            foreach (var binding in _bindings)
             {
-                foreach (var trigger in dataBinding.Triggers)
+                foreach (var trigger in binding.Triggers)
                     trigger.Detach(element);
             }
 
@@ -160,27 +160,27 @@ namespace DevZest.Data.Windows
                 _cleanup(element);
         }
 
-        private static List<DataBinding> s_emptyDataBindings = new List<DataBinding>();
-        private List<DataBinding> _dataBindings = s_emptyDataBindings;
+        private static List<Binding> s_emptyBindings = new List<Binding>();
+        private List<Binding> _bindings = s_emptyBindings;
 
-        internal void AddDataBinding(DataBinding dataBinding)
+        internal void AddBinding(Binding binding)
         {
-            Debug.Assert(dataBinding != null);
-            if (_dataBindings == s_emptyDataBindings)
-                _dataBindings = new List<DataBinding>();
-            _dataBindings.Add(dataBinding);
+            Debug.Assert(binding != null);
+            if (_bindings == s_emptyBindings)
+                _bindings = new List<Binding>();
+            _bindings.Add(binding);
         }
 
         public void UpdateTarget(UIElement element)
         {
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateTarget(element);
+            foreach (var binding in _bindings)
+                binding.UpdateTarget(element);
         }
 
         public void UpdateSource(UIElement element)
         {
-            foreach (var dataBinding in _dataBindings)
-                dataBinding.UpdateSource(element);
+            foreach (var binding in _bindings)
+                binding.UpdateSource(element);
         }
     }
 }

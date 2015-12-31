@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var binding = new Binding(DataSetView.PresenterProperty.Name);
+            var binding = new System.Windows.Data.Binding(DataSetView.PresenterProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
             BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
