@@ -72,6 +72,23 @@ namespace DevZest.Data
             }
         }
 
+        private Func<string> _displayNameGetter;
+        public string DisplayName
+        {
+            get { return _displayNameGetter != null ? _displayNameGetter() : Name; }
+            set
+            {
+                VerifyDesignMode();
+                _displayNameGetter = () => value;
+            }
+        }
+
+        public void SetDisplayName(Func<string> displayNameGetter)
+        {
+            VerifyDesignMode();
+            _displayNameGetter = displayNameGetter;
+        }
+
         /// <summary>Gets a value indicates whether current column is expression.</summary>
         public abstract bool IsExpression { get; }
 
