@@ -48,7 +48,7 @@ namespace DevZest.Data.Windows
 
             var builder = new ScalarEntry.Builder<TextBlock>(default(DataSetPresenterBuilderRange));
             builder.Initialize(x => x.Text = INITIALIZED)
-                .BindToSource(x => source = x.Text)
+                .BindToSource(x => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
             var entry = builder.Entry;
@@ -57,6 +57,7 @@ namespace DevZest.Data.Windows
 
             entry.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
+            Assert.AreEqual(INITIALIZED, source);
 
             element.Text = TARGET;
             entry.UpdateSource(element);
@@ -68,6 +69,7 @@ namespace DevZest.Data.Windows
 
             entry.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
+            Assert.AreEqual(TARGET_CHANGED, source);
         }
     }
 }

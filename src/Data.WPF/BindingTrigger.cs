@@ -6,6 +6,11 @@ namespace DevZest.Data.Windows
 {
     public abstract class BindingTrigger
     {
+        public static BindingTrigger Initialized
+        {
+            get { return InitializedTrigger.Singleton; }
+        }
+
         public static BindingTrigger LostFocus
         {
             get { return LostFocusTrigger.Singleton; }
@@ -16,6 +21,26 @@ namespace DevZest.Data.Windows
             if (property == null)
                 throw new ArgumentNullException(nameof(property));
             return new DependencyPropertyChangedTrigger(property);
+        }
+
+        private sealed class InitializedTrigger : BindingTrigger
+        {
+            public static readonly InitializedTrigger Singleton = new InitializedTrigger();
+
+            private InitializedTrigger()
+            {
+            }
+
+            protected internal override void Attach(UIElement element)
+            {
+                var gridEntry = element.GetGridEntry();
+                if (gridEntry != null)
+                    gridEntry.UpdateSource(element);
+            }
+
+            protected internal override void Detach(UIElement element)
+            {
+            }
         }
 
         private sealed class LostFocusTrigger : BindingTrigger
