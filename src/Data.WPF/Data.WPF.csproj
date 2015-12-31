@@ -45,14 +45,13 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Binding.cs" />
-    <Compile Include="ChildEntryBuilder.cs" />
     <Compile Include="DataRowPresenterCollection.cs" />
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="DataViewRowType.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataSetViewFactory.cs" />
-    <Compile Include="GridEntryBuilder.cs" />
+    <Compile Include="GridEntry.Builder.cs" />
     <Compile Include="DataSetPresenterBuilderRange.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
@@ -66,9 +65,7 @@
     <Compile Include="ListEntry.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
-    <Compile Include="ListEntryBuilder.cs" />
     <Compile Include="RowHeader.cs" />
-    <Compile Include="ScalarEntryBuilder.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildEntry.cs" />

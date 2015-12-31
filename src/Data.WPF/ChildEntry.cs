@@ -7,6 +7,25 @@ namespace DevZest.Data.Windows
 {
     public sealed class ChildEntry : ListEntry
     {
+        public sealed new class Builder<T> : GridEntry.Builder<T, ChildEntry, Builder<T>>
+            where T : DataSetView, new()
+        {
+            internal Builder(DataSetPresenterBuilderRange builderRange, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+                : base(builderRange, ChildEntry.Create<T>(childPresenterConstructor))
+            {
+            }
+
+            internal override Builder<T> This
+            {
+                get { return this; }
+            }
+
+            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ChildEntry entry)
+            {
+                return builderRange.ChildEntry(entry);
+            }
+        }
+
         internal static ChildEntry Create<T>(Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
             where T : DataSetView, new()
         {

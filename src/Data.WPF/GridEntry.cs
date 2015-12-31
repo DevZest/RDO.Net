@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class GridEntry
+    public abstract partial class GridEntry
     {
         private sealed class Behavior
         {
@@ -87,7 +87,7 @@ namespace DevZest.Data.Windows
         private static Behavior[] s_emptyBehaviors = new Behavior[0];
         private IList<Behavior> _behaviors = s_emptyBehaviors;
 
-        internal void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
+        private void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
             where T : UIElement, new()
         {
             Debug.Assert(_behaviors == s_emptyBehaviors);
@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows
         }
 
         private Action<UIElement> _initializer;
-        internal void InitInitializer<T>(Action<T> initializer)
+        private void InitInitializer<T>(Action<T> initializer)
             where T : UIElement
         {
             if (initializer == null)
@@ -136,7 +136,7 @@ namespace DevZest.Data.Windows
         }
 
         private Action<UIElement> _cleanup;
-        internal void InitCleanup<T>(Action<T> cleanup)
+        private void InitCleanup<T>(Action<T> cleanup)
             where T : UIElement
         {
             if (cleanup == null)
@@ -163,7 +163,7 @@ namespace DevZest.Data.Windows
         private static List<Binding> s_emptyBindings = new List<Binding>();
         private List<Binding> _bindings = s_emptyBindings;
 
-        internal void AddBinding(Binding binding)
+        private void AddBinding(Binding binding)
         {
             Debug.Assert(binding != null);
             if (_bindings == s_emptyBindings)

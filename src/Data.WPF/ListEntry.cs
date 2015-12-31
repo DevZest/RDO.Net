@@ -17,5 +17,24 @@ namespace DevZest.Data.Windows
             : base(constructor)
         {
         }
+
+        public sealed class Builder<T> : GridEntry.Builder<T, ListEntry, Builder<T>>
+            where T : UIElement, new()
+        {
+            internal Builder(DataSetPresenterBuilderRange builderRange)
+                : base(builderRange, ListEntry.Create<T>())
+            {
+            }
+
+            internal override Builder<T> This
+            {
+                get { return this; }
+            }
+
+            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ListEntry entry)
+            {
+                return builderRange.ListEntry(entry);
+            }
+        }
     }
 }

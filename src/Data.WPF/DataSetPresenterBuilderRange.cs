@@ -26,11 +26,11 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public ScalarEntryBuilder<T> BeginScalarEntry<T>()
+        public ScalarEntry.Builder<T> BeginScalarEntry<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ScalarEntryBuilder<T>(this);
+            return new ScalarEntry.Builder<T>(this);
         }
 
         internal DataSetPresenterBuilder ScalarEntry(ScalarEntry scalarEntry)
@@ -39,11 +39,11 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public ListEntryBuilder<T> BeginListEntry<T>()
+        public ListEntry.Builder<T> BeginListEntry<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ListEntryBuilder<T>(this);
+            return new ListEntry.Builder<T>(this);
         }
 
         internal DataSetPresenterBuilder ListEntry(ListEntry listEntry)
@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public ChildEntryBuilder<TView> BeginChildEntry<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildEntry.Builder<TView> BeginChildEntry<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataSetView, new()
         {
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildEntryBuilder<TView>(this, owner =>
+            return new ChildEntry.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public ChildEntryBuilder<TView> BeginChildEntry<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildEntry.Builder<TView> BeginChildEntry<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataSetView, new()
         {
@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildEntryBuilder<TView>(this, owner =>
+            return new ChildEntry.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)

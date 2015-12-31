@@ -19,9 +19,34 @@ namespace DevZest.Data.Windows
 
         public FlowMode FlowMode { get; private set; }
 
-        internal void InitFlowMode(FlowMode value)
+        private void InitFlowMode(FlowMode value)
         {
             FlowMode = value;
+        }
+
+        public sealed class Builder<T> : GridEntry.Builder<T, ScalarEntry, Builder<T>>
+            where T : UIElement, new()
+        {
+            internal Builder(DataSetPresenterBuilderRange builderRange)
+                : base(builderRange, ScalarEntry.Create<T>())
+            {
+            }
+
+            internal override Builder<T> This
+            {
+                get { return this; }
+            }
+
+            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ScalarEntry entry)
+            {
+                return builderRange.ScalarEntry(entry);
+            }
+
+            public Builder<T> FlowMode(FlowMode value)
+            {
+                Entry.InitFlowMode(value);
+                return this;
+            }
         }
     }
 }
