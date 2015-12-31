@@ -64,6 +64,7 @@
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="ListEntryBuilder.cs" />
+    <Compile Include="ScalarEntryBuilder.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ChildEntry.cs" />

@@ -9,9 +9,8 @@ namespace DevZest.Data.Windows
         where T : UIElement, new()
     {
         internal ListEntryBuilder(DataSetPresenterBuilderRange builderRange)
-            : base(ListEntry.Create<T>())
+            : base(builderRange, ListEntry.Create<T>())
         {
-            _builderRange = builderRange;
         }
 
         internal override ListEntryBuilder<T> This
@@ -19,10 +18,9 @@ namespace DevZest.Data.Windows
             get { return this; }
         }
 
-        private DataSetPresenterBuilderRange _builderRange;
-        public override DataSetPresenterBuilder End()
+        internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ListEntry entry)
         {
-            return _builderRange.ListEntry(Entry);
+            return builderRange.ListEntry(entry);
         }
     }
 }

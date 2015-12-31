@@ -26,15 +26,15 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public DataSetPresenterBuilder ScalarEntry<T>(Action<T> initializer, FlowMode flowMode = FlowMode.Static, Action<T> cleanup = null,
-            params IBehavior<T>[] behaviors)
+        public ScalarEntryBuilder<T> BeginScalarEntry<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            if (initializer == null)
-                throw new ArgumentNullException(nameof(initializer));
+            return new ScalarEntryBuilder<T>(this);
+        }
 
-            var scalarEntry = Windows.ScalarEntry.Create(initializer, flowMode, cleanup, behaviors);
+        internal DataSetPresenterBuilder ScalarEntry(ScalarEntry scalarEntry)
+        {
             Template.AddScalarEntry(GridRange, scalarEntry);
             return PresenterBuilder;
         }

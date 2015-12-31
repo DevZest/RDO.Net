@@ -6,25 +6,22 @@ namespace DevZest.Data.Windows
 {
     public sealed class ScalarEntry : GridEntry
     {
-        internal static ScalarEntry Create<T>(Action<T> initializer, FlowMode flowMode, Action<T> cleanup, IBehavior<T>[] behaviors)
+        internal static ScalarEntry Create<T>()
             where T : UIElement, new()
         {
-            Debug.Assert(initializer != null);
-
-            var result = new ScalarEntry(() => new T(), x => initializer((T)x), flowMode, x => cleanup((T)x));
-            result.InitBehaviors(behaviors);
-            return result;
+            return new ScalarEntry(() => new T());
         }
 
-        private ScalarEntry(Func<UIElement> constructor, Action<UIElement> initializer, FlowMode flowMode, Action<UIElement> cleanup)
+        private ScalarEntry(Func<UIElement> constructor)
             : base(constructor)
         {
-            Debug.Assert(initializer != null);
-            InitInitializer(initializer);
-            FlowMode = flowMode;
-            InitCleanup(cleanup);
         }
 
         public FlowMode FlowMode { get; private set; }
+
+        internal void InitFlowMode(FlowMode value)
+        {
+            FlowMode = value;
+        }
     }
 }
