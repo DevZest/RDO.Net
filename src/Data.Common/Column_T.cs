@@ -269,8 +269,11 @@ namespace DevZest.Data
             var ordinal = dataRow.Ordinal;
             if (IsReadOnly(ordinal))
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
+
+            bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;
-            OnValueChanged(dataRow);
+            if (!areEqual)
+                OnValueChanged(dataRow);
         }
 
         private void OnValueChanged(DataRow dataRow)
@@ -586,5 +589,7 @@ namespace DevZest.Data
         {
             this[dataRow] = (T)value;
         }
+
+        protected abstract bool AreEqual(T x, T y);
     }
 }

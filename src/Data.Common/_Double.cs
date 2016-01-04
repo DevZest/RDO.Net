@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Double : Column<Double?>, IColumn<DbReader, Double?>
     {
+        protected override bool AreEqual(double? x, double? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<double?> CreateParam(double? value)
         {

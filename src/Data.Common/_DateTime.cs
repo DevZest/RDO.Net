@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _DateTime : Column<DateTime?>, IColumn<DbReader, DateTime?>
     {
+        protected override bool AreEqual(DateTime? x, DateTime? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<DateTime?> CreateParam(DateTime? value)
         {

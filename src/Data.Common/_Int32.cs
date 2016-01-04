@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Int32 : Column<Int32?>, IColumn<DbReader, Int32?>
     {
+        protected override bool AreEqual(int? x, int? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<int?> CreateParam(int? value)
         {

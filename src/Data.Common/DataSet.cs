@@ -3,10 +3,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace DevZest.Data
 {
+    public delegate void RowCollectionChanged(DataSet dataSet, int oldIndex, DataRow dataRow);
+
+    public delegate void ColumnValueChanged(DataSet dataSet, DataRow dataRow, Column column);
+
     public abstract class DataSet : DataSource, IList<DataRow>
     {
         internal DataSet(Model model)
@@ -203,7 +208,8 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public event EventHandler<RowCollectionChangedEventArgs> RowCollectionChanged;
+        [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "No need to create EventArgs object each and every time.")]
+        public event RowCollectionChanged RowCollectionChanged;
 
         private void OnRowCollectionChanged(int oldIndex, DataRow dataRow)
         {
@@ -211,10 +217,11 @@ namespace DevZest.Data
 
             var rowCollectionChanged = RowCollectionChanged;
             if (rowCollectionChanged != null)
-                rowCollectionChanged(this, new RowCollectionChangedEventArgs(this, oldIndex, dataRow));
+                rowCollectionChanged(this, oldIndex, dataRow);
         }
 
-        public event EventHandler<ColumnValueChangedEventArgs> ColumnValueChanged;
+        [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "No need to create EventArgs object each and every time.")]
+        public event ColumnValueChanged ColumnValueChanged;
 
         internal void OnColumnValueChanged(DataRow dataRow, Column column)
         {
@@ -222,7 +229,7 @@ namespace DevZest.Data
 
             var columnValueChanged = ColumnValueChanged;
             if (columnValueChanged != null)
-                columnValueChanged(this, new ColumnValueChangedEventArgs(this, dataRow, column));
+                columnValueChanged(this, dataRow, column);
         }
 
         public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)

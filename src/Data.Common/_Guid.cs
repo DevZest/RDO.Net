@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Guid : Column<Guid?>, IColumn<DbReader, Guid?>
     {
+        protected override bool AreEqual(Guid? x, Guid? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<Guid?> CreateParam(Guid? value)
         {

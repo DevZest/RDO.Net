@@ -8,6 +8,11 @@ namespace DevZest.Data
     /// <typeparam name="T">The type of the enumerations value.</typeparam>
     public abstract class CharEnum<T> : Column<T>, IColumn<DbReader, T>
     {
+        protected sealed override bool AreEqual(T x, T y)
+        {
+            return ConvertToChar(x) == ConvertToChar(y);
+        }
+
         /// <inheritdoc/>
         protected internal sealed override JsonValue SerializeValue(T value)
         {

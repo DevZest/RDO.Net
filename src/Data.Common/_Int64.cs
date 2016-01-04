@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Int64 : Column<Int64?>, IColumn<DbReader, Int64?>
     {
+        protected override bool AreEqual(long? x, long? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<long?> CreateParam(long? value)
         {

@@ -9,6 +9,11 @@ namespace DevZest.Data.SqlServer
     /// </summary>
     public sealed class _DateTimeOffset : Column<DateTimeOffset?>, IColumn<SqlReader, DateTimeOffset?>
     {
+        protected override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
+        {
+            return x == y;
+        }
+
         protected override Column<DateTimeOffset?> CreateParam(DateTimeOffset? value)
         {
             return Param(value, this);

@@ -10,6 +10,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Decimal : Column<Decimal?>, IColumn<DbReader, Decimal?>
     {
+        protected override bool AreEqual(decimal? x, decimal? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<decimal?> CreateParam(decimal? value)
         {

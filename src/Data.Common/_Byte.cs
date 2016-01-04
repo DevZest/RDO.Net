@@ -16,6 +16,11 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
+        protected override bool AreEqual(byte? x, byte? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected internal sealed override Column<byte?> CreateConst(byte? value)
         {

@@ -9,6 +9,11 @@ namespace DevZest.Data.SqlServer
     /// </summary>
     public sealed class _TimeSpan : Column<TimeSpan?>, IColumn<SqlReader, TimeSpan?>
     {
+        protected override bool AreEqual(TimeSpan? x, TimeSpan? y)
+        {
+            return x == y;
+        }
+
         protected override Column<TimeSpan?> CreateParam(TimeSpan? value)
         {
             return Param(value, this);

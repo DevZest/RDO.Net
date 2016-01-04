@@ -7,6 +7,11 @@ namespace DevZest.Data
     public sealed class _DataSet<T> : Column<DataSet<T>>, IDataSetColumn
         where T : Model, new()
     {
+        protected override bool AreEqual(DataSet<T> x, DataSet<T> y)
+        {
+            return x == y;
+        }
+
         protected internal override JsonValue SerializeValue(DataSet<T> value)
         {
             throw new NotSupportedException();

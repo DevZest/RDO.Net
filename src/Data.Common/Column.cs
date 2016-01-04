@@ -304,6 +304,7 @@ namespace DevZest.Data
 
         #region IColumnSet
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IColumnSet.Contains(Column column)
         {
             return column == this;

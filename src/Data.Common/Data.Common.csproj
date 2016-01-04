@@ -65,7 +65,6 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
-    <Compile Include="ColumnValueChangedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="Model.Validator.cs" />
@@ -217,7 +216,6 @@
       <DependentUpon>Strings.Resx</DependentUpon>
     </Compile>
     <Compile Include="Primitives\KeyOutput.cs" />
-    <Compile Include="RowCollectionChangedEventArgs.cs" />
     <Compile Include="SortDirection.cs" />
     <Compile Include="UdtAttribute.cs" />
     <Compile Include="Utilities\ByteArrayExtensions.cs" />

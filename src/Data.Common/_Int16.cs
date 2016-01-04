@@ -11,6 +11,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Int16 : Column<Int16?>, IColumn<DbReader, Int16?>
     {
+        protected override bool AreEqual(short? x, short? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<short?> CreateParam(short? value)
         {

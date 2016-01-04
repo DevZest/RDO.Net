@@ -11,6 +11,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Single : Column<Single?>, IColumn<DbReader, Single?>
     {
+        protected override bool AreEqual(float? x, float? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<float?> CreateParam(float? value)
         {

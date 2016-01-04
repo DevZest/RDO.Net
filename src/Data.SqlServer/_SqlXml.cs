@@ -9,6 +9,11 @@ namespace DevZest.Data.SqlServer
 {
     public sealed class _SqlXml : Column<SqlXml>, IColumn<SqlReader>
     {
+        protected override bool AreEqual(SqlXml x, SqlXml y)
+        {
+            return x == y;
+        }
+
         protected override Column<SqlXml> CreateConst(SqlXml value)
         {
             return Const(value);

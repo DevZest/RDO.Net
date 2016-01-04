@@ -15,6 +15,11 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
+        protected override bool AreEqual(bool? x, bool? y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected internal sealed override Column<bool?> CreateConst(bool? value)
         {

@@ -8,6 +8,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _Binary : Column<Binary>, IColumn<DbReader, Binary>
     {
+        protected override bool AreEqual(Binary x, Binary y)
+        {
+            return x.Equals(y);
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<Binary> CreateParam(Binary value)
         {

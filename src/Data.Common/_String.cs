@@ -11,6 +11,11 @@ namespace DevZest.Data
     /// </summary>
     public sealed class _String : Column<String>, IColumn<DbReader, String>
     {
+        protected override bool AreEqual(string x, string y)
+        {
+            return x == y;
+        }
+
         /// <inheritdoc/>
         protected override Column<string> CreateParam(string value)
         {
