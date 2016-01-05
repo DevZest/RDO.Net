@@ -284,6 +284,8 @@ namespace DevZest.Data
         /// <returns>The computation expression column.</returns>
         public abstract Column GetComputation();
 
+        public abstract bool IsDbComputed { get; }
+
         /// <summary>Compute and set value for given <see cref="DataRow"/>.</summary>
         /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
         public abstract void Compute(DataRow dataRow);

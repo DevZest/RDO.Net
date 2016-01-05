@@ -37,7 +37,7 @@ namespace DevZest.Data.SqlServer
         {
             // DEFAULT
             var defaultDef = column.GetDefault();
-            if (defaultDef == null || (!isTempTable && column.GetComputation() != null))
+            if (defaultDef == null || (!isTempTable && column.IsDbComputed))
                 return;
 
             sqlBuilder.Append(" DEFAULT(");
@@ -50,9 +50,9 @@ namespace DevZest.Data.SqlServer
             var column = GetColumn();
             if (!isTempTable)
             {
-                var computation = column.GetComputation();
-                if (computation != null)
+                if (column.IsDbComputed)
                 {
+                    var computation = column.GetComputation();
                     sqlBuilder.Append("AS (");
                     var generator = new ExpressionGenerator()
                     {

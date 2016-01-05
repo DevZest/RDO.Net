@@ -571,11 +571,19 @@ namespace DevZest.Data
 
         /// <summary>Defines the computation expression for this column.</summary>
         /// <param name="computation">The computation expression.</param>
-        public void ComputedAs(Column<T> computation)
+        public void ComputedAs(Column<T> computation, bool isDbComputed = true)
         {
             Check.NotNull(computation, nameof(computation));
 
+            VerifyDesignMode();
             Computation = computation;
+            _isDbComputed = isDbComputed;
+        }
+
+        private bool _isDbComputed;
+        public sealed override bool IsDbComputed
+        {
+            get { return _isDbComputed; }
         }
 
         /// <summary>Gets the computation expression for this column.</summary>

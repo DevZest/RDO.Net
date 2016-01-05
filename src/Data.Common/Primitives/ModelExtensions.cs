@@ -66,7 +66,7 @@ namespace DevZest.Data.Primitives
                 if (column == identityColumn)
                     continue;
 
-                if (isTable && column.GetComputation() != null)
+                if (isTable && column.IsDbComputed)
                     continue;
 
                 yield return column;
