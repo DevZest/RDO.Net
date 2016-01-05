@@ -65,6 +65,7 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
+    <Compile Include="DataRowChangedEventArgs.cs" />
     <Compile Include="DataSetChangedAction.cs" />
     <Compile Include="DataSetChangedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />

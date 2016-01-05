@@ -290,5 +290,36 @@ namespace DevZest.Data
                 throw new FormatException(Strings.DataRow_FromString_ParseInt(input));
             return result;
         }
+
+        private DataRowChangedEventArgs _rowChangedEventArgs;
+        internal DataRowChangedEventArgs DataRowChangedEventArgs
+        {
+            get { return _rowChangedEventArgs ?? (_rowChangedEventArgs = new DataRowChangedEventArgs(this)); }
+        }
+
+        internal void OnChanged()
+        {
+            var parentDataRow = ParentDataRow;
+            if (parentDataRow != null)
+                GetDataSet(parentDataRow).OnRowChanged(this);
+            DataSet.OnRowChanged(this);
+        }
+
+        public DataSet DataSet
+        {
+            get { return Model.DataSet; }
+        }
+
+        public DataSet GetDataSet(DataRow parent)
+        {
+            Check.NotNull(parent, nameof(parent));
+               
+            var parentModel = Model.ParentModel;
+            var parentDataRowModel = parent.Model;
+            if (parentModel != parentDataRowModel)
+                throw new ArgumentException(Strings.InvalidChildModel, nameof(parent));
+
+            return parent[Model];
+        }
     }
 }

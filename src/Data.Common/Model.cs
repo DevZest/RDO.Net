@@ -671,22 +671,6 @@ namespace DevZest.Data
             return this.GetType().Name + ": [" + string.Join(", ", Columns.Select(x => x.Name)) + "]";
         }
 
-        public DataSet this[DataRow parentDataRow]
-        {
-            get
-            {
-                if (parentDataRow == null)
-                    return DataSet;
-
-                var parentModel = ParentModel;
-                var parentDataRowModel = parentDataRow.Model;
-                if (parentModel != parentDataRowModel)
-                    throw new ArgumentException(Strings.InvalidChildModel, nameof(parentDataRow));
-
-                return parentDataRow[this];
-            }
-        }
-
         internal KeyOutput ParentSequentialKeyModel
         {
             get

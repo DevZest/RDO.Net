@@ -8,8 +8,6 @@ using System.Text;
 
 namespace DevZest.Data
 {
-    public delegate void ColumnValueChanged(DataSet dataSet, DataRow dataRow, Column column);
-
     public abstract class DataSet : DataSource, IList<DataRow>
     {
         internal DataSet(Model model)
@@ -90,7 +88,7 @@ namespace DevZest.Data
         internal void InternalInsert(int index, DataRow dataRow)
         {
             InternalInsertCore(index, dataRow);
-            OnChanged(DataSetChangedAction.Add, index, dataRow);
+            OnCollectionChanged(DataSetChangedAction.Add, index, dataRow);
         }
 
         internal abstract void InternalInsertCore(int index, DataRow dataRow);
@@ -122,7 +120,7 @@ namespace DevZest.Data
 
             var dataRow = this[index];
             InternalRemoveAtCore(index, dataRow);
-            OnChanged(DataSetChangedAction.Remove, index, dataRow);
+            OnCollectionChanged(DataSetChangedAction.Remove, index, dataRow);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -206,27 +204,26 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public event EventHandler<DataSetChangedEventArgs> Changed;
+        public event EventHandler<DataSetChangedEventArgs> CollectionChanged;
 
-        private void OnChanged(DataSetChangedAction action, int ordinal, DataRow dataRow)
+        private void OnCollectionChanged(DataSetChangedAction action, int ordinal, DataRow dataRow)
         {
             UpdateRevision();
 
-            var changed = Changed;
-            if (changed != null)
-                changed(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
+            var collectionChanged = CollectionChanged;
+            if (collectionChanged != null)
+                collectionChanged(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "No need to create EventArgs object each and every time.")]
-        public event ColumnValueChanged ColumnValueChanged;
+        public event EventHandler<DataRowChangedEventArgs> RowChanged;
 
-        internal void OnColumnValueChanged(DataRow dataRow, Column column)
+        internal void OnRowChanged(DataRow dataRow)
         {
             UpdateRevision();
 
-            var columnValueChanged = ColumnValueChanged;
-            if (columnValueChanged != null)
-                columnValueChanged(this, dataRow, column);
+            var rowChanged = RowChanged;
+            if (rowChanged != null)
+                rowChanged(this, dataRow.DataRowChangedEventArgs);
         }
 
         public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
@@ -249,7 +246,7 @@ namespace DevZest.Data
                     var childModels = dataSet.Model.ChildModels;
                     foreach (var childModel in childModels)
                     {
-                        var childDataSet = childModel[dataRow];
+                        var childDataSet = dataRow[childModel];
                         foreach (var entry in Validate(childDataSet, validationLevel, recursive))
                             yield return entry;
                     }

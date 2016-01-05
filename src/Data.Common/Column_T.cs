@@ -313,27 +313,7 @@ namespace DevZest.Data
             bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;
             if (!areEqual)
-                OnValueChanged(dataRow);
-        }
-
-        private void OnValueChanged(DataRow dataRow)
-        {
-            var model = dataRow.Model;
-            Debug.Assert(model == ParentModel);
-
-            var parentDataRow = dataRow.ParentDataRow;
-            if (parentDataRow != null)
-                OnValueChanged(parentDataRow, dataRow);
-
-            OnValueChanged(null, dataRow);
-        }
-
-        private void OnValueChanged(DataRow parentDataRow, DataRow dataRow)
-        {
-            var model = dataRow.Model;
-            var dataSet = model[parentDataRow];
-            Debug.Assert(dataSet != null);
-            dataSet.OnColumnValueChanged(dataRow, this);
+                dataRow.OnChanged();
         }
 
         private void VerifyDataRow(DataRow dataRow)
