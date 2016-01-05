@@ -15,7 +15,6 @@ namespace DevZest.Data
         private interface IValueManager
         {
             int RowCount { get; }
-            bool IsVirtual { get; }
             bool ShouldSerialize { get; }
             bool IsReadOnly(int ordinal);
             T this[int ordinal] { get; set; }
@@ -43,11 +42,6 @@ namespace DevZest.Data
                 get { return _dataSet.Count; }
             }
 
-            public bool IsVirtual
-            {
-                get { return true; }
-            }
-
             public bool ShouldSerialize
             {
                 get { return false; }
@@ -61,7 +55,7 @@ namespace DevZest.Data
             public T this[int ordinal]
             {
                 get { return _parentColumn[_dataSet[ordinal].ParentDataRow.Ordinal]; }
-                set { Debug.Fail("Column in child relationship is readonly."); }
+                set { Debug.Fail("Child column is readonly."); }
             }
 
             public void AddRow(DataRow dataRow)
@@ -115,11 +109,6 @@ namespace DevZest.Data
                 get { return _values.Count; }
             }
 
-            public bool IsVirtual
-            {
-                get { return false; }
-            }
-
             public bool ShouldSerialize
             {
                 get { return true; }
@@ -159,6 +148,53 @@ namespace DevZest.Data
             }
         }
 
+        private sealed class ComputedValueManager : IValueManager
+        {
+            public ComputedValueManager(DataSet dataSet, Column<T> computation)
+            {
+                Debug.Assert(dataSet != null);
+                Debug.Assert(computation != null);
+                _dataSet = dataSet;
+                _computation = computation;
+            }
+
+            private DataSet _dataSet;
+            private Column<T> _computation;
+
+            public T this[int ordinal]
+            {
+                get { return _computation.Eval(_dataSet[ordinal]); }
+                set { Debug.Fail("Computed column is read only."); }
+            }
+
+            public int RowCount
+            {
+                get { return _dataSet.Count; }
+            }
+
+            public bool ShouldSerialize
+            {
+                get { return false; }
+            }
+
+            public void AddRow(DataRow dataRow)
+            {
+            }
+
+            public void ClearRows()
+            {
+            }
+
+            public bool IsReadOnly(int ordinal)
+            {
+                return true;
+            }
+
+            public void RemoveRow(DataRow dataRow)
+            {
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of <see cref="Column{T}"/> object.
         /// </summary>
@@ -178,8 +214,12 @@ namespace DevZest.Data
             var parentColumn = GetParentColumn(column);
             if (parentColumn != null)
                 return new ChildValueManager(dataSet, parentColumn);
-            else
-                return new ListValueManager(column);
+
+            var computation = column.Computation;
+            if (computation != null)
+                return new ComputedValueManager(dataSet, computation);
+
+            return new ListValueManager(column);
         }
 
         private static Column<T> GetParentColumn(Column<T> column)
@@ -268,7 +308,7 @@ namespace DevZest.Data
             Debug.Assert(dataRow != null);
             var ordinal = dataRow.Ordinal;
             if (IsReadOnly(ordinal))
-                throw new InvalidOperationException(Strings.Column_SetReadOnlyValue);
+                throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
 
             bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;

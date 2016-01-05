@@ -436,11 +436,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot set value of readonly column. The column is part of the primary key or child-parent relationship.
+        /// Cannot set value of readonly column '{column}'.
         /// </summary>
-        public static string Column_SetReadOnlyValue
+        public static string Column_SetReadOnlyValue(object column)
         {
-            get { return GetString("Column_SetReadOnlyValue"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("Column_SetReadOnlyValue", "column"), column);
         }
 
         /// <summary>

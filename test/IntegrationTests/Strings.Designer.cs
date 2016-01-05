@@ -94,13 +94,13 @@ namespace DevZest.Data {
         ///      &quot;ShipDate&quot; : &quot;2008-06-08T00:00:00.000&quot;,
         ///      &quot;Status&quot; : 5,
         ///      &quot;OnlineOrderFlag&quot; : false,
-        ///      &quot;SalesOrderNumber&quot; : &quot;SO71774&quot;,
         ///      &quot;PurchaseOrderNumber&quot; : &quot;PO348186287&quot;,
         ///      &quot;AccountNumber&quot; : &quot;10-4020-000609&quot;,
         ///      &quot;CustomerID&quot; : 29847,
         ///      &quot;ShipToAddressID&quot; : 1092,
         ///      &quot;BillToAddressID&quot; : 1092,
-        ///      &quot;ShipMethod&quot; : &quot;CA [rest of string was truncated]&quot;;.
+        ///      &quot;ShipMethod&quot; : &quot;CARGO TRANSPORT 5&quot;,
+        ///      &quot;CreditCardApp [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ExpectedJSON_SalesOrder_71774 {
             get {

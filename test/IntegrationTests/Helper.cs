@@ -37,10 +37,8 @@ namespace DevZest.Data
                 var ordinal = salesOrder.IndexOf(salesOrder.AddRow());
 
                 salesOrder._.DueDate[ordinal] = new DateTime(2015, 9, 30);
-                salesOrder._.SalesOrderNumber[ordinal] = "SalesOrderNumber" + (ordinal + 1).ToString();
                 salesOrder._.CustomerID[ordinal] = ordinal + 1;
                 salesOrder._.ShipMethod[ordinal] = "TRUCK" + (ordinal + 1).ToString();
-                salesOrder._.TotalDue[0] = 0;
             }
         }
     }

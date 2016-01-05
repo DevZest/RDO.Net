@@ -277,7 +277,7 @@
     <value>Cannot access values of the column. The column must belong to a dataset.</value>
   </data>
   <data name="Column_SetReadOnlyValue" xml:space="preserve">
-    <value>Cannot set value of readonly column. The column is part of the primary key or child-parent relationship.</value>
+    <value>Cannot set value of readonly column '{column}'.</value>
   </data>
   <data name="DbSession_ColumnNotSupported" xml:space="preserve">
     <value>The column[{columnIndex}] '{column}' is not supported by this DbSession.</value>
