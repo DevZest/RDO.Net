@@ -8,8 +8,6 @@ using System.Text;
 
 namespace DevZest.Data
 {
-    public delegate void RowCollectionChanged(DataSet dataSet, int oldIndex, DataRow dataRow);
-
     public delegate void ColumnValueChanged(DataSet dataSet, DataRow dataRow, Column column);
 
     public abstract class DataSet : DataSource, IList<DataRow>
@@ -92,7 +90,7 @@ namespace DevZest.Data
         internal void InternalInsert(int index, DataRow dataRow)
         {
             InternalInsertCore(index, dataRow);
-            OnRowCollectionChanged(-1, dataRow);
+            OnChanged(DataSetChangedAction.Add, index, dataRow);
         }
 
         internal abstract void InternalInsertCore(int index, DataRow dataRow);
@@ -124,7 +122,7 @@ namespace DevZest.Data
 
             var dataRow = this[index];
             InternalRemoveAtCore(index, dataRow);
-            OnRowCollectionChanged(index, dataRow);
+            OnChanged(DataSetChangedAction.Remove, index, dataRow);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -208,16 +206,15 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "No need to create EventArgs object each and every time.")]
-        public event RowCollectionChanged RowCollectionChanged;
+        public event EventHandler<DataSetChangedEventArgs> Changed;
 
-        private void OnRowCollectionChanged(int oldIndex, DataRow dataRow)
+        private void OnChanged(DataSetChangedAction action, int ordinal, DataRow dataRow)
         {
             UpdateRevision();
 
-            var rowCollectionChanged = RowCollectionChanged;
-            if (rowCollectionChanged != null)
-                rowCollectionChanged(this, oldIndex, dataRow);
+            var changed = Changed;
+            if (changed != null)
+                changed(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
         }
 
         [SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "No need to create EventArgs object each and every time.")]
