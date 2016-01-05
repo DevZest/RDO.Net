@@ -303,9 +303,6 @@ namespace DevZest.Data
             if (parentDataRow != null)
                 GetDataSet(parentDataRow).OnRowChanged(this);
             DataSet.OnRowChanged(this);
-
-            if (parentDataRow != null)
-                parentDataRow.BubbleChangedEvent(Model);
         }
 
         internal void BubbleChangedEvent(IModelSet modelSet)
@@ -329,7 +326,7 @@ namespace DevZest.Data
                 if (computation == null)
                     continue;
 
-                if (computation.ParentModelSet.ContainsAny(modelSet))
+                if (computation.AggregateModelSet.ContainsAny(modelSet))
                     return true;
             }
 

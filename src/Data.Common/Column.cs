@@ -184,10 +184,9 @@ namespace DevZest.Data
         {
             if (_dbColumnName != null)
                 _dbColumnName = dbColumnNameSuffixes.GetUniqueName(_dbColumnName);
-            Seal();
         }
 
-        internal abstract void Seal();
+        internal abstract void InitValueManager();
 
         internal abstract bool ShouldSerialize { get; }
 
@@ -348,8 +347,17 @@ namespace DevZest.Data
         {
             Debug.Assert(ParentModel == dataRow.Model);
 
+            var modelSet = OnChildValueChanged(dataRow, ModelSet.Empty);
             dataRow.OnChanged();
 
+            var parentRow = dataRow.ParentDataRow;
+            if (parentRow != null)
+                parentRow.BubbleChangedEvent(modelSet.Union(ParentModel));
+        }
+
+        private IModelSet OnChildValueChanged(DataRow dataRow, IModelSet modelSet)
+        {
+            var result = modelSet;
             foreach (var childModel in ParentModel.ChildModels)
             {
                 var childColumn = GetChildColumn(childModel);
@@ -358,8 +366,14 @@ namespace DevZest.Data
 
                 var childDataSet = dataRow[childModel];
                 foreach (var childRow in childDataSet)
-                    childColumn.OnValueChanged(childRow);
+                {
+                    result = childColumn.OnChildValueChanged(childRow, result);
+                    childRow.OnChanged();
+                }
+                result = result.Union(childModel);
             }
+
+            return result;
         }
 
         private Column GetChildColumn(Model childModel)

@@ -202,11 +202,11 @@ namespace DevZest.Data
         {
         }
 
-        internal sealed override void Seal()
+        internal sealed override void InitValueManager()
         {
             var dataSet = ParentModel.DataSet;
-            if (dataSet != null)
-                _valueManager = CreateValueManager(dataSet, this);
+            Debug.Assert(dataSet != null);
+            _valueManager = CreateValueManager(dataSet, this);
         }
 
         private static IValueManager CreateValueManager(DataSet dataSet, Column<T> column)

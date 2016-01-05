@@ -350,5 +350,30 @@ namespace DevZest.Data
             Assert.AreEqual(3, childChanged);
             Assert.AreEqual(3, grandChildChanged);
         }
+
+        [TestMethod]
+        public void DataSet_row_changed_bubbled()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+
+            Assert.AreEqual(3, dataSet._.ChildCount[0]);
+
+            var child = dataSet._.Child;
+            var grandChild = child.Child;
+            var childDataSet = dataSet[0][child];
+            var grandChildSet = childDataSet[0][grandChild];
+
+            int rowChanged = 0;
+            int childRowChanged = 0;
+            dataSet.RowChanged += (sender, e) => { rowChanged++; };
+            childDataSet.RowChanged += (sender, e) => { childRowChanged++; };
+
+            grandChildSet.RemoveAt(0);
+            Assert.AreEqual(2, child.ChildCount[0]);
+            Assert.AreEqual(3, dataSet._.ChildCount[0]);
+            Assert.AreEqual(1, childRowChanged);
+            Assert.AreEqual(1, rowChanged);
+        }
     }
 }

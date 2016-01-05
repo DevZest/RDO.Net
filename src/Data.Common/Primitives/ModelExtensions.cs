@@ -131,5 +131,11 @@ namespace DevZest.Data.Primitives
 
             return result;
         }
+
+        public static void EnsureChildModelsInitialized(this Model model)
+        {
+            Check.NotNull(model, nameof(model));
+            model.EnsureChildModelsInitialized();
+        }
     }
 }

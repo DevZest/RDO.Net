@@ -8,6 +8,8 @@ namespace DevZest.Data.Helpers
         {
             public static readonly Accessor<SimpleModel, _Int32> InheritedValueAccessor = RegisterColumn((SimpleModel x) => x.InheritedValue);
 
+            public static readonly Accessor<SimpleModel, _Int32> ChildCountAccessor = RegisterColumn((SimpleModel x) => x.ChildCount);
+
             public static readonly Accessor<SimpleModel, SimpleModel> ChildAccessor = RegisterChildModel((SimpleModel x) => x.Child,
                 x => x.ParentKey, (ColumnMappingsBuilder builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
 
@@ -18,7 +20,14 @@ namespace DevZest.Data.Helpers
                 Validators.Add(Model.Validator.Create(ValidatorId, ValidationLevel.Error, Id % 2 == 0, "The Id must be even.", Id));
             }
 
+            protected override void OnChildModelsInitialized()
+            {
+                ChildCount.ComputedAs(Child.Id.CountRows());
+            }
+
             public _Int32 InheritedValue { get; private set; }
+
+            public _Int32 ChildCount { get; private set; }
 
             public SimpleModel Child { get; private set; }
         }

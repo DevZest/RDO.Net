@@ -282,6 +282,8 @@ namespace DevZest.Data
             if (AreChildModelsInitialized)
                 return;
 
+            AreChildModelsInitialized = true;
+
             Initialize(s_childModelManager);
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
@@ -291,9 +293,14 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
+                OnChildModelsInitialized();
+                foreach (var column in Columns)
+                    column.InitValueManager();
             }
+        }
 
-            AreChildModelsInitialized = true;
+        protected virtual void OnChildModelsInitialized()
+        {
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
