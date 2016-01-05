@@ -313,7 +313,7 @@ namespace DevZest.Data
             bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;
             if (!areEqual)
-                dataRow.OnChanged();
+                OnValueChanged(dataRow);
         }
 
         private void VerifyDataRow(DataRow dataRow)

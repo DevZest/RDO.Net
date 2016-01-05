@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 namespace DevZest.Data
 {
@@ -342,5 +343,34 @@ namespace DevZest.Data
         }
 
         #endregion
+
+        internal void OnValueChanged(DataRow dataRow)
+        {
+            Debug.Assert(ParentModel == dataRow.Model);
+
+            dataRow.OnChanged();
+
+            foreach (var childModel in ParentModel.ChildModels)
+            {
+                var childColumn = GetChildColumn(childModel);
+                if (childColumn == null)
+                    continue;
+
+                var childDataSet = dataRow[childModel];
+                foreach (var childRow in childDataSet)
+                    childColumn.OnValueChanged(childRow);
+            }
+        }
+
+        private Column GetChildColumn(Model childModel)
+        {
+            foreach (var parentMapping in childModel.ParentMappings)
+            {
+                if (parentMapping.Target == DbExpression)
+                    return parentMapping.SourceColumn;
+            }
+
+            return null;
+        }
     }
 }

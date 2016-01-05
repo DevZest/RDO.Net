@@ -328,5 +328,27 @@ namespace DevZest.Data
             Assert.AreEqual(2, dataSet._.Child.Child.InheritedValue[9]);
             Assert.AreEqual(3, dataSet._.Child.Child.InheritedValue[18]);
         }
+
+        [TestMethod]
+        public void DataSet_child_column_changed()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+
+            var child = dataSet._.Child;
+            var grandChild = child.Child;
+            var childDataSet = dataSet[0][child];
+            var grandChildSet = childDataSet[0][grandChild];
+
+            int childChanged = 0;
+            int grandChildChanged = 0;
+            childDataSet.RowChanged += (sender, e) => { childChanged++; };
+            grandChildSet.RowChanged += (sender, e) => { grandChildChanged++; };
+
+            dataSet._.InheritedValue[0] = 5;
+
+            Assert.AreEqual(3, childChanged);
+            Assert.AreEqual(3, grandChildChanged);
+        }
     }
 }
