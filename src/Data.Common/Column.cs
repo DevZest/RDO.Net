@@ -280,8 +280,8 @@ namespace DevZest.Data
             return GetInterceptor<Default>();
         }
 
-        /// <summary>Gets the computation expression column of this column.</summary>
-        /// <returns>The computation expression column.</returns>
+        /// <summary>Gets the computation expression of this column.</summary>
+        /// <returns>The computation expression.</returns>
         public abstract Column GetComputation();
 
         public abstract bool IsDbComputed { get; }
