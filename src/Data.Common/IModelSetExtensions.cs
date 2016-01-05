@@ -35,5 +35,17 @@ namespace DevZest.Data
 
             return result ?? leftSet;
         }
+
+        public static bool ContainsAny(this IModelSet modelSet, IModelSet other)
+        {
+            foreach (var model in other)
+            {
+                if (modelSet.Contains(model))
+                    return true;
+            }
+
+            return false;
+        }
+
     }
 }

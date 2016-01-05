@@ -303,6 +303,37 @@ namespace DevZest.Data
             if (parentDataRow != null)
                 GetDataSet(parentDataRow).OnRowChanged(this);
             DataSet.OnRowChanged(this);
+
+            if (parentDataRow != null)
+                parentDataRow.BubbleChangedEvent(Model);
+        }
+
+        internal void BubbleChangedEvent(IModelSet modelSet)
+        {
+            if (ShouldRaiseChangedEvent(modelSet))
+            {
+                modelSet = modelSet.Union(Model);
+                OnChanged();
+            }
+
+            var parentDataRow = ParentDataRow;
+            if (parentDataRow != null)
+                parentDataRow.BubbleChangedEvent(modelSet);
+        }
+
+        private bool ShouldRaiseChangedEvent(IModelSet modelSet)
+        {
+            foreach (var column in Model.Columns)
+            {
+                var computation = column.GetComputation();
+                if (computation == null)
+                    continue;
+
+                if (computation.ParentModelSet.ContainsAny(modelSet))
+                    return true;
+            }
+
+            return false;
         }
 
         public DataSet DataSet

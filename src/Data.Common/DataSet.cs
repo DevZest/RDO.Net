@@ -88,7 +88,7 @@ namespace DevZest.Data
         internal void InternalInsert(int index, DataRow dataRow)
         {
             InternalInsertCore(index, dataRow);
-            OnCollectionChanged(DataSetChangedAction.Add, index, dataRow);
+            OnCollectionChanged(DataSetChangedAction.Add, index, dataRow, dataRow.Model, dataRow.ParentDataRow);
         }
 
         internal abstract void InternalInsertCore(int index, DataRow dataRow);
@@ -119,8 +119,10 @@ namespace DevZest.Data
             Debug.Assert(index >= 0 && index < Count);
 
             var dataRow = this[index];
+            var model = dataRow.Model;
+            var parentDataRow = dataRow.ParentDataRow;
             InternalRemoveAtCore(index, dataRow);
-            OnCollectionChanged(DataSetChangedAction.Remove, index, dataRow);
+            OnCollectionChanged(DataSetChangedAction.Remove, index, dataRow, model, parentDataRow);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -206,13 +208,16 @@ namespace DevZest.Data
 
         public event EventHandler<DataSetChangedEventArgs> CollectionChanged;
 
-        private void OnCollectionChanged(DataSetChangedAction action, int ordinal, DataRow dataRow)
+        private void OnCollectionChanged(DataSetChangedAction action, int ordinal, DataRow dataRow, Model model, DataRow parentDataRow)
         {
             UpdateRevision();
 
             var collectionChanged = CollectionChanged;
             if (collectionChanged != null)
                 collectionChanged(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
+
+            if (parentDataRow != null)
+                parentDataRow.BubbleChangedEvent(model);
         }
 
         public event EventHandler<DataRowChangedEventArgs> RowChanged;
