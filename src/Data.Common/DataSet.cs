@@ -83,7 +83,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            if (dataRow.parentDataRow != null)
+            if (dataRow.ParentDataRow != null)
                 throw new ArgumentException(Strings.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);

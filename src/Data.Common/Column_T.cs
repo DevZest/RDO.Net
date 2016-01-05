@@ -60,7 +60,7 @@ namespace DevZest.Data
 
             public T this[int ordinal]
             {
-                get { return _parentColumn[_dataSet[ordinal].parentDataRow.Ordinal]; }
+                get { return _parentColumn[_dataSet[ordinal].ParentDataRow.Ordinal]; }
                 set { Debug.Fail("Column in child relationship is readonly."); }
             }
 
@@ -185,13 +185,13 @@ namespace DevZest.Data
         private static Column<T> GetParentColumn(Column<T> column)
         {
             var model = column.ParentModel;
-            var columnMappings = model.ParentRelationship;
-            if (columnMappings == null)
+            var parentMappings = model.ParentMappings;
+            if (parentMappings == null)
                 return null;
-            foreach (var columnMapping in columnMappings)
+            foreach (var parentMapping in parentMappings)
             {
-                if (columnMapping.Source == column.DbExpression)
-                    return (Column<T>)columnMapping.TargetColumn;
+                if (parentMapping.Source == column.DbExpression)
+                    return (Column<T>)parentMapping.TargetColumn;
             }
             return null;
         }
@@ -281,7 +281,7 @@ namespace DevZest.Data
             var model = dataRow.Model;
             Debug.Assert(model == ParentModel);
 
-            var parentDataRow = dataRow.parentDataRow;
+            var parentDataRow = dataRow.ParentDataRow;
             if (parentDataRow != null)
                 OnValueChanged(parentDataRow, dataRow);
 

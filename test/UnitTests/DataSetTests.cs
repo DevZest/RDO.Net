@@ -90,7 +90,7 @@ namespace DevZest.Data
                     var grandChildren = child.Children(model.Child.Child);
                     foreach (var grandChild in grandChildren)
                     {
-                        Assert.AreEqual(child, grandChild.parentDataRow);
+                        Assert.AreEqual(child, grandChild.ParentDataRow);
                         grandChildModelRows.Add(grandChild);
                     }
                 }
@@ -126,7 +126,7 @@ namespace DevZest.Data
             foreach (var row in rows)
             {
                 Assert.AreEqual(null, row.Model);
-                Assert.AreEqual(null, row.parentDataRow);
+                Assert.AreEqual(null, row.ParentDataRow);
             }
         }
 
@@ -304,6 +304,29 @@ namespace DevZest.Data
             Assert.AreEqual(2, productCategories.Children(x => x.SubCategories, 1).Count);
             Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 0).Count);
             Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 1).Children(x => x.SubCategories, 1).Count);
+        }
+
+        [TestMethod]
+        public void DataSet_inherited_value()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+            dataSet._.InheritedValue[0] = 1;
+            dataSet._.InheritedValue[1] = 2;
+            dataSet._.InheritedValue[2] = 3;
+            Assert.AreEqual(1, dataSet._.Child.InheritedValue[0]);
+            Assert.AreEqual(1, dataSet._.Child.InheritedValue[1]);
+            Assert.AreEqual(1, dataSet._.Child.InheritedValue[2]);
+            Assert.AreEqual(2, dataSet._.Child.InheritedValue[3]);
+            Assert.AreEqual(2, dataSet._.Child.InheritedValue[4]);
+            Assert.AreEqual(2, dataSet._.Child.InheritedValue[5]);
+            Assert.AreEqual(3, dataSet._.Child.InheritedValue[6]);
+            Assert.AreEqual(3, dataSet._.Child.InheritedValue[7]);
+            Assert.AreEqual(3, dataSet._.Child.InheritedValue[8]);
+
+            Assert.AreEqual(1, dataSet._.Child.Child.InheritedValue[0]);
+            Assert.AreEqual(2, dataSet._.Child.Child.InheritedValue[9]);
+            Assert.AreEqual(3, dataSet._.Child.Child.InheritedValue[18]);
         }
     }
 }

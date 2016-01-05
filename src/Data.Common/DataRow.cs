@@ -30,20 +30,20 @@ namespace DevZest.Data
         internal int ChildOrdinal { get; private set; }
 
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
-        public DataRow parentDataRow { get; private set; }
+        public DataRow ParentDataRow { get; private set; }
 
         internal void InitializeBySubDataSet(DataRow parent, int childOrdinal)
         {
-            Debug.Assert(parentDataRow == null);
+            Debug.Assert(ParentDataRow == null);
             Debug.Assert(parent != null);
 
-            parentDataRow = parent;
+            ParentDataRow = parent;
             ChildOrdinal = childOrdinal;
         }
 
         internal void DisposeBySubDataSet()
         {
-            parentDataRow = null;
+            ParentDataRow = null;
         }
 
         internal void InitializeByMainDataSet(Model model, int ordinal)
@@ -197,8 +197,8 @@ namespace DevZest.Data
 
         public override string ToString()
         {
-            var parentDataRow = this.parentDataRow;
-            if (this.parentDataRow == null)
+            var parentDataRow = this.ParentDataRow;
+            if (this.ParentDataRow == null)
                 return string.Format(CultureInfo.InvariantCulture, "/[{0}]", Ordinal);
 
             var result = string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", Model.Name, ChildOrdinal);
