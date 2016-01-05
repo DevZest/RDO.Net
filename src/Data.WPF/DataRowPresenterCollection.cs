@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows
                 CoerceEmptySet(false);
 
             CoerceSelection();
-            DataSet.RowCollectionChanged += OnRowCollectionChanged;
+            DataSet.CollectionChanged += OnCollectionChanged;
         }
 
         #region IReadOnlyList<DataRowPresenter>
@@ -94,12 +94,12 @@ namespace DevZest.Data.Windows
             Debug.Assert(_virtualRow != value);
 
             if (_virtualRow != null && notifyChange)
-                Owner.OnRowCollectionChanged(DataSet.Count, true);
+                Owner.OnCollectionChanged(DataSet.Count, DataSetChangedAction.Remove);
 
             _virtualRow = value;
 
             if (_virtualRow != null && notifyChange)
-                Owner.OnRowCollectionChanged(DataSet.Count, false);
+                Owner.OnCollectionChanged(DataSet.Count, DataSetChangedAction.Add);
         }
 
         private void CoerceEmptySet(bool notifyChange)
@@ -116,24 +116,20 @@ namespace DevZest.Data.Windows
                 SetVirtualRow(null, notifyChange);
         }
 
-        private void OnRowCollectionChanged(object sender, RowCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object sender, DataSetChangedEventArgs e)
         {
-            var oldIndex = e.OldIndex;
-            var isDelete = oldIndex >= 0;
-            if (isDelete)
+            if (e.Action == DataSetChangedAction.Remove)
             {
-                _rows[oldIndex].Dispose();
-                _rows.RemoveAt(oldIndex);
-                Owner.OnRowCollectionChanged(oldIndex, true);
+                _rows[e.Ordinal].Dispose();
+                _rows.RemoveAt(e.Ordinal);
             }
             else
             {
                 var dataRow = e.DataRow;
                 var dataRowPresenter = new DataRowPresenter(Owner, dataRow);
-                var index = DataSet.IndexOf(dataRow);
-                _rows.Insert(index, dataRowPresenter);
-                Owner.OnRowCollectionChanged(index, false);
+                _rows.Insert(e.Ordinal, dataRowPresenter);
             }
+            Owner.OnCollectionChanged(e.Ordinal, e.Action);
 
             CoerceEmptySet(true);
             CoerceSelection();

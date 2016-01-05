@@ -58,23 +58,19 @@ namespace DevZest.Data.Windows
             Template = new GridTemplate(this);
             IsVirtualizing = true;
 
-            DataRow parentDataRow = owner != null ? Owner.DataRow : null;
-            DataSet = Model[parentDataRow];
-            Debug.Assert(DataSet != null);
-
             _rows = new DataRowPresenterCollection(this);
             LayoutManager = LayoutManager.Create(this);
 
-            DataSet.ColumnValueChanged += OnColumnValueChanged;
+            DataSet.RowChanged += OnRowChanged;
         }
 
         internal DataSetView View { get; set; }
 
-        internal void OnRowCollectionChanged(int index, bool isDelete)
+        internal void OnCollectionChanged(int index, DataSetChangedAction action)
         {
         }
 
-        private void OnColumnValueChanged(object sender, ColumnValueChangedEventArgs e)
+        private void OnRowChanged(object sender, DataRowChangedEventArgs e)
         {
             throw new NotImplementedException();
         }
