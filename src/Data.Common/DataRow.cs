@@ -374,7 +374,7 @@ namespace DevZest.Data
             }
         }
 
-        private ValidationMessageCollection s_emptyValidationMessages = new ValidationMessageCollection();
+        private static ValidationMessageCollection s_emptyValidationMessages = new ValidationMessageCollection();
         private ValidationMessageCollection _validationMessages;
 
         public ReadOnlyCollection<ValidationMessage> ValidationMessages
@@ -401,19 +401,29 @@ namespace DevZest.Data
             }
         }
 
+        private ValidationMessageCollection _mergedValidationMessages = s_emptyValidationMessages;
+        public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
+        {
+            get { return _mergedValidationMessages; }
+        }
+
         internal void Merge(ValidationResult result)
         {
-            _validationMessages = s_emptyValidationMessages;
+            var oldValue = _mergedValidationMessages;
+            _mergedValidationMessages = s_emptyValidationMessages;
             for (int i = 0; i < result.Count; i++)
             {
                 var entry = result[i];
                 if (entry.DataRow != this)
                     continue;
 
-                if (_validationMessages == s_emptyValidationMessages)
-                    _validationMessages = new ValidationMessageCollection();
-                _validationMessages.Add(entry.Message);
+                if (_mergedValidationMessages == s_emptyValidationMessages)
+                    _mergedValidationMessages = new ValidationMessageCollection();
+                _mergedValidationMessages.Add(entry.Message);
             }
+
+            if (_mergedValidationMessages != oldValue)
+                OnUpdated();
         }
     }
 }
