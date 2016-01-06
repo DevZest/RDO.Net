@@ -7,7 +7,7 @@ param (
 
 function showUsage()
 {
-	echo 'Usage: Build -version Version [-additionalLabel AdditionalLable] [-projectDir ProjectDir] [-files Files...]'
+	echo 'Usage: Build -version Version [-additionalLabel AdditionalLabel] [-projectDir ProjectDir] [-files Files...]'
 	echo ''
 	echo 'Version: MAJOR.MINOR.PATCH'
 	echo '  MAJOR version when you make incompatible API changes;'
