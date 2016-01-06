@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows
             _rows = new DataRowPresenterCollection(this);
             LayoutManager = LayoutManager.Create(this);
 
-            DataSet.RowChanged += OnRowChanged;
+            DataSet.RowUpdated += OnRowUpdated;
         }
 
         internal DataSetView View { get; set; }
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private void OnRowChanged(object sender, DataRowChangedEventArgs e)
+        private void OnRowUpdated(object sender, DataRowEventArgs e)
         {
             throw new NotImplementedException();
         }

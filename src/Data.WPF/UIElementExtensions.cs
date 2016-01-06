@@ -63,7 +63,7 @@ namespace DevZest.Data.Windows
             if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
                 return null;
 
-            return dataRowPresenter.DataRow[column].ToString();
+            return column.GetValue(dataRowPresenter.DataRow).ToString();
         }
     }
 }

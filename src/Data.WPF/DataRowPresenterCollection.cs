@@ -27,7 +27,8 @@ namespace DevZest.Data.Windows
                 CoerceEmptySet(false);
 
             CoerceSelection();
-            DataSet.CollectionChanged += OnCollectionChanged;
+            DataSet.RowAdded += OnRowAdded;
+            DataSet.RowRemoved += OnRowRemoved;
         }
 
         #region IReadOnlyList<DataRowPresenter>
@@ -116,21 +117,24 @@ namespace DevZest.Data.Windows
                 SetVirtualRow(null, notifyChange);
         }
 
-        private void OnCollectionChanged(object sender, DataSetChangedEventArgs e)
+        private void OnRowAdded(object sender, DataRowEventArgs e)
         {
-            if (e.Action == DataSetChangedAction.Remove)
-            {
-                _rows[e.Ordinal].Dispose();
-                _rows.RemoveAt(e.Ordinal);
-            }
-            else
-            {
-                var dataRow = e.DataRow;
-                var dataRowPresenter = new DataRowPresenter(Owner, dataRow);
-                _rows.Insert(e.Ordinal, dataRowPresenter);
-            }
-            Owner.OnCollectionChanged(e.Ordinal, e.Action);
+            var dataRow = e.DataRow;
+            var dataRowPresenter = new DataRowPresenter(Owner, dataRow);
+            _rows.Insert(dataRow.Index, dataRowPresenter);
+            OnCollectionChanged(dataRow.Index, DataSetChangedAction.Add);
+        }
 
+        private void OnRowRemoved(object sender, DataRowRemovedEventArgs e)
+        {
+            _rows[e.Index].Dispose();
+            _rows.RemoveAt(e.Ordinal);
+            OnCollectionChanged(e.Index, DataSetChangedAction.Remove);
+        }
+
+        private void OnCollectionChanged(int index, DataSetChangedAction action)
+        {
+            Owner.OnCollectionChanged(index, action);
             CoerceEmptySet(true);
             CoerceSelection();
         }
