@@ -3,13 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace DevZest.Data
 {
     public abstract class DataSet : DataSource, IList<DataRow>
     {
+        public static DataSet FromModel(Model model)
+        {
+            return model == null ? null : model.DataSet;
+        }
+
         internal DataSet(Model model)
             : base(model)
         {
@@ -217,10 +221,10 @@ namespace DevZest.Data
                 collectionChanged(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
 
             if (parentDataRow != null)
-                parentDataRow.BubbleChangedEvent(model);
+                parentDataRow.BubbleUpdatedEvent(model);
         }
 
-        public event EventHandler<DataRowChangedEventArgs> RowChanged;
+        public event EventHandler<DataRowEventArgs> RowChanged;
 
         internal void OnRowChanged(DataRow dataRow)
         {
@@ -228,7 +232,7 @@ namespace DevZest.Data
 
             var rowChanged = RowChanged;
             if (rowChanged != null)
-                rowChanged(this, dataRow.DataRowChangedEventArgs);
+                rowChanged(this, dataRow.EventArgs);
         }
 
         public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)

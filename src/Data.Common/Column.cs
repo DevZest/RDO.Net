@@ -348,11 +348,11 @@ namespace DevZest.Data
             Debug.Assert(ParentModel == dataRow.Model);
 
             var modelSet = OnChildValueChanged(dataRow, ModelSet.Empty);
-            dataRow.OnChanged();
+            dataRow.OnUpdated();
 
             var parentRow = dataRow.ParentDataRow;
             if (parentRow != null)
-                parentRow.BubbleChangedEvent(modelSet.Union(ParentModel));
+                parentRow.BubbleUpdatedEvent(modelSet.Union(ParentModel));
         }
 
         private IModelSet OnChildValueChanged(DataRow dataRow, IModelSet modelSet)
@@ -368,7 +368,7 @@ namespace DevZest.Data
                 foreach (var childRow in childDataSet)
                 {
                     result = childColumn.OnChildValueChanged(childRow, result);
-                    childRow.OnChanged();
+                    childRow.OnUpdated();
                 }
                 result = result.Union(childModel);
             }

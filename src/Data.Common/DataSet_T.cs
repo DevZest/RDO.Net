@@ -1,11 +1,8 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +13,9 @@ namespace DevZest.Data
     public abstract class DataSet<T> : DataSet
         where T : Model, new()
     {
-        private sealed class MainDataSet : DataSet<T>
+        private sealed class GlobalDataSet : DataSet<T>
         {
-            public MainDataSet(T model)
+            public GlobalDataSet(T model)
                 : base(model)
             {
                 model.SetDataSource(this);
@@ -48,7 +45,7 @@ namespace DevZest.Data
             {
                 Debug.Assert(dataRow.Model == Model && dataRow.Ordinal == index);
 
-                dataRow.DisposeByMainDataSet();
+                dataRow.DisposeByGlobalDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustOrdinal(i);
@@ -59,18 +56,20 @@ namespace DevZest.Data
                 Debug.Assert(index >= 0 && index <= Count);
                 Debug.Assert(dataRow.Model == null);
 
-                dataRow.InitializeByMainDataSet(Model, index);
+                dataRow.InitializeByGlobalDataSet(Model, index);
                 _rows.Insert(index, dataRow);
+                for (int i = index + 1; i < _rows.Count; i++)
+                    _rows[i].AdjustOrdinal(i);
             }
         }
 
         private sealed class SubDataSet : DataSet<T>
         {
-            public SubDataSet(MainDataSet mainDataSet, DataRow parentRow)
-                : base(mainDataSet._)
+            public SubDataSet(GlobalDataSet globalDataSet, DataRow parentRow)
+                : base(globalDataSet._)
             {
-                Debug.Assert(mainDataSet != null);
-                _mainDataSet = mainDataSet;
+                Debug.Assert(globalDataSet != null);
+                _globalDataSet = globalDataSet;
                 _parentRow = parentRow;
             }
 
@@ -79,7 +78,7 @@ namespace DevZest.Data
                 throw new NotSupportedException();
             }
 
-            private DataSet<T> _mainDataSet;
+            private DataSet<T> _globalDataSet;
             private DataRow _parentRow;
             public override DataRow ParentRow
             {
@@ -93,19 +92,19 @@ namespace DevZest.Data
 
             public override int IndexOf(DataRow dataRow)
             {
-                return dataRow == null || dataRow.Model != Model ? -1 : dataRow.ChildOrdinal;
+                return dataRow == null || dataRow.Model != Model ? -1 : dataRow.Index;
             }
 
             internal override void InternalRemoveAtCore(int index, DataRow dataRow)
             {
-                Debug.Assert(dataRow.Model == Model && dataRow.ChildOrdinal == index);
+                Debug.Assert(dataRow.Model == Model && dataRow.Index == index);
 
                 dataRow.DisposeBySubDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
-                    _rows[i].AdjustChildOrdinal(i);
+                    _rows[i].AdjustIndex(i);
 
-                _mainDataSet.InternalRemoveAt(dataRow.Ordinal);
+                _globalDataSet.InternalRemoveAt(dataRow.Ordinal);
             }
 
             internal override void InternalInsertCore(int index, DataRow dataRow)
@@ -115,26 +114,28 @@ namespace DevZest.Data
 
                 dataRow.InitializeBySubDataSet(_parentRow, index);
                 _rows.Insert(index, dataRow);
-                _mainDataSet.InternalInsert(GetMainDataSetIndex(dataRow), dataRow);
+                for (int i = index + 1; i < _rows.Count; i++)
+                    _rows[i].AdjustIndex(i);
+                _globalDataSet.InternalInsert(GetGlobalDataSetIndex(dataRow), dataRow);
             }
 
-            private int GetMainDataSetIndex(DataRow dataRow)
+            private int GetGlobalDataSetIndex(DataRow dataRow)
             {
-                if (_mainDataSet.Count == 0)
+                if (_globalDataSet.Count == 0)
                     return 0;
 
                 if (Count > 1)
                 {
-                    if (dataRow.ChildOrdinal > 0)
-                        return this[dataRow.ChildOrdinal - 1].Ordinal + 1;  // after the previous DataRow
+                    if (dataRow.Index > 0)
+                        return this[dataRow.Index - 1].Ordinal + 1;  // after the previous DataRow
                     else
-                        return this[dataRow.ChildOrdinal + 1].Ordinal - 1;  // before the next DataRow
+                        return this[dataRow.Index + 1].Ordinal - 1;  // before the next DataRow
                 }
 
-                return BinarySearchMainDataSetIndex(_mainDataSet[0], _mainDataSet[_mainDataSet.Count - 1], dataRow.ParentDataRow.Ordinal);
+                return BinarySearchGlobalDataSetIndex(_globalDataSet[0], _globalDataSet[_globalDataSet.Count - 1], dataRow.ParentDataRow.Ordinal);
             }
 
-            private int BinarySearchMainDataSetIndex(DataRow startRow, DataRow endRow, int parentOrdinal)
+            private int BinarySearchGlobalDataSetIndex(DataRow startRow, DataRow endRow, int parentOrdinal)
             {
                 if (parentOrdinal > endRow.ParentDataRow.Ordinal)
                     return endRow.Ordinal + 1;  // after the end DataRow
@@ -143,17 +144,17 @@ namespace DevZest.Data
                     return startRow.Ordinal;  // before the start DataRow
 
                 var midOrdinal = (startRow.Ordinal + endRow.Ordinal) >> 1;
-                var midRow = _mainDataSet[midOrdinal];
+                var midRow = _globalDataSet[midOrdinal];
                 if (parentOrdinal < midRow.ParentDataRow.Ordinal)
-                    return BinarySearchMainDataSetIndex(startRow, midRow, parentOrdinal);
+                    return BinarySearchGlobalDataSetIndex(startRow, midRow, parentOrdinal);
                 else
-                    return BinarySearchMainDataSetIndex(midRow, endRow, parentOrdinal);
+                    return BinarySearchGlobalDataSetIndex(midRow, endRow, parentOrdinal);
             }
         }
 
         internal static DataSet<T> Create(T model)
         {
-            return new MainDataSet(model);
+            return new GlobalDataSet(model);
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace DevZest.Data
             var model = new T();
             if (initializer != null)
                 initializer(model);
-            return new MainDataSet(model);
+            return new GlobalDataSet(model);
         }
 
         public readonly T _;

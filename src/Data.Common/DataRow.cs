@@ -17,7 +17,8 @@ namespace DevZest.Data
         public DataRow()
         {
             Ordinal = -1;
-            ChildOrdinal = -1;
+            _index = -1;
+            _eventArgs = new DataRowEventArgs(this);
         }
 
         private DataSet[] _childDataSets;
@@ -25,20 +26,24 @@ namespace DevZest.Data
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
 
-        internal int Ordinal { get; private set; }
+        public int Ordinal { get; private set; }
 
-        internal int ChildOrdinal { get; private set; }
+        private int _index;
+        public int Index
+        {
+            get { return _index == -1 ? Ordinal : _index; }
+        }
 
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
         public DataRow ParentDataRow { get; private set; }
 
-        internal void InitializeBySubDataSet(DataRow parent, int childOrdinal)
+        internal void InitializeBySubDataSet(DataRow parent, int index)
         {
             Debug.Assert(ParentDataRow == null);
             Debug.Assert(parent != null);
 
             ParentDataRow = parent;
-            ChildOrdinal = childOrdinal;
+            _index = index;
         }
 
         internal void DisposeBySubDataSet()
@@ -46,7 +51,7 @@ namespace DevZest.Data
             ParentDataRow = null;
         }
 
-        internal void InitializeByMainDataSet(Model model, int ordinal)
+        internal void InitializeByGlobalDataSet(Model model, int ordinal)
         {
             Debug.Assert(Model == null);
             Debug.Assert(model != null);
@@ -65,7 +70,7 @@ namespace DevZest.Data
                 column.InsertRow(this);
         }
 
-        internal void DisposeByMainDataSet()
+        internal void DisposeByGlobalDataSet()
         {
             ClearChildren();
 
@@ -82,10 +87,10 @@ namespace DevZest.Data
             Ordinal = value;
         }
 
-        internal void AdjustChildOrdinal(int value)
+        internal void AdjustIndex(int value)
         {
-            Debug.Assert(Ordinal != value);
-            ChildOrdinal = value;
+            Debug.Assert(_index != value);
+            _index = value;
         }
 
         public DataSet this[Model childModel]
@@ -201,7 +206,7 @@ namespace DevZest.Data
             if (this.ParentDataRow == null)
                 return string.Format(CultureInfo.InvariantCulture, "/[{0}]", Ordinal);
 
-            var result = string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", Model.Name, ChildOrdinal);
+            var result = string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", Model.Name, _index);
             return parentDataRow.ToString() + "/" + result;
         }
 
@@ -291,13 +296,13 @@ namespace DevZest.Data
             return result;
         }
 
-        private DataRowChangedEventArgs _rowChangedEventArgs;
-        internal DataRowChangedEventArgs DataRowChangedEventArgs
+        private readonly DataRowEventArgs _eventArgs;
+        internal DataRowEventArgs EventArgs
         {
-            get { return _rowChangedEventArgs ?? (_rowChangedEventArgs = new DataRowChangedEventArgs(this)); }
+            get { return _eventArgs; }
         }
 
-        internal void OnChanged()
+        internal void OnUpdated()
         {
             var parentDataRow = ParentDataRow;
             if (parentDataRow != null)
@@ -305,20 +310,20 @@ namespace DevZest.Data
             DataSet.OnRowChanged(this);
         }
 
-        internal void BubbleChangedEvent(IModelSet modelSet)
+        internal void BubbleUpdatedEvent(IModelSet modelSet)
         {
-            if (ShouldRaiseChangedEvent(modelSet))
+            if (ShouldRaiseUpdatedEvent(modelSet))
             {
                 modelSet = modelSet.Union(Model);
-                OnChanged();
+                OnUpdated();
             }
 
             var parentDataRow = ParentDataRow;
             if (parentDataRow != null)
-                parentDataRow.BubbleChangedEvent(modelSet);
+                parentDataRow.BubbleUpdatedEvent(modelSet);
         }
 
-        private bool ShouldRaiseChangedEvent(IModelSet modelSet)
+        private bool ShouldRaiseUpdatedEvent(IModelSet modelSet)
         {
             foreach (var column in Model.Columns)
             {

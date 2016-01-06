@@ -2,9 +2,9 @@
 
 namespace DevZest.Data
 {
-    public sealed class DataRowChangedEventArgs : EventArgs
+    public class DataRowEventArgs : EventArgs
     {
-        internal DataRowChangedEventArgs(DataRow dataRow)
+        internal DataRowEventArgs(DataRow dataRow)
         {
             DataRow = dataRow;
         }

@@ -729,5 +729,11 @@ namespace DevZest.Data
         {
             return DataSet<T>.New();
         }
+
+        public event EventHandler<DataRowEventArgs> RowAdded;
+
+        public event EventHandler<DataRowEventArgs> RowUpdated;
+
+
     }
 }
