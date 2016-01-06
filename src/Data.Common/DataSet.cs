@@ -87,12 +87,13 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);
+            dataRow.OnAdded();
         }
 
         internal void InternalInsert(int index, DataRow dataRow)
         {
+            UpdateRevision();
             InternalInsertCore(index, dataRow);
-            OnCollectionChanged(DataSetChangedAction.Add, index, dataRow, dataRow.Model, dataRow.ParentDataRow);
         }
 
         internal abstract void InternalInsertCore(int index, DataRow dataRow);
@@ -115,18 +116,18 @@ namespace DevZest.Data
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
+            var dataRow = this[index];
+            var e = new DataRowRemovedEventArgs(dataRow);
             InternalRemoveAt(index);
+            dataRow.OnRemoved(e);
         }
 
         internal void InternalRemoveAt(int index)
         {
             Debug.Assert(index >= 0 && index < Count);
 
-            var dataRow = this[index];
-            var model = dataRow.Model;
-            var parentDataRow = dataRow.ParentDataRow;
-            InternalRemoveAtCore(index, dataRow);
-            OnCollectionChanged(DataSetChangedAction.Remove, index, dataRow, model, parentDataRow);
+            UpdateRevision();
+            InternalRemoveAtCore(index, this[index]);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -208,31 +209,6 @@ namespace DevZest.Data
         public bool AllowsKeyUpdate(bool value)
         {
             return Model.AllowsKeyUpdate(value);
-        }
-
-        public event EventHandler<DataSetChangedEventArgs> CollectionChanged;
-
-        private void OnCollectionChanged(DataSetChangedAction action, int ordinal, DataRow dataRow, Model model, DataRow parentDataRow)
-        {
-            UpdateRevision();
-
-            var collectionChanged = CollectionChanged;
-            if (collectionChanged != null)
-                collectionChanged(this, new DataSetChangedEventArgs(action, ordinal, dataRow));
-
-            if (parentDataRow != null)
-                parentDataRow.BubbleUpdatedEvent(model);
-        }
-
-        public event EventHandler<DataRowEventArgs> RowChanged;
-
-        internal void OnRowChanged(DataRow dataRow)
-        {
-            UpdateRevision();
-
-            var rowChanged = RowChanged;
-            if (rowChanged != null)
-                rowChanged(this, dataRow.EventArgs);
         }
 
         public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)

@@ -49,6 +49,7 @@ namespace DevZest.Data
         internal void DisposeBySubDataSet()
         {
             ParentDataRow = null;
+            _index = -1;
         }
 
         internal void InitializeByGlobalDataSet(Model model, int ordinal)
@@ -79,6 +80,7 @@ namespace DevZest.Data
                 column.RemoveRow(this);
 
             Model = null;
+            Ordinal = -1;
         }
 
         internal void AdjustOrdinal(int value)
@@ -104,13 +106,13 @@ namespace DevZest.Data
             }
         }
 
-        public DataSet this[int ordinal]
+        public DataSet this[int modelOrdinal]
         {
             get
             {
-                if (ordinal < 0 || ordinal >= _childDataSets.Length)
-                    throw new ArgumentOutOfRangeException(nameof(ordinal));
-                return _childDataSets[ordinal];
+                if (modelOrdinal < 0 || modelOrdinal >= _childDataSets.Length)
+                    throw new ArgumentOutOfRangeException(nameof(modelOrdinal));
+                return _childDataSets[modelOrdinal];
             }
         }
 
@@ -174,18 +176,6 @@ namespace DevZest.Data
             stringBuilder.Append(name);
             stringBuilder.Append("\"");
             stringBuilder.Append(":");
-        }
-
-        public object this[Column column]
-        {
-            get { return column.GetValue(this); }
-            set { column.SetValue(this, value); }
-        }
-
-        public object this[string columnName]
-        {
-            get { return Model.Columns[columnName].GetValue(this); }
-            set { Model.Columns[columnName].SetValue(this, value); }
         }
 
         public IEnumerable<ValidationMessage> Validate()
@@ -297,20 +287,39 @@ namespace DevZest.Data
         }
 
         private readonly DataRowEventArgs _eventArgs;
-        internal DataRowEventArgs EventArgs
+
+        internal void OnUpdated(IModelSet modelSet)
         {
-            get { return _eventArgs; }
+            OnUpdated();
+            if (ParentDataRow != null)
+                ParentDataRow.BubbleUpdatedEvent(modelSet);
         }
 
         internal void OnUpdated()
         {
-            var parentDataRow = ParentDataRow;
-            if (parentDataRow != null)
-                GetDataSet(parentDataRow).OnRowChanged(this);
-            DataSet.OnRowChanged(this);
+            if (ParentDataRow != null)
+                DataSet.UpdateRevision();
+            Model.DataSet.UpdateRevision();
+            Model.OnRowUpdated(_eventArgs);
         }
 
-        internal void BubbleUpdatedEvent(IModelSet modelSet)
+        internal void OnAdded()
+        {
+            Model.OnRowAdded(_eventArgs);
+            if (ParentDataRow != null)
+                ParentDataRow.BubbleUpdatedEvent(Model);
+        }
+
+        internal void OnRemoved(DataRowRemovedEventArgs e)
+        {
+            Debug.Assert(e.DataRow == this);
+
+            e.Model.OnRowRemoved(e);
+            if (e.ParentDataRow != null)
+                e.ParentDataRow.BubbleUpdatedEvent(e.Model);
+        }
+
+        private void BubbleUpdatedEvent(IModelSet modelSet)
         {
             if (ShouldRaiseUpdatedEvent(modelSet))
             {
@@ -340,19 +349,11 @@ namespace DevZest.Data
 
         public DataSet DataSet
         {
-            get { return Model.DataSet; }
-        }
-
-        public DataSet GetDataSet(DataRow parent)
-        {
-            Check.NotNull(parent, nameof(parent));
-               
-            var parentModel = Model.ParentModel;
-            var parentDataRowModel = parent.Model;
-            if (parentModel != parentDataRowModel)
-                throw new ArgumentException(Strings.InvalidChildModel, nameof(parent));
-
-            return parent[Model];
+            get
+            {
+                var parentRow = ParentDataRow;
+                return parentRow == null ? DataSet.FromModel(Model) : parentRow[Model];
+            }
         }
     }
 }

@@ -336,19 +336,17 @@ namespace DevZest.Data
             var dataSet = GetDataSet(count);
 
             var child = dataSet._.Child;
-            var grandChild = child.Child;
-            var childDataSet = dataSet[0][child];
-            var grandChildSet = childDataSet[0][grandChild];
+            int childUpdated = 0;
+            child.RowUpdated += (sender, e) => { childUpdated++; };
 
-            int childChanged = 0;
-            int grandChildChanged = 0;
-            childDataSet.RowChanged += (sender, e) => { childChanged++; };
-            grandChildSet.RowChanged += (sender, e) => { grandChildChanged++; };
+            var grandChild = child.Child;
+            int grandChildUpdated = 0;
+            grandChild.RowUpdated += (sender, e) => { grandChildUpdated++; };
 
             dataSet._.InheritedValue[0] = 5;
 
-            Assert.AreEqual(3, childChanged);
-            Assert.AreEqual(3, grandChildChanged);
+            Assert.AreEqual(3, childUpdated);
+            Assert.AreEqual(9, grandChildUpdated);
         }
 
         [TestMethod]
@@ -359,21 +357,22 @@ namespace DevZest.Data
 
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
 
+            int rowUpdated = 0;
+            dataSet._.RowUpdated += (sender, e) => { rowUpdated++; };
+
             var child = dataSet._.Child;
+            int childRowUpdated = 0;
+            child.RowUpdated += (sender, e) => { childRowUpdated++; };
+
             var grandChild = child.Child;
             var childDataSet = dataSet[0][child];
             var grandChildSet = childDataSet[0][grandChild];
 
-            int rowChanged = 0;
-            int childRowChanged = 0;
-            dataSet.RowChanged += (sender, e) => { rowChanged++; };
-            childDataSet.RowChanged += (sender, e) => { childRowChanged++; };
-
             grandChildSet.RemoveAt(0);
             Assert.AreEqual(2, child.ChildCount[0]);
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
-            Assert.AreEqual(1, childRowChanged);
-            Assert.AreEqual(1, rowChanged);
+            Assert.AreEqual(1, childRowUpdated);
+            Assert.AreEqual(1, rowUpdated);
         }
     }
 }
