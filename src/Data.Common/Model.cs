@@ -730,31 +730,16 @@ namespace DevZest.Data
             return DataSet<T>.New();
         }
 
-        public event EventHandler<DataRowEventArgs> RowAdded;
-
         protected internal virtual void OnRowAdded(DataRowEventArgs e)
         {
-            var rowAdded = RowAdded;
-            if (rowAdded != null)
-                rowAdded(this, e);
         }
-
-        public event EventHandler<DataRowEventArgs> RowUpdated;
 
         protected internal virtual void OnRowUpdated(DataRowEventArgs e)
         {
-            var rowUpdated = RowUpdated;
-            if (rowUpdated != null)
-                rowUpdated(this, e);
         }
-
-        public event EventHandler<DataRowRemovedEventArgs> RowRemoved;
 
         protected internal virtual void OnRowRemoved(DataRowRemovedEventArgs e)
         {
-            var rowRemoved = RowRemoved;
-            if (rowRemoved != null)
-                rowRemoved(this, e);
         }
     }
 }

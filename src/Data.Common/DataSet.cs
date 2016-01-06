@@ -238,5 +238,32 @@ namespace DevZest.Data
                 }
             }
         }
+
+        public event EventHandler<DataRowEventArgs> RowAdded;
+
+        internal void OnRowAdded(DataRowEventArgs e)
+        {
+            var rowAdded = RowAdded;
+            if (rowAdded != null)
+                rowAdded(this, e);
+        }
+
+        public event EventHandler<DataRowRemovedEventArgs> RowRemoved;
+
+        internal void OnRowRemoved(DataRowRemovedEventArgs e)
+        {
+            var rowRemoved = RowRemoved;
+            if (rowRemoved != null)
+                rowRemoved(this, e);
+        }
+
+        public event EventHandler<DataRowEventArgs> RowUpdated;
+
+        internal void OnRowUpdated(DataRowEventArgs e)
+        {
+            var rowUpdated = RowUpdated;
+            if (rowUpdated != null)
+                rowUpdated(this, e);
+        }
     }
 }

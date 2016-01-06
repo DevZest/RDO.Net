@@ -301,11 +301,18 @@ namespace DevZest.Data
                 DataSet.UpdateRevision();
             Model.DataSet.UpdateRevision();
             Model.OnRowUpdated(_eventArgs);
+            if (ParentDataRow != null)
+                DataSet.OnRowUpdated(_eventArgs);
+            Model.DataSet.OnRowUpdated(_eventArgs);
         }
 
         internal void OnAdded()
         {
             Model.OnRowAdded(_eventArgs);
+            if (ParentDataRow != null)
+                DataSet.OnRowAdded(_eventArgs);
+            Model.DataSet.OnRowAdded(_eventArgs);
+
             if (ParentDataRow != null)
                 ParentDataRow.BubbleUpdatedEvent(Model);
         }
@@ -315,6 +322,10 @@ namespace DevZest.Data
             Debug.Assert(e.DataRow == this);
 
             e.Model.OnRowRemoved(e);
+            if (e.ParentDataRow != null)
+                e.DataSet.OnRowRemoved(e);
+            e.Model.DataSet.OnRowRemoved(e);
+
             if (e.ParentDataRow != null)
                 e.ParentDataRow.BubbleUpdatedEvent(e.Model);
         }
