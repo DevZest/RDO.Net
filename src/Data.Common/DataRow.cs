@@ -2,6 +2,7 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
@@ -36,6 +37,15 @@ namespace DevZest.Data
 
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
         public DataRow ParentDataRow { get; private set; }
+
+        public DataSet DataSet
+        {
+            get
+            {
+                var parentRow = ParentDataRow;
+                return parentRow == null ? DataSet.FromModel(Model) : parentRow[Model];
+            }
+        }
 
         internal void InitializeBySubDataSet(DataRow parent, int index)
         {
@@ -129,7 +139,7 @@ namespace DevZest.Data
         public DataSet<T> Children<T>(T childModel)
             where T : Model, new()
         {
-            Utilities.Check.NotNull(childModel, nameof(childModel));
+            Check.NotNull(childModel, nameof(childModel));
             if (childModel.ParentModel != Model)
                 throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
 
@@ -176,18 +186,6 @@ namespace DevZest.Data
             stringBuilder.Append(name);
             stringBuilder.Append("\"");
             stringBuilder.Append(":");
-        }
-
-        public IEnumerable<ValidationMessage> Validate()
-        {
-            foreach (var validator in Model.Validators)
-            {
-                var isValid = validator.IsValidCondition.Eval(this);
-                if (isValid == true)
-                    continue;
-                var message = validator.Message.Eval(this);
-                yield return new ValidationMessage(validator.Id, validator.Level, validator.Columns, message);
-            }
         }
 
         public override string ToString()
@@ -297,9 +295,7 @@ namespace DevZest.Data
 
         internal void OnUpdated()
         {
-            if (ParentDataRow != null)
-                DataSet.UpdateRevision();
-            Model.DataSet.UpdateRevision();
+            _validationMessages = null;
             Model.OnRowUpdated(_eventArgs);
             if (ParentDataRow != null)
                 DataSet.OnRowUpdated(_eventArgs);
@@ -355,15 +351,68 @@ namespace DevZest.Data
                     return true;
             }
 
+            foreach (var validator in Model.Validators)
+            {
+                var condition = validator.IsValidCondition;
+                if (condition.AggregateModelSet.ContainsAny(modelSet))
+                    return true;
+            }
+
             return false;
         }
 
-        public DataSet DataSet
+        private class ValidationMessageCollection : ReadOnlyCollection<ValidationMessage>
+        {
+            public ValidationMessageCollection()
+                : base(new List<ValidationMessage>())
+            {
+            }
+
+            public void Add(ValidationMessage item)
+            {
+                Items.Add(item);
+            }
+        }
+
+        private ValidationMessageCollection s_emptyValidationMessages = new ValidationMessageCollection();
+        private ValidationMessageCollection _validationMessages;
+
+        public ReadOnlyCollection<ValidationMessage> ValidationMessages
         {
             get
             {
-                var parentRow = ParentDataRow;
-                return parentRow == null ? DataSet.FromModel(Model) : parentRow[Model];
+                if (_validationMessages != null)
+                    return _validationMessages;
+
+                _validationMessages = s_emptyValidationMessages;
+                foreach (var validator in Model.Validators)
+                {
+                    var isValid = validator.IsValidCondition.Eval(this);
+                    if (isValid == true)
+                        continue;
+
+                    if (_validationMessages == s_emptyValidationMessages)
+                        _validationMessages = new ValidationMessageCollection();
+                    var message = validator.Message.Eval(this);
+                    _validationMessages.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
+                }
+
+                return _validationMessages;
+            }
+        }
+
+        internal void Merge(ValidationResult result)
+        {
+            _validationMessages = s_emptyValidationMessages;
+            for (int i = 0; i < result.Count; i++)
+            {
+                var entry = result[i];
+                if (entry.DataRow != this)
+                    continue;
+
+                if (_validationMessages == s_emptyValidationMessages)
+                    _validationMessages = new ValidationMessageCollection();
+                _validationMessages.Add(entry.Message);
             }
         }
     }
