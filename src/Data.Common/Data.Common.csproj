@@ -67,8 +67,6 @@
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="DataRowEventArgs.cs" />
     <Compile Include="DataRowRemovedEventArgs.cs" />
-    <Compile Include="DataSetChangedAction.cs" />
-    <Compile Include="DataSetChangedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
