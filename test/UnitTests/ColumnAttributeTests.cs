@@ -1,6 +1,4 @@
-﻿
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Samples.AdventureWorksLT;
 using DevZest.Data.SqlServer;
 

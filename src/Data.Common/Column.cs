@@ -188,7 +188,18 @@ namespace DevZest.Data
 
         internal abstract void InitValueManager();
 
-        internal abstract bool ShouldSerialize { get; }
+        private bool _ignoreColumn = false;
+        internal void IgnoreColumn()
+        {
+            _ignoreColumn = true;
+        }
+
+        internal bool ShouldSerialize
+        {
+            get { return _ignoreColumn ? false : ShouldSerializeOverride; }
+        }
+
+        internal abstract bool ShouldSerializeOverride { get; }
 
         /// <summary>Serializes the value at given <see cref="DataRow"/> oridinal as JSON.</summary>
         /// <param name="rowOrdinal">The <see cref="DataRow"/> ordinal.</param>

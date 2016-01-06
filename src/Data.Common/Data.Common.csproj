@@ -71,6 +71,7 @@
     <Compile Include="DataSetChangedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
+    <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
