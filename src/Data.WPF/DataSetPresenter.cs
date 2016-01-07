@@ -27,6 +27,7 @@ namespace DevZest.Data.Windows
                     DefaultBuilder(presenterBuilder, model);
             }
 
+            result.Initialize();
             return result;
         }
 
@@ -57,8 +58,11 @@ namespace DevZest.Data.Windows
             DataSet = dataSet;
             Template = new GridTemplate(this);
             IsVirtualizing = true;
+        }
 
-            _rows = new DataRowPresenterCollection(this);
+        private void Initialize()
+        {
+            _rows = new RowCollection(this);
             LayoutManager = LayoutManager.Create(this);
 
             DataSet.RowUpdated += OnRowUpdated;
@@ -66,7 +70,7 @@ namespace DevZest.Data.Windows
 
         internal DataSetView View { get; set; }
 
-        internal void OnRowsChanged(int index, CollectionChangedAction action)
+        private void OnRowsChanged(int index, RowCollectionChangeAction action)
         {
         }
 
@@ -88,7 +92,7 @@ namespace DevZest.Data.Windows
 
         #region IReadOnlyList<DataRowPresenter>
 
-        DataRowPresenterCollection _rows;
+        RowCollection _rows;
 
         public IEnumerator<DataRowPresenter> GetEnumerator()
         {
