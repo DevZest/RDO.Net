@@ -39,12 +39,12 @@ namespace DevZest.Data.Windows
             ChildPresenterConstructor = childPresenterConstructor;
         }
 
-        internal int ChildOrdinal { get; private set; }
+        internal int Index { get; private set; }
 
-        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal, int childOrdinal)
+        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal, int index)
         {
             base.Seal(owner, gridRange, ordinal);
-            ChildOrdinal = childOrdinal;
+            Index = index;
         }
 
         internal Func<DataRowPresenter, DataSetPresenter> ChildPresenterConstructor { get; private set; }
@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows
             base.Initialize(element);
             var dataSetView = (DataSetView)element;
             var parentDataRowPresenter = dataSetView.GetDataRowPresenter();
-            dataSetView.Show(parentDataRowPresenter.Children[ChildOrdinal]);
+            dataSetView.Show(parentDataRowPresenter.Children[Index]);
         }
 
         internal sealed override void Cleanup(UIElement element)

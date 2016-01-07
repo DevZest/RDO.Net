@@ -192,11 +192,15 @@ namespace DevZest.Data.Windows
             return orentation != GridOrientation.XY;
         }
 
+        internal int NumberOfScallarEntriesBeforeRow { get; private set; }
+
         internal void AddScalarEntry(GridRange gridRange, ScalarEntry scalarEntry)
         {
             VerifyAddEntry(gridRange, scalarEntry, nameof(scalarEntry), true);
             scalarEntry.Seal(this, gridRange, _scalarEntries.Count);
             _scalarEntries.Add(gridRange, scalarEntry);
+            if (_rowEntries.Count == 0)
+                NumberOfScallarEntriesBeforeRow = _scalarEntries.Count;
         }
 
         internal void AddRowEntry(GridRange gridRange, RowEntry rowEntry)
