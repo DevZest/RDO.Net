@@ -208,12 +208,5 @@ namespace DevZest.Data.Windows
         {
             get { return Template.Orientation; }
         }
-
-        //protected abstract int RepeatXCount { get; }
-
-        //protected abstract int RepeatYCount { get; }
-
-        //protected abstract Orientation MainOrientation { get; }
-
     }
 }

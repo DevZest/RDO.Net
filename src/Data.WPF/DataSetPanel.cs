@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -165,6 +162,11 @@ namespace DevZest.Data.Windows
         private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((DataSetPanel)d).OnPresenterChanged((DataSetPresenter)e.OldValue);
+        }
+
+        static DataSetPanel()
+        {
+            ClipToBoundsProperty.OverrideMetadata(typeof(DataSetPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
         public DataSetPanel()
