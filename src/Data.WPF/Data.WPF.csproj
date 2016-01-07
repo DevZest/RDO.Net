@@ -62,7 +62,7 @@
     <Compile Include="LayoutManager.LayoutY.cs" />
     <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
-    <Compile Include="ListEntry.cs" />
+    <Compile Include="RowEntry.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />

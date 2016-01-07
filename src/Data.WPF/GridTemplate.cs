@@ -84,10 +84,10 @@ namespace DevZest.Data.Windows
             get { return _scalarEntries; }
         }
 
-        private GridEntryCollection<ListEntry> _listEntries = new GridEntryCollection<ListEntry>();
-        public ReadOnlyCollection<ListEntry> ListEntries
+        private GridEntryCollection<RowEntry> _rowEntries = new GridEntryCollection<RowEntry>();
+        public ReadOnlyCollection<RowEntry> RowEntries
         {
-            get { return _listEntries; }
+            get { return _rowEntries; }
         }
 
         private GridEntryCollection<ChildEntry> _childEntries = new GridEntryCollection<ChildEntry>();
@@ -111,7 +111,7 @@ namespace DevZest.Data.Windows
 
         private GridRange AutoRepeatRange
         {
-            get { return _listEntries.Range.Union(_childEntries.Range); }
+            get { return _rowEntries.Range.Union(_childEntries.Range); }
         }
 
         internal int AddGridColumn(string width)
@@ -199,18 +199,18 @@ namespace DevZest.Data.Windows
             _scalarEntries.Add(gridRange, scalarEntry);
         }
 
-        internal void AddListEntry(GridRange gridRange, ListEntry listEntry)
+        internal void AddRowEntry(GridRange gridRange, RowEntry rowEntry)
         {
-            VerifyAddEntry(gridRange, listEntry, nameof(listEntry), true);
-            listEntry.Seal(this, gridRange, _listEntries.Count);
-            _listEntries.Add(gridRange, listEntry);
+            VerifyAddEntry(gridRange, rowEntry, nameof(rowEntry), true);
+            rowEntry.Seal(this, gridRange, _rowEntries.Count);
+            _rowEntries.Add(gridRange, rowEntry);
         }
 
         internal void AddChildEntry(GridRange gridRange, ChildEntry childEntry)
         {
             VerifyAddEntry(gridRange, childEntry, nameof(childEntry), false);
-            childEntry.Seal(this, gridRange, _listEntries.Count, _childEntries.Count);
-            _listEntries.Add(gridRange, childEntry);
+            childEntry.Seal(this, gridRange, _rowEntries.Count, _childEntries.Count);
+            _rowEntries.Add(gridRange, childEntry);
             _childEntries.Add(gridRange, childEntry);
         }
 

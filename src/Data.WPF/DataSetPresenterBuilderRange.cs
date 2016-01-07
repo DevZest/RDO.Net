@@ -39,16 +39,16 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public ListEntry.Builder<T> BeginListEntry<T>()
+        public RowEntry.Builder<T> BeginRowEntry<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ListEntry.Builder<T>(this);
+            return new RowEntry.Builder<T>(this);
         }
 
-        internal DataSetPresenterBuilder ListEntry(ListEntry listEntry)
+        internal DataSetPresenterBuilder RowEntry(RowEntry rowEntry)
         {
-            Template.AddListEntry(GridRange, listEntry);
+            Template.AddRowEntry(GridRange, rowEntry);
             return PresenterBuilder;
         }
 

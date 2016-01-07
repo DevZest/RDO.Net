@@ -89,12 +89,12 @@ namespace DevZest.Data.Windows
             Debug.Assert(_uiElements != null && index >= 0 && index < _uiElements.Length);
             var template = Template;
             Debug.Assert(template != null);
-            var listEntrys = template.ListEntries;
-            var listEntriesCount = listEntrys.Count;
-            if (index < listEntriesCount)
-                return listEntrys[index];
+            var rowEntrys = template.RowEntries;
+            var rowEntriesCount = rowEntrys.Count;
+            if (index < rowEntriesCount)
+                return rowEntrys[index];
             else
-                return template.ChildEntries[index - listEntriesCount];
+                return template.ChildEntries[index - rowEntriesCount];
         }
 
         private int UIElementsCount
@@ -102,7 +102,7 @@ namespace DevZest.Data.Windows
             get
             {
                 var template = Template;
-                return template.ListEntries.Count + template.ChildEntries.Count;
+                return template.RowEntries.Count + template.ChildEntries.Count;
             }
         }
 

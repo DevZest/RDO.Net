@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildEntry : ListEntry
+    public sealed class ChildEntry : RowEntry
     {
         public sealed new class Builder<T> : GridEntry.Builder<T, ChildEntry, Builder<T>>
             where T : DataSetView, new()

@@ -6,7 +6,7 @@ namespace DevZest.Data.Windows.Factories
     {
         public static DataSetPresenterBuilder ColumnHeader(this DataSetPresenterBuilderRange builderRange, Column column, Action<ColumnHeader> initializer = null)
         {
-            return builderRange.BeginListEntry<ColumnHeader>()
+            return builderRange.BeginRowEntry<ColumnHeader>()
                 .Initialize(initializer)
                 .End();
         }

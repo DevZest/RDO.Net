@@ -5,24 +5,24 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public class ListEntry : GridEntry
+    public class RowEntry : GridEntry
     {
-        internal static ListEntry Create<T>()
+        internal static RowEntry Create<T>()
             where T : UIElement, new()
         {
-            return new ListEntry(() => new T());
+            return new RowEntry(() => new T());
         }
 
-        internal ListEntry(Func<UIElement> constructor)
+        internal RowEntry(Func<UIElement> constructor)
             : base(constructor)
         {
         }
 
-        public sealed class Builder<T> : GridEntry.Builder<T, ListEntry, Builder<T>>
+        public sealed class Builder<T> : GridEntry.Builder<T, RowEntry, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(DataSetPresenterBuilderRange builderRange)
-                : base(builderRange, ListEntry.Create<T>())
+                : base(builderRange, RowEntry.Create<T>())
             {
             }
 
@@ -31,9 +31,9 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ListEntry entry)
+            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, RowEntry entry)
             {
-                return builderRange.ListEntry(entry);
+                return builderRange.RowEntry(entry);
             }
         }
     }
