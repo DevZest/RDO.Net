@@ -95,12 +95,12 @@ namespace DevZest.Data.Windows
             Debug.Assert(_virtualRow != value);
 
             if (_virtualRow != null && notifyChange)
-                Owner.OnCollectionChanged(DataSet.Count, DataSetChangedAction.Remove);
+                Owner.OnRowsChanged(DataSet.Count, true);
 
             _virtualRow = value;
 
             if (_virtualRow != null && notifyChange)
-                Owner.OnCollectionChanged(DataSet.Count, DataSetChangedAction.Add);
+                Owner.OnRowsChanged(DataSet.Count, false);
         }
 
         private void CoerceEmptySet(bool notifyChange)
@@ -122,19 +122,19 @@ namespace DevZest.Data.Windows
             var dataRow = e.DataRow;
             var dataRowPresenter = new DataRowPresenter(Owner, dataRow);
             _rows.Insert(dataRow.Index, dataRowPresenter);
-            OnCollectionChanged(dataRow.Index, DataSetChangedAction.Add);
+            OnRowsChanged(dataRow.Index, false);
         }
 
         private void OnRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
             _rows[e.Index].Dispose();
             _rows.RemoveAt(e.Ordinal);
-            OnCollectionChanged(e.Index, DataSetChangedAction.Remove);
+            OnRowsChanged(e.Index, true);
         }
 
-        private void OnCollectionChanged(int index, DataSetChangedAction action)
+        private void OnRowsChanged(int index, bool isRemove)
         {
-            Owner.OnCollectionChanged(index, action);
+            Owner.OnRowsChanged(index, isRemove);
             CoerceEmptySet(true);
             CoerceSelection();
         }

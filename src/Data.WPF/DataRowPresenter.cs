@@ -126,7 +126,6 @@ namespace DevZest.Data.Windows
                 _uiElements[i] = gridEntry.Generate();
                 Debug.Assert(_uiElements[i] != null);
             }
-
         }
 
         private void EnsureUIElementsRecycled()
@@ -143,8 +142,6 @@ namespace DevZest.Data.Windows
             }
             _uiElements = null;
         }
-
-
 
         public T GetValue<T>(Column<T> column)
         {
