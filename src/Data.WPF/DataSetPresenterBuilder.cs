@@ -121,19 +121,19 @@ namespace DevZest.Data.Windows
 
         public DataSetPresenterBuilder WithIsVirtualizing(bool value)
         {
-            Presenter.IsVirtualizing = value;
+            Presenter.InitIsVirtualizing(value);
             return this;
         }
 
         public DataSetPresenterBuilder WithEofVisible(bool value)
         {
-            Presenter.IsEofVisible = value;
+            Presenter.InitIsEofVisible(value);
             return this;
         }
 
         public DataSetPresenterBuilder WithEmptySetVisible(bool value)
         {
-            Presenter.IsEmptySetVisible = value;
+            Presenter.InitIsEmptySetVisible(value);
             return this;
         }
     }

@@ -54,9 +54,9 @@ namespace DevZest.Data.Windows
             Debug.Assert(dataSet != null);
             Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == owner.DataRow);
 
-            Owner = owner;
-            DataSet = dataSet;
-            Template = new GridTemplate(this);
+            _owner = owner;
+            _dataSet = dataSet;
+            _template = new GridTemplate(this);
             IsVirtualizing = true;
         }
 
@@ -68,11 +68,27 @@ namespace DevZest.Data.Windows
             DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
-        public bool IsVirtualizing { get; internal set; }
+        public bool IsVirtualizing { get; private set; }
 
-        public bool IsEofVisible { get; internal set; }
+        internal void InitIsVirtualizing(bool value)
+        {
+            IsVirtualizing = value;
+        }
 
-        public bool IsEmptySetVisible { get; internal set; }
+
+        public bool IsEofVisible { get; private set; }
+
+        internal void InitIsEofVisible(bool value)
+        {
+            IsEofVisible = value;
+        }
+
+        public bool IsEmptySetVisible { get; private set; }
+
+        internal void InitIsEmptySetVisible(bool value)
+        {
+            IsEmptySetVisible = value;
+        }
 
         internal DataSetView View { get; set; }
 
@@ -88,11 +104,23 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public DataRowPresenter Owner { get; private set; }
+        private readonly DataRowPresenter _owner;
+        public DataRowPresenter Owner
+        {
+            get { return _owner; }
+        }
 
-        public GridTemplate Template { get; private set; }
+        private readonly DataSet _dataSet;
+        public DataSet DataSet
+        {
+            get { return _dataSet; }
+        }
 
-        public DataSet DataSet { get; private set; }
+        private readonly GridTemplate _template;
+        public GridTemplate Template
+        {
+            get { return _template; }
+        }
 
         public Model Model
         {
