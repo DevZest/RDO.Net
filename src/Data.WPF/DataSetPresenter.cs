@@ -68,6 +68,12 @@ namespace DevZest.Data.Windows
             DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
+        public bool IsVirtualizing { get; internal set; }
+
+        public bool IsEofVisible { get; internal set; }
+
+        public bool IsEmptySetVisible { get; internal set; }
+
         internal DataSetView View { get; set; }
 
         private void OnRowAdded(int index)
@@ -148,11 +154,5 @@ namespace DevZest.Data.Windows
         }
 
         internal LayoutManager LayoutManager { get; private set; }
-
-        public bool IsVirtualizing { get; internal set; }
-
-        public bool IsEofVisible { get; internal set; }
-
-        public bool IsEmptySetVisible { get; internal set; }
     }
 }
