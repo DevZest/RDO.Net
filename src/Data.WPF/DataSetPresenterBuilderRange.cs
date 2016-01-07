@@ -97,18 +97,11 @@ namespace DevZest.Data.Windows
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder Repeat()
+        public DataSetPresenterBuilder AsRowRange()
         {
             VerifyNotEmpty();
 
-            Template.RepeatRange = GridRange;
-            return PresenterBuilder;
-        }
-
-        public DataSetPresenterBuilder Repeat(GridOrientation value)
-        {
-            Repeat();
-            Template.Orientation = value;
+            Template.RowRange = GridRange;
             return PresenterBuilder;
         }
     }

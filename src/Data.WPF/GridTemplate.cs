@@ -96,20 +96,20 @@ namespace DevZest.Data.Windows
             get { return _childEntries; }
         }
 
-        private GridRange? _repeatRange;
-        public GridRange RepeatRange
+        private GridRange? _rowRange;
+        public GridRange RowRange
         {
-            get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
+            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : AutoRowRange; }
             internal set
             {
-                if (!value.Contains(AutoRepeatRange))
+                if (!value.Contains(AutoRowRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                _repeatRange = value;
+                _rowRange = value;
             }
         }
 
-        private GridRange AutoRepeatRange
+        private GridRange AutoRowRange
         {
             get { return _rowEntries.Range.Union(_childEntries.Range); }
         }
@@ -218,7 +218,7 @@ namespace DevZest.Data.Windows
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
+            if (!isScalar && _rowRange.HasValue && !_rowRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
         }
 
