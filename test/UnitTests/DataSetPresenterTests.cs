@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
 
             dataSet.AddRow();
             Assert.AreEqual(1, dataSetPresenter.Count);
-            Assert.AreEqual(DataViewRowType.DataRow, dataSetPresenter[0].RowType);
+            Assert.AreEqual(RowType.DataRow, dataSetPresenter[0].RowType);
             Assert.AreEqual(0, dataSetPresenter.Current);
             Assert.AreEqual(1, dataSetPresenter.Selection.Count);
         }
@@ -32,14 +32,14 @@ namespace DevZest.Data.Windows
             var dataSetPresenter = DataSetPresenter.Create(dataSet, (c, m) => c.WithEofVisible(true));
 
             Assert.AreEqual(1, dataSetPresenter.Count);
-            Assert.AreEqual(DataViewRowType.Eof, dataSetPresenter[0].RowType);
+            Assert.AreEqual(RowType.Eof, dataSetPresenter[0].RowType);
             Assert.AreEqual(0, dataSetPresenter.Current);
             Assert.AreEqual(0, dataSetPresenter.Selection.Count);
 
             dataSet.AddRow();
             Assert.AreEqual(2, dataSetPresenter.Count);
-            Assert.AreEqual(DataViewRowType.DataRow, dataSetPresenter[0].RowType);
-            Assert.AreEqual(DataViewRowType.Eof, dataSetPresenter[1].RowType);
+            Assert.AreEqual(RowType.DataRow, dataSetPresenter[0].RowType);
+            Assert.AreEqual(RowType.Eof, dataSetPresenter[1].RowType);
             Assert.AreEqual(0, dataSetPresenter.Current);
             Assert.AreEqual(1, dataSetPresenter.Selection.Count);
         }
@@ -52,13 +52,13 @@ namespace DevZest.Data.Windows
             var dataSetPresenter = DataSetPresenter.Create(dataSet, (c, m) => c.WithEofVisible(false).WithEmptySetVisible(true));
 
             Assert.AreEqual(1, dataSetPresenter.Count);
-            Assert.AreEqual(DataViewRowType.EmptySet, dataSetPresenter[0].RowType);
+            Assert.AreEqual(RowType.EmptySet, dataSetPresenter[0].RowType);
             Assert.AreEqual(0, dataSetPresenter.Current);
             Assert.AreEqual(0, dataSetPresenter.Selection.Count);
 
             dataSet.AddRow();
             Assert.AreEqual(1, dataSetPresenter.Count);
-            Assert.AreEqual(DataViewRowType.DataRow, dataSetPresenter[0].RowType);
+            Assert.AreEqual(RowType.DataRow, dataSetPresenter[0].RowType);
             Assert.AreEqual(0, dataSetPresenter.Current);
             Assert.AreEqual(1, dataSetPresenter.Selection.Count);
         }

@@ -18,12 +18,12 @@ namespace DevZest.Data.Windows
 
                 _rows = new List<DataRowPresenter>(DataSet.Count);
                 foreach (var dataRow in DataSet)
-                    _rows.Add(new DataRowPresenter(_owner, dataRow));
+                    _rows.Add(DataRowPresenter.Create(_owner, dataRow));
 
                 if (_owner.IsEofVisible)
-                    _virtualRow = new DataRowPresenter(_owner, DataViewRowType.Eof);
+                    _virtualRow = DataRowPresenter.CreateEof(_owner);
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
-                    _virtualRow = new DataRowPresenter(_owner, DataViewRowType.EmptySet);
+                    _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
 
                 CoerceSelection();
                 DataSet.RowAdded += OnDataRowAdded;
@@ -93,7 +93,7 @@ namespace DevZest.Data.Windows
             {
                 var index = dataRow.Index;
 
-                if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.EmptySet)
+                if (_virtualRow != null && _virtualRow.RowType == RowType.EmptySet)
                 {
                     var row = _virtualRow;
                     _virtualRow = null;
@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows
                 }
 
                 {
-                    var row = new DataRowPresenter(_owner, dataRow);
+                    var row = DataRowPresenter.Create(_owner, dataRow);
                     _rows.Insert(index, row);
                     NotifyRowAdded(index);
                 }
@@ -134,7 +134,7 @@ namespace DevZest.Data.Windows
                 if (_rows.Count == 0 && _owner.IsEmptySetVisible)
                 {
                     Debug.Assert(_virtualRow == null);
-                    _virtualRow = new DataRowPresenter(_owner, DataViewRowType.EmptySet);
+                    _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
             }
@@ -169,7 +169,7 @@ namespace DevZest.Data.Windows
             public bool IsSelected(DataRowPresenter row)
             {
                 Debug.Assert(row.Owner == _owner);
-                return row.RowType != DataViewRowType.DataRow ? false : _selection.IsSelected(IndexOf(row));
+                return row.RowType != RowType.DataRow ? false : _selection.IsSelected(IndexOf(row));
             }
 
             public void Select(int index, SelectionMode selectionMode)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -8,17 +7,32 @@ namespace DevZest.Data.Windows
 {
     public sealed class DataRowPresenter
     {
-        internal DataRowPresenter(DataSetPresenter owner, DataRow dataRow)
-            : this(owner, dataRow, DataViewRowType.DataRow)
+        internal static DataRowPresenter Create(DataSetPresenter owner, DataRow dataRow)
+        {
+            return new DataRowPresenter(owner, dataRow);
+        }
+
+        internal static DataRowPresenter CreateEof(DataSetPresenter owner)
+        {
+            return new DataRowPresenter(owner, RowType.Eof);
+        }
+
+        internal static DataRowPresenter CreateEmptySet(DataSetPresenter owner)
+        {
+            return new DataRowPresenter(owner, RowType.EmptySet);
+        }
+
+        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow)
+            : this(owner, dataRow, RowType.DataRow)
         {
         }
 
-        internal DataRowPresenter(DataSetPresenter owner, DataViewRowType rowType)
+        private DataRowPresenter(DataSetPresenter owner, RowType rowType)
             : this(owner, null, rowType)
         {            
         }
 
-        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow, DataViewRowType rowType)
+        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow, RowType rowType)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
@@ -53,7 +67,7 @@ namespace DevZest.Data.Windows
         public IReadOnlyList<DataSetPresenter> Children { get; private set; }
         private IReadOnlyList<DataSetPresenter> InitChildDataSetPresenters()
         {
-            if (RowType != DataViewRowType.DataRow)
+            if (RowType != RowType.DataRow)
                 return s_emptyChildren;
 
             var childEntries = Template.ChildEntries;
@@ -77,7 +91,7 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? false : Owner.IsSelected(this); }
         }
 
-        public DataViewRowType RowType { get; private set; }
+        public RowType RowType { get; private set; }
 
         public bool IsFocused { get; internal set; }
 

@@ -47,7 +47,7 @@
     <Compile Include="Binding.cs" />
     <Compile Include="DataSetPresenter.RowCollection.cs" />
     <Compile Include="DataSetPresenterBuilder.cs" />
-    <Compile Include="DataViewRowType.cs" />
+    <Compile Include="RowType.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataSetViewFactory.cs" />
