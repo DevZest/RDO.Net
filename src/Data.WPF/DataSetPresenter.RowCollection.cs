@@ -18,10 +18,7 @@ namespace DevZest.Data.Windows
 
                 _rows = new List<DataRowPresenter>(DataSet.Count);
                 foreach (var dataRow in DataSet)
-                {
-                    var dataRowPresenter = new DataRowPresenter(_owner, dataRow);
-                    _rows.Add(dataRowPresenter);
-                }
+                    _rows.Add(new DataRowPresenter(_owner, dataRow));
 
                 if (_owner.IsEofVisible)
                     _virtualRow = new DataRowPresenter(_owner, DataViewRowType.Eof);
@@ -85,11 +82,6 @@ namespace DevZest.Data.Windows
             private DataSet DataSet
             {
                 get { return _owner.DataSet; }
-            }
-
-            private GridTemplate Template
-            {
-                get { return _owner.Template; }
             }
 
             private void OnDataRowAdded(object sender, DataRowEventArgs e)
@@ -159,12 +151,7 @@ namespace DevZest.Data.Windows
                 get { return _selection.Current; }
             }
 
-            internal bool IsCurrent(int index)
-            {
-                return index != -1 && Current == index;
-            }
-
-            internal IReadOnlyList<int> Selection
+            public IReadOnlyList<int> Selection
             {
                 get
                 {
@@ -179,13 +166,13 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            internal bool IsSelected(DataRowPresenter row)
+            public bool IsSelected(DataRowPresenter row)
             {
                 Debug.Assert(row.Owner == _owner);
                 return row.RowType != DataViewRowType.DataRow ? false : _selection.IsSelected(IndexOf(row));
             }
 
-            internal void Select(int index, SelectionMode selectionMode)
+            public void Select(int index, SelectionMode selectionMode)
             {
                 Debug.Assert(index >= 0 || index < Count);
                 _selection = _selection.Select(index, selectionMode);
