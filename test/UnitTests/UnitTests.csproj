@@ -67,7 +67,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DataSetPresenterTests_RowCollection.cs" />
+    <Compile Include="DataSetPresenterTests.cs" />
     <Compile Include="DataSetPanelTests.cs" />
     <Compile Include="GridEntryTests.cs" />
     <Compile Include="SelectionTests.cs" />

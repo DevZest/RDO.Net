@@ -4,10 +4,10 @@ using System;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataSetPresenterTests_RowCollection
+    public class DataSetPresenterTests
     {
         [TestMethod]
-        public void DataSetPresenter_RowCollection_data_row_only()
+        public void DataSetPresenter_RowType_DataRow()
         {
             var dataSet = DataSet<Adhoc>.New();
 
@@ -25,7 +25,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetPresenter_RowCollection_eof()
+        public void DataSetPresenter_RowType_Eof()
         {
             var dataSet = DataSet<Adhoc>.New();
 
@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetPresenter_RowCollection_empty_data_row()
+        public void DataSetPresenter_RowType_EmptySet()
         {
             var dataSet = DataSet<Adhoc>.New();
 
