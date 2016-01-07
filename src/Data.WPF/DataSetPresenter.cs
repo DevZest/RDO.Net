@@ -66,7 +66,7 @@ namespace DevZest.Data.Windows
 
         internal DataSetView View { get; set; }
 
-        internal void OnRowsChanged(int index, bool isRemove)
+        internal void OnRowsChanged(int index, CollectionChangedAction action)
         {
         }
 
