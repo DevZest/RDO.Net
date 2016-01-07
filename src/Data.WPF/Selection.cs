@@ -86,7 +86,7 @@ namespace DevZest.Data.Windows
 
             protected override Selection CoerceOverride(int totalCount)
             {
-                return SelectSingle(0);
+                return totalCount == 0 ? this : SelectSingle(0);
             }
 
             public override bool IsSelected(int index)

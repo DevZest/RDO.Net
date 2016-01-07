@@ -37,11 +37,6 @@ namespace DevZest.Data.Windows
 
         internal DataSetPresenter Presenter { get; private set; }
 
-        internal DataSetView View
-        {
-            get { return Presenter == null ? null : Presenter.View; }
-        }
-
         internal GridTemplate Template
         {
             get { return Presenter.Template; }

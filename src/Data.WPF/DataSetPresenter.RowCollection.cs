@@ -25,12 +25,12 @@ namespace DevZest.Data.Windows
 
                 if (_owner.IsEofVisible)
                     _virtualRow = new DataRowPresenter(_owner, DataViewRowType.Eof);
-                else
-                    CoerceEmptySet(false);
+                else if (_owner.IsEmptySetVisible && _rows.Count == 0)
+                    _virtualRow = new DataRowPresenter(_owner, DataViewRowType.EmptySet);
 
                 CoerceSelection();
-                DataSet.RowAdded += OnRowAdded;
-                DataSet.RowRemoved += OnRowRemoved;
+                DataSet.RowAdded += OnDataRowAdded;
+                DataSet.RowRemoved += OnDataRowRemoved;
             }
 
             #region IReadOnlyList<DataRowPresenter>
@@ -92,53 +92,59 @@ namespace DevZest.Data.Windows
                 get { return _owner.Template; }
             }
 
-            private void SetVirtualRow(DataRowPresenter value, bool notifyChange)
+            private void OnDataRowAdded(object sender, DataRowEventArgs e)
             {
-                Debug.Assert(_virtualRow != value);
-
-                if (_virtualRow != null && notifyChange)
-                    _owner.OnRowsChanged(DataSet.Count, RowCollectionChangeAction.Remove);
-
-                _virtualRow = value;
-
-                if (_virtualRow != null && notifyChange)
-                    _owner.OnRowsChanged(DataSet.Count, RowCollectionChangeAction.Add);
+                OnDataRowAdded(e.DataRow);
             }
 
-            private void CoerceEmptySet(bool notifyChange)
+            private void OnDataRowAdded(DataRow dataRow)
             {
-                if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.Eof)
-                    return;
+                var index = dataRow.Index;
 
-                if (_rows.Count == 0)
+                if (_virtualRow != null && _virtualRow.RowType == DataViewRowType.EmptySet)
                 {
-                    if (_owner.IsEmptySetVisible && _virtualRow == null)
-                        SetVirtualRow(new DataRowPresenter(_owner, DataViewRowType.EmptySet), notifyChange);
+                    var row = _virtualRow;
+                    _virtualRow = null;
+                    NotifyRowRemoved(0, row);
                 }
-                else if (_virtualRow != null)
-                    SetVirtualRow(null, notifyChange);
+
+                {
+                    var row = new DataRowPresenter(_owner, dataRow);
+                    _rows.Insert(index, row);
+                    NotifyRowAdded(index);
+                }
             }
 
-            private void OnRowAdded(object sender, DataRowEventArgs e)
+            void NotifyRowAdded(int index)
             {
-                var dataRow = e.DataRow;
-                var dataRowPresenter = new DataRowPresenter(_owner, dataRow);
-                _rows.Insert(dataRow.Index, dataRowPresenter);
-                OnRowsChanged(dataRow.Index, RowCollectionChangeAction.Add);
-            }
-
-            private void OnRowRemoved(object sender, DataRowRemovedEventArgs e)
-            {
-                _rows[e.Index].Dispose();
-                _rows.RemoveAt(e.Ordinal);
-                OnRowsChanged(e.Index, RowCollectionChangeAction.Remove);
-            }
-
-            private void OnRowsChanged(int index, RowCollectionChangeAction action)
-            {
-                CoerceEmptySet(true);
                 CoerceSelection();
-                _owner.OnRowsChanged(index, action);
+                _owner.OnRowAdded(index);
+            }
+
+            void NotifyRowRemoved(int index, DataRowPresenter row)
+            {
+                CoerceSelection();
+                _owner.OnRowRemoved(index, row);
+            }
+
+            private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
+            {
+                OnDataRowRemoved(e.Index);
+            }
+
+            private void OnDataRowRemoved(int index)
+            {
+                var row = _rows[index];
+                _rows[index].Dispose();
+                _rows.RemoveAt(index);
+                NotifyRowRemoved(index, row);
+
+                if (_rows.Count == 0 && _owner.IsEmptySetVisible)
+                {
+                    Debug.Assert(_virtualRow == null);
+                    _virtualRow = new DataRowPresenter(_owner, DataViewRowType.EmptySet);
+                    NotifyRowAdded(0);
+                }
             }
 
             private Selection _selection = Windows.Selection.Empty;

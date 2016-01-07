@@ -65,18 +65,21 @@ namespace DevZest.Data.Windows
             _rows = new RowCollection(this);
             LayoutManager = LayoutManager.Create(this);
 
-            DataSet.RowUpdated += OnRowUpdated;
+            DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
         internal DataSetView View { get; set; }
 
-        private void OnRowsChanged(int index, RowCollectionChangeAction action)
+        private void OnRowAdded(int index)
         {
         }
 
-        private void OnRowUpdated(object sender, DataRowEventArgs e)
+        private void OnRowRemoved(int index, DataRowPresenter row)
         {
-            throw new NotImplementedException();
+        }
+
+        private void OnRowUpdated(int index)
+        {
         }
 
         public DataRowPresenter Owner { get; private set; }
