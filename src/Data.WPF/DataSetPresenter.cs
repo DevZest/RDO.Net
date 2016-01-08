@@ -6,6 +6,7 @@ using System;
 using System.Windows.Controls;
 using System.Linq;
 using DevZest.Data.Windows.Factories;
+using System.Collections.Specialized;
 
 namespace DevZest.Data.Windows
 {
@@ -85,6 +86,42 @@ namespace DevZest.Data.Windows
             IsEofVisible = value;
         }
 
+        internal bool IsUpdatingTarget { get; private set; }
+
+        internal void EnterUpdatingTarget()
+        {
+            Debug.Assert(!IsUpdatingTarget);
+            IsUpdatingTarget = true;
+        }
+
+        internal void ExitUpdatingTarget()
+        {
+            Debug.Assert(IsUpdatingTarget);
+            IsUpdatingTarget = false;
+        }
+
+        int _shouldFireRowUpdatedEventFlags;
+
+        private static int GetMask(RowProperty rowProperty)
+        {
+            return 1 << (int)rowProperty;
+        }
+
+        internal bool ShouldFireRowUpdatedEvent(RowProperty rowProperty)
+        {
+            int mask = GetMask(rowProperty);
+            return (_shouldFireRowUpdatedEventFlags & mask) != 0;
+        }
+
+        internal void OnGetRowProperty(RowProperty rowProperty)
+        {
+            if (IsUpdatingTarget)
+            {
+                int mask = GetMask(rowProperty);
+                _shouldFireRowUpdatedEventFlags |= mask;
+            }
+        }
+
         public bool IsEmptySetVisible { get; private set; }
 
         internal void InitIsEmptySetVisible(bool value)
@@ -96,12 +133,24 @@ namespace DevZest.Data.Windows
         {
             if (CurrentRow == null)
                 CurrentRow = this[0];
+
+            if (ShouldFireRowUpdatedEvent(RowProperty.Index))
+            {
+                for (int i = index + 1; i < Count; i++)
+                    this[i].OnUpdated();
+            }
         }
 
         private void OnRowRemoved(int index, DataRowPresenter row)
         {
             if (CurrentRow == row)
                 CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
+
+            if (ShouldFireRowUpdatedEvent(RowProperty.Index))
+            {
+                for (int i = index; i < Count; i++)
+                    this[i].OnUpdated();
+            }
         }
 
         private void OnRowUpdated(int index)

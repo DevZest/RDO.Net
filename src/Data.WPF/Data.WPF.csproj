@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Binding.cs" />
+    <Compile Include="RowProperty.cs" />
     <Compile Include="DataSetPresenter.RowCollection.cs" />
     <Compile Include="DataSetPresenterBuilder.cs" />
     <Compile Include="RowType.cs" />

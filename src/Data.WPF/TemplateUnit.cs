@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows
 
         public int Ordinal { get; private set; }
 
-        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal)
+        internal void Construct(GridTemplate owner, GridRange gridRange, int ordinal)
         {
             Debug.Assert(owner != null && Owner == null);
 
@@ -176,12 +176,33 @@ namespace DevZest.Data.Windows
             _bindings.Add(binding);
         }
 
+        private void EnterUpdatingTarget()
+        {
+            if (Owner != null)  // Owner == null only possible in unit test
+                Presenter.EnterUpdatingTarget();
+        }
+
+        private void ExitUpdatingTarget()
+        {
+            if (Owner != null)  // Owner == null only possible in unit test
+                Presenter.ExitUpdatingTarget();
+        }
+
         public void UpdateTarget(UIElement element)
         {
             VerifyElement(element, nameof(element));
 
-            foreach (var binding in _bindings)
-                binding.UpdateTarget(element);
+            EnterUpdatingTarget();
+
+            try
+            {
+                foreach (var binding in _bindings)
+                    binding.UpdateTarget(element);
+            }
+            finally
+            {
+                ExitUpdatingTarget();
+            }
         }
 
         public void UpdateSource(UIElement element)

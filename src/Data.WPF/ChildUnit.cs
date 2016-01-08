@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows
 
         internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal, int index)
         {
-            base.Seal(owner, gridRange, ordinal);
+            base.Construct(owner, gridRange, ordinal);
             Index = index;
         }
 

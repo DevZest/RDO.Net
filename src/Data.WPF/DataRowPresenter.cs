@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
 
         private DataRowPresenter(DataSetPresenter owner, RowType rowType)
             : this(owner, null, rowType)
-        {            
+        {
         }
 
         private DataRowPresenter(DataSetPresenter owner, DataRow dataRow, RowType rowType)
@@ -91,33 +91,61 @@ namespace DevZest.Data.Windows
             return result;
         }
 
+        private void OnGetProperty(RowProperty rowProperty)
+        {
+            Owner.OnGetRowProperty(rowProperty);
+        }
+
+        private void OnUpdated(RowProperty rowProperty)
+        {
+            if (Owner.ShouldFireRowUpdatedEvent(rowProperty))
+                OnUpdated();
+        }
+
+        public event EventHandler Updated;
+
         internal void OnUpdated()
         {
+            var updated = Updated;
+            if (updated != null)
+                updated(this, EventArgs.Empty);
         }
 
         public int Index
         {
-            get { return DataRow == null ? Owner.Count - 1 : DataRow.Index; }
+            get
+            {
+                OnGetProperty(RowProperty.Index);
+                return DataRow == null ? Owner.Count - 1 : DataRow.Index;
+            }
         }
 
         private bool _isCurrent;
         public bool IsCurrent
         {
-            get { return _isCurrent; }
+            get
+            {
+                OnGetProperty(RowProperty.IsCurrent);
+                return _isCurrent;
+            }
             set
             {
                 if (_isCurrent == value)
                     return;
 
                 _isCurrent = value;
-                OnUpdated();
+                OnUpdated(RowProperty.IsCurrent);
             }
         }
 
         private bool _isSelected;
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get
+            {
+                OnGetProperty(RowProperty.IsSelected);
+                return _isSelected;
+            }
             set
             {
                 if (_isSelected == value)
@@ -131,7 +159,7 @@ namespace DevZest.Data.Windows
                 if (_isSelected)
                     Owner._selectedRows.Add(this);
 
-                OnUpdated();
+                OnUpdated(RowProperty.IsSelected);
             }
         }
 

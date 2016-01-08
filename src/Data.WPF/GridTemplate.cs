@@ -194,7 +194,7 @@ namespace DevZest.Data.Windows
         internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
         {
             VerifyAddTemplateUnit(gridRange, scalarUnit, nameof(scalarUnit), true);
-            scalarUnit.Seal(this, gridRange, _scalarUnits.Count);
+            scalarUnit.Construct(this, gridRange, _scalarUnits.Count);
             _scalarUnits.Add(gridRange, scalarUnit);
             if (_listUnits.Count == 0)
                 NumberOfScallarEntriesBeforeRow = _scalarUnits.Count;
@@ -203,7 +203,7 @@ namespace DevZest.Data.Windows
         internal void AddListUnit(GridRange gridRange, ListUnit listUnit)
         {
             VerifyAddTemplateUnit(gridRange, listUnit, nameof(listUnit), true);
-            listUnit.Seal(this, gridRange, _listUnits.Count);
+            listUnit.Construct(this, gridRange, _listUnits.Count);
             _listUnits.Add(gridRange, listUnit);
         }
 
