@@ -12,6 +12,14 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// The value is invalid. It does not belong to this DataSetPresenter.
+        /// </summary>
+        public static string DataSetPresenter_InvalidCurrentRow
+        {
+            get { return GetString("DataSetPresenter_InvalidCurrentRow"); }
+        }
+
+        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)

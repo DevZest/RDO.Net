@@ -204,6 +204,9 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
+            if (RowType != RowType.DataRow)
+                throw new InvalidOperationException();
+
             throw new NotImplementedException();
         }
     }

@@ -210,7 +210,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 if (value != null && value.Owner != this)
-                    throw new ArgumentException();
+                    throw new ArgumentException(Strings.DataSetPresenter_InvalidCurrentRow, nameof(value));
 
                 if (_currentRow != null)
                     _currentRow.IsCurrent = false;
