@@ -292,5 +292,34 @@ namespace DevZest.Data.Windows
             get { return ExpectDataRow().MergedValidationMessages; }
         }
 
+        private bool _isEditing;
+        public bool IsEditing
+        {
+            get
+            {
+                OnGetProperty(RowProperty.IsEditing);
+                return _isEditing;
+            }
+            private set
+            {
+                if (_isEditing == value)
+                    return;
+
+                _isEditing = value;
+                OnUpdated(RowProperty.IsEditing);
+            }
+        }
+
+        public void BeginEdit()
+        {
+        }
+
+        public void EndEdit()
+        {
+        }
+
+        public void CancelEdit()
+        {
+        }
     }
 }
