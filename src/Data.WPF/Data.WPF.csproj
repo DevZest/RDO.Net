@@ -82,7 +82,7 @@
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridSpec.cs" />
     <Compile Include="GridRow.cs" />
-    <Compile Include="GridOrientation.cs" />
+    <Compile Include="ListOrientation.cs" />
     <Compile Include="DataRowSelector.cs" />
     <Compile Include="DataSetPanel.cs" />
     <Compile Include="GridTemplate.cs" />

@@ -51,15 +51,15 @@ namespace DevZest.Data.Windows
             get { return Owner.Model; }
         }
 
-        private GridOrientation _orientation = GridOrientation.Y;
-        public GridOrientation Orientation
+        private ListOrientation _listOrientation = ListOrientation.Y;
+        public ListOrientation ListOrientation
         {
-            get { return _orientation; }
+            get { return _listOrientation; }
             internal set
             {
                 VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
                 VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
-                _orientation = value;
+                _listOrientation = value;
             }
         }
 
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows
         {
             _gridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
-            VerifyGridColumnWidth(Orientation, result, result, nameof(width));
+            VerifyGridColumnWidth(ListOrientation, result, result, nameof(width));
             return result;
         }
 
@@ -131,7 +131,7 @@ namespace DevZest.Data.Windows
         {
             _gridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
-            VerifyGridRowHeight(Orientation, result, result, nameof(height));
+            VerifyGridRowHeight(ListOrientation, result, result, nameof(height));
             return result;
         }
 
@@ -143,7 +143,7 @@ namespace DevZest.Data.Windows
                 AddGridRow(height);
         }
 
-        private void VerifyGridRowHeight(GridOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(ListOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -152,7 +152,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, GridOrientation orentation)
+        private static bool IsValidGridRowHeight(GridRow gridRow, ListOrientation orentation)
         {
             var height = gridRow.Height;
 
@@ -160,13 +160,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (height.IsStar)
-                return orentation != GridOrientation.Y && orentation != GridOrientation.YX && orentation != GridOrientation.XY;
+                return orentation != ListOrientation.Y && orentation != ListOrientation.YX && orentation != ListOrientation.XY;
 
             Debug.Assert(height.IsAuto);
-            return orentation != GridOrientation.YX;
+            return orentation != ListOrientation.YX;
         }
 
-        private void VerifyGridColumnWidth(GridOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(ListOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -175,7 +175,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, GridOrientation orentation)
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, ListOrientation orentation)
         {
             var width = gridColumn.Width;
 
@@ -183,10 +183,10 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (width.IsStar)
-                return orentation != GridOrientation.X && orentation != GridOrientation.YX && orentation != GridOrientation.XY;
+                return orentation != ListOrientation.X && orentation != ListOrientation.YX && orentation != ListOrientation.XY;
 
             Debug.Assert(width.IsAuto);
-            return orentation != GridOrientation.XY;
+            return orentation != ListOrientation.XY;
         }
 
         internal int NumberOfScallarEntriesBeforeRow { get; private set; }

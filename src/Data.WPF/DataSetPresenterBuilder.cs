@@ -65,9 +65,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataSetPresenterBuilder WithOrientation(GridOrientation value)
+        public DataSetPresenterBuilder WithOrientation(ListOrientation value)
         {
-            Template.Orientation = value;
+            Template.ListOrientation = value;
             return this;
         }
 

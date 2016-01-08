@@ -12,19 +12,19 @@ namespace DevZest.Data.Windows
     {
         internal static LayoutManager Create(DataSetPresenter presenter)
         {
-            var orientation = presenter.Template.Orientation;
+            var orientation = presenter.Template.ListOrientation;
 
-            if (orientation == GridOrientation.Z)
+            if (orientation == ListOrientation.Z)
                 return new LayoutZ(presenter);
-            else if (orientation == GridOrientation.Y)
+            else if (orientation == ListOrientation.Y)
                 return new LayoutY(presenter);
-            else if (orientation == GridOrientation.XY)
+            else if (orientation == ListOrientation.XY)
                 return new LayoutXY(presenter);
-            else if (orientation == GridOrientation.X)
+            else if (orientation == ListOrientation.X)
                 return new LayoutX(presenter);
             else
             {
-                Debug.Assert(orientation == GridOrientation.YX);
+                Debug.Assert(orientation == ListOrientation.YX);
                 return new LayoutYX(presenter);
             }
         }
@@ -204,9 +204,9 @@ namespace DevZest.Data.Windows
             get { return Presenter.IsVirtualizing; }
         }
 
-        private GridOrientation Orientation
+        private ListOrientation Orientation
         {
-            get { return Template.Orientation; }
+            get { return Template.ListOrientation; }
         }
     }
 }
