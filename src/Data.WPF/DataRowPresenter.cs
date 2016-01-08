@@ -91,6 +91,15 @@ namespace DevZest.Data.Windows
             return result;
         }
 
+        internal void OnUpdated()
+        {
+        }
+
+        public int Index
+        {
+            get { return DataRow == null ? Owner.Count - 1 : DataRow.Index; }
+        }
+
         private bool _isCurrent;
         public bool IsCurrent
         {
@@ -103,10 +112,6 @@ namespace DevZest.Data.Windows
                 _isCurrent = value;
                 OnUpdated();
             }
-        }
-
-        internal void OnUpdated()
-        {
         }
 
         private bool _isSelected;

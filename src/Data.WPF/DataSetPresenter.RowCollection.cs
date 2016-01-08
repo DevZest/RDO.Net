@@ -45,11 +45,6 @@ namespace DevZest.Data.Windows
                 return GetEnumerator();
             }
 
-            public int IndexOf(DataRowPresenter item)
-            {
-                return item == null || item.Owner != _owner ? -1 : (item == _virtualRow ? Count - 1 : item.DataRow.Index);
-            }
-
             public int Count
             {
                 get
@@ -78,7 +73,7 @@ namespace DevZest.Data.Windows
 
             private DataSet DataSet
             {
-                get { return _owner.DataSet; }
+                get { return _owner._dataSet; }
             }
 
             private void OnDataRowAdded(object sender, DataRowEventArgs e)

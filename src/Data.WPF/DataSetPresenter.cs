@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows
                 CurrentRow = this[0];
             LayoutManager = LayoutManager.Create(this);
 
-            DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
+            _dataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
         public bool IsVirtualizing { get; private set; }
@@ -118,10 +118,6 @@ namespace DevZest.Data.Windows
         }
 
         private readonly DataSet _dataSet;
-        public DataSet DataSet
-        {
-            get { return _dataSet; }
-        }
 
         private readonly GridTemplate _template;
         public GridTemplate Template
@@ -131,7 +127,7 @@ namespace DevZest.Data.Windows
 
         public Model Model
         {
-            get { return DataSet.Model; }
+            get { return _dataSet.Model; }
         }
 
         #region IReadOnlyList<DataRowPresenter>
@@ -146,11 +142,6 @@ namespace DevZest.Data.Windows
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _rows.GetEnumerator();
-        }
-
-        public int IndexOf(DataRowPresenter item)
-        {
-            return _rows.IndexOf(item);
         }
 
         public int Count

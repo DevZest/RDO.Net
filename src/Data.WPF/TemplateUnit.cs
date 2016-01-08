@@ -44,6 +44,11 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Owner { get; private set; }
 
+        public DataSetPresenter Presenter
+        {
+            get { return Owner == null ? null : Owner.Owner; }
+        }
+
         public GridRange GridRange { get; private set; }
 
         public int Ordinal { get; private set; }
