@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
             if (RowType != RowType.DataRow)
                 return s_emptyChildren;
 
-            var childEntries = Template.ChildEntries;
+            var childEntries = Template.ChildUnits;
             if (childEntries.Count == 0)
                 return s_emptyChildren;
 
@@ -98,48 +98,9 @@ namespace DevZest.Data.Windows
         private static UIElement[] s_emptyUIElements = new UIElement[0];
         private UIElement[] _uiElements = null;
 
-        private GridEntry GridEntryOf(int index)
-        {
-            Debug.Assert(_uiElements != null && index >= 0 && index < _uiElements.Length);
-            var template = Template;
-            Debug.Assert(template != null);
-            var rowEntrys = template.RowEntries;
-            var rowEntriesCount = rowEntrys.Count;
-            if (index < rowEntriesCount)
-                return rowEntrys[index];
-            else
-                return template.ChildEntries[index - rowEntriesCount];
-        }
-
         private int UIElementsCount
         {
-            get
-            {
-                var template = Template;
-                return template.RowEntries.Count + template.ChildEntries.Count;
-            }
-        }
-
-        private void EnsureUIElementsGenerated()
-        {
-            if (_uiElements != null)
-                return;
-
-            var uiElementsCount = UIElementsCount;
-            if (uiElementsCount == 0)
-            {
-                _uiElements = s_emptyUIElements;
-                return;
-            }
-
-            _uiElements = new UIElement[uiElementsCount];
-
-            for (int i = 0; i < uiElementsCount; i++)
-            {
-                var gridEntry = GridEntryOf(i);
-                _uiElements[i] = gridEntry.Generate();
-                Debug.Assert(_uiElements[i] != null);
-            }
+            get { return Template.ListUnits.Count; }
         }
 
         private void EnsureUIElementsRecycled()
@@ -149,10 +110,11 @@ namespace DevZest.Data.Windows
 
             for (int i = 0; i < _uiElements.Length; i++)
             {
-                var gridEntry = GridEntryOf(i);
                 var uiElement = _uiElements[i];
-                Debug.Assert(uiElement != null);
-                gridEntry.Recycle(uiElement);
+                if (uiElement == null)
+                    continue;
+
+                Template.ListUnits[i].Recycle(uiElement);
             }
             _uiElements = null;
         }

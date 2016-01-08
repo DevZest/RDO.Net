@@ -4,15 +4,15 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarEntry : GridEntry
+    public sealed class ScalarUnit : TemplateUnit
     {
-        internal static ScalarEntry Create<T>()
+        internal static ScalarUnit Create<T>()
             where T : UIElement, new()
         {
-            return new ScalarEntry(() => new T());
+            return new ScalarUnit(() => new T());
         }
 
-        private ScalarEntry(Func<UIElement> constructor)
+        private ScalarUnit(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -24,11 +24,11 @@ namespace DevZest.Data.Windows
             FlowMode = value;
         }
 
-        public sealed class Builder<T> : GridEntry.Builder<T, ScalarEntry, Builder<T>>
+        public sealed class Builder<T> : TemplateUnit.Builder<T, ScalarUnit, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(DataSetPresenterBuilderRange builderRange)
-                : base(builderRange, ScalarEntry.Create<T>())
+            internal Builder(GridRangeConfig rangeConfig)
+                : base(rangeConfig, ScalarUnit.Create<T>())
             {
             }
 
@@ -37,14 +37,14 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ScalarEntry entry)
+            internal override DataSetPresenterBuilder End(GridRangeConfig rangeConfig, ScalarUnit unit)
             {
-                return builderRange.ScalarEntry(entry);
+                return rangeConfig.End(unit);
             }
 
             public Builder<T> FlowMode(FlowMode value)
             {
-                Entry.InitFlowMode(value);
+                Unit.InitFlowMode(value);
                 return this;
             }
         }

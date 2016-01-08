@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public struct DataSetPresenterBuilderRange
+    public struct GridRangeConfig
     {
-        internal DataSetPresenterBuilderRange(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
+        internal GridRangeConfig(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
         {
             PresenterBuilder = presenterBuilder;
             GridRange = gridRange;
@@ -26,33 +26,33 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public ScalarEntry.Builder<T> BeginScalarEntry<T>()
+        public ScalarUnit.Builder<T> BeginScalarUnit<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ScalarEntry.Builder<T>(this);
+            return new ScalarUnit.Builder<T>(this);
         }
 
-        internal DataSetPresenterBuilder ScalarEntry(ScalarEntry scalarEntry)
+        internal DataSetPresenterBuilder End(ScalarUnit scalarUnit)
         {
-            Template.AddScalarEntry(GridRange, scalarEntry);
+            Template.AddScalarUnit(GridRange, scalarUnit);
             return PresenterBuilder;
         }
 
-        public RowEntry.Builder<T> BeginRowEntry<T>()
+        public ListUnit.Builder<T> BeginListUnit<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new RowEntry.Builder<T>(this);
+            return new ListUnit.Builder<T>(this);
         }
 
-        internal DataSetPresenterBuilder RowEntry(RowEntry rowEntry)
+        internal DataSetPresenterBuilder End(ListUnit listUnit)
         {
-            Template.AddRowEntry(GridRange, rowEntry);
+            Template.AddListUnit(GridRange, listUnit);
             return PresenterBuilder;
         }
 
-        public ChildEntry.Builder<TView> BeginChildEntry<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildUnit.Builder<TView> BeginChildUnit<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataSetView, new()
         {
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildEntry.Builder<TView>(this, owner =>
+            return new ChildUnit.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public ChildEntry.Builder<TView> BeginChildEntry<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildUnit.Builder<TView> BeginChildUnit<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataSetView, new()
         {
@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildEntry.Builder<TView>(this, owner =>
+            return new ChildUnit.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -91,17 +91,17 @@ namespace DevZest.Data.Windows
             });
         }
 
-        internal DataSetPresenterBuilder ChildEntry(ChildEntry childEntry)
+        internal DataSetPresenterBuilder End(ChildUnit childUnit)
         {
-            Template.AddChildEntry(GridRange, childEntry);
+            Template.AddChildUnit(GridRange, childUnit);
             return PresenterBuilder;
         }
 
-        public DataSetPresenterBuilder AsRowRange()
+        public DataSetPresenterBuilder AsListRange()
         {
             VerifyNotEmpty();
 
-            Template.RowRange = GridRange;
+            Template.ListRange = GridRange;
             return PresenterBuilder;
         }
     }

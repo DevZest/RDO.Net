@@ -21,20 +21,20 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class GridEntryCollection<T> : ReadOnlyCollection<T>
-            where T : GridEntry
+        private sealed class TemplateUnitCollection<T> : ReadOnlyCollection<T>
+            where T : TemplateUnit
         {
-            internal GridEntryCollection()
+            internal TemplateUnitCollection()
                 : base(new List<T>())
             {
             }
 
             internal GridRange Range { get; private set; }
 
-            internal void Add(GridRange gridRange, T gridEntry)
+            internal void Add(GridRange gridRange, T unit)
             {
-                Debug.Assert(gridEntry != null);
-                Items.Add(gridEntry);
+                Debug.Assert(unit != null);
+                Items.Add(unit);
                 Range = Range.Union(gridRange);
             }
         }
@@ -75,40 +75,40 @@ namespace DevZest.Data.Windows
             get { return _gridRows; }
         }
 
-        private GridEntryCollection<ScalarEntry> _scalarEntries = new GridEntryCollection<ScalarEntry>();
-        public ReadOnlyCollection<ScalarEntry> ScalarEntries
+        private TemplateUnitCollection<ScalarUnit> _scalarUnits = new TemplateUnitCollection<ScalarUnit>();
+        public ReadOnlyCollection<ScalarUnit> ScalarEntries
         {
-            get { return _scalarEntries; }
+            get { return _scalarUnits; }
         }
 
-        private GridEntryCollection<RowEntry> _rowEntries = new GridEntryCollection<RowEntry>();
-        public ReadOnlyCollection<RowEntry> RowEntries
+        private TemplateUnitCollection<ListUnit> _listUnits = new TemplateUnitCollection<ListUnit>();
+        public ReadOnlyCollection<ListUnit> ListUnits
         {
-            get { return _rowEntries; }
+            get { return _listUnits; }
         }
 
-        private GridEntryCollection<ChildEntry> _childEntries = new GridEntryCollection<ChildEntry>();
-        public ReadOnlyCollection<ChildEntry> ChildEntries
+        private TemplateUnitCollection<ChildUnit> _childUnits = new TemplateUnitCollection<ChildUnit>();
+        public ReadOnlyCollection<ChildUnit> ChildUnits
         {
-            get { return _childEntries; }
+            get { return _childUnits; }
         }
 
-        private GridRange? _rowRange;
-        public GridRange RowRange
+        private GridRange? _listRange;
+        public GridRange ListRange
         {
-            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : AutoRowRange; }
+            get { return _listRange.HasValue ? _listRange.GetValueOrDefault() : AutoListRange; }
             internal set
             {
-                if (!value.Contains(AutoRowRange))
+                if (!value.Contains(AutoListRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                _rowRange = value;
+                _listRange = value;
             }
         }
 
-        private GridRange AutoRowRange
+        private GridRange AutoListRange
         {
-            get { return _rowEntries.Range.Union(_childEntries.Range); }
+            get { return _listUnits.Range.Union(_childUnits.Range); }
         }
 
         internal int AddGridColumn(string width)
@@ -191,35 +191,35 @@ namespace DevZest.Data.Windows
 
         internal int NumberOfScallarEntriesBeforeRow { get; private set; }
 
-        internal void AddScalarEntry(GridRange gridRange, ScalarEntry scalarEntry)
+        internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
         {
-            VerifyAddEntry(gridRange, scalarEntry, nameof(scalarEntry), true);
-            scalarEntry.Seal(this, gridRange, _scalarEntries.Count);
-            _scalarEntries.Add(gridRange, scalarEntry);
-            if (_rowEntries.Count == 0)
-                NumberOfScallarEntriesBeforeRow = _scalarEntries.Count;
+            VerifyAddTemplateUnit(gridRange, scalarUnit, nameof(scalarUnit), true);
+            scalarUnit.Seal(this, gridRange, _scalarUnits.Count);
+            _scalarUnits.Add(gridRange, scalarUnit);
+            if (_listUnits.Count == 0)
+                NumberOfScallarEntriesBeforeRow = _scalarUnits.Count;
         }
 
-        internal void AddRowEntry(GridRange gridRange, RowEntry rowEntry)
+        internal void AddListUnit(GridRange gridRange, ListUnit listUnit)
         {
-            VerifyAddEntry(gridRange, rowEntry, nameof(rowEntry), true);
-            rowEntry.Seal(this, gridRange, _rowEntries.Count);
-            _rowEntries.Add(gridRange, rowEntry);
+            VerifyAddTemplateUnit(gridRange, listUnit, nameof(listUnit), true);
+            listUnit.Seal(this, gridRange, _listUnits.Count);
+            _listUnits.Add(gridRange, listUnit);
         }
 
-        internal void AddChildEntry(GridRange gridRange, ChildEntry childEntry)
+        internal void AddChildUnit(GridRange gridRange, ChildUnit childUnit)
         {
-            VerifyAddEntry(gridRange, childEntry, nameof(childEntry), false);
-            childEntry.Seal(this, gridRange, _rowEntries.Count, _childEntries.Count);
-            _rowEntries.Add(gridRange, childEntry);
-            _childEntries.Add(gridRange, childEntry);
+            VerifyAddTemplateUnit(gridRange, childUnit, nameof(childUnit), false);
+            childUnit.Seal(this, gridRange, _listUnits.Count, _childUnits.Count);
+            _listUnits.Add(gridRange, childUnit);
+            _childUnits.Add(gridRange, childUnit);
         }
 
-        private void VerifyAddEntry(GridRange gridRange, GridEntry gridEntry, string paramGridEntryName, bool isScalar)
+        private void VerifyAddTemplateUnit(GridRange gridRange, TemplateUnit templateUnit, string paramTemplateUnitName, bool isScalar)
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _rowRange.HasValue && !_rowRange.GetValueOrDefault().Contains(gridRange))
+            if (!isScalar && _listRange.HasValue && !_listRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
         }
 

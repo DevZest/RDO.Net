@@ -3,79 +3,79 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    partial class GridEntry
+    partial class TemplateUnit
     {
-        public abstract class Builder<TElement, TEntry, TBuilder> : IDisposable
+        public abstract class Builder<TElement, TUnit, TBuilder> : IDisposable
             where TElement : UIElement, new()
-            where TEntry : GridEntry
-            where TBuilder : Builder<TElement, TEntry, TBuilder>
+            where TUnit : TemplateUnit
+            where TBuilder : Builder<TElement, TUnit, TBuilder>
         {
-            internal Builder(DataSetPresenterBuilderRange builderRange, TEntry entry)
+            internal Builder(GridRangeConfig rangeConfig, TUnit unit)
             {
-                _builderRange = builderRange;
-                _Entry = entry;
+                _rangeConfig = rangeConfig;
+                _unit = unit;
             }
 
             public void Dispose()
             {
-                _Entry = null;
+                _unit = null;
             }
 
-            private DataSetPresenterBuilderRange _builderRange;
+            private GridRangeConfig _rangeConfig;
             public DataSetPresenterBuilder End()
             {
-                return End(_builderRange, Entry);
+                return End(_rangeConfig, Unit);
             }
 
-            internal abstract DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, TEntry entry);
+            internal abstract DataSetPresenterBuilder End(GridRangeConfig rangeConfig, TUnit unit);
 
             internal abstract TBuilder This { get; }
 
-            private TEntry _Entry;
-            internal TEntry Entry
+            private TUnit _unit;
+            internal TUnit Unit
             {
                 get
                 {
-                    if (_Entry == null)
+                    if (_unit == null)
                         throw new ObjectDisposedException(GetType().FullName);
 
-                    return _Entry;
+                    return _unit;
                 }
             }
 
             public TBuilder Initialize(Action<TElement> initializer)
             {
-                Entry.InitInitializer(initializer);
+                Unit.InitInitializer(initializer);
                 return This;
             }
 
             public TBuilder Cleanup(Action<TElement> cleanup)
             {
-                Entry.InitCleanup(cleanup);
+                Unit.InitCleanup(cleanup);
                 return This;
             }
 
             public TBuilder Behaviors(params IBehavior<TElement>[] behaviors)
             {
-                Entry.InitBehaviors(behaviors);
+                Unit.InitBehaviors(behaviors);
                 return This;
             }
 
             public TBuilder Bind(Action<TElement> updateTarget)
             {
-                Entry.AddBinding(Binding.Bind(updateTarget));
+                Unit.AddBinding(Binding.Bind(updateTarget));
                 return This;
             }
 
             public TBuilder BindToSource(Action<TElement> updateSource, params BindingTrigger[] triggers)
             {
-                Entry.AddBinding(Binding.BindToSource(updateSource, triggers));
+                Unit.AddBinding(Binding.BindToSource(updateSource, triggers));
                 return This;
             }
 
             public TBuilder BindTwoWay(Action<TElement> updateTarget, Action<TElement> updateSource, params BindingTrigger[] triggers)
             {
-                Entry.AddBinding(Binding.BindTwoWay(updateTarget, updateSource, triggers));
+                Unit.AddBinding(Binding.BindTwoWay(updateTarget, updateSource, triggers));
                 return This;
             }
         }

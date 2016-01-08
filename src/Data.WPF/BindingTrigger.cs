@@ -33,9 +33,9 @@ namespace DevZest.Data.Windows
 
             protected internal override void Attach(UIElement element)
             {
-                var gridEntry = element.GetGridEntry();
-                if (gridEntry != null)
-                    gridEntry.UpdateSource(element);
+                var templateUnit = element.GetTemplateUnit();
+                if (templateUnit != null)
+                    templateUnit.UpdateSource(element);
             }
 
             protected internal override void Detach(UIElement element)
@@ -100,9 +100,9 @@ namespace DevZest.Data.Windows
 
         protected void UpdateSource(UIElement element)
         {
-            var gridEntry = element.GetGridEntry();
-            if (gridEntry == null)
-                gridEntry.UpdateSource(element);
+            var templateUnit = element.GetTemplateUnit();
+            if (templateUnit == null)
+                templateUnit.UpdateSource(element);
         }
     }
 }

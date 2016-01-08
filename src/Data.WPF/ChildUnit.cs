@@ -5,13 +5,13 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildEntry : RowEntry
+    public sealed class ChildUnit : ListUnit
     {
-        public sealed new class Builder<T> : GridEntry.Builder<T, ChildEntry, Builder<T>>
+        public sealed new class Builder<T> : TemplateUnit.Builder<T, ChildUnit, Builder<T>>
             where T : DataSetView, new()
         {
-            internal Builder(DataSetPresenterBuilderRange builderRange, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
-                : base(builderRange, ChildEntry.Create<T>(childPresenterConstructor))
+            internal Builder(GridRangeConfig rangeConfig, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+                : base(rangeConfig, ChildUnit.Create<T>(childPresenterConstructor))
             {
             }
 
@@ -20,19 +20,19 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataSetPresenterBuilder End(DataSetPresenterBuilderRange builderRange, ChildEntry entry)
+            internal override DataSetPresenterBuilder End(GridRangeConfig rangeConfig, ChildUnit unit)
             {
-                return builderRange.ChildEntry(entry);
+                return rangeConfig.End(unit);
             }
         }
 
-        internal static ChildEntry Create<T>(Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+        internal static ChildUnit Create<T>(Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
             where T : DataSetView, new()
         {
-            return new ChildEntry(() => new T(), childPresenterConstructor);
+            return new ChildUnit(() => new T(), childPresenterConstructor);
         }
 
-        private ChildEntry(Func<UIElement> constructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
+        private ChildUnit(Func<UIElement> constructor, Func<DataRowPresenter, DataSetPresenter> childPresenterConstructor)
                 : base(constructor)
         {
             Debug.Assert(childPresenterConstructor != null);

@@ -51,8 +51,8 @@
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataSetViewFactory.cs" />
-    <Compile Include="GridEntry.Builder.cs" />
-    <Compile Include="DataSetPresenterBuilderRange.cs" />
+    <Compile Include="TemplateUnit.Builder.cs" />
+    <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
@@ -62,13 +62,13 @@
     <Compile Include="LayoutManager.LayoutY.cs" />
     <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
-    <Compile Include="RowEntry.cs" />
+    <Compile Include="ListUnit.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="ChildEntry.cs" />
+    <Compile Include="ChildUnit.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
     <Compile Include="DataRowPanel.cs" />
@@ -90,12 +90,11 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScalarEntry.cs" />
+    <Compile Include="ScalarUnit.cs" />
     <Compile Include="Selection.cs" />
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="GridEntry.cs" />
-    <Compile Include="ValidationManager.cs" />
+    <Compile Include="TemplateUnit.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
     <Compile Include="LayoutManager.cs" />

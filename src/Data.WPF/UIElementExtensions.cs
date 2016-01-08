@@ -5,18 +5,18 @@ namespace DevZest.Data.Windows
 {
     public static class UIElementExtensions
     {
-        private static readonly DependencyProperty GridEntryProperty = DependencyProperty.RegisterAttached(nameof(GridEntry),
-            typeof(GridEntry), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty TemplateUnitProperty = DependencyProperty.RegisterAttached(nameof(TemplateUnit),
+            typeof(TemplateUnit), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static GridEntry GetGridEntry(this UIElement element)
+        public static TemplateUnit GetTemplateUnit(this UIElement element)
         {
-            return (GridEntry)element.GetValue(GridEntryProperty);
+            return (TemplateUnit)element.GetValue(TemplateUnitProperty);
         }
 
-        internal static void SetGridEntry(this UIElement element, GridEntry value)
+        internal static void SetTemplateUnit(this UIElement element, TemplateUnit value)
         {
-            Debug.Assert(value != null && element.GetGridEntry() == null);
-            element.SetValue(GridEntryProperty, value);
+            Debug.Assert(value != null && element.GetTemplateUnit() == null);
+            element.SetValue(TemplateUnitProperty, value);
         }
 
         private static readonly DependencyProperty DataRowPresenterProperty = DependencyProperty.RegisterAttached(nameof(DataRowPresenter),

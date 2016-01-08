@@ -4,9 +4,9 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class ColumnHeaderFactory
     {
-        public static DataSetPresenterBuilder ColumnHeader(this DataSetPresenterBuilderRange builderRange, Column column, Action<ColumnHeader> initializer = null)
+        public static DataSetPresenterBuilder ColumnHeader(this GridRangeConfig rangeConfig, Column column, Action<ColumnHeader> initializer = null)
         {
-            return builderRange.BeginRowEntry<ColumnHeader>()
+            return rangeConfig.BeginListUnit<ColumnHeader>()
                 .Initialize(initializer)
                 .End();
         }

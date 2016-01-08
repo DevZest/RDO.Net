@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract partial class GridEntry
+    public abstract partial class TemplateUnit
     {
         private sealed class Behavior
         {
@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridEntry(Func<UIElement> constructor)
+        internal TemplateUnit(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
             _constructor = constructor;
@@ -50,10 +50,8 @@ namespace DevZest.Data.Windows
 
         internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal)
         {
-            Debug.Assert(owner != null);
+            Debug.Assert(owner != null && Owner == null);
 
-            if (Owner != null)
-                throw new InvalidOperationException(Strings.GridEntry_OwnerAlreadySet);
             Owner = owner;
             GridRange = gridRange;
             Ordinal = ordinal;
@@ -75,7 +73,7 @@ namespace DevZest.Data.Windows
         private UIElement Create()
         {
             var result = _constructor();
-            result.SetGridEntry(this);
+            result.SetTemplateUnit(this);
             return result;
         }
 
@@ -112,7 +110,7 @@ namespace DevZest.Data.Windows
 
         internal virtual void Initialize(UIElement element)
         {
-            Debug.Assert(element != null && element.GetGridEntry() == this);
+            Debug.Assert(element != null && element.GetTemplateUnit() == this);
 
             if (_initializer != null)
                 _initializer(element);
@@ -129,7 +127,7 @@ namespace DevZest.Data.Windows
 
         internal void Recycle(UIElement element)
         {
-            Debug.Assert(element != null && element.GetGridEntry() == this);
+            Debug.Assert(element != null && element.GetTemplateUnit() == this);
 
             Cleanup(element);
             if (_cachedUIElements == null)
@@ -194,8 +192,8 @@ namespace DevZest.Data.Windows
             if (element == null)
                 throw new ArgumentNullException(paramName);
 
-            if (element.GetGridEntry() != this)
-                throw new ArgumentException(Strings.GridEntry_InvalidElement, paramName);
+            if (element.GetTemplateUnit() != this)
+                throw new ArgumentException(Strings.TemplateUnit_InvalidElement, paramName);
         }
     }
 }

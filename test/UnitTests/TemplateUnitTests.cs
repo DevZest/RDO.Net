@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class GridEntryTests
+    public class TemplateUnitTests
     {
         const string INITIALIZED = "Initialized";
         const string CLEANUP = "Cleanup";
@@ -14,60 +14,60 @@ namespace DevZest.Data.Windows
         const string TARGET_CHANGED = "Target changed";
 
         [TestMethod]
-        public void ScalarEntryBuilder_Bind()
+        public void ScalarUnitBuilder_Bind()
         {
             string source = SOURCE;
 
-            var builder = new ScalarEntry.Builder<TextBlock>(default(DataSetPresenterBuilderRange));
+            var builder = new ScalarUnit.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind(x => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var entry = builder.Entry;
-            var element = (TextBlock)entry.Generate();
-            Assert.IsTrue(element.GetGridEntry() == entry);
+            var unit = builder.Unit;
+            var element = (TextBlock)unit.Generate();
+            Assert.IsTrue(element.GetTemplateUnit() == unit);
 
-            entry.Initialize(element);
+            unit.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
 
-            entry.UpdateTarget(element);
+            unit.UpdateTarget(element);
             Assert.AreEqual(SOURCE, element.Text);
 
             source = SOURCE_CHANGED;
-            entry.UpdateTarget(element);
+            unit.UpdateTarget(element);
             Assert.AreEqual(SOURCE_CHANGED, element.Text);
 
-            entry.Cleanup(element);
+            unit.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
         }
 
         [TestMethod]
-        public void ScalarEntryBuilder_BindToSource()
+        public void ScalarUnitBuilder_BindToSource()
         {
             string source = SOURCE;
 
-            var builder = new ScalarEntry.Builder<TextBlock>(default(DataSetPresenterBuilderRange));
+            var builder = new ScalarUnit.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource(x => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var entry = builder.Entry;
-            var element = (TextBlock)entry.Generate();
-            Assert.IsTrue(element.GetGridEntry() == entry);
+            var unit = builder.Unit;
+            var element = (TextBlock)unit.Generate();
+            Assert.IsTrue(element.GetTemplateUnit() == unit);
 
-            entry.Initialize(element);
+            unit.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
             Assert.AreEqual(INITIALIZED, source);
 
             element.Text = TARGET;
-            entry.UpdateSource(element);
+            unit.UpdateSource(element);
             Assert.AreEqual(TARGET, source);
 
             element.Text = TARGET_CHANGED;
-            entry.UpdateSource(element);
+            unit.UpdateSource(element);
             Assert.AreEqual(TARGET_CHANGED, source);
 
-            entry.Cleanup(element);
+            unit.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
             Assert.AreEqual(TARGET_CHANGED, source);
         }

@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows
 
             builder.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
-                .Range(0, 1, columns.Count - 1, 1).AsRowRange();
+                .Range(0, 1, columns.Count - 1, 1).AsListRange();
 
             for (int i = 0; i < columns.Count; i++)
             {
