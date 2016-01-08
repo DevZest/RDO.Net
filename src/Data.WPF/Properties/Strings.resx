@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DataRowPresenter_SetValue_InvalidRowType" xml:space="preserve">
-    <value>Invalid RowType to SetValue, only RowType.DataRow is allowed.</value>
+  <data name="DataRowPresenter_ExpectDataRow" xml:space="preserve">
+    <value>Invalid RowType, only RowType.DataRow is allowed.</value>
   </data>
   <data name="DataSetPresenter_InvalidCurrentRow" xml:space="preserve">
     <value>The value is invalid. It does not belong to this DataSetPresenter.</value>

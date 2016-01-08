@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 
@@ -236,9 +237,7 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            var dataRow = DataRow;
-            if (dataRow == null)
-                throw new InvalidOperationException(Strings.DataRowPresenter_SetValue_InvalidRowType);
+            var dataRow = ExpectDataRow();
 
             if (suppressUpdateTarget)
                 EnterSuppressUpdateTarget();
@@ -259,9 +258,7 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            var dataRow = DataRow;
-            if (dataRow == null)
-                throw new InvalidOperationException(Strings.DataRowPresenter_SetValue_InvalidRowType);
+            var dataRow = ExpectDataRow();
 
             if (suppressUpdateTarget)
                 EnterSuppressUpdateTarget();
@@ -276,5 +273,24 @@ namespace DevZest.Data.Windows
                     ExitSuppressUpdateTarget();
             }
         }
+
+        private DataRow ExpectDataRow()
+        {
+            var dataRow = DataRow;
+            if (dataRow == null)
+                throw new InvalidOperationException(Strings.DataRowPresenter_ExpectDataRow);
+            return dataRow;
+        }
+
+        public ReadOnlyCollection<ValidationMessage> ValidationMessages
+        {
+            get { return ExpectDataRow().ValidationMessages; }
+        }
+
+        public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
+        {
+            get { return ExpectDataRow().MergedValidationMessages; }
+        }
+
     }
 }
