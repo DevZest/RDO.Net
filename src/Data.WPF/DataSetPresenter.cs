@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
 using System;
-using System.Windows.Controls;
 using System.Linq;
 using DevZest.Data.Windows.Factories;
-using System.Collections.Specialized;
 
 namespace DevZest.Data.Windows
 {
