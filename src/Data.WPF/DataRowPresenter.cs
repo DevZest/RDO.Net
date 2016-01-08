@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
-            Owner = owner;
+            _owner = owner;
             DataRow = dataRow;
             RowType = rowType;
             Children = InitChildDataSetPresenters();
@@ -44,12 +44,22 @@ namespace DevZest.Data.Windows
 
         internal void Dispose()
         {
-            Owner = null;
+            _owner = null;
             Children = null;
             EnsureUIElementsRecycled();
         }
 
-        public DataSetPresenter Owner { get; private set; }
+        private DataSetPresenter _owner;
+        public DataSetPresenter Owner
+        {
+            get
+            {
+                if (_owner == null)
+                    throw new ObjectDisposedException(GetType().FullName);
+
+                return _owner;
+            }
+        }
 
         public GridTemplate Template
         {
@@ -81,14 +91,43 @@ namespace DevZest.Data.Windows
             return result;
         }
 
+        private bool _isCurrent;
         public bool IsCurrent
         {
-            get { return Owner == null ? false : Owner.IndexOf(this) == Owner.Current; }
+            get { return _isCurrent; }
+            set
+            {
+                if (_isCurrent == value)
+                    return;
+
+                _isCurrent = value;
+                OnUpdated();
+            }
         }
 
+        internal void OnUpdated()
+        {
+        }
+
+        private bool _isSelected;
         public bool IsSelected
         {
-            get { return Owner == null ? false : Owner.IsSelected(this); }
+            get { return _isSelected; }
+            set
+            {
+                if (_isSelected == value)
+                    return;
+
+                if (_isSelected)
+                    Owner._selectedRows.Remove(this);
+
+                _isSelected = value;
+
+                if (_isSelected)
+                    Owner._selectedRows.Add(this);
+
+                OnUpdated();
+            }
         }
 
         public RowType RowType { get; private set; }

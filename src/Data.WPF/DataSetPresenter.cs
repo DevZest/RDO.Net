@@ -63,6 +63,8 @@ namespace DevZest.Data.Windows
         private void Initialize()
         {
             _rows = new RowCollection(this);
+            if (Count > 0)
+                CurrentRow = this[0];
             LayoutManager = LayoutManager.Create(this);
 
             DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
@@ -94,14 +96,19 @@ namespace DevZest.Data.Windows
 
         private void OnRowAdded(int index)
         {
+            if (CurrentRow == null)
+                CurrentRow = this[0];
         }
 
         private void OnRowRemoved(int index, DataRowPresenter row)
         {
+            if (CurrentRow == row)
+                CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
         }
 
         private void OnRowUpdated(int index)
         {
+            this[index].OnUpdated();
         }
 
         private readonly DataRowPresenter _owner;
@@ -157,28 +164,32 @@ namespace DevZest.Data.Windows
         }
         #endregion
 
-        public int Current
+        private DataRowPresenter _currentRow;
+        public DataRowPresenter CurrentRow
         {
-            get { return _rows.Current; }
+            get { return _currentRow; }
+            set
+            {
+                if (_currentRow == value)
+                    return;
+
+                if (value != null && value.Owner != this)
+                    throw new ArgumentException();
+
+                if (_currentRow != null)
+                    _currentRow.IsCurrent = false;
+
+                _currentRow = value;
+
+                if (_currentRow != null)
+                    _currentRow.IsCurrent = true;
+            }
         }
 
-        public IReadOnlyList<int> Selection
+        internal HashSet<DataRowPresenter> _selectedRows = new HashSet<DataRowPresenter>();
+        public IReadOnlyCollection<DataRowPresenter> SelectedRows
         {
-            get { return _rows.Selection; }
-        }
-
-        internal bool IsSelected(DataRowPresenter row)
-        {
-            Debug.Assert(row.Owner == this);
-            return _rows.IsSelected(row);
-        }
-
-        public void Select(int index, SelectionMode selectionMode)
-        {
-            if (index < 0 || index >= Count)
-                throw new ArgumentOutOfRangeException(nameof(index));
-
-            _rows.Select(index, selectionMode);
+            get { return _selectedRows; }
         }
 
         internal LayoutManager LayoutManager { get; private set; }

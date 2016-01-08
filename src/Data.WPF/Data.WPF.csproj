@@ -91,7 +91,6 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="ScalarUnit.cs" />
-    <Compile Include="Selection.cs" />
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="TemplateUnit.cs" />

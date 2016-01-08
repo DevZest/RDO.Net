@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -25,7 +23,6 @@ namespace DevZest.Data.Windows
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
                     _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
 
-                CoerceSelection();
                 DataSet.RowAdded += OnDataRowAdded;
                 DataSet.RowRemoved += OnDataRowRemoved;
             }
@@ -50,7 +47,7 @@ namespace DevZest.Data.Windows
 
             public int IndexOf(DataRowPresenter item)
             {
-                return item == null || item.Owner != _owner ? -1 : (item == _virtualRow ? Count - 1 : DataSet.IndexOf(item.DataRow));
+                return item == null || item.Owner != _owner ? -1 : (item == _virtualRow ? Count - 1 : item.DataRow.Index);
             }
 
             public int Count
@@ -109,13 +106,11 @@ namespace DevZest.Data.Windows
 
             void NotifyRowAdded(int index)
             {
-                CoerceSelection();
                 _owner.OnRowAdded(index);
             }
 
             void NotifyRowRemoved(int index, DataRowPresenter row)
             {
-                CoerceSelection();
                 _owner.OnRowRemoved(index, row);
             }
 
@@ -137,45 +132,6 @@ namespace DevZest.Data.Windows
                     _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
-            }
-
-            private Selection _selection = Windows.Selection.Empty;
-
-            private void CoerceSelection()
-            {
-                _selection = _selection.Coerce(Count);
-            }
-
-            public int Current
-            {
-                get { return _selection.Current; }
-            }
-
-            public IReadOnlyList<int> Selection
-            {
-                get
-                {
-                    if (_virtualRow == null)
-                        return _selection;
-
-                    var virtualRowIndex = DataSet.Count;
-                    if (_selection.IsSelected(virtualRowIndex))
-                        return _selection.Where(x => x != virtualRowIndex).ToArray();
-
-                    return _selection;
-                }
-            }
-
-            public bool IsSelected(DataRowPresenter row)
-            {
-                Debug.Assert(row.Owner == _owner);
-                return row.RowType != RowType.DataRow ? false : _selection.IsSelected(IndexOf(row));
-            }
-
-            public void Select(int index, SelectionMode selectionMode)
-            {
-                Debug.Assert(index >= 0 || index < Count);
-                _selection = _selection.Select(index, selectionMode);
             }
         }
     }
