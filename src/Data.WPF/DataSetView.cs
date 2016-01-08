@@ -44,11 +44,6 @@ namespace DevZest.Data.Windows
 
         private void OnPresenterChanged(DataSetPresenter oldValue, DataSetPresenter newValue)
         {
-            if (oldValue != null)
-                oldValue.View = null;
-
-            Debug.Assert(newValue != null);
-            newValue.View = this;
         }
 
         public DataSetPresenter Presenter

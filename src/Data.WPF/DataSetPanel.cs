@@ -263,14 +263,7 @@ namespace DevZest.Data.Windows
 
         private DataSetView View
         {
-            get
-            {
-                if (_parent != null)
-                    return _parent.View;
-
-                var presenter = Presenter;
-                return presenter == null ? null : presenter.View;
-            }
+            get { return TemplatedParent as DataSetView; }
         }
 
         internal LayoutManager LayoutManager

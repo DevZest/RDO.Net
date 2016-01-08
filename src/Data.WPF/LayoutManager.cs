@@ -188,11 +188,6 @@ namespace DevZest.Data.Windows
 
         private void InvalidateMeasure()
         {
-            var dataSetView = Presenter.View;
-            if (dataSetView != null)
-            {
-                dataSetView.InvalidateMeasure();
-            }
         }
 
         internal void Measure(Size availableSize)

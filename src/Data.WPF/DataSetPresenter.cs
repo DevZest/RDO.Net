@@ -92,8 +92,6 @@ namespace DevZest.Data.Windows
             IsEmptySetVisible = value;
         }
 
-        internal DataSetView View { get; set; }
-
         private void OnRowAdded(int index)
         {
             if (CurrentRow == null)
