@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -43,27 +44,40 @@ namespace DevZest.Data.Windows
 
         public static T GetSourceValue<T>(this UIElement element, Column<T> column)
         {
-            var dataRowPresenter = element.GetDataRowPresenter();
-            if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
-                return default(T);
-            return column[dataRowPresenter.DataRow];
+            var dataRowPresenter = element.ExpectDataRowPresenter();
+            return dataRowPresenter.GetValue(column);
         }
 
-        public static void SetSourceValue<T>(this UIElement element, Column<T> column, T value)
+        public static object GetSourceValue(this UIElement element, Column column)
         {
-            var dataRowPresenter = element.GetDataRowPresenter();
-            if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
-                return;
-            column[dataRowPresenter.DataRow] = value;
+            var dataRowPresenter = element.ExpectDataRowPresenter();
+            return dataRowPresenter.GetValue(column);
+        }
+
+        public static void SetSourceValue<T>(this UIElement element, Column<T> column, T value, bool suppressUpdateTarget = true)
+        {
+            var dataRowPresenter = element.ExpectDataRowPresenter();
+            dataRowPresenter.SetValue(column, value, suppressUpdateTarget);
+        }
+
+        public static void SetSourceValue<T>(this UIElement element, Column column, object value, bool suppressUpdateTarget = true)
+        {
+            var dataRowPresenter = element.ExpectDataRowPresenter();
+            dataRowPresenter.SetValue(column, value, suppressUpdateTarget);
         }
 
         public static string GetSourceText(this UIElement element, Column column)
         {
-            var dataRowPresenter = element.GetDataRowPresenter();
-            if (dataRowPresenter == null || dataRowPresenter.DataRow == null)
-                return null;
+            var dataRowPresenter = element.ExpectDataRowPresenter();
+            return dataRowPresenter.GetValue(column).ToString();
+        }
 
-            return column.GetValue(dataRowPresenter.DataRow).ToString();
+        private static DataRowPresenter ExpectDataRowPresenter(this UIElement element)
+        {
+            var result = element.GetDataRowPresenter();
+            if (result == null)
+                throw new ArgumentException();
+            return result;
         }
     }
 }

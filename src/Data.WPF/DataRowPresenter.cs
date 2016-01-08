@@ -106,6 +106,9 @@ namespace DevZest.Data.Windows
 
         internal void OnUpdated()
         {
+            if (_updateTargetSuppressed)
+                return;
+
             var updated = Updated;
             if (updated != null)
                 updated(this, EventArgs.Empty);
@@ -199,15 +202,79 @@ namespace DevZest.Data.Windows
             return DataRow == null ? default(T) : column[DataRow];
         }
 
-        public void SetValue<T>(Column<T> column, T value)
+        private static object GetDefault(Type type)
+        {
+            if (type.IsValueType)
+                return Activator.CreateInstance(type);
+            return null;
+        }
+
+        public object GetValue(Column column)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            if (RowType != RowType.DataRow)
-                throw new InvalidOperationException();
+            return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
+        }
 
-            throw new NotImplementedException();
+        bool _updateTargetSuppressed;
+        private void EnterSuppressUpdateTarget()
+        {
+            Debug.Assert(!_updateTargetSuppressed);
+            _updateTargetSuppressed = true;
+        }
+
+        private void ExitSuppressUpdateTarget()
+        {
+            Debug.Assert(_updateTargetSuppressed);
+            _updateTargetSuppressed = false;
+        }
+      
+
+        public void SetValue<T>(Column<T> column, T value, bool suppressUpdateTarget = true)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            var dataRow = DataRow;
+            if (dataRow == null)
+                throw new InvalidOperationException(Strings.DataRowPresenter_SetValue_InvalidRowType);
+
+            if (suppressUpdateTarget)
+                EnterSuppressUpdateTarget();
+
+            try
+            {
+                column[dataRow] = value;
+            }
+            finally
+            {
+                if (suppressUpdateTarget)
+                    ExitSuppressUpdateTarget();
+            }
+        }
+
+        public void SetValue(Column column, object value, bool suppressUpdateTarget = true)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            var dataRow = DataRow;
+            if (dataRow == null)
+                throw new InvalidOperationException(Strings.DataRowPresenter_SetValue_InvalidRowType);
+
+            if (suppressUpdateTarget)
+                EnterSuppressUpdateTarget();
+
+            try
+            {
+                column.SetValue(dataRow, value);
+            }
+            finally
+            {
+                if (suppressUpdateTarget)
+                    ExitSuppressUpdateTarget();
+            }
         }
     }
 }

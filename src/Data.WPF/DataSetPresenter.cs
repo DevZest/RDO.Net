@@ -10,20 +10,43 @@ namespace DevZest.Data.Windows
 {
     public sealed partial class DataSetPresenter : IReadOnlyList<DataRowPresenter>
     {
-        public static DataSetPresenter Create<T>(DataSet<T> dataSet, Action<DataSetPresenterBuilder, T> builder = null)
+        internal static DataSetPresenter Create<T>(DataRowPresenter owner, T childModel, Action<DataSetPresenterBuilder, T> builder)
+            where T : Model, new()
+        {
+            Debug.Assert(owner != null);
+            Debug.Assert(childModel != null);
+            Debug.Assert(builder != null);
+
+            var result = new DataSetPresenter(owner, owner.DataRow[childModel]);
+            using (var presenterBuilder = new DataSetPresenterBuilder(result))
+            {
+                builder(presenterBuilder, childModel);
+            }
+
+            result.Initialize();
+            return result;
+        }
+
+        public static DataSetPresenter Create<T>(DataSet<T> dataSet, Action<DataSetPresenterBuilder, T> builderAction = null)
             where T : Model, new()
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
+            return Create<T>(null, dataSet, builderAction);
+        }
+
+        private static DataSetPresenter Create<T>(DataRowPresenter owner, DataSet<T> dataSet, Action<DataSetPresenterBuilder, T> builderAction)
+            where T : Model, new()
+        {
             var model = dataSet._;
-            var result = new DataSetPresenter(null, dataSet);
-            using (var presenterBuilder = new DataSetPresenterBuilder(result))
+            var result = new DataSetPresenter(owner, dataSet);
+            using (var builder = new DataSetPresenterBuilder(result))
             {
-                if (builder != null)
-                    builder(presenterBuilder, model);
+                if (builderAction != null)
+                    builderAction(builder, model);
                 else
-                    DefaultBuilder(presenterBuilder, model);
+                    DefaultBuilder(builder, model);
             }
 
             result.Initialize();

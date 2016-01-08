@@ -12,6 +12,14 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// Invalid RowType to SetValue, only RowType.DataRow is allowed.
+        /// </summary>
+        public static string DataRowPresenter_SetValue_InvalidRowType
+        {
+            get { return GetString("DataRowPresenter_SetValue_InvalidRowType"); }
+        }
+
+        /// <summary>
         /// The value is invalid. It does not belong to this DataSetPresenter.
         /// </summary>
         public static string DataSetPresenter_InvalidCurrentRow

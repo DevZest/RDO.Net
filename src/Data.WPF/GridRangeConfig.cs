@@ -63,10 +63,9 @@ namespace DevZest.Data.Windows
 
             return new ChildUnit.Builder<TView>(this, owner =>
             {
-                var dataRow = owner.DataRow;
-                if (dataRow == null)
+                if (owner.RowType != RowType.DataRow)
                     return null;
-                return DataSetPresenter.Create(dataRow.Children(childModel), builder);
+                return DataSetPresenter.Create(owner, childModel, builder);
             });
         }
 
