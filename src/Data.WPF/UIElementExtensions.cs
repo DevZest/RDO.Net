@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
         {
             var result = element.GetDataRowPresenter();
             if (result == null)
-                throw new ArgumentException();
+                throw new InvalidOperationException(Strings.UIElement_ExpectDataRowPresenter);
             return result;
         }
     }

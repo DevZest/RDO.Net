@@ -75,6 +75,14 @@ namespace DevZest.Data.Windows
             get { return GetString("TemplateUnit_InvalidElement"); }
         }
 
+        /// <summary>
+        /// The UIElement is not attached to DataRowPresenter.
+        /// </summary>
+        public static string UIElement_ExpectDataRowPresenter
+        {
+            get { return GetString("UIElement_ExpectDataRowPresenter"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
