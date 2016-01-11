@@ -395,5 +395,9 @@ namespace DevZest.Data
 
             return null;
         }
+
+        internal abstract void Save(DataRow dataRow);
+
+        internal abstract void Load(DataRow dataRow);
     }
 }

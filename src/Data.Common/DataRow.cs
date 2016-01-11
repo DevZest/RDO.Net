@@ -425,5 +425,17 @@ namespace DevZest.Data
             if (_mergedValidationMessages != oldValue)
                 OnUpdated();
         }
+
+        public void Save()
+        {
+            foreach (var column in Model.Columns)
+                column.Save(this);
+        }
+
+        public void Load()
+        {
+            foreach (var column in Model.Columns)
+                column.Load(this);
+        }
     }
 }

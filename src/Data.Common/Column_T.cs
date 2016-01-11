@@ -306,10 +306,15 @@ namespace DevZest.Data
         private void SetValue(DataRow dataRow, T value)
         {
             Debug.Assert(dataRow != null);
-            var ordinal = dataRow.Ordinal;
-            if (IsReadOnly(ordinal))
+            if (IsReadOnly(dataRow.Ordinal))
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
 
+            UpdateValue(dataRow, value);
+        }
+
+        private void UpdateValue(DataRow dataRow, T value)
+        {
+            var ordinal = dataRow.Ordinal;
             bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;
             if (!areEqual)
@@ -607,5 +612,19 @@ namespace DevZest.Data
         }
 
         protected abstract bool AreEqual(T x, T y);
+
+        internal sealed override void Save(DataRow dataRow)
+        {
+            var listValues = _valueManager as ListValueManager;
+            if (listValues != null)
+                _scalarValue = listValues[dataRow.Ordinal];
+        }
+
+        internal sealed override void Load(DataRow dataRow)
+        {
+            var listValues = _valueManager as ListValueManager;
+            if (listValues != null)
+                UpdateValue(dataRow, _scalarValue);
+        }
     }
 }
