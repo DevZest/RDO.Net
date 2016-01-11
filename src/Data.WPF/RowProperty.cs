@@ -5,7 +5,6 @@
         IsSelected = 0,
         IsCurrent,
         Index,
-        HasFocus,
         IsEditing
     }
 }
