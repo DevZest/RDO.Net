@@ -62,7 +62,18 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        public sealed override T Eval(DataRow dataRow)
+        protected internal sealed override T this[DataRow dataRow]
+        {
+            get { return Eval(dataRow); }
+        }
+
+        /// <inheritdoc/>
+        protected internal sealed override T Eval()
+        {
+            return Eval(null);
+        }
+
+        private T Eval(DataRow dataRow)
         {
             if (Param.ParentModel.DataSource.Kind != DataSourceKind.DataSet)
                 throw new InvalidOperationException(Strings.ColumnAggregateFunction_EvalOnNonDataSet(Param, Param.ParentModel.DataSource.Kind));

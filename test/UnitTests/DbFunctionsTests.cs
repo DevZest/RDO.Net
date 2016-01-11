@@ -28,10 +28,10 @@ namespace DevZest.Data
             var dataRow = dataSet.AddRow();
             
             column1[dataRow] = null;
-            Assert.AreEqual(true, isNullExpr.Eval(dataRow));
+            Assert.AreEqual(true, isNullExpr[dataRow]);
 
             column1[dataRow] = 1;
-            Assert.AreEqual(false, isNullExpr.Eval(dataRow));
+            Assert.AreEqual(false, isNullExpr[dataRow]);
         }
 
         [TestMethod]
@@ -46,10 +46,10 @@ namespace DevZest.Data
             var dataRow = dataSet.AddRow();
 
             column1[dataRow] = null;
-            Assert.AreEqual(false, isNotNullExpr.Eval(dataRow));
+            Assert.AreEqual(false, isNotNullExpr[dataRow]);
 
             column1[dataRow] = 1;
-            Assert.AreEqual(true, isNotNullExpr.Eval(dataRow));
+            Assert.AreEqual(true, isNotNullExpr[dataRow]);
         }
 
         [TestMethod]
@@ -65,10 +65,10 @@ namespace DevZest.Data
             var dataRow = dataSet.AddRow();
 
             column1[dataRow] = null;
-            Assert.AreEqual(10, expr.Eval(dataRow));
+            Assert.AreEqual(10, expr[dataRow]);
 
             column1[dataRow] = 1;
-            Assert.AreEqual(1, expr.Eval(dataRow));
+            Assert.AreEqual(1, expr[dataRow]);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace DevZest.Data
             var getDateExpr = Functions.GetDate();
             ((DbFunctionExpression)getDateExpr.DbExpression).Verify(FunctionKeys.GetDate);
 
-            var currentDate = getDateExpr.Eval(null);
+            var currentDate = getDateExpr.Eval();
             var span = DateTime.Now - currentDate;
             Assert.AreEqual(true, span.Value.Seconds < 1);
         }
@@ -88,7 +88,7 @@ namespace DevZest.Data
             var getUtcDateExpr = Functions.GetUtcDate();
             ((DbFunctionExpression)getUtcDateExpr.DbExpression).Verify(FunctionKeys.GetUtcDate);
 
-            var currentDate = getUtcDateExpr.Eval(null);
+            var currentDate = getUtcDateExpr.Eval();
             var span = DateTime.UtcNow - currentDate;
             Assert.AreEqual(true, span.Value.Seconds < 1);
         }
@@ -99,7 +99,7 @@ namespace DevZest.Data
             var newGuidExpr = Functions.NewGuid();
             ((DbFunctionExpression)newGuidExpr.DbExpression).Verify(FunctionKeys.NewGuid);
 
-            var newGuid = newGuidExpr.Eval(null);
+            var newGuid = newGuidExpr.Eval();
             Assert.IsTrue(newGuid.HasValue);
         }
     }

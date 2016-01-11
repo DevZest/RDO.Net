@@ -61,10 +61,21 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        public sealed override TResult Eval(DataRow dataRow)
+        protected internal sealed override TResult this[DataRow dataRow]
         {
-            var x = Left.Eval(dataRow);
-            var y = Right.Eval(dataRow);
+            get
+            {
+                var x = Left[dataRow];
+                var y = Right[dataRow];
+                return EvalCore(x, y);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected internal sealed override TResult Eval()
+        {
+            var x = Left.Eval();
+            var y = Right.Eval();
             return EvalCore(x, y);
         }
 

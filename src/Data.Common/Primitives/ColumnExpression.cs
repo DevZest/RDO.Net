@@ -11,12 +11,9 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="T">Data type of the expression.</typeparam>
     public abstract class ColumnExpression<T>
     {
-        /// <summary>
-        /// Evaluates the expression against provided <see cref="DataRow"/> object.
-        /// </summary>
-        /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
-        /// <returns>The evaluated result.</returns>
-        public abstract T Eval(DataRow dataRow);
+        protected internal abstract T this[DataRow dataRow] { get; }
+
+        protected internal abstract T Eval();
 
         /// <summary>
         /// Gets the <see cref="Column{T}" /> object which owns this expression.

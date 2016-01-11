@@ -739,6 +739,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("DataRow_DeserializeColumn_InvalidColumnName", "columnName", "dataRowString"), columnName, dataRowString);
         }
 
+        /// <summary>
+        /// The Expression property is null. The Eval operation can only be performed against expression column.
+        /// </summary>
+        public static string Column_Eval_NullExpression
+        {
+            get { return GetString("Column_Eval_NullExpression"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

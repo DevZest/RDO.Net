@@ -110,12 +110,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(i * count, first2.Eval(dataRow));
+                Assert.AreEqual(i * count, first2[dataRow]);
                 var childDataSet = dataRow.Children(x.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(i * count * count + j * count, first3.Eval(childDataRow));
+                    Assert.AreEqual(i * count * count + j * count, first3[childDataRow]);
                 }
             }
         }
@@ -143,12 +143,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual((i + 1) * count - 1, last2.Eval(dataRow));
+                Assert.AreEqual((i + 1) * count - 1, last2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(i * count * count + (j + 1) * count - 1, last3.Eval(childDataRow));
+                    Assert.AreEqual(i * count * count + (j + 1) * count - 1, last3[childDataRow]);
                 }
             }
         }
@@ -176,12 +176,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, count2.Eval(dataRow));
+                Assert.AreEqual(count - 1, count2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, count3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, count3[childDataRow]);
                 }
             }
         }
@@ -209,12 +209,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count, count2.Eval(dataRow));
+                Assert.AreEqual(count, count2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count, count3.Eval(childDataRow));
+                    Assert.AreEqual(count, count3[childDataRow]);
                 }
             }
         }
@@ -242,12 +242,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, sum2.Eval(dataRow));
+                Assert.AreEqual(count - 1, sum2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, sum3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, sum3[childDataRow]);
                 }
             }
         }
@@ -275,12 +275,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, sum2.Eval(dataRow));
+                Assert.AreEqual(count - 1, sum2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, sum3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, sum3[childDataRow]);
                 }
             }
         }
@@ -308,12 +308,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, sum2.Eval(dataRow));
+                Assert.AreEqual(count - 1, sum2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, sum3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, sum3[childDataRow]);
                 }
             }
         }
@@ -341,12 +341,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, sum2.Eval(dataRow));
+                Assert.AreEqual(count - 1, sum2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, sum3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, sum3[childDataRow]);
                 }
             }
         }
@@ -374,12 +374,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(count - 1, sum2.Eval(dataRow));
+                Assert.AreEqual(count - 1, sum2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(count - 1, sum3.Eval(childDataRow));
+                    Assert.AreEqual(count - 1, sum3[childDataRow]);
                 }
             }
         }
@@ -407,12 +407,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(i * count, min2.Eval(dataRow));
+                Assert.AreEqual(i * count, min2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(i * count * count + j * count, min3.Eval(childDataRow));
+                    Assert.AreEqual(i * count * count + j * count, min3[childDataRow]);
                 }
             }
         }
@@ -440,12 +440,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual((i * count).ToString(STR_PADDING), min2.Eval(dataRow));
+                Assert.AreEqual((i * count).ToString(STR_PADDING), min2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual((i * count * count + j * count).ToString(STR_PADDING), min3.Eval(childDataRow));
+                    Assert.AreEqual((i * count * count + j * count).ToString(STR_PADDING), min3[childDataRow]);
                 }
             }
         }
@@ -473,12 +473,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual((i + 1) * count - 1, max2.Eval(dataRow));
+                Assert.AreEqual((i + 1) * count - 1, max2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(i * count * count + (j + 1) * count - 1, max3.Eval(childDataRow));
+                    Assert.AreEqual(i * count * count + (j + 1) * count - 1, max3[childDataRow]);
                 }
             }
         }
@@ -505,12 +505,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(((i + 1) * count - 1).ToString(STR_PADDING), max2.Eval(dataRow));
+                Assert.AreEqual(((i + 1) * count - 1).ToString(STR_PADDING), max2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual((i * count * count + (j + 1) * count - 1).ToString(STR_PADDING), max3.Eval(childDataRow));
+                    Assert.AreEqual((i * count * count + (j + 1) * count - 1).ToString(STR_PADDING), max3[childDataRow]);
                 }
             }
         }
@@ -538,12 +538,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(2, avg2.Eval(dataRow));
+                Assert.AreEqual(2, avg2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(2, avg3.Eval(childDataRow));
+                    Assert.AreEqual(2, avg3[childDataRow]);
                 }
             }
         }
@@ -571,12 +571,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(2, avg2.Eval(dataRow));
+                Assert.AreEqual(2, avg2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(2, avg3.Eval(childDataRow));
+                    Assert.AreEqual(2, avg3[childDataRow]);
                 }
             }
         }
@@ -604,12 +604,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(2, avg2.Eval(dataRow));
+                Assert.AreEqual(2, avg2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(2, avg3.Eval(childDataRow));
+                    Assert.AreEqual(2, avg3[childDataRow]);
                 }
             }
         }
@@ -637,12 +637,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(2, avg2.Eval(dataRow));
+                Assert.AreEqual(2, avg2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(2, avg3.Eval(childDataRow));
+                    Assert.AreEqual(2, avg3[childDataRow]);
                 }
             }
         }
@@ -670,12 +670,12 @@ namespace DevZest.Data
             for (int i = 0; i < count; i++)
             {
                 var dataRow = dataSet[i];
-                Assert.AreEqual(2, avg2.Eval(dataRow));
+                Assert.AreEqual(2, avg2[dataRow]);
                 var childDataSet = dataRow.Children(model.Child);
                 for (int j = 0; j < count; j++)
                 {
                     var childDataRow = childDataSet[j];
-                    Assert.AreEqual(2, avg3.Eval(childDataRow));
+                    Assert.AreEqual(2, avg3[childDataRow]);
                 }
             }
         }

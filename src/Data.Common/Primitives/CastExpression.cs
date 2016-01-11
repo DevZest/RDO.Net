@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using System;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
 {
@@ -24,9 +25,15 @@ namespace DevZest.Data.Primitives
         protected abstract TTarget Cast(TSource value);
 
         /// <inheritdoc/>
-        public sealed override TTarget Eval(DataRow dataRow)
+        protected internal sealed override TTarget this[DataRow dataRow]
         {
-            return Cast(Operand.Eval(dataRow));
+            get { return Cast(Operand[dataRow]); }
+        }
+
+        /// <inheritdoc/>
+        protected internal sealed override TTarget Eval()
+        {
+            return Cast(Operand.Eval());
         }
 
         /// <inheritdoc/>

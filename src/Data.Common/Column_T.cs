@@ -163,7 +163,7 @@ namespace DevZest.Data
 
             public T this[int ordinal]
             {
-                get { return _computation.Eval(_dataSet[ordinal]); }
+                get { return _computation[_dataSet[ordinal]]; }
                 set { Debug.Fail("Computed column is read only."); }
             }
 
@@ -272,35 +272,35 @@ namespace DevZest.Data
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> object.</summary>
         /// <param name="dataRow">The provided <see cref="DataRow"/> object.</param>
         /// <returns>The value of this column from provided <see cref="DataRow"/> object.</returns>
-        /// <remarks>If <paramref name="dataRow"/> is <see langword="null"/>, gets or sets the value of this column's <see cref="ScalarValue"/>.</remarks>
+        /// <exception cref="ArgumentNullException">The <paramref name="dataRow"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">This column does not belong to provided <paramref name="dataRow"/>.</exception>
         /// <exception cref="InvalidOperationException">This column is read only when setting the value.</exception>
-        /// <seealso cref="ScalarValue"/>
         /// <seealso cref="IsReadOnly(DataRow)"/>
         public T this[DataRow dataRow]
         {
             get
             {
-                if (dataRow == null)
-                    return ScalarValue;
-
                 if (IsExpression)
-                    return _expression.Eval(dataRow);
+                {
+                    Check.NotNull(dataRow, nameof(dataRow));
+                    return _expression[dataRow];
+                }
 
-                VerifyDataRow(dataRow);
+                VerifyDataRow(dataRow, nameof(dataRow));
                 return ValueManager[dataRow.Ordinal];
             }
             set
             {
-                if (dataRow == null)
-                {
-                    ScalarValue = value;
-                    return;
-                }
-
-                VerifyDataRow(dataRow);
+                VerifyDataRow(dataRow, nameof(dataRow));
                 SetValue(dataRow, value);
             }
+        }
+
+        public T Eval()
+        {
+            if (!IsExpression)
+                throw new InvalidOperationException(Strings.Column_Eval_NullExpression);
+            return _expression.Eval();
         }
 
         private void SetValue(DataRow dataRow, T value)
@@ -316,12 +316,11 @@ namespace DevZest.Data
                 OnValueChanged(dataRow);
         }
 
-        private void VerifyDataRow(DataRow dataRow)
+        private void VerifyDataRow(DataRow dataRow, string paramName)
         {
-            Debug.Assert(dataRow != null);
-
+            Check.NotNull(dataRow, paramName);
             if (dataRow.Model != ParentModel)
-                throw new ArgumentException(Strings.Column_VerifyDataRow, nameof(dataRow));
+                throw new ArgumentException(Strings.Column_VerifyDataRow, paramName);
         }
 
         /// <summary>Gets a value indicates whether this column is readonly for provided <see cref="DataRow"/> object.</summary>
@@ -329,10 +328,7 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if this column is readonly for provided <paramref name="dataRow"/>, otherwise <see langword="false"/>.</returns>
         public bool IsReadOnly(DataRow dataRow)
         {
-            if (dataRow == null)
-                return false;
-
-            VerifyDataRow(dataRow);
+            VerifyDataRow(dataRow, nameof(dataRow));
             return IsReadOnly(dataRow.Ordinal);
         }
 
@@ -413,24 +409,12 @@ namespace DevZest.Data
             _valueManager.ClearRows();
         }
 
-        /// <summary>Gets or sets a scalar value for this column.</summary>
-        /// <remarks>The <see cref="ScalarValue"/> can be used to temporarily store a value for this column.
-        /// It does not participate value evaluaiton nor validation.</remarks>
-        public T ScalarValue { get; set; }
+        private T _scalarValue;
 
         /// <inheritdoc/>
         public override bool IsExpression
         {
             get { return _expression != null; }
-        }
-
-        /// <summary>Evaluates the expression against the provided <see cref="DataRow"/> object.</summary>
-        /// <param name="dataRow">The provided <see cref="DataRow"/> object. If <see langword="null"/> provided, it will be
-        /// evaluated against the <see cref="ScalarValue"/>.</param>
-        /// <returns>The result value.</returns>
-        public T Eval(DataRow dataRow = null)
-        {
-            return IsExpression ? _expression.Eval(dataRow) : this[dataRow];
         }
 
         /// <inheritdoc/>
@@ -456,6 +440,11 @@ namespace DevZest.Data
         public sealed override bool IsNull(DataRow dataRow)
         {
             return IsNull(this[dataRow]);
+        }
+
+        public sealed override bool IsEvalNull
+        {
+            get { return IsNull(Eval()); }
         }
 
         /// <inheritdoc/>
@@ -546,7 +535,7 @@ namespace DevZest.Data
         internal virtual T GetDefaultValue(DataRow dataRow)
         {
             var defaultDef = this.GetDefault();
-            return defaultDef != null ? defaultDef.DefaultValue.Eval(dataRow) : default(T);
+            return defaultDef != null ? defaultDef.DefaultValue[dataRow] : default(T);
         }
 
         /// <summary>Defines the computation expression for this column.</summary>
@@ -578,10 +567,9 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public sealed override void Compute(DataRow dataRow)
         {
+            VerifyDataRow(dataRow, nameof(dataRow));
             if (Computation == null)
                 return;
-
-            VerifyDataRow(dataRow);
             this[dataRow] = Computation[dataRow];
         }
 

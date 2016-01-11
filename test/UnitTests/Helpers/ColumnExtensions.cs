@@ -36,12 +36,7 @@ namespace DevZest.Data.Helpers
 
         public static void VerifyEval<T>(this Column<T> column, T expectedValue)
         {
-            column.VerifyEval(expectedValue, null);
-        }
-
-        public static void VerifyEval<T>(this Column<T> column, T expectedValue, DataRow dataRow)
-        {
-            Assert.AreEqual(expectedValue, column.Eval(dataRow));
+            Assert.AreEqual(expectedValue, column.Eval());
         }
 
         public static void VerifyNullable(this Column column, bool expectedValue)

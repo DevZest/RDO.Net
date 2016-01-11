@@ -120,7 +120,7 @@ namespace DevZest.Data
 
         private void TestStringColumnCast(String x, Boolean? expectedValue)
         {
-            _String column1 = x;
+            _String column1 = _String.Const(x);
             _Boolean expr = (_Boolean)column1;
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(String), typeof(Boolean?));

@@ -52,7 +52,12 @@ namespace DevZest.Data.SqlServer
                 return Parameters[0].AggregateModelSet;
             }
 
-            public override T Eval(DataRow dataRow)
+            protected override T this[DataRow dataRow]
+            {
+                get { throw new NotSupportedException(); }
+            }
+
+            protected override T Eval()
             {
                 throw new NotSupportedException();
             }

@@ -11,7 +11,12 @@ namespace DevZest.Data.Primitives
 
         public T Value { get; private set; }
 
-        public sealed override T Eval(DataRow dataRow)
+        protected internal sealed override T this[DataRow dataRow]
+        {
+            get { return Value; }
+        }
+
+        protected internal sealed override T Eval()
         {
             return Value;
         }

@@ -20,16 +20,32 @@ namespace DevZest.Data.Primitives
         private Column<TResult> _else;
 
         /// <inheritdoc/>
-        public override TResult Eval(DataRow dataRow)
+        protected internal sealed override TResult this[DataRow dataRow]
+        {
+            get
+            {
+                for (int i = 0; i < _when.Count; i++)
+                {
+                    var whenValue = _when[i][dataRow];
+                    if (whenValue == true)
+                        return _then[i][dataRow];
+                }
+
+                return _else[dataRow];
+            }
+        }
+
+        /// <inheritdoc/>
+        protected internal sealed override TResult Eval()
         {
             for (int i = 0; i < _when.Count; i++)
             {
-                var whenValue = _when[i].Eval(dataRow);
+                var whenValue = _when[i].Eval();
                 if (whenValue == true)
-                    return _then[i].Eval(dataRow);
+                    return _then[i].Eval();
             }
 
-            return _else.Eval(dataRow);
+            return _else.Eval();
         }
 
         /// <summary>Builds the WHEN...THEN... expression.</summary>

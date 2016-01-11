@@ -390,4 +390,7 @@
   <data name="DataRow_DeserializeColumn_InvalidColumnName" xml:space="preserve">
     <value>The column name '{columnName}' is invalid for DataRow '{dataRowString}'.</value>
   </data>
+  <data name="Column_Eval_NullExpression" xml:space="preserve">
+    <value>The Expression property is null. The Eval operation can only be performed against expression column.</value>
+  </data>
 </root>

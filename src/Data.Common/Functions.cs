@@ -23,9 +23,14 @@ namespace DevZest.Data
                 get { return FunctionKeys.IsNull; }
             }
 
-            public override bool? Eval(DataRow dataRow)
+            protected internal override bool? this[DataRow dataRow]
             {
-                return _column.IsNull(dataRow);
+                get { return _column.IsNull(dataRow); }
+            }
+
+            protected internal override bool? Eval()
+            {
+                return _column.IsEvalNull;
             }
         }
 
@@ -54,9 +59,14 @@ namespace DevZest.Data
                 get { return FunctionKeys.IsNotNull; }
             }
 
-            public override bool? Eval(DataRow dataRow)
+            protected internal override bool? this[DataRow dataRow]
             {
-                return !_column.IsNull(dataRow);
+                get { return !_column.IsNull(dataRow); }
+            }
+
+            protected internal override bool? Eval()
+            {
+                return !_column.IsEvalNull;
             }
         }
 
@@ -87,10 +97,19 @@ namespace DevZest.Data
             Column<T> _column;
             Column<T> _replaceColumn;
 
-            public override T Eval(DataRow dataRow)
+            protected internal override T this[DataRow dataRow]
             {
-                var result = _column[dataRow];
-                return _column.IsNull(dataRow) ? _replaceColumn[dataRow] : _column[dataRow];
+                get
+                {
+                    var result = _column[dataRow];
+                    return _column.IsNull(dataRow) ? _replaceColumn[dataRow] : _column[dataRow];
+                }
+            }
+
+            protected internal override T Eval()
+            {
+                var result = _column.Eval();
+                return _column.IsEvalNull ? _replaceColumn.Eval() : _column.Eval();
             }
         }
 
@@ -126,7 +145,12 @@ namespace DevZest.Data
 
         private class GetDateFunction : ScalarFunctionExpression<DateTime?>
         {
-            public override DateTime? Eval(DataRow dataRow)
+            protected internal override DateTime? this[DataRow dataRow]
+            {
+                get { return DateTime.Now; }
+            }
+
+            protected internal override DateTime? Eval()
             {
                 return DateTime.Now;
             }
@@ -148,7 +172,12 @@ namespace DevZest.Data
 
         private class GetUtcDateFunction : ScalarFunctionExpression<DateTime?>
         {
-            public override DateTime? Eval(DataRow dataRow)
+            protected internal override DateTime? this[DataRow dataRow]
+            {
+                get { return DateTime.UtcNow; }
+            }
+
+            protected internal override DateTime? Eval()
             {
                 return DateTime.UtcNow;
             }
@@ -170,7 +199,12 @@ namespace DevZest.Data
 
         private class NewGuidFunction : ScalarFunctionExpression<Guid?>
         {
-            public override Guid? Eval(DataRow dataRow)
+            protected internal override Guid? this[DataRow dataRow]
+            {
+                get { return Guid.NewGuid(); }
+            }
+
+            protected internal override Guid? Eval()
             {
                 return Guid.NewGuid();
             }

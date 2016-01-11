@@ -31,13 +31,13 @@ namespace DevZest.Data
 
             var dataRow = dataSet.AddRow();
             column1[dataRow] = 1;
-            Assert.AreEqual(true, expr.Eval(dataRow));
+            Assert.AreEqual(true, expr[dataRow]);
 
             column1[dataRow] = 0;
-            Assert.AreEqual(false, expr.Eval(dataRow));
+            Assert.AreEqual(false, expr[dataRow]);
 
             column1[dataRow] = null;
-            Assert.AreEqual(null, expr.Eval(dataRow));
+            Assert.AreEqual(null, expr[dataRow]);
         }
 
         [TestMethod]
@@ -56,13 +56,13 @@ namespace DevZest.Data
             dbExpr.Verify(null, c1, _Boolean.True, c0, _Boolean.False, _Boolean.Null);
 
             column1[dataRow] = 1;
-            Assert.AreEqual(true, expr.Eval(dataRow));
+            Assert.AreEqual(true, expr[dataRow]);
 
             column1[dataRow] = 0;
-            Assert.AreEqual(false, expr.Eval(dataRow));
+            Assert.AreEqual(false, expr[dataRow]);
 
             column1[dataRow] = null;
-            Assert.AreEqual(null, expr.Eval(dataRow));
+            Assert.AreEqual(null, expr[dataRow]);
         }
     }
 }

@@ -40,10 +40,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        public sealed override T Eval(DataRow dataRow)
+        protected internal sealed override T this[DataRow dataRow]
         {
-            var x = Operand.Eval(dataRow);
-            return EvalCore(x);
+            get { return EvalCore(Operand[dataRow]); }
+        }
+
+        /// <inheritdoc/>
+        protected internal sealed override T Eval()
+        {
+            return EvalCore(Operand.Eval());
         }
 
         /// <summary>Evaluates against the given value.</summary>
