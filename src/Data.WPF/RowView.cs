@@ -6,41 +6,41 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataRowPresenter
+    public sealed class RowView
     {
-        internal static DataRowPresenter Create(DataSetPresenter owner, DataRow dataRow)
+        internal static RowView Create(DataView owner, DataRow dataRow)
         {
-            return new DataRowPresenter(owner, dataRow);
+            return new RowView(owner, dataRow);
         }
 
-        internal static DataRowPresenter CreateEof(DataSetPresenter owner)
+        internal static RowView CreateEof(DataView owner)
         {
-            return new DataRowPresenter(owner, RowType.Eof);
+            return new RowView(owner, RowType.Eof);
         }
 
-        internal static DataRowPresenter CreateEmptySet(DataSetPresenter owner)
+        internal static RowView CreateEmptySet(DataView owner)
         {
-            return new DataRowPresenter(owner, RowType.EmptySet);
+            return new RowView(owner, RowType.EmptySet);
         }
 
-        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow)
+        private RowView(DataView owner, DataRow dataRow)
             : this(owner, dataRow, RowType.DataRow)
         {
         }
 
-        private DataRowPresenter(DataSetPresenter owner, RowType rowType)
+        private RowView(DataView owner, RowType rowType)
             : this(owner, null, rowType)
         {
         }
 
-        private DataRowPresenter(DataSetPresenter owner, DataRow dataRow, RowType rowType)
+        private RowView(DataView owner, DataRow dataRow, RowType rowType)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             _owner = owner;
             DataRow = dataRow;
             RowType = rowType;
-            Children = InitChildDataSetPresenters();
+            Children = InitChildViews();
         }
 
         internal void Dispose()
@@ -50,8 +50,8 @@ namespace DevZest.Data.Windows
             EnsureUIElementsRecycled();
         }
 
-        private DataSetPresenter _owner;
-        public DataSetPresenter Owner
+        private DataView _owner;
+        public DataView Owner
         {
             get
             {
@@ -74,9 +74,9 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? null : Owner.Model; }
         }
 
-        private static DataSetPresenter[] s_emptyChildren = new DataSetPresenter[0];
-        public IReadOnlyList<DataSetPresenter> Children { get; private set; }
-        private IReadOnlyList<DataSetPresenter> InitChildDataSetPresenters()
+        private static DataView[] s_emptyChildren = new DataView[0];
+        public IReadOnlyList<DataView> Children { get; private set; }
+        private IReadOnlyList<DataView> InitChildViews()
         {
             if (RowType != RowType.DataRow)
                 return s_emptyChildren;
@@ -85,9 +85,9 @@ namespace DevZest.Data.Windows
             if (childEntries.Count == 0)
                 return s_emptyChildren;
 
-            var result = new DataSetPresenter[childEntries.Count];
+            var result = new DataView[childEntries.Count];
             for (int i = 0; i < childEntries.Count; i++)
-                result[i] = childEntries[i].ChildPresenterConstructor(this);
+                result[i] = childEntries[i].ChildViewConstructor(this);
 
             return result;
         }
@@ -278,7 +278,7 @@ namespace DevZest.Data.Windows
         {
             var dataRow = DataRow;
             if (dataRow == null)
-                throw new InvalidOperationException(Strings.DataRowPresenter_ExpectDataRow);
+                throw new InvalidOperationException(Strings.RowView_ExpectDataRow);
             return dataRow;
         }
 

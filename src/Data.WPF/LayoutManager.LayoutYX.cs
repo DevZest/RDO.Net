@@ -4,8 +4,8 @@
     {
         private sealed class LayoutYX : LayoutManager
         {
-            public LayoutYX(DataSetPresenter presenter)
-                : base(presenter)
+            public LayoutYX(DataView view)
+                : base(view)
             {
             }
         }

@@ -4,8 +4,8 @@
     {
         private abstract class DuplexOrientationLayout : LayoutManager
         {
-            public DuplexOrientationLayout(DataSetPresenter presenter)
-                : base(presenter)
+            public DuplexOrientationLayout(DataView view)
+                : base(view)
             {
             }
         }

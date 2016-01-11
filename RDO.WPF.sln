@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.WPF", "src\Data.WPF\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests\UnitTests.csproj", "{0A97428A-730F-4939-BF41-A65AE91BB01E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSetViewSample", "test\SampleApp\DataSetViewSample.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "test\SampleApp\SampleApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

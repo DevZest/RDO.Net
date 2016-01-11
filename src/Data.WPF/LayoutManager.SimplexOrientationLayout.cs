@@ -4,8 +4,8 @@
     {
         private abstract class SimplexOrientationLayout : LayoutManager
         {
-            public SimplexOrientationLayout(DataSetPresenter presenter)
-                : base(presenter)
+            public SimplexOrientationLayout(DataView view)
+                : base(view)
             {
             }
         }

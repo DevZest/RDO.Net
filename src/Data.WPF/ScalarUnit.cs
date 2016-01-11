@@ -37,7 +37,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataSetPresenterBuilder End(GridRangeConfig rangeConfig, ScalarUnit unit)
+            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ScalarUnit unit)
             {
                 return rangeConfig.End(unit);
             }

@@ -4,9 +4,9 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
-    public class DataRowView : Control
+    public class RowForm : Control
     {
-        public DataRowPresenter Presenter { get; internal set; }
+        public RowView View { get; internal set; }
 
         protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
@@ -16,15 +16,15 @@ namespace DevZest.Data.Windows
         protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
             base.OnLostKeyboardFocus(e);
-            if (Presenter != null)
-                Presenter.IsFocused = false;
+            if (View != null)
+                View.IsFocused = false;
         }
 
         protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
         {
             base.OnPreviewGotKeyboardFocus(e);
-            if (Presenter != null)
-                Presenter.IsFocused = true;
+            if (View != null)
+                View.IsFocused = true;
         }
     }
 }

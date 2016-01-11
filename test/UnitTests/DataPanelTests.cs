@@ -10,18 +10,18 @@ using System.Windows.Threading;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataSetPanelTests
+    public class DataPanelTests
     {
         [TestMethod]
-        public void DataSetPanel_properly_initialized()
+        public void DataPanel_properly_initialized()
         {
-            var dataSetView = new DataSetView();
-            dataSetView.Show(DataSetPresenter.Create(DataSet<Adhoc>.New()));
+            var dataForm = new DataForm();
+            dataForm.Show(DataView.Create(DataSet<Adhoc>.New()));
 
-            dataSetView.RunAfterLoaded(x =>
+            dataForm.RunAfterLoaded(x =>
             {
-                var layoutManager = dataSetView.Presenter.LayoutManager;
-                var dataSetPanel = x.FindVisualChild<DataSetPanel>();
+                var layoutManager = dataForm.View.LayoutManager;
+                var dataSetPanel = x.FindVisualChild<DataPanel>();
                 Assert.IsTrue(dataSetPanel != null, "Failed to resolve DataSetPanel from control template.");
                 Verify(dataSetPanel, layoutManager.ScrollableElements);
                 Assert.IsTrue(dataSetPanel.Child == null);
@@ -29,28 +29,28 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataSetPanel_properly_initialized_pinned()
+        public void DataPanel_properly_initialized_pinned()
         {
-            var dataSetView = new DataSetView();
-            dataSetView.Show(DataSetPresenter.Create(DataSet<Adhoc>.New(), (c, m) =>
+            var dataForm = new DataForm();
+            dataForm.Show(DataView.Create(DataSet<Adhoc>.New(), (c, m) =>
             {
                 c.WithPinnedLeft(1);
             }));
 
-            dataSetView.RunAfterLoaded(x =>
+            dataForm.RunAfterLoaded(x =>
             {
-                var layoutManager = dataSetView.Presenter.LayoutManager;
-                var dataSetPanel = x.FindVisualChild<DataSetPanel>();
+                var layoutManager = dataForm.View.LayoutManager;
+                var dataSetPanel = x.FindVisualChild<DataPanel>();
                 Assert.IsTrue(dataSetPanel != null, "Failed to resolve DataSetPanel from control template.");
                 Verify(dataSetPanel, layoutManager.PinnedElements);
                 Verify(dataSetPanel.Child, layoutManager.ScrollableElements);
             });
         }
 
-        private static void Verify(DataSetPanel dataSetPanel, IReadOnlyList<UIElement> elements)
+        private static void Verify(DataPanel dataPanel, IReadOnlyList<UIElement> elements)
         {
-            Assert.IsTrue(dataSetPanel.Elements == elements);
-            Assert.IsTrue(((IElementCollection)elements).Parent == dataSetPanel);
+            Assert.IsTrue(dataPanel.Elements == elements);
+            Assert.IsTrue(((IElementCollection)elements).Parent == dataPanel);
         }
     }
 }

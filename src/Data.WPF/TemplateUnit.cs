@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Owner { get; private set; }
 
-        public DataSetPresenter Presenter
+        public DataView View
         {
             get { return Owner == null ? null : Owner.Owner; }
         }
@@ -179,13 +179,13 @@ namespace DevZest.Data.Windows
         private void EnterUpdatingTarget()
         {
             if (Owner != null)  // Owner == null only possible in unit test
-                Presenter.EnterUpdatingTarget();
+                View.EnterUpdatingTarget();
         }
 
         private void ExitUpdatingTarget()
         {
             if (Owner != null)  // Owner == null only possible in unit test
-                Presenter.ExitUpdatingTarget();
+                View.ExitUpdatingTarget();
         }
 
         public void UpdateTarget(UIElement element)

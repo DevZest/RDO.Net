@@ -39,12 +39,12 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridTemplate(DataSetPresenter owner)
+        internal GridTemplate(DataView owner)
         {
             Owner = owner;
         }
 
-        public DataSetPresenter Owner { get; private set; }
+        public DataView Owner { get; private set; }
 
         public Model Model
         {

@@ -5,19 +5,19 @@ namespace DevZest.Data.Windows
 {
     public struct GridRangeConfig
     {
-        internal GridRangeConfig(DataSetPresenterBuilder presenterBuilder, GridRange gridRange)
+        internal GridRangeConfig(DataViewBuilder viewBuilder, GridRange gridRange)
         {
-            PresenterBuilder = presenterBuilder;
+            ViewBuilder = viewBuilder;
             GridRange = gridRange;
         }
 
-        public readonly DataSetPresenterBuilder PresenterBuilder;
+        internal readonly DataViewBuilder ViewBuilder;
 
-        public readonly GridRange GridRange;
+        internal readonly GridRange GridRange;
 
         private GridTemplate Template
         {
-            get { return PresenterBuilder.Presenter.Template; }
+            get { return ViewBuilder.View.Template; }
         }
 
         private void VerifyNotEmpty()
@@ -33,10 +33,10 @@ namespace DevZest.Data.Windows
             return new ScalarUnit.Builder<T>(this);
         }
 
-        internal DataSetPresenterBuilder End(ScalarUnit scalarUnit)
+        internal DataViewBuilder End(ScalarUnit scalarUnit)
         {
             Template.AddScalarUnit(GridRange, scalarUnit);
-            return PresenterBuilder;
+            return ViewBuilder;
         }
 
         public ListUnit.Builder<T> BeginListUnit<T>()
@@ -46,39 +46,39 @@ namespace DevZest.Data.Windows
             return new ListUnit.Builder<T>(this);
         }
 
-        internal DataSetPresenterBuilder End(ListUnit listUnit)
+        internal DataViewBuilder End(ListUnit listUnit)
         {
             Template.AddListUnit(GridRange, listUnit);
-            return PresenterBuilder;
+            return ViewBuilder;
         }
 
-        public ChildUnit.Builder<TView> BeginChildUnit<TModel, TView>(TModel childModel, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildUnit.Builder<TForm> BeginChildUnit<TModel, TForm>(TModel childModel, Action<DataViewBuilder, TModel> builder)
             where TModel : Model, new()
-            where TView : DataSetView, new()
+            where TForm : DataForm, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildUnit.Builder<TView>(this, owner =>
+            return new ChildUnit.Builder<TForm>(this, owner =>
             {
                 if (owner.RowType != RowType.DataRow)
                     return null;
-                return DataSetPresenter.Create(owner, childModel, builder);
+                return DataView.Create(owner, childModel, builder);
             });
         }
 
-        public ChildUnit.Builder<TView> BeginChildUnit<TModel, TView>(_DataSet<TModel> child, Action<DataSetPresenterBuilder, TModel> builder)
+        public ChildUnit.Builder<TForm> BeginChildUnit<TModel, TForm>(_DataSet<TModel> child, Action<DataViewBuilder, TModel> builder)
             where TModel : Model, new()
-            where TView : DataSetView, new()
+            where TForm : DataForm, new()
         {
             if (child == null)
                 throw new ArgumentNullException(nameof(child));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildUnit.Builder<TView>(this, owner =>
+            return new ChildUnit.Builder<TForm>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -86,22 +86,22 @@ namespace DevZest.Data.Windows
                 var childDataSet = child[dataRow];
                 if (childDataSet == null)
                     return null;
-                return DataSetPresenter.Create(childDataSet, builder);
+                return DataView.Create(childDataSet, builder);
             });
         }
 
-        internal DataSetPresenterBuilder End(ChildUnit childUnit)
+        internal DataViewBuilder End(ChildUnit childUnit)
         {
             Template.AddChildUnit(GridRange, childUnit);
-            return PresenterBuilder;
+            return ViewBuilder;
         }
 
-        public DataSetPresenterBuilder AsListRange()
+        public DataViewBuilder AsListRange()
         {
             VerifyNotEmpty();
 
             Template.ListRange = GridRange;
-            return PresenterBuilder;
+            return ViewBuilder;
         }
     }
 }

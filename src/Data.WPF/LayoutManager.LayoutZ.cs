@@ -4,8 +4,8 @@
     {
         private sealed class LayoutZ : LayoutManager
         {
-            public LayoutZ(DataSetPresenter presenter)
-                : base(presenter)
+            public LayoutZ(DataView view)
+                : base(view)
             {
             }
         }

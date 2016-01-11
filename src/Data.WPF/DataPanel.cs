@@ -9,18 +9,18 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataSetPanel : FrameworkElement, IScrollInfo
+    public sealed class DataPanel : FrameworkElement, IScrollInfo
     {
         #region IScrollInfo
 
         private double ScrollLineHeight
         {
-            get { return View.ScrollLineHeight; }
+            get { return DataForm.ScrollLineHeight; }
         }
 
         private double ScrollLineWidth
         {
-            get { return View.ScrollLineWidth; }
+            get { return DataForm.ScrollLineWidth; }
         }
 
         bool _canVerticallyScroll;
@@ -156,41 +156,41 @@ namespace DevZest.Data.Windows
 
         #endregion
 
-        private static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataSetPresenter),
-            typeof(DataSetPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnPresenterChanged));
+        private static readonly DependencyProperty ViewProperty = DependencyProperty.Register(nameof(View), typeof(DataView),
+            typeof(DataPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnViewChanged));
 
-        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DataSetPanel)d).OnPresenterChanged((DataSetPresenter)e.OldValue);
+            ((DataPanel)d).OnViewChanged((DataView)e.OldValue);
         }
 
-        static DataSetPanel()
+        static DataPanel()
         {
-            ClipToBoundsProperty.OverrideMetadata(typeof(DataSetPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            ClipToBoundsProperty.OverrideMetadata(typeof(DataPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
-        public DataSetPanel()
+        public DataPanel()
         {
         }
 
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var binding = new System.Windows.Data.Binding(DataSetView.PresenterProperty.Name);
+            var binding = new System.Windows.Data.Binding(DataForm.ViewProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, PresenterProperty, binding);
+            BindingOperations.SetBinding(this, ViewProperty, binding);
         }
 
-        private DataSetPanel(DataSetPanel parent)
+        private DataPanel(DataPanel parent)
         {
             Debug.Assert(parent != null && _parent == null);
             _parent = parent;
         }
 
-        private DataSetPanel _parent;
+        private DataPanel _parent;
 
-        private DataSetPanel _child;
-        internal DataSetPanel Child
+        private DataPanel _child;
+        internal DataPanel Child
         {
             get { return _child; }
             private set
@@ -214,12 +214,12 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal DataSetPresenter Presenter
+        internal DataView View
         {
-            get { return _parent != null ? _parent.Presenter : (DataSetPresenter)GetValue(PresenterProperty); }
+            get { return _parent != null ? _parent.View : (DataView)GetValue(ViewProperty); }
         }
 
-        private void OnPresenterChanged(DataSetPresenter oldValue)
+        private void OnViewChanged(DataView oldValue)
         {
             if (oldValue != null)
             {
@@ -235,9 +235,9 @@ namespace DevZest.Data.Windows
             if (layoutManager == null || !layoutManager.IsPinned)
                 Child = null;
             else if (Child == null)
-                Child = new DataSetPanel(this);
+                Child = new DataPanel(this);
 
-            DataSetPanel pinnedPanel, scrollablePanel;
+            DataPanel pinnedPanel, scrollablePanel;
             if (isPinned)
             {
                 pinnedPanel = this;
@@ -261,17 +261,17 @@ namespace DevZest.Data.Windows
             scrollablePanel._elements = layoutManager == null ? null : layoutManager.ScrollableElements;
         }
 
-        private DataSetView View
+        private DataForm DataForm
         {
-            get { return TemplatedParent as DataSetView; }
+            get { return TemplatedParent as DataForm; }
         }
 
         internal LayoutManager LayoutManager
         {
             get
             {
-                var presenter = Presenter;
-                return presenter == null ? null : presenter.LayoutManager;
+                var view = View;
+                return view == null ? null : view.LayoutManager;
             }
         }
 

@@ -3,16 +3,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DevZest.Data.Windows">
     
-    <Style TargetType="{x:Type local:DataSetView}">
+    <Style TargetType="{x:Type local:DataForm}">
         <Style.Triggers>
             <Trigger Property="Scrollable" Value="True">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type local:DataSetView}">
+                        <ControlTemplate TargetType="{x:Type local:DataForm}">
                             <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
                                           VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                           CanContentScroll="True">
-                                <local:DataSetPanel />
+                                <local:DataPanel />
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
@@ -21,8 +21,8 @@
             <Trigger Property="Scrollable" Value="False">
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type local:DataSetView}">
-                            <local:DataSetPanel />
+                        <ControlTemplate TargetType="{x:Type local:DataForm}">
+                            <local:DataPanel />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

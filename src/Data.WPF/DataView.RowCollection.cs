@@ -5,37 +5,37 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    partial class DataSetPresenter
+    partial class DataView
     {
-        private class RowCollection : IReadOnlyList<DataRowPresenter>
+        private class RowCollection : IReadOnlyList<RowView>
         {
-            public RowCollection(DataSetPresenter owner)
+            public RowCollection(DataView owner)
             {
                 Debug.Assert(owner != null);
                 _owner = owner;
 
-                _rows = new List<DataRowPresenter>(DataSet.Count);
+                _rows = new List<RowView>(DataSet.Count);
                 foreach (var dataRow in DataSet)
-                    _rows.Add(DataRowPresenter.Create(_owner, dataRow));
+                    _rows.Add(RowView.Create(_owner, dataRow));
 
                 if (_owner.IsEofVisible)
-                    _virtualRow = DataRowPresenter.CreateEof(_owner);
+                    _virtualRow = RowView.CreateEof(_owner);
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
-                    _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
+                    _virtualRow = RowView.CreateEmptySet(_owner);
 
                 DataSet.RowAdded += OnDataRowAdded;
                 DataSet.RowRemoved += OnDataRowRemoved;
             }
 
-            #region IReadOnlyList<DataRowPresenter>
+            #region IReadOnlyList<RowView>
 
-            List<DataRowPresenter> _rows;
-            DataRowPresenter _virtualRow;
+            List<RowView> _rows;
+            RowView _virtualRow;
 
-            public IEnumerator<DataRowPresenter> GetEnumerator()
+            public IEnumerator<RowView> GetEnumerator()
             {
-                foreach (var dataRowPresenter in _rows)
-                    yield return dataRowPresenter;
+                foreach (var row in _rows)
+                    yield return row;
                 if (_virtualRow != null)
                     yield return _virtualRow;
             }
@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public DataRowPresenter this[int index]
+            public RowView this[int index]
             {
                 get
                 {
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows
 
             #endregion
 
-            private readonly DataSetPresenter _owner;
+            private readonly DataView _owner;
 
             private DataSet DataSet
             {
@@ -93,7 +93,7 @@ namespace DevZest.Data.Windows
                 }
 
                 {
-                    var row = DataRowPresenter.Create(_owner, dataRow);
+                    var row = RowView.Create(_owner, dataRow);
                     _rows.Insert(index, row);
                     NotifyRowAdded(index);
                 }
@@ -104,7 +104,7 @@ namespace DevZest.Data.Windows
                 _owner.OnRowAdded(index);
             }
 
-            void NotifyRowRemoved(int index, DataRowPresenter row)
+            void NotifyRowRemoved(int index, RowView row)
             {
                 _owner.OnRowRemoved(index, row);
             }
@@ -124,7 +124,7 @@ namespace DevZest.Data.Windows
                 if (_rows.Count == 0 && _owner.IsEmptySetVisible)
                 {
                     Debug.Assert(_virtualRow == null);
-                    _virtualRow = DataRowPresenter.CreateEmptySet(_owner);
+                    _virtualRow = RowView.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
             }

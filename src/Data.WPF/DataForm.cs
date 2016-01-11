@@ -7,49 +7,49 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public class DataSetView : Control
+    public class DataForm : Control
     {
-        private static readonly DependencyPropertyKey PresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Presenter),
-            typeof(DataSetPresenter), typeof(DataSetView), new FrameworkPropertyMetadata(null, OnPresenterChanged));
+        private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
+            typeof(DataView), typeof(DataForm), new FrameworkPropertyMetadata(null, OnViewChanged));
 
-        public static readonly DependencyProperty PresenterProperty = PresenterPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
-            typeof(bool), typeof(DataSetView), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            typeof(bool), typeof(DataForm), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataSetView), new PropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataForm), new PropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataSetView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataForm), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataForm), new FrameworkPropertyMetadata(20.0d));
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
-            typeof(double), typeof(DataSetView), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataForm), new FrameworkPropertyMetadata(20.0d));
 
-        static DataSetView()
+        static DataForm()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DataSetView), new FrameworkPropertyMetadata(typeof(DataSetView)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DataForm), new FrameworkPropertyMetadata(typeof(DataForm)));
         }
 
 
-        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var oldValue = (DataSetPresenter)e.OldValue;
-            var newValue = (DataSetPresenter)e.NewValue;
-            ((DataSetView)d).OnPresenterChanged(oldValue, newValue);
+            var oldValue = (DataView)e.OldValue;
+            var newValue = (DataView)e.NewValue;
+            ((DataForm)d).OnViewChanged(oldValue, newValue);
         }
 
-        private void OnPresenterChanged(DataSetPresenter oldValue, DataSetPresenter newValue)
+        private void OnViewChanged(DataView oldValue, DataView newValue)
         {
         }
 
-        public DataSetPresenter Presenter
+        public DataView View
         {
-            get { return (DataSetPresenter)GetValue(PresenterProperty); }
-            private set { SetValue(PresenterPropertyKey, value); }
+            get { return (DataView)GetValue(ViewProperty); }
+            private set { SetValue(ViewPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -82,18 +82,18 @@ namespace DevZest.Data.Windows
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
-        public void Show(DataSetPresenter presenter)
+        public void Show(DataView view)
         {
-            if (presenter == null)
-                throw new ArgumentNullException(nameof(presenter));
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
 
-            Presenter = presenter;
+            View = view;
         }
 
         internal void Cleanup()
         {
-            Debug.Assert(Presenter != null);
-            Presenter = null;
+            Debug.Assert(View != null);
+            View = null;
         }
     }
 }

@@ -45,13 +45,14 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Binding.cs" />
+    <Compile Include="ModelExtensions.cs" />
     <Compile Include="RowProperty.cs" />
-    <Compile Include="DataSetPresenter.RowCollection.cs" />
-    <Compile Include="DataSetPresenterBuilder.cs" />
+    <Compile Include="DataView.RowCollection.cs" />
+    <Compile Include="DataViewBuilder.cs" />
     <Compile Include="RowType.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
-    <Compile Include="Factories\DataSetViewFactory.cs" />
+    <Compile Include="Factories\DataFormFactory.cs" />
     <Compile Include="TemplateUnit.Builder.cs" />
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />
@@ -72,20 +73,20 @@
     <Compile Include="ChildUnit.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\Extensions.IsClose.cs" />
-    <Compile Include="DataRowPanel.cs" />
-    <Compile Include="DataRowView.cs" />
-    <Compile Include="DataRowPresenter.cs" />
+    <Compile Include="RowPanel.cs" />
+    <Compile Include="RowForm.cs" />
+    <Compile Include="RowView.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
-    <Compile Include="DataSetPresenter.cs" />
+    <Compile Include="DataView.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataSetView.cs" />
+    <Compile Include="DataForm.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridSpec.cs" />
     <Compile Include="GridRow.cs" />
     <Compile Include="ListOrientation.cs" />
-    <Compile Include="DataRowSelector.cs" />
-    <Compile Include="DataSetPanel.cs" />
+    <Compile Include="RowSelector.cs" />
+    <Compile Include="DataPanel.cs" />
     <Compile Include="GridTemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">

@@ -20,63 +20,63 @@ namespace DevZest.Data.Windows
             element.SetValue(TemplateUnitProperty, value);
         }
 
-        private static readonly DependencyProperty DataRowPresenterProperty = DependencyProperty.RegisterAttached(nameof(DataRowPresenter),
-            typeof(DataRowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached("Row",
+            typeof(RowView), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static DataRowPresenter GetDataRowPresenter(this UIElement element)
+        public static RowView GetRow(this UIElement element)
         {
-            return (DataRowPresenter)element.GetValue(DataRowPresenterProperty);
+            return (RowView)element.GetValue(RowProperty);
         }
 
-        internal static void SetDataRowPresenter(this UIElement element, DataRowPresenter value)
+        internal static void SetRow(this UIElement element, RowView value)
         {
             if (value == null)
             {
-                Debug.Assert(element.GetDataRowPresenter() != null);
-                element.ClearValue(DataRowPresenterProperty);
+                Debug.Assert(element.GetRow() != null);
+                element.ClearValue(RowProperty);
             }
             else
             {
-                Debug.Assert(element.GetDataRowPresenter() == null);
-                element.SetValue(DataRowPresenterProperty, value);
+                Debug.Assert(element.GetRow() == null);
+                element.SetValue(RowProperty, value);
             }
         }
 
         public static T GetSourceValue<T>(this UIElement element, Column<T> column)
         {
-            var dataRowPresenter = element.ExpectDataRowPresenter();
-            return dataRowPresenter.GetValue(column);
+            var row = element.ExpectRow();
+            return row.GetValue(column);
         }
 
         public static object GetSourceValue(this UIElement element, Column column)
         {
-            var dataRowPresenter = element.ExpectDataRowPresenter();
-            return dataRowPresenter.GetValue(column);
+            var row = element.ExpectRow();
+            return row.GetValue(column);
         }
 
         public static void SetSourceValue<T>(this UIElement element, Column<T> column, T value, bool suppressUpdateTarget = true)
         {
-            var dataRowPresenter = element.ExpectDataRowPresenter();
-            dataRowPresenter.SetValue(column, value, suppressUpdateTarget);
+            var row = element.ExpectRow();
+            row.SetValue(column, value, suppressUpdateTarget);
         }
 
         public static void SetSourceValue<T>(this UIElement element, Column column, object value, bool suppressUpdateTarget = true)
         {
-            var dataRowPresenter = element.ExpectDataRowPresenter();
-            dataRowPresenter.SetValue(column, value, suppressUpdateTarget);
+            var row = element.ExpectRow();
+            row.SetValue(column, value, suppressUpdateTarget);
         }
 
         public static string GetSourceText(this UIElement element, Column column)
         {
-            var dataRowPresenter = element.ExpectDataRowPresenter();
-            return dataRowPresenter.GetValue(column).ToString();
+            var row = element.ExpectRow();
+            return row.GetValue(column).ToString();
         }
 
-        private static DataRowPresenter ExpectDataRowPresenter(this UIElement element)
+        private static RowView ExpectRow(this UIElement element)
         {
-            var result = element.GetDataRowPresenter();
+            var result = element.GetRow();
             if (result == null)
-                throw new InvalidOperationException(Strings.UIElement_ExpectDataRowPresenter);
+                throw new InvalidOperationException(Strings.UIElement_ExpectRow);
             return result;
         }
     }

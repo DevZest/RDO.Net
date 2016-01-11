@@ -10,36 +10,36 @@ namespace DevZest.Data.Windows
 {
     internal abstract partial class LayoutManager
     {
-        internal static LayoutManager Create(DataSetPresenter presenter)
+        internal static LayoutManager Create(DataView view)
         {
-            var orientation = presenter.Template.ListOrientation;
+            var orientation = view.Template.ListOrientation;
 
             if (orientation == ListOrientation.Z)
-                return new LayoutZ(presenter);
+                return new LayoutZ(view);
             else if (orientation == ListOrientation.Y)
-                return new LayoutY(presenter);
+                return new LayoutY(view);
             else if (orientation == ListOrientation.XY)
-                return new LayoutXY(presenter);
+                return new LayoutXY(view);
             else if (orientation == ListOrientation.X)
-                return new LayoutX(presenter);
+                return new LayoutX(view);
             else
             {
                 Debug.Assert(orientation == ListOrientation.YX);
-                return new LayoutYX(presenter);
+                return new LayoutYX(view);
             }
         }
 
-        protected LayoutManager(DataSetPresenter presenter)
+        protected LayoutManager(DataView view)
         {
-            Debug.Assert(presenter != null);
-            Presenter = presenter;
+            Debug.Assert(view != null);
+            View = view;
         }
 
-        internal DataSetPresenter Presenter { get; private set; }
+        internal DataView View { get; private set; }
 
         internal GridTemplate Template
         {
-            get { return Presenter.Template; }
+            get { return View.Template; }
         }
 
         internal bool IsPinned
@@ -196,7 +196,7 @@ namespace DevZest.Data.Windows
 
         private bool IsVirtualizing
         {
-            get { return Presenter.IsVirtualizing; }
+            get { return View.IsVirtualizing; }
         }
 
         private ListOrientation Orientation

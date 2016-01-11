@@ -5,43 +5,43 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class DataSetPresenterBuilder : IDisposable
+    public sealed class DataViewBuilder : IDisposable
     {
-        internal DataSetPresenterBuilder(DataSetPresenter presenter)
+        internal DataViewBuilder(DataView view)
         {
-            Debug.Assert(presenter != null);
-            _presenter = presenter;
+            Debug.Assert(view != null);
+            _view = view;
         }
 
-        DataSetPresenter _presenter;
-        public DataSetPresenter Presenter
+        DataView _view;
+        public DataView View
         {
             get
             {
-                if (_presenter == null)
+                if (_view == null)
                     throw new ObjectDisposedException(GetType().FullName);
 
-                return _presenter;
+                return _view;
             }
         }
 
         public void Dispose()
         {
-            _presenter = null;
+            _view = null;
         }
 
         public GridTemplate Template
         {
-            get { return Presenter.Template; }
+            get { return View.Template; }
         }
 
-        public DataSetPresenterBuilder AddGridColumn(string width, out int index)
+        public DataViewBuilder AddGridColumn(string width, out int index)
         {
             index = Template.AddGridColumn(width);
             return this;
         }
 
-        public DataSetPresenterBuilder AddGridColumns(params string[] widths)
+        public DataViewBuilder AddGridColumns(params string[] widths)
         {
             if (widths == null)
                 throw new ArgumentNullException(nameof(widths));
@@ -50,13 +50,13 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataSetPresenterBuilder AddGridRow(string height, out int index)
+        public DataViewBuilder AddGridRow(string height, out int index)
         {
             index = Template.AddGridRow(height);
             return this;
         }
 
-        public DataSetPresenterBuilder AddGridRows(params string[] heights)
+        public DataViewBuilder AddGridRows(params string[] heights)
         {
             if (heights == null)
                 throw new ArgumentNullException(nameof(heights));
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataSetPresenterBuilder WithOrientation(ListOrientation value)
+        public DataViewBuilder WithOrientation(ListOrientation value)
         {
             Template.ListOrientation = value;
             return this;
@@ -73,39 +73,39 @@ namespace DevZest.Data.Windows
 
         public GridRangeConfig Range(int column, int row)
         {
-            return new GridRangeConfig(this, Presenter.Template.Range(column, row));
+            return new GridRangeConfig(this, View.Template.Range(column, row));
         }
 
         public GridRangeConfig Range(int left, int top, int right, int bottom)
         {
-            return new GridRangeConfig(this, Presenter.Template.Range(left, top, right, bottom));
+            return new GridRangeConfig(this, View.Template.Range(left, top, right, bottom));
         }
 
-        public DataSetPresenterBuilder WithPinnedLeft(int value)
+        public DataViewBuilder WithPinnedLeft(int value)
         {
             Template.PinnedLeft = value;
             return this;
         }
 
-        public DataSetPresenterBuilder WithPinnedTop(int value)
+        public DataViewBuilder WithPinnedTop(int value)
         {
             Template.PinnedTop = value;
             return this;
         }
 
-        public DataSetPresenterBuilder WithPinnedRight(int value)
+        public DataViewBuilder WithPinnedRight(int value)
         {
             Template.PinnedRight = value;
             return this;
         }
 
-        public DataSetPresenterBuilder WithPinnedBottom(int value)
+        public DataViewBuilder WithPinnedBottom(int value)
         {
             Template.PinnedBottom = value;
             return this;
         }
 
-        public DataSetPresenterBuilder Pin(int left, int top, int right, int bottom)
+        public DataViewBuilder Pin(int left, int top, int right, int bottom)
         {
             Template.PinnedLeft = left;
             Template.PinnedTop = top;
@@ -114,21 +114,21 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataSetPresenterBuilder WithIsVirtualizing(bool value)
+        public DataViewBuilder WithIsVirtualizing(bool value)
         {
-            Presenter.InitIsVirtualizing(value);
+            View.InitIsVirtualizing(value);
             return this;
         }
 
-        public DataSetPresenterBuilder WithEofVisible(bool value)
+        public DataViewBuilder WithEofVisible(bool value)
         {
-            Presenter.InitIsEofVisible(value);
+            View.InitIsEofVisible(value);
             return this;
         }
 
-        public DataSetPresenterBuilder WithEmptySetVisible(bool value)
+        public DataViewBuilder WithEmptySetVisible(bool value)
         {
-            Presenter.InitIsEmptySetVisible(value);
+            View.InitIsEmptySetVisible(value);
             return this;
         }
     }
