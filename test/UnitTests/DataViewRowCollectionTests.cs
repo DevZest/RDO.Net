@@ -4,14 +4,18 @@ using System;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataViewTests
+    public class DataViewRowCollectionTests
     {
+        private static DataView CreateDataView(DataSet<Adhoc> dataSet, bool isEofVisible, bool isEmptySetVisible = false)
+        {
+            return DataView.Create(dataSet, (builder, model) => builder.WithEofVisible(isEofVisible).WithEmptySetVisible(isEmptySetVisible));
+        }
+
         [TestMethod]
-        public void DataView_RowType_DataRow()
+        public void DataView_RowCollection_RowType_DataRow()
         {
             var dataSet = DataSet<Adhoc>.New();
-
-            var dataView = DataView.Create(dataSet, (c, m) => c.WithEofVisible(false).WithEmptySetVisible(false));
+            var dataView = CreateDataView(dataSet, false, false);
 
             Assert.AreEqual(0, dataView.Count);
             Assert.AreEqual(null, dataView.CurrentRow);
@@ -23,11 +27,10 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataView_RowType_Eof()
+        public void DataView_RowCollection_RowType_Eof()
         {
             var dataSet = DataSet<Adhoc>.New();
-
-            var dataView = DataView.Create(dataSet, (c, m) => c.WithEofVisible(true));
+            var dataView = CreateDataView(dataSet, true);
 
             Assert.AreEqual(1, dataView.Count);
             Assert.AreEqual(RowType.Eof, dataView[0].RowType);
@@ -41,11 +44,10 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void DataView_RowType_EmptySet()
+        public void DataView_RowCollection_RowType_EmptySet()
         {
             var dataSet = DataSet<Adhoc>.New();
-
-            var dataView = DataView.Create(dataSet, (c, m) => c.WithEofVisible(false).WithEmptySetVisible(true));
+            var dataView = CreateDataView(dataSet, false, true);
 
             Assert.AreEqual(1, dataView.Count);
             Assert.AreEqual(RowType.EmptySet, dataView[0].RowType);
