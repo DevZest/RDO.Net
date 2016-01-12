@@ -10,27 +10,17 @@ namespace DevZest.Data.Windows
     {
         internal static RowView Create(DataView owner, DataRow dataRow)
         {
-            return new RowView(owner, dataRow);
+            return new RowView(owner, dataRow, RowType.DataRow);
         }
 
         internal static RowView CreateEof(DataView owner)
         {
-            return new RowView(owner, RowType.Eof);
+            return new RowView(owner, null, RowType.Eof);
         }
 
         internal static RowView CreateEmptySet(DataView owner)
         {
-            return new RowView(owner, RowType.EmptySet);
-        }
-
-        private RowView(DataView owner, DataRow dataRow)
-            : this(owner, dataRow, RowType.DataRow)
-        {
-        }
-
-        private RowView(DataView owner, RowType rowType)
-            : this(owner, null, rowType)
-        {
+            return new RowView(owner, null, RowType.EmptySet);
         }
 
         private RowView(DataView owner, DataRow dataRow, RowType rowType)
@@ -38,6 +28,11 @@ namespace DevZest.Data.Windows
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
             _owner = owner;
+            Initialize(dataRow, rowType);
+        }
+
+        internal void Initialize(DataRow dataRow, RowType rowType)
+        {
             DataRow = dataRow;
             RowType = rowType;
             Children = InitChildViews();
@@ -237,14 +232,14 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            var dataRow = ExpectDataRow();
+            BeginEdit();
 
             if (suppressUpdateTarget)
                 EnterSuppressUpdateTarget();
 
             try
             {
-                column[dataRow] = value;
+                column[DataRow] = value;
             }
             finally
             {
@@ -258,14 +253,14 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            var dataRow = ExpectDataRow();
+            BeginEdit();
 
             if (suppressUpdateTarget)
                 EnterSuppressUpdateTarget();
 
             try
             {
-                column.SetValue(dataRow, value);
+                column.SetValue(DataRow, value);
             }
             finally
             {
@@ -274,22 +269,14 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataRow ExpectDataRow()
-        {
-            var dataRow = DataRow;
-            if (dataRow == null)
-                throw new InvalidOperationException(Strings.RowView_ExpectDataRow);
-            return dataRow;
-        }
-
         public ReadOnlyCollection<ValidationMessage> ValidationMessages
         {
-            get { return ExpectDataRow().ValidationMessages; }
+            get { return DataRow == null ? null : DataRow.ValidationMessages; }
         }
 
         public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
         {
-            get { return ExpectDataRow().MergedValidationMessages; }
+            get { return DataRow == null ? null : DataRow.MergedValidationMessages; }
         }
 
         private bool _isEditing;
@@ -305,21 +292,76 @@ namespace DevZest.Data.Windows
                 if (_isEditing == value)
                     return;
 
+                if (_isEditing)
+                {
+                    Debug.Assert(Model.GetEditingRow() == this);
+                    Model.SetEditingRow(null);
+                }
+
                 _isEditing = value;
+
+                if (_isEditing)
+                {
+                    Debug.Assert(Model.GetEditingRow() == null);
+                    Model.SetEditingRow(this);
+                }
+
                 OnUpdated(RowViewBindingSource.IsEditing);
             }
         }
 
-        public void BeginEdit()
+        private bool _wasEof;
+
+        private bool EofToDataRow()
         {
+            if (RowType == RowType.DataRow)
+                return false;
+
+            Debug.Assert(RowType == RowType.Eof);
+            Owner.EofToDataRow();
+            return true;
         }
 
-        public void CommitEdit()
+        private void DataRowToEof()
         {
+            if (!_wasEof)
+                return;
+
+            Owner.DataRowToEof();
+        }
+
+        public void BeginEdit()
+        {
+            if (IsEditing)
+                return;
+
+            if (RowType == RowType.EmptySet)
+                throw new InvalidOperationException(Strings.RowView_BeginEdit_EmptySet);
+
+            _wasEof = EofToDataRow();
+            Debug.Assert(DataRow != null);
+
+            var editingRow = Model.GetEditingRow();
+            if (editingRow != null)
+                editingRow.EndEdit();
+
+            if (!_wasEof)
+                DataRow.Save();
+            IsEditing = true;
+        }
+
+        public void EndEdit()
+        {
+            IsEditing = false;
         }
 
         public void CancelEdit()
         {
+            if (_wasEof)
+                DataRowToEof();
+            else
+                DataRow.Load();
+            IsEditing = false;
         }
     }
 }

@@ -272,6 +272,16 @@ namespace DevZest.Data.Windows
         }
         #endregion
 
+        internal void EofToDataRow()
+        {
+            _rows.EofToDataRow();
+        }
+
+        internal void DataRowToEof()
+        {
+            _rows.DataRowToEof();
+        }
+
         private RowView _currentRow;
         public RowView CurrentRow
         {

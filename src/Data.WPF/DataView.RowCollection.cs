@@ -23,8 +23,19 @@ namespace DevZest.Data.Windows
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
                     _virtualRow = RowView.CreateEmptySet(_owner);
 
+                AddRowsChangedListener();
+            }
+
+            private void AddRowsChangedListener()
+            {
                 DataSet.RowAdded += OnDataRowAdded;
                 DataSet.RowRemoved += OnDataRowRemoved;
+            }
+
+            private void RemoveRowsChangedListener()
+            {
+                DataSet.RowAdded -= OnDataRowAdded;
+                DataSet.RowRemoved -= OnDataRowRemoved;
             }
 
             #region IReadOnlyList<RowView>
@@ -127,6 +138,41 @@ namespace DevZest.Data.Windows
                     _virtualRow = RowView.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
+            }
+
+            public void EofToDataRow()
+            {
+                var eof = _virtualRow;
+                Debug.Assert(eof.RowType == RowType.Eof);
+
+                RemoveRowsChangedListener();
+
+                var dataRow = new DataRow();
+                DataSet.Add(dataRow);
+                eof.Initialize(dataRow, RowType.DataRow);
+                eof.OnBindingsReset();
+                _virtualRow = RowView.CreateEof(_owner);
+                NotifyRowAdded(Count - 1);
+
+                AddRowsChangedListener();
+            }
+
+            public void DataRowToEof()
+            {
+                RemoveRowsChangedListener();
+
+                var eof = _virtualRow;
+                _virtualRow = null;
+                NotifyRowRemoved(Count - 1, eof);
+
+                var index = DataSet.Count - 1;
+                var row = this[index];
+                DataSet.RemoveAt(index);
+                row.Initialize(null, RowType.Eof);
+                _virtualRow = row;
+                row.OnBindingsReset();
+
+                AddRowsChangedListener();
             }
         }
     }

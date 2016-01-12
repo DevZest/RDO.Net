@@ -60,11 +60,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid RowType, only RowType.DataRow is allowed.
+        /// BeginEdit is invalid when RowType is EmptySet.
         /// </summary>
-        public static string RowView_ExpectDataRow
+        public static string RowView_BeginEdit_EmptySet
         {
-            get { return GetString("RowView_ExpectDataRow"); }
+            get { return GetString("RowView_BeginEdit_EmptySet"); }
         }
 
         /// <summary>
