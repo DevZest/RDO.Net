@@ -107,40 +107,77 @@ namespace DevZest.Data.Windows
             IsEofVisible = value;
         }
 
-        internal bool IsUpdatingTarget { get; private set; }
+        private bool _isUpdatingTarget;
 
         internal void EnterUpdatingTarget()
         {
-            Debug.Assert(!IsUpdatingTarget);
-            IsUpdatingTarget = true;
+            Debug.Assert(!_isUpdatingTarget);
+            _isUpdatingTarget = true;
         }
 
         internal void ExitUpdatingTarget()
         {
-            Debug.Assert(IsUpdatingTarget);
-            IsUpdatingTarget = false;
+            Debug.Assert(_isUpdatingTarget);
+            _isUpdatingTarget = false;
         }
 
-        int _shouldFireRowUpdatedEventFlags;
+        int _rowViewBindingSourceFlags;
 
-        private static int GetMask(RowProperty rowProperty)
+        private static int GetMask(RowViewBindingSource bindingSource)
         {
-            return 1 << (int)rowProperty;
+            return 1 << (int)bindingSource;
         }
 
-        internal bool ShouldFireRowUpdatedEvent(RowProperty rowProperty)
+        internal bool IsConsumed(RowViewBindingSource bindingSource)
         {
-            int mask = GetMask(rowProperty);
-            return (_shouldFireRowUpdatedEventFlags & mask) != 0;
+            int mask = GetMask(bindingSource);
+            return (_rowViewBindingSourceFlags & mask) != 0;
         }
 
-        internal void OnGetRowProperty(RowProperty rowProperty)
+        internal void OnGetValue(RowViewBindingSource bindingSource)
         {
-            if (IsUpdatingTarget)
+            if (_isUpdatingTarget)
             {
-                int mask = GetMask(rowProperty);
-                _shouldFireRowUpdatedEventFlags |= mask;
+                int mask = GetMask(bindingSource);
+                _rowViewBindingSourceFlags |= mask;
             }
+        }
+
+        int _dataViewBindingSourceFlags;
+
+        private static int GetMask(DataViewBindingSource bindingSource)
+        {
+            return 1 << (int)bindingSource;
+        }
+
+        internal bool IsConsumed(DataViewBindingSource bindingSource)
+        {
+            int mask = GetMask(bindingSource);
+            return (_dataViewBindingSourceFlags & mask) != 0;
+        }
+
+        private void OnGetValue(DataViewBindingSource bindingSource)
+        {
+            if (_isUpdatingTarget)
+            {
+                int mask = GetMask(bindingSource);
+                _dataViewBindingSourceFlags |= mask;
+            }
+        }
+
+        public event EventHandler BindingsReset;
+
+        private void OnUpdated(DataViewBindingSource bindingSource)
+        {
+            if (IsConsumed(bindingSource))
+                OnBindingsReset();
+        }
+
+        private void OnBindingsReset()
+        {
+            var bindingsReset = BindingsReset;
+            if (bindingsReset != null)
+                bindingsReset(this, EventArgs.Empty);
         }
 
         public bool IsEmptySetVisible { get; private set; }
@@ -155,11 +192,13 @@ namespace DevZest.Data.Windows
             if (CurrentRow == null)
                 CurrentRow = this[0];
 
-            if (ShouldFireRowUpdatedEvent(RowProperty.Index))
+            if (IsConsumed(RowViewBindingSource.Index))
             {
                 for (int i = index + 1; i < Count; i++)
-                    this[i].OnUpdated();
+                    this[i].OnBindingsReset();
             }
+
+            OnUpdated(DataViewBindingSource.Rows);
         }
 
         private void OnRowRemoved(int index, RowView row)
@@ -167,16 +206,18 @@ namespace DevZest.Data.Windows
             if (CurrentRow == row)
                 CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
 
-            if (ShouldFireRowUpdatedEvent(RowProperty.Index))
+            if (IsConsumed(RowViewBindingSource.Index))
             {
                 for (int i = index; i < Count; i++)
-                    this[i].OnUpdated();
+                    this[i].OnBindingsReset();
             }
+
+            OnUpdated(DataViewBindingSource.Rows);
         }
 
         private void OnRowUpdated(int index)
         {
-            this[index].OnUpdated();
+            this[index].OnBindingsReset();
         }
 
         private readonly RowView _owner;
@@ -201,32 +242,44 @@ namespace DevZest.Data.Windows
         #region IReadOnlyList<RowView>
 
         RowCollection _rows;
+        private RowCollection Rows
+        {
+            get
+            {
+                OnGetValue(DataViewBindingSource.Rows);
+                return _rows;
+            }
+        }
 
         public IEnumerator<RowView> GetEnumerator()
         {
-            return _rows.GetEnumerator();
+            return Rows.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _rows.GetEnumerator();
+            return Rows.GetEnumerator();
         }
 
         public int Count
         {
-            get { return _rows.Count; }
+            get { return Rows.Count; }
         }
 
         public RowView this[int index]
         {
-            get { return _rows[index]; }
+            get { return Rows[index]; }
         }
         #endregion
 
         private RowView _currentRow;
         public RowView CurrentRow
         {
-            get { return _currentRow; }
+            get
+            {
+                OnGetValue(DataViewBindingSource.CurrentRow);
+                return _currentRow;
+            }
             set
             {
                 if (_currentRow == value)
@@ -245,10 +298,26 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal HashSet<RowView> _selectedRows = new HashSet<RowView>();
+        private HashSet<RowView> _selectedRows = new HashSet<RowView>();
         public IReadOnlyCollection<RowView> SelectedRows
         {
-            get { return _selectedRows; }
+            get
+            {
+                OnGetValue(DataViewBindingSource.SelectedRows);
+                return _selectedRows;
+            }
+        }
+
+        internal void AddSelectedRow(RowView row)
+        {
+            _selectedRows.Add(row);
+            OnUpdated(DataViewBindingSource.SelectedRows);
+        }
+
+        internal void RemoveSelectedRow(RowView row)
+        {
+            _selectedRows.Remove(row);
+            OnUpdated(DataViewBindingSource.SelectedRows);
         }
 
         internal LayoutManager LayoutManager { get; private set; }

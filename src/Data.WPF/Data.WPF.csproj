@@ -45,8 +45,9 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Binding.cs" />
+    <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="RowProperty.cs" />
+    <Compile Include="RowViewBindingSource.cs" />
     <Compile Include="DataView.RowCollection.cs" />
     <Compile Include="DataViewBuilder.cs" />
     <Compile Include="RowType.cs" />

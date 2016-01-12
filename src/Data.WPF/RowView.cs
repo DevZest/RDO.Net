@@ -92,34 +92,34 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private void OnGetProperty(RowProperty rowProperty)
+        private void OnGetValue(RowViewBindingSource bindingSource)
         {
-            Owner.OnGetRowProperty(rowProperty);
+            Owner.OnGetValue(bindingSource);
         }
 
-        private void OnUpdated(RowProperty rowProperty)
+        private void OnUpdated(RowViewBindingSource bindingSource)
         {
-            if (Owner.ShouldFireRowUpdatedEvent(rowProperty))
-                OnUpdated();
+            if (Owner.IsConsumed(bindingSource))
+                OnBindingsReset();
         }
 
-        public event EventHandler Updated;
+        public event EventHandler BindingsReset;
 
-        internal void OnUpdated()
+        internal void OnBindingsReset()
         {
             if (_updateTargetSuppressed)
                 return;
 
-            var updated = Updated;
-            if (updated != null)
-                updated(this, EventArgs.Empty);
+            var bindingsReset = BindingsReset;
+            if (bindingsReset != null)
+                bindingsReset(this, EventArgs.Empty);
         }
 
         public int Index
         {
             get
             {
-                OnGetProperty(RowProperty.Index);
+                OnGetValue(RowViewBindingSource.Index);
                 return DataRow == null ? Owner.Count - 1 : DataRow.Index;
             }
         }
@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetProperty(RowProperty.IsCurrent);
+                OnGetValue(RowViewBindingSource.IsCurrent);
                 return _isCurrent;
             }
             set
@@ -138,7 +138,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                OnUpdated(RowProperty.IsCurrent);
+                OnUpdated(RowViewBindingSource.IsCurrent);
             }
         }
 
@@ -147,7 +147,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetProperty(RowProperty.IsSelected);
+                OnGetValue(RowViewBindingSource.IsSelected);
                 return _isSelected;
             }
             set
@@ -156,14 +156,14 @@ namespace DevZest.Data.Windows
                     return;
 
                 if (_isSelected)
-                    Owner._selectedRows.Remove(this);
+                    Owner.RemoveSelectedRow(this);
 
                 _isSelected = value;
 
                 if (_isSelected)
-                    Owner._selectedRows.Add(this);
+                    Owner.AddSelectedRow(this);
 
-                OnUpdated(RowProperty.IsSelected);
+                OnUpdated(RowViewBindingSource.IsSelected);
             }
         }
 
@@ -297,7 +297,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetProperty(RowProperty.IsEditing);
+                OnGetValue(RowViewBindingSource.IsEditing);
                 return _isEditing;
             }
             private set
@@ -306,7 +306,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isEditing = value;
-                OnUpdated(RowProperty.IsEditing);
+                OnUpdated(RowViewBindingSource.IsEditing);
             }
         }
 
@@ -314,7 +314,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public void EndEdit()
+        public void CommitEdit()
         {
         }
 
