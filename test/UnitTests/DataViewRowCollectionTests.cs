@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows
 
             dataSet.AddRow();
             Assert.AreEqual(1, dataView.Count);
-            Assert.AreEqual(RowType.DataRow, dataView[0].RowType);
+            Assert.AreEqual(RowKind.DataRow, dataView[0].Kind);
             Assert.AreEqual(dataView[0], dataView.CurrentRow);
         }
 
@@ -33,13 +33,13 @@ namespace DevZest.Data.Windows
             var dataView = CreateDataView(dataSet, true);
 
             Assert.AreEqual(1, dataView.Count);
-            Assert.AreEqual(RowType.Eof, dataView[0].RowType);
+            Assert.AreEqual(RowKind.Eof, dataView[0].Kind);
             Assert.AreEqual(dataView[0], dataView.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(2, dataView.Count);
-            Assert.AreEqual(RowType.DataRow, dataView[0].RowType);
-            Assert.AreEqual(RowType.Eof, dataView[1].RowType);
+            Assert.AreEqual(RowKind.DataRow, dataView[0].Kind);
+            Assert.AreEqual(RowKind.Eof, dataView[1].Kind);
             Assert.AreEqual(dataView[1], dataView.CurrentRow);
         }
 
@@ -50,12 +50,12 @@ namespace DevZest.Data.Windows
             var dataView = CreateDataView(dataSet, false, true);
 
             Assert.AreEqual(1, dataView.Count);
-            Assert.AreEqual(RowType.EmptySet, dataView[0].RowType);
+            Assert.AreEqual(RowKind.EmptySet, dataView[0].Kind);
             Assert.AreEqual(dataView[0], dataView.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, dataView.Count);
-            Assert.AreEqual(RowType.DataRow, dataView[0].RowType);
+            Assert.AreEqual(RowKind.DataRow, dataView[0].Kind);
             Assert.AreEqual(dataView[0], dataView.CurrentRow);
         }
     }

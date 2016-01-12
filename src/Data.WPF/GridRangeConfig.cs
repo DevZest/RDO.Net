@@ -63,7 +63,7 @@ namespace DevZest.Data.Windows
 
             return new ChildUnit.Builder<TForm>(this, owner =>
             {
-                if (owner.RowType != RowType.DataRow)
+                if (owner.Kind != RowKind.DataRow)
                     return null;
                 return DataView.Create(owner, childModel, builder);
             });

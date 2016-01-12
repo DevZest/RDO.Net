@@ -96,7 +96,7 @@ namespace DevZest.Data.Windows
             {
                 var index = dataRow.Index;
 
-                if (_virtualRow != null && _virtualRow.RowType == RowType.EmptySet)
+                if (_virtualRow != null && _virtualRow.Kind == RowKind.EmptySet)
                 {
                     var row = _virtualRow;
                     _virtualRow = null;
@@ -143,13 +143,14 @@ namespace DevZest.Data.Windows
             public void EofToDataRow()
             {
                 var eof = _virtualRow;
-                Debug.Assert(eof.RowType == RowType.Eof);
+                Debug.Assert(eof.Kind == RowKind.Eof);
 
                 RemoveRowsChangedListener();
 
                 var dataRow = new DataRow();
                 DataSet.Add(dataRow);
-                eof.Initialize(dataRow, RowType.DataRow);
+                _rows.Add(eof);
+                eof.Initialize(dataRow, RowKind.DataRow);
                 eof.OnBindingsReset();
                 _virtualRow = RowView.CreateEof(_owner);
                 NotifyRowAdded(Count - 1);
@@ -168,7 +169,8 @@ namespace DevZest.Data.Windows
                 var index = DataSet.Count - 1;
                 var row = this[index];
                 DataSet.RemoveAt(index);
-                row.Initialize(null, RowType.Eof);
+                _rows.RemoveAt(index);
+                row.Initialize(null, RowKind.Eof);
                 _virtualRow = row;
                 row.OnBindingsReset();
 

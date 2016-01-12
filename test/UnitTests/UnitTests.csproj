@@ -46,6 +46,14 @@
       <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20160111\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevZest.Data.SqlServer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DevZest.Data.SqlServer.1.0.0-rc-20160111\lib\net451\DevZest.Data.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevZest.Samples.AdventureWorksLT, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DevZest.Samples.AdventureWorksLT.1.0.0-rc-20160111\lib\net451\DevZest.Samples.AdventureWorksLT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -69,6 +77,12 @@
   <ItemGroup>
     <Compile Include="DataViewRowCollectionTests.cs" />
     <Compile Include="DataPanelTests.cs" />
+    <Compile Include="RowViewTests.cs" />
+    <Compile Include="StringRes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringRes.resx</DependentUpon>
+    </Compile>
     <Compile Include="TemplateUnitTests.cs" />
     <Compile Include="GridLengthParserTests.cs" />
     <Compile Include="GridTemplateTests.cs" />
@@ -83,6 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="StringRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

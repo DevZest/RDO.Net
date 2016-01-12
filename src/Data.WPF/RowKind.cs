@@ -3,7 +3,7 @@
 namespace DevZest.Data.Windows
 {
     [Flags]
-    public enum RowType
+    public enum RowKind
     {
         DataRow = 0,
         EmptySet = 1,

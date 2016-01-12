@@ -50,7 +50,7 @@
     <Compile Include="RowViewBindingSource.cs" />
     <Compile Include="DataView.RowCollection.cs" />
     <Compile Include="DataViewBuilder.cs" />
-    <Compile Include="RowType.cs" />
+    <Compile Include="RowKind.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataFormFactory.cs" />

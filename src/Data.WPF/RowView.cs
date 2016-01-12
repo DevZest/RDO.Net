@@ -10,20 +10,20 @@ namespace DevZest.Data.Windows
     {
         internal static RowView Create(DataView owner, DataRow dataRow)
         {
-            return new RowView(owner, dataRow, RowType.DataRow);
+            return new RowView(owner, dataRow, RowKind.DataRow);
         }
 
         internal static RowView CreateEof(DataView owner)
         {
-            return new RowView(owner, null, RowType.Eof);
+            return new RowView(owner, null, RowKind.Eof);
         }
 
         internal static RowView CreateEmptySet(DataView owner)
         {
-            return new RowView(owner, null, RowType.EmptySet);
+            return new RowView(owner, null, RowKind.EmptySet);
         }
 
-        private RowView(DataView owner, DataRow dataRow, RowType rowType)
+        private RowView(DataView owner, DataRow dataRow, RowKind rowType)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
@@ -31,10 +31,10 @@ namespace DevZest.Data.Windows
             Initialize(dataRow, rowType);
         }
 
-        internal void Initialize(DataRow dataRow, RowType rowType)
+        internal void Initialize(DataRow dataRow, RowKind rowType)
         {
             DataRow = dataRow;
-            RowType = rowType;
+            Kind = rowType;
             Children = InitChildViews();
         }
 
@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows
         public IReadOnlyList<DataView> Children { get; private set; }
         private IReadOnlyList<DataView> InitChildViews()
         {
-            if (RowType != RowType.DataRow)
+            if (Kind != RowKind.DataRow)
                 return s_emptyChildren;
 
             var childEntries = Template.ChildUnits;
@@ -162,7 +162,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public RowType RowType { get; private set; }
+        public RowKind Kind { get; private set; }
 
         public bool IsFocused { get; internal set; }
 
@@ -314,10 +314,10 @@ namespace DevZest.Data.Windows
 
         private bool EofToDataRow()
         {
-            if (RowType == RowType.DataRow)
+            if (Kind == RowKind.DataRow)
                 return false;
 
-            Debug.Assert(RowType == RowType.Eof);
+            Debug.Assert(Kind == RowKind.Eof);
             Owner.EofToDataRow();
             return true;
         }
@@ -335,7 +335,7 @@ namespace DevZest.Data.Windows
             if (IsEditing)
                 return;
 
-            if (RowType == RowType.EmptySet)
+            if (Kind == RowKind.EmptySet)
                 throw new InvalidOperationException(Strings.RowView_BeginEdit_EmptySet);
 
             _wasEof = EofToDataRow();
