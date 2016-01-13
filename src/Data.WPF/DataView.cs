@@ -99,7 +99,6 @@ namespace DevZest.Data.Windows
             IsVirtualizing = value;
         }
 
-
         public bool IsEofVisible { get; private set; }
 
         internal void InitIsEofVisible(bool value)
@@ -198,6 +197,7 @@ namespace DevZest.Data.Windows
                     this[i].OnBindingsReset();
             }
 
+            LayoutManager.OnRowAdded(index);
             OnUpdated(DataViewBindingSource.Rows);
         }
 
@@ -212,6 +212,7 @@ namespace DevZest.Data.Windows
                     this[i].OnBindingsReset();
             }
 
+            LayoutManager.OnRowRemoved(index, row);
             OnUpdated(DataViewBindingSource.Rows);
         }
 

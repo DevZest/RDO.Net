@@ -224,12 +224,12 @@ namespace DevZest.Data.Windows
             if (oldValue != null)
             {
                 var oldLayoutManager = oldValue.LayoutManager;
+                oldLayoutManager.Invalidated -= OnLayoutInvalidated;
                 oldLayoutManager.SetElementsParent(null, null);
                 oldLayoutManager.ScrollOwner = null;
             }
 
             var layoutManager = LayoutManager;
-            layoutManager.ScrollOwner = _scrollOwner;
             var isPinned = layoutManager == null ? false : layoutManager.IsPinned;
 
             if (layoutManager == null || !layoutManager.IsPinned)
@@ -250,15 +250,21 @@ namespace DevZest.Data.Windows
             }
 
             if (layoutManager != null)
-                layoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
-
-            if (pinnedPanel != null)
             {
-                Debug.Assert(layoutManager != null);
-                pinnedPanel._elements = layoutManager.PinnedElements;
+                layoutManager.ScrollOwner = _scrollOwner;
+                layoutManager.Invalidated += OnLayoutInvalidated;
+
+                layoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
+                if (pinnedPanel != null)
+                    pinnedPanel._elements = layoutManager.PinnedElements;
             }
-            Debug.Assert(scrollablePanel != null);
+
             scrollablePanel._elements = layoutManager == null ? null : layoutManager.ScrollableElements;
+        }
+
+        private void OnLayoutInvalidated(object sender, EventArgs e)
+        {
+            InvalidateMeasure();
         }
 
         private DataForm DataForm
@@ -302,19 +308,13 @@ namespace DevZest.Data.Windows
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
-            if (layoutManager == null)
-                return base.MeasureOverride(availableSize);
-
-            return base.MeasureOverride(availableSize);
+            return layoutManager == null ? base.MeasureOverride(availableSize) : layoutManager.Measure(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             var layoutManager = LayoutManager;
-            if (layoutManager == null)
-                return base.ArrangeOverride(finalSize);
-
-            return base.ArrangeOverride(finalSize);
+            return layoutManager == null ? base.ArrangeOverride(finalSize) : layoutManager.Arrange(finalSize);
         }
     }
 }

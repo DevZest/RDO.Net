@@ -36,6 +36,11 @@ namespace DevZest.Data.Windows
 
         private DataView _view;
 
+        private IReadOnlyList<RowView> Rows
+        {
+            get { return _view; }
+        }
+
         private GridTemplate Template
         {
             get { return _view.Template; }
@@ -44,6 +49,16 @@ namespace DevZest.Data.Windows
         public bool IsPinned
         {
             get { return Template.IsPinned; }
+        }
+
+        private bool IsVirtualizing
+        {
+            get { return _view.IsVirtualizing; }
+        }
+
+        private ListOrientation Orientation
+        {
+            get { return Template.ListOrientation; }
         }
 
         private IElementCollection _scrollableElements;
@@ -65,7 +80,6 @@ namespace DevZest.Data.Windows
                 return _pinnedElements;
             }
         }
-
 
         private FrameworkElement _pinnedElementsParent;
         private FrameworkElement _scrollableElementsParent;
@@ -100,38 +114,9 @@ namespace DevZest.Data.Windows
             _scrollableElements = IElementCollectionFactory.Create(_scrollableElementsParent);
         }
 
-        private Size _availableSize;
-        internal Size AvailableSize
-        {
-            get { return _availableSize; }
-            set
-            {
-                if (_availableSize.IsClose(value))
-                    return;
-
-                _availableSize = value;
-                InvalidateMeasure();
-            }
-        }
-
         public double ViewportWidth { get; private set; }
 
         public double ViewportHeight { get; private set; }
-
-        public Size ViewportSize
-        {
-            set
-            {
-                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
-                    return;
-
-                ViewportWidth = value.Width;
-                ViewportHeight = value.Height;
-
-                InvalidateScrollInfo();
-                InvalidateMeasure();
-            }
-        }
 
         public double ExtentHeight { get; private set; }
 
@@ -150,7 +135,7 @@ namespace DevZest.Data.Windows
         }
 
         private double _horizontalOffset;
-        internal double HorizontalOffset
+        public double HorizontalOffset
         {
             get { return _horizontalOffset; }
             set
@@ -165,7 +150,7 @@ namespace DevZest.Data.Windows
         }
 
         private double _verticalOffset;
-        internal double VerticalOffset
+        public double VerticalOffset
         {
             get { return _verticalOffset; }
             set
@@ -192,22 +177,69 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
+        public void OnRowAdded(int index)
+        {
+            _isMeasureDirty = true;
+            InvalidateMeasure();
+        }
+
+        public void OnRowRemoved(int index, RowView row)
+        {
+            _isMeasureDirty = true;
+            InvalidateMeasure();
+        }
+
+        private bool _isMeasureDirty;
+        public event EventHandler Invalidated;
+
         private void InvalidateMeasure()
         {
+            _isMeasureDirty = true;
+            var invalidated = Invalidated;
+            if (invalidated != null)
+                invalidated(this, EventArgs.Empty);
         }
 
-        internal void Measure(Size availableSize)
+        private const double DEFAULT_WIDTH = 200;
+        private const double DEFAULT_HEIGHT = 200;
+
+        public Size Measure(Size availableSize)
         {
+            double width = availableSize.Width;
+            if (double.IsPositiveInfinity(width))
+                width = DEFAULT_WIDTH;
+            double height = availableSize.Height;
+            if (double.IsPositiveInfinity(height))
+                height = DEFAULT_HEIGHT;
+
+            ViewportSize = new Size(width, height);
+            if (_isMeasureDirty)
+                return ViewportSize;
+
+            _isMeasureDirty = false;
+            return ViewportSize;
         }
 
-        private bool IsVirtualizing
+        private Size ViewportSize
         {
-            get { return _view.IsVirtualizing; }
+            get { return new Size(ViewportWidth, ViewportHeight); }
+            set
+            {
+                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
+                    return;
+
+                ViewportWidth = value.Width;
+                ViewportHeight = value.Height;
+
+                InvalidateScrollInfo();
+                if (!_isMeasureDirty)
+                    _isMeasureDirty = true;
+            }
         }
 
-        private ListOrientation Orientation
+        public Size Arrange(Size finalSize)
         {
-            get { return Template.ListOrientation; }
+            return ViewportSize;
         }
     }
 }
