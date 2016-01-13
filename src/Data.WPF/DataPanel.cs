@@ -39,22 +39,22 @@ namespace DevZest.Data.Windows
 
         double IScrollInfo.ExtentWidth
         {
-            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentSize.Width; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentWidth; }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentSize.Height; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ExtentHeight; }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportSize.Width; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportWidth; }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportSize.Height; }
+            get { return LayoutManager == null ? 0.0d : LayoutManager.ViewportHeight; }
         }
 
         double IScrollInfo.HorizontalOffset
@@ -101,22 +101,22 @@ namespace DevZest.Data.Windows
 
         void IScrollInfo.PageUp()
         {
-            LayoutManager.VerticalOffset -= LayoutManager.ViewportSize.Height;
+            LayoutManager.VerticalOffset -= LayoutManager.ViewportHeight;
         }
 
         void IScrollInfo.PageDown()
         {
-            LayoutManager.VerticalOffset += LayoutManager.ViewportSize.Height;
+            LayoutManager.VerticalOffset += LayoutManager.ViewportHeight;
         }
 
         void IScrollInfo.PageLeft()
         {
-            LayoutManager.HorizontalOffset -= LayoutManager.ViewportSize.Width;
+            LayoutManager.HorizontalOffset -= LayoutManager.ViewportWidth;
         }
 
         void IScrollInfo.PageRight()
         {
-            LayoutManager.HorizontalOffset += LayoutManager.ViewportSize.Width;
+            LayoutManager.HorizontalOffset += LayoutManager.ViewportWidth;
         }
 
         void IScrollInfo.MouseWheelUp()

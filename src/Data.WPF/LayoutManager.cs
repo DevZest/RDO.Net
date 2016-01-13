@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,23 +31,23 @@ namespace DevZest.Data.Windows
         protected LayoutManager(DataView view)
         {
             Debug.Assert(view != null);
-            View = view;
+            _view = view;
         }
 
-        internal DataView View { get; private set; }
+        private DataView _view;
 
-        internal GridTemplate Template
+        private GridTemplate Template
         {
-            get { return View.Template; }
+            get { return _view.Template; }
         }
 
-        internal bool IsPinned
+        public bool IsPinned
         {
             get { return Template.IsPinned; }
         }
 
         private IElementCollection _scrollableElements;
-        internal IReadOnlyList<UIElement> ScrollableElements
+        public IReadOnlyList<UIElement> ScrollableElements
         {
             get
             {
@@ -58,7 +57,7 @@ namespace DevZest.Data.Windows
         }
 
         private IElementCollection _pinnedElements;
-        internal IReadOnlyList<UIElement> PinnedElements
+        public IReadOnlyList<UIElement> PinnedElements
         {
             get
             {
@@ -71,7 +70,7 @@ namespace DevZest.Data.Windows
         private FrameworkElement _pinnedElementsParent;
         private FrameworkElement _scrollableElementsParent;
 
-        internal void SetElementsParent(FrameworkElement pinnedElementsParent, FrameworkElement scrollableElementsParent)
+        public void SetElementsParent(FrameworkElement pinnedElementsParent, FrameworkElement scrollableElementsParent)
         {
             Debug.Assert(_pinnedElementsParent != pinnedElementsParent || _scrollableElementsParent != scrollableElementsParent);
             Debug.Assert(IsPinned || (!IsPinned && pinnedElementsParent == null), "pinnedElementsParent must be null when IsPinned==false");
@@ -115,30 +114,37 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private Size _viewportSize;
-        internal Size ViewportSize
+        public double ViewportWidth { get; private set; }
+
+        public double ViewportHeight { get; private set; }
+
+        public Size ViewportSize
         {
-            get { return _viewportSize; }
             set
             {
-                if (_viewportSize.IsClose(value))
+                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
                     return;
 
-                _viewportSize = value;
+                ViewportWidth = value.Width;
+                ViewportHeight = value.Height;
+
                 InvalidateScrollInfo();
                 InvalidateMeasure();
             }
         }
 
-        private Size _extentSize;
-        internal Size ExtentSize
+        public double ExtentHeight { get; private set; }
+
+        public double ExtentWidth { get; private set; }
+
+        private Size ExtentSize
         {
-            get { return _extentSize; }
-            private set
+            set
             {
-                if (_extentSize.IsClose(value))
+                if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
                     return;
-                _extentSize = value;
+                ExtentHeight = value.Height;
+                ExtentWidth = value.Width;
                 InvalidateScrollInfo();
             }
         }
@@ -173,7 +179,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal ScrollViewer ScrollOwner { get; set; }
+        public ScrollViewer ScrollOwner { get; set; }
 
         private void InvalidateScrollInfo()
         {
@@ -181,7 +187,7 @@ namespace DevZest.Data.Windows
                 ScrollOwner.InvalidateScrollInfo();
         }
 
-        internal Rect MakeVisible(Visual visual, Rect rectangle)
+        public Rect MakeVisible(Visual visual, Rect rectangle)
         {
             throw new NotImplementedException();
         }
@@ -196,7 +202,7 @@ namespace DevZest.Data.Windows
 
         private bool IsVirtualizing
         {
-            get { return View.IsVirtualizing; }
+            get { return _view.IsVirtualizing; }
         }
 
         private ListOrientation Orientation
