@@ -21,29 +21,9 @@ namespace DevZest.Data.Windows
             dataForm.RunAfterLoaded(x =>
             {
                 var layoutManager = dataForm.View.LayoutManager;
-                var dataSetPanel = x.FindVisualChild<DataPanel>();
-                Assert.IsTrue(dataSetPanel != null, "Failed to resolve DataSetPanel from control template.");
-                Verify(dataSetPanel, layoutManager.ScrollableElements);
-                Assert.IsTrue(dataSetPanel.Child == null);
-            });
-        }
-
-        [TestMethod]
-        public void DataPanel_properly_initialized_pinned()
-        {
-            var dataForm = new DataForm();
-            dataForm.Show(DataView.Create(DataSet<Adhoc>.New(), (c, m) =>
-            {
-                c.WithPinnedLeft(1);
-            }));
-
-            dataForm.RunAfterLoaded(x =>
-            {
-                var layoutManager = dataForm.View.LayoutManager;
-                var dataSetPanel = x.FindVisualChild<DataPanel>();
-                Assert.IsTrue(dataSetPanel != null, "Failed to resolve DataSetPanel from control template.");
-                Verify(dataSetPanel, layoutManager.PinnedElements);
-                Verify(dataSetPanel.Child, layoutManager.ScrollableElements);
+                var dataPanel = x.FindVisualChild<DataPanel>();
+                Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
+                Verify(dataPanel, layoutManager.Elements);
             });
         }
 

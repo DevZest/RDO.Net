@@ -46,11 +46,6 @@ namespace DevZest.Data.Windows
             get { return _view.Template; }
         }
 
-        public bool IsPinned
-        {
-            get { return Template.IsPinned; }
-        }
-
         private bool IsVirtualizing
         {
             get { return _view.IsVirtualizing; }
@@ -61,57 +56,36 @@ namespace DevZest.Data.Windows
             get { return Template.ListOrientation; }
         }
 
-        private IElementCollection _scrollableElements;
-        public IReadOnlyList<UIElement> ScrollableElements
+        private IElementCollection _elements;
+        public IReadOnlyList<UIElement> Elements
         {
             get
             {
                 EnsureElementCollectionInitialized();
-                return _scrollableElements;
+                return _elements;
             }
         }
 
-        private IElementCollection _pinnedElements;
-        public IReadOnlyList<UIElement> PinnedElements
+        private FrameworkElement _elementsPanel;
+
+        public void SetElementsPanel(FrameworkElement elementsPanel)
         {
-            get
+            Debug.Assert(_elementsPanel != elementsPanel);
+
+            _elementsPanel = elementsPanel;
+
+            if (_elements != null)
             {
-                EnsureElementCollectionInitialized();
-                return _pinnedElements;
-            }
-        }
-
-        private FrameworkElement _pinnedElementsParent;
-        private FrameworkElement _scrollableElementsParent;
-
-        public void SetElementsParent(FrameworkElement pinnedElementsParent, FrameworkElement scrollableElementsParent)
-        {
-            Debug.Assert(_pinnedElementsParent != pinnedElementsParent || _scrollableElementsParent != scrollableElementsParent);
-            Debug.Assert(IsPinned || (!IsPinned && pinnedElementsParent == null), "pinnedElementsParent must be null when IsPinned==false");
-
-            _pinnedElementsParent = pinnedElementsParent;
-            _scrollableElementsParent = scrollableElementsParent;
-
-            if (_pinnedElements != null)
-            {
-                _pinnedElements.Clear();
-                _pinnedElements = null;
-            }
-
-            if (_scrollableElements != null)
-            {
-                _scrollableElements.Clear();
-                _scrollableElements = null;
+                _elements.Clear();
+                _elements = null;
             }
         }
 
         private void EnsureElementCollectionInitialized()
         {
-            if (_scrollableElements != null)
+            if (_elements != null)
                 return;
-
-            _pinnedElements = IsPinned ? IElementCollectionFactory.Create(_pinnedElementsParent) : null;
-            _scrollableElements = IElementCollectionFactory.Create(_scrollableElementsParent);
+            _elements = IElementCollectionFactory.Create(_elementsPanel);
         }
 
         public double ViewportWidth { get; private set; }

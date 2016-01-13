@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -181,42 +180,9 @@ namespace DevZest.Data.Windows
             BindingOperations.SetBinding(this, ViewProperty, binding);
         }
 
-        private DataPanel(DataPanel parent)
+        private DataView View
         {
-            Debug.Assert(parent != null && _parent == null);
-            _parent = parent;
-        }
-
-        private DataPanel _parent;
-
-        private DataPanel _child;
-        internal DataPanel Child
-        {
-            get { return _child; }
-            private set
-            {
-                if (_child == value)
-                    return;
-
-                if (_child != null)
-                {
-                    RemoveLogicalChild(_child);
-                    RemoveVisualChild(_child);
-                }
-
-                _child = value;
-
-                if (_child != null)
-                {
-                    AddLogicalChild(_child);
-                    AddVisualChild(_child);
-                }
-            }
-        }
-
-        internal DataView View
-        {
-            get { return _parent != null ? _parent.View : (DataView)GetValue(ViewProperty); }
+            get { return (DataView)GetValue(ViewProperty); }
         }
 
         private void OnViewChanged(DataView oldValue)
@@ -225,41 +191,18 @@ namespace DevZest.Data.Windows
             {
                 var oldLayoutManager = oldValue.LayoutManager;
                 oldLayoutManager.Invalidated -= OnLayoutInvalidated;
-                oldLayoutManager.SetElementsParent(null, null);
+                oldLayoutManager.SetElementsPanel(null);
                 oldLayoutManager.ScrollOwner = null;
             }
 
             var layoutManager = LayoutManager;
-            var isPinned = layoutManager == null ? false : layoutManager.IsPinned;
-
-            if (layoutManager == null || !layoutManager.IsPinned)
-                Child = null;
-            else if (Child == null)
-                Child = new DataPanel(this);
-
-            DataPanel pinnedPanel, scrollablePanel;
-            if (isPinned)
-            {
-                pinnedPanel = this;
-                scrollablePanel = Child;
-            }
-            else
-            {
-                pinnedPanel = null;
-                scrollablePanel = this;
-            }
-
             if (layoutManager != null)
             {
                 layoutManager.ScrollOwner = _scrollOwner;
+                layoutManager.SetElementsPanel(this);
+                _elements = layoutManager.Elements;
                 layoutManager.Invalidated += OnLayoutInvalidated;
-
-                layoutManager.SetElementsParent(pinnedPanel, scrollablePanel);
-                if (pinnedPanel != null)
-                    pinnedPanel._elements = layoutManager.PinnedElements;
             }
-
-            scrollablePanel._elements = layoutManager == null ? null : layoutManager.ScrollableElements;
         }
 
         private void OnLayoutInvalidated(object sender, EventArgs e)
@@ -294,7 +237,7 @@ namespace DevZest.Data.Windows
 
         protected override int VisualChildrenCount
         {
-            get { return Child == null ? ElementsCount : ElementsCount + 1; }
+            get { return ElementsCount; }
         }
 
         protected override Visual GetVisualChild(int index)
@@ -302,7 +245,7 @@ namespace DevZest.Data.Windows
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return index < ElementsCount ? Elements[index] : Child;
+            return Elements[index];
         }
 
         protected override Size MeasureOverride(Size availableSize)
