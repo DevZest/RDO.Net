@@ -132,7 +132,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\DataSetView.xaml">
+    <Page Include="Themes\DataForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
