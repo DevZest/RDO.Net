@@ -131,5 +131,14 @@ namespace DevZest.Data.Windows
             View.InitIsEmptySetVisible(value);
             return this;
         }
+
+        public DataViewBuilder WithRowFormConstructor(Func<RowForm> rowFormConstructor)
+        {
+            if (rowFormConstructor == null)
+                throw new ArgumentNullException(nameof(rowFormConstructor));
+
+            View.LayoutManager.InitRowFormConstructor(rowFormConstructor);
+            return this;
+        }
     }
 }

@@ -219,5 +219,32 @@ namespace DevZest.Data.Windows
         {
             return ViewportSize;
         }
+
+        Func<RowForm> _rowFormConstructor = () => new RowForm();
+        public void InitRowFormConstructor(Func<RowForm> rowFormConstructor)
+        {
+            _rowFormConstructor = rowFormConstructor;
+        }
+
+        List<RowForm> _cachedRowForms;
+        internal RowForm GetOrCreateRowForm()
+        {
+            if (_cachedRowForms == null || _cachedRowForms.Count == 0)
+                return _rowFormConstructor();
+
+            var last = _cachedRowForms.Count - 1;
+            var result = _cachedRowForms[last];
+            _cachedRowForms.RemoveAt(last);
+            return result;
+        }
+
+        internal void RecycleRowForm(RowForm rowForm)
+        {
+            Debug.Assert(rowForm != null);
+
+            if (_cachedRowForms == null)
+                _cachedRowForms = new List<RowForm>();
+            _cachedRowForms.Add(rowForm);
+        }
     }
 }

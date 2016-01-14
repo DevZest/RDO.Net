@@ -41,9 +41,10 @@ namespace DevZest.Data.Windows
 
         internal void Dispose()
         {
+            if (RowForm != null)
+                Virtualize();
             _owner = null;
             Children = null;
-            EnsureUIElementsRecycled();
         }
 
         private DataView _owner;
@@ -58,9 +59,14 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public GridTemplate Template
+        private GridTemplate Template
         {
-            get { return Owner == null ? null : Owner.Template; }
+            get { return Owner.Template; }
+        }
+
+        private LayoutManager LayoutManager
+        {
+            get { return Owner.LayoutManager; }
         }
 
         public DataRow DataRow { get; private set; }
@@ -166,30 +172,6 @@ namespace DevZest.Data.Windows
         public RowKind Kind { get; private set; }
 
         public bool IsFocused { get; internal set; }
-
-        private static UIElement[] s_emptyUIElements = new UIElement[0];
-        private UIElement[] _uiElements = null;
-
-        private int UIElementsCount
-        {
-            get { return Template.ListUnits.Count; }
-        }
-
-        private void EnsureUIElementsRecycled()
-        {
-            if (_uiElements == null)
-                return;
-
-            for (int i = 0; i < _uiElements.Length; i++)
-            {
-                var uiElement = _uiElements[i];
-                if (uiElement == null)
-                    continue;
-
-                Template.ListUnits[i].Recycle(uiElement);
-            }
-            _uiElements = null;
-        }
 
         public T GetValue<T>(Column<T> column)
         {
@@ -365,11 +347,27 @@ namespace DevZest.Data.Windows
             IsEditing = false;
         }
 
+        internal RowForm RowForm { get; private set; }
         private IList<UIElement> _elements;
 
-        internal void Realize(IList<UIElement> elements)
+        internal RowForm Realize()
         {
-            Debug.Assert(!IsRealized);
+            Debug.Assert(RowForm == null);
+            RowForm = LayoutManager.GetOrCreateRowForm();
+            RowForm.Initialize(this);
+            return RowForm;
+        }
+
+        internal void Virtualize()
+        {
+            Debug.Assert(RowForm != null);
+            RowForm.Cleanup();
+            RowForm = null;
+        }
+
+        internal void RealizeElements(IList<UIElement> elements)
+        {
+            Debug.Assert(_elements == null);
             Debug.Assert(elements != null);
 
             _elements = elements;
@@ -382,9 +380,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal void Recycle()
+        internal void VirtualizeElements()
         {
-            Debug.Assert(IsRealized);
+            Debug.Assert(_elements != null);
 
             var listUnits = Template.ListUnits;
             for (int i = listUnits.Count - 1; i >= 0; i++)
@@ -397,11 +395,6 @@ namespace DevZest.Data.Windows
                 listUnit.Recycle(element);
             }
             _elements = null;
-        }
-
-        private bool IsRealized
-        {
-            get { return _elements != null; }
         }
     }
 }

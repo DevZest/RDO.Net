@@ -37,10 +37,10 @@ namespace DevZest.Data.Windows
         private void OnViewChanged(RowView oldValue, RowView newValue)
         {
             if (oldValue != null)
-                oldValue.Recycle();
+                oldValue.VirtualizeElements();
 
             if (newValue != null)
-                newValue.Realize(_elements);
+                newValue.RealizeElements(_elements);
         }
 
         private IList<UIElement> _elements;
