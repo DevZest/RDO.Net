@@ -127,7 +127,7 @@ namespace DevZest.Data.Windows
                 OnGetValue(RowViewBindingSource.IsCurrent);
                 return _isCurrent;
             }
-            set
+            internal set
             {
                 if (_isCurrent == value)
                     return;

@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows
             _owner = owner;
             _dataSet = dataSet;
             _template = new GridTemplate(this);
-            IsVirtualizing = true;
+            VirtualizingThreshold = 50;
         }
 
         private void Initialize()
@@ -92,11 +92,11 @@ namespace DevZest.Data.Windows
             _dataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
-        public bool IsVirtualizing { get; private set; }
+        public int VirtualizingThreshold { get; private set; }
 
-        internal void InitIsVirtualizing(bool value)
+        internal void InitVirtualizingThreshold(int value)
         {
-            IsVirtualizing = value;
+            VirtualizingThreshold = value;
         }
 
         public bool IsEofVisible { get; private set; }
@@ -299,6 +299,7 @@ namespace DevZest.Data.Windows
                 if (value != null && value.Owner != this)
                     throw new ArgumentException(Strings.DataView_InvalidCurrentRow, nameof(value));
 
+                var oldValue = _currentRow;
                 if (_currentRow != null)
                     _currentRow.IsCurrent = false;
 
@@ -306,6 +307,10 @@ namespace DevZest.Data.Windows
 
                 if (_currentRow != null)
                     _currentRow.IsCurrent = true;
+
+                if (LayoutManager != null)
+                    LayoutManager.OnCurrentRowChanged(oldValue);
+                OnUpdated(DataViewBindingSource.CurrentRow);
             }
         }
 

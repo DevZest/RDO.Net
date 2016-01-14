@@ -114,9 +114,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataViewBuilder WithIsVirtualizing(bool value)
+        public DataViewBuilder WithVirtualizingThreshold(int value)
         {
-            View.InitIsVirtualizing(value);
+            View.InitVirtualizingThreshold(value);
             return this;
         }
 

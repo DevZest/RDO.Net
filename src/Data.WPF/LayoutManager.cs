@@ -46,9 +46,9 @@ namespace DevZest.Data.Windows
             get { return _view.Template; }
         }
 
-        private bool IsVirtualizing
+        private int VirtualizingThreshold
         {
-            get { return _view.IsVirtualizing; }
+            get { return _view.VirtualizingThreshold; }
         }
 
         private ListOrientation Orientation
@@ -161,6 +161,10 @@ namespace DevZest.Data.Windows
         {
             _isMeasureDirty = true;
             InvalidateMeasure();
+        }
+
+        public virtual void OnCurrentRowChanged(RowView oldValue)
+        {
         }
 
         private bool _isMeasureDirty;
