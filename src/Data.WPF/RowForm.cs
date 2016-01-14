@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -6,25 +7,45 @@ namespace DevZest.Data.Windows
 {
     public class RowForm : Control
     {
-        public RowView View { get; internal set; }
+        private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
+            typeof(RowView), typeof(RowForm), new FrameworkPropertyMetadata(null));
 
-        protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
+
+        public RowView View
         {
-            base.OnPreviewLostKeyboardFocus(e);
+            get { return (RowView)GetValue(ViewProperty); }
         }
 
-        protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        internal void Initialize(RowView view)
         {
-            base.OnLostKeyboardFocus(e);
-            if (View != null)
-                View.IsFocused = false;
+            Debug.Assert(view != null && View == null);
+            SetValue(ViewPropertyKey, view);
         }
 
-        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        internal void Cleanup()
         {
-            base.OnPreviewGotKeyboardFocus(e);
-            if (View != null)
-                View.IsFocused = true;
+            Debug.Assert(View != null);
+            ClearValue(ViewPropertyKey);
         }
+
+        //protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        //{
+        //    base.OnPreviewLostKeyboardFocus(e);
+        //}
+
+        //protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        //{
+        //    base.OnLostKeyboardFocus(e);
+        //    if (View != null)
+        //        View.IsFocused = false;
+        //}
+
+        //protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        //{
+        //    base.OnPreviewGotKeyboardFocus(e);
+        //    if (View != null)
+        //        View.IsFocused = true;
+        //}
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -362,6 +363,45 @@ namespace DevZest.Data.Windows
             else
                 DataRow.Load();
             IsEditing = false;
+        }
+
+        private IList<UIElement> _elements;
+
+        internal void Realize(IList<UIElement> elements)
+        {
+            Debug.Assert(!IsRealized);
+            Debug.Assert(elements != null);
+
+            _elements = elements;
+            foreach (var listUnit in Template.ListUnits)
+            {
+                var element = listUnit.Generate();
+                element.SetRow(this);
+                _elements.Add(element);
+                listUnit.Initialize(element);
+            }
+        }
+
+        internal void Recycle()
+        {
+            Debug.Assert(IsRealized);
+
+            var listUnits = Template.ListUnits;
+            for (int i = listUnits.Count - 1; i >= 0; i++)
+            {
+                var listUnit = listUnits[i];
+                var element = _elements[i];
+                listUnit.Cleanup(element);
+                _elements.RemoveAt(i);
+                element.SetRow(null);
+                listUnit.Recycle(element);
+            }
+            _elements = null;
+        }
+
+        private bool IsRealized
+        {
+            get { return _elements != null; }
         }
     }
 }

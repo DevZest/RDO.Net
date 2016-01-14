@@ -134,7 +134,6 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(element != null && element.GetTemplateUnit() == this);
 
-            Cleanup(element);
             if (_cachedUIElements == null)
                 _cachedUIElements = new List<UIElement>();
             _cachedUIElements.Add(element);
