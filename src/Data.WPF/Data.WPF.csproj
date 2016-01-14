@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
+    <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="RowViewBindingSource.cs" />
     <Compile Include="DataView.RowCollection.cs" />
