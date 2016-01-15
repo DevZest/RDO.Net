@@ -20,25 +20,47 @@ namespace DevZest.Data.Windows
             element.SetValue(TemplateUnitProperty, value);
         }
 
-        private static readonly DependencyProperty RowProperty = DependencyProperty.RegisterAttached("Row",
-            typeof(RowView), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty DataViewProperty = DependencyProperty.RegisterAttached("DataView",
+            typeof(DataView), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static RowView GetRow(this UIElement element)
+        public static DataView GetDataView(this UIElement element)
         {
-            return (RowView)element.GetValue(RowProperty);
+            return (DataView)element.GetValue(DataViewProperty);
         }
 
-        internal static void SetRow(this UIElement element, RowView value)
+        internal static void SetDataView(this UIElement element, DataView value)
         {
             if (value == null)
             {
-                Debug.Assert(element.GetRow() != null);
-                element.ClearValue(RowProperty);
+                Debug.Assert(element.GetDataView() != null);
+                element.ClearValue(DataViewProperty);
             }
             else
             {
-                Debug.Assert(element.GetRow() == null);
-                element.SetValue(RowProperty, value);
+                Debug.Assert(element.GetDataView() == null);
+                element.SetValue(DataViewProperty, value);
+            }
+        }
+
+        private static readonly DependencyProperty RowViewProperty = DependencyProperty.RegisterAttached("RowView",
+            typeof(RowView), typeof(UIElementExtensions), new PropertyMetadata(null));
+
+        public static RowView GetRowView(this UIElement element)
+        {
+            return (RowView)element.GetValue(RowViewProperty);
+        }
+
+        internal static void SetRowView(this UIElement element, RowView value)
+        {
+            if (value == null)
+            {
+                Debug.Assert(element.GetRowView() != null);
+                element.ClearValue(RowViewProperty);
+            }
+            else
+            {
+                Debug.Assert(element.GetRowView() == null);
+                element.SetValue(RowViewProperty, value);
             }
         }
 
@@ -74,7 +96,7 @@ namespace DevZest.Data.Windows
 
         private static RowView ExpectRow(this UIElement element)
         {
-            var result = element.GetRow();
+            var result = element.GetRowView();
             if (result == null)
                 throw new InvalidOperationException(Strings.UIElement_ExpectRow);
             return result;

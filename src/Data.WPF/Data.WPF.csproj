@@ -48,6 +48,7 @@
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
+    <Compile Include="RealizedRowCollection.cs" />
     <Compile Include="RowViewBindingSource.cs" />
     <Compile Include="DataView.RowCollection.cs" />
     <Compile Include="DataViewBuilder.cs" />
@@ -59,8 +60,6 @@
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
-    <Compile Include="LayoutManager.DuplexOrientationLayout.cs" />
-    <Compile Include="LayoutManager.SimplexOrientationLayout.cs" />
     <Compile Include="LayoutManager.LayoutXY.cs" />
     <Compile Include="LayoutManager.LayoutYX.cs" />
     <Compile Include="LayoutManager.LayoutY.cs" />

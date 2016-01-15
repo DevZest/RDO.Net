@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
-                element.SetRow(view);
+                element.SetRowView(view);
                 listUnits[i].Initialize(element);
             }
         }
@@ -72,7 +72,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
-                element.SetRow(null);
+                element.SetRowView(null);
                 listUnits[i].Cleanup(element);
             }
 

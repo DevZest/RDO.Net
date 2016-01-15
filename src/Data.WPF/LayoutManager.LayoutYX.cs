@@ -2,12 +2,12 @@
 {
     partial class LayoutManager
     {
-        private sealed class LayoutYX : LayoutManager
-        {
-            public LayoutYX(DataView view)
-                : base(view)
-            {
-            }
-        }
+        //private sealed class LayoutYX : LayoutManager
+        //{
+        //    public LayoutYX(DataView view)
+        //        : base(view)
+        //    {
+        //    }
+        //}
     }
 }

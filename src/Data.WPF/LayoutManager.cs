@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -11,27 +12,29 @@ namespace DevZest.Data.Windows
     {
         internal static LayoutManager Create(DataView view)
         {
-            var orientation = view.Template.ListOrientation;
+            return new LayoutZ(view);
 
-            if (orientation == ListOrientation.Z)
-                return new LayoutZ(view);
-            else if (orientation == ListOrientation.Y)
-                return new LayoutY(view);
-            else if (orientation == ListOrientation.XY)
-                return new LayoutXY(view);
-            else if (orientation == ListOrientation.X)
-                return new LayoutX(view);
-            else
-            {
-                Debug.Assert(orientation == ListOrientation.YX);
-                return new LayoutYX(view);
-            }
+            //var orientation = view.Template.ListOrientation;
+            //if (orientation == ListOrientation.Z)
+            //    return new LayoutZ(view);
+            //else if (orientation == ListOrientation.Y)
+            //    return new LayoutY(view);
+            //else if (orientation == ListOrientation.XY)
+            //    return new LayoutXY(view);
+            //else if (orientation == ListOrientation.X)
+            //    return new LayoutX(view);
+            //else
+            //{
+            //    Debug.Assert(orientation == ListOrientation.YX);
+            //    return new LayoutYX(view);
+            //}
         }
 
         protected LayoutManager(DataView view)
         {
             Debug.Assert(view != null);
             _view = view;
+            _realizedRows = new RealizedRowCollection(this);
         }
 
         private DataView _view;
@@ -41,7 +44,14 @@ namespace DevZest.Data.Windows
             get { return _view; }
         }
 
-        private GridTemplate Template
+        private RealizedRowCollection _realizedRows;
+
+        public void InitRowFormConstructor(Func<RowForm> rowFormConstructor)
+        {
+            _realizedRows.InitRowFormConstructor(rowFormConstructor);
+        }
+
+        public GridTemplate Template
         {
             get { return _view.Template; }
         }
@@ -51,13 +61,22 @@ namespace DevZest.Data.Windows
             get { return _view.VirtualizingThreshold; }
         }
 
-        private ListOrientation Orientation
+        private ListOrientation ListOrientation
         {
             get { return Template.ListOrientation; }
         }
 
         private IElementCollection _elements;
         public IReadOnlyList<UIElement> Elements
+        {
+            get
+            {
+                EnsureElementCollectionInitialized();
+                return _elements;
+            }
+        }
+
+        public IElementCollection Children
         {
             get
             {
@@ -86,6 +105,25 @@ namespace DevZest.Data.Windows
             if (_elements != null)
                 return;
             _elements = IElementCollectionFactory.Create(_elementsPanel);
+
+            var scalarUnits = Template.ScalarUnits;
+
+            for (int i = 0; i < scalarUnits.Count; i++)
+                _elements.Add(GenerateScalar(scalarUnits[i]));
+        }
+
+        private UIElement GenerateScalar(ScalarUnit scalarUnit)
+        {
+            var element = scalarUnit.Generate();
+            element.SetDataView(_view);
+            scalarUnit.Initialize(element);
+            return element;
+        }
+
+        private void RecycleScalar(ScalarUnit scalarUnit, UIElement element)
+        {
+            scalarUnit.Cleanup(element);
+            element.SetDataView(null);
         }
 
         public double ViewportWidth { get; private set; }
@@ -117,11 +155,14 @@ namespace DevZest.Data.Windows
                 if (_horizontalOffset.IsClose(value))
                     return;
 
+                HorizontalOffsetDelta += (value - _horizontalOffset);
                 _horizontalOffset = value;
                 InvalidateScrollInfo();
-                InvalidateMeasure();
+                Invalidate();
             }
         }
+
+        protected double HorizontalOffsetDelta { get; private set; }
 
         private double _verticalOffset;
         public double VerticalOffset
@@ -132,11 +173,14 @@ namespace DevZest.Data.Windows
                 if (_verticalOffset.IsClose(value))
                     return;
 
+                VerticalOffsetDelta += (value - _verticalOffset);
                 _verticalOffset = value;
                 InvalidateScrollInfo();
-                InvalidateMeasure();
+                Invalidate();
             }
         }
+
+        protected double VerticalOffsetDelta { get; private set; }
 
         public ScrollViewer ScrollOwner { get; set; }
 
@@ -151,53 +195,6 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        public void OnRowAdded(int index)
-        {
-            _isMeasureDirty = true;
-            InvalidateMeasure();
-        }
-
-        public void OnRowRemoved(int index, RowView row)
-        {
-            _isMeasureDirty = true;
-            InvalidateMeasure();
-        }
-
-        public virtual void OnCurrentRowChanged(RowView oldValue)
-        {
-        }
-
-        private bool _isMeasureDirty;
-        public event EventHandler Invalidated;
-
-        private void InvalidateMeasure()
-        {
-            _isMeasureDirty = true;
-            var invalidated = Invalidated;
-            if (invalidated != null)
-                invalidated(this, EventArgs.Empty);
-        }
-
-        private const double DEFAULT_WIDTH = 200;
-        private const double DEFAULT_HEIGHT = 200;
-
-        public Size Measure(Size availableSize)
-        {
-            double width = availableSize.Width;
-            if (double.IsPositiveInfinity(width))
-                width = DEFAULT_WIDTH;
-            double height = availableSize.Height;
-            if (double.IsPositiveInfinity(height))
-                height = DEFAULT_HEIGHT;
-
-            ViewportSize = new Size(width, height);
-            if (_isMeasureDirty)
-                return ViewportSize;
-
-            _isMeasureDirty = false;
-            return ViewportSize;
-        }
-
         private Size ViewportSize
         {
             get { return new Size(ViewportWidth, ViewportHeight); }
@@ -210,41 +207,81 @@ namespace DevZest.Data.Windows
                 ViewportHeight = value.Height;
 
                 InvalidateScrollInfo();
-                if (!_isMeasureDirty)
-                    _isMeasureDirty = true;
             }
         }
+
+        public void OnRowAdded(int index)
+        {
+            Invalidate();
+        }
+
+        public void OnRowRemoved(int index, RowView row)
+        {
+            Invalidate();
+        }
+
+        public virtual void OnCurrentRowChanged()
+        {
+        }
+
+        private bool _isInvalidated
+        {
+            get; set;
+        }
+        public event EventHandler Invalidated;
+
+        private void Invalidate()
+        {
+            if (_isInvalidated)
+                return;
+
+            _isInvalidated = true;
+            var invalidated = Invalidated;
+            if (invalidated != null)
+                invalidated(this, EventArgs.Empty);
+        }
+
+        private const double DEFAULT_WIDTH = 200;
+        private const double DEFAULT_HEIGHT = 200;
+
+        public Size Measure(Size availableSize)
+        {
+            availableSize = PositiveInfinityAsDefault(availableSize);
+            MeasureOverride(availableSize);
+
+            ExtentSize = GetExtentSize();
+            HorizontalOffsetDelta = 0;
+            VerticalOffsetDelta = 0;
+            _isInvalidated = false;
+            return availableSize;
+        }
+
+        private static Size PositiveInfinityAsDefault(Size availableSize)
+        {
+            double width = availableSize.Width;
+            if (double.IsPositiveInfinity(width))
+                width = DEFAULT_WIDTH;
+            double height = availableSize.Height;
+            if (double.IsPositiveInfinity(height))
+                height = DEFAULT_HEIGHT;
+            return new Size(width, height);
+        }
+
+        protected abstract void MeasureOverride(Size availableSize);
+
+        protected abstract int RepeatXCount { get; }
+
+        protected abstract int RepeatYCount { get; }
+
+        protected abstract double GetGridWidth(GridColumn gridColumn, int repeatXIndex);
+
+        protected abstract double GetGridHeight(GridRow gridRow, int repeatYIndex);
+
+        protected abstract Size GetExtentSize();
 
         public Size Arrange(Size finalSize)
         {
             return ViewportSize;
-        }
-
-        Func<RowForm> _rowFormConstructor = () => new RowForm();
-        public void InitRowFormConstructor(Func<RowForm> rowFormConstructor)
-        {
-            _rowFormConstructor = rowFormConstructor;
-        }
-
-        List<RowForm> _cachedRowForms;
-        public RowForm GetOrCreateRowForm()
-        {
-            if (_cachedRowForms == null || _cachedRowForms.Count == 0)
-                return _rowFormConstructor();
-
-            var last = _cachedRowForms.Count - 1;
-            var result = _cachedRowForms[last];
-            _cachedRowForms.RemoveAt(last);
-            return result;
-        }
-
-        public void RecycleRowForm(RowForm rowForm)
-        {
-            Debug.Assert(rowForm != null);
-
-            if (_cachedRowForms == null)
-                _cachedRowForms = new List<RowForm>();
-            _cachedRowForms.Add(rowForm);
         }
     }
 }

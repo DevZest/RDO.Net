@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
         }
 
         private TemplateUnitCollection<ScalarUnit> _scalarUnits = new TemplateUnitCollection<ScalarUnit>();
-        public ReadOnlyCollection<ScalarUnit> ScalarEntries
+        public ReadOnlyCollection<ScalarUnit> ScalarUnits
         {
             get { return _scalarUnits; }
         }
@@ -189,7 +189,7 @@ namespace DevZest.Data.Windows
             return orentation != ListOrientation.XY;
         }
 
-        internal int NumberOfScallarEntriesBeforeRow { get; private set; }
+        internal int NumberOfScallarUnitsBeforeRow { get; private set; }
 
         internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
         {
@@ -197,7 +197,7 @@ namespace DevZest.Data.Windows
             scalarUnit.Construct(this, gridRange, _scalarUnits.Count);
             _scalarUnits.Add(gridRange, scalarUnit);
             if (_listUnits.Count == 0)
-                NumberOfScallarEntriesBeforeRow = _scalarUnits.Count;
+                NumberOfScallarUnitsBeforeRow = _scalarUnits.Count;
         }
 
         internal void AddListUnit(GridRange gridRange, ListUnit listUnit)

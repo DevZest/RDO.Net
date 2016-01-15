@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows
         {
             base.Initialize(element);
             var dataForm = (DataForm)element;
-            var parentRow = dataForm.GetRow();
+            var parentRow = dataForm.GetRowView();
             dataForm.Show(parentRow.Children[Index]);
         }
 

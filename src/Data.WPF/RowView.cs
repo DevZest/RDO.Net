@@ -41,8 +41,7 @@ namespace DevZest.Data.Windows
 
         internal void Dispose()
         {
-            if (RowForm != null)
-                Virtualize();
+            Debug.Assert(Form == null, "Row should be virtualized first before dispose.");
             _owner = null;
             Children = null;
         }
@@ -347,22 +346,6 @@ namespace DevZest.Data.Windows
             IsEditing = false;
         }
 
-        internal RowForm RowForm { get; private set; }
-
-        internal RowForm Realize()
-        {
-            Debug.Assert(RowForm == null);
-            RowForm = LayoutManager.GetOrCreateRowForm();
-            RowForm.Initialize(this);
-            return RowForm;
-        }
-
-        internal void Virtualize()
-        {
-            Debug.Assert(RowForm != null);
-            RowForm.Cleanup();
-            LayoutManager.RecycleRowForm(RowForm);
-            RowForm = null;
-        }
+        internal RowForm Form { get; set; }
     }
 }

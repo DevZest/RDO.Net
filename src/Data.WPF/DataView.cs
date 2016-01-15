@@ -309,7 +309,7 @@ namespace DevZest.Data.Windows
                     _currentRow.IsCurrent = true;
 
                 if (LayoutManager != null)
-                    LayoutManager.OnCurrentRowChanged(oldValue);
+                    LayoutManager.OnCurrentRowChanged();
                 OnUpdated(DataViewBindingSource.CurrentRow);
             }
         }
