@@ -225,10 +225,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private bool _isInvalidated
-        {
-            get; set;
-        }
+        private bool _isInvalidated;
         public event EventHandler Invalidated;
 
         private void Invalidate()
