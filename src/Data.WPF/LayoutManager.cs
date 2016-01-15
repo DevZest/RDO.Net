@@ -227,7 +227,7 @@ namespace DevZest.Data.Windows
         }
 
         List<RowForm> _cachedRowForms;
-        internal RowForm GetOrCreateRowForm()
+        public RowForm GetOrCreateRowForm()
         {
             if (_cachedRowForms == null || _cachedRowForms.Count == 0)
                 return _rowFormConstructor();
@@ -238,7 +238,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        internal void RecycleRowForm(RowForm rowForm)
+        public void RecycleRowForm(RowForm rowForm)
         {
             Debug.Assert(rowForm != null);
 

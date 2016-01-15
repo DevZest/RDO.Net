@@ -361,6 +361,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowForm != null);
             RowForm.Cleanup();
+            LayoutManager.RecycleRowForm(RowForm);
             RowForm = null;
         }
     }
