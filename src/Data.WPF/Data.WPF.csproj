@@ -48,7 +48,7 @@
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="RealizedRowCollection.cs" />
+    <Compile Include="LayoutManager.RealizedRowCollection.cs" />
     <Compile Include="RowViewBindingSource.cs" />
     <Compile Include="DataView.RowCollection.cs" />
     <Compile Include="DataViewBuilder.cs" />

@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public IElementCollection Children
+        private IElementCollection Children
         {
             get
             {
@@ -95,6 +95,15 @@ namespace DevZest.Data.Windows
 
             if (_elements != null)
             {
+                _realizedRows.RemoveAll();
+                var scalarUnits = Template.ScalarUnits;
+                for (int i = 0; i < scalarUnits.Count; i++)
+                {
+                    var scalarUnit = scalarUnits[i];
+                    var element = Elements[i];
+                    scalarUnit.Cleanup(element);
+                    element.SetDataView(null);
+                }
                 _elements.Clear();
                 _elements = null;
             }
@@ -109,21 +118,13 @@ namespace DevZest.Data.Windows
             var scalarUnits = Template.ScalarUnits;
 
             for (int i = 0; i < scalarUnits.Count; i++)
-                _elements.Add(GenerateScalar(scalarUnits[i]));
-        }
-
-        private UIElement GenerateScalar(ScalarUnit scalarUnit)
-        {
-            var element = scalarUnit.Generate();
-            element.SetDataView(_view);
-            scalarUnit.Initialize(element);
-            return element;
-        }
-
-        private void RecycleScalar(ScalarUnit scalarUnit, UIElement element)
-        {
-            scalarUnit.Cleanup(element);
-            element.SetDataView(null);
+            {
+                var scalarUnit = scalarUnits[i];
+                var element = scalarUnit.Generate();
+                element.SetDataView(_view);
+                scalarUnit.Initialize(element);
+                _elements.Add(element);
+            }
         }
 
         public double ViewportWidth { get; private set; }
