@@ -44,8 +44,11 @@ namespace DevZest.Data.Windows
             {
                 var element = Elements[i];
                 element.SetRowView(view);
+                element.SetDataView(view.Owner);
                 listUnits[i].Initialize(element);
             }
+
+            view.BindingsReset += OnBindingsReset;
         }
 
         private void EnsureElementsCreated(RowView view)
@@ -56,24 +59,31 @@ namespace DevZest.Data.Windows
             ApplyTemplate();
             var listUnits = view.Owner.Template.ListUnits;
             for (int i = 0; i < listUnits.Count; i++)
-            {
-                var listUnit = listUnits[i];
-                _elements.Add(listUnit.Generate());
-            }
+                _elements.Add(listUnits[i].Generate());
             _elementsCreated = true;
+        }
+
+        private void OnBindingsReset(object sender, System.EventArgs e)
+        {
+            var listUnits = View.Owner.Template.ListUnits;
+            for (int i = 0; i < listUnits.Count; i++)
+                listUnits[i].UpdateTarget(Elements[i]);
         }
 
         internal void Cleanup()
         {
             Debug.Assert(View != null);
 
+            View.BindingsReset -= OnBindingsReset;
+
             var listUnits = View.Owner.Template.ListUnits;
             Debug.Assert(Elements.Count == listUnits.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
-                element.SetRowView(null);
                 listUnits[i].Cleanup(element);
+                element.SetRowView(null);
+                element.SetDataView(null);
             }
 
             View = null;
