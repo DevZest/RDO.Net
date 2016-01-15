@@ -132,6 +132,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\RowForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\DataForm.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -348,7 +348,6 @@ namespace DevZest.Data.Windows
         }
 
         internal RowForm RowForm { get; private set; }
-        private IList<UIElement> _elements;
 
         internal RowForm Realize()
         {
@@ -363,38 +362,6 @@ namespace DevZest.Data.Windows
             Debug.Assert(RowForm != null);
             RowForm.Cleanup();
             RowForm = null;
-        }
-
-        internal void RealizeElements(IList<UIElement> elements)
-        {
-            Debug.Assert(_elements == null);
-            Debug.Assert(elements != null);
-
-            _elements = elements;
-            foreach (var listUnit in Template.ListUnits)
-            {
-                var element = listUnit.Generate();
-                element.SetRow(this);
-                _elements.Add(element);
-                listUnit.Initialize(element);
-            }
-        }
-
-        internal void VirtualizeElements()
-        {
-            Debug.Assert(_elements != null);
-
-            var listUnits = Template.ListUnits;
-            for (int i = listUnits.Count - 1; i >= 0; i++)
-            {
-                var listUnit = listUnits[i];
-                var element = _elements[i];
-                listUnit.Cleanup(element);
-                _elements.RemoveAt(i);
-                element.SetRow(null);
-                listUnit.Recycle(element);
-            }
-            _elements = null;
         }
     }
 }

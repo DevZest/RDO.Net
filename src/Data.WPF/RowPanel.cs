@@ -1,53 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows
 {
     public class RowPanel : FrameworkElement
     {
-        private static readonly DependencyProperty ViewProperty = DependencyProperty.Register(nameof(View), typeof(RowView),
-            typeof(RowPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnViewChanged));
-
-        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((RowPanel)d).OnViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
-        }
-
         public RowPanel()
         {
-            _elements = IElementCollectionFactory.Create(this);
+            ElementCollection = IElementCollectionFactory.Create(this);
         }
 
-        protected override void OnInitialized(EventArgs e)
+        internal IElementCollection ElementCollection { get; private set; }
+        private IReadOnlyList<UIElement> Elements
         {
-            base.OnInitialized(e);
-            var binding = new System.Windows.Data.Binding(DataForm.ViewProperty.Name);
-            binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, ViewProperty, binding);
+            get { return ElementCollection; }
         }
-
-        private RowView View
-        {
-            get { return (RowView)GetValue(ViewProperty); }
-        }
-
-        private void OnViewChanged(RowView oldValue, RowView newValue)
-        {
-            if (oldValue != null)
-                oldValue.VirtualizeElements();
-
-            if (newValue != null)
-                newValue.RealizeElements(_elements);
-        }
-
-        private IList<UIElement> _elements;
 
         protected override int VisualChildrenCount
         {
-            get { return _elements.Count; }
+            get { return Elements.Count; }
         }
 
         protected override Visual GetVisualChild(int index)
@@ -55,7 +28,7 @@ namespace DevZest.Data.Windows
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return _elements[index];
+            return Elements[index];
         }
 
         protected override Size MeasureOverride(Size availableSize)
