@@ -244,23 +244,27 @@ namespace DevZest.Data.Windows
 
         public Size Measure(Size availableSize)
         {
-            availableSize = PositiveInfinityAsDefault(availableSize);
-            MeasureOverride(availableSize);
+            availableSize = VerifyInfinity(availableSize);
 
-            ExtentSize = GetExtentSize();
+            MeasureOverride(availableSize);
+            if (ScrollOwner != null)
+            {
+                ViewportSize = CalcViewportSize();
+                ExtentSize = CalcExtentSize();
+            }
             HorizontalOffsetDelta = 0;
             VerticalOffsetDelta = 0;
             _isInvalidated = false;
             return availableSize;
         }
 
-        private static Size PositiveInfinityAsDefault(Size availableSize)
+        private Size VerifyInfinity(Size availableSize)
         {
             double width = availableSize.Width;
-            if (double.IsPositiveInfinity(width))
+            if (double.IsPositiveInfinity(width) && !Template.AllowsInfiniteX)
                 width = DEFAULT_WIDTH;
             double height = availableSize.Height;
-            if (double.IsPositiveInfinity(height))
+            if (double.IsPositiveInfinity(height) && !Template.AllowsInfiniteY)
                 height = DEFAULT_HEIGHT;
             return new Size(width, height);
         }
@@ -275,7 +279,15 @@ namespace DevZest.Data.Windows
 
         protected abstract double GetGridHeight(GridRow gridRow, int repeatYIndex);
 
-        protected abstract Size GetExtentSize();
+        private Size CalcViewportSize()
+        {
+            return new Size();
+        }
+
+        private Size CalcExtentSize()
+        {
+            return new Size();
+        }
 
         public Size Arrange(Size finalSize)
         {

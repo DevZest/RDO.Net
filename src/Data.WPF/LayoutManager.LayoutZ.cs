@@ -63,11 +63,6 @@ namespace DevZest.Data.Windows
             {
                 CurrentRow = _view.CurrentRow;
             }
-
-            protected override Size GetExtentSize()
-            {
-                return new Size();
-            }
         }
     }
 }

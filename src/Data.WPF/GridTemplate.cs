@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data.Windows
 {
@@ -276,9 +277,14 @@ namespace DevZest.Data.Windows
 
         public int PinnedBottom { get; internal set; }
 
-        public bool IsPinned
+        internal bool AllowsInfiniteX
         {
-            get { return PinnedLeft > 0 || PinnedTop > 0 || PinnedRight > 0 || PinnedBottom > 0; }
+            get { return ListOrientation == ListOrientation.X || ListOrientation == ListOrientation.YX ? true : !GridColumns.Any(x => x.Length.IsStar); }
+        }
+
+        internal bool AllowsInfiniteY
+        {
+            get { return ListOrientation == ListOrientation.Y || ListOrientation == ListOrientation.XY ? true : !GridRows.Any(x => x.Length.IsStar); }
         }
     }
 }
