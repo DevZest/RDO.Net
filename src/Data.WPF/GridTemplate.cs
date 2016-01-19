@@ -6,12 +6,13 @@ using System.Linq;
 
 namespace DevZest.Data.Windows
 {
+    // https://www.w3.org/TR/2011/WD-css3-grid-layout-20110407/
     public sealed partial class GridTemplate
     {
-        private class GridSpecCollection<T> : ReadOnlyCollection<T>
-            where T : GridSpec
+        private class GridTrackCollection<T> : ReadOnlyCollection<T>
+            where T : GridTrack
         {
-            internal GridSpecCollection()
+            internal GridTrackCollection()
                 : base(new List<T>())
             {
             }
@@ -64,13 +65,13 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private GridSpecCollection<GridColumn> _gridColumns = new GridSpecCollection<GridColumn>();
+        private GridTrackCollection<GridColumn> _gridColumns = new GridTrackCollection<GridColumn>();
         public ReadOnlyCollection<GridColumn> GridColumns
         {
             get { return _gridColumns; }
         }
 
-        private GridSpecCollection<GridRow> _gridRows = new GridSpecCollection<GridRow>();
+        private GridTrackCollection<GridRow> _gridRows = new GridTrackCollection<GridRow>();
         public ReadOnlyCollection<GridRow> GridRows
         {
             get { return _gridRows; }

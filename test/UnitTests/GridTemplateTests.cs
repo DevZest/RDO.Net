@@ -13,8 +13,8 @@ namespace DevZest.Data.Windows
             var template = new GridTemplate(null);
             template.AddGridColumns("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridColumns.Count);
-            VerifyGridSpec(template.GridColumns[0], new GridLength(25), 20.0, 30.0);
-            VerifyGridSpec(template.GridColumns[1], new GridLength(28), 0.0, double.PositiveInfinity);
+            VerifyGridTrack(template.GridColumns[0], new GridLength(25), 20.0, 30.0);
+            VerifyGridTrack(template.GridColumns[1], new GridLength(28), 0.0, double.PositiveInfinity);
         }
 
         [TestMethod]
@@ -23,15 +23,15 @@ namespace DevZest.Data.Windows
             var template = new GridTemplate(null);
             template.AddGridRows("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridRows.Count);
-            VerifyGridSpec(template.GridRows[0], new GridLength(25), 20.0, 30.0);
-            VerifyGridSpec(template.GridRows[1], new GridLength(28), 0.0, double.PositiveInfinity);
+            VerifyGridTrack(template.GridRows[0], new GridLength(25), 20.0, 30.0);
+            VerifyGridTrack(template.GridRows[1], new GridLength(28), 0.0, double.PositiveInfinity);
         }
 
-        private void VerifyGridSpec(GridSpec gridSpec, GridLength expectedLength, double expectedMinLength, double expectedMaxLength)
+        private void VerifyGridTrack(GridTrack gridTrack, GridLength expectedLength, double expectedMinLength, double expectedMaxLength)
         {
-            Assert.AreEqual(gridSpec.Length, expectedLength);
-            Assert.AreEqual(gridSpec.MinLength, expectedMinLength);
-            Assert.AreEqual(gridSpec.MaxLength, expectedMaxLength);
+            Assert.AreEqual(gridTrack.Length, expectedLength);
+            Assert.AreEqual(gridTrack.MinLength, expectedMinLength);
+            Assert.AreEqual(gridTrack.MaxLength, expectedMaxLength);
         }
 
         [TestMethod]

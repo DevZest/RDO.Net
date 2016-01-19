@@ -83,7 +83,7 @@
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="DataForm.cs" />
     <Compile Include="GridColumn.cs" />
-    <Compile Include="GridSpec.cs" />
+    <Compile Include="GridTrack.cs" />
     <Compile Include="GridRow.cs" />
     <Compile Include="ListOrientation.cs" />
     <Compile Include="RowSelector.cs" />

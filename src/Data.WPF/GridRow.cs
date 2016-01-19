@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridRow : GridSpec
+    public sealed class GridRow : GridTrack
     {
         internal GridRow(GridTemplate owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)

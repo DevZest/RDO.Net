@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Windows
 {
-    public abstract class GridSpec
+    public abstract class GridTrack
     {
-        internal GridSpec(GridTemplate owner, int ordinal, GridLengthParser.Result result)
+        internal GridTrack(GridTemplate owner, int ordinal, GridLengthParser.Result result)
         {
             Owner = owner;
             Ordinal = ordinal;

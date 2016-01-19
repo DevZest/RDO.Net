@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridColumn : GridSpec
+    public sealed class GridColumn : GridTrack
     {
         internal GridColumn(GridTemplate owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
