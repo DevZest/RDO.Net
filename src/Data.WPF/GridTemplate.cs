@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DevZest.Data.Windows
 {
-    // https://www.w3.org/TR/2011/WD-css3-grid-layout-20110407/
+    // https://www.w3.org/TR/css-grid-1/
     public sealed partial class GridTemplate
     {
         private class GridTrackCollection<T> : ReadOnlyCollection<T>

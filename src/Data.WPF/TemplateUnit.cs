@@ -220,5 +220,7 @@ namespace DevZest.Data.Windows
             if (element.GetTemplateUnit() != this)
                 throw new ArgumentException(Strings.TemplateUnit_InvalidElement, paramName);
         }
+
+        public int AutoSizeMeasureOrder { get; internal set; }
     }
 }

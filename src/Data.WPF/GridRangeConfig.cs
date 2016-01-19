@@ -3,26 +3,33 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public struct GridRangeConfig
+    public sealed class GridRangeConfig
     {
         internal GridRangeConfig(DataViewBuilder viewBuilder, GridRange gridRange)
         {
-            ViewBuilder = viewBuilder;
-            GridRange = gridRange;
+            _viewBuilder = viewBuilder;
+            _gridRange = gridRange;
         }
 
-        internal readonly DataViewBuilder ViewBuilder;
+        private readonly DataViewBuilder _viewBuilder;
 
-        internal readonly GridRange GridRange;
+        private readonly GridRange _gridRange;
+
+        int _autoSizeMeasureOrder;
+        public GridRangeConfig AutoSizeMeasureOrder(int value)
+        {
+            _autoSizeMeasureOrder = value;
+            return this;
+        }
 
         private GridTemplate Template
         {
-            get { return ViewBuilder.View.Template; }
+            get { return _viewBuilder.View.Template; }
         }
 
         private void VerifyNotEmpty()
         {
-            if (GridRange.IsEmpty)
+            if (_gridRange.IsEmpty)
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
@@ -35,8 +42,9 @@ namespace DevZest.Data.Windows
 
         internal DataViewBuilder End(ScalarUnit scalarUnit)
         {
-            Template.AddScalarUnit(GridRange, scalarUnit);
-            return ViewBuilder;
+            scalarUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddScalarUnit(_gridRange, scalarUnit);
+            return _viewBuilder;
         }
 
         public ListUnit.Builder<T> BeginListUnit<T>()
@@ -48,8 +56,9 @@ namespace DevZest.Data.Windows
 
         internal DataViewBuilder End(ListUnit listUnit)
         {
-            Template.AddListUnit(GridRange, listUnit);
-            return ViewBuilder;
+            listUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddListUnit(_gridRange, listUnit);
+            return _viewBuilder;
         }
 
         public ChildUnit.Builder<TForm> BeginChildUnit<TModel, TForm>(TModel childModel, Action<DataViewBuilder, TModel> builder)
@@ -92,16 +101,17 @@ namespace DevZest.Data.Windows
 
         internal DataViewBuilder End(ChildUnit childUnit)
         {
-            Template.AddChildUnit(GridRange, childUnit);
-            return ViewBuilder;
+            childUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddChildUnit(_gridRange, childUnit);
+            return _viewBuilder;
         }
 
         public DataViewBuilder AsListRange()
         {
             VerifyNotEmpty();
 
-            Template.ListRange = GridRange;
-            return ViewBuilder;
+            Template.ListRange = _gridRange;
+            return _viewBuilder;
         }
     }
 }
