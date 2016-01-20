@@ -239,12 +239,11 @@ namespace DevZest.Data.Windows
                 invalidated(this, EventArgs.Empty);
         }
 
-        private const double DEFAULT_WIDTH = 200;
-        private const double DEFAULT_HEIGHT = 200;
+        private AutoSizeMeasurerCollection _autoSizeMeasurers;
 
         public Size Measure(Size availableSize)
         {
-            availableSize = VerifyInfinity(availableSize);
+            _autoSizeMeasurers = AutoSizeMeasurerCollection.GetOrCreate(_autoSizeMeasurers, Template, availableSize);
 
             MeasureOverride(availableSize);
             if (ScrollOwner != null)
@@ -255,18 +254,7 @@ namespace DevZest.Data.Windows
             HorizontalOffsetDelta = 0;
             VerticalOffsetDelta = 0;
             _isInvalidated = false;
-            return availableSize;
-        }
-
-        private Size VerifyInfinity(Size availableSize)
-        {
-            double width = availableSize.Width;
-            if (double.IsPositiveInfinity(width) && !Template.AllowsInfiniteX)
-                width = DEFAULT_WIDTH;
-            double height = availableSize.Height;
-            if (double.IsPositiveInfinity(height) && !Template.AllowsInfiniteY)
-                height = DEFAULT_HEIGHT;
-            return new Size(width, height);
+            return CalcDesiredSize();
         }
 
         protected abstract void MeasureOverride(Size availableSize);
@@ -285,6 +273,11 @@ namespace DevZest.Data.Windows
         }
 
         private Size CalcExtentSize()
+        {
+            return new Size();
+        }
+
+        private Size CalcDesiredSize()
         {
             return new Size();
         }

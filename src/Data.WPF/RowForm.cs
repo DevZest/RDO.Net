@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows
 
         private bool _elementsCreated;
         private IElementCollection _elements;
-        private IReadOnlyList<UIElement> Elements
+        internal IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
         }
