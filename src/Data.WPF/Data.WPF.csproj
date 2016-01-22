@@ -50,7 +50,7 @@
     <Compile Include="IGridColumnSet.cs" />
     <Compile Include="IGridRowSet.cs" />
     <Compile Include="IGridTrackSet.cs" />
-    <Compile Include="LayoutManager.AutoSizeDirection.cs" />
+    <Compile Include="LayoutManager.AutoSizeTracks.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LayoutManager.AutoSizeUnit.cs" />

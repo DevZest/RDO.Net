@@ -9,13 +9,14 @@ namespace DevZest.Data.Windows
     {
         private sealed class AutoSizeUnit
         {
-            public AutoSizeUnit(TemplateUnit templateUnit, AutoSizeDirection autoSizeDirection)
+            public AutoSizeUnit(TemplateUnit templateUnit, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
             {
                 Debug.Assert(templateUnit != null);
-                Debug.Assert(autoSizeDirection != AutoSizeDirection.None);
+                Debug.Assert(autoSizeGridColumns.Count > 0 || autoSizeGridRows.Count > 0);
 
                 TemplateUnit = templateUnit;
-                AutoSizeDirection = autoSizeDirection;
+                AutoSizeGridColumns = autoSizeGridColumns;
+                AutoSizeGridRows = autoSizeGridRows;
             }
 
             public TemplateUnit TemplateUnit { get; private set; }
@@ -25,16 +26,18 @@ namespace DevZest.Data.Windows
                 get { return TemplateUnit.GridRange; }
             }
 
-            private AutoSizeDirection AutoSizeDirection { get; set; }
+            public readonly IGridColumnSet AutoSizeGridColumns;
+
+            public readonly IGridRowSet AutoSizeGridRows;
 
             private bool IsAutoX
             {
-                get { return (AutoSizeDirection & AutoSizeDirection.X) == AutoSizeDirection.X; }
+                get { return AutoSizeGridColumns.Count > 0; }
             }
 
             private bool IsAutoY
             {
-                get { return (AutoSizeDirection & AutoSizeDirection.Y) == AutoSizeDirection.Y; }
+                get { return AutoSizeGridRows.Count > 0; }
             }
 
             public bool IsScalar

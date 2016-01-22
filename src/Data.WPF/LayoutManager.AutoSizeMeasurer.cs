@@ -58,39 +58,36 @@ namespace DevZest.Data.Windows
                 if (templateUnit.AutoSizeMeasureOrder < 0)
                     return false;
 
-                var autoSizeDirection = GetAutoSizeDirection(templateUnit.GridRange, sizeToContentX, sizeToContentY);
-                if (autoSizeDirection == AutoSizeDirection.None)
-                    return false;
-
-                result = new AutoSizeUnit(templateUnit, autoSizeDirection);
-                return true;
+                var autoSizeTracks = GetAutoSizeTracks(templateUnit.GridRange, sizeToContentX, sizeToContentY);
+                if (autoSizeTracks.IsAutoX || autoSizeTracks.IsAutoY)
+                {
+                    result = new AutoSizeUnit(templateUnit, autoSizeTracks.Columns, autoSizeTracks.Rows);
+                    return true;
+                }
+                return false;
             }
 
-            private static AutoSizeDirection GetAutoSizeDirection(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+            private static AutoSizeTracks GetAutoSizeTracks(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
             {
-                var result = AutoSizeDirection.None;
-
+                var columns = GridColumnSet.Empty;
                 for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
                 {
-                    var width = gridRange.Owner.GridColumns[x].Width;
+                    var column = gridRange.Owner.GridColumns[x];
+                    var width = column.Width;
                     if (width.IsAuto || (width.IsStar && sizeToContentX))
-                    {
-                        result |= AutoSizeDirection.X;
-                        break;
-                    }
+                        columns = columns.Merge(column);
                 }
 
+                var rows = GridRowSet.Empty;
                 for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
                 {
-                    var height = gridRange.Owner.GridRows[y].Height;
+                    var row = gridRange.Owner.GridRows[y];
+                    var height = row.Height;
                     if (height.IsAuto || (height.IsStar && sizeToContentY))
-                    {
-                        result |= AutoSizeDirection.Y;
-                        break;
-                    }
+                        rows = rows.Merge(row);
                 }
 
-                return result;
+                return new AutoSizeTracks(columns, rows);
             }
 
             private AutoSizeMeasurer(IList<AutoSizeUnit> autoSizeMeasurers, bool sizeToContentX, bool sizeToContentY)
