@@ -44,11 +44,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="GridRowSet.cs" />
+    <Compile Include="GridColumnSet.cs" />
+    <Compile Include="GridTrackSet.cs" />
+    <Compile Include="IGridColumnSet.cs" />
+    <Compile Include="IGridRowSet.cs" />
+    <Compile Include="IGridTrackSet.cs" />
     <Compile Include="LayoutManager.AutoSizeDirection.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
+    <Compile Include="LayoutManager.AutoSizeUnit.cs" />
     <Compile Include="LayoutManager.AutoSizeMeasurer.cs" />
-    <Compile Include="LayoutManager.AutoSizeMeasurerCollection.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />

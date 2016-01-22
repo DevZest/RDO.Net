@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class GridTrack
+    public abstract class GridTrack : IGridTrackSet
     {
         internal GridTrack(GridTemplate owner, int ordinal, GridLengthParser.Result result)
         {
@@ -24,5 +26,19 @@ namespace DevZest.Data.Windows
         public double MaxLength { get; private set; }
 
         public double ActualLength { get; internal set; }
+
+        int IGridTrackSet.Count
+        {
+            get { return 1; }
+        }
+
+        GridTrack IGridTrackSet.this[int index]
+        {
+            get
+            {
+                Debug.Assert(index == 0);
+                return this;
+            }
+        }
     }
 }

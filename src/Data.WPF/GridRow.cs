@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridRow : GridTrack
+    public sealed class GridRow : GridTrack, IGridRowSet
     {
         internal GridRow(GridTemplate owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
@@ -28,6 +30,15 @@ namespace DevZest.Data.Windows
         {
             get { return ActualLength; }
             internal set { ActualLength = value; }
+        }
+
+        GridRow IGridTrackSet<GridRow>.this[int index]
+        {
+            get
+            {
+                Debug.Assert(index == 0);
+                return this;
+            }
         }
     }
 }

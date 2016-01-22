@@ -1,151 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
     partial class LayoutManager
     {
-        private abstract class AutoSizeMeasurer
+        private sealed class AutoSizeMeasurer : ReadOnlyCollection<AutoSizeUnit>
         {
-            public static AutoSizeMeasurer Create(TemplateUnit templateUnit, AutoSizeDirection autoSizeDirection)
+            public static AutoSizeMeasurer GetOrCreate(AutoSizeMeasurer oldValue, GridTemplate template, Size availableSize)
             {
-                var gridRange = templateUnit.GridRange;
-                bool isSpanned = gridRange.Left != gridRange.Right || gridRange.Top != gridRange.Bottom;
+                bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
+                bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
 
-                return isSpanned ? new SpannedAutoSizeMeasurer(templateUnit, autoSizeDirection) : new SpannedAutoSizeMeasurer(templateUnit, autoSizeDirection);
+                if (oldValue != null && oldValue._sizeToContentX == sizeToContentX && oldValue._sizeToContentY == sizeToContentY)
+                    return oldValue;
+
+                var autoSizeUnits = CreateAutoSizeUnits(template, sizeToContentX, sizeToContentY)
+                    .OrderBy(x => x.TemplateUnit.AutoSizeMeasureOrder).ToArray();
+
+                return new AutoSizeMeasurer(autoSizeUnits, sizeToContentX, sizeToContentY);
             }
 
-            private sealed class SingleCellAutoSizeMeasurer : AutoSizeMeasurer
+            private static IEnumerable<AutoSizeUnit> CreateAutoSizeUnits(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
             {
-                public SingleCellAutoSizeMeasurer(TemplateUnit templateUnit, AutoSizeDirection autoSizeDirection)
-                    : base(templateUnit, autoSizeDirection)
+                var scalarUnits = template.ScalarUnits;
+                var listUnits = template.ListUnits;
+                AutoSizeUnit measurer;
+                for (int i = 0; i < template.NumberOfScallarUnitsBeforeRow; i++)
                 {
+                    var scalarUnit = template.ScalarUnits[i];
+                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out measurer))
+                        yield return measurer;
                 }
 
-                protected override void OnMeasured(RowView row, Size desiredSize)
+                for (int i = 0; i < listUnits.Count; i++)
                 {
-                    throw new NotImplementedException();
-                }
-            }
-
-            private sealed class SpannedAutoSizeMeasurer : AutoSizeMeasurer
-            {
-                public SpannedAutoSizeMeasurer(TemplateUnit templateUnit, AutoSizeDirection autoSizeDirection)
-                    : base(templateUnit, autoSizeDirection)
-                {
+                    var listUnit = template.ListUnits[i];
+                    if (TryCreateAutoSizeUnit(listUnit, sizeToContentX, sizeToContentY, out measurer))
+                        yield return measurer;
                 }
 
-                protected override void OnMeasured(RowView row, Size desiredSize)
+                for (int i = template.NumberOfScallarUnitsBeforeRow; i < scalarUnits.Count; i++)
                 {
-                    throw new NotImplementedException();
-                }
-            }
-
-            protected AutoSizeMeasurer(TemplateUnit templateUnit, AutoSizeDirection autoSizeDirection)
-            {
-                Debug.Assert(templateUnit != null);
-                Debug.Assert(autoSizeDirection != AutoSizeDirection.None);
-
-                TemplateUnit = templateUnit;
-                AutoSizeDirection = autoSizeDirection;
-            }
-
-            public TemplateUnit TemplateUnit { get; private set; }
-
-            protected GridRange GridRange
-            {
-                get { return TemplateUnit.GridRange; }
-            }
-
-            protected AutoSizeDirection AutoSizeDirection { get; private set; }
-
-            protected bool IsAutoX
-            {
-                get { return (AutoSizeDirection & AutoSizeDirection.X) == AutoSizeDirection.X; }
-            }
-
-            protected bool IsAutoY
-            {
-                get { return (AutoSizeDirection & AutoSizeDirection.Y) == AutoSizeDirection.Y; }
-            }
-
-            public bool IsScalar
-            {
-                get { return TemplateUnit is ScalarUnit; }
-            }
-
-            public bool IsList
-            {
-                get { return !IsScalar; }
-            }
-
-            protected GridTemplate Template
-            {
-                get { return TemplateUnit.Owner; }
-            }
-
-            protected LayoutManager LayoutManager
-            {
-                get { return Template.Owner.LayoutManager; }
-            }
-
-            private Size ConstraintSize
-            {
-                get
-                {
-                    var width = IsAutoX ? double.PositiveInfinity : GetLength(Template.GridColumns, GridRange.Left, GridRange.Right);
-                    var height = IsAutoY ? double.PositiveInfinity : GetLength(Template.GridRows, GridRange.Top, GridRange.Bottom);
-                    return new Size(width, height);
+                    var scalarUnit = template.ScalarUnits[i];
+                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out measurer))
+                        yield return measurer;
                 }
             }
 
-            private static double GetLength(IReadOnlyList<GridTrack> gridTracks, GridTrack start, GridTrack end)
+            private static bool TryCreateAutoSizeUnit(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY, out AutoSizeUnit result)
             {
-                double result = 0;
-                for (int i = start.Ordinal; i <= end.Ordinal; i++)
-                    result += gridTracks[i].ActualLength;
+                result = null;
+
+                if (templateUnit.AutoSizeMeasureOrder < 0)
+                    return false;
+
+                var autoSizeDirection = GetAutoSizeDirection(templateUnit.GridRange, sizeToContentX, sizeToContentY);
+                if (autoSizeDirection == AutoSizeDirection.None)
+                    return false;
+
+                result = new AutoSizeUnit(templateUnit, autoSizeDirection);
+                return true;
+            }
+
+            private static AutoSizeDirection GetAutoSizeDirection(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+            {
+                var result = AutoSizeDirection.None;
+
+                for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
+                {
+                    var width = gridRange.Owner.GridColumns[x].Width;
+                    if (width.IsAuto || (width.IsStar && sizeToContentX))
+                    {
+                        result |= AutoSizeDirection.X;
+                        break;
+                    }
+                }
+
+                for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+                {
+                    var height = gridRange.Owner.GridRows[y].Height;
+                    if (height.IsAuto || (height.IsStar && sizeToContentY))
+                    {
+                        result |= AutoSizeDirection.Y;
+                        break;
+                    }
+                }
 
                 return result;
             }
 
-            private UIElement GetUIElmenet(RowView row)
+            private AutoSizeMeasurer(IList<AutoSizeUnit> autoSizeMeasurers, bool sizeToContentX, bool sizeToContentY)
+                : base(autoSizeMeasurers)
             {
-                return row == null ? ScalarElement : GetListElement(row);
+                _sizeToContentX = sizeToContentX;
+                _sizeToContentY = sizeToContentY;
             }
 
-            private UIElement ScalarElement
-            {
-                get { return LayoutManager.Elements[ScalarElementIndex]; }
-            }
+            private bool _sizeToContentX;
 
-            private int ScalarElementIndex
-            {
-                get
-                {
-                    Debug.Assert(IsScalar);
-
-                    var ordinal = TemplateUnit.Ordinal;
-                    return ordinal < Template.NumberOfScallarUnitsBeforeRow ? ordinal : LayoutManager.Elements.Count - (Template.ScalarUnits.Count - ordinal);
-                }
-            }
-
-            private UIElement GetListElement(RowView row)
-            {
-                Debug.Assert(IsList && row.Form != null);
-
-                return row.Form.Elements[TemplateUnit.Ordinal];
-            }
-
-            public void Measure(RowView row)
-            {
-                var uiElement = GetUIElmenet(row);
-                uiElement.Measure(ConstraintSize);
-                OnMeasured(row, uiElement.DesiredSize);
-            }
-
-            protected abstract void OnMeasured(RowView row, Size desiredSize);
+            private bool _sizeToContentY;
         }
     }
 }
