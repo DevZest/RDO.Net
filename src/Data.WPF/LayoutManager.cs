@@ -239,11 +239,11 @@ namespace DevZest.Data.Windows
                 invalidated(this, EventArgs.Empty);
         }
 
-        private AutoSizeMeasurer _autoSizeMeasurer;
+        private Measurer _autoSizeMeasurer;
 
         public Size Measure(Size availableSize)
         {
-            _autoSizeMeasurer = AutoSizeMeasurer.GetOrCreate(_autoSizeMeasurer, Template, availableSize);
+            _autoSizeMeasurer = Measurer.GetOrCreate(_autoSizeMeasurer, Template, availableSize);
 
             MeasureOverride(availableSize);
             if (ScrollOwner != null)

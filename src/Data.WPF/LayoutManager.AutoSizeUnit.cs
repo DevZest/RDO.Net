@@ -17,6 +17,53 @@ namespace DevZest.Data.Windows
                 TemplateUnit = templateUnit;
                 AutoSizeGridColumns = autoSizeGridColumns;
                 AutoSizeGridRows = autoSizeGridRows;
+
+                FilterGridColumns(out AbsoluteSizeGridColumns, out StarSizeGridColumns);
+                FilterGridRows(out AbsoluteSizeGridRows, out StarSizeGridRows);
+            }
+
+            private void FilterGridColumns(out IGridColumnSet absoluteSizeGridColumns, out IGridColumnSet starSizeGridColumns)
+            {
+                absoluteSizeGridColumns = starSizeGridColumns = GridColumnSet.Empty;
+                int autoSizeColumnIndex = 0;
+                for (int i = GridRange.Left.Ordinal; i <= GridRange.Right.Ordinal; i++)
+                {
+                    var column = Template.GridColumns[i];
+                    if (autoSizeColumnIndex < AutoSizeGridColumns.Count && column == AutoSizeGridColumns[autoSizeColumnIndex])
+                    {
+                        autoSizeColumnIndex++;
+                        continue;
+                    }
+                    if (column.Length.IsAbsolute)
+                        absoluteSizeGridColumns = absoluteSizeGridColumns.Merge(column);
+                    else
+                    {
+                        Debug.Assert(column.Length.IsStar);
+                        starSizeGridColumns = starSizeGridColumns.Merge(column);
+                    }
+                }
+            }
+
+            private void FilterGridRows(out IGridRowSet absoluteSizeGridRows, out IGridRowSet starSizeGridRows)
+            {
+                absoluteSizeGridRows = starSizeGridRows = GridRowSet.Empty;
+                int autoSizeRowIndex = 0;
+                for (int i = GridRange.Top.Ordinal; i <= GridRange.Bottom.Ordinal; i++)
+                {
+                    var row = Template.GridRows[i];
+                    if (autoSizeRowIndex < AutoSizeGridRows.Count && row == AutoSizeGridRows[autoSizeRowIndex])
+                    {
+                        autoSizeRowIndex++;
+                        continue;
+                    }
+                    if (row.Length.IsAbsolute)
+                        absoluteSizeGridRows = absoluteSizeGridRows.Merge(row);
+                    else
+                    {
+                        Debug.Assert(row.Length.IsStar);
+                        starSizeGridRows = starSizeGridRows.Merge(row);
+                    }
+                }
             }
 
             public TemplateUnit TemplateUnit { get; private set; }
@@ -29,6 +76,14 @@ namespace DevZest.Data.Windows
             public readonly IGridColumnSet AutoSizeGridColumns;
 
             public readonly IGridRowSet AutoSizeGridRows;
+
+            public readonly IGridColumnSet AbsoluteSizeGridColumns;
+
+            public readonly IGridRowSet AbsoluteSizeGridRows;
+
+            public readonly IGridColumnSet StarSizeGridColumns;
+
+            public readonly IGridRowSet StarSizeGridRows;
 
             private bool IsAutoX
             {
@@ -74,14 +129,9 @@ namespace DevZest.Data.Windows
             {
                 double result = 0;
                 for (int i = start.Ordinal; i <= end.Ordinal; i++)
-                    result += gridTracks[i].ActualLength;
+                    result += gridTracks[i].MeasuredLength;
 
                 return result;
-            }
-
-            private UIElement GetUIElmenet(RowView row)
-            {
-                return row == null ? ScalarElement : GetListElement(row);
             }
 
             private UIElement ScalarElement
@@ -107,11 +157,11 @@ namespace DevZest.Data.Windows
                 return row.Form.Elements[TemplateUnit.Ordinal];
             }
 
-            public void Measure(RowView row)
+            public Size Measure(RowView row)
             {
-                var uiElement = GetUIElmenet(row);
+                var uiElement = IsScalar ? ScalarElement : GetListElement(row);
                 uiElement.Measure(ConstraintSize);
-                //OnMeasured(row, uiElement.DesiredSize);
+                return uiElement.DesiredSize;
             }
         }
     }

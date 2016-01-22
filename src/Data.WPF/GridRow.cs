@@ -26,10 +26,10 @@ namespace DevZest.Data.Windows
             get { return MaxLength; }
         }
 
-        public double ActualHeight
+        public double MeasuredHeight
         {
-            get { return ActualLength; }
-            internal set { ActualLength = value; }
+            get { return MeasuredLength; }
+            internal set { MeasuredLength = value; }
         }
 
         GridRow IGridTrackSet<GridRow>.this[int index]

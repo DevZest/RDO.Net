@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
     partial class LayoutManager
     {
-        private sealed class AutoSizeMeasurer : ReadOnlyCollection<AutoSizeUnit>
+        private sealed class Measurer
         {
-            public static AutoSizeMeasurer GetOrCreate(AutoSizeMeasurer oldValue, GridTemplate template, Size availableSize)
+            public static Measurer GetOrCreate(Measurer oldValue, GridTemplate template, Size availableSize)
             {
                 bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
                 bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
@@ -18,36 +17,41 @@ namespace DevZest.Data.Windows
                 if (oldValue != null && oldValue._sizeToContentX == sizeToContentX && oldValue._sizeToContentY == sizeToContentY)
                     return oldValue;
 
-                var autoSizeUnits = CreateAutoSizeUnits(template, sizeToContentX, sizeToContentY)
-                    .OrderBy(x => x.TemplateUnit.AutoSizeMeasureOrder).ToArray();
+                return new Measurer(template, sizeToContentX, sizeToContentY);
+            }
 
-                return new AutoSizeMeasurer(autoSizeUnits, sizeToContentX, sizeToContentY);
+            private Measurer(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
+            {
+                Template = template;
+                _sizeToContentX = sizeToContentX;
+                _sizeToContentY = sizeToContentY;
+                _autoSizeUnits = CreateAutoSizeUnits(template, sizeToContentX, sizeToContentY).OrderBy(x => x.TemplateUnit.AutoSizeMeasureOrder).ToArray();
             }
 
             private static IEnumerable<AutoSizeUnit> CreateAutoSizeUnits(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
             {
                 var scalarUnits = template.ScalarUnits;
                 var listUnits = template.ListUnits;
-                AutoSizeUnit measurer;
+                AutoSizeUnit autoSizeUnit;
                 for (int i = 0; i < template.NumberOfScallarUnitsBeforeRow; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
-                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out measurer))
-                        yield return measurer;
+                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                        yield return autoSizeUnit;
                 }
 
                 for (int i = 0; i < listUnits.Count; i++)
                 {
                     var listUnit = template.ListUnits[i];
-                    if (TryCreateAutoSizeUnit(listUnit, sizeToContentX, sizeToContentY, out measurer))
-                        yield return measurer;
+                    if (TryCreateAutoSizeUnit(listUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                        yield return autoSizeUnit;
                 }
 
                 for (int i = template.NumberOfScallarUnitsBeforeRow; i < scalarUnits.Count; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
-                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out measurer))
-                        yield return measurer;
+                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                        yield return autoSizeUnit;
                 }
             }
 
@@ -90,16 +94,27 @@ namespace DevZest.Data.Windows
                 return new AutoSizeTracks(columns, rows);
             }
 
-            private AutoSizeMeasurer(IList<AutoSizeUnit> autoSizeMeasurers, bool sizeToContentX, bool sizeToContentY)
-                : base(autoSizeMeasurers)
+            public readonly GridTemplate Template;
+
+            private Orientation? LayoutOrientation
             {
-                _sizeToContentX = sizeToContentX;
-                _sizeToContentY = sizeToContentY;
+                get
+                {
+                    if (Template.ListOrientation == ListOrientation.Z)
+                        return null;
+                    else if (Template.ListOrientation == ListOrientation.Y || Template.ListOrientation == ListOrientation.XY)
+                        return Orientation.Vertical;
+                    else
+                        return Orientation.Horizontal;
+                }
             }
 
             private bool _sizeToContentX;
 
             private bool _sizeToContentY;
+
+            private AutoSizeUnit[] _autoSizeUnits;
+
         }
     }
 }

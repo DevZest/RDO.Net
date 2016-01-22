@@ -25,7 +25,7 @@ namespace DevZest.Data.Windows
 
         public double MaxLength { get; private set; }
 
-        public double ActualLength { get; internal set; }
+        public double MeasuredLength { get; internal set; }
 
         int IGridTrackSet.Count
         {

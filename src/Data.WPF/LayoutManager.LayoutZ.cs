@@ -50,13 +50,13 @@ namespace DevZest.Data.Windows
             protected override double GetGridWidth(GridColumn gridColumn, int repeatXIndex)
             {
                 Debug.Assert(repeatXIndex == 0);
-                return gridColumn.ActualWidth;
+                return gridColumn.MeasuredWidth;
             }
 
             protected override double GetGridHeight(GridRow gridRow, int repeatYIndex)
             {
                 Debug.Assert(repeatYIndex == 0);
-                return gridRow.ActualHeight;
+                return gridRow.MeasuredHeight;
             }
 
             protected override void MeasureOverride(Size availableSize)
