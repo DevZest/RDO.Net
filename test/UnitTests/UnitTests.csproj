@@ -77,6 +77,8 @@
   <ItemGroup>
     <Compile Include="DataViewRowCollectionTests.cs" />
     <Compile Include="DataPanelTests.cs" />
+    <Compile Include="GridRowSetTests.cs" />
+    <Compile Include="GridColumnSetTests.cs" />
     <Compile Include="RowViewTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
