@@ -115,9 +115,12 @@ namespace DevZest.Data.Windows
 
         internal int AddGridColumn(string width)
         {
-            _gridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
+            var gridWidth = GridLengthParser.Parse(width);
+            _gridColumns.Add(new GridColumn(this, GridColumns.Count, gridWidth));
             var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(ListOrientation, result, result, nameof(width));
+            if (gridWidth.Length.IsStar)
+                NumberOfStarColumns++;
             return result;
         }
 
@@ -131,9 +134,12 @@ namespace DevZest.Data.Windows
 
         internal int AddGridRow(string height)
         {
-            _gridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
+            var gridHeight = GridLengthParser.Parse(height);
+            _gridRows.Add(new GridRow(this, GridRows.Count, gridHeight));
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(ListOrientation, result, result, nameof(height));
+            if (gridHeight.Length.IsStar)
+                NumberOfStarRows++;
             return result;
         }
 
@@ -191,7 +197,11 @@ namespace DevZest.Data.Windows
             return orentation != ListOrientation.XY;
         }
 
-        internal int NumberOfScallarUnitsBeforeRow { get; private set; }
+        internal int NumberOfScalarUnitsBeforeRow { get; private set; }
+
+        internal int NumberOfStarColumns { get; private set; }
+
+        internal int NumberOfStarRows { get; private set; }
 
         internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
         {
@@ -199,7 +209,7 @@ namespace DevZest.Data.Windows
             scalarUnit.Construct(this, gridRange, _scalarUnits.Count);
             _scalarUnits.Add(gridRange, scalarUnit);
             if (_listUnits.Count == 0)
-                NumberOfScallarUnitsBeforeRow = _scalarUnits.Count;
+                NumberOfScalarUnitsBeforeRow = _scalarUnits.Count;
         }
 
         internal void AddListUnit(GridRange gridRange, ListUnit listUnit)

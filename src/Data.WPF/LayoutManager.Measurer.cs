@@ -14,10 +14,8 @@ namespace DevZest.Data.Windows
                 bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
                 bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
 
-                if (oldValue != null && oldValue._sizeToContentX == sizeToContentX && oldValue._sizeToContentY == sizeToContentY)
-                    return oldValue;
-
-                return new Measurer(template, sizeToContentX, sizeToContentY);
+                return oldValue == null || oldValue.ShouldRecreate(sizeToContentX, sizeToContentY)
+                    ? new Measurer(template, sizeToContentX, sizeToContentY) : oldValue;
             }
 
             private Measurer(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
@@ -33,7 +31,7 @@ namespace DevZest.Data.Windows
                 var scalarUnits = template.ScalarUnits;
                 var listUnits = template.ListUnits;
                 AutoSizeUnit autoSizeUnit;
-                for (int i = 0; i < template.NumberOfScallarUnitsBeforeRow; i++)
+                for (int i = 0; i < template.NumberOfScalarUnitsBeforeRow; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
                     if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
@@ -47,7 +45,7 @@ namespace DevZest.Data.Windows
                         yield return autoSizeUnit;
                 }
 
-                for (int i = template.NumberOfScallarUnitsBeforeRow; i < scalarUnits.Count; i++)
+                for (int i = template.NumberOfScalarUnitsBeforeRow; i < scalarUnits.Count; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
                     if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
@@ -112,6 +110,12 @@ namespace DevZest.Data.Windows
             private bool _sizeToContentX;
 
             private bool _sizeToContentY;
+
+            private bool ShouldRecreate(bool sizeToContentX, bool sizeToContentY)
+            {
+                return (Template.NumberOfStarColumns > 0 && _sizeToContentX != sizeToContentX) ||
+                    (Template.NumberOfStarRows > 0 && _sizeToContentY != sizeToContentY);
+            }
 
             private AutoSizeUnit[] _autoSizeUnits;
 

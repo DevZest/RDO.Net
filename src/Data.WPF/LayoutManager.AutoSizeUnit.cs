@@ -146,7 +146,7 @@ namespace DevZest.Data.Windows
                     Debug.Assert(IsScalar);
 
                     var ordinal = TemplateUnit.Ordinal;
-                    return ordinal < Template.NumberOfScallarUnitsBeforeRow ? ordinal : LayoutManager.Elements.Count - (Template.ScalarUnits.Count - ordinal);
+                    return ordinal < Template.NumberOfScalarUnitsBeforeRow ? ordinal : LayoutManager.Elements.Count - (Template.ScalarUnits.Count - ordinal);
                 }
             }
 
