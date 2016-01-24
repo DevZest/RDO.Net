@@ -23,37 +23,37 @@ namespace DevZest.Data.Windows
                 Template = template;
                 _sizeToContentX = sizeToContentX;
                 _sizeToContentY = sizeToContentY;
-                _autoSizeUnits = CreateAutoSizeUnits(template, sizeToContentX, sizeToContentY).OrderBy(x => x.TemplateUnit.AutoSizeMeasureOrder).ToArray();
+                _autoSizeUnits = GetAutoSizeMeasurers(template, sizeToContentX, sizeToContentY).OrderBy(x => x.TemplateUnit.AutoSizeMeasureOrder).ToArray();
             }
 
-            private static IEnumerable<AutoSizeUnit> CreateAutoSizeUnits(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
+            private static IEnumerable<AutoSizeMeasurer> GetAutoSizeMeasurers(GridTemplate template, bool sizeToContentX, bool sizeToContentY)
             {
                 var scalarUnits = template.ScalarUnits;
                 var listUnits = template.ListUnits;
-                AutoSizeUnit autoSizeUnit;
+                AutoSizeMeasurer autoSizeUnit;
                 for (int i = 0; i < template.NumberOfScalarUnitsBeforeRow; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
-                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                    if (TryGetAutoSizeMeasurer(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
                         yield return autoSizeUnit;
                 }
 
                 for (int i = 0; i < listUnits.Count; i++)
                 {
                     var listUnit = template.ListUnits[i];
-                    if (TryCreateAutoSizeUnit(listUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                    if (TryGetAutoSizeMeasurer(listUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
                         yield return autoSizeUnit;
                 }
 
                 for (int i = template.NumberOfScalarUnitsBeforeRow; i < scalarUnits.Count; i++)
                 {
                     var scalarUnit = template.ScalarUnits[i];
-                    if (TryCreateAutoSizeUnit(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
+                    if (TryGetAutoSizeMeasurer(scalarUnit, sizeToContentX, sizeToContentY, out autoSizeUnit))
                         yield return autoSizeUnit;
                 }
             }
 
-            private static bool TryCreateAutoSizeUnit(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY, out AutoSizeUnit result)
+            private static bool TryGetAutoSizeMeasurer(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY, out AutoSizeMeasurer result)
             {
                 result = null;
 
@@ -63,7 +63,7 @@ namespace DevZest.Data.Windows
                 var autoSizeTracks = GetAutoSizeTracks(templateUnit.GridRange, sizeToContentX, sizeToContentY);
                 if (autoSizeTracks.IsAutoX || autoSizeTracks.IsAutoY)
                 {
-                    result = new AutoSizeUnit(templateUnit, autoSizeTracks.Columns, autoSizeTracks.Rows);
+                    result = new AutoSizeMeasurer(templateUnit, autoSizeTracks.Columns, autoSizeTracks.Rows);
                     return true;
                 }
                 return false;
@@ -94,30 +94,17 @@ namespace DevZest.Data.Windows
 
             public readonly GridTemplate Template;
 
-            private Orientation? LayoutOrientation
-            {
-                get
-                {
-                    if (Template.ListOrientation == ListOrientation.Z)
-                        return null;
-                    else if (Template.ListOrientation == ListOrientation.Y || Template.ListOrientation == ListOrientation.XY)
-                        return Orientation.Vertical;
-                    else
-                        return Orientation.Horizontal;
-                }
-            }
-
             private bool _sizeToContentX;
 
             private bool _sizeToContentY;
 
             private bool ShouldRecreate(bool sizeToContentX, bool sizeToContentY)
             {
-                return (Template.NumberOfStarColumns > 0 && _sizeToContentX != sizeToContentX) ||
-                    (Template.NumberOfStarRows > 0 && _sizeToContentY != sizeToContentY);
+                return (Template.StarColumnsCount > 0 && _sizeToContentX != sizeToContentX) ||
+                    (Template.StarRowsCount > 0 && _sizeToContentY != sizeToContentY);
             }
 
-            private AutoSizeUnit[] _autoSizeUnits;
+            private AutoSizeMeasurer[] _autoSizeUnits;
 
         }
     }

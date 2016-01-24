@@ -7,9 +7,9 @@ namespace DevZest.Data.Windows
 {
     partial class LayoutManager
     {
-        private sealed class AutoSizeUnit
+        private sealed class AutoSizeMeasurer
         {
-            public AutoSizeUnit(TemplateUnit templateUnit, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
+            public AutoSizeMeasurer(TemplateUnit templateUnit, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
             {
                 Debug.Assert(templateUnit != null);
                 Debug.Assert(autoSizeGridColumns.Count > 0 || autoSizeGridRows.Count > 0);

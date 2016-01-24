@@ -75,16 +75,15 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? null : Owner.Model; }
         }
 
-        private static DataView[] s_emptyChildren = new DataView[0];
         public IReadOnlyList<DataView> Children { get; private set; }
         private IReadOnlyList<DataView> InitChildViews()
         {
             if (Kind != RowKind.DataRow)
-                return s_emptyChildren;
+                return EmptyArray<DataView>.Singleton;
 
             var childEntries = Template.ChildUnits;
             if (childEntries.Count == 0)
-                return s_emptyChildren;
+                return EmptyArray<DataView>.Singleton;
 
             var result = new DataView[childEntries.Count];
             for (int i = 0; i < childEntries.Count; i++)

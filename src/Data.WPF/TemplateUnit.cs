@@ -87,13 +87,12 @@ namespace DevZest.Data.Windows
             return GetOrCreate();
         }
 
-        private static Behavior[] s_emptyBehaviors = new Behavior[0];
-        private IList<Behavior> _behaviors = s_emptyBehaviors;
+        private IList<Behavior> _behaviors = EmptyArray<Behavior>.Singleton;
 
         private void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
             where T : UIElement, new()
         {
-            Debug.Assert(_behaviors == s_emptyBehaviors);
+            Debug.Assert(_behaviors == EmptyArray<Behavior>.Singleton);
 
             if (behaviors == null || behaviors.Count == 0)
                 return;
@@ -164,13 +163,12 @@ namespace DevZest.Data.Windows
                 _cleanup(element);
         }
 
-        private static List<Binding> s_emptyBindings = new List<Binding>();
-        private List<Binding> _bindings = s_emptyBindings;
+        private IList<Binding> _bindings = EmptyArray<Binding>.Singleton;
 
         private void AddBinding(Binding binding)
         {
             Debug.Assert(binding != null);
-            if (_bindings == s_emptyBindings)
+            if (_bindings == EmptyArray<Binding>.Singleton)
                 _bindings = new List<Binding>();
             _bindings.Add(binding);
         }

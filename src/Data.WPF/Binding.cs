@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
             _updateTarget = updateTarget;
             _updateSource = updateSource;
             if (triggers == null || triggers.Length == 0)
-                _triggers = s_emptyTriggers;
+                _triggers = EmptyArray<BindingTrigger>.Singleton;
             else
                 _triggers = triggers;
         }
@@ -48,7 +48,6 @@ namespace DevZest.Data.Windows
                 _updateSource(element);
         }
 
-        private static BindingTrigger[] s_emptyTriggers = new BindingTrigger[0];
         IReadOnlyList<BindingTrigger> _triggers;
         internal IReadOnlyList<BindingTrigger> Triggers
         {

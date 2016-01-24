@@ -18,6 +18,16 @@ namespace DevZest.Data.Windows
             public readonly GridLength Length;
             public readonly double MinLength;
             public readonly double MaxLength;
+
+            public bool IsAuto
+            {
+                get { return Length.IsAuto; }
+            }
+
+            public bool IsStar
+            {
+                get { return Length.IsStar; }
+            }
         }
 
         private static GridLengthConverter s_gridLengthConverter = new GridLengthConverter();
