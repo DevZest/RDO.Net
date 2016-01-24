@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract partial class TemplateUnit
+    public abstract partial class TemplateItem
     {
         private sealed class Behavior
         {
@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal TemplateUnit(Func<UIElement> constructor)
+        internal TemplateItem(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
             _constructor = constructor;
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
         private UIElement Create()
         {
             var result = _constructor();
-            result.SetTemplateUnit(this);
+            result.SetTemplateItem(this);
             return result;
         }
 
@@ -114,7 +114,7 @@ namespace DevZest.Data.Windows
 
         internal virtual void Initialize(UIElement element)
         {
-            Debug.Assert(element != null && element.GetTemplateUnit() == this);
+            Debug.Assert(element != null && element.GetTemplateItem() == this);
 
             if (_initializer != null)
                 _initializer(element);
@@ -131,7 +131,7 @@ namespace DevZest.Data.Windows
 
         internal void Recycle(UIElement element)
         {
-            Debug.Assert(element != null && element.GetTemplateUnit() == this);
+            Debug.Assert(element != null && element.GetTemplateItem() == this);
 
             if (_cachedUIElements == null)
                 _cachedUIElements = new List<UIElement>();
@@ -215,8 +215,8 @@ namespace DevZest.Data.Windows
             if (element == null)
                 throw new ArgumentNullException(paramName);
 
-            if (element.GetTemplateUnit() != this)
-                throw new ArgumentException(Strings.TemplateUnit_InvalidElement, paramName);
+            if (element.GetTemplateItem() != this)
+                throw new ArgumentException(Strings.TemplateItem_InvalidElement, paramName);
         }
 
         public int AutoSizeMeasureOrder { get; internal set; }

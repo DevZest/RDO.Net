@@ -9,12 +9,12 @@ namespace DevZest.Data.Windows
     {
         private sealed class AutoSizeMeasurer
         {
-            public AutoSizeMeasurer(TemplateUnit templateUnit, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
+            public AutoSizeMeasurer(TemplateItem templateItem, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
             {
-                Debug.Assert(templateUnit != null);
+                Debug.Assert(templateItem != null);
                 Debug.Assert(autoSizeGridColumns.Count > 0 || autoSizeGridRows.Count > 0);
 
-                TemplateUnit = templateUnit;
+                TemplateItem = templateItem;
                 AutoSizeGridColumns = autoSizeGridColumns;
                 AutoSizeGridRows = autoSizeGridRows;
 
@@ -66,11 +66,11 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public TemplateUnit TemplateUnit { get; private set; }
+            public TemplateItem TemplateItem { get; private set; }
 
             private GridRange GridRange
             {
-                get { return TemplateUnit.GridRange; }
+                get { return TemplateItem.GridRange; }
             }
 
             public readonly IGridColumnSet AutoSizeGridColumns;
@@ -97,7 +97,7 @@ namespace DevZest.Data.Windows
 
             public bool IsScalar
             {
-                get { return TemplateUnit is ScalarUnit; }
+                get { return TemplateItem is ScalarItem; }
             }
 
             public bool IsList
@@ -107,7 +107,7 @@ namespace DevZest.Data.Windows
 
             private GridTemplate Template
             {
-                get { return TemplateUnit.Owner; }
+                get { return TemplateItem.Owner; }
             }
 
             private LayoutManager LayoutManager
@@ -145,8 +145,8 @@ namespace DevZest.Data.Windows
                 {
                     Debug.Assert(IsScalar);
 
-                    var ordinal = TemplateUnit.Ordinal;
-                    return ordinal < Template.NumberOfScalarUnitsBeforeRow ? ordinal : LayoutManager.Elements.Count - (Template.ScalarUnits.Count - ordinal);
+                    var ordinal = TemplateItem.Ordinal;
+                    return ordinal < Template.ScalarItemsCountBeforeList ? ordinal : LayoutManager.Elements.Count - (Template.ScalarItems.Count - ordinal);
                 }
             }
 
@@ -154,7 +154,7 @@ namespace DevZest.Data.Windows
             {
                 Debug.Assert(IsList && row.Form != null);
 
-                return row.Form.Elements[TemplateUnit.Ordinal];
+                return row.Form.Elements[TemplateItem.Ordinal];
             }
 
             public Size Measure(RowView row)

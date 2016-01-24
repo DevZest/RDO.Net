@@ -5,13 +5,13 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildUnit : ListUnit
+    public sealed class ChildItem : ListItem
     {
-        public sealed new class Builder<T> : TemplateUnit.Builder<T, ChildUnit, Builder<T>>
+        public sealed new class Builder<T> : TemplateItem.Builder<T, ChildItem, Builder<T>>
             where T : DataForm, new()
         {
             internal Builder(GridRangeConfig rangeConfig, Func<RowView, DataView> childViewConstructor)
-                : base(rangeConfig, ChildUnit.Create<T>(childViewConstructor))
+                : base(rangeConfig, ChildItem.Create<T>(childViewConstructor))
             {
             }
 
@@ -20,19 +20,19 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ChildUnit unit)
+            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ChildItem item)
             {
-                return rangeConfig.End(unit);
+                return rangeConfig.End(item);
             }
         }
 
-        internal static ChildUnit Create<T>(Func<RowView, DataView> childViewConstructor)
+        internal static ChildItem Create<T>(Func<RowView, DataView> childViewConstructor)
             where T : DataForm, new()
         {
-            return new ChildUnit(() => new T(), childViewConstructor);
+            return new ChildItem(() => new T(), childViewConstructor);
         }
 
-        private ChildUnit(Func<UIElement> constructor, Func<RowView, DataView> childViewConstructor)
+        private ChildItem(Func<UIElement> constructor, Func<RowView, DataView> childViewConstructor)
                 : base(constructor)
         {
             Debug.Assert(childViewConstructor != null);

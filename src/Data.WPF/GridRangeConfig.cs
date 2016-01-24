@@ -33,35 +33,35 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public ScalarUnit.Builder<T> BeginScalarUnit<T>()
+        public ScalarItem.Builder<T> BeginScalarItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ScalarUnit.Builder<T>(this);
+            return new ScalarItem.Builder<T>(this);
         }
 
-        internal DataViewBuilder End(ScalarUnit scalarUnit)
+        internal DataViewBuilder End(ScalarItem scalarItem)
         {
-            scalarUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddScalarUnit(_gridRange, scalarUnit);
+            scalarItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddScalarItem(_gridRange, scalarItem);
             return _viewBuilder;
         }
 
-        public ListUnit.Builder<T> BeginListUnit<T>()
+        public ListItem.Builder<T> BeginListItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ListUnit.Builder<T>(this);
+            return new ListItem.Builder<T>(this);
         }
 
-        internal DataViewBuilder End(ListUnit listUnit)
+        internal DataViewBuilder End(ListItem listItem)
         {
-            listUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddListUnit(_gridRange, listUnit);
+            listItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddListItem(_gridRange, listItem);
             return _viewBuilder;
         }
 
-        public ChildUnit.Builder<TForm> BeginChildUnit<TModel, TForm>(TModel childModel, Action<DataViewBuilder, TModel> builder)
+        public ChildItem.Builder<TForm> BeginChildItem<TModel, TForm>(TModel childModel, Action<DataViewBuilder, TModel> builder)
             where TModel : Model, new()
             where TForm : DataForm, new()
         {
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildUnit.Builder<TForm>(this, owner =>
+            return new ChildItem.Builder<TForm>(this, owner =>
             {
                 if (owner.Kind != RowKind.DataRow)
                     return null;
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public ChildUnit.Builder<TForm> BeginChildUnit<TModel, TForm>(_DataSet<TModel> child, Action<DataViewBuilder, TModel> builder)
+        public ChildItem.Builder<TForm> BeginChildItem<TModel, TForm>(_DataSet<TModel> child, Action<DataViewBuilder, TModel> builder)
             where TModel : Model, new()
             where TForm : DataForm, new()
         {
@@ -87,7 +87,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildUnit.Builder<TForm>(this, owner =>
+            return new ChildItem.Builder<TForm>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -99,10 +99,10 @@ namespace DevZest.Data.Windows
             });
         }
 
-        internal DataViewBuilder End(ChildUnit childUnit)
+        internal DataViewBuilder End(ChildItem childItem)
         {
-            childUnit.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddChildUnit(_gridRange, childUnit);
+            childItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddChildItem(_gridRange, childItem);
             return _viewBuilder;
         }
 

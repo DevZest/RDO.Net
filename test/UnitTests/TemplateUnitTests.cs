@@ -18,14 +18,14 @@ namespace DevZest.Data.Windows
         {
             string source = SOURCE;
 
-            var builder = new ScalarUnit.Builder<TextBlock>(default(GridRangeConfig));
+            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind(x => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var unit = builder.Unit;
+            var unit = builder.Item;
             var element = (TextBlock)unit.Generate();
-            Assert.IsTrue(element.GetTemplateUnit() == unit);
+            Assert.IsTrue(element.GetTemplateItem() == unit);
 
             unit.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
@@ -46,14 +46,14 @@ namespace DevZest.Data.Windows
         {
             string source = SOURCE;
 
-            var builder = new ScalarUnit.Builder<TextBlock>(default(GridRangeConfig));
+            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource(x => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var unit = builder.Unit;
+            var unit = builder.Item;
             var element = (TextBlock)unit.Generate();
-            Assert.IsTrue(element.GetTemplateUnit() == unit);
+            Assert.IsTrue(element.GetTemplateItem() == unit);
 
             unit.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);

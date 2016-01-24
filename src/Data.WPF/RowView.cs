@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows
             if (Kind != RowKind.DataRow)
                 return EmptyArray<DataView>.Singleton;
 
-            var childEntries = Template.ChildUnits;
+            var childEntries = Template.ChildItems;
             if (childEntries.Count == 0)
                 return EmptyArray<DataView>.Singleton;
 

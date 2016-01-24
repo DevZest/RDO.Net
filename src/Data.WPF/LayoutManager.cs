@@ -96,12 +96,12 @@ namespace DevZest.Data.Windows
             if (_elements != null)
             {
                 _realizedRows.RemoveAll();
-                var scalarUnits = Template.ScalarUnits;
-                for (int i = 0; i < scalarUnits.Count; i++)
+                var scalarItems = Template.ScalarItems;
+                for (int i = 0; i < scalarItems.Count; i++)
                 {
-                    var scalarUnit = scalarUnits[i];
+                    var scalarItem = scalarItems[i];
                     var element = Elements[i];
-                    scalarUnit.Cleanup(element);
+                    scalarItem.Cleanup(element);
                     element.SetDataView(null);
                 }
                 _elements.Clear();
@@ -115,14 +115,14 @@ namespace DevZest.Data.Windows
                 return;
             _elements = IElementCollectionFactory.Create(_elementsPanel);
 
-            var scalarUnits = Template.ScalarUnits;
+            var scalarItems = Template.ScalarItems;
 
-            for (int i = 0; i < scalarUnits.Count; i++)
+            for (int i = 0; i < scalarItems.Count; i++)
             {
-                var scalarUnit = scalarUnits[i];
-                var element = scalarUnit.Generate();
+                var scalarItem = scalarItems[i];
+                var element = scalarItem.Generate();
                 element.SetDataView(_view);
-                scalarUnit.Initialize(element);
+                scalarItem.Initialize(element);
                 _elements.Add(element);
             }
         }
@@ -322,25 +322,24 @@ namespace DevZest.Data.Windows
             var template = Template;
             _autoSizeMeasurers = EmptyArray<AutoSizeMeasurer>.Singleton;
 
-            var scalarUnits = template.ScalarUnits;
-            var listUnits = template.ListUnits;
-            for (int i = 0; i < template.NumberOfScalarUnitsBeforeRow; i++)
-                AddAutoSizeMeasurer(scalarUnits[i], sizeToContentX, sizeToContentY);
+            var scalarItems = template.ScalarItems;
+            var listItems = template.ListItems;
+            for (int i = 0; i < template.ScalarItemsCountBeforeList; i++)
+                AddAutoSizeMeasurer(scalarItems[i], sizeToContentX, sizeToContentY);
 
-            for (int i = 0; i < listUnits.Count; i++)
-                AddAutoSizeMeasurer(listUnits[i], sizeToContentX, sizeToContentY);
+            for (int i = 0; i < listItems.Count; i++)
+                AddAutoSizeMeasurer(listItems[i], sizeToContentX, sizeToContentY);
 
-            for (int i = template.NumberOfScalarUnitsBeforeRow; i < scalarUnits.Count; i++)
-                AddAutoSizeMeasurer(scalarUnits[i], sizeToContentX, sizeToContentY);
+            for (int i = template.ScalarItemsCountBeforeList; i < scalarItems.Count; i++)
+                AddAutoSizeMeasurer(scalarItems[i], sizeToContentX, sizeToContentY);
 
-            if (_autoSizeMeasurers.Count > 0)
-                _autoSizeMeasurers.Sort((x, y) => Compare(x, y));
+            _autoSizeMeasurers.Sort((x, y) => Compare(x, y));
         }
 
         private static int Compare(AutoSizeMeasurer x, AutoSizeMeasurer y)
         {
-            var order1 = x.TemplateUnit.AutoSizeMeasureOrder;
-            var order2 = y.TemplateUnit.AutoSizeMeasureOrder;
+            var order1 = x.TemplateItem.AutoSizeMeasureOrder;
+            var order2 = y.TemplateItem.AutoSizeMeasureOrder;
             if (order1 > order2)
                 return 1;
             else if (order1 < order2)
@@ -349,9 +348,9 @@ namespace DevZest.Data.Windows
                 return 0;
         }
 
-        private void AddAutoSizeMeasurer(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY)
+        private void AddAutoSizeMeasurer(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
         {
-            var autoSizeMeasurer = GetAutoSizeMeasurer(templateUnit, sizeToContentX, sizeToContentY);
+            var autoSizeMeasurer = GetAutoSizeMeasurer(templateItem, sizeToContentX, sizeToContentY);
             if (autoSizeMeasurer == null)
                 return;
 
@@ -360,13 +359,13 @@ namespace DevZest.Data.Windows
             _autoSizeMeasurers.Add(autoSizeMeasurer);
         }
 
-        private static AutoSizeMeasurer GetAutoSizeMeasurer(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY)
+        private static AutoSizeMeasurer GetAutoSizeMeasurer(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
         {
-            if (templateUnit.AutoSizeMeasureOrder < 0)
+            if (templateItem.AutoSizeMeasureOrder < 0)
                 return null;
 
-            var autoSizeTracks = GetAutoSizeTracks(templateUnit.GridRange, sizeToContentX, sizeToContentY);
-            return autoSizeTracks.IsAutoX || autoSizeTracks.IsAutoY ? new AutoSizeMeasurer(templateUnit, autoSizeTracks.Columns, autoSizeTracks.Rows) : null;
+            var autoSizeTracks = GetAutoSizeTracks(templateItem.GridRange, sizeToContentX, sizeToContentY);
+            return autoSizeTracks.IsAutoX || autoSizeTracks.IsAutoY ? new AutoSizeMeasurer(templateItem, autoSizeTracks.Columns, autoSizeTracks.Rows) : null;
         }
 
         private static AutoSizeTracks GetAutoSizeTracks(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)

@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows.Factories
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return rangeConfig.BeginListUnit<TextBlock>()
+            return rangeConfig.BeginListItem<TextBlock>()
                 .Initialize(initializer)
                 .Bind(x => x.Text = x.GetSourceText(column).ToString())
                 .End();
@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows.Factories
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return rangeConfig.BeginListUnit<TextBlock>()
+            return rangeConfig.BeginListItem<TextBlock>()
                 .Initialize(initializer)
                 .Bind(x => x.Text = column.DisplayName + ":")
                 .End();
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Factories
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return rangeConfig.BeginListUnit<TextBlock>()
+            return rangeConfig.BeginListItem<TextBlock>()
                 .Initialize(initializer)
                 .Bind(x => x.Text = column.DisplayName)
                 .End();

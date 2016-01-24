@@ -4,15 +4,15 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarUnit : TemplateUnit
+    public sealed class ScalarItem : TemplateItem
     {
-        internal static ScalarUnit Create<T>()
+        internal static ScalarItem Create<T>()
             where T : UIElement, new()
         {
-            return new ScalarUnit(() => new T());
+            return new ScalarItem(() => new T());
         }
 
-        private ScalarUnit(Func<UIElement> constructor)
+        private ScalarItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -24,11 +24,11 @@ namespace DevZest.Data.Windows
             FlowMode = value;
         }
 
-        public sealed class Builder<T> : TemplateUnit.Builder<T, ScalarUnit, Builder<T>>
+        public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeConfig rangeConfig)
-                : base(rangeConfig, ScalarUnit.Create<T>())
+                : base(rangeConfig, ScalarItem.Create<T>())
             {
             }
 
@@ -37,14 +37,14 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ScalarUnit unit)
+            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ScalarItem item)
             {
-                return rangeConfig.End(unit);
+                return rangeConfig.End(item);
             }
 
             public Builder<T> FlowMode(FlowMode value)
             {
-                Unit.InitFlowMode(value);
+                Item.InitFlowMode(value);
                 return this;
             }
         }

@@ -35,7 +35,7 @@ namespace DevZest.Data.Windows
 
             public int Count
             {
-                get { return Elements.Count - Template.ScalarUnits.Count; }
+                get { return Elements.Count - Template.ScalarItems.Count; }
             }
 
             public RowView this[int index]
@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
-                    var rowForm = (RowForm)Elements[index + Template.NumberOfScalarUnitsBeforeRow];
+                    var rowForm = (RowForm)Elements[index + Template.ScalarItemsCountBeforeList];
                     return rowForm.View;
                 }
             }
@@ -92,11 +92,11 @@ namespace DevZest.Data.Windows
 
                 int index;
                 if (Count == 0 || row.Index == this[0].Index - 1)
-                    index = Template.NumberOfScalarUnitsBeforeRow;
+                    index = Template.ScalarItemsCountBeforeList;
                 else
                 {
                     Debug.Assert(row.Index == this[Count - 1].Index + 1);
-                    index = Template.NumberOfScalarUnitsBeforeRow + Count;
+                    index = Template.ScalarItemsCountBeforeList + Count;
                 }
 
                 var rowForm = GenerateRowForm();
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows
                     row.Form = null;
                 }
 
-                int startChildrenIndex = startIndex + Template.NumberOfScalarUnitsBeforeRow;
+                int startChildrenIndex = startIndex + Template.ScalarItemsCountBeforeList;
                 Children.RemoveRange(startChildrenIndex, count);
             }
 

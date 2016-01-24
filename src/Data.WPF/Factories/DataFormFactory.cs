@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows.Factories
             Action<DataViewBuilder, T> builder, Action<DataForm> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildUnit<T, DataForm>(child, builder)
+            return rangeConfig.BeginChildItem<T, DataForm>(child, builder)
                 .Initialize(initializer)
                 .End();
         }
@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Factories
             Action<DataViewBuilder, T> builder, Action<DataForm> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildUnit<T, DataForm>(childModel, builder)
+            return rangeConfig.BeginChildItem<T, DataForm>(childModel, builder)
                 .Initialize(initializer)
                 .End();
         }

@@ -6,21 +6,21 @@ namespace DevZest.Data.Windows
 {
     public static class UIElementExtensions
     {
-        private static readonly DependencyProperty TemplateUnitProperty = DependencyProperty.RegisterAttached(nameof(TemplateUnit),
-            typeof(TemplateUnit), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty TemplateItemProperty = DependencyProperty.RegisterAttached(nameof(TemplateItem),
+            typeof(TemplateItem), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static TemplateUnit GetTemplateUnit(this UIElement element)
+        public static TemplateItem GetTemplateItem(this UIElement element)
         {
-            return (TemplateUnit)element.GetValue(TemplateUnitProperty);
+            return (TemplateItem)element.GetValue(TemplateItemProperty);
         }
 
-        internal static void SetTemplateUnit(this UIElement element, TemplateUnit value)
+        internal static void SetTemplateItem(this UIElement element, TemplateItem value)
         {
-            Debug.Assert(value != null && element.GetTemplateUnit() == null);
-            element.SetValue(TemplateUnitProperty, value);
+            Debug.Assert(value != null && element.GetTemplateItem() == null);
+            element.SetValue(TemplateItemProperty, value);
         }
 
-        private static readonly DependencyProperty DataViewProperty = DependencyProperty.RegisterAttached("DataView",
+        private static readonly DependencyProperty DataViewProperty = DependencyProperty.RegisterAttached(nameof(DataView),
             typeof(DataView), typeof(UIElementExtensions), new PropertyMetadata(null));
 
         public static DataView GetDataView(this UIElement element)
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static readonly DependencyProperty RowViewProperty = DependencyProperty.RegisterAttached("RowView",
+        private static readonly DependencyProperty RowViewProperty = DependencyProperty.RegisterAttached(nameof(RowView),
             typeof(RowView), typeof(UIElementExtensions), new PropertyMetadata(null));
 
         public static RowView GetRowView(this UIElement element)

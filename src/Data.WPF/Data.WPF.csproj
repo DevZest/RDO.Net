@@ -64,7 +64,7 @@
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataFormFactory.cs" />
-    <Compile Include="TemplateUnit.Builder.cs" />
+    <Compile Include="TemplateItem.Builder.cs" />
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
@@ -73,13 +73,13 @@
     <Compile Include="LayoutManager.LayoutY.cs" />
     <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
-    <Compile Include="ListUnit.cs" />
+    <Compile Include="ListItem.cs" />
     <Compile Include="FlowMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="ChildUnit.cs" />
+    <Compile Include="ChildItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\EmptyArray.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
@@ -102,10 +102,10 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScalarUnit.cs" />
+    <Compile Include="ScalarItem.cs" />
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="TemplateUnit.cs" />
+    <Compile Include="TemplateItem.cs" />
     <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />

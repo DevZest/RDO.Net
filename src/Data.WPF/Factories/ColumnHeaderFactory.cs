@@ -6,7 +6,7 @@ namespace DevZest.Data.Windows.Factories
     {
         public static DataViewBuilder ColumnHeader(this GridRangeConfig rangeConfig, Column column, Action<ColumnHeader> initializer = null)
         {
-            return rangeConfig.BeginListUnit<ColumnHeader>()
+            return rangeConfig.BeginListItem<ColumnHeader>()
                 .Initialize(initializer)
                 .End();
         }

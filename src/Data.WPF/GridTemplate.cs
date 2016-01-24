@@ -23,20 +23,20 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class TemplateUnitCollection<T> : ReadOnlyCollection<T>
-            where T : TemplateUnit
+        private sealed class TemplateItemCollection<T> : ReadOnlyCollection<T>
+            where T : TemplateItem
         {
-            internal TemplateUnitCollection()
+            internal TemplateItemCollection()
                 : base(new List<T>())
             {
             }
 
             internal GridRange Range { get; private set; }
 
-            internal void Add(GridRange gridRange, T unit)
+            internal void Add(GridRange gridRange, T item)
             {
-                Debug.Assert(unit != null);
-                Items.Add(unit);
+                Debug.Assert(item != null);
+                Items.Add(item);
                 Range = Range.Union(gridRange);
             }
         }
@@ -77,22 +77,22 @@ namespace DevZest.Data.Windows
             get { return _gridRows; }
         }
 
-        private TemplateUnitCollection<ScalarUnit> _scalarUnits = new TemplateUnitCollection<ScalarUnit>();
-        public ReadOnlyCollection<ScalarUnit> ScalarUnits
+        private TemplateItemCollection<ScalarItem> _scalarItems = new TemplateItemCollection<ScalarItem>();
+        public ReadOnlyCollection<ScalarItem> ScalarItems
         {
-            get { return _scalarUnits; }
+            get { return _scalarItems; }
         }
 
-        private TemplateUnitCollection<ListUnit> _listUnits = new TemplateUnitCollection<ListUnit>();
-        public ReadOnlyCollection<ListUnit> ListUnits
+        private TemplateItemCollection<ListItem> _listItems = new TemplateItemCollection<ListItem>();
+        public ReadOnlyCollection<ListItem> ListItems
         {
-            get { return _listUnits; }
+            get { return _listItems; }
         }
 
-        private TemplateUnitCollection<ChildUnit> _childUnits = new TemplateUnitCollection<ChildUnit>();
-        public ReadOnlyCollection<ChildUnit> ChildUnits
+        private TemplateItemCollection<ChildItem> _childItems = new TemplateItemCollection<ChildItem>();
+        public ReadOnlyCollection<ChildItem> ChildItems
         {
-            get { return _childUnits; }
+            get { return _childItems; }
         }
 
         private GridRange? _listRange;
@@ -110,7 +110,7 @@ namespace DevZest.Data.Windows
 
         private GridRange AutoListRange
         {
-            get { return _listUnits.Range.Union(_childUnits.Range); }
+            get { return _listItems.Range.Union(_childItems.Range); }
         }
 
         internal int AddGridColumn(string width)
@@ -201,7 +201,7 @@ namespace DevZest.Data.Windows
             return orentation != ListOrientation.XY;
         }
 
-        internal int NumberOfScalarUnitsBeforeRow { get; private set; }
+        internal int ScalarItemsCountBeforeList { get; private set; }
 
         internal int StarSizeColumnsCount { get; private set; }
 
@@ -211,31 +211,31 @@ namespace DevZest.Data.Windows
 
         internal int AutoSizeRowsCount { get; private set; }
 
-        internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
+        internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
         {
-            VerifyAddTemplateUnit(gridRange, scalarUnit, nameof(scalarUnit), true);
-            scalarUnit.Construct(this, gridRange, _scalarUnits.Count);
-            _scalarUnits.Add(gridRange, scalarUnit);
-            if (_listUnits.Count == 0)
-                NumberOfScalarUnitsBeforeRow = _scalarUnits.Count;
+            VerifyAddTemplateItem(gridRange, scalarItem, nameof(scalarItem), true);
+            scalarItem.Construct(this, gridRange, _scalarItems.Count);
+            _scalarItems.Add(gridRange, scalarItem);
+            if (_listItems.Count == 0)
+                ScalarItemsCountBeforeList = _scalarItems.Count;
         }
 
-        internal void AddListUnit(GridRange gridRange, ListUnit listUnit)
+        internal void AddListItem(GridRange gridRange, ListItem listItem)
         {
-            VerifyAddTemplateUnit(gridRange, listUnit, nameof(listUnit), true);
-            listUnit.Construct(this, gridRange, _listUnits.Count);
-            _listUnits.Add(gridRange, listUnit);
+            VerifyAddTemplateItem(gridRange, listItem, nameof(listItem), true);
+            listItem.Construct(this, gridRange, _listItems.Count);
+            _listItems.Add(gridRange, listItem);
         }
 
-        internal void AddChildUnit(GridRange gridRange, ChildUnit childUnit)
+        internal void AddChildItem(GridRange gridRange, ChildItem childItem)
         {
-            VerifyAddTemplateUnit(gridRange, childUnit, nameof(childUnit), false);
-            childUnit.Seal(this, gridRange, _listUnits.Count, _childUnits.Count);
-            _listUnits.Add(gridRange, childUnit);
-            _childUnits.Add(gridRange, childUnit);
+            VerifyAddTemplateItem(gridRange, childItem, nameof(childItem), false);
+            childItem.Seal(this, gridRange, _listItems.Count, _childItems.Count);
+            _listItems.Add(gridRange, childItem);
+            _childItems.Add(gridRange, childItem);
         }
 
-        private void VerifyAddTemplateUnit(GridRange gridRange, TemplateUnit templateUnit, string paramTemplateUnitName, bool isScalar)
+        private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
