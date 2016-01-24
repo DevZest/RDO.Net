@@ -239,12 +239,162 @@ namespace DevZest.Data.Windows
                 invalidated(this, EventArgs.Empty);
         }
 
-        private Measurer _autoSizeMeasurer;
+        private GridColumn[] _autoSizeColumns;
+        private GridRow[] _autoSizeRows;
+        private GridColumn[] _starSizeColumns;
+        private GridRow[] _starSizeRows;
+        private IList<AutoSizeMeasurer> _autoSizeMeasurers;
+
+        private void InitMeasure(Size availableSize)
+        {
+            bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
+            bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
+
+            bool regenerateAutoSizeMeasurers = InitGridColumns(sizeToContentX) || InitGridRows(sizeToContentY);
+            InitAutoSizeMeasurers(sizeToContentX, sizeToContentY, regenerateAutoSizeMeasurers);
+        }
+
+        private bool InitGridColumns(bool sizeToContentX)
+        {
+            var autoSizeColumnsCount = Template.AutoSizeColumnsCount;
+            if (sizeToContentX)
+                autoSizeColumnsCount += Template.StarSizeColumnsCount;
+
+            var starSizeColumnsCount = sizeToContentX ? 0 : Template.StarSizeColumnsCount;
+
+            if (_autoSizeColumns != null && _autoSizeColumns.Length == autoSizeColumnsCount)
+            {
+                Debug.Assert(_starSizeColumns != null && _starSizeColumns.Length == starSizeColumnsCount);
+                return false;
+            }
+
+            _autoSizeColumns = autoSizeColumnsCount == 0 ? EmptyArray<GridColumn>.Singleton : new GridColumn[autoSizeColumnsCount];
+            _starSizeColumns = starSizeColumnsCount == 0 ? EmptyArray<GridColumn>.Singleton : new GridColumn[starSizeColumnsCount];
+            InitTracks(Template.GridColumns, sizeToContentX, _autoSizeColumns, _starSizeColumns);
+            return true;
+        }
+
+        private bool InitGridRows(bool sizeToContentY)
+        {
+            var autoSizeRowsCount = Template.AutoSizeRowsCount;
+            if (sizeToContentY)
+                autoSizeRowsCount += Template.StarSizeRowsCount;
+
+            var starSizeRowsCount = sizeToContentY ? 0 : Template.StarSizeRowsCount;
+
+            if (_autoSizeRows != null && _autoSizeRows.Length == autoSizeRowsCount)
+            {
+                Debug.Assert(_starSizeRows != null && _starSizeRows.Length == starSizeRowsCount);
+                return false;
+            }
+
+            _autoSizeRows = autoSizeRowsCount == 0 ? EmptyArray<GridRow>.Singleton : new GridRow[autoSizeRowsCount];
+            _starSizeRows = starSizeRowsCount == 0 ? EmptyArray<GridRow>.Singleton : new GridRow[starSizeRowsCount];
+            InitTracks(Template.GridRows, sizeToContentY, _autoSizeRows, _starSizeRows);
+            return true;
+        }
+
+        private static void InitTracks<T>(IReadOnlyList<T> tracks, bool sizeToContent, T[] autoSizeTracks, T[] starSizeTracks)
+            where T : GridTrack
+        {
+            var indexAutoSize = 0;
+            var indexStarSize = 0;
+            foreach (var track in tracks)
+            {
+                var length = track.Length;
+                if (length.IsAuto)
+                    autoSizeTracks[indexAutoSize++] = track;
+                else if (length.IsStar)
+                {
+                    if (sizeToContent)
+                        autoSizeTracks[indexAutoSize++] = track;
+                    else
+                        starSizeTracks[indexStarSize++] = track;
+                }
+            }
+        }
+
+        private void InitAutoSizeMeasurers(bool sizeToContentX, bool sizeToContentY, bool regenerate)
+        {
+            if (_autoSizeMeasurers != null && !regenerate)
+                return;
+
+            var template = Template;
+            _autoSizeMeasurers = EmptyArray<AutoSizeMeasurer>.Singleton;
+
+            var scalarUnits = template.ScalarUnits;
+            var listUnits = template.ListUnits;
+            for (int i = 0; i < template.NumberOfScalarUnitsBeforeRow; i++)
+                AddAutoSizeMeasurer(scalarUnits[i], sizeToContentX, sizeToContentY);
+
+            for (int i = 0; i < listUnits.Count; i++)
+                AddAutoSizeMeasurer(listUnits[i], sizeToContentX, sizeToContentY);
+
+            for (int i = template.NumberOfScalarUnitsBeforeRow; i < scalarUnits.Count; i++)
+                AddAutoSizeMeasurer(scalarUnits[i], sizeToContentX, sizeToContentY);
+
+            if (_autoSizeMeasurers.Count > 0)
+                _autoSizeMeasurers.Sort((x, y) => Compare(x, y));
+        }
+
+        private static int Compare(AutoSizeMeasurer x, AutoSizeMeasurer y)
+        {
+            var order1 = x.TemplateUnit.AutoSizeMeasureOrder;
+            var order2 = y.TemplateUnit.AutoSizeMeasureOrder;
+            if (order1 > order2)
+                return 1;
+            else if (order1 < order2)
+                return -1;
+            else
+                return 0;
+        }
+
+        private void AddAutoSizeMeasurer(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY)
+        {
+            var autoSizeMeasurer = GetAutoSizeMeasurer(templateUnit, sizeToContentX, sizeToContentY);
+            if (autoSizeMeasurer == null)
+                return;
+
+            if (_autoSizeMeasurers == EmptyArray<AutoSizeMeasurer>.Singleton)
+                _autoSizeMeasurers = new List<AutoSizeMeasurer>();
+            _autoSizeMeasurers.Add(autoSizeMeasurer);
+        }
+
+        private static AutoSizeMeasurer GetAutoSizeMeasurer(TemplateUnit templateUnit, bool sizeToContentX, bool sizeToContentY)
+        {
+            if (templateUnit.AutoSizeMeasureOrder < 0)
+                return null;
+
+            var autoSizeTracks = GetAutoSizeTracks(templateUnit.GridRange, sizeToContentX, sizeToContentY);
+            return autoSizeTracks.IsAutoX || autoSizeTracks.IsAutoY ? new AutoSizeMeasurer(templateUnit, autoSizeTracks.Columns, autoSizeTracks.Rows) : null;
+        }
+
+        private static AutoSizeTracks GetAutoSizeTracks(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+        {
+            var columns = GridColumnSet.Empty;
+            for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
+            {
+                var column = gridRange.Owner.GridColumns[x];
+                var width = column.Width;
+                if (width.IsAuto || (width.IsStar && sizeToContentX))
+                    columns = columns.Merge(column);
+            }
+
+            var rows = GridRowSet.Empty;
+            for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+            {
+                var row = gridRange.Owner.GridRows[y];
+                var height = row.Height;
+                if (height.IsAuto || (height.IsStar && sizeToContentY))
+                    rows = rows.Merge(row);
+            }
+
+            return new AutoSizeTracks(columns, rows);
+        }
+
 
         public Size Measure(Size availableSize)
         {
-            _autoSizeMeasurer = Measurer.GetOrCreate(_autoSizeMeasurer, Template, availableSize);
-
             MeasureOverride(availableSize);
             if (ScrollOwner != null)
             {

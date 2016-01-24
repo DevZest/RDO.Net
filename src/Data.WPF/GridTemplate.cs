@@ -120,9 +120,9 @@ namespace DevZest.Data.Windows
             var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(ListOrientation, result, result, nameof(width));
             if (gridWidth.IsStar)
-                StarColumnsCount++;
+                StarSizeColumnsCount++;
             else if (gridWidth.IsAuto)
-                AutoColumnsCount++;
+                AutoSizeColumnsCount++;
             return result;
         }
 
@@ -141,9 +141,9 @@ namespace DevZest.Data.Windows
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(ListOrientation, result, result, nameof(height));
             if (gridHeight.IsStar)
-                StarRowsCount++;
+                StarSizeRowsCount++;
             else if (gridHeight.IsAuto)
-                AutoRowsCount++;
+                AutoSizeRowsCount++;
             return result;
         }
 
@@ -203,13 +203,13 @@ namespace DevZest.Data.Windows
 
         internal int NumberOfScalarUnitsBeforeRow { get; private set; }
 
-        internal int StarColumnsCount { get; private set; }
+        internal int StarSizeColumnsCount { get; private set; }
 
-        internal int StarRowsCount { get; private set; }
+        internal int StarSizeRowsCount { get; private set; }
 
-        internal int AutoColumnsCount { get; private set; }
+        internal int AutoSizeColumnsCount { get; private set; }
 
-        internal int AutoRowsCount { get; private set; }
+        internal int AutoSizeRowsCount { get; private set; }
 
         internal void AddScalarUnit(GridRange gridRange, ScalarUnit scalarUnit)
         {

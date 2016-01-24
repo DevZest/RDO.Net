@@ -54,7 +54,6 @@
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LayoutManager.AutoSizeMeasurer.cs" />
-    <Compile Include="LayoutManager.Measurer.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
@@ -83,7 +82,7 @@
     <Compile Include="ChildUnit.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\EmptyArray.cs" />
-    <Compile Include="Utilities\Extensions.IsClose.cs" />
+    <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="RowPanel.cs" />
     <Compile Include="RowForm.cs" />
     <Compile Include="RowView.cs" />
@@ -107,6 +106,7 @@
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="TemplateUnit.cs" />
+    <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
     <Compile Include="LayoutManager.cs" />
