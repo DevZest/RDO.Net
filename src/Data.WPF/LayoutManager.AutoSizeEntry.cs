@@ -5,9 +5,9 @@ namespace DevZest.Data.Windows
 {
     partial class LayoutManager
     {
-        private struct AutoSizeTracks
+        private struct AutoSizeEntry
         {
-            public AutoSizeTracks(IGridColumnSet columns, IGridRowSet rows)
+            public AutoSizeEntry(IGridColumnSet columns, IGridRowSet rows)
             {
                 Debug.Assert(columns != null);
                 Debug.Assert(rows != null);
@@ -19,14 +19,9 @@ namespace DevZest.Data.Windows
 
             public readonly IGridRowSet Rows;
 
-            public bool IsAutoX
+            public bool IsEmpty
             {
-                get { return Columns.Count > 0; }
-            }
-
-            public bool IsAutoY
-            {
-                get { return Rows.Count > 0; }
+                get { return Columns.Count == 0 && Rows.Count == 0; }
             }
         }
     }

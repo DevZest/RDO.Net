@@ -50,10 +50,10 @@
     <Compile Include="IGridColumnSet.cs" />
     <Compile Include="IGridRowSet.cs" />
     <Compile Include="IGridTrackSet.cs" />
-    <Compile Include="LayoutManager.AutoSizeTracks.cs" />
+    <Compile Include="LayoutManager.AutoSizeEntry.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
-    <Compile Include="LayoutManager.AutoSizeMeasurer.cs" />
+    <Compile Include="LayoutManager.AutoSizeItem.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
