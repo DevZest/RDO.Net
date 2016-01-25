@@ -373,50 +373,57 @@ namespace DevZest.Data.Windows
             //  The reason between this choice is that (1) will tend to increase excessively the size of auto-sized tracks (for nothing).
             //  Moreover, we consider items included both auto and star-size tracks are rare, and most of the time we want
             //  to be spread along several tracks rather than auto-sized.
-            if (ContainsStarTrack(gridRange, sizeToContentX, sizeToContentY))
-                return AutoSizeEntry.Empty;
 
             var columnSet = GridColumnSet.Empty;
-            for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
+            if (ContainsStarWidth(gridRange, sizeToContentX))
             {
-                var column = gridRange.Owner.GridColumns[x];
-                var width = column.Width;
-                if (width.IsAuto || (width.IsStar && sizeToContentX))
-                    columnSet = columnSet.Merge(column);
+                for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
+                {
+                    var column = gridRange.Owner.GridColumns[x];
+                    var width = column.Width;
+                    if (width.IsAuto || (width.IsStar && sizeToContentX))
+                        columnSet = columnSet.Merge(column);
+                }
             }
 
             var rowSet = GridRowSet.Empty;
-            for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+            if (ContainsStarHeight(gridRange, sizeToContentY))
             {
-                var row = gridRange.Owner.GridRows[y];
-                var height = row.Height;
-                if (height.IsAuto || (height.IsStar && sizeToContentY))
-                    rowSet = rowSet.Merge(row);
+                for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+                {
+                    var row = gridRange.Owner.GridRows[y];
+                    var height = row.Height;
+                    if (height.IsAuto || (height.IsStar && sizeToContentY))
+                        rowSet = rowSet.Merge(row);
+                }
             }
 
             return new AutoSizeEntry(columnSet, rowSet);
         }
 
-        private static bool ContainsStarTrack(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+        private static bool ContainsStarWidth(GridRange gridRange, bool sizeToContentX)
         {
-            if (!sizeToContentX)
-            {
-                for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
-                {
-                    if (gridRange.Owner.GridColumns[x].Width.IsStar)
-                        return true;
-                }
-            }
+            if (sizeToContentX)
+                return false;
 
-            if (!sizeToContentY)
+            for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
             {
-                for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
-                {
-                    if (gridRange.Owner.GridRows[y].Height.IsStar)
-                        return true;
-                }
+                if (gridRange.Owner.GridColumns[x].Width.IsStar)
+                    return true;
             }
+            return false;
+        }
 
+        private static bool ContainsStarHeight(GridRange gridRange, bool sizeToContentY)
+        {
+            if (sizeToContentY)
+                return false;
+
+            for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+            {
+                if (gridRange.Owner.GridRows[y].Height.IsStar)
+                    return true;
+            }
             return false;
         }
 

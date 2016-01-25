@@ -18,13 +18,13 @@ namespace DevZest.Data.Windows
                 AutoSizeGridColumns = autoSizeGridColumns;
                 AutoSizeGridRows = autoSizeGridRows;
 
-                FilterGridColumns(out AbsoluteSizeGridColumns, out StarSizeGridColumns);
-                FilterGridRows(out AbsoluteSizeGridRows, out StarSizeGridRows);
+                _totalAbsoluteWidth = CalcTotalAbsoluteWidth();
+                _totalAbsoluteHeight = CalcTotalAbsoluteHeight();
             }
 
-            private void FilterGridColumns(out IGridColumnSet absoluteSizeGridColumns, out IGridColumnSet starSizeGridColumns)
+            private double CalcTotalAbsoluteWidth()
             {
-                absoluteSizeGridColumns = starSizeGridColumns = GridColumnSet.Empty;
+                var result = 0.0d;
                 int autoSizeColumnIndex = 0;
                 for (int i = GridRange.Left.Ordinal; i <= GridRange.Right.Ordinal; i++)
                 {
@@ -34,36 +34,28 @@ namespace DevZest.Data.Windows
                         autoSizeColumnIndex++;
                         continue;
                     }
-                    if (column.Length.IsAbsolute)
-                        absoluteSizeGridColumns = absoluteSizeGridColumns.Merge(column);
-                    else
-                    {
-                        Debug.Assert(column.Length.IsStar);
-                        starSizeGridColumns = starSizeGridColumns.Merge(column);
-                    }
+                    Debug.Assert(column.Length.IsAbsolute, "Items contain both auto and star size should have been ignored.");
+                    result += column.MeasuredWidth;
                 }
+                return result;
             }
 
-            private void FilterGridRows(out IGridRowSet absoluteSizeGridRows, out IGridRowSet starSizeGridRows)
+            private double CalcTotalAbsoluteHeight()
             {
-                absoluteSizeGridRows = starSizeGridRows = GridRowSet.Empty;
+                var result = 0.0d;
                 int autoSizeRowIndex = 0;
                 for (int i = GridRange.Top.Ordinal; i <= GridRange.Bottom.Ordinal; i++)
                 {
                     var row = Template.GridRows[i];
-                    if (autoSizeRowIndex < AutoSizeGridRows.Count && row == AutoSizeGridRows[autoSizeRowIndex])
+                    if (autoSizeRowIndex < AutoSizeGridColumns.Count && row == AutoSizeGridRows[autoSizeRowIndex])
                     {
                         autoSizeRowIndex++;
                         continue;
                     }
-                    if (row.Length.IsAbsolute)
-                        absoluteSizeGridRows = absoluteSizeGridRows.Merge(row);
-                    else
-                    {
-                        Debug.Assert(row.Length.IsStar);
-                        starSizeGridRows = starSizeGridRows.Merge(row);
-                    }
+                    Debug.Assert(row.Length.IsAbsolute, "Items contain both auto and star size should have been ignored.");
+                    result += row.MeasuredHeight;
                 }
+                return result;
             }
 
             public TemplateItem TemplateItem { get; private set; }
@@ -77,13 +69,9 @@ namespace DevZest.Data.Windows
 
             public readonly IGridRowSet AutoSizeGridRows;
 
-            public readonly IGridColumnSet AbsoluteSizeGridColumns;
+            private readonly double _totalAbsoluteWidth;
 
-            public readonly IGridRowSet AbsoluteSizeGridRows;
-
-            public readonly IGridColumnSet StarSizeGridColumns;
-
-            public readonly IGridRowSet StarSizeGridRows;
+            private readonly double _totalAbsoluteHeight;
 
             private bool IsAutoX
             {
@@ -119,13 +107,13 @@ namespace DevZest.Data.Windows
             {
                 get
                 {
-                    var width = IsAutoX ? double.PositiveInfinity : GetLength(Template.GridColumns, GridRange.Left, GridRange.Right);
-                    var height = IsAutoY ? double.PositiveInfinity : GetLength(Template.GridRows, GridRange.Top, GridRange.Bottom);
+                    var width = IsAutoX ? double.PositiveInfinity : CalcLength(Template.GridColumns, GridRange.Left, GridRange.Right);
+                    var height = IsAutoY ? double.PositiveInfinity : CalcLength(Template.GridRows, GridRange.Top, GridRange.Bottom);
                     return new Size(width, height);
                 }
             }
 
-            private static double GetLength(IReadOnlyList<GridTrack> gridTracks, GridTrack start, GridTrack end)
+            private static double CalcLength(IReadOnlyList<GridTrack> gridTracks, GridTrack start, GridTrack end)
             {
                 double result = 0;
                 for (int i = start.Ordinal; i <= end.Ordinal; i++)
@@ -157,11 +145,29 @@ namespace DevZest.Data.Windows
                 return row.Form.Elements[TemplateItem.Ordinal];
             }
 
-            public Size Measure(RowView row)
+            public void Measure(RowView row)
             {
                 var uiElement = IsScalar ? ScalarElement : GetListElement(row);
                 uiElement.Measure(ConstraintSize);
-                return uiElement.DesiredSize;
+                var desiredSize = uiElement.DesiredSize;
+                UpdateMeasuredAutoSize(AutoSizeGridColumns, desiredSize.Width - _totalAbsoluteWidth);
+                UpdateMeasuredAutoSize(AutoSizeGridRows, desiredSize.Height - _totalAbsoluteHeight);
+            }
+
+            private void UpdateMeasuredAutoSize(IGridTrackSet autoSizeTracks, double length)
+            {
+                if (autoSizeTracks.Count == 0 || length <= 0)
+                    return;
+
+                for (int i = 0; i < autoSizeTracks.Count; i++)
+                {
+                    length -= autoSizeTracks[i].MeasuredLength;
+                    if (length <= 0)
+                        return;
+                }
+
+                // increase MeasuredLength of last auto size track
+                autoSizeTracks[autoSizeTracks.Count - 1].MeasuredLength += length;
             }
         }
     }
