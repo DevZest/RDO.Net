@@ -7,6 +7,11 @@ namespace DevZest.Data.Windows
     {
         private struct AutoSizeEntry
         {
+            public static AutoSizeEntry Empty
+            {
+                get { return new AutoSizeEntry(GridColumnSet.Empty, GridRowSet.Empty); }
+            }
+
             public AutoSizeEntry(IGridColumnSet columns, IGridRowSet rows)
             {
                 Debug.Assert(columns != null);

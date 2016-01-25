@@ -245,16 +245,6 @@ namespace DevZest.Data.Windows
         private GridRow[] _starSizeRows;
         private IList<AutoSizeItem> _autoSizeItems;
 
-        private void InitMeasure(Size availableSize)
-        {
-            bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
-            bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
-
-            bool gridColumnsReset = ClassifyGridColumns(sizeToContentX);
-            bool gridRowsReset = ClassifyGridRows(sizeToContentY);
-            PrepareAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
-        }
-
         private bool ClassifyGridColumns(bool sizeToContentX)
         {
             var autoSizeColumnsCount = Template.AutoSizeColumnsCount;
@@ -371,29 +361,74 @@ namespace DevZest.Data.Windows
 
         private static AutoSizeEntry GetAutoSizeEntry(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
         {
-            var columns = GridColumnSet.Empty;
+            //  There is an issue with items contains both auto and star tracks.
+            //  Intuitively, we expect that those items receive enough space to layout and that this space is perfectly divided into the auto / star tracks.
+            //  The problem is that it is not possible to determine the size of star tracks until all auto track size determined,
+            //  and that it is not possible determine missing space to include into the auto-sized tracks for those items as long as we don't know the size 
+            //  of star-sized tracks.
+            //  We are in a dead-end. There is basically two solutions: 
+            //     1. Include all the missing size for those items into the auto tracks
+            //     2. Include none of the missing size into the auto tracks and hope that the star tracks will be big enough to contain those items.
+            //  Here we chose option (2), that is we ignore those elements during calculation of auto-sized tracks.
+            //  The reason between this choice is that (1) will tend to increase excessively the size of auto-sized tracks (for nothing).
+            //  Moreover, we consider items included both auto and star-size tracks are rare, and most of the time we want
+            //  to be spread along several tracks rather than auto-sized.
+            if (ContainsStarTrack(gridRange, sizeToContentX, sizeToContentY))
+                return AutoSizeEntry.Empty;
+
+            var columnSet = GridColumnSet.Empty;
             for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
             {
                 var column = gridRange.Owner.GridColumns[x];
                 var width = column.Width;
                 if (width.IsAuto || (width.IsStar && sizeToContentX))
-                    columns = columns.Merge(column);
+                    columnSet = columnSet.Merge(column);
             }
 
-            var rows = GridRowSet.Empty;
+            var rowSet = GridRowSet.Empty;
             for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
             {
                 var row = gridRange.Owner.GridRows[y];
                 var height = row.Height;
                 if (height.IsAuto || (height.IsStar && sizeToContentY))
-                    rows = rows.Merge(row);
+                    rowSet = rowSet.Merge(row);
             }
 
-            return new AutoSizeEntry(columns, rows);
+            return new AutoSizeEntry(columnSet, rowSet);
+        }
+
+        private static bool ContainsStarTrack(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+        {
+            if (!sizeToContentX)
+            {
+                for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
+                {
+                    if (gridRange.Owner.GridColumns[x].Width.IsStar)
+                        return true;
+                }
+            }
+
+            if (!sizeToContentY)
+            {
+                for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
+                {
+                    if (gridRange.Owner.GridRows[y].Height.IsStar)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public Size Measure(Size availableSize)
         {
+            bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
+            bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
+
+            bool gridColumnsReset = ClassifyGridColumns(sizeToContentX);
+            bool gridRowsReset = ClassifyGridRows(sizeToContentY);
+            PrepareAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
+
             MeasureOverride(availableSize);
             if (ScrollOwner != null)
             {
