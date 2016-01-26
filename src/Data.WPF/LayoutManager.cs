@@ -245,47 +245,6 @@ namespace DevZest.Data.Windows
         private GridRow[] _starHeightRows;
         private IList<AutoSizeItem> _autoSizeItems;
 
-        private static bool ClassifyGridTracks<T>(ref T[] autoLengthTracks, ref T[] starLengthTracks, GridTrackCollection<T> tracks, bool sizeToContentX)
-            where T : GridTrack
-        {
-            var autoLengthCount = tracks.AutoLengthCount;
-            if (sizeToContentX)
-                autoLengthCount += tracks.StarLengthCount;
-
-            var starLengthCount = sizeToContentX ? 0 : tracks.StarLengthCount;
-
-            if (autoLengthTracks != null && autoLengthTracks.Length == autoLengthCount)
-            {
-                Debug.Assert(starLengthTracks != null && starLengthTracks.Length == starLengthCount);
-                return false;
-            }
-
-            autoLengthTracks = autoLengthCount == 0 ? EmptyArray<T>.Singleton : new T[autoLengthCount];
-            starLengthTracks = starLengthCount == 0 ? EmptyArray<T>.Singleton : new T[starLengthCount];
-            FillClassifiedGridTracks(tracks, sizeToContentX, autoLengthTracks, starLengthTracks);
-            return true;
-        }
-
-        private static void FillClassifiedGridTracks<T>(IEnumerable<T> tracks, bool sizeToContent, T[] autoLengthTracks, T[] starLengthTracks)
-            where T : GridTrack
-        {
-            var indexAutoSize = 0;
-            var indexStarSize = 0;
-            foreach (var track in tracks)
-            {
-                var length = track.Length;
-                if (length.IsAuto)
-                    autoLengthTracks[indexAutoSize++] = track;
-                else if (length.IsStar)
-                {
-                    if (sizeToContent)
-                        autoLengthTracks[indexAutoSize++] = track;
-                    else
-                        starLengthTracks[indexStarSize++] = track;
-                }
-            }
-        }
-
         private void GenerateAutoSizeItems(bool sizeToContentX, bool sizeToContentY, bool reset)
         {
             if (_autoSizeItems != null && !reset)
@@ -336,76 +295,8 @@ namespace DevZest.Data.Windows
             if (templateItem.AutoSizeMeasureOrder < 0)
                 return null;
 
-            var entry = GetAutoSizeEntry(templateItem.GridRange, sizeToContentX, sizeToContentY);
+            var entry = AutoSizeEntry.Resolve(templateItem.GridRange, sizeToContentX, sizeToContentY);
             return entry.IsEmpty ? null : new AutoSizeItem(templateItem, entry.Columns, entry.Rows);
-        }
-
-        private static AutoSizeEntry GetAutoSizeEntry(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
-        {
-            //  There is an issue with items contains both auto and star tracks.
-            //  Intuitively, we expect that those items receive enough space to layout and that this space is perfectly divided into the auto / star tracks.
-            //  The problem is that it is not possible to determine the size of star tracks until all auto track size determined,
-            //  and that it is not possible determine missing space to include into the auto-sized tracks for those items as long as we don't know the size 
-            //  of star-sized tracks.
-            //  We are in a dead-end. There is basically two solutions: 
-            //     1. Include all the missing size for those items into the auto tracks
-            //     2. Include none of the missing size into the auto tracks and hope that the star tracks will be big enough to contain those items.
-            //  Here we chose option (2), that is we ignore those elements during calculation of auto-sized tracks.
-            //  The reason between this choice is that (1) will tend to increase excessively the size of auto-sized tracks (for nothing).
-            //  Moreover, we consider items included both auto and star-size tracks are rare, and most of the time we want
-            //  to be spread along several tracks rather than auto-sized.
-
-            var columnSet = GridColumnSet.Empty;
-            if (ContainsStarWidth(gridRange, sizeToContentX))
-            {
-                for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
-                {
-                    var column = gridRange.Owner.GridColumns[x];
-                    var width = column.Width;
-                    if (width.IsAuto || (width.IsStar && sizeToContentX))
-                        columnSet = columnSet.Merge(column);
-                }
-            }
-
-            var rowSet = GridRowSet.Empty;
-            if (ContainsStarHeight(gridRange, sizeToContentY))
-            {
-                for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
-                {
-                    var row = gridRange.Owner.GridRows[y];
-                    var height = row.Height;
-                    if (height.IsAuto || (height.IsStar && sizeToContentY))
-                        rowSet = rowSet.Merge(row);
-                }
-            }
-
-            return new AutoSizeEntry(columnSet, rowSet);
-        }
-
-        private static bool ContainsStarWidth(GridRange gridRange, bool sizeToContentX)
-        {
-            if (sizeToContentX)
-                return false;
-
-            for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
-            {
-                if (gridRange.Owner.GridColumns[x].Width.IsStar)
-                    return true;
-            }
-            return false;
-        }
-
-        private static bool ContainsStarHeight(GridRange gridRange, bool sizeToContentY)
-        {
-            if (sizeToContentY)
-                return false;
-
-            for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
-            {
-                if (gridRange.Owner.GridRows[y].Height.IsStar)
-                    return true;
-            }
-            return false;
         }
 
         private static void InitMeasuredLength(double availableLength, GridTrack[] autoGridTracks, GridTrack[] starGridTracks)
@@ -440,9 +331,9 @@ namespace DevZest.Data.Windows
             bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
             bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
 
-            bool gridColumnsReset = ClassifyGridTracks(ref _autoWidthColumns, ref _starWidthColumns, Template.GridColumns, sizeToContentX);
+            bool gridColumnsReset = Template.GridColumns.Classify(sizeToContentX, ref _autoWidthColumns, ref _starWidthColumns);
             InitMeasuredLength(availableSize.Width, _autoWidthColumns, _starWidthColumns);
-            bool gridRowsReset = ClassifyGridTracks(ref _autoHeightRows, ref _starHeightRows, Template.GridRows, sizeToContentY);
+            bool gridRowsReset = Template.GridRows.Classify(sizeToContentY, ref _autoHeightRows, ref _starHeightRows);
             InitMeasuredLength(availableSize.Height, _autoHeightRows, _starHeightRows);
             GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
 
