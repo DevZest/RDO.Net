@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -246,60 +247,6 @@ namespace DevZest.Data.Windows
         private GridRow[] _starHeightRows;
         private IList<AutoSizeItem> _autoSizeItems;
 
-        private void GenerateAutoSizeItems(bool sizeToContentX, bool sizeToContentY, bool reset)
-        {
-            if (_autoSizeItems != null && !reset)
-                return;
-
-            var template = Template;
-            _autoSizeItems = EmptyArray<AutoSizeItem>.Singleton;
-
-            var scalarItems = template.ScalarItems;
-            var listItems = template.ListItems;
-            for (int i = 0; i < template.ScalarItemsCountBeforeList; i++)
-                GenerateAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
-
-            for (int i = 0; i < listItems.Count; i++)
-                GenerateAutoSizeItem(listItems[i], sizeToContentX, sizeToContentY);
-
-            for (int i = template.ScalarItemsCountBeforeList; i < scalarItems.Count; i++)
-                GenerateAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
-
-            _autoSizeItems.Sort((x, y) => Compare(x, y));
-        }
-
-        private static int Compare(AutoSizeItem x, AutoSizeItem y)
-        {
-            var order1 = x.TemplateItem.AutoSizeMeasureOrder;
-            var order2 = y.TemplateItem.AutoSizeMeasureOrder;
-            if (order1 > order2)
-                return 1;
-            else if (order1 < order2)
-                return -1;
-            else
-                return 0;
-        }
-
-        private void GenerateAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
-        {
-            var autoSizeItem = TryGenerateAutoSizeItem(templateItem, sizeToContentX, sizeToContentY);
-            if (autoSizeItem == null)
-                return;
-
-            if (_autoSizeItems == EmptyArray<AutoSizeItem>.Singleton)
-                _autoSizeItems = new List<AutoSizeItem>();
-            _autoSizeItems.Add(autoSizeItem);
-        }
-
-        private static AutoSizeItem TryGenerateAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
-        {
-            if (templateItem.AutoSizeMeasureOrder < 0)
-                return null;
-
-            var entry = AutoSizeEntry.Resolve(templateItem.GridRange, sizeToContentX, sizeToContentY);
-            return entry.IsEmpty ? null : new AutoSizeItem(templateItem, entry.Columns, entry.Rows);
-        }
-
         private static void InitMeasuredLength(double availableLength, GridTrack[] autoGridTracks, GridTrack[] starGridTracks)
         {
             double autoLengthTotal = 0;
@@ -314,9 +261,6 @@ namespace DevZest.Data.Windows
 
         private static void CalcStarMeasuredLength(double availableLength, GridTrack[] starGridTracks)
         {
-            if (starGridTracks.Length == 0)
-                return;
-
             double starLengthTotal = 0;
             foreach (var starGridTrack in starGridTracks)
                 starLengthTotal += starGridTrack.Length.Value;
@@ -331,8 +275,8 @@ namespace DevZest.Data.Windows
         {
             _availableSize = availableSize;
             InitGridTracks();
-
             InitMeasure();
+            CalcStarSizeTracks();
 
             if (ScrollOwner != null)
             {
@@ -350,11 +294,38 @@ namespace DevZest.Data.Windows
             bool sizeToContentX = double.IsPositiveInfinity(_availableSize.Width);
             bool sizeToContentY = double.IsPositiveInfinity(_availableSize.Height);
 
-            bool gridColumnsReset = Template.GridColumns.Classify(sizeToContentX, ref _autoWidthColumns, ref _starWidthColumns);
+            bool gridColumnsReset = InitGridColumns(sizeToContentX);
+            bool gridRowsReset = InitGridRows(sizeToContentY);
+            _autoSizeItems = AutoSizeItem.Generate(this, sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
+        }
+
+        private bool InitGridColumns(bool sizeToContent)
+        {
+            var result = Template.GridColumns.Classify(sizeToContent, ref _autoWidthColumns, ref _starWidthColumns);
             InitMeasuredLength(_availableSize.Width, _autoWidthColumns, _starWidthColumns);
-            bool gridRowsReset = Template.GridRows.Classify(sizeToContentY, ref _autoHeightRows, ref _starHeightRows);
+            return result;
+        }
+
+        private bool InitGridRows(bool sizeToContent)
+        {
+            var result = Template.GridRows.Classify(sizeToContent, ref _autoHeightRows, ref _starHeightRows);
             InitMeasuredLength(_availableSize.Height, _autoHeightRows, _starHeightRows);
-            GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
+            return result;
+        }
+
+        private void CalcStarSizeTracks()
+        {
+            if (_starWidthColumns.Length > 0)
+            {
+                var usedSpace = Template.GridColumns.AbsoluteLengthTotal + _autoWidthColumns.Sum(x => x.MeasuredLength);
+                CalcStarMeasuredLength(_availableSize.Width - usedSpace, _starWidthColumns);
+            }
+
+            if (_starHeightRows.Length > 0)
+            {
+                var usedSpace = Template.GridRows.AbsoluteLengthTotal + _autoHeightRows.Sum(x => x.MeasuredLength);
+                CalcStarMeasuredLength(_availableSize.Height - usedSpace, _starHeightRows);
+            }
         }
 
         /// <summary>Derived class must override this method to:
