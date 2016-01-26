@@ -297,13 +297,13 @@ namespace DevZest.Data.Windows
             var scalarItems = template.ScalarItems;
             var listItems = template.ListItems;
             for (int i = 0; i < template.ScalarItemsCountBeforeList; i++)
-                AddAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
+                GenerateAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
 
             for (int i = 0; i < listItems.Count; i++)
-                AddAutoSizeItem(listItems[i], sizeToContentX, sizeToContentY);
+                GenerateAutoSizeItem(listItems[i], sizeToContentX, sizeToContentY);
 
             for (int i = template.ScalarItemsCountBeforeList; i < scalarItems.Count; i++)
-                AddAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
+                GenerateAutoSizeItem(scalarItems[i], sizeToContentX, sizeToContentY);
 
             _autoSizeItems.Sort((x, y) => Compare(x, y));
         }
@@ -320,9 +320,9 @@ namespace DevZest.Data.Windows
                 return 0;
         }
 
-        private void AddAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
+        private void GenerateAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
         {
-            var autoSizeItem = GetAutoSizeItem(templateItem, sizeToContentX, sizeToContentY);
+            var autoSizeItem = TryGenerateAutoSizeItem(templateItem, sizeToContentX, sizeToContentY);
             if (autoSizeItem == null)
                 return;
 
@@ -331,7 +331,7 @@ namespace DevZest.Data.Windows
             _autoSizeItems.Add(autoSizeItem);
         }
 
-        private static AutoSizeItem GetAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
+        private static AutoSizeItem TryGenerateAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
         {
             if (templateItem.AutoSizeMeasureOrder < 0)
                 return null;
