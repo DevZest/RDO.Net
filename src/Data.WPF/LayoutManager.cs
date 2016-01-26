@@ -277,6 +277,7 @@ namespace DevZest.Data.Windows
             InitGridTracks();
             InitMeasure();
             CalcStarSizeTracks();
+            MeasureElements();
 
             if (ScrollOwner != null)
             {
@@ -334,13 +335,22 @@ namespace DevZest.Data.Windows
         /// </summary>
         protected abstract void InitMeasure();
 
-        protected abstract int RepeatXCount { get; }
+        private void MeasureElements()
+        {
+            foreach (var element in Elements)
+            {
+                var rowForm = element as RowForm;
+                if (rowForm != null)
+                {
+                    //rowForm.Measure();
+                }
+                else
+                {
+                    var templateItem = element.GetTemplateItem();
 
-        protected abstract int RepeatYCount { get; }
-
-        protected abstract double GetGridWidth(GridColumn gridColumn, int repeatXIndex);
-
-        protected abstract double GetGridHeight(GridRow gridRow, int repeatYIndex);
+                }
+            }
+        }
 
         private Size CalcViewportSize()
         {

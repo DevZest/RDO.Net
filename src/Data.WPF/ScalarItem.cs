@@ -17,11 +17,11 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public FlowMode FlowMode { get; private set; }
+        public RepeatMode RepeatMode { get; private set; }
 
-        private void InitFlowMode(FlowMode value)
+        private void InitRepeatMode(RepeatMode value)
         {
-            FlowMode = value;
+            RepeatMode = value;
         }
 
         public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
@@ -42,9 +42,9 @@ namespace DevZest.Data.Windows
                 return rangeConfig.End(item);
             }
 
-            public Builder<T> FlowMode(FlowMode value)
+            public Builder<T> RepeatMode(RepeatMode value)
             {
-                Item.InitFlowMode(value);
+                Item.InitRepeatMode(value);
                 return this;
             }
         }

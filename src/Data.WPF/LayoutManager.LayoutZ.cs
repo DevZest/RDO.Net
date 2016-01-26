@@ -37,28 +37,6 @@ namespace DevZest.Data.Windows
                 Invalidate();
             }
 
-            protected override int RepeatXCount
-            {
-                get { return 1; }
-            }
-
-            protected override int RepeatYCount
-            {
-                get { return 1; }
-            }
-
-            protected override double GetGridWidth(GridColumn gridColumn, int repeatXIndex)
-            {
-                Debug.Assert(repeatXIndex == 0);
-                return gridColumn.MeasuredWidth;
-            }
-
-            protected override double GetGridHeight(GridRow gridRow, int repeatYIndex)
-            {
-                Debug.Assert(repeatYIndex == 0);
-                return gridRow.MeasuredHeight;
-            }
-
             protected override void InitMeasure()
             {
                 CurrentRow = _view.CurrentRow;
