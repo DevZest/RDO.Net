@@ -239,6 +239,7 @@ namespace DevZest.Data.Windows
                 invalidated(this, EventArgs.Empty);
         }
 
+        private Size _availableSize;
         private GridColumn[] _autoWidthColumns;
         private GridRow[] _autoHeightRows;
         private GridColumn[] _starWidthColumns;
@@ -328,16 +329,10 @@ namespace DevZest.Data.Windows
 
         public Size Measure(Size availableSize)
         {
-            bool sizeToContentX = double.IsPositiveInfinity(availableSize.Width);
-            bool sizeToContentY = double.IsPositiveInfinity(availableSize.Height);
+            _availableSize = availableSize;
+            InitGridTracks();
 
-            bool gridColumnsReset = Template.GridColumns.Classify(sizeToContentX, ref _autoWidthColumns, ref _starWidthColumns);
-            InitMeasuredLength(availableSize.Width, _autoWidthColumns, _starWidthColumns);
-            bool gridRowsReset = Template.GridRows.Classify(sizeToContentY, ref _autoHeightRows, ref _starHeightRows);
-            InitMeasuredLength(availableSize.Height, _autoHeightRows, _starHeightRows);
-            GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
-
-            MeasureAutoSizeItems();
+            InitMeasure();
 
             if (ScrollOwner != null)
             {
@@ -350,7 +345,23 @@ namespace DevZest.Data.Windows
             return CalcDesiredSize();
         }
 
-        protected abstract void MeasureAutoSizeItems();
+        private void InitGridTracks()
+        {
+            bool sizeToContentX = double.IsPositiveInfinity(_availableSize.Width);
+            bool sizeToContentY = double.IsPositiveInfinity(_availableSize.Height);
+
+            bool gridColumnsReset = Template.GridColumns.Classify(sizeToContentX, ref _autoWidthColumns, ref _starWidthColumns);
+            InitMeasuredLength(_availableSize.Width, _autoWidthColumns, _starWidthColumns);
+            bool gridRowsReset = Template.GridRows.Classify(sizeToContentY, ref _autoHeightRows, ref _starHeightRows);
+            InitMeasuredLength(_availableSize.Height, _autoHeightRows, _starHeightRows);
+            GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
+        }
+
+        /// <summary>Derived class must override this method to:
+        /// 1. Realize row(s);
+        /// 2. Update auto-sized MeasuredLength.
+        /// </summary>
+        protected abstract void InitMeasure();
 
         protected abstract int RepeatXCount { get; }
 

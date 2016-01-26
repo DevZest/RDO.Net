@@ -59,7 +59,7 @@ namespace DevZest.Data.Windows
                 return gridRow.MeasuredHeight;
             }
 
-            protected override void MeasureAutoSizeItems()
+            protected override void InitMeasure()
             {
                 CurrentRow = _view.CurrentRow;
                 foreach (var autoSizeItem in _autoSizeItems)
