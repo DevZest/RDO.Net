@@ -59,9 +59,16 @@ namespace DevZest.Data.Windows
                 return gridRow.MeasuredHeight;
             }
 
-            protected override void MeasureOverride(Size availableSize)
+            protected override void MeasureAutoSizeItems()
             {
                 CurrentRow = _view.CurrentRow;
+                foreach (var autoSizeItem in _autoSizeItems)
+                {
+                    if (autoSizeItem.IsScalar)
+                        autoSizeItem.Measure(null);
+                    else if (autoSizeItem.IsList && CurrentRow != null)
+                        autoSizeItem.Measure(CurrentRow);
+                }
             }
         }
     }

@@ -446,7 +446,8 @@ namespace DevZest.Data.Windows
             InitMeasuredLength(availableSize.Height, _autoHeightRows, _starHeightRows);
             GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
 
-            MeasureOverride(availableSize);
+            MeasureAutoSizeItems();
+
             if (ScrollOwner != null)
             {
                 ViewportSize = CalcViewportSize();
@@ -458,7 +459,7 @@ namespace DevZest.Data.Windows
             return CalcDesiredSize();
         }
 
-        protected abstract void MeasureOverride(Size availableSize);
+        protected abstract void MeasureAutoSizeItems();
 
         protected abstract int RepeatXCount { get; }
 
