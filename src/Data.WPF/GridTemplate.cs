@@ -6,23 +6,8 @@ using System.Linq;
 
 namespace DevZest.Data.Windows
 {
-    // https://www.w3.org/TR/css-grid-1/
     public sealed partial class GridTemplate
     {
-        private class GridTrackCollection<T> : ReadOnlyCollection<T>
-            where T : GridTrack
-        {
-            internal GridTrackCollection()
-                : base(new List<T>())
-            {
-            }
-
-            internal void Add(T item)
-            {
-                Items.Add(item);
-            }
-        }
-
         private sealed class TemplateItemCollection<T> : ReadOnlyCollection<T>
             where T : TemplateItem
         {
@@ -44,9 +29,11 @@ namespace DevZest.Data.Windows
         internal GridTemplate(DataView owner)
         {
             Owner = owner;
+            GridColumns = new GridTrackCollection<GridColumn>();
+            GridRows = new GridTrackCollection<GridRow>();
         }
 
-        public DataView Owner { get; private set; }
+    public DataView Owner { get; private set; }
 
         public Model Model
         {
@@ -65,17 +52,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private GridTrackCollection<GridColumn> _gridColumns = new GridTrackCollection<GridColumn>();
-        public ReadOnlyCollection<GridColumn> GridColumns
-        {
-            get { return _gridColumns; }
-        }
+        public GridTrackCollection<GridColumn> GridColumns { get; private set; }
 
-        private GridTrackCollection<GridRow> _gridRows = new GridTrackCollection<GridRow>();
-        public ReadOnlyCollection<GridRow> GridRows
-        {
-            get { return _gridRows; }
-        }
+        public GridTrackCollection<GridRow> GridRows { get; private set; }
 
         private TemplateItemCollection<ScalarItem> _scalarItems = new TemplateItemCollection<ScalarItem>();
         public ReadOnlyCollection<ScalarItem> ScalarItems
@@ -115,14 +94,9 @@ namespace DevZest.Data.Windows
 
         internal int AddGridColumn(string width)
         {
-            var gridWidth = GridLengthParser.Parse(width);
-            _gridColumns.Add(new GridColumn(this, GridColumns.Count, gridWidth));
+            GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
             VerifyGridColumnWidth(ListOrientation, result, result, nameof(width));
-            if (gridWidth.IsStar)
-                StarSizeColumnsCount++;
-            else if (gridWidth.IsAuto)
-                AutoSizeColumnsCount++;
             return result;
         }
 
@@ -136,14 +110,9 @@ namespace DevZest.Data.Windows
 
         internal int AddGridRow(string height)
         {
-            var gridHeight = GridLengthParser.Parse(height);
-            _gridRows.Add(new GridRow(this, GridRows.Count, gridHeight));
+            GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
             VerifyGridRowHeight(ListOrientation, result, result, nameof(height));
-            if (gridHeight.IsStar)
-                StarSizeRowsCount++;
-            else if (gridHeight.IsAuto)
-                AutoSizeRowsCount++;
             return result;
         }
 
@@ -203,13 +172,35 @@ namespace DevZest.Data.Windows
 
         internal int ScalarItemsCountBeforeList { get; private set; }
 
-        internal int StarSizeColumnsCount { get; private set; }
+        //internal int StarWidthColumnsCount
+        //{
+        //    get { return GridColumns.StarLengthCount; }
+        //}
 
-        internal int StarSizeRowsCount { get; private set; }
+        //internal int StarHeightRowsCount
+        //{
+        //    get { return GridRows.StarLengthCount; }
+        //}
 
-        internal int AutoSizeColumnsCount { get; private set; }
+        //internal int AutoWidthColumnsCount
+        //{
+        //    get { return GridColumns.AutoLengthCount; }
+        //}
 
-        internal int AutoSizeRowsCount { get; private set; }
+        //internal int AutoHeightRowsCount
+        //{
+        //    get { return GridRows.AutoLengthCount; }
+        //}
+
+        //internal double AbsoluteWidthTotal
+        //{
+        //    get { return GridColumns.AbsoluteLengthTotal; }
+        //}
+
+        //internal double AbsouteHeightTotal
+        //{
+        //    get { return GridRows.AbsoluteLengthTotal; }
+        //}
 
         internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
         {

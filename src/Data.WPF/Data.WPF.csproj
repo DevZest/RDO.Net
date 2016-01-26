@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="GridRowSet.cs" />
     <Compile Include="GridColumnSet.cs" />
+    <Compile Include="GridTrackCollection.cs" />
     <Compile Include="GridTrackSet.cs" />
     <Compile Include="IGridColumnSet.cs" />
     <Compile Include="IGridRowSet.cs" />
