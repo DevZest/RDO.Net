@@ -113,6 +113,7 @@ namespace DevZest.Data.Windows
                     var rowForm = this[i].Form;
                     rowForm.Cleanup();
                     row.Form = null;
+                    RecycleRowForm(rowForm);
                 }
 
                 int startChildrenIndex = startIndex + Template.ScalarItemsCountBeforeList;
