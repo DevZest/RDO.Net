@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -43,10 +44,40 @@ namespace DevZest.Data.Windows
                 foreach (var autoSizeItem in _autoSizeItems)
                 {
                     if (autoSizeItem.IsScalar)
-                        autoSizeItem.Measure(null);
+                        autoSizeItem.MeasureListElement(null);
                     else if (autoSizeItem.IsList && CurrentRow != null)
-                        autoSizeItem.Measure(CurrentRow);
+                        autoSizeItem.MeasureListElement(CurrentRow);
                 }
+            }
+
+            public override Orientation RepeatOrientation
+            {
+                get { return Orientation.Vertical; }
+            }
+
+            public override RowView RepeatStartRow
+            {
+                get { return CurrentRow; }
+            }
+
+            public override int RepeatX
+            {
+                get { return 1; }
+            }
+
+            public override int RepeatY
+            {
+                get { return 1; }
+            }
+
+            protected override double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex)
+            {
+                return gridTrack.MeasuredLength;
+            }
+
+            protected override void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value)
+            {
+                gridTrack.MeasuredLength = value;
             }
         }
     }

@@ -51,10 +51,10 @@
     <Compile Include="IGridColumnSet.cs" />
     <Compile Include="IGridRowSet.cs" />
     <Compile Include="IGridTrackSet.cs" />
-    <Compile Include="LayoutManager.AutoSizeEntry.cs" />
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LayoutManager.AutoSizeItem.cs" />
+    <Compile Include="LayoutManager.RepeatDimension.cs" />
     <Compile Include="LayoutManager.RepeatLayout.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
@@ -66,6 +66,7 @@
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataFormFactory.cs" />
+    <Compile Include="ScalarElementsContainer.cs" />
     <Compile Include="TemplateItem.Builder.cs" />
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />

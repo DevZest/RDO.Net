@@ -9,7 +9,32 @@ namespace DevZest.Data.Windows
     {
         private sealed class AutoSizeItem
         {
-            public AutoSizeItem(TemplateItem templateItem, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
+            private struct AutoSizeInfo
+            {
+                public static AutoSizeInfo Empty
+                {
+                    get { return new AutoSizeInfo(GridColumnSet.Empty, GridRowSet.Empty); }
+                }
+
+                public AutoSizeInfo(IGridColumnSet gridColumns, IGridRowSet gridRows)
+                {
+                    Debug.Assert(gridColumns != null);
+                    Debug.Assert(gridRows != null);
+                    GridColumns = gridColumns;
+                    GridRows = gridRows;
+                }
+
+                public readonly IGridColumnSet GridColumns;
+
+                public readonly IGridRowSet GridRows;
+
+                public bool IsEmpty
+                {
+                    get { return GridColumns.Count == 0 && GridRows.Count == 0; }
+                }
+            }
+
+            private AutoSizeItem(TemplateItem templateItem, IGridColumnSet autoSizeGridColumns, IGridRowSet autoSizeGridRows)
             {
                 Debug.Assert(templateItem != null);
                 Debug.Assert(autoSizeGridColumns.Count > 0 || autoSizeGridRows.Count > 0);
@@ -138,62 +163,71 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            private UIElement GetListElement(RowView row)
+            public void MeasureScalarElement(int repeatIndex)
             {
-                Debug.Assert(IsList && row.Form != null);
+                Debug.Assert(IsScalar);
 
-                return row.Form.Elements[TemplateItem.Ordinal];
+                var uiElement = ScalarElement;
+                var scalarElementsContainer = uiElement as ScalarElementsContainer;
+                if (scalarElementsContainer != null)
+                    uiElement = scalarElementsContainer[LayoutManager.RepeatOrientation, repeatIndex];
+                Measure(uiElement, repeatIndex, repeatIndex); // when repeatIndex > 0, either AutoSizeGridColumns or AutoSizeGridRows is empty.
             }
 
-            public void Measure(RowView row)
+            public void MeasureListElement(RowView row)
             {
-                var uiElement = IsScalar ? ScalarElement : GetListElement(row);
+                Debug.Assert(IsList);
+                var uiElement = row.Form.Elements[TemplateItem.Ordinal];
+                var repeatDimension = LayoutManager.GetRepeatDimension(row);
+                Measure(uiElement, repeatDimension.X, repeatDimension.Y);
+            }
+
+            private void Measure(UIElement uiElement, int repeatIndexX, int repeatIndexY)
+            {
                 uiElement.Measure(ConstraintSize);
                 var desiredSize = uiElement.DesiredSize;
-                UpdateMeasuredAutoSize(AutoSizeGridColumns, desiredSize.Width - _totalAbsoluteWidth);
-                UpdateMeasuredAutoSize(AutoSizeGridRows, desiredSize.Height - _totalAbsoluteHeight);
+                UpdateMeasuredLength(repeatIndexX, AutoSizeGridColumns, desiredSize.Width - _totalAbsoluteWidth);
+                UpdateMeasuredLength(repeatIndexY, AutoSizeGridRows, desiredSize.Height - _totalAbsoluteHeight);
             }
 
-            private void UpdateMeasuredAutoSize(IGridTrackSet autoSizeTracks, double length)
+            private void UpdateMeasuredLength(int repeatIndex, IGridTrackSet autoSizeTracks, double length)
             {
                 if (autoSizeTracks.Count == 0 || length <= 0)
                     return;
 
                 for (int i = 0; i < autoSizeTracks.Count; i++)
                 {
-                    length -= autoSizeTracks[i].MeasuredLength;
-                    if (length <= 0)
-                        return;
+                    var track = autoSizeTracks[i];
+                    var measuredLength = LayoutManager.GetMeasuredLength(track, repeatIndex);
+                    if (i < autoSizeTracks.Count - 1)   // not the last track
+                    {
+                        length -= measuredLength;
+                        if (length <= 0)
+                            return;
+                    }
+                    else if (length > measuredLength)
+                        LayoutManager.SetMeasureLength(track, repeatIndex, length);
                 }
-
-                // increase MeasuredLength of last auto size track
-                autoSizeTracks[autoSizeTracks.Count - 1].MeasuredLength += length;
             }
 
-            public static IList<AutoSizeItem> Generate(LayoutManager layoutManager, bool sizeToContentX, bool sizeToContentY, bool reset)
+            public static IList<AutoSizeItem> GenerateList(GridTemplate template, bool sizeToContentX, bool sizeToContentY, bool reset)
             {
-                var autoSizeItems = layoutManager._autoSizeItems;
+                IList<AutoSizeItem> result = EmptyArray<AutoSizeItem>.Singleton;
 
-                if (autoSizeItems != null && !reset)
-                    return autoSizeItems;
-
-                autoSizeItems = EmptyArray<AutoSizeItem>.Singleton;
-
-                var template = layoutManager.Template;
                 var scalarItems = template.ScalarItems;
                 var listItems = template.ListItems;
                 for (int i = 0; i < template.ScalarItemsCountBeforeList; i++)
-                    autoSizeItems = GenerateAutoSizeItem(autoSizeItems, scalarItems[i], sizeToContentX, sizeToContentY);
+                    result = GenerateList(result, scalarItems[i], sizeToContentX, sizeToContentY);
 
                 for (int i = 0; i < listItems.Count; i++)
-                    autoSizeItems = GenerateAutoSizeItem(autoSizeItems, listItems[i], sizeToContentX, sizeToContentY);
+                    result = GenerateList(result, listItems[i], sizeToContentX, sizeToContentY);
 
                 for (int i = template.ScalarItemsCountBeforeList; i < scalarItems.Count; i++)
-                    autoSizeItems = GenerateAutoSizeItem(autoSizeItems, scalarItems[i], sizeToContentX, sizeToContentY);
+                    result = GenerateList(result, scalarItems[i], sizeToContentX, sizeToContentY);
 
-                autoSizeItems.Sort((x, y) => Compare(x, y));
+                result.Sort((x, y) => Compare(x, y));
 
-                return autoSizeItems;
+                return result;
             }
 
             private static int Compare(AutoSizeItem x, AutoSizeItem y)
@@ -208,9 +242,9 @@ namespace DevZest.Data.Windows
                     return 0;
             }
 
-            private static IList<AutoSizeItem> GenerateAutoSizeItem(IList<AutoSizeItem> autoSizeItems, TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
+            private static IList<AutoSizeItem> GenerateList(IList<AutoSizeItem> autoSizeItems, TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
             {
-                var autoSizeItem = TryGenerateAutoSizeItem(templateItem, sizeToContentX, sizeToContentY);
+                var autoSizeItem = Generate(templateItem, sizeToContentX, sizeToContentY);
                 if (autoSizeItem == null)
                     return autoSizeItems;
 
@@ -221,16 +255,16 @@ namespace DevZest.Data.Windows
                 return autoSizeItems;
             }
 
-            private static AutoSizeItem TryGenerateAutoSizeItem(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
+            private static AutoSizeItem Generate(TemplateItem templateItem, bool sizeToContentX, bool sizeToContentY)
             {
                 if (templateItem.AutoSizeMeasureOrder < 0)
                     return null;
 
-                var entry = GetAutoSizeEntry(templateItem.GridRange, sizeToContentX, sizeToContentY);
-                return entry.IsEmpty ? null : new AutoSizeItem(templateItem, entry.Columns, entry.Rows);
+                var info = GetAutoSizeInfo(templateItem.GridRange, sizeToContentX, sizeToContentY);
+                return info.IsEmpty ? null : new AutoSizeItem(templateItem, info.GridColumns, info.GridRows);
             }
 
-            private static AutoSizeEntry GetAutoSizeEntry(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
+            private static AutoSizeInfo GetAutoSizeInfo(GridRange gridRange, bool sizeToContentX, bool sizeToContentY)
             {
                 //  There is an issue with items contains both auto and star tracks.
                 //  Intuitively, we expect that those items receive enough space to layout and that this space is perfectly divided into the auto / star tracks.
@@ -269,7 +303,7 @@ namespace DevZest.Data.Windows
                     }
                 }
 
-                return new AutoSizeEntry(columnSet, rowSet);
+                return new AutoSizeInfo(columnSet, rowSet);
             }
 
             private static bool ContainsStarWidth(GridRange gridRange, bool sizeToContentX)

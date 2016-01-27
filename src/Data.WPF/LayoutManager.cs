@@ -297,7 +297,7 @@ namespace DevZest.Data.Windows
 
             bool gridColumnsReset = InitGridColumns(sizeToContentX);
             bool gridRowsReset = InitGridRows(sizeToContentY);
-            _autoSizeItems = AutoSizeItem.Generate(this, sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
+            GenerateAutoSizeItems(sizeToContentX, sizeToContentY, gridColumnsReset || gridRowsReset);
         }
 
         private bool InitGridColumns(bool sizeToContent)
@@ -312,6 +312,13 @@ namespace DevZest.Data.Windows
             var result = Template.GridRows.Classify(sizeToContent, ref _autoHeightRows, ref _starHeightRows);
             InitMeasuredLength(_availableSize.Height, _autoHeightRows, _starHeightRows);
             return result;
+        }
+
+        private void GenerateAutoSizeItems(bool sizeToContentX, bool sizeToContentY, bool reset)
+        {
+            if (_autoSizeItems != null && !reset)
+                return;
+            _autoSizeItems = AutoSizeItem.GenerateList(Template, sizeToContentX, sizeToContentY, reset);
         }
 
         private void CalcStarSizeTracks()
@@ -334,6 +341,55 @@ namespace DevZest.Data.Windows
         /// 2. Update auto-sized MeasuredLength.
         /// </summary>
         protected abstract void InitMeasure();
+
+        public abstract Orientation RepeatOrientation { get; }
+
+        public abstract int RepeatX { get; }
+
+        public abstract int RepeatY { get; }
+
+        public abstract RowView RepeatStartRow { get; }
+
+        private void OnRepeatDimensionChanged()
+        {
+        }
+
+        private bool IsVariantAuto(GridTrack gridTrack)
+        {
+            return gridTrack.Length.IsAuto && gridTrack.Orientation == RepeatOrientation;
+        }
+
+        private double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
+        {
+            Debug.Assert(repeatIndex >= 0 && repeatIndex < (gridTrack.Orientation == Orientation.Horizontal ? RepeatX : RepeatY));
+            return IsVariantAuto(gridTrack) ? GetVariantAutoLength(gridTrack, repeatIndex) : gridTrack.MeasuredLength;
+        }
+
+        private void SetMeasureLength(GridTrack gridTrack, int repeatIndex, double value)
+        {
+            if (IsVariantAuto(gridTrack))
+                SetVariantAutoLength(gridTrack, repeatIndex, value);
+            else
+                gridTrack.MeasuredLength = value;
+        }
+
+        protected abstract double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex);
+
+        protected abstract void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value);
+
+        private RepeatDimension GetRepeatDimension(RowView row)
+        {
+            Debug.Assert(row.Index >= RepeatStartRow.Index);
+
+            var flowCount = RepeatOrientation == Orientation.Vertical ? RepeatX : RepeatY;
+            var growCount = RepeatOrientation == Orientation.Horizontal ? RepeatY : RepeatX;
+
+            var flowIndex = (row.Index - RepeatStartRow.Index) % flowCount;
+            var growIndex = (row.Index - RepeatStartRow.Index + flowCount) / flowCount;
+            Debug.Assert(growIndex < growCount);
+
+            return RepeatOrientation == Orientation.Vertical ? new RepeatDimension(flowIndex, growIndex) : new RepeatDimension(growIndex, flowIndex);
+        }
 
         private void MeasureElements()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -39,6 +40,11 @@ namespace DevZest.Data.Windows
                 Debug.Assert(index == 0);
                 return this;
             }
+        }
+
+        public override Orientation Orientation
+        {
+            get { return Orientation.Horizontal; }
         }
     }
 }

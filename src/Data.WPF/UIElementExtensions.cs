@@ -64,6 +64,38 @@ namespace DevZest.Data.Windows
             }
         }
 
+        private static readonly DependencyProperty RepeatXIndexProperty = DependencyProperty.RegisterAttached("RepeatXIndex",
+            typeof(int), typeof(UIElementExtensions), new PropertyMetadata(-1));
+
+        public static int GetHorizontalIndex(this UIElement element)
+        {
+            return (int)element.GetValue(RepeatXIndexProperty);
+        }
+
+        internal static void SetRepeatXIndex(this UIElement element, int value)
+        {
+            if (value < 0)
+                element.ClearValue(RepeatXIndexProperty);
+            else
+                element.SetValue(RepeatXIndexProperty, value);
+        }
+
+        private static readonly DependencyProperty RepeatYIndexProperty = DependencyProperty.RegisterAttached("RepeatYIndex",
+            typeof(int), typeof(UIElementExtensions), new PropertyMetadata(-1));
+
+        public static int GetVerticalIndex(this UIElement element)
+        {
+            return (int)element.GetValue(RepeatYIndexProperty);
+        }
+
+        internal static void SetRepeatYIndex(this UIElement element, int value)
+        {
+            if (value < 0)
+                element.ClearValue(RepeatYIndexProperty);
+            else
+                element.SetValue(RepeatYIndexProperty, value);
+        }
+
         public static T GetSourceValue<T>(this UIElement element, Column<T> column)
         {
             var row = element.ExpectRow();

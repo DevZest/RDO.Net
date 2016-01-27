@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -40,5 +41,7 @@ namespace DevZest.Data.Windows
                 return this;
             }
         }
+
+        public abstract Orientation Orientation { get; }
     }
 }
