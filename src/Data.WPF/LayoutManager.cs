@@ -393,9 +393,26 @@ namespace DevZest.Data.Windows
             }
         }
 
+        private double GetLength(GridTrack start, GridTrack end, int repeatIndex)
+        {
+            Debug.Assert(start != null && end != null);
+            Debug.Assert(start.Owner == end.Owner && start.Orientation == end.Orientation);
+            Debug.Assert(start.Ordinal <= end.Ordinal);
+
+            double result = 0;
+            var gridTracks = start.GridTracks;
+            for (int i = start.Ordinal; i <= end.Ordinal; i++)
+                result += GetMeasuredLength(gridTracks[i], repeatIndex);
+            return result;
+        }
+
         private Size GetSize(RowView row)
         {
-            throw new NotImplementedException();
+            var repeatPosition = GetRepeatPosition(row);
+            var range = Template.RepeatRange;
+            var width = GetLength(range.Left, range.Right, repeatPosition.X);
+            var height = GetLength(range.Top, range.Bottom, repeatPosition.Y);
+            return new Size(width, height);
         }
 
         private Point GetPoint(RowView row)

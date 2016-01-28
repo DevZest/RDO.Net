@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,5 +45,16 @@ namespace DevZest.Data.Windows
         }
 
         public abstract Orientation Orientation { get; }
+
+        internal IReadOnlyList<GridTrack> GridTracks
+        {
+            get
+            {
+                if (Orientation == Orientation.Horizontal)
+                    return Owner.GridColumns;
+                else
+                    return Owner.GridRows;
+            }
+        }
     }
 }
