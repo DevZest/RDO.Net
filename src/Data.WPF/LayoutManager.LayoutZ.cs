@@ -50,26 +50,6 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public override Orientation GrowOrientation
-            {
-                get { return Orientation.Vertical; }
-            }
-
-            public override RowView RepeatStartRow
-            {
-                get { return CurrentRow; }
-            }
-
-            public override int RepeatX
-            {
-                get { return 1; }
-            }
-
-            public override int RepeatY
-            {
-                get { return 1; }
-            }
-
             protected override double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex)
             {
                 return gridTrack.MeasuredLength;

@@ -71,10 +71,6 @@
     <Compile Include="GridRangeConfig.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
-    <Compile Include="LayoutManager.LayoutXY.cs" />
-    <Compile Include="LayoutManager.LayoutYX.cs" />
-    <Compile Include="LayoutManager.LayoutY.cs" />
-    <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
     <Compile Include="RepeatItem.cs" />
     <Compile Include="ScalarItemRepeatMode.cs" />

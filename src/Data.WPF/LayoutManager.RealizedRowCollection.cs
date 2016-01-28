@@ -124,6 +124,16 @@ namespace DevZest.Data.Windows
             {
                 RemoveRange(0, Count);
             }
+
+            public RowView First
+            {
+                get { return Count > 0 ? this[0] : null; }
+            }
+
+            public RowView Last
+            {
+                get { return Count > 0 ? this[Count - 1] : null; }
+            }
         }
     }
 }

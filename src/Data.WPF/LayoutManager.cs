@@ -13,22 +13,7 @@ namespace DevZest.Data.Windows
     {
         internal static LayoutManager Create(DataView view)
         {
-            return new LayoutZ(view);
-
-            //var orientation = view.Template.ListOrientation;
-            //if (orientation == ListOrientation.Z)
-            //    return new LayoutZ(view);
-            //else if (orientation == ListOrientation.Y)
-            //    return new LayoutY(view);
-            //else if (orientation == ListOrientation.XY)
-            //    return new LayoutXY(view);
-            //else if (orientation == ListOrientation.X)
-            //    return new LayoutX(view);
-            //else
-            //{
-            //    Debug.Assert(orientation == ListOrientation.YX);
-            //    return new LayoutYX(view);
-            //}
+            return view.Template.RepeatOrientation == RepeatOrientation.Z ? new LayoutZ(view) : RepeatLayout.Create(view);
         }
 
         protected LayoutManager(DataView view)
@@ -337,16 +322,34 @@ namespace DevZest.Data.Windows
         /// </summary>
         protected abstract void InitMeasure();
 
-        public abstract Orientation GrowOrientation { get; }
-
-        public abstract int RepeatX { get; }
-
-        public abstract int RepeatY { get; }
-
-        public abstract RowView RepeatStartRow { get; }
-
-        private void OnRepeatDimensionChanged()
+        public virtual Orientation GrowOrientation
         {
+            get { return Orientation.Vertical; }
+        }
+
+        public virtual int GetFlowCount()
+        {
+            return 1;
+        }
+
+        private int FlowCount
+        {
+            get { return _view.FlowCount; }
+        }
+
+        private int GrowCount
+        {
+            get { return (_realizedRows.Count + FlowCount) / FlowCount; }
+        }
+
+        public int RepeatX
+        {
+            get { return GrowOrientation == Orientation.Vertical ? FlowCount : GrowCount; }
+        }
+
+        public int RepeatY
+        {
+            get { return GrowOrientation == Orientation.Horizontal ? FlowCount : GrowCount; }
         }
 
         private bool IsVariantAuto(GridTrack gridTrack)
@@ -374,14 +377,15 @@ namespace DevZest.Data.Windows
 
         private RepeatDimension GetRepeatDimension(RowView row)
         {
-            Debug.Assert(row.Index >= RepeatStartRow.Index);
+            Debug.Assert(row != null);
+            Debug.Assert(_realizedRows.Count > 0);
 
-            var flowCount = GrowOrientation == Orientation.Vertical ? RepeatX : RepeatY;
-            var growCount = GrowOrientation == Orientation.Horizontal ? RepeatY : RepeatX;
+            var offset = row.Index - _realizedRows.First.Index;
+            Debug.Assert(offset >= 0 && offset < _realizedRows.Count);
 
-            var flowIndex = (row.Index - RepeatStartRow.Index) % flowCount;
-            var growIndex = (row.Index - RepeatStartRow.Index + flowCount) / flowCount;
-            Debug.Assert(growIndex < growCount);
+            var flowIndex = offset % FlowCount;
+            var growIndex = (offset + FlowCount) / FlowCount - 1;
+            Debug.Assert(growIndex < GrowCount);
 
             return GrowOrientation == Orientation.Vertical ? new RepeatDimension(flowIndex, growIndex) : new RepeatDimension(growIndex, flowIndex);
         }
