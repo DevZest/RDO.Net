@@ -376,7 +376,7 @@ namespace DevZest.Data.Windows
 
         protected abstract void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value);
 
-        private RepeatDimension GetRepeatDimension(RowView row)
+        private RepeatPosition GetRepeatPosition(RowView row)
         {
             Debug.Assert(row != null);
             Debug.Assert(_realizedRows.Count > 0);
@@ -388,7 +388,7 @@ namespace DevZest.Data.Windows
             var growIndex = (offset + FlowCount) / FlowCount - 1;
             Debug.Assert(growIndex < GrowCount);
 
-            return GrowOrientation == Orientation.Vertical ? new RepeatDimension(flowIndex, growIndex) : new RepeatDimension(growIndex, flowIndex);
+            return GrowOrientation == Orientation.Vertical ? new RepeatPosition(flowIndex, growIndex) : new RepeatPosition(growIndex, flowIndex);
         }
 
         private void MeasureElements()

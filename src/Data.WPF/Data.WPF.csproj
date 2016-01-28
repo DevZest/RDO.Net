@@ -54,7 +54,7 @@
     <Compile Include="Binding.cs" />
     <Compile Include="DataViewBindingSource.cs" />
     <Compile Include="LayoutManager.AutoSizeItem.cs" />
-    <Compile Include="LayoutManager.RepeatDimension.cs" />
+    <Compile Include="LayoutManager.RepeatPosition.cs" />
     <Compile Include="LayoutManager.RepeatLayout.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />

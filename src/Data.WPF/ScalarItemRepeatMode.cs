@@ -5,7 +5,6 @@
         Static,
         Stretch,
         Horizontal,
-        Vertical,
-        Both
+        Vertical
     }
 }

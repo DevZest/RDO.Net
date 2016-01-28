@@ -2,9 +2,9 @@
 {
     partial class LayoutManager
     {
-        private struct RepeatDimension
+        private struct RepeatPosition
         {
-            public RepeatDimension(int x, int y)
+            public RepeatPosition(int x, int y)
             {
                 X = x;
                 Y = y;

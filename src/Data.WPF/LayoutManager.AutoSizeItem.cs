@@ -178,8 +178,8 @@ namespace DevZest.Data.Windows
             {
                 Debug.Assert(IsRepeat);
                 var uiElement = row.Form.Elements[TemplateItem.Ordinal];
-                var repeatDimension = LayoutManager.GetRepeatDimension(row);
-                Measure(uiElement, repeatDimension.X, repeatDimension.Y);
+                var repeatPosition = LayoutManager.GetRepeatPosition(row);
+                Measure(uiElement, repeatPosition.X, repeatPosition.Y);
             }
 
             private void Measure(UIElement uiElement, int repeatIndexX, int repeatIndexY)
