@@ -19,6 +19,11 @@ namespace DevZest.Data.Windows
 
         public ScalarItemRepeatMode RepeatMode { get; private set; }
 
+        public bool IsRepeat
+        {
+            get { return RepeatMode == ScalarItemRepeatMode.Flow || RepeatMode == ScalarItemRepeatMode.Grow; }
+        }
+
         private void InitRepeatMode(ScalarItemRepeatMode value)
         {
             RepeatMode = value;

@@ -2,9 +2,8 @@
 {
     public enum ScalarItemRepeatMode
     {
-        Static,
-        Stretch,
-        Horizontal,
-        Vertical
+        None,
+        Flow,
+        Grow
     }
 }

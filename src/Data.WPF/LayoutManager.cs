@@ -340,17 +340,7 @@ namespace DevZest.Data.Windows
 
         private int GrowCount
         {
-            get { return (_realizedRows.Count + FlowCount) / FlowCount; }
-        }
-
-        public int RepeatX
-        {
-            get { return GrowOrientation == Orientation.Vertical ? FlowCount : GrowCount; }
-        }
-
-        public int RepeatY
-        {
-            get { return GrowOrientation == Orientation.Horizontal ? FlowCount : GrowCount; }
+            get { return (_realizedRows.Count + FlowCount) / FlowCount - 1; }
         }
 
         private bool IsVariantAuto(GridTrack gridTrack)
@@ -360,7 +350,7 @@ namespace DevZest.Data.Windows
 
         private double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
         {
-            Debug.Assert(repeatIndex >= 0 && repeatIndex < (gridTrack.Orientation == Orientation.Horizontal ? RepeatX : RepeatY));
+            Debug.Assert(repeatIndex >= 0 && repeatIndex < (gridTrack.Orientation == GrowOrientation ? GrowCount : FlowCount));
             return IsVariantAuto(gridTrack) ? GetVariantAutoLength(gridTrack, repeatIndex) : gridTrack.MeasuredLength;
         }
 
@@ -385,7 +375,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(offset >= 0 && offset < _realizedRows.Count);
 
             var flowIndex = offset % FlowCount;
-            var growIndex = (offset + FlowCount) / FlowCount - 1;
+            var growIndex = offset / FlowCount;
             Debug.Assert(growIndex < GrowCount);
 
             return GrowOrientation == Orientation.Vertical ? new RepeatPosition(flowIndex, growIndex) : new RepeatPosition(growIndex, flowIndex);
@@ -397,15 +387,50 @@ namespace DevZest.Data.Windows
             {
                 var rowForm = element as RowForm;
                 if (rowForm != null)
-                {
-                    //rowForm.Measure();
-                }
+                    rowForm.Measure(GetSize(rowForm.View));
                 else
-                {
-                    var templateItem = element.GetTemplateItem();
-
-                }
+                    element.Measure(GetSize((ScalarItem)element.GetTemplateItem()));
             }
+        }
+
+        private Size GetSize(RowView row)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Point GetPoint(RowView row)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Rect GetRect(RowView row)
+        {
+            return new Rect(GetPoint(row), GetSize(row));
+        }
+
+        private Size GetSize(ScalarItem scalarItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Point GetPoint(ScalarItem scalarItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Rect GetRect(ScalarItem scalarItem)
+        {
+            return new Rect(GetPoint(scalarItem), GetSize(scalarItem));
+        }
+
+        public Size GetSize(RowView row, RepeatItem repeatItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Point GetPoint(RowView row, RepeatItem repeatItem)
+        {
+            throw new NotImplementedException();
         }
 
         private Size CalcViewportSize()
@@ -425,7 +450,16 @@ namespace DevZest.Data.Windows
 
         public Size Arrange(Size finalSize)
         {
-            return ViewportSize;
+            foreach (var element in Elements)
+            {
+                var rowForm = element as RowForm;
+                if (rowForm != null)
+                    rowForm.Arrange(GetRect(rowForm.View));
+                else
+                    element.Arrange(GetRect((ScalarItem)element.GetTemplateItem()));
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

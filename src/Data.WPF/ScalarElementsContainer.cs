@@ -9,8 +9,8 @@ namespace DevZest.Data.Windows
     {
         public ScalarElementsContainer(ScalarItem scalarItem)
         {
+            Debug.Assert(scalarItem.IsRepeat);
             _scalarItem = scalarItem;
-            Debug.Assert(RepeatMode == ScalarItemRepeatMode.Horizontal || RepeatMode == ScalarItemRepeatMode.Vertical);
             _scalarElements = new UIElementCollection(this, this);
         }
 
