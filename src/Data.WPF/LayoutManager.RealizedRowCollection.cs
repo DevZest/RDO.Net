@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
-                    var rowForm = (RowForm)Elements[index + Template.ScalarItemsCountBeforeList];
+                    var rowForm = (RowForm)Elements[index + Template.ScalarItemsCountBeforeRepeat];
                     return rowForm.View;
                 }
             }
@@ -92,11 +92,11 @@ namespace DevZest.Data.Windows
 
                 int index;
                 if (Count == 0 || row.Index == this[0].Index - 1)
-                    index = Template.ScalarItemsCountBeforeList;
+                    index = Template.ScalarItemsCountBeforeRepeat;
                 else
                 {
                     Debug.Assert(row.Index == this[Count - 1].Index + 1);
-                    index = Template.ScalarItemsCountBeforeList + Count;
+                    index = Template.ScalarItemsCountBeforeRepeat + Count;
                 }
 
                 var rowForm = GenerateRowForm();
@@ -116,7 +116,7 @@ namespace DevZest.Data.Windows
                     RecycleRowForm(rowForm);
                 }
 
-                int startChildrenIndex = startIndex + Template.ScalarItemsCountBeforeList;
+                int startChildrenIndex = startIndex + Template.ScalarItemsCountBeforeRepeat;
                 Children.RemoveRange(startChildrenIndex, count);
             }
 

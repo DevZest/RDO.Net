@@ -113,7 +113,7 @@ namespace DevZest.Data.Windows
                 get { return TemplateItem is ScalarItem; }
             }
 
-            public bool IsList
+            public bool IsRepeat
             {
                 get { return !IsScalar; }
             }
@@ -159,24 +159,24 @@ namespace DevZest.Data.Windows
                     Debug.Assert(IsScalar);
 
                     var ordinal = TemplateItem.Ordinal;
-                    return ordinal < Template.ScalarItemsCountBeforeList ? ordinal : LayoutManager.Elements.Count - (Template.ScalarItems.Count - ordinal);
+                    return ordinal < Template.ScalarItemsCountBeforeRepeat ? ordinal : LayoutManager.Elements.Count - (Template.ScalarItems.Count - ordinal);
                 }
             }
 
-            public void MeasureScalarElement(int repeatIndex)
+            public void MeasureScalar(int repeatIndex)
             {
                 Debug.Assert(IsScalar);
 
                 var uiElement = ScalarElement;
                 var scalarElementsContainer = uiElement as ScalarElementsContainer;
                 if (scalarElementsContainer != null)
-                    uiElement = scalarElementsContainer[LayoutManager.RepeatOrientation, repeatIndex];
+                    uiElement = scalarElementsContainer[LayoutManager.GrowOrientation, repeatIndex];
                 Measure(uiElement, repeatIndex, repeatIndex); // when repeatIndex > 0, either AutoSizeGridColumns or AutoSizeGridRows is empty.
             }
 
-            public void MeasureListElement(RowView row)
+            public void MeasureRepeat(RowView row)
             {
-                Debug.Assert(IsList);
+                Debug.Assert(IsRepeat);
                 var uiElement = row.Form.Elements[TemplateItem.Ordinal];
                 var repeatDimension = LayoutManager.GetRepeatDimension(row);
                 Measure(uiElement, repeatDimension.X, repeatDimension.Y);
@@ -215,14 +215,14 @@ namespace DevZest.Data.Windows
                 IList<AutoSizeItem> result = EmptyArray<AutoSizeItem>.Singleton;
 
                 var scalarItems = template.ScalarItems;
-                var listItems = template.ListItems;
-                for (int i = 0; i < template.ScalarItemsCountBeforeList; i++)
+                var repeatItems = template.RepeatItems;
+                for (int i = 0; i < template.ScalarItemsCountBeforeRepeat; i++)
                     result = GenerateList(result, scalarItems[i], sizeToContentX, sizeToContentY);
 
-                for (int i = 0; i < listItems.Count; i++)
-                    result = GenerateList(result, listItems[i], sizeToContentX, sizeToContentY);
+                for (int i = 0; i < repeatItems.Count; i++)
+                    result = GenerateList(result, repeatItems[i], sizeToContentX, sizeToContentY);
 
-                for (int i = template.ScalarItemsCountBeforeList; i < scalarItems.Count; i++)
+                for (int i = template.ScalarItemsCountBeforeRepeat; i < scalarItems.Count; i++)
                     result = GenerateList(result, scalarItems[i], sizeToContentX, sizeToContentY);
 
                 result.Sort((x, y) => Compare(x, y));

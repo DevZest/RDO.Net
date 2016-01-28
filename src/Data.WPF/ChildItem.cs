@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildItem : ListItem
+    public sealed class ChildItem : RepeatItem
     {
         public sealed new class Builder<T> : TemplateItem.Builder<T, ChildItem, Builder<T>>
             where T : DataForm, new()

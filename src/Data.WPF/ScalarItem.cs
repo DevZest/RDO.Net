@@ -17,9 +17,9 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public RepeatMode RepeatMode { get; private set; }
+        public ScalarItemRepeatMode RepeatMode { get; private set; }
 
-        private void InitRepeatMode(RepeatMode value)
+        private void InitRepeatMode(ScalarItemRepeatMode value)
         {
             RepeatMode = value;
         }
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
                 return rangeConfig.End(item);
             }
 
-            public Builder<T> RepeatMode(RepeatMode value)
+            public Builder<T> Repeat(ScalarItemRepeatMode value)
             {
                 Item.InitRepeatMode(value);
                 return this;

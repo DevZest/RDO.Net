@@ -3,24 +3,24 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public class ListItem : TemplateItem
+    public class RepeatItem : TemplateItem
     {
-        internal static ListItem Create<T>()
+        internal static RepeatItem Create<T>()
             where T : UIElement, new()
         {
-            return new ListItem(() => new T());
+            return new RepeatItem(() => new T());
         }
 
-        internal ListItem(Func<UIElement> constructor)
+        internal RepeatItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, ListItem, Builder<T>>
+        public sealed class Builder<T> : TemplateItem.Builder<T, RepeatItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeConfig rangeConfig)
-                : base(rangeConfig, ListItem.Create<T>())
+                : base(rangeConfig, RepeatItem.Create<T>())
             {
             }
 
@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ListItem item)
+            internal override DataViewBuilder End(GridRangeConfig rangeConfig, RepeatItem item)
             {
                 return rangeConfig.End(item);
             }

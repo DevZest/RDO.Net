@@ -62,11 +62,6 @@ namespace DevZest.Data.Windows
             get { return _view.VirtualizingThreshold; }
         }
 
-        private ListOrientation ListOrientation
-        {
-            get { return Template.ListOrientation; }
-        }
-
         private IElementCollection _elements;
         public IReadOnlyList<UIElement> Elements
         {
@@ -342,7 +337,7 @@ namespace DevZest.Data.Windows
         /// </summary>
         protected abstract void InitMeasure();
 
-        public abstract Orientation RepeatOrientation { get; }
+        public abstract Orientation GrowOrientation { get; }
 
         public abstract int RepeatX { get; }
 
@@ -356,7 +351,7 @@ namespace DevZest.Data.Windows
 
         private bool IsVariantAuto(GridTrack gridTrack)
         {
-            return gridTrack.Length.IsAuto && gridTrack.Orientation == RepeatOrientation;
+            return gridTrack.Length.IsAuto && gridTrack.Orientation == GrowOrientation;
         }
 
         private double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
@@ -381,14 +376,14 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(row.Index >= RepeatStartRow.Index);
 
-            var flowCount = RepeatOrientation == Orientation.Vertical ? RepeatX : RepeatY;
-            var growCount = RepeatOrientation == Orientation.Horizontal ? RepeatY : RepeatX;
+            var flowCount = GrowOrientation == Orientation.Vertical ? RepeatX : RepeatY;
+            var growCount = GrowOrientation == Orientation.Horizontal ? RepeatY : RepeatX;
 
             var flowIndex = (row.Index - RepeatStartRow.Index) % flowCount;
             var growIndex = (row.Index - RepeatStartRow.Index + flowCount) / flowCount;
             Debug.Assert(growIndex < growCount);
 
-            return RepeatOrientation == Orientation.Vertical ? new RepeatDimension(flowIndex, growIndex) : new RepeatDimension(growIndex, flowIndex);
+            return GrowOrientation == Orientation.Vertical ? new RepeatDimension(flowIndex, growIndex) : new RepeatDimension(growIndex, flowIndex);
         }
 
         private void MeasureElements()

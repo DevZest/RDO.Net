@@ -40,15 +40,15 @@ namespace DevZest.Data.Windows
             get { return Owner.Model; }
         }
 
-        private ListOrientation _listOrientation = ListOrientation.Y;
-        public ListOrientation ListOrientation
+        private RepeatOrientation _repeatOrientation = RepeatOrientation.Y;
+        public RepeatOrientation RepeatOrientation
         {
-            get { return _listOrientation; }
+            get { return _repeatOrientation; }
             internal set
             {
                 VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
                 VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
-                _listOrientation = value;
+                _repeatOrientation = value;
             }
         }
 
@@ -62,10 +62,10 @@ namespace DevZest.Data.Windows
             get { return _scalarItems; }
         }
 
-        private TemplateItemCollection<ListItem> _listItems = new TemplateItemCollection<ListItem>();
-        public ReadOnlyCollection<ListItem> ListItems
+        private TemplateItemCollection<RepeatItem> _repeatItems = new TemplateItemCollection<RepeatItem>();
+        public ReadOnlyCollection<RepeatItem> RepeatItems
         {
-            get { return _listItems; }
+            get { return _repeatItems; }
         }
 
         private TemplateItemCollection<ChildItem> _childItems = new TemplateItemCollection<ChildItem>();
@@ -74,29 +74,29 @@ namespace DevZest.Data.Windows
             get { return _childItems; }
         }
 
-        private GridRange? _listRange;
-        public GridRange ListRange
+        private GridRange? _repeatRange;
+        public GridRange RepeatRange
         {
-            get { return _listRange.HasValue ? _listRange.GetValueOrDefault() : AutoListRange; }
+            get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
             internal set
             {
-                if (!value.Contains(AutoListRange))
+                if (!value.Contains(AutoRepeatRange))
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                _listRange = value;
+                _repeatRange = value;
             }
         }
 
-        private GridRange AutoListRange
+        private GridRange AutoRepeatRange
         {
-            get { return _listItems.Range.Union(_childItems.Range); }
+            get { return _repeatItems.Range.Union(_childItems.Range); }
         }
 
         internal int AddGridColumn(string width)
         {
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
-            VerifyGridColumnWidth(ListOrientation, result, result, nameof(width));
+            VerifyGridColumnWidth(RepeatOrientation, result, result, nameof(width));
             return result;
         }
 
@@ -112,7 +112,7 @@ namespace DevZest.Data.Windows
         {
             GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
-            VerifyGridRowHeight(ListOrientation, result, result, nameof(height));
+            VerifyGridRowHeight(RepeatOrientation, result, result, nameof(height));
             return result;
         }
 
@@ -124,7 +124,7 @@ namespace DevZest.Data.Windows
                 AddGridRow(height);
         }
 
-        private void VerifyGridRowHeight(ListOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, ListOrientation orentation)
+        private static bool IsValidGridRowHeight(GridRow gridRow, RepeatOrientation orentation)
         {
             var height = gridRow.Height;
 
@@ -141,13 +141,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (height.IsStar)
-                return orentation != ListOrientation.Y && orentation != ListOrientation.YX && orentation != ListOrientation.XY;
+                return orentation != RepeatOrientation.Y && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
 
             Debug.Assert(height.IsAuto);
-            return orentation != ListOrientation.YX;
+            return orentation != RepeatOrientation.YX;
         }
 
-        private void VerifyGridColumnWidth(ListOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridColumnWidth(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
         {
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -156,7 +156,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, ListOrientation orentation)
+        private static bool IsValidGridColumnWidth(GridColumn gridColumn, RepeatOrientation orentation)
         {
             var width = gridColumn.Width;
 
@@ -164,13 +164,13 @@ namespace DevZest.Data.Windows
                 return true;
 
             if (width.IsStar)
-                return orentation != ListOrientation.X && orentation != ListOrientation.YX && orentation != ListOrientation.XY;
+                return orentation != RepeatOrientation.X && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
 
             Debug.Assert(width.IsAuto);
-            return orentation != ListOrientation.XY;
+            return orentation != RepeatOrientation.XY;
         }
 
-        internal int ScalarItemsCountBeforeList { get; private set; }
+        internal int ScalarItemsCountBeforeRepeat { get; private set; }
 
         //internal int StarWidthColumnsCount
         //{
@@ -207,22 +207,22 @@ namespace DevZest.Data.Windows
             VerifyAddTemplateItem(gridRange, scalarItem, nameof(scalarItem), true);
             scalarItem.Construct(this, gridRange, _scalarItems.Count);
             _scalarItems.Add(gridRange, scalarItem);
-            if (_listItems.Count == 0)
-                ScalarItemsCountBeforeList = _scalarItems.Count;
+            if (_repeatItems.Count == 0)
+                ScalarItemsCountBeforeRepeat = _scalarItems.Count;
         }
 
-        internal void AddListItem(GridRange gridRange, ListItem listItem)
+        internal void AddRepeatItem(GridRange gridRange, RepeatItem repeatItem)
         {
-            VerifyAddTemplateItem(gridRange, listItem, nameof(listItem), true);
-            listItem.Construct(this, gridRange, _listItems.Count);
-            _listItems.Add(gridRange, listItem);
+            VerifyAddTemplateItem(gridRange, repeatItem, nameof(repeatItem), true);
+            repeatItem.Construct(this, gridRange, _repeatItems.Count);
+            _repeatItems.Add(gridRange, repeatItem);
         }
 
         internal void AddChildItem(GridRange gridRange, ChildItem childItem)
         {
             VerifyAddTemplateItem(gridRange, childItem, nameof(childItem), false);
-            childItem.Seal(this, gridRange, _listItems.Count, _childItems.Count);
-            _listItems.Add(gridRange, childItem);
+            childItem.Seal(this, gridRange, _repeatItems.Count, _childItems.Count);
+            _repeatItems.Add(gridRange, childItem);
             _childItems.Add(gridRange, childItem);
         }
 
@@ -230,7 +230,7 @@ namespace DevZest.Data.Windows
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _listRange.HasValue && !_listRange.GetValueOrDefault().Contains(gridRange))
+            if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
         }
 
@@ -289,12 +289,12 @@ namespace DevZest.Data.Windows
 
         internal bool AllowsInfiniteX
         {
-            get { return ListOrientation == ListOrientation.X || ListOrientation == ListOrientation.YX ? true : !GridColumns.Any(x => x.Length.IsStar); }
+            get { return RepeatOrientation == RepeatOrientation.X || RepeatOrientation == RepeatOrientation.YX ? true : !GridColumns.Any(x => x.Length.IsStar); }
         }
 
         internal bool AllowsInfiniteY
         {
-            get { return ListOrientation == ListOrientation.Y || ListOrientation == ListOrientation.XY ? true : !GridRows.Any(x => x.Length.IsStar); }
+            get { return RepeatOrientation == RepeatOrientation.Y || RepeatOrientation == RepeatOrientation.XY ? true : !GridRows.Any(x => x.Length.IsStar); }
         }
     }
 }

@@ -44,13 +44,13 @@ namespace DevZest.Data.Windows
                 foreach (var autoSizeItem in _autoSizeItems)
                 {
                     if (autoSizeItem.IsScalar)
-                        autoSizeItem.MeasureListElement(null);
-                    else if (autoSizeItem.IsList && CurrentRow != null)
-                        autoSizeItem.MeasureListElement(CurrentRow);
+                        autoSizeItem.MeasureRepeat(null);
+                    else if (autoSizeItem.IsRepeat && CurrentRow != null)
+                        autoSizeItem.MeasureRepeat(CurrentRow);
                 }
             }
 
-            public override Orientation RepeatOrientation
+            public override Orientation GrowOrientation
             {
                 get { return Orientation.Vertical; }
             }

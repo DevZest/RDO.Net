@@ -47,17 +47,17 @@ namespace DevZest.Data.Windows
             return _viewBuilder;
         }
 
-        public ListItem.Builder<T> BeginListItem<T>()
+        public RepeatItem.Builder<T> BeginRepeatItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ListItem.Builder<T>(this);
+            return new RepeatItem.Builder<T>(this);
         }
 
-        internal DataViewBuilder End(ListItem listItem)
+        internal DataViewBuilder End(RepeatItem repeatItem)
         {
-            listItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddListItem(_gridRange, listItem);
+            repeatItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddRepeatItem(_gridRange, repeatItem);
             return _viewBuilder;
         }
 
@@ -106,11 +106,11 @@ namespace DevZest.Data.Windows
             return _viewBuilder;
         }
 
-        public DataViewBuilder AsListRange()
+        public DataViewBuilder Repeat()
         {
             VerifyNotEmpty();
 
-            Template.ListRange = _gridRange;
+            Template.RepeatRange = _gridRange;
             return _viewBuilder;
         }
     }

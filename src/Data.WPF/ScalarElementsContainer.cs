@@ -10,14 +10,14 @@ namespace DevZest.Data.Windows
         public ScalarElementsContainer(ScalarItem scalarItem)
         {
             _scalarItem = scalarItem;
-            Debug.Assert(RepeatMode == RepeatMode.Horizontal || RepeatMode == RepeatMode.Vertical || RepeatMode == RepeatMode.Both);
+            Debug.Assert(RepeatMode == ScalarItemRepeatMode.Horizontal || RepeatMode == ScalarItemRepeatMode.Vertical || RepeatMode == ScalarItemRepeatMode.Both);
             _scalarElements = new UIElementCollection(this, this);
         }
 
         private readonly ScalarItem _scalarItem;
         private readonly UIElementCollection _scalarElements;
 
-        private RepeatMode RepeatMode
+        private ScalarItemRepeatMode RepeatMode
         {
             get { return _scalarItem.RepeatMode; }
         }

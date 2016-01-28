@@ -65,9 +65,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataViewBuilder WithOrientation(ListOrientation value)
+        public DataViewBuilder WithOrientation(RepeatOrientation value)
         {
-            Template.ListOrientation = value;
+            Template.RepeatOrientation = value;
             return this;
         }
 

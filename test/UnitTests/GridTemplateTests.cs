@@ -38,47 +38,47 @@ namespace DevZest.Data.Windows
         public void GridTemplate_InvalidGridColumnWidth_throws_exception()
         {
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.X;
+                x.RepeatOrientation = RepeatOrientation.X;
                 x.AddGridColumns("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 x.AddGridColumns("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 x.AddGridColumns("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 x.AddGridColumns("Auto; min: 10");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.ListOrientation = ListOrientation.X;
+                x.RepeatOrientation = RepeatOrientation.X;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("Auto; min: 10");
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 });
         }
 
@@ -86,47 +86,47 @@ namespace DevZest.Data.Windows
         public void GridTemplate_InvalidGridRowHeight_throws_exception()
         {
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Y;
+                x.RepeatOrientation = RepeatOrientation.Y;
                 x.AddGridRows("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 x.AddGridRows("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 x.AddGridRows("*");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 x.AddGridRows("Auto; min: 10");
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.ListOrientation = ListOrientation.Y;
+                x.RepeatOrientation = RepeatOrientation.Y;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.ListOrientation = ListOrientation.XY;
+                x.RepeatOrientation = RepeatOrientation.XY;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 });
 
             ExpectArgumentException(x => {
-                x.ListOrientation = ListOrientation.Z;
+                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("Auto");
-                x.ListOrientation = ListOrientation.YX;
+                x.RepeatOrientation = RepeatOrientation.YX;
                 });
         }
 

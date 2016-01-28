@@ -38,14 +38,14 @@ namespace DevZest.Data.Windows
 
             View = view;
 
-            var listItems = view.Owner.Template.ListItems;
-            Debug.Assert(Elements.Count == listItems.Count);
+            var repeatItems = view.Owner.Template.RepeatItems;
+            Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
                 element.SetRowView(view);
                 element.SetDataView(view.Owner);
-                listItems[i].Initialize(element);
+                repeatItems[i].Initialize(element);
             }
 
             view.BindingsReset += OnBindingsReset;
@@ -57,17 +57,17 @@ namespace DevZest.Data.Windows
                 return;
 
             ApplyTemplate();
-            var listItems = view.Owner.Template.ListItems;
-            for (int i = 0; i < listItems.Count; i++)
-                _elements.Add(listItems[i].Generate());
+            var repeatItems = view.Owner.Template.RepeatItems;
+            for (int i = 0; i < repeatItems.Count; i++)
+                _elements.Add(repeatItems[i].Generate());
             _elementsCreated = true;
         }
 
         private void OnBindingsReset(object sender, System.EventArgs e)
         {
-            var listItems = View.Owner.Template.ListItems;
-            for (int i = 0; i < listItems.Count; i++)
-                listItems[i].UpdateTarget(Elements[i]);
+            var repeatItems = View.Owner.Template.RepeatItems;
+            for (int i = 0; i < repeatItems.Count; i++)
+                repeatItems[i].UpdateTarget(Elements[i]);
         }
 
         internal void Cleanup()
@@ -76,12 +76,12 @@ namespace DevZest.Data.Windows
 
             View.BindingsReset -= OnBindingsReset;
 
-            var listItems = View.Owner.Template.ListItems;
-            Debug.Assert(Elements.Count == listItems.Count);
+            var repeatItems = View.Owner.Template.RepeatItems;
+            Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
-                listItems[i].Cleanup(element);
+                repeatItems[i].Cleanup(element);
                 element.SetRowView(null);
                 element.SetDataView(null);
             }

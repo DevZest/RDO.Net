@@ -76,8 +76,8 @@
     <Compile Include="LayoutManager.LayoutY.cs" />
     <Compile Include="LayoutManager.LayoutX.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />
-    <Compile Include="ListItem.cs" />
-    <Compile Include="RepeatMode.cs" />
+    <Compile Include="RepeatItem.cs" />
+    <Compile Include="ScalarItemRepeatMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="UIElementExtensions.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridTrack.cs" />
     <Compile Include="GridRow.cs" />
-    <Compile Include="ListOrientation.cs" />
+    <Compile Include="RepeatOrientation.cs" />
     <Compile Include="RowSelector.cs" />
     <Compile Include="DataPanel.cs" />
     <Compile Include="GridTemplate.cs" />

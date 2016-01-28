@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum RepeatMode
+    public enum ScalarItemRepeatMode
     {
         Static,
         Stretch,
