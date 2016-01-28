@@ -338,6 +338,6 @@ namespace DevZest.Data.Windows
 
         internal LayoutManager LayoutManager { get; private set; }
 
-        public int FlowCount { get; private set; }
+        public int FlowCount { get; internal set; }
     }
 }

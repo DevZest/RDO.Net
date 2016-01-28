@@ -64,36 +64,20 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static readonly DependencyProperty RepeatXIndexProperty = DependencyProperty.RegisterAttached("RepeatXIndex",
+        private static readonly DependencyProperty RepeatOrdinalProperty = DependencyProperty.RegisterAttached("RepeatOrdinal",
             typeof(int), typeof(UIElementExtensions), new PropertyMetadata(-1));
 
-        public static int GetHorizontalIndex(this UIElement element)
+        public static int GetRepeatOrdinal(this UIElement element)
         {
-            return (int)element.GetValue(RepeatXIndexProperty);
+            return (int)element.GetValue(RepeatOrdinalProperty);
         }
 
-        internal static void SetRepeatXIndex(this UIElement element, int value)
+        internal static void SetRepeatOrdinal(this UIElement element, int value)
         {
             if (value < 0)
-                element.ClearValue(RepeatXIndexProperty);
+                element.ClearValue(RepeatOrdinalProperty);
             else
-                element.SetValue(RepeatXIndexProperty, value);
-        }
-
-        private static readonly DependencyProperty RepeatYIndexProperty = DependencyProperty.RegisterAttached("RepeatYIndex",
-            typeof(int), typeof(UIElementExtensions), new PropertyMetadata(-1));
-
-        public static int GetVerticalIndex(this UIElement element)
-        {
-            return (int)element.GetValue(RepeatYIndexProperty);
-        }
-
-        internal static void SetRepeatYIndex(this UIElement element, int value)
-        {
-            if (value < 0)
-                element.ClearValue(RepeatYIndexProperty);
-            else
-                element.SetValue(RepeatYIndexProperty, value);
+                element.SetValue(RepeatOrdinalProperty, value);
         }
 
         public static T GetSourceValue<T>(this UIElement element, Column<T> column)

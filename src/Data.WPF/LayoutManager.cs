@@ -335,6 +335,7 @@ namespace DevZest.Data.Windows
         private int FlowCount
         {
             get { return _view.FlowCount; }
+            set { _view.FlowCount = value; }
         }
 
         private int GrowCount

@@ -85,6 +85,8 @@ namespace DevZest.Data.Windows
 
             protected override void InitMeasure()
             {
+                FlowCount = GetFlowCount();
+
                 throw new NotImplementedException();
             }
 
