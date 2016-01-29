@@ -28,6 +28,8 @@ namespace DevZest.Data.Windows
 
         public double MaxLength { get; private set; }
 
+        internal int AutoLengthIndex { get; set; }
+
         internal double MeasuredLength { get; set; }
 
         internal double AccumulatedLength { get; set; }

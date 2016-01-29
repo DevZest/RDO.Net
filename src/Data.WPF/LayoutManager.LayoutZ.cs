@@ -50,13 +50,15 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            protected override double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex)
+            protected override double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
             {
+                Debug.Assert(repeatIndex == 0);
                 return gridTrack.MeasuredLength;
             }
 
-            protected override void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value)
+            protected override void SetMeasureLength(GridTrack gridTrack, int repeatIndex, double value)
             {
+                Debug.Assert(repeatIndex == 0);
                 gridTrack.MeasuredLength = value;
             }
         }

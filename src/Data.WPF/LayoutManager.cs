@@ -258,6 +258,8 @@ namespace DevZest.Data.Windows
             InitMeasure();
             CalcStarSizeTracks();
             MeasureElements();
+            CalcAccumulatedLengths(Template.GridColumns);
+            CalcAccumulatedLengths(Template.GridRows);
 
             if (ScrollOwner != null)
             {
@@ -343,28 +345,15 @@ namespace DevZest.Data.Windows
             get { return (_realizedRows.Count + FlowCount) / FlowCount - 1; }
         }
 
-        private bool IsVariantAuto(GridTrack gridTrack)
+        protected abstract double GetMeasuredLength(GridTrack gridTrack, int repeatIndex);
+
+        protected abstract void SetMeasureLength(GridTrack gridTrack, int repeatIndex, double value);
+
+        protected virtual void CalcAccumulatedLengths(IReadOnlyList<GridTrack> gridTracks)
         {
-            return gridTrack.Length.IsAuto && gridTrack.Orientation == GrowOrientation;
+            for (int i = 1; i < gridTracks.Count; i++)
+                gridTracks[i].AccumulatedLength = gridTracks[i - 1].AccumulatedLength + gridTracks[i].MeasuredLength;
         }
-
-        private double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
-        {
-            Debug.Assert(repeatIndex >= 0 && repeatIndex < (gridTrack.Orientation == GrowOrientation ? GrowCount : FlowCount));
-            return IsVariantAuto(gridTrack) ? GetVariantAutoLength(gridTrack, repeatIndex) : gridTrack.MeasuredLength;
-        }
-
-        private void SetMeasureLength(GridTrack gridTrack, int repeatIndex, double value)
-        {
-            if (IsVariantAuto(gridTrack))
-                SetVariantAutoLength(gridTrack, repeatIndex, value);
-            else
-                gridTrack.MeasuredLength = value;
-        }
-
-        protected abstract double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex);
-
-        protected abstract void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value);
 
         private RepeatPosition GetRepeatPosition(RowView row)
         {

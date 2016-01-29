@@ -60,20 +60,21 @@ namespace DevZest.Data.Windows
 
         private void DoClassify(bool sizeToContent, T[] autoLengthTracks, T[] starLengthTracks)
         {
-            var indexAutoSize = 0;
-            var indexStarSize = 0;
+            var indexAuto = 0;
+            var indexStar = 0;
             foreach (var track in this)
             {
                 var length = track.Length;
-                if (length.IsAuto)
-                    autoLengthTracks[indexAutoSize++] = track;
-                else if (length.IsStar)
+                if (length.IsAuto || (length.IsStar && sizeToContent))  // Auto
                 {
-                    if (sizeToContent)
-                        autoLengthTracks[indexAutoSize++] = track;
-                    else
-                        starLengthTracks[indexStarSize++] = track;
+                    track.AutoLengthIndex = indexAuto;
+                    autoLengthTracks[indexAuto++] = track;
+                    continue;
                 }
+
+                track.AutoLengthIndex = -1;
+                if (length.IsStar && !sizeToContent)    // Star
+                    starLengthTracks[indexStar++] = track;
             }
         }
     }

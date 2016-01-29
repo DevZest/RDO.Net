@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
@@ -83,6 +83,8 @@ namespace DevZest.Data.Windows
             {
             }
 
+            private IList<double> _lengths;
+
             protected override void InitMeasure()
             {
                 FlowCount = GetFlowCount();
@@ -90,14 +92,41 @@ namespace DevZest.Data.Windows
                 throw new NotImplementedException();
             }
 
-            protected override double GetVariantAutoLength(GridTrack gridTrack, int repeatIndex)
+            protected override double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
             {
-                throw new NotImplementedException();
+                return IsVariantAuto(gridTrack) ? _lengths[GetVariantAutoIndex(gridTrack, repeatIndex)] : gridTrack.MeasuredLength;
             }
 
-            protected override void SetVariantAutoLength(GridTrack gridTrack, int repeatIndex, double value)
+            protected override void SetMeasureLength(GridTrack gridTrack, int repeatIndex, double value)
             {
-                throw new NotImplementedException();
+                if (IsVariantAuto(gridTrack))
+                    _lengths[GetVariantAutoIndex(gridTrack, repeatIndex)] = value;
+                else
+                    gridTrack.MeasuredLength = value;
+            }
+
+            private bool IsVariantAuto(GridTrack gridTrack)
+            {
+                return gridTrack.AutoLengthIndex >= 0 && gridTrack.Orientation == GrowOrientation;
+            }
+
+            private GridTrack[] VariantAutoTracks
+            {
+                get
+                {
+                    if (GrowOrientation == Orientation.Vertical)
+                        return _autoHeightRows;
+                    else
+                        return _autoWidthColumns;
+                }
+            }
+
+            private int GetVariantAutoIndex(GridTrack gridTrack, int repeatIndex)
+            {
+                Debug.Assert(repeatIndex > 0 && repeatIndex < _realizedRows.Count);
+                Debug.Assert(VariantAutoTracks.Length > 0);
+                Debug.Assert(IsVariantAuto(gridTrack));
+                return repeatIndex * VariantAutoTracks.Length + gridTrack.AutoLengthIndex;
             }
         }
     }
