@@ -24,13 +24,7 @@ namespace DevZest.Data.Windows
 
         public double MaxWidth
         {
-            get { return MaxWidth; }
-        }
-
-        public double MeasuredWidth
-        {
-            get { return MeasuredLength; }
-            internal set { MeasuredLength = value; }
+            get { return MaxLength; }
         }
 
         GridColumn IGridTrackSet<GridColumn>.this[int index]

@@ -60,7 +60,7 @@ namespace DevZest.Data.Windows
                         continue;
                     }
                     Debug.Assert(column.Length.IsAbsolute, "Items contain both auto and star size should have been ignored.");
-                    result += column.MeasuredWidth;
+                    result += column.MeasuredLength;
                 }
                 return result;
             }
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
                         continue;
                     }
                     Debug.Assert(row.Length.IsAbsolute, "Items contain both auto and star size should have been ignored.");
-                    result += row.MeasuredHeight;
+                    result += row.MeasuredLength;
                 }
                 return result;
             }
