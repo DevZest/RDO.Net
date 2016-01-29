@@ -26,14 +26,14 @@ namespace DevZest.Data.Windows
                     return ScalarRepeatMode.None;
 
                 if (_repeatMode == ScalarRepeatMode.Flow)
-                    return ValidateFlowRepeatMode();
+                    return CoerceFlowRepeatMode();
 
                 Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
-                return ValidateGrowRepeatMode();
+                return CoerceGrowRepeatMode();
             }
         }
 
-        private ScalarRepeatMode ValidateFlowRepeatMode()
+        private ScalarRepeatMode CoerceFlowRepeatMode()
         {
             Debug.Assert(_repeatMode == ScalarRepeatMode.Flow);
             bool isValid = false;
@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows
             return isValid ? ScalarRepeatMode.Flow : ScalarRepeatMode.None;
         }
 
-        private ScalarRepeatMode ValidateGrowRepeatMode()
+        private ScalarRepeatMode CoerceGrowRepeatMode()
         {
             Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
             bool isValid = false;
@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows
             return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
         }
 
-        public bool IsRepeat
+        public bool IsRepeatable
         {
             get { return RepeatMode == ScalarRepeatMode.Flow || RepeatMode == ScalarRepeatMode.Grow; }
         }

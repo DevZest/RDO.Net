@@ -30,6 +30,8 @@ namespace DevZest.Data.Windows
 
         internal double MeasuredLength { get; set; }
 
+        internal double AccumulatedLength { get; set; }
+
         int IGridTrackSet.Count
         {
             get { return 1; }
