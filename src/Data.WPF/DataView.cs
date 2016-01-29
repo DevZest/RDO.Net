@@ -80,6 +80,7 @@ namespace DevZest.Data.Windows
             _dataSet = dataSet;
             _template = new GridTemplate(this);
             VirtualizingThreshold = 50;
+            FlowCount = 1;
         }
 
         private void Initialize()

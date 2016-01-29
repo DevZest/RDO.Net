@@ -329,11 +329,6 @@ namespace DevZest.Data.Windows
             get { return Orientation.Vertical; }
         }
 
-        public virtual int GetFlowCount()
-        {
-            return 1;
-        }
-
         private int FlowCount
         {
             get { return _view.FlowCount; }

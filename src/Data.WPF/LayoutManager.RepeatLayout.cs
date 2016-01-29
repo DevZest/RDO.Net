@@ -33,7 +33,7 @@ namespace DevZest.Data.Windows
                 {
                 }
 
-                public override int GetFlowCount()
+                private int GetFlowCount()
                 {
                     return (int)(Template.GridColumns.Sum(x => x.MeasuredLength) / _availableSize.Width);
                 }
@@ -90,6 +90,11 @@ namespace DevZest.Data.Windows
                 FlowCount = GetFlowCount();
 
                 throw new NotImplementedException();
+            }
+
+            protected virtual int GetFlowCount()
+            {
+                return 1;
             }
 
             protected override double GetMeasuredLength(GridTrack gridTrack, int repeatIndex)
