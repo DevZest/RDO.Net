@@ -22,43 +22,39 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (_repeatMode == ScalarRepeatMode.Flow)
-                    return ValidatedRepeatFlow;
-                else if (_repeatMode == ScalarRepeatMode.Grow)
-                    return ValidatedRepeatGrow;
-                else
+                if (_repeatMode == ScalarRepeatMode.None)
                     return ScalarRepeatMode.None;
-            }
-        }
 
-        private ScalarRepeatMode ValidatedRepeatFlow
-        {
-            get
-            {
-                Debug.Assert(_repeatMode == ScalarRepeatMode.Flow);
-                bool isValid = false;
-                if (Owner.RepeatOrientation == RepeatOrientation.XY)
-                    isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
-                else if (Owner.RepeatOrientation == RepeatOrientation.YX)
-                    isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
+                if (_repeatMode == ScalarRepeatMode.Flow)
+                    return ValidateFlowRepeatMode();
 
-                return isValid ? ScalarRepeatMode.Flow : ScalarRepeatMode.None;
-            }
-        }
-
-        private ScalarRepeatMode ValidatedRepeatGrow
-        {
-            get
-            {
                 Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
-                bool isValid = false;
-                if (Owner.RepeatOrientation == RepeatOrientation.Y || Owner.RepeatOrientation == RepeatOrientation.XY)
-                    isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
-                else if (Owner.RepeatOrientation == RepeatOrientation.X || Owner.RepeatOrientation == RepeatOrientation.YX)
-                    isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
-
-                return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
+                return ValidateGrowRepeatMode();
             }
+        }
+
+        private ScalarRepeatMode ValidateFlowRepeatMode()
+        {
+            Debug.Assert(_repeatMode == ScalarRepeatMode.Flow);
+            bool isValid = false;
+            if (Owner.RepeatOrientation == RepeatOrientation.XY)
+                isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
+            else if (Owner.RepeatOrientation == RepeatOrientation.YX)
+                isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
+
+            return isValid ? ScalarRepeatMode.Flow : ScalarRepeatMode.None;
+        }
+
+        private ScalarRepeatMode ValidateGrowRepeatMode()
+        {
+            Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
+            bool isValid = false;
+            if (Owner.RepeatOrientation == RepeatOrientation.Y || Owner.RepeatOrientation == RepeatOrientation.XY)
+                isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
+            else if (Owner.RepeatOrientation == RepeatOrientation.X || Owner.RepeatOrientation == RepeatOrientation.YX)
+                isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
+
+            return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
         }
 
         public bool IsRepeat
