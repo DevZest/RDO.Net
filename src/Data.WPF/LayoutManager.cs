@@ -377,7 +377,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private double GetLength(GridTrack start, GridTrack end, int repeatIndex)
+        private double GetMeasuredLength(GridTrack start, GridTrack end, int repeatIndex = 0)
         {
             Debug.Assert(start != null && end != null);
             Debug.Assert(start.Owner == end.Owner && start.Orientation == end.Orientation);
@@ -394,8 +394,8 @@ namespace DevZest.Data.Windows
         {
             var repeatPosition = GetRepeatPosition(row);
             var range = Template.RepeatRange;
-            var width = GetLength(range.Left, range.Right, repeatPosition.X);
-            var height = GetLength(range.Top, range.Bottom, repeatPosition.Y);
+            var width = GetMeasuredLength(range.Left, range.Right, repeatPosition.X);
+            var height = GetMeasuredLength(range.Top, range.Bottom, repeatPosition.Y);
             return new Size(width, height);
         }
 

@@ -33,9 +33,12 @@ namespace DevZest.Data.Windows
                 {
                 }
 
-                private int GetFlowCount()
+                protected override int GetFlowCount()
                 {
-                    return (int)(Template.GridColumns.Sum(x => x.MeasuredLength) / _availableSize.Width);
+                    var gridColumns = Template.GridColumns;
+                    var totalWidth = GetMeasuredLength(gridColumns[0], gridColumns[gridColumns.Count - 1]);
+                    var repeatWidth = GetMeasuredLength(Template.RepeatRange.Left, Template.RepeatRange.Right);
+                    return 1 + (int)(Math.Max(0d, _availableSize.Width - totalWidth) / repeatWidth);
                 }
             }
 
@@ -59,9 +62,12 @@ namespace DevZest.Data.Windows
                     get { return Orientation.Horizontal; }
                 }
 
-                public override int GetFlowCount()
+                protected override int GetFlowCount()
                 {
-                    return (int)(Template.GridRows.Sum(x => x.MeasuredLength) / _availableSize.Height);
+                    var gridRows = Template.GridRows;
+                    var totalHeight = GetMeasuredLength(gridRows[0], gridRows[gridRows.Count - 1]);
+                    var repeatHeight = GetMeasuredLength(Template.RepeatRange.Top, Template.RepeatRange.Bottom);
+                    return 1 + (int)(Math.Max(0d, _availableSize.Height - totalHeight) / repeatHeight);
                 }
             }
 
