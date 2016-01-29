@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum ScalarItemRepeatMode
+    public enum ScalarRepeatMode
     {
         None,
         Flow,

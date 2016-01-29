@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows
         private readonly ScalarItem _scalarItem;
         private readonly UIElementCollection _scalarElements;
 
-        private ScalarItemRepeatMode RepeatMode
+        private ScalarRepeatMode RepeatMode
         {
             get { return _scalarItem.RepeatMode; }
         }
