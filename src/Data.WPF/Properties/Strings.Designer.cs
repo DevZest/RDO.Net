@@ -75,14 +75,6 @@ namespace DevZest.Data.Windows
             get { return GetString("TemplateItem_InvalidElement"); }
         }
 
-        /// <summary>
-        /// The UIElement is not attached to RowView.
-        /// </summary>
-        public static string UIElement_ExpectRow
-        {
-            get { return GetString("UIElement_ExpectRow"); }
-        }
-
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

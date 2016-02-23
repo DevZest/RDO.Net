@@ -79,43 +79,5 @@ namespace DevZest.Data.Windows
             else
                 element.SetValue(RepeatOrdinalProperty, value);
         }
-
-        public static T GetSourceValue<T>(this UIElement element, Column<T> column)
-        {
-            var row = element.ExpectRow();
-            return row.GetValue(column);
-        }
-
-        public static object GetSourceValue(this UIElement element, Column column)
-        {
-            var row = element.ExpectRow();
-            return row.GetValue(column);
-        }
-
-        public static void SetSourceValue<T>(this UIElement element, Column<T> column, T value, bool suppressUpdateTarget = true)
-        {
-            var row = element.ExpectRow();
-            row.SetValue(column, value, suppressUpdateTarget);
-        }
-
-        public static void SetSourceValue<T>(this UIElement element, Column column, object value, bool suppressUpdateTarget = true)
-        {
-            var row = element.ExpectRow();
-            row.SetValue(column, value, suppressUpdateTarget);
-        }
-
-        public static string GetSourceText(this UIElement element, Column column)
-        {
-            var row = element.ExpectRow();
-            return row.GetValue(column).ToString();
-        }
-
-        private static RowView ExpectRow(this UIElement element)
-        {
-            var result = element.GetRowView();
-            if (result == null)
-                throw new InvalidOperationException(Strings.UIElement_ExpectRow);
-            return result;
-        }
     }
 }
