@@ -76,7 +76,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DataViewRowCollectionTests.cs" />
-    <Compile Include="DataPanelTests.cs" />
+    <Compile Include="DataFormTests.cs" />
     <Compile Include="GridRowSetTests.cs" />
     <Compile Include="GridColumnSetTests.cs" />
     <Compile Include="RowViewTests.cs" />

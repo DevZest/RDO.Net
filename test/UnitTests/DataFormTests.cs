@@ -10,10 +10,10 @@ using System.Windows.Threading;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataPanelTests
+    public class DataFormTests
     {
         [TestMethod]
-        public void DataPanel_properly_initialized()
+        public void DataForm_properly_initialized()
         {
             var dataForm = new DataForm();
             dataForm.Show(DataView.Create(DataSet<Adhoc>.New()));
