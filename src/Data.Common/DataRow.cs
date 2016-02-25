@@ -12,14 +12,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a row of in-memory data.
     /// </summary>
-    public sealed class DataRow
+    public sealed class DataRow : EventArgs
     {
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
         {
             Ordinal = -1;
             _index = -1;
-            _eventArgs = new DataRowEventArgs(this);
         }
 
         private DataSet[] _childDataSets;
@@ -284,8 +283,6 @@ namespace DevZest.Data
             return result;
         }
 
-        private readonly DataRowEventArgs _eventArgs;
-
         internal void OnUpdated(IModelSet modelSet)
         {
             OnUpdated();
@@ -296,18 +293,18 @@ namespace DevZest.Data
         internal void OnUpdated()
         {
             _validationMessages = null;
-            Model.OnRowUpdated(_eventArgs);
+            Model.OnRowUpdated(this);
             if (ParentDataRow != null)
-                DataSet.OnRowUpdated(_eventArgs);
-            Model.DataSet.OnRowUpdated(_eventArgs);
+                DataSet.OnRowUpdated(this);
+            Model.DataSet.OnRowUpdated(this);
         }
 
         internal void OnAdded()
         {
-            Model.OnRowAdded(_eventArgs);
+            Model.OnRowAdded(this);
             if (ParentDataRow != null)
-                DataSet.OnRowAdded(_eventArgs);
-            Model.DataSet.OnRowAdded(_eventArgs);
+                DataSet.OnRowAdded(this);
+            Model.DataSet.OnRowAdded(this);
 
             if (ParentDataRow != null)
                 ParentDataRow.BubbleUpdatedEvent(Model);

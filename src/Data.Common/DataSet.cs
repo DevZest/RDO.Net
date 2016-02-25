@@ -50,9 +50,9 @@ namespace DevZest.Data
         /// <inheritdoc cref="ICollection{T}.IsReadOnly"/>
         public abstract bool IsReadOnly { get; }
 
-        public event EventHandler<DataRowEventArgs> RowAdded;
+        public event EventHandler<DataRow> RowAdded;
 
-        internal void OnRowAdded(DataRowEventArgs e)
+        internal void OnRowAdded(DataRow e)
         {
             var rowAdded = RowAdded;
             if (rowAdded != null)
@@ -68,9 +68,9 @@ namespace DevZest.Data
                 rowRemoved(this, e);
         }
 
-        public event EventHandler<DataRowEventArgs> RowUpdated;
+        public event EventHandler<DataRow> RowUpdated;
 
-        internal void OnRowUpdated(DataRowEventArgs e)
+        internal void OnRowUpdated(DataRow e)
         {
             UpdateRevision();
             var rowUpdated = RowUpdated;

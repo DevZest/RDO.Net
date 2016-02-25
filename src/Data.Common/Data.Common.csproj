@@ -65,7 +65,6 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
-    <Compile Include="DataRowEventArgs.cs" />
     <Compile Include="DataRowRemovedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />

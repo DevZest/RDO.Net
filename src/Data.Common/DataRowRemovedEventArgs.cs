@@ -1,15 +1,19 @@
-﻿namespace DevZest.Data
+﻿using System;
+
+namespace DevZest.Data
 {
-    public class DataRowRemovedEventArgs : DataRowEventArgs
+    public class DataRowRemovedEventArgs : EventArgs
     {
         internal DataRowRemovedEventArgs(DataRow dataRow)
-            : base(dataRow)
         {
+            DataRow = dataRow;
             Model = dataRow.Model;
             ParentDataRow = dataRow.ParentDataRow;
             Ordinal = dataRow.Ordinal;
             Index = dataRow.Index;
         }
+
+        public DataRow DataRow { get; private set; }
 
         public Model Model { get; private set; }
 

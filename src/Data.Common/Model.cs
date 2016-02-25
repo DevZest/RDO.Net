@@ -730,11 +730,11 @@ namespace DevZest.Data
             return DataSet<T>.New();
         }
 
-        protected internal virtual void OnRowAdded(DataRowEventArgs e)
+        protected internal virtual void OnRowAdded(DataRow e)
         {
         }
 
-        protected internal virtual void OnRowUpdated(DataRowEventArgs e)
+        protected internal virtual void OnRowUpdated(DataRow e)
         {
         }
 
