@@ -741,5 +741,7 @@ namespace DevZest.Data
         protected internal virtual void OnRowRemoved(DataRowRemovedEventArgs e)
         {
         }
+
+        public DataRow SavedDataRow { get; internal set; }
     }
 }

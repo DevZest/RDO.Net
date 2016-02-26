@@ -747,6 +747,14 @@ namespace DevZest.Data
             get { return GetString("Column_Eval_NullExpression"); }
         }
 
+        /// <summary>
+        /// Mismatch with Model.SavedDataRow.
+        /// </summary>
+        public static string DataRow_MismatchWithSavedDataRow
+        {
+            get { return GetString("DataRow_MismatchWithSavedDataRow"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

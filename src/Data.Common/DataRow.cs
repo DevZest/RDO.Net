@@ -442,10 +442,14 @@ namespace DevZest.Data
         {
             foreach (var column in Model.Columns)
                 column.Save(this);
+            Model.SavedDataRow = this;
         }
 
         public void Load()
         {
+            if (Model.SavedDataRow != this)
+                throw new InvalidOperationException(Strings.DataRow_MismatchWithSavedDataRow);
+
             Update(() =>
             {
                 foreach (var column in Model.Columns)
