@@ -297,10 +297,6 @@ namespace DevZest.Data
 
         public abstract bool IsDbComputed { get; }
 
-        /// <summary>Compute and set value for given <see cref="DataRow"/>.</summary>
-        /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
-        public abstract void Compute(DataRow dataRow);
-
         /// <summary>Determines whether the value of given <see cref="DataRow"/> is null.</summary>
         /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
         /// <returns><see langword="true"/> if the value of given <see cref="DataRow"/> is null, otherwise <see langword="false"/>.</returns>
@@ -361,7 +357,7 @@ namespace DevZest.Data
             Debug.Assert(ParentModel == dataRow.Model);
 
             var modelSet = OnChildValueChanged(dataRow, ModelSet.Empty);
-            dataRow.OnUpdated(modelSet.Union(ParentModel));
+            dataRow.Update(() => dataRow.OnUpdated(modelSet.Union(ParentModel)));
         }
 
         private IModelSet OnChildValueChanged(DataRow dataRow, IModelSet modelSet)

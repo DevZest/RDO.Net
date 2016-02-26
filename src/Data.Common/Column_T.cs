@@ -569,15 +569,6 @@ namespace DevZest.Data
             return Computation;
         }
 
-        /// <inheritdoc/>
-        public sealed override void Compute(DataRow dataRow)
-        {
-            VerifyDataRow(dataRow, nameof(dataRow));
-            if (Computation == null)
-                return;
-            this[dataRow] = Computation[dataRow];
-        }
-
         /// <summary>Mapping this column with another column.</summary>
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>The <see cref="ColumnMapping"/> contains <paramref name="sourceColumn"/> and this column.</returns>

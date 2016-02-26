@@ -292,6 +292,13 @@ namespace DevZest.Data
 
         internal void OnUpdated()
         {
+            if (IsUpdating)
+            {
+                _isUpdated = true;
+                return;
+            }
+
+            _isUpdated = false;
             _validationMessages = null;
             Model.OnRowUpdated(this);
             if (ParentDataRow != null)
@@ -378,24 +385,32 @@ namespace DevZest.Data
         {
             get
             {
-                if (_validationMessages != null)
-                    return _validationMessages;
+                if (IsUpdating && _isUpdated)
+                    return GetValidationMessages();
 
-                _validationMessages = s_emptyValidationMessages;
-                foreach (var validator in Model.Validators)
-                {
-                    var isValid = validator.IsValidCondition[this];
-                    if (isValid == true)
-                        continue;
-
-                    if (_validationMessages == s_emptyValidationMessages)
-                        _validationMessages = new ValidationMessageCollection();
-                    var message = validator.Message[this];
-                    _validationMessages.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
-                }
+                if (_validationMessages == null)
+                    _validationMessages = GetValidationMessages();
 
                 return _validationMessages;
             }
+        }
+
+        private ValidationMessageCollection GetValidationMessages()
+        {
+            var result = s_emptyValidationMessages;
+            foreach (var validator in Model.Validators)
+            {
+                var isValid = validator.IsValidCondition[this];
+                if (isValid == true)
+                    continue;
+
+                if (result == s_emptyValidationMessages)
+                    result = new ValidationMessageCollection();
+                var message = validator.Message[this];
+                result.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
+            }
+
+            return result;
         }
 
         private ValidationMessageCollection _mergedValidationMessages = s_emptyValidationMessages;
@@ -431,8 +446,48 @@ namespace DevZest.Data
 
         public void Load()
         {
-            foreach (var column in Model.Columns)
-                column.Load(this);
+            Update(() =>
+            {
+                foreach (var column in Model.Columns)
+                    column.Load(this);
+            });
+        }
+
+        private bool _isUpdating;
+        private bool _isUpdated;
+
+        public bool IsUpdating
+        {
+            get { return _isUpdating; }
+            private set
+            {
+                Debug.Assert(_isUpdating != value);
+                _isUpdating = value;
+
+                if (!_isUpdating && _isUpdated)
+                    OnUpdated();
+            }
+        }
+
+        public void Update(Action updateAction)
+        {
+            Check.NotNull(updateAction, nameof(updateAction));
+
+            if (IsUpdating)
+            {
+                updateAction();
+                return;
+            }
+
+            try
+            {
+                IsUpdating = true;
+                updateAction();
+            }
+            finally
+            {
+                IsUpdating = false;
+            }
         }
     }
 }
