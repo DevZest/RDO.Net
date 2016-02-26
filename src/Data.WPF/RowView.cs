@@ -92,12 +92,12 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private void OnGetValue(RowViewBindingSource bindingSource)
+        private void OnGetValue(RowState bindingSource)
         {
             Owner.OnGetValue(bindingSource);
         }
 
-        private void OnUpdated(RowViewBindingSource bindingSource)
+        private void OnUpdated(RowState bindingSource)
         {
             if (Owner.IsConsumed(bindingSource))
                 OnBindingsReset();
@@ -119,7 +119,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowViewBindingSource.Index);
+                OnGetValue(RowState.Index);
                 return DataRow == null ? Owner.Count - 1 : DataRow.Index;
             }
         }
@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowViewBindingSource.IsCurrent);
+                OnGetValue(RowState.IsCurrent);
                 return _isCurrent;
             }
             internal set
@@ -138,7 +138,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                OnUpdated(RowViewBindingSource.IsCurrent);
+                OnUpdated(RowState.IsCurrent);
             }
         }
 
@@ -147,7 +147,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowViewBindingSource.IsSelected);
+                OnGetValue(RowState.IsSelected);
                 return _isSelected;
             }
             set
@@ -163,7 +163,7 @@ namespace DevZest.Data.Windows
                 if (_isSelected)
                     Owner.AddSelectedRow(this);
 
-                OnUpdated(RowViewBindingSource.IsSelected);
+                OnUpdated(RowState.IsSelected);
             }
         }
 
@@ -265,7 +265,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowViewBindingSource.IsEditing);
+                OnGetValue(RowState.IsEditing);
                 return _isEditing;
             }
             private set
@@ -287,7 +287,7 @@ namespace DevZest.Data.Windows
                     Model.SetEditingRow(this);
                 }
 
-                OnUpdated(RowViewBindingSource.IsEditing);
+                OnUpdated(RowState.IsEditing);
             }
         }
 

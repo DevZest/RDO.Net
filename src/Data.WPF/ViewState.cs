@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    internal enum DataViewBindingSource
+    internal enum ViewState
     {
         Rows = 0,
         CurrentRow,

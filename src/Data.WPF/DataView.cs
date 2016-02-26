@@ -123,18 +123,18 @@ namespace DevZest.Data.Windows
 
         int _rowViewBindingSourceFlags;
 
-        private static int GetMask(RowViewBindingSource bindingSource)
+        private static int GetMask(RowState bindingSource)
         {
             return 1 << (int)bindingSource;
         }
 
-        internal bool IsConsumed(RowViewBindingSource bindingSource)
+        internal bool IsConsumed(RowState bindingSource)
         {
             int mask = GetMask(bindingSource);
             return (_rowViewBindingSourceFlags & mask) != 0;
         }
 
-        internal void OnGetValue(RowViewBindingSource bindingSource)
+        internal void OnGetValue(RowState bindingSource)
         {
             if (_isUpdatingTarget)
             {
@@ -145,18 +145,18 @@ namespace DevZest.Data.Windows
 
         int _dataViewBindingSourceFlags;
 
-        private static int GetMask(DataViewBindingSource bindingSource)
+        private static int GetMask(ViewState bindingSource)
         {
             return 1 << (int)bindingSource;
         }
 
-        internal bool IsConsumed(DataViewBindingSource bindingSource)
+        internal bool IsConsumed(ViewState bindingSource)
         {
             int mask = GetMask(bindingSource);
             return (_dataViewBindingSourceFlags & mask) != 0;
         }
 
-        private void OnGetValue(DataViewBindingSource bindingSource)
+        private void OnGetValue(ViewState bindingSource)
         {
             if (_isUpdatingTarget)
             {
@@ -167,7 +167,7 @@ namespace DevZest.Data.Windows
 
         public event EventHandler BindingsReset;
 
-        private void OnUpdated(DataViewBindingSource bindingSource)
+        private void OnUpdated(ViewState bindingSource)
         {
             if (IsConsumed(bindingSource))
                 OnBindingsReset();
@@ -192,14 +192,14 @@ namespace DevZest.Data.Windows
             if (CurrentRow == null)
                 CurrentRow = this[0];
 
-            if (IsConsumed(RowViewBindingSource.Index))
+            if (IsConsumed(RowState.Index))
             {
                 for (int i = index + 1; i < Count; i++)
                     this[i].OnBindingsReset();
             }
 
             LayoutManager.OnRowAdded(index);
-            OnUpdated(DataViewBindingSource.Rows);
+            OnUpdated(ViewState.Rows);
         }
 
         private void OnRowRemoved(int index, RowView row)
@@ -207,14 +207,14 @@ namespace DevZest.Data.Windows
             if (CurrentRow == row)
                 CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
 
-            if (IsConsumed(RowViewBindingSource.Index))
+            if (IsConsumed(RowState.Index))
             {
                 for (int i = index; i < Count; i++)
                     this[i].OnBindingsReset();
             }
 
             LayoutManager.OnRowRemoved(index, row);
-            OnUpdated(DataViewBindingSource.Rows);
+            OnUpdated(ViewState.Rows);
         }
 
         private void OnRowUpdated(int index)
@@ -248,7 +248,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(DataViewBindingSource.Rows);
+                OnGetValue(ViewState.Rows);
                 return _rows;
             }
         }
@@ -289,7 +289,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(DataViewBindingSource.CurrentRow);
+                OnGetValue(ViewState.CurrentRow);
                 return _currentRow;
             }
             set
@@ -311,7 +311,7 @@ namespace DevZest.Data.Windows
 
                 if (LayoutManager != null)
                     LayoutManager.OnCurrentRowChanged();
-                OnUpdated(DataViewBindingSource.CurrentRow);
+                OnUpdated(ViewState.CurrentRow);
             }
         }
 
@@ -320,7 +320,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(DataViewBindingSource.SelectedRows);
+                OnGetValue(ViewState.SelectedRows);
                 return _selectedRows;
             }
         }
@@ -328,13 +328,13 @@ namespace DevZest.Data.Windows
         internal void AddSelectedRow(RowView row)
         {
             _selectedRows.Add(row);
-            OnUpdated(DataViewBindingSource.SelectedRows);
+            OnUpdated(ViewState.SelectedRows);
         }
 
         internal void RemoveSelectedRow(RowView row)
         {
             _selectedRows.Remove(row);
-            OnUpdated(DataViewBindingSource.SelectedRows);
+            OnUpdated(ViewState.SelectedRows);
         }
 
         internal LayoutManager LayoutManager { get; private set; }

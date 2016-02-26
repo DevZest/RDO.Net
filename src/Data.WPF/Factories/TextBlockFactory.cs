@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Factories
 
             return rangeConfig.BeginRepeatItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind(x => x.Text = x.GetRowView().GetValue(column).GetText())
+                .Bind((src, x) => x.Text = src.RowView.GetValue(column).GetText())
                 .End();
         }
 
@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Factories
 
             return rangeConfig.BeginRepeatItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind(x => x.Text = column.DisplayName + ":")
+                .Bind((src, x) => x.Text = column.DisplayName + ":")
                 .End();
         }
 
@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows.Factories
 
             return rangeConfig.BeginRepeatItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind(x => x.Text = column.DisplayName)
+                .Bind((src, x) => x.Text = column.DisplayName)
                 .End();
         }
     }

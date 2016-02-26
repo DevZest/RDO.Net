@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    internal enum RowViewBindingSource
+    internal enum RowState
     {
         IsSelected = 0,
         IsCurrent,

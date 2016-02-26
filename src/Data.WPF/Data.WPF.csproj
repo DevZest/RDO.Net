@@ -44,6 +44,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="BindingSource.cs" />
     <Compile Include="GridRowSet.cs" />
     <Compile Include="GridColumnSet.cs" />
     <Compile Include="GridTrackCollection.cs" />
@@ -52,14 +53,14 @@
     <Compile Include="IGridRowSet.cs" />
     <Compile Include="IGridTrackSet.cs" />
     <Compile Include="Binding.cs" />
-    <Compile Include="DataViewBindingSource.cs" />
+    <Compile Include="ViewState.cs" />
     <Compile Include="LayoutManager.AutoSizeItem.cs" />
     <Compile Include="LayoutManager.RepeatPosition.cs" />
     <Compile Include="LayoutManager.RepeatLayout.cs" />
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
-    <Compile Include="RowViewBindingSource.cs" />
+    <Compile Include="RowState.cs" />
     <Compile Include="DataView.RowCollection.cs" />
     <Compile Include="DataViewBuilder.cs" />
     <Compile Include="RowKind.cs" />

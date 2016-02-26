@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
 
             var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
-                .Bind(x => x.Text = source)
+                .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
 
             var unit = builder.Item;
@@ -48,7 +48,7 @@ namespace DevZest.Data.Windows
 
             var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
             builder.Initialize(x => x.Text = INITIALIZED)
-                .BindToSource(x => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
+                .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
             var unit = builder.Item;

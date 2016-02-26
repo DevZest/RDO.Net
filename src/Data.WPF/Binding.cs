@@ -6,26 +6,27 @@ namespace DevZest.Data.Windows
 {
     internal sealed class Binding
     {
-        internal static Binding Bind<T>(Action<T> updateTarget)
+        internal static Binding Bind<T>(TemplateItem owner, Action<BindingSource, T> updateTarget)
             where T : UIElement
         {
-            return new Binding(x => updateTarget((T)x), null, null);
+            return new Binding(owner, (source, element) => updateTarget(source, (T)element), null, null);
         }
 
-        internal static Binding BindToSource<T>(Action<T> updateSource, BindingTrigger[] triggers)
+        internal static Binding BindToSource<T>(TemplateItem owner, Action<T, BindingSource> updateSource, BindingTrigger[] triggers)
             where T : UIElement
         {
-            return new Binding(null, x => updateSource((T)x), triggers);
+            return new Binding(owner, null, (element, source) => updateSource((T)element, source), triggers);
         }
 
-        internal static Binding BindTwoWay<T>(Action<T> updateTarget, Action<T> updateSource, BindingTrigger[] triggers)
+        internal static Binding BindTwoWay<T>(TemplateItem owner, Action<BindingSource, T> updateTarget, Action<T, BindingSource> updateSource, BindingTrigger[] triggers)
             where T : UIElement
         {
-            return new Binding(x => updateTarget((T)x), x => updateSource((T)x), triggers);
+            return new Binding(owner, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
         }
 
-        private Binding(Action<UIElement> updateTarget, Action<UIElement> updateSource, BindingTrigger[] triggers)
+        private Binding(TemplateItem owner, Action<BindingSource, UIElement> updateTarget, Action<UIElement, BindingSource> updateSource, BindingTrigger[] triggers)
         {
+            Owner = owner;
             _updateTarget = updateTarget;
             _updateSource = updateSource;
             if (triggers == null || triggers.Length == 0)
@@ -34,18 +35,42 @@ namespace DevZest.Data.Windows
                 _triggers = triggers;
         }
 
-        Action<UIElement> _updateTarget;
+        internal TemplateItem Owner { get; private set; }
+
+        Action<BindingSource, UIElement> _updateTarget;
         internal void UpdateTarget(UIElement element)
         {
             if (_updateTarget != null)
-                _updateTarget(element);
+            {
+                var source = BindingSource.Current;
+                source.Enter(this, element);
+                try
+                {
+                    _updateTarget(source, element);
+                }
+                finally
+                {
+                    source.Exit();                    
+                }
+            }
         }
 
-        Action<UIElement> _updateSource;
+        Action<UIElement, BindingSource> _updateSource;
         internal void UpdateSource(UIElement element)
         {
             if (_updateSource != null)
-                _updateSource(element);
+            {
+                var source = BindingSource.Current;
+                source.Enter(this, element);
+                try
+                {
+                    _updateSource(element, source);
+                }
+                finally
+                {
+                    source.Exit();
+                }
+            }
         }
 
         IReadOnlyList<BindingTrigger> _triggers;
