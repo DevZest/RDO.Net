@@ -8,26 +8,26 @@ using DevZest.Data.Windows.Factories;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class DataView : IReadOnlyList<RowView>
+    public sealed partial class DataPresenter : IReadOnlyList<RowPresenter>
     {
-        internal static DataView Create<T>(RowView owner, T childModel, Action<DataViewBuilder, T> action)
+        internal static DataPresenter Create<T>(RowPresenter owner, T childModel, Action<DataPresenterBuilder, T> action)
             where T : Model, new()
         {
             Debug.Assert(owner != null);
             Debug.Assert(childModel != null);
             Debug.Assert(action != null);
 
-            var result = new DataView(owner, owner.DataRow[childModel]);
-            using (var viewBuilder = new DataViewBuilder(result))
+            var result = new DataPresenter(owner, owner.DataRow[childModel]);
+            using (var presenterBuilder = new DataPresenterBuilder(result))
             {
-                action(viewBuilder, childModel);
+                action(presenterBuilder, childModel);
             }
 
             result.Initialize();
             return result;
         }
 
-        public static DataView Create<T>(DataSet<T> dataSet, Action<DataViewBuilder, T> builderAction = null)
+        public static DataPresenter Create<T>(DataSet<T> dataSet, Action<DataPresenterBuilder, T> builderAction = null)
             where T : Model, new()
         {
             if (dataSet == null)
@@ -36,12 +36,12 @@ namespace DevZest.Data.Windows
             return Create<T>(null, dataSet, builderAction);
         }
 
-        private static DataView Create<T>(RowView owner, DataSet<T> dataSet, Action<DataViewBuilder, T> builderAction)
+        private static DataPresenter Create<T>(RowPresenter owner, DataSet<T> dataSet, Action<DataPresenterBuilder, T> builderAction)
             where T : Model, new()
         {
             var model = dataSet._;
-            var result = new DataView(owner, dataSet);
-            using (var builder = new DataViewBuilder(result))
+            var result = new DataPresenter(owner, dataSet);
+            using (var builder = new DataPresenterBuilder(result))
             {
                 if (builderAction != null)
                     builderAction(builder, model);
@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private static void DefaultBuilder(DataViewBuilder builder, Model model)
+        private static void DefaultBuilder(DataPresenterBuilder builder, Model model)
         {
             var columns = model.GetColumns();
             if (columns.Count == 0)
@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataView(RowView owner, DataSet dataSet)
+        private DataPresenter(RowPresenter owner, DataSet dataSet)
         {
             Debug.Assert(dataSet != null);
             Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == owner.DataRow);
@@ -121,55 +121,55 @@ namespace DevZest.Data.Windows
             _isUpdatingTarget = false;
         }
 
-        int _rowViewBindingSourceFlags;
+        int _rowPresenterStateFlags;
 
-        private static int GetMask(RowState bindingSource)
+        private static int GetMask(RowPresenterState rowPresenterState)
         {
-            return 1 << (int)bindingSource;
+            return 1 << (int)rowPresenterState;
         }
 
-        internal bool IsConsumed(RowState bindingSource)
+        internal bool IsConsumed(RowPresenterState rowPresenterState)
         {
-            int mask = GetMask(bindingSource);
-            return (_rowViewBindingSourceFlags & mask) != 0;
+            int mask = GetMask(rowPresenterState);
+            return (_rowPresenterStateFlags & mask) != 0;
         }
 
-        internal void OnGetValue(RowState bindingSource)
+        internal void OnGetValue(RowPresenterState rowPresenterState)
         {
             if (_isUpdatingTarget)
             {
-                int mask = GetMask(bindingSource);
-                _rowViewBindingSourceFlags |= mask;
+                int mask = GetMask(rowPresenterState);
+                _rowPresenterStateFlags |= mask;
             }
         }
 
-        int _dataViewBindingSourceFlags;
+        int _dataPresenterStateFlags;
 
-        private static int GetMask(ViewState bindingSource)
+        private static int GetMask(DataPresenterState dataPresenterState)
         {
-            return 1 << (int)bindingSource;
+            return 1 << (int)dataPresenterState;
         }
 
-        internal bool IsConsumed(ViewState bindingSource)
+        internal bool IsConsumed(DataPresenterState dataPresenterState)
         {
-            int mask = GetMask(bindingSource);
-            return (_dataViewBindingSourceFlags & mask) != 0;
+            int mask = GetMask(dataPresenterState);
+            return (_dataPresenterStateFlags & mask) != 0;
         }
 
-        private void OnGetValue(ViewState bindingSource)
+        private void OnGetValue(DataPresenterState dataPresenterState)
         {
             if (_isUpdatingTarget)
             {
-                int mask = GetMask(bindingSource);
-                _dataViewBindingSourceFlags |= mask;
+                int mask = GetMask(dataPresenterState);
+                _dataPresenterStateFlags |= mask;
             }
         }
 
         public event EventHandler BindingsReset;
 
-        private void OnUpdated(ViewState bindingSource)
+        private void OnUpdated(DataPresenterState dataPresenterState)
         {
-            if (IsConsumed(bindingSource))
+            if (IsConsumed(dataPresenterState))
                 OnBindingsReset();
         }
 
@@ -192,29 +192,29 @@ namespace DevZest.Data.Windows
             if (CurrentRow == null)
                 CurrentRow = this[0];
 
-            if (IsConsumed(RowState.Index))
+            if (IsConsumed(RowPresenterState.Index))
             {
                 for (int i = index + 1; i < Count; i++)
                     this[i].OnBindingsReset();
             }
 
             LayoutManager.OnRowAdded(index);
-            OnUpdated(ViewState.Rows);
+            OnUpdated(DataPresenterState.Rows);
         }
 
-        private void OnRowRemoved(int index, RowView row)
+        private void OnRowRemoved(int index, RowPresenter row)
         {
             if (CurrentRow == row)
                 CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
 
-            if (IsConsumed(RowState.Index))
+            if (IsConsumed(RowPresenterState.Index))
             {
                 for (int i = index; i < Count; i++)
                     this[i].OnBindingsReset();
             }
 
             LayoutManager.OnRowRemoved(index, row);
-            OnUpdated(ViewState.Rows);
+            OnUpdated(DataPresenterState.Rows);
         }
 
         private void OnRowUpdated(int index)
@@ -222,8 +222,8 @@ namespace DevZest.Data.Windows
             this[index].OnBindingsReset();
         }
 
-        private readonly RowView _owner;
-        public RowView Owner
+        private readonly RowPresenter _owner;
+        public RowPresenter Owner
         {
             get { return _owner; }
         }
@@ -241,19 +241,19 @@ namespace DevZest.Data.Windows
             get { return _dataSet.Model; }
         }
 
-        #region IReadOnlyList<RowView>
+        #region IReadOnlyList<RowPresenter>
 
         RowCollection _rows;
         private RowCollection Rows
         {
             get
             {
-                OnGetValue(ViewState.Rows);
+                OnGetValue(DataPresenterState.Rows);
                 return _rows;
             }
         }
 
-        public IEnumerator<RowView> GetEnumerator()
+        public IEnumerator<RowPresenter> GetEnumerator()
         {
             return Rows.GetEnumerator();
         }
@@ -268,7 +268,7 @@ namespace DevZest.Data.Windows
             get { return Rows.Count; }
         }
 
-        public RowView this[int index]
+        public RowPresenter this[int index]
         {
             get { return Rows[index]; }
         }
@@ -284,12 +284,12 @@ namespace DevZest.Data.Windows
             _rows.DataRowToEof();
         }
 
-        private RowView _currentRow;
-        public RowView CurrentRow
+        private RowPresenter _currentRow;
+        public RowPresenter CurrentRow
         {
             get
             {
-                OnGetValue(ViewState.CurrentRow);
+                OnGetValue(DataPresenterState.CurrentRow);
                 return _currentRow;
             }
             set
@@ -298,7 +298,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 if (value != null && value.Owner != this)
-                    throw new ArgumentException(Strings.DataView_InvalidCurrentRow, nameof(value));
+                    throw new ArgumentException(Strings.DataPresenter_InvalidCurrentRow, nameof(value));
 
                 var oldValue = _currentRow;
                 if (_currentRow != null)
@@ -311,30 +311,30 @@ namespace DevZest.Data.Windows
 
                 if (LayoutManager != null)
                     LayoutManager.OnCurrentRowChanged();
-                OnUpdated(ViewState.CurrentRow);
+                OnUpdated(DataPresenterState.CurrentRow);
             }
         }
 
-        private HashSet<RowView> _selectedRows = new HashSet<RowView>();
-        public IReadOnlyCollection<RowView> SelectedRows
+        private HashSet<RowPresenter> _selectedRows = new HashSet<RowPresenter>();
+        public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get
             {
-                OnGetValue(ViewState.SelectedRows);
+                OnGetValue(DataPresenterState.SelectedRows);
                 return _selectedRows;
             }
         }
 
-        internal void AddSelectedRow(RowView row)
+        internal void AddSelectedRow(RowPresenter row)
         {
             _selectedRows.Add(row);
-            OnUpdated(ViewState.SelectedRows);
+            OnUpdated(DataPresenterState.SelectedRows);
         }
 
-        internal void RemoveSelectedRow(RowView row)
+        internal void RemoveSelectedRow(RowPresenter row)
         {
             _selectedRows.Remove(row);
-            OnUpdated(ViewState.SelectedRows);
+            OnUpdated(DataPresenterState.SelectedRows);
         }
 
         internal LayoutManager LayoutManager { get; private set; }

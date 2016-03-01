@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    internal enum ViewState
+    internal enum DataPresenterState
     {
         Rows = 0,
         CurrentRow,

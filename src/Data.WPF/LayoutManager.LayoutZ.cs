@@ -9,13 +9,13 @@ namespace DevZest.Data.Windows
     {
         private sealed class LayoutZ : LayoutManager
         {
-            public LayoutZ(DataView view)
-                : base(view)
+            public LayoutZ(DataPresenter presenter)
+                : base(presenter)
             {
             }
 
-            private RowView _currentRow;
-            private RowView CurrentRow
+            private RowPresenter _currentRow;
+            private RowPresenter CurrentRow
             {
                 get { return _currentRow; }
                 set
@@ -40,7 +40,7 @@ namespace DevZest.Data.Windows
 
             protected override void InitMeasure()
             {
-                CurrentRow = _view.CurrentRow;
+                CurrentRow = _presenter.CurrentRow;
                 foreach (var autoSizeItem in _autoSizeItems)
                 {
                     if (autoSizeItem.IsScalar)

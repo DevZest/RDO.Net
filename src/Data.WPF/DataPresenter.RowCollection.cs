@@ -5,23 +5,23 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
-    partial class DataView
+    partial class DataPresenter
     {
-        private class RowCollection : IReadOnlyList<RowView>
+        private class RowCollection : IReadOnlyList<RowPresenter>
         {
-            public RowCollection(DataView owner)
+            public RowCollection(DataPresenter owner)
             {
                 Debug.Assert(owner != null);
                 _owner = owner;
 
-                _rows = new List<RowView>(DataSet.Count);
+                _rows = new List<RowPresenter>(DataSet.Count);
                 foreach (var dataRow in DataSet)
-                    _rows.Add(RowView.Create(_owner, dataRow));
+                    _rows.Add(RowPresenter.Create(_owner, dataRow));
 
                 if (_owner.IsEofVisible)
-                    _virtualRow = RowView.CreateEof(_owner);
+                    _virtualRow = RowPresenter.CreateEof(_owner);
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
-                    _virtualRow = RowView.CreateEmptySet(_owner);
+                    _virtualRow = RowPresenter.CreateEmptySet(_owner);
 
                 AddRowsChangedListener();
             }
@@ -38,12 +38,12 @@ namespace DevZest.Data.Windows
                 DataSet.RowRemoved -= OnDataRowRemoved;
             }
 
-            #region IReadOnlyList<RowView>
+            #region IReadOnlyList<RowPresenter>
 
-            List<RowView> _rows;
-            RowView _virtualRow;
+            List<RowPresenter> _rows;
+            RowPresenter _virtualRow;
 
-            public IEnumerator<RowView> GetEnumerator()
+            public IEnumerator<RowPresenter> GetEnumerator()
             {
                 foreach (var row in _rows)
                     yield return row;
@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public RowView this[int index]
+            public RowPresenter this[int index]
             {
                 get
                 {
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows
 
             #endregion
 
-            private readonly DataView _owner;
+            private readonly DataPresenter _owner;
 
             private DataSet DataSet
             {
@@ -104,7 +104,7 @@ namespace DevZest.Data.Windows
                 }
 
                 {
-                    var row = RowView.Create(_owner, dataRow);
+                    var row = RowPresenter.Create(_owner, dataRow);
                     _rows.Insert(index, row);
                     NotifyRowAdded(index);
                 }
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows
                 _owner.OnRowAdded(index);
             }
 
-            void NotifyRowRemoved(int index, RowView row)
+            void NotifyRowRemoved(int index, RowPresenter row)
             {
                 _owner.OnRowRemoved(index, row);
             }
@@ -135,7 +135,7 @@ namespace DevZest.Data.Windows
                 if (_rows.Count == 0 && _owner.IsEmptySetVisible)
                 {
                     Debug.Assert(_virtualRow == null);
-                    _virtualRow = RowView.CreateEmptySet(_owner);
+                    _virtualRow = RowPresenter.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
             }
@@ -152,7 +152,7 @@ namespace DevZest.Data.Windows
                 _rows.Add(eof);
                 eof.Initialize(dataRow, RowKind.DataRow);
                 eof.OnBindingsReset();
-                _virtualRow = RowView.CreateEof(_owner);
+                _virtualRow = RowPresenter.CreateEof(_owner);
                 NotifyRowAdded(Count - 1);
 
                 AddRowsChangedListener();

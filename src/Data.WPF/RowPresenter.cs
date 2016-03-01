@@ -7,24 +7,24 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowView
+    public sealed class RowPresenter
     {
-        internal static RowView Create(DataView owner, DataRow dataRow)
+        internal static RowPresenter Create(DataPresenter owner, DataRow dataRow)
         {
-            return new RowView(owner, dataRow, RowKind.DataRow);
+            return new RowPresenter(owner, dataRow, RowKind.DataRow);
         }
 
-        internal static RowView CreateEof(DataView owner)
+        internal static RowPresenter CreateEof(DataPresenter owner)
         {
-            return new RowView(owner, null, RowKind.Eof);
+            return new RowPresenter(owner, null, RowKind.Eof);
         }
 
-        internal static RowView CreateEmptySet(DataView owner)
+        internal static RowPresenter CreateEmptySet(DataPresenter owner)
         {
-            return new RowView(owner, null, RowKind.EmptySet);
+            return new RowPresenter(owner, null, RowKind.EmptySet);
         }
 
-        private RowView(DataView owner, DataRow dataRow, RowKind rowType)
+        private RowPresenter(DataPresenter owner, DataRow dataRow, RowKind rowType)
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
         {
             DataRow = dataRow;
             Kind = rowType;
-            Children = InitChildViews();
+            Children = InitChildPresenters();
         }
 
         internal void Dispose()
@@ -46,8 +46,8 @@ namespace DevZest.Data.Windows
             Children = null;
         }
 
-        private DataView _owner;
-        public DataView Owner
+        private DataPresenter _owner;
+        public DataPresenter Owner
         {
             get
             {
@@ -75,29 +75,29 @@ namespace DevZest.Data.Windows
             get { return Owner == null ? null : Owner.Model; }
         }
 
-        public IReadOnlyList<DataView> Children { get; private set; }
-        private IReadOnlyList<DataView> InitChildViews()
+        public IReadOnlyList<DataPresenter> Children { get; private set; }
+        private IReadOnlyList<DataPresenter> InitChildPresenters()
         {
             if (Kind != RowKind.DataRow)
-                return EmptyArray<DataView>.Singleton;
+                return EmptyArray<DataPresenter>.Singleton;
 
             var childEntries = Template.ChildItems;
             if (childEntries.Count == 0)
-                return EmptyArray<DataView>.Singleton;
+                return EmptyArray<DataPresenter>.Singleton;
 
-            var result = new DataView[childEntries.Count];
+            var result = new DataPresenter[childEntries.Count];
             for (int i = 0; i < childEntries.Count; i++)
-                result[i] = childEntries[i].ChildViewConstructor(this);
+                result[i] = childEntries[i].ChildPresenterConstructor(this);
 
             return result;
         }
 
-        private void OnGetValue(RowState bindingSource)
+        private void OnGetValue(RowPresenterState bindingSource)
         {
             Owner.OnGetValue(bindingSource);
         }
 
-        private void OnUpdated(RowState bindingSource)
+        private void OnUpdated(RowPresenterState bindingSource)
         {
             if (Owner.IsConsumed(bindingSource))
                 OnBindingsReset();
@@ -119,7 +119,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowState.Index);
+                OnGetValue(RowPresenterState.Index);
                 return DataRow == null ? Owner.Count - 1 : DataRow.Index;
             }
         }
@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowState.IsCurrent);
+                OnGetValue(RowPresenterState.IsCurrent);
                 return _isCurrent;
             }
             internal set
@@ -138,7 +138,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                OnUpdated(RowState.IsCurrent);
+                OnUpdated(RowPresenterState.IsCurrent);
             }
         }
 
@@ -147,7 +147,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowState.IsSelected);
+                OnGetValue(RowPresenterState.IsSelected);
                 return _isSelected;
             }
             set
@@ -163,7 +163,7 @@ namespace DevZest.Data.Windows
                 if (_isSelected)
                     Owner.AddSelectedRow(this);
 
-                OnUpdated(RowState.IsSelected);
+                OnUpdated(RowPresenterState.IsSelected);
             }
         }
 
@@ -265,7 +265,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowState.IsEditing);
+                OnGetValue(RowPresenterState.IsEditing);
                 return _isEditing;
             }
             private set
@@ -287,7 +287,7 @@ namespace DevZest.Data.Windows
                     Model.SetEditingRow(this);
                 }
 
-                OnUpdated(RowState.IsEditing);
+                OnUpdated(RowPresenterState.IsEditing);
             }
         }
 
@@ -317,7 +317,7 @@ namespace DevZest.Data.Windows
                 return;
 
             if (Kind == RowKind.EmptySet)
-                throw new InvalidOperationException(Strings.RowView_BeginEdit_EmptySet);
+                throw new InvalidOperationException(Strings.RowPresenter_BeginEdit_EmptySet);
 
             _wasEof = EofToDataRow();
             Debug.Assert(DataRow != null);

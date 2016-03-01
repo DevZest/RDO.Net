@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
 {
     partial class LayoutManager
     {
-        private class RealizedRowCollection : IReadOnlyList<RowView>
+        private class RealizedRowCollection : IReadOnlyList<RowPresenter>
         {
             public RealizedRowCollection(LayoutManager layoutManager)
             {
@@ -38,17 +38,17 @@ namespace DevZest.Data.Windows
                 get { return Elements.Count - Template.ScalarItems.Count; }
             }
 
-            public RowView this[int index]
+            public RowPresenter this[int index]
             {
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
                     var rowForm = (RowForm)Elements[index + Template.ScalarItemsCountBeforeRepeat];
-                    return rowForm.View;
+                    return rowForm.Presenter;
                 }
             }
 
-            public IEnumerator<RowView> GetEnumerator()
+            public IEnumerator<RowPresenter> GetEnumerator()
             {
                 for (int i = 0; i < Count; i++)
                     yield return this[i];
@@ -86,7 +86,7 @@ namespace DevZest.Data.Windows
                 _cachedRowForms.Add(rowForm);
             }
 
-            public void Add(RowView row)
+            public void Add(RowPresenter row)
             {
                 Debug.Assert(row != null && row.Form == null);
 
@@ -125,12 +125,12 @@ namespace DevZest.Data.Windows
                 RemoveRange(0, Count);
             }
 
-            public RowView First
+            public RowPresenter First
             {
                 get { return Count > 0 ? this[0] : null; }
             }
 
-            public RowView Last
+            public RowPresenter Last
             {
                 get { return Count > 0 ? this[Count - 1] : null; }
             }

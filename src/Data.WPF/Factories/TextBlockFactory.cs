@@ -5,14 +5,14 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class TextBlockFactory
     {
-        public static DataViewBuilder TextBlock(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static DataPresenterBuilder TextBlock(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
             return rangeConfig.BeginRepeatItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind((src, x) => x.Text = src.RowView.GetValue(column).GetText())
+                .Bind((src, x) => x.Text = src.RowPresenter.GetValue(column).GetText())
                 .End();
         }
 
@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows.Factories
             return value == null ? string.Empty : value.ToString();
         }
 
-        public static DataViewBuilder TextBlockLabel(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static DataPresenterBuilder TextBlockLabel(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Factories
                 .End();
         }
 
-        public static DataViewBuilder TextBlockName(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static DataPresenterBuilder TextBlockName(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));

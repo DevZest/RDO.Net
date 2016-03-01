@@ -11,23 +11,23 @@ namespace DevZest.Data.Windows
 {
     internal abstract partial class LayoutManager
     {
-        internal static LayoutManager Create(DataView view)
+        internal static LayoutManager Create(DataPresenter presenter)
         {
-            return view.Template.RepeatOrientation == RepeatOrientation.Z ? new LayoutZ(view) : RepeatLayout.Create(view);
+            return presenter.Template.RepeatOrientation == RepeatOrientation.Z ? new LayoutZ(presenter) : RepeatLayout.Create(presenter);
         }
 
-        protected LayoutManager(DataView view)
+        protected LayoutManager(DataPresenter presenter)
         {
-            Debug.Assert(view != null);
-            _view = view;
+            Debug.Assert(presenter != null);
+            _presenter = presenter;
             _realizedRows = new RealizedRowCollection(this);
         }
 
-        private DataView _view;
+        private DataPresenter _presenter;
 
-        private IReadOnlyList<RowView> Rows
+        private IReadOnlyList<RowPresenter> Rows
         {
-            get { return _view; }
+            get { return _presenter; }
         }
 
         private RealizedRowCollection _realizedRows;
@@ -39,12 +39,12 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Template
         {
-            get { return _view.Template; }
+            get { return _presenter.Template; }
         }
 
         private int VirtualizingThreshold
         {
-            get { return _view.VirtualizingThreshold; }
+            get { return _presenter.VirtualizingThreshold; }
         }
 
         private IElementCollection _elements;
@@ -83,7 +83,7 @@ namespace DevZest.Data.Windows
                     var scalarItem = scalarItems[i];
                     var element = Elements[i];
                     scalarItem.Cleanup(element);
-                    element.SetDataView(null);
+                    element.SetDataPresenter(null);
                 }
                 _elements.Clear();
                 _elements = null;
@@ -102,7 +102,7 @@ namespace DevZest.Data.Windows
             {
                 var scalarItem = scalarItems[i];
                 var element = scalarItem.Generate();
-                element.SetDataView(_view);
+                element.SetDataPresenter(_presenter);
                 scalarItem.Initialize(element);
                 _elements.Add(element);
             }
@@ -197,7 +197,7 @@ namespace DevZest.Data.Windows
             Invalidate();
         }
 
-        public void OnRowRemoved(int index, RowView row)
+        public void OnRowRemoved(int index, RowPresenter row)
         {
             Invalidate();
         }
@@ -331,8 +331,8 @@ namespace DevZest.Data.Windows
 
         private int FlowCount
         {
-            get { return _view.FlowCount; }
-            set { _view.FlowCount = value; }
+            get { return _presenter.FlowCount; }
+            set { _presenter.FlowCount = value; }
         }
 
         private int GrowCount
@@ -350,7 +350,7 @@ namespace DevZest.Data.Windows
                 gridTracks[i].AccumulatedLength = gridTracks[i - 1].AccumulatedLength + gridTracks[i].MeasuredLength;
         }
 
-        private RepeatPosition GetRepeatPosition(RowView row)
+        private RepeatPosition GetRepeatPosition(RowPresenter row)
         {
             Debug.Assert(row != null);
             Debug.Assert(_realizedRows.Count > 0);
@@ -371,7 +371,7 @@ namespace DevZest.Data.Windows
             {
                 var rowForm = element as RowForm;
                 if (rowForm != null)
-                    rowForm.Measure(GetSize(rowForm.View));
+                    rowForm.Measure(GetSize(rowForm.Presenter));
                 else
                     element.Measure(GetSize((ScalarItem)element.GetTemplateItem()));
             }
@@ -390,7 +390,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private Size GetSize(RowView row)
+        private Size GetSize(RowPresenter row)
         {
             var repeatPosition = GetRepeatPosition(row);
             var range = Template.RepeatRange;
@@ -399,12 +399,12 @@ namespace DevZest.Data.Windows
             return new Size(width, height);
         }
 
-        private Point GetPoint(RowView row)
+        private Point GetPoint(RowPresenter row)
         {
             throw new NotImplementedException();
         }
 
-        private Rect GetRect(RowView row)
+        private Rect GetRect(RowPresenter row)
         {
             return new Rect(GetPoint(row), GetSize(row));
         }
@@ -424,12 +424,12 @@ namespace DevZest.Data.Windows
             return new Rect(GetPoint(scalarItem), GetSize(scalarItem));
         }
 
-        public Size GetSize(RowView row, RepeatItem repeatItem)
+        public Size GetSize(RowPresenter row, RepeatItem repeatItem)
         {
             throw new NotImplementedException();
         }
 
-        public Point GetPoint(RowView row, RepeatItem repeatItem)
+        public Point GetPoint(RowPresenter row, RepeatItem repeatItem)
         {
             throw new NotImplementedException();
         }
@@ -455,7 +455,7 @@ namespace DevZest.Data.Windows
             {
                 var rowForm = element as RowForm;
                 if (rowForm != null)
-                    rowForm.Arrange(GetRect(rowForm.View));
+                    rowForm.Arrange(GetRect(rowForm.Presenter));
                 else
                     element.Arrange(GetRect((ScalarItem)element.GetTemplateItem()));
             }

@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows
         public void RowView_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var dataView = DataView.Create(dataSet, (builder, model) =>
+            var dataView = DataPresenter.Create(dataSet, (builder, model) =>
             {
                 builder.WithEofVisible(true);
             });
@@ -33,7 +33,7 @@ namespace DevZest.Data.Windows
         public void RowView_CancelEdit_Eof()
         {
             var dataSet = DataSet<SalesOrder>.New();
-            var dataView = DataView.Create(dataSet, (builder, model) =>
+            var dataView = DataPresenter.Create(dataSet, (builder, model) =>
             {
                 builder.WithEofVisible(true);
             });

@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
             _elements.Pop();
         }
 
-        public DataView DataView
+        public DataPresenter DataPresenter
         {
             get
             {
@@ -32,12 +32,12 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public RowView RowView
+        public RowPresenter RowPresenter
         {
             get
             {
                 var element = _elements.Peek();
-                return element == null ? null : element.GetRowView();
+                return element == null ? null : element.GetRowPresenter();
             }
         }
     }

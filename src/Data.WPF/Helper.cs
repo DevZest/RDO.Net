@@ -6,10 +6,10 @@ namespace DevZest.Data.Windows
 {
     public static class Helper
     {
-        internal static DataView GetDataView(this DependencyObject reference)
+        internal static DataPresenter GetDataPresenter(this DependencyObject reference)
         {
             var dataForm = reference.GetParent<DataForm>();
-            return dataForm == null ? null : dataForm.View;
+            return dataForm == null ? null : dataForm.Presenter;
         }
 
         private static T GetParent<T>(this DependencyObject reference)

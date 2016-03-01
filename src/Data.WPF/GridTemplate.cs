@@ -26,14 +26,14 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridTemplate(DataView owner)
+        internal GridTemplate(DataPresenter owner)
         {
             Owner = owner;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
         }
 
-    public DataView Owner { get; private set; }
+    public DataPresenter Owner { get; private set; }
 
         public Model Model
         {

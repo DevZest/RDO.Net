@@ -10,26 +10,26 @@ namespace DevZest.Data.Windows
     {
         private abstract class RepeatLayout : LayoutManager
         {
-            public static new LayoutManager Create(DataView view)
+            public static new LayoutManager Create(DataPresenter presenter)
             {
-                var orientation = view.Template.RepeatOrientation;
+                var orientation = presenter.Template.RepeatOrientation;
                 if (orientation == RepeatOrientation.Y)
-                    return new LayoutY(view);
+                    return new LayoutY(presenter);
                 else if (orientation == RepeatOrientation.XY)
-                    return new LayoutXY(view);
+                    return new LayoutXY(presenter);
                 else if (orientation == RepeatOrientation.X)
-                    return new LayoutX(view);
+                    return new LayoutX(presenter);
                 else
                 {
                     Debug.Assert(orientation == RepeatOrientation.YX);
-                    return new LayoutYX(view);
+                    return new LayoutYX(presenter);
                 }
             }
 
             private sealed class LayoutXY : RepeatLayout
             {
-                public LayoutXY(DataView view)
-                    : base(view)
+                public LayoutXY(DataPresenter presenter)
+                    : base(presenter)
                 {
                 }
 
@@ -44,16 +44,16 @@ namespace DevZest.Data.Windows
 
             private sealed class LayoutY : RepeatLayout
             {
-                public LayoutY(DataView view)
-                    : base(view)
+                public LayoutY(DataPresenter presenter)
+                    : base(presenter)
                 {
                 }
             }
 
             private sealed class LayoutYX : RepeatLayout
             {
-                public LayoutYX(DataView view)
-                    : base(view)
+                public LayoutYX(DataPresenter presenter)
+                    : base(presenter)
                 {
                 }
 
@@ -73,8 +73,8 @@ namespace DevZest.Data.Windows
 
             private sealed class LayoutX : RepeatLayout
             {
-                public LayoutX(DataView view)
-                    : base(view)
+                public LayoutX(DataPresenter presenter)
+                    : base(presenter)
                 {
                 }
 
@@ -84,8 +84,8 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public RepeatLayout(DataView view)
-                : base(view)
+            public RepeatLayout(DataPresenter presenter)
+                : base(presenter)
             {
             }
 

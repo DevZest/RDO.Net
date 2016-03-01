@@ -5,23 +5,23 @@ namespace DevZest.Data.Windows
 {
     internal static class ModelExtensions
     {
-        private static ConditionalWeakTable<Model, RowView> s_editingRows = new ConditionalWeakTable<Model, RowView>();
+        private static ConditionalWeakTable<Model, RowPresenter> s_editingRows = new ConditionalWeakTable<Model, RowPresenter>();
 
-        internal static RowView GetEditingRow(this Model model)
+        internal static RowPresenter GetEditingRow(this Model model)
         {
             Debug.Assert(model != null);
 
-            RowView result;
+            RowPresenter result;
             if (s_editingRows.TryGetValue(model, out result))
                 return result;
             return null;
         }
 
-        internal static void SetEditingRow(this Model model, RowView value)
+        internal static void SetEditingRow(this Model model, RowPresenter value)
         {
             Debug.Assert(model != null);
 
-            RowView oldValue;
+            RowPresenter oldValue;
             if (!s_editingRows.TryGetValue(model, out oldValue))
                 oldValue = null;
 

@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows
     {
         private const string PART_RowPanel = "PART_RowPanel";
 
-        public RowView View { get; private set; }
+        public RowPresenter Presenter { get; private set; }
 
         private bool _elementsCreated;
         private IElementCollection _elements;
@@ -24,40 +24,40 @@ namespace DevZest.Data.Windows
         {
             base.OnApplyTemplate();
 
-            Debug.Assert(View == null);
+            Debug.Assert(Presenter == null);
             var rowPanel = GetTemplateChild(PART_RowPanel) as RowPanel;
             _elements = rowPanel == null ? IElementCollectionFactory.Create(null) : rowPanel.ElementCollection;
             _elementsCreated = false;
         }
 
-        internal void Initialize(RowView view)
+        internal void Initialize(RowPresenter presenter)
         {
-            Debug.Assert(view != null && View == null);
+            Debug.Assert(presenter != null && Presenter == null);
 
-            EnsureElementsCreated(view);
+            EnsureElementsCreated(presenter);
 
-            View = view;
+            Presenter = presenter;
 
-            var repeatItems = view.Owner.Template.RepeatItems;
+            var repeatItems = presenter.Owner.Template.RepeatItems;
             Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
-                element.SetRowView(view);
-                element.SetDataView(view.Owner);
+                element.SetRowPresenter(presenter);
+                element.SetDataPresenter(presenter.Owner);
                 repeatItems[i].Initialize(element);
             }
 
-            view.BindingsReset += OnBindingsReset;
+            presenter.BindingsReset += OnBindingsReset;
         }
 
-        private void EnsureElementsCreated(RowView view)
+        private void EnsureElementsCreated(RowPresenter rowPresenter)
         {
             if (_elementsCreated)
                 return;
 
             ApplyTemplate();
-            var repeatItems = view.Owner.Template.RepeatItems;
+            var repeatItems = rowPresenter.Owner.Template.RepeatItems;
             for (int i = 0; i < repeatItems.Count; i++)
                 _elements.Add(repeatItems[i].Generate());
             _elementsCreated = true;
@@ -65,28 +65,28 @@ namespace DevZest.Data.Windows
 
         private void OnBindingsReset(object sender, System.EventArgs e)
         {
-            var repeatItems = View.Owner.Template.RepeatItems;
+            var repeatItems = Presenter.Owner.Template.RepeatItems;
             for (int i = 0; i < repeatItems.Count; i++)
                 repeatItems[i].UpdateTarget(Elements[i]);
         }
 
         internal void Cleanup()
         {
-            Debug.Assert(View != null);
+            Debug.Assert(Presenter != null);
 
-            View.BindingsReset -= OnBindingsReset;
+            Presenter.BindingsReset -= OnBindingsReset;
 
-            var repeatItems = View.Owner.Template.RepeatItems;
+            var repeatItems = Presenter.Owner.Template.RepeatItems;
             Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
                 repeatItems[i].Cleanup(element);
-                element.SetRowView(null);
-                element.SetDataView(null);
+                element.SetRowPresenter(null);
+                element.SetDataPresenter(null);
             }
 
-            View = null;
+            Presenter = null;
         }
 
         //protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)

@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows
                 Measure(uiElement, repeatIndex, repeatIndex); // when repeatIndex > 0, either AutoSizeGridColumns or AutoSizeGridRows is empty.
             }
 
-            public void MeasureRepeat(RowView row)
+            public void MeasureRepeat(RowPresenter row)
             {
                 Debug.Assert(IsRepeat);
                 var uiElement = row.Form.Elements[TemplateItem.Ordinal];

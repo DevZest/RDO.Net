@@ -155,12 +155,12 @@ namespace DevZest.Data.Windows
 
         #endregion
 
-        private static readonly DependencyProperty ViewProperty = DependencyProperty.Register(nameof(View), typeof(DataView),
-            typeof(DataPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnViewChanged));
+        private static readonly DependencyProperty PresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataPresenter),
+            typeof(DataPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnPresenterChanged));
 
-        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((DataPanel)d).OnViewChanged((DataView)e.OldValue);
+            ((DataPanel)d).OnPresenterChanged((DataPresenter)e.OldValue);
         }
 
         static DataPanel()
@@ -175,17 +175,17 @@ namespace DevZest.Data.Windows
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var binding = new System.Windows.Data.Binding(DataForm.ViewProperty.Name);
+            var binding = new System.Windows.Data.Binding(DataForm.PresenterProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, ViewProperty, binding);
+            BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
 
-        private DataView View
+        private DataPresenter Presenter
         {
-            get { return (DataView)GetValue(ViewProperty); }
+            get { return (DataPresenter)GetValue(PresenterProperty); }
         }
 
-        private void OnViewChanged(DataView oldValue)
+        private void OnPresenterChanged(DataPresenter oldValue)
         {
             if (oldValue != null)
             {
@@ -219,8 +219,8 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                var view = View;
-                return view == null ? null : view.LayoutManager;
+                var presenter = Presenter;
+                return presenter == null ? null : presenter.LayoutManager;
             }
         }
 

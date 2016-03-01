@@ -16,11 +16,11 @@ namespace DevZest.Data.Windows
         public void DataForm_properly_initialized()
         {
             var dataForm = new DataForm();
-            dataForm.Show(DataView.Create(DataSet<Adhoc>.New()));
+            dataForm.Show(DataPresenter.Create(DataSet<Adhoc>.New()));
 
             dataForm.RunAfterLoaded(x =>
             {
-                var layoutManager = dataForm.View.LayoutManager;
+                var layoutManager = dataForm.Presenter.LayoutManager;
                 var dataPanel = x.FindVisualChild<DataPanel>();
                 Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
                 Verify(dataPanel, layoutManager.Elements);

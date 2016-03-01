@@ -6,9 +6,9 @@ namespace DevZest.Data.Windows
     [TestClass]
     public class DataViewRowCollectionTests
     {
-        private static DataView CreateDataView(DataSet<Adhoc> dataSet, bool isEofVisible, bool isEmptySetVisible = false)
+        private static DataPresenter CreateDataView(DataSet<Adhoc> dataSet, bool isEofVisible, bool isEmptySetVisible = false)
         {
-            return DataView.Create(dataSet, (builder, model) => builder.WithEofVisible(isEofVisible).WithEmptySetVisible(isEmptySetVisible));
+            return DataPresenter.Create(dataSet, (builder, model) => builder.WithEofVisible(isEofVisible).WithEmptySetVisible(isEmptySetVisible));
         }
 
         [TestMethod]

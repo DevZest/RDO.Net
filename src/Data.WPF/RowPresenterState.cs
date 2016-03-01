@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    internal enum RowState
+    internal enum RowPresenterState
     {
         IsSelected = 0,
         IsCurrent,

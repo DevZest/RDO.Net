@@ -10,8 +10,8 @@ namespace DevZest.Data.Windows
         public sealed new class Builder<T> : TemplateItem.Builder<T, ChildItem, Builder<T>>
             where T : DataForm, new()
         {
-            internal Builder(GridRangeConfig rangeConfig, Func<RowView, DataView> childViewConstructor)
-                : base(rangeConfig, ChildItem.Create<T>(childViewConstructor))
+            internal Builder(GridRangeConfig rangeConfig, Func<RowPresenter, DataPresenter> childPresenterConstructor)
+                : base(rangeConfig, ChildItem.Create<T>(childPresenterConstructor))
             {
             }
 
@@ -20,23 +20,23 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataViewBuilder End(GridRangeConfig rangeConfig, ChildItem item)
+            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, ChildItem item)
             {
                 return rangeConfig.End(item);
             }
         }
 
-        internal static ChildItem Create<T>(Func<RowView, DataView> childViewConstructor)
+        internal static ChildItem Create<T>(Func<RowPresenter, DataPresenter> childPresenterConstructor)
             where T : DataForm, new()
         {
-            return new ChildItem(() => new T(), childViewConstructor);
+            return new ChildItem(() => new T(), childPresenterConstructor);
         }
 
-        private ChildItem(Func<UIElement> constructor, Func<RowView, DataView> childViewConstructor)
+        private ChildItem(Func<UIElement> constructor, Func<RowPresenter, DataPresenter> childPresenterConstructor)
                 : base(constructor)
         {
-            Debug.Assert(childViewConstructor != null);
-            ChildViewConstructor = childViewConstructor;
+            Debug.Assert(childPresenterConstructor != null);
+            ChildPresenterConstructor = childPresenterConstructor;
         }
 
         internal int Index { get; private set; }
@@ -47,13 +47,13 @@ namespace DevZest.Data.Windows
             Index = index;
         }
 
-        internal Func<RowView, DataView> ChildViewConstructor { get; private set; }
+        internal Func<RowPresenter, DataPresenter> ChildPresenterConstructor { get; private set; }
 
         internal sealed override void Initialize(UIElement element)
         {
             base.Initialize(element);
             var dataForm = (DataForm)element;
-            var parentRow = dataForm.GetRowView();
+            var parentRow = dataForm.GetRowPresenter();
             dataForm.Show(parentRow.Children[Index]);
         }
 

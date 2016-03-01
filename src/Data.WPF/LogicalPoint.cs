@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows
 {
     internal struct LogicalPoint
     {
-        public LogicalPoint(GridColumn gridColumn, GridRow gridRow, RowView row, double offsetX, double offsetY)
+        public LogicalPoint(GridColumn gridColumn, GridRow gridRow, RowPresenter row, double offsetX, double offsetY)
         {
             Debug.Assert(gridColumn != null && gridRow != null && gridColumn.Owner == gridRow.Owner);
             Debug.Assert(row == null || row.Owner.Template == gridColumn.Owner);
@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
         public readonly GridColumn GridColumn;
         public readonly GridRow GridRow;
 
-        public readonly RowView Row;
+        public readonly RowPresenter Row;
 
         private readonly double _factorX;
         public double OffsetX
@@ -34,12 +34,12 @@ namespace DevZest.Data.Windows
             get { return GetGridHeight(GridRow, Row) * _factorY; }
         }
 
-        private static double GetGridWidth(GridColumn gridColumn, RowView row)
+        private static double GetGridWidth(GridColumn gridColumn, RowPresenter row)
         {
             throw new NotImplementedException();
         }
 
-        private static double GetGridHeight(GridRow gridRow, RowView row)
+        private static double GetGridHeight(GridRow gridRow, RowPresenter row)
         {
             throw new NotImplementedException();
         }

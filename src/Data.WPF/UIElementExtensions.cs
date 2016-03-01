@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public static class UIElementExtensions
+    internal static class UIElementExtensions
     {
         private static readonly DependencyProperty TemplateItemProperty = DependencyProperty.RegisterAttached(nameof(TemplateItem),
             typeof(TemplateItem), typeof(UIElementExtensions), new PropertyMetadata(null));
@@ -20,47 +20,47 @@ namespace DevZest.Data.Windows
             element.SetValue(TemplateItemProperty, value);
         }
 
-        private static readonly DependencyProperty DataViewProperty = DependencyProperty.RegisterAttached(nameof(DataView),
-            typeof(DataView), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty DataPresenterProperty = DependencyProperty.RegisterAttached(nameof(DataPresenter),
+            typeof(DataPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static DataView GetDataView(this UIElement element)
+        public static DataPresenter GetDataPresenter(this UIElement element)
         {
-            return (DataView)element.GetValue(DataViewProperty);
+            return (DataPresenter)element.GetValue(DataPresenterProperty);
         }
 
-        internal static void SetDataView(this UIElement element, DataView value)
+        internal static void SetDataPresenter(this UIElement element, DataPresenter value)
         {
             if (value == null)
             {
-                Debug.Assert(element.GetDataView() != null);
-                element.ClearValue(DataViewProperty);
+                Debug.Assert(element.GetDataPresenter() != null);
+                element.ClearValue(DataPresenterProperty);
             }
             else
             {
-                Debug.Assert(element.GetDataView() == null);
-                element.SetValue(DataViewProperty, value);
+                Debug.Assert(element.GetDataPresenter() == null);
+                element.SetValue(DataPresenterProperty, value);
             }
         }
 
-        private static readonly DependencyProperty RowViewProperty = DependencyProperty.RegisterAttached(nameof(RowView),
-            typeof(RowView), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
+            typeof(RowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static RowView GetRowView(this UIElement element)
+        public static RowPresenter GetRowPresenter(this UIElement element)
         {
-            return (RowView)element.GetValue(RowViewProperty);
+            return (RowPresenter)element.GetValue(RowPresenterProperty);
         }
 
-        internal static void SetRowView(this UIElement element, RowView value)
+        internal static void SetRowPresenter(this UIElement element, RowPresenter value)
         {
             if (value == null)
             {
-                Debug.Assert(element.GetRowView() != null);
-                element.ClearValue(RowViewProperty);
+                Debug.Assert(element.GetRowPresenter() != null);
+                element.ClearValue(RowPresenterProperty);
             }
             else
             {
-                Debug.Assert(element.GetRowView() == null);
-                element.SetValue(RowViewProperty, value);
+                Debug.Assert(element.GetRowPresenter() == null);
+                element.SetValue(RowPresenterProperty, value);
             }
         }
 

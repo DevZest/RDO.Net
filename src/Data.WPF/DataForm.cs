@@ -9,10 +9,10 @@ namespace DevZest.Data.Windows
 {
     public class DataForm : Control
     {
-        private static readonly DependencyPropertyKey ViewPropertyKey = DependencyProperty.RegisterReadOnly(nameof(View),
-            typeof(DataView), typeof(DataForm), new FrameworkPropertyMetadata(null, OnViewChanged));
+        private static readonly DependencyPropertyKey PresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Presenter),
+            typeof(DataPresenter), typeof(DataForm), new FrameworkPropertyMetadata(null, OnPresenterChanged));
 
-        public static readonly DependencyProperty ViewProperty = ViewPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty PresenterProperty = PresenterPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
             typeof(bool), typeof(DataForm), new FrameworkPropertyMetadata(BooleanBoxes.True));
@@ -35,21 +35,21 @@ namespace DevZest.Data.Windows
         }
 
 
-        private static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var oldValue = (DataView)e.OldValue;
-            var newValue = (DataView)e.NewValue;
-            ((DataForm)d).OnViewChanged(oldValue, newValue);
+            var oldValue = (DataPresenter)e.OldValue;
+            var newValue = (DataPresenter)e.NewValue;
+            ((DataForm)d).OnPresenterChanged(oldValue, newValue);
         }
 
-        private void OnViewChanged(DataView oldValue, DataView newValue)
+        private void OnPresenterChanged(DataPresenter oldValue, DataPresenter newValue)
         {
         }
 
-        public DataView View
+        public DataPresenter Presenter
         {
-            get { return (DataView)GetValue(ViewProperty); }
-            private set { SetValue(ViewPropertyKey, value); }
+            get { return (DataPresenter)GetValue(PresenterProperty); }
+            private set { SetValue(PresenterPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -82,18 +82,18 @@ namespace DevZest.Data.Windows
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
-        public void Show(DataView view)
+        public void Show(DataPresenter presenter)
         {
-            if (view == null)
-                throw new ArgumentNullException(nameof(view));
+            if (presenter == null)
+                throw new ArgumentNullException(nameof(presenter));
 
-            View = view;
+            Presenter = presenter;
         }
 
         internal void Cleanup()
         {
-            Debug.Assert(View != null);
-            View = null;
+            Debug.Assert(Presenter != null);
+            Presenter = null;
         }
     }
 }
