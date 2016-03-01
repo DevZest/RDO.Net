@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows
             _owner = owner;
             _dataSet = dataSet;
             _template = new GridTemplate(this);
-            VirtualizingThreshold = 50;
+            VirtualizationThreshold = 50;
             FlowCount = 1;
         }
 
@@ -93,11 +93,11 @@ namespace DevZest.Data.Windows
             _dataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
-        public int VirtualizingThreshold { get; private set; }
+        public int VirtualizationThreshold { get; private set; }
 
-        internal void InitVirtualizingThreshold(int value)
+        internal void InitVirtualizationThreshold(int value)
         {
-            VirtualizingThreshold = value;
+            VirtualizationThreshold = value;
         }
 
         public bool IsEofVisible { get; private set; }

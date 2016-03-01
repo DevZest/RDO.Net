@@ -114,9 +114,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataPresenterBuilder WithVirtualizingThreshold(int value)
+        public DataPresenterBuilder WithVirtualizationThreshold(int value)
         {
-            Presenter.InitVirtualizingThreshold(value);
+            Presenter.InitVirtualizationThreshold(value);
             return this;
         }
 
