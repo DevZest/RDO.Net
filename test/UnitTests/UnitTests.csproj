@@ -75,11 +75,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DataViewRowCollectionTests.cs" />
+    <Compile Include="DataPresenterRowCollectionTests.cs" />
     <Compile Include="DataFormTests.cs" />
     <Compile Include="GridRowSetTests.cs" />
     <Compile Include="GridColumnSetTests.cs" />
-    <Compile Include="RowViewTests.cs" />
+    <Compile Include="RowPresenterTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

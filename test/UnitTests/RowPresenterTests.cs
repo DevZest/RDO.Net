@@ -7,18 +7,18 @@ using System.Windows;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class RowViewTests
+    public class RowPresenterTests
     {
         [TestMethod]
-        public void RowView_CancelEdit()
+        public void RowPresenter_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var dataView = DataPresenter.Create(dataSet, (builder, model) =>
+            var dataPresenter = DataPresenter.Create(dataSet, (builder, model) =>
             {
                 builder.WithEofVisible(true);
             });
 
-            var row = dataView[0];
+            var row = dataPresenter[0];
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
 
             row.SetValue(dataSet._.Status, SalesOrderStatus.InProcess);
@@ -30,26 +30,26 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void RowView_CancelEdit_Eof()
+        public void RowPresenter_CancelEdit_Eof()
         {
             var dataSet = DataSet<SalesOrder>.New();
-            var dataView = DataPresenter.Create(dataSet, (builder, model) =>
+            var dataPresenter = DataPresenter.Create(dataSet, (builder, model) =>
             {
                 builder.WithEofVisible(true);
             });
 
-            var row = dataView[0];
+            var row = dataPresenter[0];
             Assert.AreEqual(RowKind.Eof, row.Kind);
 
             row.SetValue(dataSet._.Status, SalesOrderStatus.InProcess);
             Assert.AreEqual(RowKind.DataRow, row.Kind);
-            Assert.AreEqual(2, dataView.Count);
+            Assert.AreEqual(2, dataPresenter.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
             row.CancelEdit();
             Assert.IsFalse(row.IsEditing);
             Assert.AreEqual(RowKind.Eof, row.Kind);
-            Assert.AreEqual(1, dataView.Count);
+            Assert.AreEqual(1, dataPresenter.Count);
         }
     }
 }
