@@ -7,6 +7,8 @@ namespace DevZest.Data.Windows
 {
     partial class DataPresenter
     {
+        /// <summary>This class manages mappings between RowPresenter and DataRow objects.
+        /// A special dummy RowPresenter is maintained for EOF or empty DataSet.</summary>
         private class RowCollection : IReadOnlyList<RowPresenter>
         {
             public RowCollection(DataPresenter owner)
@@ -19,9 +21,9 @@ namespace DevZest.Data.Windows
                     _rows.Add(RowPresenter.Create(_owner, dataRow));
 
                 if (_owner.IsEofVisible)
-                    _virtualRow = RowPresenter.CreateEof(_owner);
+                    _dummyRow = RowPresenter.CreateEof(_owner);
                 else if (_owner.IsEmptySetVisible && _rows.Count == 0)
-                    _virtualRow = RowPresenter.CreateEmptySet(_owner);
+                    _dummyRow = RowPresenter.CreateEmptySet(_owner);
 
                 AddRowsChangedListener();
             }
@@ -40,15 +42,15 @@ namespace DevZest.Data.Windows
 
             #region IReadOnlyList<RowPresenter>
 
-            List<RowPresenter> _rows;
-            RowPresenter _virtualRow;
+            List<RowPresenter> _rows;   // 1 on 1 mapping to DataRows
+            RowPresenter _dummyRow; // EOF or empty DataSet
 
             public IEnumerator<RowPresenter> GetEnumerator()
             {
                 foreach (var row in _rows)
                     yield return row;
-                if (_virtualRow != null)
-                    yield return _virtualRow;
+                if (_dummyRow != null)
+                    yield return _dummyRow;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -61,7 +63,7 @@ namespace DevZest.Data.Windows
                 get
                 {
                     var result = _rows.Count;
-                    if (_virtualRow != null)
+                    if (_dummyRow != null)
                         result++;
                     return result;
                 }
@@ -74,7 +76,7 @@ namespace DevZest.Data.Windows
                     if (index < 0 || index >= Count)
                         throw new ArgumentOutOfRangeException(nameof(index));
 
-                    return _virtualRow != null && index == Count - 1 ? _virtualRow : _rows[index];
+                    return _dummyRow != null && index == Count - 1 ? _dummyRow : _rows[index];
                 }
             }
 
@@ -96,10 +98,10 @@ namespace DevZest.Data.Windows
             {
                 var index = dataRow.Index;
 
-                if (_virtualRow != null && _virtualRow.Kind == RowKind.EmptySet)
+                if (_dummyRow != null && _dummyRow.Kind == RowKind.EmptySet)
                 {
-                    var row = _virtualRow;
-                    _virtualRow = null;
+                    var row = _dummyRow;
+                    _dummyRow = null;
                     NotifyRowRemoved(0, row);
                 }
 
@@ -134,15 +136,15 @@ namespace DevZest.Data.Windows
 
                 if (_rows.Count == 0 && _owner.IsEmptySetVisible)
                 {
-                    Debug.Assert(_virtualRow == null);
-                    _virtualRow = RowPresenter.CreateEmptySet(_owner);
+                    Debug.Assert(_dummyRow == null);
+                    _dummyRow = RowPresenter.CreateEmptySet(_owner);
                     NotifyRowAdded(0);
                 }
             }
 
             public void EofToDataRow()
             {
-                var eof = _virtualRow;
+                var eof = _dummyRow;
                 Debug.Assert(eof.Kind == RowKind.Eof);
 
                 RemoveRowsChangedListener();
@@ -152,7 +154,7 @@ namespace DevZest.Data.Windows
                 _rows.Add(eof);
                 eof.Initialize(dataRow, RowKind.DataRow);
                 eof.OnBindingsReset();
-                _virtualRow = RowPresenter.CreateEof(_owner);
+                _dummyRow = RowPresenter.CreateEof(_owner);
                 NotifyRowAdded(Count - 1);
 
                 AddRowsChangedListener();
@@ -162,8 +164,8 @@ namespace DevZest.Data.Windows
             {
                 RemoveRowsChangedListener();
 
-                var eof = _virtualRow;
-                _virtualRow = null;
+                var eof = _dummyRow;
+                _dummyRow = null;
                 NotifyRowRemoved(Count - 1, eof);
 
                 var index = DataSet.Count - 1;
@@ -171,7 +173,7 @@ namespace DevZest.Data.Windows
                 DataSet.RemoveAt(index);
                 _rows.RemoveAt(index);
                 row.Initialize(null, RowKind.Eof);
-                _virtualRow = row;
+                _dummyRow = row;
                 row.OnBindingsReset();
 
                 AddRowsChangedListener();
