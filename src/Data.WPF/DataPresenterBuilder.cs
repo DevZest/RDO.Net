@@ -132,12 +132,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public DataPresenterBuilder WithRowFormConstructor(Func<RowForm> rowFormConstructor)
+        public DataPresenterBuilder WithRowViewConstructor(Func<RowView> rowViewConstructor)
         {
-            if (rowFormConstructor == null)
-                throw new ArgumentNullException(nameof(rowFormConstructor));
+            if (rowViewConstructor == null)
+                throw new ArgumentNullException(nameof(rowViewConstructor));
 
-            Presenter.LayoutManager.InitRowFormConstructor(rowFormConstructor);
+            Presenter.LayoutManager.InitRowViewConstructor(rowViewConstructor);
             return this;
         }
     }

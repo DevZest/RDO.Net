@@ -2,22 +2,22 @@
 
 namespace DevZest.Data.Windows.Factories
 {
-    public static class DataFormFactory
+    public static class DataViewFactory
     {
-        public static DataPresenterBuilder DataForm<T>(this GridRangeConfig rangeConfig, _DataSet<T> child,
-            Action<DataPresenterBuilder, T> builder, Action<DataForm> initializer = null)
+        public static DataPresenterBuilder DataView<T>(this GridRangeConfig rangeConfig, _DataSet<T> child,
+            Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildItem<T, DataForm>(child, builder)
+            return rangeConfig.BeginChildItem<T, DataView>(child, builder)
                 .Initialize(initializer)
                 .End();
         }
 
-        public static DataPresenterBuilder DataForm<T>(this GridRangeConfig rangeConfig, T childModel,
-            Action<DataPresenterBuilder, T> builder, Action<DataForm> initializer = null)
+        public static DataPresenterBuilder DataView<T>(this GridRangeConfig rangeConfig, T childModel,
+            Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildItem<T, DataForm>(childModel, builder)
+            return rangeConfig.BeginChildItem<T, DataView>(childModel, builder)
                 .Initialize(initializer)
                 .End();
         }

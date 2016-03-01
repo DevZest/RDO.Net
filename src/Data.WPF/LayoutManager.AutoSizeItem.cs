@@ -177,7 +177,7 @@ namespace DevZest.Data.Windows
             public void MeasureRepeat(RowPresenter row)
             {
                 Debug.Assert(IsRepeat);
-                var uiElement = row.Form.Elements[TemplateItem.Ordinal];
+                var uiElement = row.View.Elements[TemplateItem.Ordinal];
                 var repeatPosition = LayoutManager.GetRepeatPosition(row);
                 Measure(uiElement, repeatPosition.X, repeatPosition.Y);
             }

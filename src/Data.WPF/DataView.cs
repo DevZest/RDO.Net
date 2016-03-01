@@ -7,31 +7,31 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    public class DataForm : Control
+    public class DataView : Control
     {
         private static readonly DependencyPropertyKey PresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Presenter),
-            typeof(DataPresenter), typeof(DataForm), new FrameworkPropertyMetadata(null, OnPresenterChanged));
+            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnPresenterChanged));
 
         public static readonly DependencyProperty PresenterProperty = PresenterPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
-            typeof(bool), typeof(DataForm), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataForm), new PropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataView), new PropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility),
-            typeof(ScrollBarVisibility), typeof(DataForm), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
+            typeof(ScrollBarVisibility), typeof(DataView), new FrameworkPropertyMetadata(ScrollBarVisibility.Auto));
 
         public static readonly DependencyProperty ScrollLineHeightProperty = DependencyProperty.Register(nameof(ScrollLineHeight),
-            typeof(double), typeof(DataForm), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
-            typeof(double), typeof(DataForm), new FrameworkPropertyMetadata(20.0d));
+            typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
 
-        static DataForm()
+        static DataView()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(DataForm), new FrameworkPropertyMetadata(typeof(DataForm)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(typeof(DataView)));
         }
 
 
@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows
         {
             var oldValue = (DataPresenter)e.OldValue;
             var newValue = (DataPresenter)e.NewValue;
-            ((DataForm)d).OnPresenterChanged(oldValue, newValue);
+            ((DataView)d).OnPresenterChanged(oldValue, newValue);
         }
 
         private void OnPresenterChanged(DataPresenter oldValue, DataPresenter newValue)

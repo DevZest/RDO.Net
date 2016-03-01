@@ -10,17 +10,17 @@ using System.Windows.Threading;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class DataFormTests
+    public class DataViewTests
     {
         [TestMethod]
-        public void DataForm_properly_initialized()
+        public void DataView_properly_initialized()
         {
-            var dataForm = new DataForm();
-            dataForm.Show(DataPresenter.Create(DataSet<Adhoc>.New()));
+            var dataView = new DataView();
+            dataView.Show(DataPresenter.Create(DataSet<Adhoc>.New()));
 
-            dataForm.RunAfterLoaded(x =>
+            dataView.RunAfterLoaded(x =>
             {
-                var layoutManager = dataForm.Presenter.LayoutManager;
+                var layoutManager = dataView.Presenter.LayoutManager;
                 var dataPanel = x.FindVisualChild<DataPanel>();
                 Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
                 Verify(dataPanel, layoutManager.Elements);

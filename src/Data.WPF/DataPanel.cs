@@ -14,12 +14,12 @@ namespace DevZest.Data.Windows
 
         private double ScrollLineHeight
         {
-            get { return DataForm.ScrollLineHeight; }
+            get { return DataView.ScrollLineHeight; }
         }
 
         private double ScrollLineWidth
         {
-            get { return DataForm.ScrollLineWidth; }
+            get { return DataView.ScrollLineWidth; }
         }
 
         bool _canVerticallyScroll;
@@ -175,7 +175,7 @@ namespace DevZest.Data.Windows
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            var binding = new System.Windows.Data.Binding(DataForm.PresenterProperty.Name);
+            var binding = new System.Windows.Data.Binding(DataView.PresenterProperty.Name);
             binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
             BindingOperations.SetBinding(this, PresenterProperty, binding);
         }
@@ -210,9 +210,9 @@ namespace DevZest.Data.Windows
             InvalidateMeasure();
         }
 
-        private DataForm DataForm
+        private DataView DataView
         {
-            get { return TemplatedParent as DataForm; }
+            get { return TemplatedParent as DataView; }
         }
 
         internal LayoutManager LayoutManager

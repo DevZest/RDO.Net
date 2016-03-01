@@ -61,16 +61,16 @@ namespace DevZest.Data.Windows
             return _presenterBuilder;
         }
 
-        public ChildItem.Builder<TForm> BeginChildItem<TModel, TForm>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
+        public ChildItem.Builder<TView> BeginChildItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
-            where TForm : DataForm, new()
+            where TView : DataView, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildItem.Builder<TForm>(this, owner =>
+            return new ChildItem.Builder<TView>(this, owner =>
             {
                 if (owner.Kind != RowKind.DataRow)
                     return null;
@@ -78,16 +78,16 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public ChildItem.Builder<TForm> BeginChildItem<TModel, TForm>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
+        public ChildItem.Builder<TView> BeginChildItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
-            where TForm : DataForm, new()
+            where TView : DataView, new()
         {
             if (child == null)
                 throw new ArgumentNullException(nameof(child));
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildItem.Builder<TForm>(this, owner =>
+            return new ChildItem.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)

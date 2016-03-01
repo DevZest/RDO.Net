@@ -76,7 +76,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DataPresenterRowCollectionTests.cs" />
-    <Compile Include="DataFormTests.cs" />
+    <Compile Include="DataViewTests.cs" />
     <Compile Include="GridRowSetTests.cs" />
     <Compile Include="GridColumnSetTests.cs" />
     <Compile Include="RowPresenterTests.cs" />
@@ -85,7 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
-    <Compile Include="TemplateUnitTests.cs" />
+    <Compile Include="TemplateItemTests.cs" />
     <Compile Include="GridLengthParserTests.cs" />
     <Compile Include="GridTemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

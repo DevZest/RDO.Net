@@ -8,8 +8,8 @@ namespace DevZest.Data.Windows
     {
         internal static DataPresenter GetDataPresenter(this DependencyObject reference)
         {
-            var dataForm = reference.GetParent<DataForm>();
-            return dataForm == null ? null : dataForm.Presenter;
+            var dataView = reference.GetParent<DataView>();
+            return dataView == null ? null : dataView.Presenter;
         }
 
         private static T GetParent<T>(this DependencyObject reference)

@@ -41,7 +41,7 @@ namespace DevZest.Data.Windows
 
         internal void Dispose()
         {
-            Debug.Assert(Form == null, "Row should be virtualized first before dispose.");
+            Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _owner = null;
             Children = null;
         }
@@ -345,6 +345,6 @@ namespace DevZest.Data.Windows
             IsEditing = false;
         }
 
-        internal RowForm Form { get; set; }
+        internal RowView View { get; set; }
     }
 }

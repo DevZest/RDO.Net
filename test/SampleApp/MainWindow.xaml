@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <dz:DataForm />
+        <dz:DataView />
     </Grid>
 </Window>

@@ -32,9 +32,9 @@ namespace DevZest.Data.Windows
 
         private RealizedRowCollection _realizedRows;
 
-        public void InitRowFormConstructor(Func<RowForm> rowFormConstructor)
+        public void InitRowViewConstructor(Func<RowView> rowViewConstructor)
         {
-            _realizedRows.InitRowFormConstructor(rowFormConstructor);
+            _realizedRows.InitRowViewConstructor(rowViewConstructor);
         }
 
         public GridTemplate Template
@@ -369,9 +369,9 @@ namespace DevZest.Data.Windows
         {
             foreach (var element in Elements)
             {
-                var rowForm = element as RowForm;
-                if (rowForm != null)
-                    rowForm.Measure(GetSize(rowForm.Presenter));
+                var rowView = element as RowView;
+                if (rowView != null)
+                    rowView.Measure(GetSize(rowView.Presenter));
                 else
                     element.Measure(GetSize((ScalarItem)element.GetTemplateItem()));
             }
@@ -453,9 +453,9 @@ namespace DevZest.Data.Windows
         {
             foreach (var element in Elements)
             {
-                var rowForm = element as RowForm;
-                if (rowForm != null)
-                    rowForm.Arrange(GetRect(rowForm.Presenter));
+                var rowView = element as RowView;
+                if (rowView != null)
+                    rowView.Arrange(GetRect(rowView.Presenter));
                 else
                     element.Arrange(GetRect((ScalarItem)element.GetTemplateItem()));
             }

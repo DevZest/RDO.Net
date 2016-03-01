@@ -43,8 +43,8 @@ namespace DevZest.Data.Windows
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
-                    var rowForm = (RowForm)Elements[index + Template.ScalarItemsCountBeforeRepeat];
-                    return rowForm.Presenter;
+                    var rowView = (RowView)Elements[index + Template.ScalarItemsCountBeforeRepeat];
+                    return rowView.Presenter;
                 }
             }
 
@@ -59,36 +59,36 @@ namespace DevZest.Data.Windows
                 return GetEnumerator();
             }
 
-            Func<RowForm> _rowFormConstructor = () => new RowForm();
-            public void InitRowFormConstructor(Func<RowForm> rowFormConstructor)
+            Func<RowView> _rowViewConstructor = () => new RowView();
+            public void InitRowViewConstructor(Func<RowView> rowViewConstructor)
             {
-                _rowFormConstructor = rowFormConstructor;
+                _rowViewConstructor = rowViewConstructor;
             }
 
-            List<RowForm> _cachedRowForms;
-            private RowForm GenerateRowForm()
+            List<RowView> _cachedRowViews;
+            private RowView GenerateRowView()
             {
-                if (_cachedRowForms == null || _cachedRowForms.Count == 0)
-                    return _rowFormConstructor();
+                if (_cachedRowViews == null || _cachedRowViews.Count == 0)
+                    return _rowViewConstructor();
 
-                var last = _cachedRowForms.Count - 1;
-                var result = _cachedRowForms[last];
-                _cachedRowForms.RemoveAt(last);
+                var last = _cachedRowViews.Count - 1;
+                var result = _cachedRowViews[last];
+                _cachedRowViews.RemoveAt(last);
                 return result;
             }
 
-            private void RecycleRowForm(RowForm rowForm)
+            private void RecycleRowView(RowView rowView)
             {
-                Debug.Assert(rowForm != null);
+                Debug.Assert(rowView != null);
 
-                if (_cachedRowForms == null)
-                    _cachedRowForms = new List<RowForm>();
-                _cachedRowForms.Add(rowForm);
+                if (_cachedRowViews == null)
+                    _cachedRowViews = new List<RowView>();
+                _cachedRowViews.Add(rowView);
             }
 
             public void Add(RowPresenter row)
             {
-                Debug.Assert(row != null && row.Form == null);
+                Debug.Assert(row != null && row.View == null);
 
                 int index;
                 if (Count == 0 || row.Index == this[0].Index - 1)
@@ -99,10 +99,10 @@ namespace DevZest.Data.Windows
                     index = Template.ScalarItemsCountBeforeRepeat + Count;
                 }
 
-                var rowForm = GenerateRowForm();
-                rowForm.Initialize(row);
-                row.Form = rowForm;
-                Children.Insert(index, rowForm);
+                var rowView = GenerateRowView();
+                rowView.Initialize(row);
+                row.View = rowView;
+                Children.Insert(index, rowView);
             }
 
             public void RemoveRange(int startIndex, int count)
@@ -110,10 +110,10 @@ namespace DevZest.Data.Windows
                 for (int i = startIndex; i < count; i++)
                 {
                     var row = this[i];
-                    var rowForm = this[i].Form;
-                    rowForm.Cleanup();
-                    row.Form = null;
-                    RecycleRowForm(rowForm);
+                    var rowView = this[i].View;
+                    rowView.Cleanup();
+                    row.View = null;
+                    RecycleRowView(rowView);
                 }
 
                 int startChildrenIndex = startIndex + Template.ScalarItemsCountBeforeRepeat;

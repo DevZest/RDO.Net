@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:DevZest.Data.Windows">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/DataForm.xaml" />
-        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowForm.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/DataView.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

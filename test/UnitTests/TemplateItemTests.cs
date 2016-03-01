@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class TemplateUnitTests
+    public class TemplateItemTests
     {
         const string INITIALIZED = "Initialized";
         const string CLEANUP = "Cleanup";
@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows
         const string TARGET_CHANGED = "Target changed";
 
         [TestMethod]
-        public void ScalarUnitBuilder_Bind()
+        public void ScalarItemBuilder_Bind()
         {
             string source = SOURCE;
 
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void ScalarUnitBuilder_BindToSource()
+        public void ScalarItemBuilder_BindToSource()
         {
             string source = SOURCE;
 

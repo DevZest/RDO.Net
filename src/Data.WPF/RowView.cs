@@ -7,7 +7,7 @@ using System.Windows.Input;
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = PART_RowPanel, Type = typeof(RowPanel))]
-    public class RowForm : Control
+    public class RowView : Control
     {
         private const string PART_RowPanel = "PART_RowPanel";
 

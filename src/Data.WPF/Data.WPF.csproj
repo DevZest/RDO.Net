@@ -84,13 +84,13 @@
     <Compile Include="Utilities\EmptyArray.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="RowPanel.cs" />
-    <Compile Include="RowForm.cs" />
+    <Compile Include="RowView.cs" />
     <Compile Include="RowPresenter.cs" />
     <Compile Include="GridLengthParser.cs" />
     <Compile Include="GridRange.cs" />
     <Compile Include="DataPresenter.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataForm.cs" />
+    <Compile Include="DataView.cs" />
     <Compile Include="GridColumn.cs" />
     <Compile Include="GridTrack.cs" />
     <Compile Include="GridRow.cs" />
@@ -141,11 +141,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Themes\RowForm.xaml">
+    <Page Include="Themes\RowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\DataForm.xaml">
+    <Page Include="Themes\DataView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

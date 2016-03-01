@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
     public sealed class ChildItem : RepeatItem
     {
         public sealed new class Builder<T> : TemplateItem.Builder<T, ChildItem, Builder<T>>
-            where T : DataForm, new()
+            where T : DataView, new()
         {
             internal Builder(GridRangeConfig rangeConfig, Func<RowPresenter, DataPresenter> childPresenterConstructor)
                 : base(rangeConfig, ChildItem.Create<T>(childPresenterConstructor))
@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows
         }
 
         internal static ChildItem Create<T>(Func<RowPresenter, DataPresenter> childPresenterConstructor)
-            where T : DataForm, new()
+            where T : DataView, new()
         {
             return new ChildItem(() => new T(), childPresenterConstructor);
         }
@@ -52,16 +52,16 @@ namespace DevZest.Data.Windows
         internal sealed override void Initialize(UIElement element)
         {
             base.Initialize(element);
-            var dataForm = (DataForm)element;
-            var parentRow = dataForm.GetRowPresenter();
-            dataForm.Show(parentRow.Children[Index]);
+            var dataView = (DataView)element;
+            var parentRow = dataView.GetRowPresenter();
+            dataView.Show(parentRow.Children[Index]);
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
             base.Cleanup(element);
-            var dataForm = (DataForm)element;
-            dataForm.Cleanup();
+            var dataView = (DataView)element;
+            dataView.Cleanup();
         }
     }
 }
