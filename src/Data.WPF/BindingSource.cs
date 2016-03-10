@@ -23,15 +23,6 @@ namespace DevZest.Data.Windows
             _elements.Pop();
         }
 
-        public DataPresenter DataPresenter
-        {
-            get
-            {
-                var binding = _bindings.Peek();
-                return binding == null ? null : binding.Owner.Owner.Owner;
-            }
-        }
-
         public RowPresenter RowPresenter
         {
             get

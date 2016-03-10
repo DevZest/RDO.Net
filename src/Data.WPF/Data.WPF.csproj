@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="BindingSource.cs" />
+    <Compile Include="DataPresenter.ElementGenerator.cs" />
     <Compile Include="GridRowSet.cs" />
     <Compile Include="GridColumnSet.cs" />
     <Compile Include="GridTrackCollection.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
     <Compile Include="RowPresenterState.cs" />
-    <Compile Include="DataPresenter.RowCollection.cs" />
+    <Compile Include="RowPresenterCollection.cs" />
     <Compile Include="DataPresenterBuilder.cs" />
     <Compile Include="RowKind.cs" />
     <Compile Include="BindingTrigger.cs" />

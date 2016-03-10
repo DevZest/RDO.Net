@@ -27,16 +27,6 @@ namespace DevZest.Data.Windows
             get { return _scalarItem.Owner; }
         }
 
-        private DataPresenter DataPresenter
-        {
-            get { return Template.Owner; }
-        }
-
-        private LayoutManager LayoutManager
-        {
-            get { return DataPresenter.LayoutManager; }
-        }
-
         public UIElement this[Orientation orientation, int repeatIndex]
         {
             get

@@ -26,18 +26,10 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridTemplate(DataPresenter owner)
+        internal GridTemplate()
         {
-            Owner = owner;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
-        }
-
-    public DataPresenter Owner { get; private set; }
-
-        public Model Model
-        {
-            get { return Owner.Model; }
         }
 
         private RepeatOrientation _repeatOrientation = RepeatOrientation.Y;

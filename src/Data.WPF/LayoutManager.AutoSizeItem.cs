@@ -125,7 +125,7 @@ namespace DevZest.Data.Windows
 
             private LayoutManager LayoutManager
             {
-                get { return Template.Owner.LayoutManager; }
+                get { throw new NotImplementedException(); }
             }
 
             private Size ConstraintSize

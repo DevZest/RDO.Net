@@ -44,11 +44,6 @@ namespace DevZest.Data.Windows
 
         public GridTemplate Owner { get; private set; }
 
-        public DataPresenter Presenter
-        {
-            get { return Owner == null ? null : Owner.Owner; }
-        }
-
         public GridRange GridRange { get; private set; }
 
         public int Ordinal { get; private set; }
@@ -173,33 +168,12 @@ namespace DevZest.Data.Windows
             _bindings.Add(binding);
         }
 
-        private void EnterUpdatingTarget()
-        {
-            if (Owner != null)  // Owner == null only possible in unit test
-                Presenter.EnterUpdatingTarget();
-        }
-
-        private void ExitUpdatingTarget()
-        {
-            if (Owner != null)  // Owner == null only possible in unit test
-                Presenter.ExitUpdatingTarget();
-        }
-
         public void UpdateTarget(UIElement element)
         {
             VerifyElement(element, nameof(element));
 
-            EnterUpdatingTarget();
-
-            try
-            {
-                foreach (var binding in _bindings)
-                    binding.UpdateTarget(element);
-            }
-            finally
-            {
-                ExitUpdatingTarget();
-            }
+            foreach (var binding in _bindings)
+                binding.UpdateTarget(element);
         }
 
         public void UpdateSource(UIElement element)

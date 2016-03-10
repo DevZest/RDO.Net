@@ -78,14 +78,14 @@ namespace DevZest.Data.Windows
 
             _owner = owner;
             _dataSet = dataSet;
-            _template = new GridTemplate(this);
+            _template = new GridTemplate();
             VirtualizationThreshold = 50;
             FlowCount = 1;
         }
 
         private void Initialize()
         {
-            _rows = new RowCollection(this);
+            _rows = new RowPresenterCollection(this);
             if (Count > 0)
                 CurrentRow = this[0];
             LayoutManager = LayoutManager.Create(this);
@@ -187,7 +187,7 @@ namespace DevZest.Data.Windows
             IsEmptySetVisible = value;
         }
 
-        private void OnRowAdded(int index)
+        internal void OnRowAdded(int index)
         {
             if (CurrentRow == null)
                 CurrentRow = this[0];
@@ -202,7 +202,7 @@ namespace DevZest.Data.Windows
             OnUpdated(DataPresenterState.Rows);
         }
 
-        private void OnRowRemoved(int index, RowPresenter row)
+        internal void OnRowRemoved(int index, RowPresenter row)
         {
             if (CurrentRow == row)
                 CurrentRow = Count == 0 ? null : this[Math.Min(Count - 1, index)];
@@ -229,6 +229,10 @@ namespace DevZest.Data.Windows
         }
 
         private readonly DataSet _dataSet;
+        public DataSet DataSet
+        {
+            get { return _dataSet; }
+        }
 
         private readonly GridTemplate _template;
         public GridTemplate Template
@@ -243,8 +247,8 @@ namespace DevZest.Data.Windows
 
         #region IReadOnlyList<RowPresenter>
 
-        RowCollection _rows;
-        private RowCollection Rows
+        RowPresenterCollection _rows;
+        private RowPresenterCollection Rows
         {
             get
             {

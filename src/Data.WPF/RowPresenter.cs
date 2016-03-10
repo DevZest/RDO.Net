@@ -63,11 +63,6 @@ namespace DevZest.Data.Windows
             get { return Owner.Template; }
         }
 
-        private LayoutManager LayoutManager
-        {
-            get { return Owner.LayoutManager; }
-        }
-
         public DataRow DataRow { get; private set; }
 
         public Model Model
