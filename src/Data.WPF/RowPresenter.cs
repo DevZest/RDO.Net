@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(owner != null);
             Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
-            _owner = owner;
+            _dataPresenter = owner;
             Initialize(dataRow, rowType);
         }
 
@@ -34,42 +34,51 @@ namespace DevZest.Data.Windows
         {
             DataRow = dataRow;
             Kind = rowType;
-            Children = InitChildPresenters();
+            _childDataPresenters = InitChildDataPresenters();
         }
 
         internal void Dispose()
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
-            _owner = null;
-            Children = null;
+            _dataPresenter = null;
+            _childDataPresenters = null;
         }
 
-        private DataPresenter _owner;
-        public DataPresenter Owner
+        private DataPresenter _dataPresenter;
+        public DataPresenter DataPresenter
         {
             get
             {
-                if (_owner == null)
+                if (_dataPresenter == null)
                     throw new ObjectDisposedException(GetType().FullName);
 
-                return _owner;
+                return _dataPresenter;
             }
         }
 
         private GridTemplate Template
         {
-            get { return Owner.Template; }
+            get { return DataPresenter.Template; }
         }
 
         public DataRow DataRow { get; private set; }
 
         public Model Model
         {
-            get { return Owner == null ? null : Owner.Model; }
+            get { return DataPresenter == null ? null : DataPresenter.Model; }
         }
 
-        public IReadOnlyList<DataPresenter> Children { get; private set; }
-        private IReadOnlyList<DataPresenter> InitChildPresenters()
+        private IReadOnlyList<DataPresenter> _childDataPresenters;
+        public IReadOnlyList<DataPresenter> ChildDataPresenters
+        {
+            get
+            {
+                if (_childDataPresenters == null)
+                    _childDataPresenters = InitChildDataPresenters();
+                return _childDataPresenters;
+            }
+        }
+        private IReadOnlyList<DataPresenter> InitChildDataPresenters()
         {
             if (Kind != RowKind.DataRow)
                 return EmptyArray<DataPresenter>.Singleton;
@@ -87,12 +96,12 @@ namespace DevZest.Data.Windows
 
         private void OnGetValue(RowPresenterState bindingSource)
         {
-            Owner.OnGetValue(bindingSource);
+            DataPresenter.OnGetValue(bindingSource);
         }
 
         private void OnUpdated(RowPresenterState bindingSource)
         {
-            if (Owner.IsConsumed(bindingSource))
+            if (DataPresenter.IsConsumed(bindingSource))
                 OnBindingsReset();
         }
 
@@ -113,7 +122,7 @@ namespace DevZest.Data.Windows
             get
             {
                 OnGetValue(RowPresenterState.Index);
-                return DataRow == null ? Owner.Count - 1 : DataRow.Index;
+                return DataRow == null ? DataPresenter.Count - 1 : DataRow.Index;
             }
         }
 
@@ -149,12 +158,12 @@ namespace DevZest.Data.Windows
                     return;
 
                 if (_isSelected)
-                    Owner.RemoveSelectedRow(this);
+                    DataPresenter.RemoveSelectedRow(this);
 
                 _isSelected = value;
 
                 if (_isSelected)
-                    Owner.AddSelectedRow(this);
+                    DataPresenter.AddSelectedRow(this);
 
                 OnUpdated(RowPresenterState.IsSelected);
             }
@@ -292,7 +301,7 @@ namespace DevZest.Data.Windows
                 return false;
 
             Debug.Assert(Kind == RowKind.Eof);
-            Owner.EofToDataRow();
+            DataPresenter.EofToDataRow();
             return true;
         }
 
@@ -301,7 +310,7 @@ namespace DevZest.Data.Windows
             if (!_wasEof)
                 return;
 
-            Owner.DataRowToEof();
+            DataPresenter.DataRowToEof();
         }
 
         public void BeginEdit()

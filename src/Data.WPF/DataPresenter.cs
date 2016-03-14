@@ -301,7 +301,7 @@ namespace DevZest.Data.Windows
                 if (_currentRow == value)
                     return;
 
-                if (value != null && value.Owner != this)
+                if (value != null && value.DataPresenter != this)
                     throw new ArgumentException(Strings.DataPresenter_InvalidCurrentRow, nameof(value));
 
                 var oldValue = _currentRow;

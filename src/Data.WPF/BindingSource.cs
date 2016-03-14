@@ -11,6 +11,10 @@ namespace DevZest.Data.Windows
         private Stack<Binding> _bindings = new Stack<Binding>();
         private Stack<UIElement> _elements = new Stack<UIElement>();
 
+        private BindingSource()
+        {
+        }
+
         internal void Enter(Binding binding, UIElement element)
         {
             _bindings.Push(binding);

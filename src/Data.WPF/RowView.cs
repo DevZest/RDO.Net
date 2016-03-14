@@ -38,13 +38,13 @@ namespace DevZest.Data.Windows
 
             Presenter = presenter;
 
-            var repeatItems = presenter.Owner.Template.RepeatItems;
+            var repeatItems = presenter.DataPresenter.Template.RepeatItems;
             Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {
                 var element = Elements[i];
                 element.SetRowPresenter(presenter);
-                element.SetDataPresenter(presenter.Owner);
+                element.SetDataPresenter(presenter.DataPresenter);
                 repeatItems[i].Initialize(element);
             }
 
@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows
                 return;
 
             ApplyTemplate();
-            var repeatItems = rowPresenter.Owner.Template.RepeatItems;
+            var repeatItems = rowPresenter.DataPresenter.Template.RepeatItems;
             for (int i = 0; i < repeatItems.Count; i++)
                 _elements.Add(repeatItems[i].Generate());
             _elementsCreated = true;
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows
 
         private void OnBindingsReset(object sender, System.EventArgs e)
         {
-            var repeatItems = Presenter.Owner.Template.RepeatItems;
+            var repeatItems = Presenter.DataPresenter.Template.RepeatItems;
             for (int i = 0; i < repeatItems.Count; i++)
                 repeatItems[i].UpdateTarget(Elements[i]);
         }
@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
 
             Presenter.BindingsReset -= OnBindingsReset;
 
-            var repeatItems = Presenter.Owner.Template.RepeatItems;
+            var repeatItems = Presenter.DataPresenter.Template.RepeatItems;
             Debug.Assert(Elements.Count == repeatItems.Count);
             for (int i = 0; i < Elements.Count; i++)
             {

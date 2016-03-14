@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
         public LogicalPoint(GridColumn gridColumn, GridRow gridRow, RowPresenter row, double offsetX, double offsetY)
         {
             Debug.Assert(gridColumn != null && gridRow != null && gridColumn.Owner == gridRow.Owner);
-            Debug.Assert(row == null || row.Owner.Template == gridColumn.Owner);
+            Debug.Assert(row == null || row.DataPresenter.Template == gridColumn.Owner);
 
             GridColumn = gridColumn;
             GridRow = gridRow;
