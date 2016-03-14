@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows
                 {
                     Debug.Assert(index >= 0 && index < Count);
                     var rowView = (RowView)Elements[index + Template.ScalarItemsCountBeforeRepeat];
-                    return rowView.Presenter;
+                    return rowView.RowPresenter;
                 }
             }
 

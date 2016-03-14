@@ -371,7 +371,7 @@ namespace DevZest.Data.Windows
             {
                 var rowView = element as RowView;
                 if (rowView != null)
-                    rowView.Measure(GetSize(rowView.Presenter));
+                    rowView.Measure(GetSize(rowView.RowPresenter));
                 else
                     element.Measure(GetSize((ScalarItem)element.GetTemplateItem()));
             }
@@ -455,7 +455,7 @@ namespace DevZest.Data.Windows
             {
                 var rowView = element as RowView;
                 if (rowView != null)
-                    rowView.Arrange(GetRect(rowView.Presenter));
+                    rowView.Arrange(GetRect(rowView.RowPresenter));
                 else
                     element.Arrange(GetRect((ScalarItem)element.GetTemplateItem()));
             }
