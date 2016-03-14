@@ -9,10 +9,10 @@ namespace DevZest.Data.Windows
 {
     public class DataView : Control
     {
-        private static readonly DependencyPropertyKey PresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Presenter),
+        private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
             typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnPresenterChanged));
 
-        public static readonly DependencyProperty PresenterProperty = PresenterPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty DataPresenterProperty = DataPresenterPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.True));
@@ -46,10 +46,10 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public DataPresenter Presenter
+        public DataPresenter DataPresenter
         {
-            get { return (DataPresenter)GetValue(PresenterProperty); }
-            private set { SetValue(PresenterPropertyKey, value); }
+            get { return (DataPresenter)GetValue(DataPresenterProperty); }
+            private set { SetValue(DataPresenterPropertyKey, value); }
         }
 
         public bool Scrollable
@@ -87,13 +87,13 @@ namespace DevZest.Data.Windows
             if (presenter == null)
                 throw new ArgumentNullException(nameof(presenter));
 
-            Presenter = presenter;
+            DataPresenter = presenter;
         }
 
         internal void Cleanup()
         {
-            Debug.Assert(Presenter != null);
-            Presenter = null;
+            Debug.Assert(DataPresenter != null);
+            DataPresenter = null;
         }
     }
 }
