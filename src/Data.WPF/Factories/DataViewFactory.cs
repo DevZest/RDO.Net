@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows.Factories
             Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildItem<T, DataView>(child, builder)
+            return rangeConfig.BeginSubviewItem<T, DataView>(child, builder)
                 .Initialize(initializer)
                 .End();
         }
@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Factories
             Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return rangeConfig.BeginChildItem<T, DataView>(childModel, builder)
+            return rangeConfig.BeginSubviewItem<T, DataView>(childModel, builder)
                 .Initialize(initializer)
                 .End();
         }

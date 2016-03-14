@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows
             return _presenterBuilder;
         }
 
-        public SubviewItem.Builder<TView> BeginChildItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public SubviewItem.Builder<TView> BeginChildItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -99,10 +99,10 @@ namespace DevZest.Data.Windows
             });
         }
 
-        internal DataPresenterBuilder End(SubviewItem childItem)
+        internal DataPresenterBuilder End(SubviewItem subviewItem)
         {
-            childItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddChildItem(_gridRange, childItem);
+            subviewItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddSubviewItem(_gridRange, subviewItem);
             return _presenterBuilder;
         }
 

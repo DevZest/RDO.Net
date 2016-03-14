@@ -67,7 +67,7 @@
     <Compile Include="RowKind.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
-    <Compile Include="Factories\DataFormFactory.cs" />
+    <Compile Include="Factories\DataViewFactory.cs" />
     <Compile Include="ScalarElementsContainer.cs" />
     <Compile Include="TemplateItem.Builder.cs" />
     <Compile Include="GridRangeConfig.cs" />

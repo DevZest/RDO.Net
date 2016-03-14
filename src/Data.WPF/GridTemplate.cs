@@ -210,12 +210,12 @@ namespace DevZest.Data.Windows
             _repeatItems.Add(gridRange, repeatItem);
         }
 
-        internal void AddChildItem(GridRange gridRange, SubviewItem childItem)
+        internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
         {
-            VerifyAddTemplateItem(gridRange, childItem, nameof(childItem), false);
-            childItem.Seal(this, gridRange, _repeatItems.Count, _subviewItems.Count);
-            _repeatItems.Add(gridRange, childItem);
-            _subviewItems.Add(gridRange, childItem);
+            VerifyAddTemplateItem(gridRange, subviewItem, nameof(subviewItem), false);
+            subviewItem.Seal(this, gridRange, _repeatItems.Count, _subviewItems.Count);
+            _repeatItems.Add(gridRange, subviewItem);
+            _subviewItems.Add(gridRange, subviewItem);
         }
 
         private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)
