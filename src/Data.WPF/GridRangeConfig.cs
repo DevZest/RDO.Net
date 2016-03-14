@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows
             return _presenterBuilder;
         }
 
-        public ChildItem.Builder<TView> BeginChildItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginChildItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildItem.Builder<TView>(this, owner =>
+            return new SubviewItem.Builder<TView>(this, owner =>
             {
                 if (owner.Kind != RowKind.DataRow)
                     return null;
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public ChildItem.Builder<TView> BeginChildItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginChildItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -87,7 +87,7 @@ namespace DevZest.Data.Windows
             if (builder == null)
                 throw new ArgumentNullException(nameof(builder));
 
-            return new ChildItem.Builder<TView>(this, owner =>
+            return new SubviewItem.Builder<TView>(this, owner =>
             {
                 var dataRow = owner.DataRow;
                 if (dataRow == null)
@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        internal DataPresenterBuilder End(ChildItem childItem)
+        internal DataPresenterBuilder End(SubviewItem childItem)
         {
             childItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
             Template.AddChildItem(_gridRange, childItem);

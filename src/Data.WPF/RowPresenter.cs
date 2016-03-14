@@ -34,14 +34,14 @@ namespace DevZest.Data.Windows
         {
             DataRow = dataRow;
             Kind = rowType;
-            _childDataPresenters = InitChildDataPresenters();
+            _subviewPresenters = InitSubviewPresenters();
         }
 
         internal void Dispose()
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _dataPresenter = null;
-            _childDataPresenters = null;
+            _subviewPresenters = null;
         }
 
         private DataPresenter _dataPresenter;
@@ -68,28 +68,28 @@ namespace DevZest.Data.Windows
             get { return DataPresenter == null ? null : DataPresenter.Model; }
         }
 
-        private IReadOnlyList<DataPresenter> _childDataPresenters;
-        public IReadOnlyList<DataPresenter> ChildDataPresenters
+        private IReadOnlyList<DataPresenter> _subviewPresenters;
+        public IReadOnlyList<DataPresenter> SubviewPresenters
         {
             get
             {
-                if (_childDataPresenters == null)
-                    _childDataPresenters = InitChildDataPresenters();
-                return _childDataPresenters;
+                if (_subviewPresenters == null)
+                    _subviewPresenters = InitSubviewPresenters();
+                return _subviewPresenters;
             }
         }
-        private IReadOnlyList<DataPresenter> InitChildDataPresenters()
+        private IReadOnlyList<DataPresenter> InitSubviewPresenters()
         {
             if (Kind != RowKind.DataRow)
                 return EmptyArray<DataPresenter>.Singleton;
 
-            var childEntries = Template.ChildItems;
-            if (childEntries.Count == 0)
+            var subviewItems = Template.SubviewItems;
+            if (subviewItems.Count == 0)
                 return EmptyArray<DataPresenter>.Singleton;
 
-            var result = new DataPresenter[childEntries.Count];
-            for (int i = 0; i < childEntries.Count; i++)
-                result[i] = childEntries[i].ChildPresenterConstructor(this);
+            var result = new DataPresenter[subviewItems.Count];
+            for (int i = 0; i < subviewItems.Count; i++)
+                result[i] = subviewItems[i].DataPresenterConstructor(this);
 
             return result;
         }

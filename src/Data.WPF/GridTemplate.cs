@@ -60,10 +60,10 @@ namespace DevZest.Data.Windows
             get { return _repeatItems; }
         }
 
-        private TemplateItemCollection<ChildItem> _childItems = new TemplateItemCollection<ChildItem>();
-        public ReadOnlyCollection<ChildItem> ChildItems
+        private TemplateItemCollection<SubviewItem> _subviewItems = new TemplateItemCollection<SubviewItem>();
+        public ReadOnlyCollection<SubviewItem> SubviewItems
         {
-            get { return _childItems; }
+            get { return _subviewItems; }
         }
 
         private GridRange? _repeatRange;
@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows
 
         private GridRange AutoRepeatRange
         {
-            get { return _repeatItems.Range.Union(_childItems.Range); }
+            get { return _repeatItems.Range.Union(_subviewItems.Range); }
         }
 
         internal int AddGridColumn(string width)
@@ -210,12 +210,12 @@ namespace DevZest.Data.Windows
             _repeatItems.Add(gridRange, repeatItem);
         }
 
-        internal void AddChildItem(GridRange gridRange, ChildItem childItem)
+        internal void AddChildItem(GridRange gridRange, SubviewItem childItem)
         {
             VerifyAddTemplateItem(gridRange, childItem, nameof(childItem), false);
-            childItem.Seal(this, gridRange, _repeatItems.Count, _childItems.Count);
+            childItem.Seal(this, gridRange, _repeatItems.Count, _subviewItems.Count);
             _repeatItems.Add(gridRange, childItem);
-            _childItems.Add(gridRange, childItem);
+            _subviewItems.Add(gridRange, childItem);
         }
 
         private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)

@@ -5,13 +5,13 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ChildItem : RepeatItem
+    public sealed class SubviewItem : RepeatItem
     {
-        public sealed new class Builder<T> : TemplateItem.Builder<T, ChildItem, Builder<T>>
+        public sealed new class Builder<T> : TemplateItem.Builder<T, SubviewItem, Builder<T>>
             where T : DataView, new()
         {
-            internal Builder(GridRangeConfig rangeConfig, Func<RowPresenter, DataPresenter> childPresenterConstructor)
-                : base(rangeConfig, ChildItem.Create<T>(childPresenterConstructor))
+            internal Builder(GridRangeConfig rangeConfig, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
+                : base(rangeConfig, SubviewItem.Create<T>(dataPresenterConstructor))
             {
             }
 
@@ -20,23 +20,23 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, ChildItem item)
+            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, SubviewItem item)
             {
                 return rangeConfig.End(item);
             }
         }
 
-        internal static ChildItem Create<T>(Func<RowPresenter, DataPresenter> childPresenterConstructor)
+        internal static SubviewItem Create<T>(Func<RowPresenter, DataPresenter> dataPresenterConstructor)
             where T : DataView, new()
         {
-            return new ChildItem(() => new T(), childPresenterConstructor);
+            return new SubviewItem(() => new T(), dataPresenterConstructor);
         }
 
-        private ChildItem(Func<UIElement> constructor, Func<RowPresenter, DataPresenter> childPresenterConstructor)
+        private SubviewItem(Func<UIElement> constructor, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
                 : base(constructor)
         {
-            Debug.Assert(childPresenterConstructor != null);
-            ChildPresenterConstructor = childPresenterConstructor;
+            Debug.Assert(dataPresenterConstructor != null);
+            DataPresenterConstructor = dataPresenterConstructor;
         }
 
         internal int Index { get; private set; }
@@ -47,14 +47,14 @@ namespace DevZest.Data.Windows
             Index = index;
         }
 
-        internal Func<RowPresenter, DataPresenter> ChildPresenterConstructor { get; private set; }
+        internal Func<RowPresenter, DataPresenter> DataPresenterConstructor { get; private set; }
 
         internal sealed override void Initialize(UIElement element)
         {
             base.Initialize(element);
             var dataView = (DataView)element;
             var parentRow = dataView.GetRowPresenter();
-            dataView.Show(parentRow.ChildDataPresenters[Index]);
+            dataView.Show(parentRow.SubviewPresenters[Index]);
         }
 
         internal sealed override void Cleanup(UIElement element)
