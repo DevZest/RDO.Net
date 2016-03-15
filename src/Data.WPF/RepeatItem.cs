@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
         public sealed class Builder<T> : TemplateItem.Builder<T, RepeatItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(GridRangeConfig rangeConfig)
+            internal Builder(GridRangeBuilder rangeConfig)
                 : base(rangeConfig, RepeatItem.Create<T>())
             {
             }
@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeConfig rangeConfig, RepeatItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, RepeatItem item)
             {
                 return rangeConfig.End(item);
             }

@@ -54,14 +54,14 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public GridRangeConfig Range(int column, int row)
+        public GridRangeBuilder Range(int column, int row)
         {
-            return new GridRangeConfig(this, Template.Range(column, row));
+            return new GridRangeBuilder(this, Template.Range(column, row));
         }
 
-        public GridRangeConfig Range(int left, int top, int right, int bottom)
+        public GridRangeBuilder Range(int left, int top, int right, int bottom)
         {
-            return new GridRangeConfig(this, Template.Range(left, top, right, bottom));
+            return new GridRangeBuilder(this, Template.Range(left, top, right, bottom));
         }
 
         public TemplateBuilder WithPinnedLeft(int value)

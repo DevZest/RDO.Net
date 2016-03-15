@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
+            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeBuilder));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
@@ -46,7 +46,7 @@ namespace DevZest.Data.Windows
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeConfig));
+            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeBuilder));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);

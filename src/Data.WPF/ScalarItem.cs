@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
         public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(GridRangeConfig rangeConfig)
+            internal Builder(GridRangeBuilder rangeConfig)
                 : base(rangeConfig, ScalarItem.Create<T>())
             {
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeConfig rangeConfig, ScalarItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, ScalarItem item)
             {
                 return rangeConfig.End(item);
             }

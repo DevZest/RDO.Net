@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
             where TItem : TemplateItem
             where TBuilder : Builder<TElement, TItem, TBuilder>
         {
-            internal Builder(GridRangeConfig rangeConfig, TItem item)
+            internal Builder(GridRangeBuilder rangeConfig, TItem item)
             {
                 _rangeConfig = rangeConfig;
                 _item = item;
@@ -21,13 +21,13 @@ namespace DevZest.Data.Windows
                 _item = null;
             }
 
-            private GridRangeConfig _rangeConfig;
+            private GridRangeBuilder _rangeConfig;
             public TemplateBuilder End()
             {
                 return End(_rangeConfig, Item);
             }
 
-            internal abstract TemplateBuilder End(GridRangeConfig rangeConfig, TItem item);
+            internal abstract TemplateBuilder End(GridRangeBuilder rangeConfig, TItem item);
 
             internal abstract TBuilder This { get; }
 

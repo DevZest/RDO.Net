@@ -71,7 +71,7 @@
     <Compile Include="Factories\DataViewFactory.cs" />
     <Compile Include="ScalarElementsContainer.cs" />
     <Compile Include="TemplateItem.Builder.cs" />
-    <Compile Include="GridRangeConfig.cs" />
+    <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
     <Compile Include="LayoutManager.LayoutZ.cs" />

@@ -4,7 +4,7 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class DataViewFactory
     {
-        public static TemplateBuilder DataView<T>(this GridRangeConfig rangeConfig, _DataSet<T> child,
+        public static TemplateBuilder DataView<T>(this GridRangeBuilder rangeConfig, _DataSet<T> child,
             Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows.Factories
                 .End();
         }
 
-        public static TemplateBuilder DataView<T>(this GridRangeConfig rangeConfig, T childModel,
+        public static TemplateBuilder DataView<T>(this GridRangeBuilder rangeConfig, T childModel,
             Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {

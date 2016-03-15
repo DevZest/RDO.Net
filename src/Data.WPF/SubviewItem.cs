@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
         public sealed new class Builder<T> : TemplateItem.Builder<T, SubviewItem, Builder<T>>
             where T : DataView, new()
         {
-            internal Builder(GridRangeConfig rangeConfig, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
+            internal Builder(GridRangeBuilder rangeConfig, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
                 : base(rangeConfig, SubviewItem.Create<T>(dataPresenterConstructor))
             {
             }
@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeConfig rangeConfig, SubviewItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, SubviewItem item)
             {
                 return rangeConfig.End(item);
             }

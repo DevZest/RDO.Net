@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridRangeConfig
+    public sealed class GridRangeBuilder
     {
-        internal GridRangeConfig(TemplateBuilder templateBuilder, GridRange gridRange)
+        internal GridRangeBuilder(TemplateBuilder templateBuilder, GridRange gridRange)
         {
             _templateBuilder = templateBuilder;
             _gridRange = gridRange;
@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows
         private readonly GridRange _gridRange;
 
         int _autoSizeMeasureOrder;
-        public GridRangeConfig AutoSizeMeasureOrder(int value)
+        public GridRangeBuilder AutoSizeMeasureOrder(int value)
         {
             _autoSizeMeasureOrder = value;
             return this;
