@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     internal sealed class Binding
     {

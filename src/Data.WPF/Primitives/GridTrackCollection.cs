@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     public class GridTrackCollection<T> : ReadOnlyCollection<T>
         where T : GridTrack

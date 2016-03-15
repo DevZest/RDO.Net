@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Diagnostics;
 
 namespace DevZest.Data.Windows

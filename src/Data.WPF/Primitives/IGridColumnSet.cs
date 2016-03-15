@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Windows
+﻿namespace DevZest.Data.Windows.Primitives
 {
     internal interface IGridColumnSet : IGridTrackSet<GridColumn>
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     internal static class GridLengthParser
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     public class RepeatItem : TemplateItem
     {

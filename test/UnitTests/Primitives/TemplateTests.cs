@@ -2,7 +2,7 @@
 using System;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
     public class TemplateTests

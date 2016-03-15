@@ -1,9 +1,8 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     public sealed class SubviewItem : RepeatItem
     {
@@ -20,9 +19,9 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, SubviewItem item)
+            internal override TemplateBuilder End(GridRangeBuilder gridRangeBuilder, SubviewItem item)
             {
-                return rangeConfig.End(item);
+                return gridRangeBuilder.End(item);
             }
         }
 
