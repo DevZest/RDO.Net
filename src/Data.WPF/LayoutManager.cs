@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows
 
         private int VirtualizingThreshold
         {
-            get { return _presenter.VirtualizationThreshold; }
+            get { return _presenter.Template.VirtualizationThreshold; }
         }
 
         private IElementCollection _elements;

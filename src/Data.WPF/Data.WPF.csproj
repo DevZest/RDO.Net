@@ -62,6 +62,7 @@
     <Compile Include="LogicalPoint.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
+    <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="RowPresenterCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />

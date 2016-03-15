@@ -109,5 +109,11 @@ namespace DevZest.Data.Windows
             Template.IsEmptySetVisible = value;
             return this;
         }
+
+        public TemplateBuilder WithVirtualizationThreshold(int value)
+        {
+            Template.VirtualizationThreshold = value;
+            return this;
+        }
     }
 }

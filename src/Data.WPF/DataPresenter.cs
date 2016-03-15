@@ -9,7 +9,7 @@ using DevZest.Data.Windows.Primitives;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class DataPresenter : IReadOnlyList<RowPresenter>
+    public sealed partial class DataPresenter : RowManager, IReadOnlyList<RowPresenter>
     {
         internal static DataPresenter Create<T>(RowPresenter owner, T childModel, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(buildTemplateAction != null);
 
             var result = new DataPresenter(owner, owner.DataRow[childModel]);
-            using (var templateBuilder = new TemplateBuilder(result._template))
+            using (var templateBuilder = new TemplateBuilder(result.Template))
             {
                 buildTemplateAction(templateBuilder, childModel);
             }
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
         {
             var model = dataSet._;
             var result = new DataPresenter(owner, dataSet);
-            using (var templateBuilder = new TemplateBuilder(result._template))
+            using (var templateBuilder = new TemplateBuilder(result.Template))
             {
                 if (buildTemplateAction != null)
                     buildTemplateAction(templateBuilder, model);
@@ -71,33 +71,24 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataPresenter(RowPresenter owner, DataSet dataSet)
+        private DataPresenter(RowPresenter parent, DataSet dataSet)
+            : base(dataSet)
         {
             Debug.Assert(dataSet != null);
-            Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == owner.DataRow);
+            Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == parent.DataRow);
 
-            _owner = owner;
-            _dataSet = dataSet;
-            _template = new Template();
-            VirtualizationThreshold = 50;
+            _parent = parent;
             FlowCount = 1;
         }
 
-        private void Initialize()
+        private new void Initialize()
         {
             _rows = new RowPresenterCollection(this);
             if (Count > 0)
                 CurrentRow = this[0];
             LayoutManager = LayoutManager.Create(this);
 
-            _dataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
-        }
-
-        public int VirtualizationThreshold { get; private set; }
-
-        internal void InitVirtualizationThreshold(int value)
-        {
-            VirtualizationThreshold = value;
+            DataSet.RowUpdated += (sender, e) => OnRowUpdated(e.DataRow.Index);
         }
 
         private bool _isUpdatingTarget;
@@ -208,27 +199,10 @@ namespace DevZest.Data.Windows
             this[index].OnBindingsReset();
         }
 
-        private readonly RowPresenter _owner;
-        public RowPresenter Owner
+        private readonly RowPresenter _parent;
+        public RowPresenter Parent
         {
-            get { return _owner; }
-        }
-
-        private readonly DataSet _dataSet;
-        public DataSet DataSet
-        {
-            get { return _dataSet; }
-        }
-
-        private readonly Template _template;
-        public Template Template
-        {
-            get { return _template; }
-        }
-
-        public Model Model
-        {
-            get { return _dataSet.Model; }
+            get { return _parent; }
         }
 
         #region IReadOnlyList<RowPresenter>

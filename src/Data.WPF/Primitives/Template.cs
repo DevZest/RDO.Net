@@ -30,6 +30,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
+            VirtualizationThreshold = 50;
         }
 
         private RepeatOrientation _repeatOrientation = RepeatOrientation.Y;
@@ -282,5 +283,7 @@ namespace DevZest.Data.Windows.Primitives
         public bool IsEofVisible { get; internal set; }
 
         public bool IsEmptySetVisible { get; internal set; }
+
+        public int VirtualizationThreshold { get; internal set; }
     }
 }
