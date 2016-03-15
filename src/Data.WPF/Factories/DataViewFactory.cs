@@ -4,8 +4,8 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class DataViewFactory
     {
-        public static DataPresenterBuilder DataView<T>(this GridRangeConfig rangeConfig, _DataSet<T> child,
-            Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
+        public static TemplateBuilder DataView<T>(this GridRangeConfig rangeConfig, _DataSet<T> child,
+            Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
             return rangeConfig.BeginSubviewItem<T, DataView>(child, builder)
@@ -13,8 +13,8 @@ namespace DevZest.Data.Windows.Factories
                 .End();
         }
 
-        public static DataPresenterBuilder DataView<T>(this GridRangeConfig rangeConfig, T childModel,
-            Action<DataPresenterBuilder, T> builder, Action<DataView> initializer = null)
+        public static TemplateBuilder DataView<T>(this GridRangeConfig rangeConfig, T childModel,
+            Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
             return rangeConfig.BeginSubviewItem<T, DataView>(childModel, builder)

@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="BindingSource.cs" />
     <Compile Include="DataPresenter.ElementGenerator.cs" />
+    <Compile Include="ElementsManager.cs" />
     <Compile Include="GridRowSet.cs" />
     <Compile Include="GridColumnSet.cs" />
     <Compile Include="GridTrackCollection.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="LayoutManager.RealizedRowCollection.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="RowPresenterCollection.cs" />
-    <Compile Include="DataPresenterBuilder.cs" />
+    <Compile Include="TemplateBuilder.cs" />
     <Compile Include="RowKind.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="RepeatOrientation.cs" />
     <Compile Include="RowSelector.cs" />
     <Compile Include="DataPanel.cs" />
-    <Compile Include="GridTemplate.cs" />
+    <Compile Include="Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>

@@ -18,9 +18,9 @@ namespace DevZest.Data.Windows
             foreach (var dataRow in DataSet)
                 _rows.Add(RowPresenter.Create(_owner, dataRow));
 
-            if (_owner.IsEofVisible)
+            if (_owner.Template.IsEofVisible)
                 _dummyRow = RowPresenter.CreateEof(_owner);
-            else if (_owner.IsEmptySetVisible && _rows.Count == 0)
+            else if (_owner.Template.IsEmptySetVisible && _rows.Count == 0)
                 _dummyRow = RowPresenter.CreateEmptySet(_owner);
 
             AddRowsChangedListener();
@@ -135,7 +135,7 @@ namespace DevZest.Data.Windows
             _rows.RemoveAt(index);
             NotifyRowRemoved(index, row);
 
-            if (_rows.Count == 0 && _owner.IsEmptySetVisible)
+            if (_rows.Count == 0 && _owner.Template.IsEmptySetVisible)
             {
                 Debug.Assert(_dummyRow == null);
                 _dummyRow = RowPresenter.CreateEmptySet(_owner);

@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows
             get { return _scalarItem.RepeatMode; }
         }
 
-        private GridTemplate Template
+        private Template Template
         {
             get { return _scalarItem.Owner; }
         }

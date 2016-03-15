@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, ScalarItem item)
+            internal override TemplateBuilder End(GridRangeConfig rangeConfig, ScalarItem item)
             {
                 return rangeConfig.End(item);
             }

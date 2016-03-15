@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, RepeatItem item)
+            internal override TemplateBuilder End(GridRangeConfig rangeConfig, RepeatItem item)
             {
                 return rangeConfig.End(item);
             }

@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows
 {
     public abstract class GridTrack : IGridTrackSet
     {
-        internal GridTrack(GridTemplate owner, int ordinal, GridLengthParser.Result result)
+        internal GridTrack(Template owner, int ordinal, GridLengthParser.Result result)
         {
             Owner = owner;
             Ordinal = ordinal;
@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
             MaxLength = result.MaxLength;
         }
 
-        internal GridTemplate Owner { get; private set; }
+        internal Template Owner { get; private set; }
 
         internal int Ordinal { get; private set; }
 

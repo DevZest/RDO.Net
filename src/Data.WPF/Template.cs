@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class GridTemplate
+    public sealed partial class Template
     {
         private sealed class TemplateItemCollection<T> : ReadOnlyCollection<T>
             where T : TemplateItem
@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal GridTemplate()
+        internal Template()
         {
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
@@ -279,14 +279,8 @@ namespace DevZest.Data.Windows
 
         public int PinnedBottom { get; internal set; }
 
-        internal bool AllowsInfiniteX
-        {
-            get { return RepeatOrientation == RepeatOrientation.X || RepeatOrientation == RepeatOrientation.YX ? true : !GridColumns.Any(x => x.Length.IsStar); }
-        }
+        public bool IsEofVisible { get; internal set; }
 
-        internal bool AllowsInfiniteY
-        {
-            get { return RepeatOrientation == RepeatOrientation.Y || RepeatOrientation == RepeatOrientation.XY ? true : !GridRows.Any(x => x.Length.IsStar); }
-        }
+        public bool IsEmptySetVisible { get; internal set; }
     }
 }

@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
                 get { return this; }
             }
 
-            internal override DataPresenterBuilder End(GridRangeConfig rangeConfig, SubviewItem item)
+            internal override TemplateBuilder End(GridRangeConfig rangeConfig, SubviewItem item)
             {
                 return rangeConfig.End(item);
             }
@@ -41,7 +41,7 @@ namespace DevZest.Data.Windows
 
         internal int Index { get; private set; }
 
-        internal void Seal(GridTemplate owner, GridRange gridRange, int ordinal, int index)
+        internal void Seal(Template owner, GridRange gridRange, int ordinal, int index)
         {
             base.Construct(owner, gridRange, ordinal);
             Index = index;

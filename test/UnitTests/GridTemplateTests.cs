@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_AddGridColumns()
         {
-            var template = new GridTemplate();
+            var template = new Template();
             template.AddGridColumns("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridColumns.Count);
             VerifyGridTrack(template.GridColumns[0], new GridLength(25), 20.0, 30.0);
@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
         [TestMethod]
         public void GridTemplate_AddGridRows()
         {
-            var template = new GridTemplate();
+            var template = new Template();
             template.AddGridRows("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridRows.Count);
             VerifyGridTrack(template.GridRows[0], new GridLength(25), 20.0, 30.0);
@@ -130,11 +130,11 @@ namespace DevZest.Data.Windows
                 });
         }
 
-        private static void ExpectArgumentException(Action<GridTemplate> action)
+        private static void ExpectArgumentException(Action<Template> action)
         {
             try
             {
-                var template = new GridTemplate();
+                var template = new Template();
                 action(template);
                 Assert.Fail("An ArgumentException should be thrown.'");
             }

@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class TextBlockFactory
     {
-        public static DataPresenterBuilder TextBlock(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static TemplateBuilder TextBlock(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows.Factories
             return value == null ? string.Empty : value.ToString();
         }
 
-        public static DataPresenterBuilder TextBlockLabel(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static TemplateBuilder TextBlockLabel(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Factories
                 .End();
         }
 
-        public static DataPresenterBuilder TextBlockName(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
+        public static TemplateBuilder TextBlockName(this GridRangeConfig rangeConfig, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));

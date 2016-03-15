@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private GridTemplate Template
+        private Template Template
         {
             get { return DataPresenter.Template; }
         }

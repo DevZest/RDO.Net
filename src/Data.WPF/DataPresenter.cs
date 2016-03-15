@@ -10,63 +10,63 @@ namespace DevZest.Data.Windows
 {
     public sealed partial class DataPresenter : IReadOnlyList<RowPresenter>
     {
-        internal static DataPresenter Create<T>(RowPresenter owner, T childModel, Action<DataPresenterBuilder, T> action)
+        internal static DataPresenter Create<T>(RowPresenter owner, T childModel, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
         {
             Debug.Assert(owner != null);
             Debug.Assert(childModel != null);
-            Debug.Assert(action != null);
+            Debug.Assert(buildTemplateAction != null);
 
             var result = new DataPresenter(owner, owner.DataRow[childModel]);
-            using (var presenterBuilder = new DataPresenterBuilder(result))
+            using (var templateBuilder = new TemplateBuilder(result._template))
             {
-                action(presenterBuilder, childModel);
+                buildTemplateAction(templateBuilder, childModel);
             }
 
             result.Initialize();
             return result;
         }
 
-        public static DataPresenter Create<T>(DataSet<T> dataSet, Action<DataPresenterBuilder, T> builderAction = null)
+        public static DataPresenter Create<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
             where T : Model, new()
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            return Create<T>(null, dataSet, builderAction);
+            return Create<T>(null, dataSet, buildTemplateAction);
         }
 
-        private static DataPresenter Create<T>(RowPresenter owner, DataSet<T> dataSet, Action<DataPresenterBuilder, T> builderAction)
+        private static DataPresenter Create<T>(RowPresenter owner, DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
         {
             var model = dataSet._;
             var result = new DataPresenter(owner, dataSet);
-            using (var builder = new DataPresenterBuilder(result))
+            using (var templateBuilder = new TemplateBuilder(result._template))
             {
-                if (builderAction != null)
-                    builderAction(builder, model);
+                if (buildTemplateAction != null)
+                    buildTemplateAction(templateBuilder, model);
                 else
-                    DefaultBuilder(builder, model);
+                    BuildDefaultTemplate(templateBuilder, model);
             }
 
             result.Initialize();
             return result;
         }
 
-        private static void DefaultBuilder(DataPresenterBuilder builder, Model model)
+        private static void BuildDefaultTemplate(TemplateBuilder templateBuilder, Model model)
         {
             var columns = model.GetColumns();
             if (columns.Count == 0)
                 return;
 
-            builder.AddGridColumns(columns.Select(x => "Auto").ToArray())
+            templateBuilder.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
                 .Range(0, 1, columns.Count - 1, 1).Repeat();
 
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                builder.Range(i, 0).ColumnHeader(column)
+                templateBuilder.Range(i, 0).ColumnHeader(column)
                     .Range(i, 1).TextBlock(column);
             }
         }
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
 
             _owner = owner;
             _dataSet = dataSet;
-            _template = new GridTemplate();
+            _template = new Template();
             VirtualizationThreshold = 50;
             FlowCount = 1;
         }
@@ -98,13 +98,6 @@ namespace DevZest.Data.Windows
         internal void InitVirtualizationThreshold(int value)
         {
             VirtualizationThreshold = value;
-        }
-
-        public bool IsEofVisible { get; private set; }
-
-        internal void InitIsEofVisible(bool value)
-        {
-            IsEofVisible = value;
         }
 
         private bool _isUpdatingTarget;
@@ -180,13 +173,6 @@ namespace DevZest.Data.Windows
                 bindingsReset(this, EventArgs.Empty);
         }
 
-        public bool IsEmptySetVisible { get; private set; }
-
-        internal void InitIsEmptySetVisible(bool value)
-        {
-            IsEmptySetVisible = value;
-        }
-
         internal void OnRowAdded(int index)
         {
             if (CurrentRow == null)
@@ -234,8 +220,8 @@ namespace DevZest.Data.Windows
             get { return _dataSet; }
         }
 
-        private readonly GridTemplate _template;
-        public GridTemplate Template
+        private readonly Template _template;
+        public Template Template
         {
             get { return _template; }
         }

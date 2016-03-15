@@ -22,12 +22,12 @@ namespace DevZest.Data.Windows
             }
 
             private GridRangeConfig _rangeConfig;
-            public DataPresenterBuilder End()
+            public TemplateBuilder End()
             {
                 return End(_rangeConfig, Item);
             }
 
-            internal abstract DataPresenterBuilder End(GridRangeConfig rangeConfig, TItem item);
+            internal abstract TemplateBuilder End(GridRangeConfig rangeConfig, TItem item);
 
             internal abstract TBuilder This { get; }
 

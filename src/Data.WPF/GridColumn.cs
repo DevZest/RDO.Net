@@ -7,7 +7,7 @@ namespace DevZest.Data.Windows
 {
     public sealed class GridColumn : GridTrack, IGridColumnSet
     {
-        internal GridColumn(GridTemplate owner, int ordinal, GridLengthParser.Result result)
+        internal GridColumn(Template owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
         {
         }

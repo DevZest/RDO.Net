@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
 
             private LayoutManager _layoutManager;
 
-            private GridTemplate Template
+            private Template Template
             {
                 get { return _layoutManager.Template; }
             }

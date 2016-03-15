@@ -5,13 +5,13 @@ namespace DevZest.Data.Windows
 {
     public sealed class GridRangeConfig
     {
-        internal GridRangeConfig(DataPresenterBuilder presenterBuilder, GridRange gridRange)
+        internal GridRangeConfig(TemplateBuilder templateBuilder, GridRange gridRange)
         {
-            _presenterBuilder = presenterBuilder;
+            _templateBuilder = templateBuilder;
             _gridRange = gridRange;
         }
 
-        private readonly DataPresenterBuilder _presenterBuilder;
+        private readonly TemplateBuilder _templateBuilder;
 
         private readonly GridRange _gridRange;
 
@@ -22,9 +22,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        private GridTemplate Template
+        private Template Template
         {
-            get { return _presenterBuilder.Presenter.Template; }
+            get { return _templateBuilder.Template; }
         }
 
         private void VerifyNotEmpty()
@@ -40,11 +40,11 @@ namespace DevZest.Data.Windows
             return new ScalarItem.Builder<T>(this);
         }
 
-        internal DataPresenterBuilder End(ScalarItem scalarItem)
+        internal TemplateBuilder End(ScalarItem scalarItem)
         {
             scalarItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
             Template.AddScalarItem(_gridRange, scalarItem);
-            return _presenterBuilder;
+            return _templateBuilder;
         }
 
         public RepeatItem.Builder<T> BeginRepeatItem<T>()
@@ -54,14 +54,14 @@ namespace DevZest.Data.Windows
             return new RepeatItem.Builder<T>(this);
         }
 
-        internal DataPresenterBuilder End(RepeatItem repeatItem)
+        internal TemplateBuilder End(RepeatItem repeatItem)
         {
             repeatItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
             Template.AddRepeatItem(_gridRange, repeatItem);
-            return _presenterBuilder;
+            return _templateBuilder;
         }
 
-        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(_DataSet<TModel> child, Action<DataPresenterBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> builder)
             where TModel : Model, new()
             where TView : DataView, new()
         {
@@ -99,19 +99,19 @@ namespace DevZest.Data.Windows
             });
         }
 
-        internal DataPresenterBuilder End(SubviewItem subviewItem)
+        internal TemplateBuilder End(SubviewItem subviewItem)
         {
             subviewItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
             Template.AddSubviewItem(_gridRange, subviewItem);
-            return _presenterBuilder;
+            return _templateBuilder;
         }
 
-        public DataPresenterBuilder Repeat()
+        public TemplateBuilder Repeat()
         {
             VerifyNotEmpty();
 
             Template.RepeatRange = _gridRange;
-            return _presenterBuilder;
+            return _templateBuilder;
         }
     }
 }

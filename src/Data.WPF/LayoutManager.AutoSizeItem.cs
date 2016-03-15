@@ -118,7 +118,7 @@ namespace DevZest.Data.Windows
                 get { return !IsScalar; }
             }
 
-            private GridTemplate Template
+            private Template Template
             {
                 get { return TemplateItem.Owner; }
             }
@@ -210,7 +210,7 @@ namespace DevZest.Data.Windows
                 }
             }
 
-            public static IList<AutoSizeItem> GenerateList(GridTemplate template, bool sizeToContentX, bool sizeToContentY, bool reset)
+            public static IList<AutoSizeItem> GenerateList(Template template, bool sizeToContentX, bool sizeToContentY, bool reset)
             {
                 IList<AutoSizeItem> result = EmptyArray<AutoSizeItem>.Singleton;
 
@@ -284,7 +284,7 @@ namespace DevZest.Data.Windows
                 {
                     for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
                     {
-                        var column = gridRange.Owner.GridColumns[x];
+                        var column = gridRange.Template.GridColumns[x];
                         var width = column.Width;
                         if (width.IsAuto || (width.IsStar && sizeToContentX))
                             columnSet = columnSet.Merge(column);
@@ -296,7 +296,7 @@ namespace DevZest.Data.Windows
                 {
                     for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
                     {
-                        var row = gridRange.Owner.GridRows[y];
+                        var row = gridRange.Template.GridRows[y];
                         var height = row.Height;
                         if (height.IsAuto || (height.IsStar && sizeToContentY))
                             rowSet = rowSet.Merge(row);
@@ -313,7 +313,7 @@ namespace DevZest.Data.Windows
 
                 for (int x = gridRange.Left.Ordinal; x <= gridRange.Right.Ordinal; x++)
                 {
-                    if (gridRange.Owner.GridColumns[x].Width.IsStar)
+                    if (gridRange.Template.GridColumns[x].Width.IsStar)
                         return true;
                 }
                 return false;
@@ -326,7 +326,7 @@ namespace DevZest.Data.Windows
 
                 for (int y = gridRange.Top.Ordinal; y <= gridRange.Bottom.Ordinal; y++)
                 {
-                    if (gridRange.Owner.GridRows[y].Height.IsStar)
+                    if (gridRange.Template.GridRows[y].Height.IsStar)
                         return true;
                 }
                 return false;

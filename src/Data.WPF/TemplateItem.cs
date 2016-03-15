@@ -42,13 +42,13 @@ namespace DevZest.Data.Windows
             _constructor = constructor;
         }
 
-        public GridTemplate Owner { get; private set; }
+        public Template Owner { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
         public int Ordinal { get; private set; }
 
-        internal void Construct(GridTemplate owner, GridRange gridRange, int ordinal)
+        internal void Construct(Template owner, GridRange gridRange, int ordinal)
         {
             Debug.Assert(owner != null && Owner == null);
 

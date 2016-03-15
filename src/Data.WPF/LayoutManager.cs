@@ -37,7 +37,7 @@ namespace DevZest.Data.Windows
             _realizedRows.InitRowViewConstructor(rowViewConstructor);
         }
 
-        public GridTemplate Template
+        public Template Template
         {
             get { return _presenter.Template; }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -28,19 +27,19 @@ namespace DevZest.Data.Windows
         public readonly GridColumn Right;
         public readonly GridRow Bottom;
 
-        internal GridTemplate Owner
+        internal Template Template
         {
             get { return Left == null ? null : Left.Owner; }
         }
 
         public bool IsEmpty
         {
-            get { return Owner == null; }
+            get { return Template == null; }
         }
 
         public bool Contains(GridRange gridRange)
         {
-            if (IsEmpty || Owner != gridRange.Owner)
+            if (IsEmpty || Template != gridRange.Template)
                 return false;
             return Left.Ordinal <= gridRange.Left.Ordinal && Right.Ordinal >= gridRange.Right.Ordinal
                 && Top.Ordinal <= gridRange.Top.Ordinal && Bottom.Ordinal >= gridRange.Bottom.Ordinal;
@@ -48,7 +47,7 @@ namespace DevZest.Data.Windows
 
         public bool Contains(GridColumn gridColumn)
         {
-            if (IsEmpty || Owner != gridColumn.Owner)
+            if (IsEmpty || Template != gridColumn.Owner)
                 return false;
 
             return Left.Ordinal <= gridColumn.Ordinal && Right.Ordinal >= gridColumn.Ordinal;
@@ -56,7 +55,7 @@ namespace DevZest.Data.Windows
 
         public bool Contains(GridRow gridRow)
         {
-            if (IsEmpty || Owner != gridRow.Owner)
+            if (IsEmpty || Template != gridRow.Owner)
                 return false;
 
             return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
@@ -64,7 +63,7 @@ namespace DevZest.Data.Windows
 
         public bool IntersectsWith(GridRange gridRange)
         {
-            if (IsEmpty || Owner != gridRange.Owner)
+            if (IsEmpty || Template != gridRange.Template)
                 return false;
 
             return gridRange.Left.Ordinal <= this.Right.Ordinal
@@ -81,7 +80,7 @@ namespace DevZest.Data.Windows
             if (this.IsEmpty)
                 return gridRange;
 
-            if (Owner != gridRange.Owner)
+            if (Template != gridRange.Template)
                 throw new ArgumentException(Strings.GridRange_InvalidOwner, nameof(gridRange));
 
             return new GridRange(
