@@ -87,7 +87,7 @@
     </Compile>
     <Compile Include="TemplateItemTests.cs" />
     <Compile Include="GridLengthParserTests.cs" />
-    <Compile Include="GridTemplateTests.cs" />
+    <Compile Include="TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DispatcherObjectExtensions.cs" />
   </ItemGroup>

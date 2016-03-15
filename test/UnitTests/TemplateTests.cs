@@ -5,10 +5,10 @@ using System.Windows;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class GridTemplateTests
+    public class TemplateTests
     {
         [TestMethod]
-        public void GridTemplate_AddGridColumns()
+        public void Template_AddGridColumns()
         {
             var template = new Template();
             template.AddGridColumns("25;min:20;max:30", "28px");
@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void GridTemplate_AddGridRows()
+        public void Template_AddGridRows()
         {
             var template = new Template();
             template.AddGridRows("25;min:20;max:30", "28px");
@@ -35,7 +35,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void GridTemplate_InvalidGridColumnWidth_throws_exception()
+        public void Template_InvalidGridColumnWidth_throws_exception()
         {
             ExpectArgumentException(x => {
                 x.RepeatOrientation = RepeatOrientation.X;
@@ -83,7 +83,7 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void GridTemplate_InvalidGridRowHeight_throws_exception()
+        public void Template_InvalidGridRowHeight_throws_exception()
         {
             ExpectArgumentException(x => {
                 x.RepeatOrientation = RepeatOrientation.Y;
