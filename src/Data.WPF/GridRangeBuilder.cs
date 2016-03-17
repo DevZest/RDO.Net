@@ -62,41 +62,41 @@ namespace DevZest.Data.Windows
             return _templateBuilder;
         }
 
-        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> buildTemplateAction)
             where TModel : Model, new()
             where TView : DataView, new()
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
+            if (buildTemplateAction == null)
+                throw new ArgumentNullException(nameof(buildTemplateAction));
 
-            return new SubviewItem.Builder<TView>(this, owner =>
+            return new SubviewItem.Builder<TView>(this, rowPresenter =>
             {
-                if (owner.Kind != RowKind.DataRow)
+                if (rowPresenter.DataRow == null)
                     return null;
-                return DataPresenter.Create(owner, childModel, builder);
+                return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
             });
         }
 
-        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> builder)
+        public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> buildTemplateAction)
             where TModel : Model, new()
             where TView : DataView, new()
         {
             if (child == null)
                 throw new ArgumentNullException(nameof(child));
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
+            if (buildTemplateAction == null)
+                throw new ArgumentNullException(nameof(buildTemplateAction));
 
-            return new SubviewItem.Builder<TView>(this, owner =>
+            return new SubviewItem.Builder<TView>(this, rowPresenter =>
             {
-                var dataRow = owner.DataRow;
+                var dataRow = rowPresenter.DataRow;
                 if (dataRow == null)
                     return null;
                 var childDataSet = child[dataRow];
                 if (childDataSet == null)
                     return null;
-                return DataPresenter.Create(childDataSet, builder);
+                return DataPresenter.Create(childDataSet, buildTemplateAction);
             });
         }
 

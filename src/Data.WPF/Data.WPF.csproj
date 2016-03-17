@@ -45,8 +45,9 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="BindingSource.cs" />
-    <Compile Include="DataPresenter.ElementGenerator.cs" />
     <Compile Include="ElementsManager.cs" />
+    <Compile Include="EofRowStrategy.cs" />
+    <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridRowSet.cs" />
     <Compile Include="Primitives\GridColumnSet.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
@@ -55,18 +56,12 @@
     <Compile Include="Primitives\IGridRowSet.cs" />
     <Compile Include="Primitives\IGridTrackSet.cs" />
     <Compile Include="Primitives\Binding.cs" />
-    <Compile Include="DataPresenter.State.cs" />
-    <Compile Include="LayoutManager.AutoSizeItem.cs" />
-    <Compile Include="LayoutManager.RepeatPosition.cs" />
-    <Compile Include="LayoutManager.RepeatLayout.cs" />
-    <Compile Include="LogicalPoint.cs" />
+    <Compile Include="DataPresenterState.cs" />
     <Compile Include="ModelExtensions.cs" />
-    <Compile Include="LayoutManager.RealizedRowCollection.cs" />
+    <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
-    <Compile Include="RowPresenterCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />
-    <Compile Include="RowKind.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataViewFactory.cs" />
@@ -75,7 +70,6 @@
     <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="IElementCollection.cs" />
-    <Compile Include="LayoutManager.LayoutZ.cs" />
     <Compile Include="Primitives\RepeatItem.cs" />
     <Compile Include="ScalarRepeatMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
@@ -112,7 +106,6 @@
     <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
-    <Compile Include="LayoutManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">

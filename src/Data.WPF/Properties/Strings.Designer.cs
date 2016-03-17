@@ -12,14 +12,6 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// The value is invalid. It does not belong to this DataPresenter.
-        /// </summary>
-        public static string DataPresenter_InvalidCurrentRow
-        {
-            get { return GetString("DataPresenter_InvalidCurrentRow"); }
-        }
-
-        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)
@@ -60,11 +52,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Row is not editable when RowType is EmptySet.
+        /// The value is invalid. It does not belong to this RowManager.
         /// </summary>
-        public static string RowPresenter_BeginEdit_EmptySet
+        public static string RowManager_InvalidCurrentRow
         {
-            get { return GetString("RowPresenter_BeginEdit_EmptySet"); }
+            get { return GetString("RowManager_InvalidCurrentRow"); }
         }
 
         /// <summary>

@@ -280,9 +280,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public int PinnedBottom { get; internal set; }
 
-        public bool IsEofVisible { get; internal set; }
-
-        public bool IsEmptySetVisible { get; internal set; }
+        public EofRowStrategy EofRowStrategy { get; internal set; }
 
         public int VirtualizationThreshold { get; internal set; }
     }

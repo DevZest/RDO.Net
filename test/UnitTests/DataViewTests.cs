@@ -21,10 +21,11 @@ namespace DevZest.Data.Windows
 
             dataView.RunAfterLoaded(x =>
             {
-                var layoutManager = dataView.DataPresenter.LayoutManager;
+                //var layoutManager = dataView.DataPresenter.LayoutManager;
                 var dataPanel = x.FindVisualChild<DataPanel>();
                 Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
-                Verify(dataPanel, layoutManager.Elements);
+                //Verify(dataPanel, layoutManager.Elements);
+                Assert.Fail("To be implemented.");
             });
         }
 

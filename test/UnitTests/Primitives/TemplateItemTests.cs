@@ -23,21 +23,21 @@ namespace DevZest.Data.Windows.Primitives
                 .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var unit = builder.Item;
-            var element = (TextBlock)unit.Generate();
-            Assert.IsTrue(element.GetTemplateItem() == unit);
+            var item = builder.Item;
+            var element = (TextBlock)item.Generate();
+            Assert.IsTrue(element.GetTemplateItem() == item);
 
-            unit.Initialize(element);
+            item.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
 
-            unit.UpdateTarget(element);
+            item.UpdateTarget(element);
             Assert.AreEqual(SOURCE, element.Text);
 
             source = SOURCE_CHANGED;
-            unit.UpdateTarget(element);
+            item.UpdateTarget(element);
             Assert.AreEqual(SOURCE_CHANGED, element.Text);
 
-            unit.Cleanup(element);
+            item.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
         }
 
@@ -51,23 +51,23 @@ namespace DevZest.Data.Windows.Primitives
                 .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var unit = builder.Item;
-            var element = (TextBlock)unit.Generate();
-            Assert.IsTrue(element.GetTemplateItem() == unit);
+            var item = builder.Item;
+            var element = (TextBlock)item.Generate();
+            Assert.IsTrue(element.GetTemplateItem() == item);
 
-            unit.Initialize(element);
+            item.Initialize(element);
             Assert.AreEqual(INITIALIZED, element.Text);
             Assert.AreEqual(INITIALIZED, source);
 
             element.Text = TARGET;
-            unit.UpdateSource(element);
+            item.UpdateSource(element);
             Assert.AreEqual(TARGET, source);
 
             element.Text = TARGET_CHANGED;
-            unit.UpdateSource(element);
+            item.UpdateSource(element);
             Assert.AreEqual(TARGET_CHANGED, source);
 
-            unit.Cleanup(element);
+            item.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
             Assert.AreEqual(TARGET_CHANGED, source);
         }

@@ -28,6 +28,16 @@ namespace DevZest.Data.Windows
             _elements.Pop();
         }
 
+        internal RowManager RowManager
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public DataPresenter DataPresenter
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public RowPresenter RowPresenter
         {
             get

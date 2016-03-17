@@ -3,6 +3,7 @@
     internal enum DataPresenterState
     {
         Rows = 0,
+        FlattenedRows,
         CurrentRow,
         SelectedRows
     }

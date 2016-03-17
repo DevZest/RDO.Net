@@ -65,25 +65,25 @@ namespace DevZest.Data.Windows
             return new GridRangeBuilder(this, Template.Range(left, top, right, bottom));
         }
 
-        public TemplateBuilder WithPinnedLeft(int value)
+        public TemplateBuilder PinLeft(int value)
         {
             Template.PinnedLeft = value;
             return this;
         }
 
-        public TemplateBuilder WithPinnedTop(int value)
+        public TemplateBuilder PinTop(int value)
         {
             Template.PinnedTop = value;
             return this;
         }
 
-        public TemplateBuilder WithPinnedRight(int value)
+        public TemplateBuilder PinRight(int value)
         {
             Template.PinnedRight = value;
             return this;
         }
 
-        public TemplateBuilder WithPinnedBottom(int value)
+        public TemplateBuilder PinBottom(int value)
         {
             Template.PinnedBottom = value;
             return this;
@@ -98,19 +98,13 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder WithEofVisible(bool value)
+        public TemplateBuilder EofRow(EofRowStrategy value)
         {
-            Template.IsEofVisible = value;
+            Template.EofRowStrategy = value;
             return this;
         }
 
-        public TemplateBuilder WithEmptySetVisible(bool value)
-        {
-            Template.IsEmptySetVisible = value;
-            return this;
-        }
-
-        public TemplateBuilder WithVirtualizationThreshold(int value)
+        public TemplateBuilder SetVirtualizationThreshold(int value)
         {
             Template.VirtualizationThreshold = value;
             return this;

@@ -3,70 +3,58 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace DevZest.Data.Windows
 {
     public sealed class RowPresenter
     {
-        internal static RowPresenter Create(DataPresenter owner, DataRow dataRow)
+        internal RowPresenter(RowManager rowManager, DataRow dataRow)
         {
-            return new RowPresenter(owner, dataRow, RowKind.DataRow);
-        }
-
-        internal static RowPresenter CreateEof(DataPresenter owner)
-        {
-            return new RowPresenter(owner, null, RowKind.Eof);
-        }
-
-        internal static RowPresenter CreateEmptySet(DataPresenter owner)
-        {
-            return new RowPresenter(owner, null, RowKind.EmptySet);
-        }
-
-        private RowPresenter(DataPresenter owner, DataRow dataRow, RowKind rowType)
-        {
-            Debug.Assert(owner != null);
-            Debug.Assert(dataRow == null || owner.Model == dataRow.Model);
-            _dataPresenter = owner;
-            Initialize(dataRow, rowType);
-        }
-
-        internal void Initialize(DataRow dataRow, RowKind rowType)
-        {
+            Debug.Assert(rowManager != null);
+            Debug.Assert(dataRow == null || rowManager.Model == dataRow.Model);
+            _rowManager = rowManager;
             DataRow = dataRow;
-            Kind = rowType;
-            _subviewPresenters = InitSubviewPresenters();
         }
 
         internal void Dispose()
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
-            _dataPresenter = null;
+            _rowManager = null;
             _subviewPresenters = null;
         }
 
-        private DataPresenter _dataPresenter;
-        public DataPresenter DataPresenter
+        private RowManager _rowManager;
+        internal RowManager RowManager
         {
             get
             {
-                if (_dataPresenter == null)
+                if (_rowManager == null)
                     throw new ObjectDisposedException(GetType().FullName);
-
-                return _dataPresenter;
+                return _rowManager;
             }
         }
 
+        //public DataPresenter DataPresenter
+        //{
+        //    get { return RowManager as DataPresenter; }
+        //}
+
         private Template Template
         {
-            get { return DataPresenter.Template; }
+            get { return RowManager.Template; }
         }
 
-        public DataRow DataRow { get; private set; }
+        public DataRow DataRow { get; internal set; }
+
+        public bool IsEof
+        {
+            get { return DataRow == null; }
+        }
 
         public Model Model
         {
-            get { return DataPresenter == null ? null : DataPresenter.Model; }
+            get { return RowManager.Model; }
         }
 
         private IReadOnlyList<DataPresenter> _subviewPresenters;
@@ -79,9 +67,10 @@ namespace DevZest.Data.Windows
                 return _subviewPresenters;
             }
         }
+
         private IReadOnlyList<DataPresenter> InitSubviewPresenters()
         {
-            if (Kind != RowKind.DataRow)
+            if (IsEof)
                 return EmptyArray<DataPresenter>.Singleton;
 
             var subviewItems = Template.SubviewItems;
@@ -95,35 +84,38 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private void OnGetValue(RowPresenterState bindingSource)
+        private void OnGetState(RowPresenterState rowPresenterState)
         {
-            DataPresenter.OnGetValue(bindingSource);
+            RowManager.OnGetState(this, rowPresenterState);
         }
 
-        private void OnUpdated(RowPresenterState bindingSource)
+        private void OnSetState(RowPresenterState rowPresenterState)
         {
-            if (DataPresenter.IsConsumed(bindingSource))
-                OnBindingsReset();
-        }
-
-        public event EventHandler BindingsReset;
-
-        internal void OnBindingsReset()
-        {
-            if (_updateTargetSuppressed)
-                return;
-
-            var bindingsReset = BindingsReset;
-            if (bindingsReset != null)
-                bindingsReset(this, EventArgs.Empty);
+            RowManager.OnSetState(this, rowPresenterState);
         }
 
         public int Index
         {
             get
             {
-                OnGetValue(RowPresenterState.Index);
-                return DataRow == null ? DataPresenter.Count - 1 : DataRow.Index;
+                OnGetState(RowPresenterState.Index);
+                return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
+            }
+        }
+
+        private int _flattenedIndex = -1;
+        public int FlattenedIndex
+        {
+            get
+            {
+                OnGetState(RowPresenterState.FlattenedIndex);
+                if (RowManager.Rows == RowManager.FlattenedRows)
+                    return Index;
+                return _flattenedIndex;
+            }
+            internal set
+            {
+                _flattenedIndex = value;
             }
         }
 
@@ -132,7 +124,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowPresenterState.IsCurrent);
+                OnGetState(RowPresenterState.IsCurrent);
                 return _isCurrent;
             }
             internal set
@@ -141,7 +133,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                OnUpdated(RowPresenterState.IsCurrent);
+                OnSetState(RowPresenterState.IsCurrent);
             }
         }
 
@@ -150,7 +142,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetValue(RowPresenterState.IsSelected);
+                OnGetState(RowPresenterState.IsSelected);
                 return _isSelected;
             }
             set
@@ -159,20 +151,16 @@ namespace DevZest.Data.Windows
                     return;
 
                 if (_isSelected)
-                    DataPresenter.RemoveSelectedRow(this);
+                    RowManager.RemoveSelectedRow(this);
 
                 _isSelected = value;
 
                 if (_isSelected)
-                    DataPresenter.AddSelectedRow(this);
+                    RowManager.AddSelectedRow(this);
 
-                OnUpdated(RowPresenterState.IsSelected);
+                OnSetState(RowPresenterState.IsSelected);
             }
         }
-
-        public RowKind Kind { get; private set; }
-
-        public bool IsFocused { get; internal set; }
 
         public T GetValue<T>(Column<T> column)
         {
@@ -197,29 +185,27 @@ namespace DevZest.Data.Windows
             return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
         }
 
-        bool _updateTargetSuppressed;
-        private void EnterSuppressUpdateTarget()
+        private void SuppressViewUpdate()
         {
-            Debug.Assert(!_updateTargetSuppressed);
-            _updateTargetSuppressed = true;
+            Debug.Assert(DataRow != null);
+            RowManager.SuppressViewUpdate(DataRow);
         }
 
-        private void ExitSuppressUpdateTarget()
+        private void ResumeViewUpdate()
         {
-            Debug.Assert(_updateTargetSuppressed);
-            _updateTargetSuppressed = false;
+            Debug.Assert(DataRow != null);
+            RowManager.ResumeViewUpdate();
         }
-      
 
-        public void SetValue<T>(Column<T> column, T value, bool suppressUpdateTarget = true)
+        public void SetValue<T>(Column<T> column, T value, bool suppressViewUpdate = true)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
             BeginEdit();
 
-            if (suppressUpdateTarget)
-                EnterSuppressUpdateTarget();
+            if (suppressViewUpdate)
+                SuppressViewUpdate();
 
             try
             {
@@ -227,8 +213,8 @@ namespace DevZest.Data.Windows
             }
             finally
             {
-                if (suppressUpdateTarget)
-                    ExitSuppressUpdateTarget();
+                if (suppressViewUpdate)
+                    ResumeViewUpdate();
             }
         }
 
@@ -240,7 +226,7 @@ namespace DevZest.Data.Windows
             BeginEdit();
 
             if (suppressUpdateTarget)
-                EnterSuppressUpdateTarget();
+                SuppressViewUpdate();
 
             try
             {
@@ -249,7 +235,7 @@ namespace DevZest.Data.Windows
             finally
             {
                 if (suppressUpdateTarget)
-                    ExitSuppressUpdateTarget();
+                    ResumeViewUpdate();
             }
         }
 
@@ -263,86 +249,73 @@ namespace DevZest.Data.Windows
             get { return DataRow == null ? null : DataRow.MergedValidationMessages; }
         }
 
-        private bool _isEditing;
+        private static ConditionalWeakTable<Model, RowPresenter> s_editingRows = new ConditionalWeakTable<Model, RowPresenter>();
+
+        private RowPresenter EditingRow
+        {
+            get
+            {
+                Debug.Assert(DataRow != null);
+
+                RowPresenter result;
+                Model model = DataRow.Model;
+                return s_editingRows.TryGetValue(model, out result) ? result : null;
+            }
+        }
+
         public bool IsEditing
         {
             get
             {
-                OnGetValue(RowPresenterState.IsEditing);
-                return _isEditing;
+                OnGetState(RowPresenterState.IsEditing);
+                return DataRow != null && EditingRow == this;
             }
             private set
             {
-                if (_isEditing == value)
-                    return;
+                Debug.Assert(DataRow != null);
+                Debug.Assert(IsEditing != value);
 
-                if (_isEditing)
-                {
-                    Debug.Assert(Model.GetEditingRow() == this);
-                    Model.SetEditingRow(null);
-                }
+                Model model = DataRow.Model;
+                if (value)
+                    s_editingRows.Add(model, this);
+                else
+                    s_editingRows.Remove(model);
 
-                _isEditing = value;
-
-                if (_isEditing)
-                {
-                    Debug.Assert(Model.GetEditingRow() == null);
-                    Model.SetEditingRow(this);
-                }
-
-                OnUpdated(RowPresenterState.IsEditing);
+                OnSetState(RowPresenterState.IsEditing);
             }
-        }
-
-        private bool _wasEof;
-
-        private bool EofToDataRow()
-        {
-            if (Kind == RowKind.DataRow)
-                return false;
-
-            Debug.Assert(Kind == RowKind.Eof);
-            DataPresenter.EofToDataRow();
-            return true;
-        }
-
-        private void DataRowToEof()
-        {
-            if (!_wasEof)
-                return;
-
-            DataPresenter.DataRowToEof();
         }
 
         public void BeginEdit()
         {
-            if (IsEditing)
-                return;
+            bool isEof = IsEof;
+            if (isEof)
+                RowManager.BeginEditEof();
 
-            if (Kind == RowKind.EmptySet)
-                throw new InvalidOperationException(Strings.RowPresenter_BeginEdit_EmptySet);
-
-            _wasEof = EofToDataRow();
             Debug.Assert(DataRow != null);
 
-            var editingRow = Model.GetEditingRow();
+            var editingRow = EditingRow;
+            if (editingRow == this)
+                return;
             if (editingRow != null)
                 editingRow.EndEdit();
 
-            if (!_wasEof)
+            if (!isEof)
                 DataRow.Save();
             IsEditing = true;
         }
 
         public void EndEdit()
         {
+            if (!IsEditing)
+                return;
+
             IsEditing = false;
         }
 
         public void CancelEdit()
         {
-            if (_wasEof)
-                DataRowToEof();
+            if (RowManager.EditingEofRow == this)
+                RowManager.CancelEditEof();
             else
                 DataRow.Load();
             IsEditing = false;

@@ -31,64 +31,64 @@ namespace DevZest.Data.Windows
             _elementsCreated = false;
         }
 
-        internal void Initialize(RowPresenter rowPresenter)
-        {
-            Debug.Assert(rowPresenter != null && RowPresenter == null);
+        //internal void Initialize(RowPresenter rowPresenter)
+        //{
+        //    Debug.Assert(rowPresenter != null && RowPresenter == null);
 
-            EnsureElementsCreated(rowPresenter);
+        //    EnsureElementsCreated(rowPresenter);
 
-            RowPresenter = rowPresenter;
+        //    RowPresenter = rowPresenter;
 
-            var repeatItems = rowPresenter.DataPresenter.Template.RepeatItems;
-            Debug.Assert(Elements.Count == repeatItems.Count);
-            for (int i = 0; i < Elements.Count; i++)
-            {
-                var element = Elements[i];
-                element.SetRowPresenter(rowPresenter);
-                element.SetDataPresenter(rowPresenter.DataPresenter);
-                repeatItems[i].Initialize(element);
-            }
+        //    var repeatItems = rowPresenter.DataPresenter.Template.RepeatItems;
+        //    Debug.Assert(Elements.Count == repeatItems.Count);
+        //    for (int i = 0; i < Elements.Count; i++)
+        //    {
+        //        var element = Elements[i];
+        //        element.SetRowPresenter(rowPresenter);
+        //        element.SetDataPresenter(rowPresenter.DataPresenter);
+        //        repeatItems[i].Initialize(element);
+        //    }
 
-            rowPresenter.BindingsReset += OnBindingsReset;
-        }
+        //    rowPresenter.BindingsReset += OnBindingsReset;
+        //}
 
-        private void EnsureElementsCreated(RowPresenter rowPresenter)
-        {
-            if (_elementsCreated)
-                return;
+        //private void EnsureElementsCreated(RowPresenter rowPresenter)
+        //{
+        //    if (_elementsCreated)
+        //        return;
 
-            ApplyTemplate();
-            var repeatItems = rowPresenter.DataPresenter.Template.RepeatItems;
-            for (int i = 0; i < repeatItems.Count; i++)
-                _elements.Add(repeatItems[i].Generate());
-            _elementsCreated = true;
-        }
+        //    ApplyTemplate();
+        //    var repeatItems = rowPresenter.DataPresenter.Template.RepeatItems;
+        //    for (int i = 0; i < repeatItems.Count; i++)
+        //        _elements.Add(repeatItems[i].Generate());
+        //    _elementsCreated = true;
+        //}
 
-        private void OnBindingsReset(object sender, System.EventArgs e)
-        {
-            var repeatItems = RowPresenter.DataPresenter.Template.RepeatItems;
-            for (int i = 0; i < repeatItems.Count; i++)
-                repeatItems[i].UpdateTarget(Elements[i]);
-        }
+        //private void OnBindingsReset(object sender, System.EventArgs e)
+        //{
+        //    var repeatItems = RowPresenter.DataPresenter.Template.RepeatItems;
+        //    for (int i = 0; i < repeatItems.Count; i++)
+        //        repeatItems[i].UpdateTarget(Elements[i]);
+        //}
 
-        internal void Cleanup()
-        {
-            Debug.Assert(RowPresenter != null);
+        //internal void Cleanup()
+        //{
+        //    Debug.Assert(RowPresenter != null);
 
-            RowPresenter.BindingsReset -= OnBindingsReset;
+        //    RowPresenter.BindingsReset -= OnBindingsReset;
 
-            var repeatItems = RowPresenter.DataPresenter.Template.RepeatItems;
-            Debug.Assert(Elements.Count == repeatItems.Count);
-            for (int i = 0; i < Elements.Count; i++)
-            {
-                var element = Elements[i];
-                repeatItems[i].Cleanup(element);
-                element.SetRowPresenter(null);
-                element.SetDataPresenter(null);
-            }
+        //    var repeatItems = RowPresenter.DataPresenter.Template.RepeatItems;
+        //    Debug.Assert(Elements.Count == repeatItems.Count);
+        //    for (int i = 0; i < Elements.Count; i++)
+        //    {
+        //        var element = Elements[i];
+        //        repeatItems[i].Cleanup(element);
+        //        element.SetRowPresenter(null);
+        //        element.SetDataPresenter(null);
+        //    }
 
-            RowPresenter = null;
-        }
+        //    RowPresenter = null;
+        //}
 
         //protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
         //{
