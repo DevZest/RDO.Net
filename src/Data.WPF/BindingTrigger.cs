@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.ComponentModel;
 using System.Windows;
 
@@ -101,7 +102,7 @@ namespace DevZest.Data.Windows
         protected void UpdateSource(UIElement element)
         {
             var templateItem = element.GetTemplateItem();
-            if (templateItem == null)
+            if (templateItem != null)
                 templateItem.UpdateSource(element);
         }
     }

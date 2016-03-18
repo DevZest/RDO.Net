@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void GridRowSet_Merge()
         {
-            var template = new Template();
+            var template = new Template(null);
             template.AddGridRows("Auto", "Auto", "Auto", "Auto", "Auto");
             var gridRows = template.GridRows;
 

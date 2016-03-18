@@ -74,7 +74,7 @@
     <Compile Include="ScalarRepeatMode.cs" />
     <Compile Include="IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />
-    <Compile Include="UIElementExtensions.cs" />
+    <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="SubviewItem.cs" />
     <Compile Include="ColumnHeader.cs" />

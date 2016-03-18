@@ -42,17 +42,17 @@ namespace DevZest.Data.Windows.Primitives
             _constructor = constructor;
         }
 
-        public Template Owner { get; private set; }
+        public Template Template { get; private set; }
 
         public GridRange GridRange { get; private set; }
 
         public int Ordinal { get; private set; }
 
-        internal void Construct(Template owner, GridRange gridRange, int ordinal)
+        internal void Construct(Template template, GridRange gridRange, int ordinal)
         {
-            Debug.Assert(owner != null && Owner == null);
+            Debug.Assert(template != null && Template == null);
 
-            Owner = owner;
+            Template = template;
             GridRange = gridRange;
             Ordinal = ordinal;
         }
@@ -168,29 +168,40 @@ namespace DevZest.Data.Windows.Primitives
             _bindings.Add(binding);
         }
 
-        public void UpdateTarget(UIElement element)
+        internal void UpdateTarget(UIElement element)
         {
-            VerifyElement(element, nameof(element));
-
-            foreach (var binding in _bindings)
-                binding.UpdateTarget(element);
+            var bindingSource = BindingSource.Current;
+            bindingSource.Enter(this, element);
+            try
+            {
+                foreach (var binding in _bindings)
+                {
+                    if (binding.UpdateTargetAction != null)
+                        binding.UpdateTargetAction(bindingSource, element);
+                }
+            }
+            finally
+            {
+                bindingSource.Exit();
+            }
         }
 
-        public void UpdateSource(UIElement element)
+        internal void UpdateSource(UIElement element)
         {
-            VerifyElement(element, nameof(element));
-
-            foreach (var binding in _bindings)
-                binding.UpdateSource(element);
-        }
-
-        private void VerifyElement(UIElement element, string paramName)
-        {
-            if (element == null)
-                throw new ArgumentNullException(paramName);
-
-            if (element.GetTemplateItem() != this)
-                throw new ArgumentException(Strings.TemplateItem_InvalidElement, paramName);
+            var bindingSource = BindingSource.Current;
+            bindingSource.Enter(this, element);
+            try
+            {
+                foreach (var binding in _bindings)
+                {
+                    if (binding.UpdateSourceAction != null)
+                        binding.UpdateSourceAction(element, bindingSource);
+                }
+            }
+            finally
+            {
+                bindingSource.Exit();
+            }
         }
 
         public int AutoSizeMeasureOrder { get; internal set; }

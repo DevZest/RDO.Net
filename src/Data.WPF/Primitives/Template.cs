@@ -26,11 +26,29 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal Template()
+        internal Template(RowManager rowManager)
         {
+            RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
             VirtualizationThreshold = 50;
+        }
+
+        internal RowManager RowManager { get; private set; }
+
+        internal ElementManager ElementManager
+        {
+            get { return RowManager as ElementManager; }
+        }
+
+        internal LayoutManager LayoutManager
+        {
+            get { return RowManager as LayoutManager; }
+        }
+
+        public DataPresenter DataPresenter
+        {
+            get { return RowManager as DataPresenter; }
         }
 
         private RepeatOrientation _repeatOrientation = RepeatOrientation.Y;

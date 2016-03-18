@@ -25,7 +25,7 @@ namespace DevZest.Data.Windows
 
         private Template Template
         {
-            get { return _scalarItem.Owner; }
+            get { return _scalarItem.Template; }
         }
 
         public UIElement this[Orientation orientation, int repeatIndex]

@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     internal static class UIElementExtensions
     {
@@ -19,28 +19,6 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(value != null && element.GetTemplateItem() == null);
             element.SetValue(TemplateItemProperty, value);
-        }
-
-        private static readonly DependencyProperty DataPresenterProperty = DependencyProperty.RegisterAttached(nameof(DataPresenter),
-            typeof(DataPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
-
-        public static DataPresenter GetDataPresenter(this UIElement element)
-        {
-            return (DataPresenter)element.GetValue(DataPresenterProperty);
-        }
-
-        internal static void SetDataPresenter(this UIElement element, DataPresenter value)
-        {
-            if (value == null)
-            {
-                Debug.Assert(element.GetDataPresenter() != null);
-                element.ClearValue(DataPresenterProperty);
-            }
-            else
-            {
-                Debug.Assert(element.GetDataPresenter() == null);
-                element.SetValue(DataPresenterProperty, value);
-            }
         }
 
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
@@ -63,22 +41,6 @@ namespace DevZest.Data.Windows
                 Debug.Assert(element.GetRowPresenter() == null);
                 element.SetValue(RowPresenterProperty, value);
             }
-        }
-
-        private static readonly DependencyProperty RepeatOrdinalProperty = DependencyProperty.RegisterAttached("RepeatOrdinal",
-            typeof(int), typeof(UIElementExtensions), new PropertyMetadata(-1));
-
-        public static int GetRepeatOrdinal(this UIElement element)
-        {
-            return (int)element.GetValue(RepeatOrdinalProperty);
-        }
-
-        internal static void SetRepeatOrdinal(this UIElement element, int value)
-        {
-            if (value < 0)
-                element.ClearValue(RepeatOrdinalProperty);
-            else
-                element.SetValue(RepeatOrdinalProperty, value);
         }
     }
 }

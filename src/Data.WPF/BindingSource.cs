@@ -9,42 +9,53 @@ namespace DevZest.Data.Windows
     {
         internal static readonly BindingSource Current = new BindingSource();
 
-        private Stack<Binding> _bindings = new Stack<Binding>();
-        private Stack<UIElement> _elements = new Stack<UIElement>();
+        private Stack<Template> _templates = new Stack<Template>();
+        private Stack<RowPresenter> _rowPresenters = new Stack<RowPresenter>();
 
         private BindingSource()
         {
         }
 
-        internal void Enter(Binding binding, UIElement element)
+        internal void Enter(TemplateItem templateItem, UIElement uiElement)
         {
-            _bindings.Push(binding);
-            _elements.Push(element);
+            _templates.Push(templateItem.Template);
+            _rowPresenters.Push(uiElement.GetRowPresenter());
         }
 
         internal void Exit()
         {
-            _bindings.Pop();
-            _elements.Pop();
+            _templates.Pop();
+            _rowPresenters.Pop();
+        }
+
+        private Template Template
+        {
+            get { return _templates.Count == 0 ? null : _templates.Peek(); }
         }
 
         internal RowManager RowManager
         {
-            get { throw new NotImplementedException(); }
+            get { return Template == null ? null : Template.RowManager; }
+        }
+
+        internal ElementManager ElementManager
+        {
+            get { return Template == null ? null : Template.ElementManager; }
+        }
+
+        internal LayoutManager LayoutManager
+        {
+            get { return Template == null ? null : Template.LayoutManager; }
         }
 
         public DataPresenter DataPresenter
         {
-            get { throw new NotImplementedException(); }
+            get { return Template == null ? null : Template.DataPresenter; }
         }
 
         public RowPresenter RowPresenter
         {
-            get
-            {
-                var element = _elements.Peek();
-                return element == null ? null : element.GetRowPresenter();
-            }
+            get { return _rowPresenters.Count == 0 ? null : _rowPresenters.Peek(); }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void GridColumnSet_Merge()
         {
-            var template = new Template();
+            var template = new Template(null);
             template.AddGridColumns("Auto", "Auto", "Auto", "Auto", "Auto");
             var gridColumns = template.GridColumns;
 

@@ -37,10 +37,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(_repeatMode == ScalarRepeatMode.Flow);
             bool isValid = false;
-            if (Owner.RepeatOrientation == RepeatOrientation.XY)
-                isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
-            else if (Owner.RepeatOrientation == RepeatOrientation.YX)
-                isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
+            if (Template.RepeatOrientation == RepeatOrientation.XY)
+                isValid = Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
+            else if (Template.RepeatOrientation == RepeatOrientation.YX)
+                isValid = Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
 
             return isValid ? ScalarRepeatMode.Flow : ScalarRepeatMode.None;
         }
@@ -49,10 +49,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
             bool isValid = false;
-            if (Owner.RepeatOrientation == RepeatOrientation.Y || Owner.RepeatOrientation == RepeatOrientation.XY)
-                isValid = Owner.RepeatRange.Contains(GridRange.Top) && Owner.RepeatRange.Contains(GridRange.Bottom);
-            else if (Owner.RepeatOrientation == RepeatOrientation.X || Owner.RepeatOrientation == RepeatOrientation.YX)
-                isValid = Owner.RepeatRange.Contains(GridRange.Left) && Owner.RepeatRange.Contains(GridRange.Right);
+            if (Template.RepeatOrientation == RepeatOrientation.Y || Template.RepeatOrientation == RepeatOrientation.XY)
+                isValid = Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
+            else if (Template.RepeatOrientation == RepeatOrientation.X || Template.RepeatOrientation == RepeatOrientation.YX)
+                isValid = Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
 
             return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
         }

@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows.Primitives
     {
         internal RowManager(DataSet dataSet)
         {
-            _template = new Template();
+            _template = new Template(this);
             _dataSet = dataSet;
         }
 

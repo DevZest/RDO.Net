@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void Template_AddGridColumns()
         {
-            var template = new Template();
+            var template = new Template(null);
             template.AddGridColumns("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridColumns.Count);
             VerifyGridTrack(template.GridColumns[0], new GridLength(25), 20.0, 30.0);
@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void Template_AddGridRows()
         {
-            var template = new Template();
+            var template = new Template(null);
             template.AddGridRows("25;min:20;max:30", "28px");
             Assert.AreEqual(2, template.GridRows.Count);
             VerifyGridTrack(template.GridRows[0], new GridLength(25), 20.0, 30.0);
@@ -134,7 +134,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             try
             {
-                var template = new Template();
+                var template = new Template(null);
                 action(template);
                 Assert.Fail("An ArgumentException should be thrown.'");
             }
