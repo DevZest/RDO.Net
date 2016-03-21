@@ -161,5 +161,11 @@ namespace DevZest.Data.Primitives
             Check.NotNull(model, nameof(model));
             return model.DataSet;
         }
+
+        public static int GetHierarchicalLevel(this Model model)
+        {
+            Check.NotNull(model, nameof(model));
+            return model.GetHierarchicalLevel();
+        }
     }
 }

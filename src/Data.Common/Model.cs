@@ -259,7 +259,10 @@ namespace DevZest.Data
         {
             base.ConstructModelMember(parentModel, ownerType, name);
             ParentModel.ChildModels.Add(this);
+            HierarchicalLevel = ParentModel.HierarchicalLevel + 1;
         }
+
+        internal int HierarchicalLevel { get; private set; }
 
         /// <summary>
         /// Gets a value indicates whether child models are initialized.
