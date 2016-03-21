@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using DevZest.Data.Primitives;
 using System;
 using System.Diagnostics;
 
@@ -6,10 +7,11 @@ namespace DevZest.Data.Windows
 {
     public sealed class TemplateBuilder : IDisposable
     {
-        internal TemplateBuilder(Template template)
+        internal TemplateBuilder(Template template, Model model)
         {
             Debug.Assert(template != null);
             Template = template;
+            _model = model;
         }
 
         public void Dispose()
@@ -18,6 +20,8 @@ namespace DevZest.Data.Windows
         }
 
         internal Template Template { get; private set; }
+
+        private Model _model;
 
         public TemplateBuilder AddGridColumn(string width, out int index)
         {
@@ -107,6 +111,18 @@ namespace DevZest.Data.Windows
         public TemplateBuilder SetVirtualizationThreshold(int value)
         {
             Template.VirtualizationThreshold = value;
+            return this;
+        }
+
+        public TemplateBuilder FlattenHierarchy(Model childModel)
+        {
+            if (childModel == null)
+                throw new ArgumentNullException(nameof(childModel));
+
+            if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
+                throw new ArgumentException();
+
+            //Template.FlattenHierarchyChildModelIndex = childModel.
             return this;
         }
     }

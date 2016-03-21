@@ -123,12 +123,12 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void OnDataRowAdded(object sender, DataRowEventArgs e)
+        private void OnDataRowAdded(object sender, DataRow dataRow)
         {
-            if (EditingEofRow != null && EditingEofRow.DataRow == e.DataRow)
+            if (EditingEofRow != null && EditingEofRow.DataRow == dataRow)
                 return;
 
-            InsertRowPresenter(e.DataRow);
+            InsertRowPresenter(dataRow);
             CoerceEofRow();
         }
 
@@ -212,9 +212,9 @@ namespace DevZest.Data.Windows.Primitives
             _viewUpdateSuppressed = null;
         }
 
-        private void OnDataRowUpdated(object sender, DataRowEventArgs e)
+        private void OnDataRowUpdated(object sender, DataRow dataRow)
         {
-            if (_viewUpdateSuppressed != e.DataRow)
+            if (_viewUpdateSuppressed != dataRow)
                 InvalidateView();
         }
 

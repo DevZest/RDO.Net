@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(buildTemplateAction != null);
 
             var result = new DataPresenter(owner, owner.DataRow[childModel]);
-            using (var templateBuilder = new TemplateBuilder(result.Template))
+            using (var templateBuilder = new TemplateBuilder(result.Template, childModel))
             {
                 buildTemplateAction(templateBuilder, childModel);
             }
@@ -41,7 +41,7 @@ namespace DevZest.Data.Windows
         {
             var model = dataSet._;
             var result = new DataPresenter(owner, dataSet);
-            using (var templateBuilder = new TemplateBuilder(result.Template))
+            using (var templateBuilder = new TemplateBuilder(result.Template, dataSet.Model))
             {
                 if (buildTemplateAction != null)
                     buildTemplateAction(templateBuilder, model);
