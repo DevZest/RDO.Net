@@ -149,5 +149,17 @@ namespace DevZest.Data.Primitives
             Check.NotNull(model, nameof(model));
             return model.Ordinal;
         }
+
+        public static DataSource GetDataSource(this Model model)
+        {
+            Check.NotNull(model, nameof(model));
+            return model.DataSource;
+        }
+
+        public static DataSet GetDataSet(this Model model)
+        {
+            Check.NotNull(model, nameof(model));
+            return model.DataSet;
+        }
     }
 }
