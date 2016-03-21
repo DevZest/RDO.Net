@@ -158,7 +158,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsHierarchical && !row.IsEof);
 
-            hierarchicalOrdinal = InsertSingleHierarchicalRow(hierarchicalOrdinal, row);
+            hierarchicalOrdinal = InsertIntoHierarchicalRows(hierarchicalOrdinal, row);
             if (row.IsExpanded)
             {
                 var children = row.DataRow[Template.HierarchicalModelOrdinal];
@@ -171,7 +171,7 @@ namespace DevZest.Data.Windows.Primitives
             return hierarchicalOrdinal;
         }
 
-        private int InsertSingleHierarchicalRow(int hierarchicalOrdinal, RowPresenter row)
+        private int InsertIntoHierarchicalRows(int hierarchicalOrdinal, RowPresenter row)
         {
             row.Ordinal = hierarchicalOrdinal;
             _hierarchicalRows.Insert(hierarchicalOrdinal++, row);
@@ -293,7 +293,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(EofRow == null);
             var row = new RowPresenter(this, null);
-            InsertSingleHierarchicalRow(_hierarchicalRows.Count - 1, row);
+            InsertIntoHierarchicalRows(_hierarchicalRows.Count - 1, row);
         }
 
         private void RemoveEofRow(RowPresenter eofRow)
