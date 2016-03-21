@@ -158,10 +158,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                var eofRowStrategy = Template.EofRowStrategy;
-                if (eofRowStrategy == EofRowStrategy.Never)
+                var eofRowMapping= Template.EofRowMapping;
+                if (eofRowMapping == EofRowMapping.Never)
                     return false;
-                else if (eofRowStrategy == EofRowStrategy.NoData)
+                else if (eofRowMapping == EofRowMapping.NoData)
                     return DataSet.Count == 0;
                 else
                     return true;

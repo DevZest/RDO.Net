@@ -102,9 +102,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder EofRow(EofRowStrategy value)
+        public TemplateBuilder EofRow(EofRowMapping value)
         {
-            Template.EofRowStrategy = value;
+            Template.EofRowMapping = value;
             return this;
         }
 

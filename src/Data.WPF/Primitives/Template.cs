@@ -299,7 +299,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public int PinnedBottom { get; internal set; }
 
-        public EofRowStrategy EofRowStrategy { get; internal set; }
+        public EofRowMapping EofRowMapping { get; internal set; }
 
         public int FlattenHierarchyChildModelOrdinal { get; internal set; }
 

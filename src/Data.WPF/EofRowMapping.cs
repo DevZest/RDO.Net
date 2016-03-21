@@ -1,7 +1,7 @@
 ﻿namespace DevZest.Data.Windows
 {
     /// <summary>Specifies condition for generating EOF <see cref="RowPresenter"/>.</summary>
-    public enum EofRowStrategy
+    public enum EofRowMapping
     {
         /// <summary>No EOF <see cref="RowPresenter"/> will be generated.</summary>
         Never,

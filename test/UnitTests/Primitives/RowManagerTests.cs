@@ -18,19 +18,19 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static RowManager CreateRowManager(DataSet<Adhoc> dataSet, EofRowStrategy eofRowStrategy)
+        private static RowManager CreateRowManager(DataSet<Adhoc> dataSet, EofRowMapping eofRowMapping)
         {
             RowManager result = new ConcreteRowManager(dataSet);
-            result.Template.EofRowStrategy = eofRowStrategy;
+            result.Template.EofRowMapping = eofRowMapping;
             result.Initialize();
             return result;
         }
 
         [TestMethod]
-        public void RowManager_EofRowStrategy_Never()
+        public void RowManager_EofRowMapping_Never()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowStrategy.Never);
+            var rowManager = CreateRowManager(dataSet, EofRowMapping.Never);
 
             Assert.AreEqual(0, rowManager.MappedRows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);
@@ -42,10 +42,10 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_EofRowStrategy_Always()
+        public void RowManager_EofRowMapping_Always()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowStrategy.Always);
+            var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
 
             Assert.AreEqual(1, rowManager.MappedRows.Count);
             Assert.AreEqual(true, rowManager.MappedRows[0].IsEof);
@@ -59,10 +59,10 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_EofRowStrategy_NoData()
+        public void RowManager_EofRowMapping_NoData()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowStrategy.NoData);
+            var rowManager = CreateRowManager(dataSet, EofRowMapping.NoData);
 
             Assert.AreEqual(1, rowManager.MappedRows.Count);
             Assert.IsTrue(rowManager.MappedRows[0].IsEof);
