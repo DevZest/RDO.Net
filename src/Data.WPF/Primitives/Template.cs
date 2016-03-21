@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows.Primitives
             RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
-            FlattenHierarchyChildModelIndex = -1;
+            FlattenHierarchyChildModelOrdinal = -1;
             VirtualizationThreshold = 50;
         }
 
@@ -301,7 +301,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public EofRowStrategy EofRowStrategy { get; internal set; }
 
-        public int FlattenHierarchyChildModelIndex { get; internal set; }
+        public int FlattenHierarchyChildModelOrdinal { get; internal set; }
 
         public int VirtualizationThreshold { get; internal set; }
     }

@@ -120,9 +120,9 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(childModel));
 
             if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
-                throw new ArgumentException();
+                throw new ArgumentException(Strings.TemplateBuilder_InvalidFlattenHierarchyChildModel);
 
-            //Template.FlattenHierarchyChildModelIndex = childModel.
+            Template.FlattenHierarchyChildModelOrdinal = childModel.GetOrdinal();
             return this;
         }
     }
