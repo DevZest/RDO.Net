@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal virtual void Initialize()
         {
-            _rows = new List<RowPresenter>(DataSet.Count);
+            _mappedRows = new List<RowPresenter>(DataSet.Count);
             foreach (var dataRow in DataSet)
                 InsertRowPresenter(dataRow);
             CoerceEofRow();
@@ -103,13 +103,13 @@ namespace DevZest.Data.Windows.Primitives
                 InvalidateView();
         }
 
-        private List<RowPresenter> _rows;
-        public IReadOnlyList<RowPresenter> Rows
+        private List<RowPresenter> _mappedRows;
+        public IReadOnlyList<RowPresenter> MappedRows
         {
             get
             {
                 OnGetState(DataPresenterState.Rows);
-                return _rows;
+                return _mappedRows;
             }
         }
 
@@ -125,7 +125,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnDataRowAdded(object sender, DataRowEventArgs e)
         {
-            if (EditingEofRow.DataRow == e.DataRow)
+            if (EditingEofRow != null && EditingEofRow.DataRow == e.DataRow)
                 return;
 
             InsertRowPresenter(e.DataRow);
@@ -135,8 +135,8 @@ namespace DevZest.Data.Windows.Primitives
         private void InsertRowPresenter(DataRow dataRow)
         {
             var rowPresenter = new RowPresenter(this, dataRow);
-            var index = dataRow == null ? _rows.Count : dataRow.Index;
-            _rows.Insert(index, rowPresenter);
+            var index = dataRow == null ? _mappedRows.Count : dataRow.Index;
+            _mappedRows.Insert(index, rowPresenter);
             OnSetState(DataPresenterState.Rows);
         }
 
@@ -148,9 +148,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RemoveRowPresenter(int index)
         {
-            var row = _rows[index];
-            _rows[index].Dispose();
-            _rows.RemoveAt(index);
+            var row = _mappedRows[index];
+            _mappedRows[index].Dispose();
+            _mappedRows.RemoveAt(index);
             OnSetState(DataPresenterState.Rows);
         }
 
@@ -170,7 +170,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private RowPresenter LastRow
         {
-            get { return _rows.Count == 0 ? null : _rows[_rows.Count - 1]; }
+            get { return _mappedRows.Count == 0 ? null : _mappedRows[_mappedRows.Count - 1]; }
         }
 
         private RowPresenter EofRow
@@ -194,7 +194,7 @@ namespace DevZest.Data.Windows.Primitives
             else
             {
                 if (EofRow != null)
-                    RemoveRowPresenter(_rows.Count - 1);
+                    RemoveRowPresenter(_mappedRows.Count - 1);
             }
         }
 
@@ -289,7 +289,7 @@ namespace DevZest.Data.Windows.Primitives
             var eofRow = EofRow;
             EditingEofRow.DataRow = null;
             if (eofRow != null)
-                RemoveRowPresenter(_rows.Count - 1);
+                RemoveRowPresenter(_mappedRows.Count - 1);
             CoerceEofRow();
             EditingEofRow = null;
         }

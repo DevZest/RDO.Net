@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows
             get
             {
                 OnGetState(RowPresenterState.Index);
-                return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
+                return IsEof ? RowManager.MappedRows.Count - 1 : DataRow.Index;
             }
         }
 
@@ -109,7 +109,7 @@ namespace DevZest.Data.Windows
             get
             {
                 OnGetState(RowPresenterState.FlattenedIndex);
-                if (RowManager.Rows == RowManager.FlattenedRows)
+                if (RowManager.MappedRows == RowManager.FlattenedRows)
                     return Index;
                 return _flattenedIndex;
             }
