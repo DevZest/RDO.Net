@@ -4,8 +4,8 @@
     {
         IsSelected = 0,
         IsCurrent,
-        Index,
-        FlattenedIndex,
+        Ordinal,
+        IsExpanded,
         IsEditing
     }
 }

@@ -32,13 +32,13 @@ namespace DevZest.Data.Windows.Primitives
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, EofRowMapping.Never);
 
-            Assert.AreEqual(0, rowManager.MappedRows.Count);
+            Assert.AreEqual(0, rowManager.Rows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);
 
             dataSet.AddRow();
-            Assert.AreEqual(1, rowManager.MappedRows.Count);
-            Assert.IsFalse(rowManager.MappedRows[0].IsEof);
-            Assert.AreEqual(rowManager.MappedRows[0], rowManager.CurrentRow);
+            Assert.AreEqual(1, rowManager.Rows.Count);
+            Assert.IsFalse(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
         [TestMethod]
@@ -47,15 +47,15 @@ namespace DevZest.Data.Windows.Primitives
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
 
-            Assert.AreEqual(1, rowManager.MappedRows.Count);
-            Assert.AreEqual(true, rowManager.MappedRows[0].IsEof);
-            Assert.AreEqual(rowManager.MappedRows[0], rowManager.CurrentRow);
+            Assert.AreEqual(1, rowManager.Rows.Count);
+            Assert.AreEqual(true, rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
-            Assert.AreEqual(2, rowManager.MappedRows.Count);
-            Assert.IsFalse(rowManager.MappedRows[0].IsEof);
-            Assert.IsTrue(rowManager.MappedRows[1].IsEof);
-            Assert.AreEqual(rowManager.MappedRows[1], rowManager.CurrentRow);
+            Assert.AreEqual(2, rowManager.Rows.Count);
+            Assert.IsFalse(rowManager.Rows[0].IsEof);
+            Assert.IsTrue(rowManager.Rows[1].IsEof);
+            Assert.AreEqual(rowManager.Rows[1], rowManager.CurrentRow);
         }
 
         [TestMethod]
@@ -64,14 +64,14 @@ namespace DevZest.Data.Windows.Primitives
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, EofRowMapping.NoData);
 
-            Assert.AreEqual(1, rowManager.MappedRows.Count);
-            Assert.IsTrue(rowManager.MappedRows[0].IsEof);
-            Assert.AreEqual(rowManager.MappedRows[0], rowManager.CurrentRow);
+            Assert.AreEqual(1, rowManager.Rows.Count);
+            Assert.IsTrue(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
-            Assert.AreEqual(1, rowManager.MappedRows.Count);
-            Assert.IsFalse(rowManager.MappedRows[0].IsEof);
-            Assert.AreEqual(rowManager.MappedRows[0], rowManager.CurrentRow);
+            Assert.AreEqual(1, rowManager.Rows.Count);
+            Assert.IsFalse(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FlattenHierarchy(Model childModel)
+        public TemplateBuilder Hierarchical(Model childModel)
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
@@ -122,7 +122,7 @@ namespace DevZest.Data.Windows
             if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
                 throw new ArgumentException(Strings.TemplateBuilder_InvalidFlattenHierarchyChildModel);
 
-            Template.FlattenHierarchyChildModelOrdinal = childModel.GetOrdinal();
+            Template.HierarchicalModelOrdinal = childModel.GetOrdinal();
             return this;
         }
     }

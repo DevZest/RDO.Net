@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -12,22 +13,15 @@ namespace DevZest.Data.Windows.Primitives
             _dataSet = dataSet;
         }
 
-        internal virtual void Initialize()
-        {
-            _mappedRows = new List<RowPresenter>(DataSet.Count);
-            foreach (var dataRow in DataSet)
-                InsertRowPresenter(dataRow);
-            CoerceEofRow();
-
-            DataSet.RowAdded += OnDataRowAdded;
-            DataSet.RowRemoved += OnDataRowRemoved;
-            DataSet.RowUpdated += OnDataRowUpdated;
-        }
-
         private readonly Template _template;
         public Template Template
         {
             get { return _template; }
+        }
+
+        public bool IsHierarchical
+        {
+            get { return Template.HierarchicalModelOrdinal >= 0; }
         }
 
         private readonly DataSet _dataSet;
@@ -36,9 +30,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return _dataSet; }
         }
 
-        public Model Model
+        internal virtual void Initialize()
         {
-            get { return DataSet.Model; }
+            InitializeRowMappings();
+            InitializeHierarchicalRows();
         }
 
         int _rowPresenterStateFlags;
@@ -67,7 +62,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void OnSetState(RowPresenter rowPresenter, RowPresenterState rowPresenterState)
         {
-            if (BindingSource.Current.RowPresenter == rowPresenter && GetStateFlag(rowPresenterState))
+            if (GetStateFlag(rowPresenterState))
                 InvalidateView();
         }
 
@@ -103,28 +98,91 @@ namespace DevZest.Data.Windows.Primitives
                 InvalidateView();
         }
 
-        private List<RowPresenter> _mappedRows;
-        public IReadOnlyList<RowPresenter> MappedRows
+        private List<List<RowPresenter>> _rowMappings;
+        private List<RowPresenter> _hierarchicalRows;
+        public IReadOnlyList<RowPresenter> Rows
         {
             get
             {
                 OnGetState(DataPresenterState.Rows);
-                return _mappedRows;
+                return _hierarchicalRows;
             }
         }
 
-        private List<RowPresenter> _flattenedRows;
-        public IReadOnlyList<RowPresenter> FlattenedRows
+        private void InitializeRowMappings()
         {
-            get
+            _rowMappings = new List<List<RowPresenter>>();
+            for (var dataSet = DataSet; dataSet != null; dataSet = GetChildDataSet(dataSet))
             {
-                OnGetState(DataPresenterState.FlattenedRows);
-                return _flattenedRows;
+                _rowMappings.Add(new List<RowPresenter>());
+                foreach (var dataRow in DataSet)
+                    InsertRowMapping(dataRow);
+
+                dataSet.RowAdded += OnDataRowAdded;
+                dataSet.RowRemoved += OnDataRowRemoved;
+                dataSet.RowUpdated += OnDataRowUpdated;
             }
+        }
+
+        private RowPresenter InsertRowMapping(DataRow dataRow)
+        {
+            Debug.Assert(dataRow != null);
+            var rows = _rowMappings[dataRow.Model.GetHierarchicalLevel()];
+            var row = new RowPresenter(this, dataRow);
+            var ordinal = dataRow.Ordinal;
+            rows.Insert(ordinal, row);
+            return row;
+        }
+
+        private DataSet GetChildDataSet(DataSet dataSet)
+        {
+            if (dataSet.Count == 0 || !IsHierarchical)
+                return null;
+
+            return dataSet.Model.GetChildModels()[Template.HierarchicalModelOrdinal].GetDataSet();
+        }
+
+        private void InitializeHierarchicalRows()
+        {
+            _hierarchicalRows = IsHierarchical ? new List<RowPresenter>() : _rowMappings[0];
+            if (IsHierarchical)
+            {
+                int hierarchicalOrdinal = 0;
+                foreach (var row in _rowMappings[0])
+                    hierarchicalOrdinal = InsertHierarchicalRowRecursively(hierarchicalOrdinal, row);
+            }
+            CoerceEofRow();
+        }
+
+        private int InsertHierarchicalRowRecursively(int hierarchicalOrdinal, RowPresenter row)
+        {
+            Debug.Assert(IsHierarchical && !row.IsEof);
+
+            hierarchicalOrdinal = InsertSingleHierarchicalRow(hierarchicalOrdinal, row);
+            if (row.IsExpanded)
+            {
+                var children = row.DataRow[Template.HierarchicalModelOrdinal];
+                foreach (var childDataRow in children)
+                {
+                    var childRow = GetRowPresenter(childDataRow);
+                    hierarchicalOrdinal = InsertHierarchicalRowRecursively(hierarchicalOrdinal, childRow);
+                }
+            }
+            return hierarchicalOrdinal;
+        }
+
+        private int InsertSingleHierarchicalRow(int hierarchicalOrdinal, RowPresenter row)
+        {
+            row.Ordinal = hierarchicalOrdinal;
+            _hierarchicalRows.Insert(hierarchicalOrdinal++, row);
+            return hierarchicalOrdinal;
         }
 
         private void OnDataRowAdded(object sender, DataRow dataRow)
         {
+            if (IsHierarchical && dataRow.Model.GetHierarchicalLevel() == _rowMappings.Count - 1)
+                _rowMappings.Add(new List<RowPresenter>());
+
             if (EditingEofRow != null && EditingEofRow.DataRow == dataRow)
                 return;
 
@@ -134,24 +192,115 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InsertRowPresenter(DataRow dataRow)
         {
-            var rowPresenter = new RowPresenter(this, dataRow);
-            var index = dataRow == null ? _mappedRows.Count : dataRow.Index;
-            _mappedRows.Insert(index, rowPresenter);
-            OnSetState(DataPresenterState.Rows);
+            Debug.Assert(dataRow != null);
+            var row = InsertRowMapping(dataRow);
+            var hierarchicalOrdinal = GetHierarchicalOrdinal(row);
+            if (hierarchicalOrdinal >= 0)
+                InsertHierarchicalRow(hierarchicalOrdinal, row);
+            else
+                OnSetState(DataPresenterState.Rows);
+        }
+
+        private void InsertHierarchicalRow(int hierarchicalOrdinal, RowPresenter row)
+        {
+            hierarchicalOrdinal = InsertHierarchicalRowRecursively(hierarchicalOrdinal, row);
+            for (int i = hierarchicalOrdinal; i < _hierarchicalRows.Count; i++)
+                _hierarchicalRows[i].Ordinal = i;
+        }
+
+        private int GetHierarchicalOrdinal(RowPresenter row)
+        {
+            Debug.Assert(!row.IsEof);
+
+            if (!IsHierarchical)
+                return -1;
+
+            var parentRow = GetParentRow(row);
+            var prevRow = GetPreviousRow(row);
+            if (parentRow == null)
+                return prevRow == null ? 0 : GetNextHierarchicalOrdinal(prevRow);
+            else if (parentRow.Ordinal >= 0 && parentRow.IsExpanded)
+                return prevRow == null ? parentRow.Ordinal + 1 : GetNextHierarchicalOrdinal(prevRow);
+            else
+                return -1;
+        }
+
+        private RowPresenter GetParentRow(RowPresenter row)
+        {
+            var parentDataRow = row.DataRow.ParentDataRow;
+            return parentDataRow == null ? null : GetRowPresenter(parentDataRow);
+        }
+
+        private RowPresenter GetPreviousRow(RowPresenter row)
+        {
+            var ordinal = row.DataRow.Ordinal;
+            return ordinal == 0 ? null : GetRowPresenter(row.HierarchicalLevel, ordinal - 1);
+        }
+
+        private RowPresenter GetRowPresenter(DataRow dataRow)
+        {
+            Debug.Assert(dataRow != null);
+            return GetRowPresenter(dataRow.Model.GetHierarchicalLevel(), dataRow.Ordinal);
+        }
+
+        private RowPresenter GetRowPresenter(int hierarchicalLevel, int ordinal)
+        {
+            return _rowMappings[hierarchicalLevel][ordinal];
+        }
+
+        private int GetNextHierarchicalOrdinal(RowPresenter row)
+        {
+            Debug.Assert(IsHierarchical && row != null && row.Ordinal >= 0);
+
+            var hierarchicalLevel = row.HierarchicalLevel;
+            var result = row.Ordinal + 1;
+            for (; result < _hierarchicalRows.Count; result++)
+            {
+                if (_hierarchicalRows[result].HierarchicalLevel <= hierarchicalLevel)
+                    break;
+            }
+            return result;
         }
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
-            RemoveRowPresenter(e.Index);
+            RemoveRowPresenter(e.Model.GetHierarchicalLevel(), e.Index);
             CoerceEofRow();
         }
 
-        private void RemoveRowPresenter(int index)
+        private void RemoveRowPresenter(int hierarchicalLevel, int ordinal)
         {
-            var row = _mappedRows[index];
-            _mappedRows[index].Dispose();
-            _mappedRows.RemoveAt(index);
+            var row = GetRowPresenter(hierarchicalLevel, ordinal);
+            var hierarchicalOrdinal = row.Ordinal;
+            row.Dispose();
+            _rowMappings[hierarchicalLevel].RemoveAt(ordinal);
+            if (IsHierarchical)
+            {
+                if (hierarchicalOrdinal >= 0)
+                    RemoveHierarchicalRow(hierarchicalOrdinal);
+            }
+            else
+                OnSetState(DataPresenterState.Rows);
+        }
+
+        private void RemoveHierarchicalRow(int ordinal)
+        {
+            _hierarchicalRows.RemoveAt(ordinal);
             OnSetState(DataPresenterState.Rows);
+        }
+
+        private void AddEofRow()
+        {
+            Debug.Assert(EofRow == null);
+            var row = new RowPresenter(this, null);
+            InsertSingleHierarchicalRow(_hierarchicalRows.Count - 1, row);
+        }
+
+        private void RemoveEofRow(RowPresenter eofRow)
+        {
+            Debug.Assert(eofRow == EofRow);
+            eofRow.Dispose();
+            RemoveHierarchicalRow(_hierarchicalRows.Count - 1);
         }
 
         private bool ShouldHaveEofRow
@@ -168,19 +317,19 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private RowPresenter LastRow
+        private RowPresenter LastHierarchicalRow
         {
-            get { return _mappedRows.Count == 0 ? null : _mappedRows[_mappedRows.Count - 1]; }
+            get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_rowMappings.Count - 1]; }
         }
 
         private RowPresenter EofRow
         {
             get
             {
-                var lastRow = LastRow;
-                if (lastRow == null)
+                var lastHierarchicalRow = LastHierarchicalRow;
+                if (lastHierarchicalRow == null)
                     return null;
-                return lastRow.IsEof ? lastRow : null;
+                return lastHierarchicalRow.IsEof ? lastHierarchicalRow : null;
             }
         }
 
@@ -189,12 +338,13 @@ namespace DevZest.Data.Windows.Primitives
             if (ShouldHaveEofRow)
             {
                 if (EofRow == null)
-                    InsertRowPresenter(null);
+                    AddEofRow();
             }
             else
             {
-                if (EofRow != null)
-                    RemoveRowPresenter(_mappedRows.Count - 1);
+                var eofRow = EofRow;
+                if (eofRow != null)
+                    RemoveEofRow(eofRow);
             }
         }
 
@@ -289,7 +439,7 @@ namespace DevZest.Data.Windows.Primitives
             var eofRow = EofRow;
             EditingEofRow.DataRow = null;
             if (eofRow != null)
-                RemoveRowPresenter(_mappedRows.Count - 1);
+                RemoveEofRow(eofRow);
             CoerceEofRow();
             EditingEofRow = null;
         }

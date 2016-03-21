@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +13,6 @@ namespace DevZest.Data.Windows
         internal RowPresenter(RowManager rowManager, DataRow dataRow)
         {
             Debug.Assert(rowManager != null);
-            Debug.Assert(dataRow == null || rowManager.Model == dataRow.Model);
             _rowManager = rowManager;
             DataRow = dataRow;
         }
@@ -21,6 +21,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowManager = null;
+            _ordinal = -1;
             _subviewPresenters = null;
         }
 
@@ -50,11 +51,6 @@ namespace DevZest.Data.Windows
         public bool IsEof
         {
             get { return DataRow == null; }
-        }
-
-        public Model Model
-        {
-            get { return RowManager.Model; }
         }
 
         private IReadOnlyList<DataPresenter> _subviewPresenters;
@@ -94,29 +90,44 @@ namespace DevZest.Data.Windows
             RowManager.OnSetState(this, rowPresenterState);
         }
 
-        public int Index
+        private int _ordinal;
+        public int Ordinal
         {
             get
             {
-                OnGetState(RowPresenterState.Index);
-                return IsEof ? RowManager.MappedRows.Count - 1 : DataRow.Index;
-            }
-        }
-
-        private int _flattenedIndex = -1;
-        public int FlattenedIndex
-        {
-            get
-            {
-                OnGetState(RowPresenterState.FlattenedIndex);
-                if (RowManager.MappedRows == RowManager.FlattenedRows)
-                    return Index;
-                return _flattenedIndex;
+                OnGetState(RowPresenterState.Ordinal);
+                if (RowManager.IsHierarchical)
+                    return _ordinal;
+                else
+                    return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
             }
             internal set
             {
-                _flattenedIndex = value;
+                _ordinal = value;
             }
+        }
+
+        public int HierarchicalLevel
+        {
+            get { return IsEof ? 0 : DataRow.Model.GetHierarchicalLevel(); }
+        }
+
+        private bool _isExpanded = false;
+        public bool IsExpanded
+        {
+            get
+            {
+                OnGetState(RowPresenterState.IsExpanded);
+                return _isExpanded;
+            }
+        }
+
+        public void Expand()
+        {
+        }
+
+        public void Collapse()
+        {
         }
 
         private bool _isCurrent;
