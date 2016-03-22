@@ -60,11 +60,19 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Expand/Collapse operation is only allowed on hierarchical rows.
+        /// The column is invalid. It does not belong to the DataSet.
         /// </summary>
-        public static string RowPresenter_NotHierarchical
+        public static string RowPresenter_VerifyColumn
         {
-            get { return GetString("RowPresenter_NotHierarchical"); }
+            get { return GetString("RowPresenter_VerifyColumn"); }
+        }
+
+        /// <summary>
+        /// The row must be hierarchical.
+        /// </summary>
+        public static string RowPresenter_VerifyHierarchical
+        {
+            get { return GetString("RowPresenter_VerifyHierarchical"); }
         }
 
         /// <summary>

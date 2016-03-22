@@ -37,6 +37,11 @@ namespace DevZest.Data.Windows
             }
         }
 
+        private bool IsHierarchical
+        {
+            get { return !IsEof && RowManager.IsHierarchical; }
+        }
+
         //public DataPresenter DataPresenter
         //{
         //    get { return RowManager as DataPresenter; }
@@ -58,7 +63,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (IsEof || !RowManager.IsHierarchical)
+                if (!IsHierarchical)
                     return null;
 
                 var parentDataRow = DataRow.ParentDataRow;
@@ -70,7 +75,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (!RowManager.IsHierarchical || IsEof)
+                if (!IsHierarchical)
                     return 0;
 
                 OnGetState(RowPresenterState.HierarchicalChildren);
@@ -143,7 +148,7 @@ namespace DevZest.Data.Windows
 
         public int HierarchicalLevel
         {
-            get { return IsEof ? 0 : DataRow.Model.GetHierarchicalLevel(); }
+            get { return IsHierarchical ? DataRow.Model.GetHierarchicalLevel() : 0; }
         }
 
         private bool _isExpanded = false;
@@ -163,8 +168,7 @@ namespace DevZest.Data.Windows
 
         public void Expand()
         {
-            if (!RowManager.IsHierarchical)
-                throw new InvalidOperationException(Strings.RowPresenter_NotHierarchical);
+            VerifyHierarchical();
 
             if (IsExpanded)
                 return;
@@ -175,14 +179,19 @@ namespace DevZest.Data.Windows
 
         public void Collapse()
         {
-            if (!RowManager.IsHierarchical)
-                throw new InvalidOperationException(Strings.RowPresenter_NotHierarchical);
+            VerifyHierarchical();
 
             if (!IsExpanded)
                 return;
 
             RowManager.Collapse(this);
             IsExpanded = false;
+        }
+
+        private void VerifyHierarchical()
+        {
+            if (!IsHierarchical)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyHierarchical);
         }
 
         private bool _isCurrent;
@@ -230,10 +239,21 @@ namespace DevZest.Data.Windows
 
         public T GetValue<T>(Column<T> column)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
+            VerifyColumn(column, nameof(column));
+
+            if (HierarchicalLevel > 0)
+                column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             return DataRow == null ? default(T) : column[DataRow];
+        }
+
+        private void VerifyColumn(Column column, string paramName)
+        {
+            if (column == null)
+                throw new ArgumentNullException(paramName);
+
+            if (column.GetParentModel() != RowManager.DataSet.Model)
+                throw new ArgumentException(Strings.RowPresenter_VerifyColumn, paramName);
         }
 
         private static object GetDefault(Type type)
@@ -243,12 +263,16 @@ namespace DevZest.Data.Windows
             return null;
         }
 
-        public object GetValue(Column column)
+        public object this[Column column]
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
+            get
+            {
+                VerifyColumn(column, nameof(column));
 
-            return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
+                if (HierarchicalLevel > 0)
+                    column = DataRow.Model.GetColumns()[column.Ordinal];
+                return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
+            }
         }
 
         private void SuppressViewUpdate()

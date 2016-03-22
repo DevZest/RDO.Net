@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Factories
 
             return rangeConfig.BeginRepeatItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind((src, x) => x.Text = src.RowPresenter.GetValue(column).GetText())
+                .Bind((src, x) => x.Text = src.RowPresenter[column].GetText())
                 .End();
         }
 
