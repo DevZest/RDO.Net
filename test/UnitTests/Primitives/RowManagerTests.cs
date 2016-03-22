@@ -1,12 +1,49 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using DevZest.Samples.AdventureWorksLT;
+using System.Globalization;
 
 namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
     public class RowManagerTests
     {
+        private static DataSet<ProductCategory> MockProductCategories(int count)
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var model = dataSet._;
+
+            string namePrefix = "Name";
+            AddRows(dataSet, namePrefix, count);
+            for (int i = 0; i < dataSet.Count; i++)
+            {
+                var children = dataSet[i].Children(model.SubCategories);
+                AddRows(children, GetName(namePrefix, i), count);
+                for (int j = 0; j < children.Count; j++)
+                {
+                    var grandChildren = children[j].Children(children._.SubCategories);
+                    AddRows(grandChildren, GetName(GetName(namePrefix, i), j), count);
+                }
+            }
+
+            return dataSet;
+        }
+
+        private static void AddRows(DataSet<ProductCategory> dataSet, string namePrefix, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var dataRow = dataSet.AddRow();
+                dataSet._.Name[dataRow] = GetName(namePrefix, i);
+            }
+        }
+
+        private static string GetName(string namePrefix, int index)
+        {
+            return string.Format("{0}-{1}", namePrefix, (index + 1).ToString(CultureInfo.InvariantCulture));
+        }
+
         private sealed class ConcreteRowManager : RowManager
         {
             public ConcreteRowManager(DataSet dataSet)
@@ -67,6 +104,13 @@ namespace DevZest.Data.Windows.Primitives
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsFalse(rowManager.Rows[0].IsEof);
+        }
+
+        [TestMethod]
+        public void RowManager_GetHierarchicalDataSet()
+        {
+            var productCategories = MockProductCategories(3);
+            Assert.AreEqual("", productCategories.ToJsonString(true));
         }
     }
 }
