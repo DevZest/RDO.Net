@@ -124,10 +124,25 @@ namespace DevZest.Data.Windows
 
         public void Expand()
         {
+            if (!RowManager.IsHierarchical)
+                throw new InvalidOperationException(Strings.RowPresenter_NotHierarchical);
+
+            if (IsExpanded)
+                return;
+
+            
+            throw new NotImplementedException();
         }
 
         public void Collapse()
         {
+            if (!RowManager.IsHierarchical)
+                throw new InvalidOperationException(Strings.RowPresenter_NotHierarchical);
+
+            if (!IsExpanded)
+                return;
+
+            throw new NotImplementedException();
         }
 
         private bool _isCurrent;

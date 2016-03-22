@@ -60,6 +60,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Expand/Collapse operation is only allowed on hierarchical rows.
+        /// </summary>
+        public static string RowPresenter_NotHierarchical
+        {
+            get { return GetString("RowPresenter_NotHierarchical"); }
+        }
+
+        /// <summary>
         /// The child model is invalid. It must be direct child model and has the same type.
         /// </summary>
         public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
