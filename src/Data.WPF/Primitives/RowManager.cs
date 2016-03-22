@@ -111,7 +111,7 @@ namespace DevZest.Data.Windows.Primitives
             return row;
         }
 
-        private RowPresenter RowMappings_GetRow(DataRow dataRow)
+        internal RowPresenter RowMappings_GetRow(DataRow dataRow)
         {
             Debug.Assert(dataRow != null);
             return RowMappings_GetRow(dataRow.Model.GetHierarchicalLevel(), dataRow.Ordinal);
@@ -145,6 +145,17 @@ namespace DevZest.Data.Windows.Primitives
         {
             _hierarchicalRows[ordinal].Ordinal = -1;
             _hierarchicalRows.RemoveAt(ordinal);
+            OnSetState(DataPresenterState.Rows);
+        }
+
+        private void HierarchicalRows_RemoveRange(int ordinal, int count)
+        {
+            Debug.Assert(count > 0);
+
+            for (int i = 0; i < count; i++)
+                _hierarchicalRows[ordinal + i].Ordinal = -1;
+
+            _hierarchicalRows.RemoveRange(ordinal, count);
             OnSetState(DataPresenterState.Rows);
         }
 
@@ -221,26 +232,19 @@ namespace DevZest.Data.Windows.Primitives
             if (!IsHierarchical)
                 return -1;
 
-            var parentRow = ParentOf(row);
-            var prevRow = PreviousOf(row);
+            var parentRow = row.HierarchicalParent;
+            var prevSiblingRow = PrevSiblingOf(row);
             if (parentRow == null)
-                return prevRow == null ? 0 : NextHierarchicalOrdinalOf(prevRow);
+                return prevSiblingRow == null ? 0 : NextHierarchicalOrdinalOf(prevSiblingRow);
             else if (parentRow.Ordinal >= 0 && parentRow.IsExpanded)
-                return prevRow == null ? parentRow.Ordinal + 1 : NextHierarchicalOrdinalOf(prevRow);
+                return prevSiblingRow == null ? parentRow.Ordinal + 1 : NextHierarchicalOrdinalOf(prevSiblingRow);
             else
                 return -1;
         }
 
-        private RowPresenter ParentOf(RowPresenter row)
+        private RowPresenter PrevSiblingOf(RowPresenter row)
         {
-            var parentDataRow = row.DataRow.ParentDataRow;
-            return parentDataRow == null ? null : RowMappings_GetRow(parentDataRow);
-        }
-
-        private RowPresenter PreviousOf(RowPresenter row)
-        {
-            var ordinal = row.DataRow.Ordinal;
-            return ordinal == 0 ? null : RowMappings_GetRow(row.HierarchicalLevel, ordinal - 1);
+            return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.HierarchicalLevel, row.DataRow.Ordinal - 1);
         }
 
         private int NextHierarchicalOrdinalOf(RowPresenter row)
@@ -450,6 +454,32 @@ namespace DevZest.Data.Windows.Primitives
                 RemoveEofRow(eofRow);
             CoerceEofRow();
             EditingEofRow = null;
+        }
+
+        internal void Expand(RowPresenter row)
+        {
+            Debug.Assert(IsHierarchical && !row.IsExpanded);
+
+            var nextOrdinal = row.Ordinal + 1;
+            for (int i = 0; i < row.HierarchicalChildrenCount; i++)
+            {
+                var childRow = row.GetHierarchicalChild(i);
+                nextOrdinal = InsertHierarchicalRow(nextOrdinal, childRow);
+            }
+            HierarchicalRows_UpdateOrdinal(nextOrdinal);
+        }
+
+        internal void Collapse(RowPresenter row)
+        {
+            Debug.Assert(IsHierarchical && row.IsExpanded);
+
+            var nextOrdinal = row.Ordinal + 1;
+            int count = NextHierarchicalOrdinalOf(row) - nextOrdinal;
+            if (count == 0)
+                return;
+
+            HierarchicalRows_RemoveRange(nextOrdinal, count);
+            HierarchicalRows_UpdateOrdinal(nextOrdinal);
         }
     }
 }

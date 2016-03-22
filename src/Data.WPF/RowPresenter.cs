@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Collections;
 
 namespace DevZest.Data.Windows
 {
@@ -51,6 +52,39 @@ namespace DevZest.Data.Windows
         public bool IsEof
         {
             get { return DataRow == null; }
+        }
+
+        public RowPresenter HierarchicalParent
+        {
+            get
+            {
+                if (IsEof || !RowManager.IsHierarchical)
+                    return null;
+
+                var parentDataRow = DataRow.ParentDataRow;
+                return parentDataRow == null ? null : RowManager.RowMappings_GetRow(parentDataRow);
+            }
+        }
+
+        public int HierarchicalChildrenCount
+        {
+            get
+            {
+                if (!RowManager.IsHierarchical || IsEof)
+                    return 0;
+
+                OnGetState(RowPresenterState.HierarchicalChildren);
+                return DataRow.ParentDataRow[Template.HierarchicalModelOrdinal].Count;
+            }
+        }
+
+        public RowPresenter GetHierarchicalChild(int index)
+        {
+            if (index < 0 || index >= HierarchicalChildrenCount)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            OnGetState(RowPresenterState.HierarchicalChildren);
+            return RowManager.RowMappings_GetRow(DataRow.ParentDataRow[Template.HierarchicalModelOrdinal][index]);
         }
 
         private IReadOnlyList<DataPresenter> _subviewPresenters;
@@ -120,6 +154,11 @@ namespace DevZest.Data.Windows
                 OnGetState(RowPresenterState.IsExpanded);
                 return _isExpanded;
             }
+            private set
+            {
+                _isExpanded = value;
+                OnSetState(RowPresenterState.IsExpanded);
+            }
         }
 
         public void Expand()
@@ -130,8 +169,8 @@ namespace DevZest.Data.Windows
             if (IsExpanded)
                 return;
 
-            
-            throw new NotImplementedException();
+            RowManager.Expand(this);
+            IsExpanded = true;
         }
 
         public void Collapse()
@@ -142,7 +181,8 @@ namespace DevZest.Data.Windows
             if (!IsExpanded)
                 return;
 
-            throw new NotImplementedException();
+            RowManager.Collapse(this);
+            IsExpanded = false;
         }
 
         private bool _isCurrent;

@@ -5,6 +5,7 @@
         IsSelected = 0,
         IsCurrent,
         Ordinal,
+        HierarchicalChildren,
         IsExpanded,
         IsEditing
     }
