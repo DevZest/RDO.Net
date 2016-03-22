@@ -128,7 +128,7 @@ namespace DevZest.Data.Windows
             RowManager.OnSetState(this, rowPresenterState);
         }
 
-        private int _ordinal;
+        private int _ordinal = -1;
         public int Ordinal
         {
             get

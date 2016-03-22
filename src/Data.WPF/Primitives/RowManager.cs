@@ -134,10 +134,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private void HierarchicalRows_Insert(int ordinal, RowPresenter row)
         {
-            Debug.Assert(row != null && row.Ordinal == -1);
+            Debug.Assert(row != null);
 
-            row.Ordinal = ordinal;
             _hierarchicalRows.Insert(ordinal, row);
+            if (IsHierarchical)
+            {
+                Debug.Assert(row.Ordinal == -1);
+                row.Ordinal = ordinal;
+            }
             OnSetState(DataPresenterState.Rows);
         }
 
@@ -334,7 +338,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(EofRow == null);
             var row = new RowPresenter(this, null);
-            HierarchicalRows_Insert(_hierarchicalRows.Count - 1, row);
+            HierarchicalRows_Insert(_hierarchicalRows.Count, row);
         }
 
         private void RemoveEofRow(RowPresenter eofRow)
@@ -357,7 +361,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private RowPresenter LastHierarchicalRow
         {
-            get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_rowMappings.Count - 1]; }
+            get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_hierarchicalRows.Count - 1]; }
         }
 
         private DataRow _viewUpdateSuppressed;
