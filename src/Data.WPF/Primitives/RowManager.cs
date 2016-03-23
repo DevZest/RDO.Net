@@ -34,6 +34,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             InitializeRowMappings();
             InitializeHierarchicalRows();
+            CoerceValues();
         }
 
         int _rowPresenterStateFlags;
@@ -209,7 +210,6 @@ namespace DevZest.Data.Windows.Primitives
                 foreach (var row in _rowMappings[0])
                     hierarchicalOrdinal = InsertHierarchicalRow(hierarchicalOrdinal, row);
             }
-            CoerceEofRow();
         }
 
         private int InsertHierarchicalRow(int hierarchicalOrdinal, RowPresenter row)
@@ -282,13 +282,13 @@ namespace DevZest.Data.Windows.Primitives
             }
             else
                 OnSetState(DataPresenterState.Rows);
-            CoerceEofRow();
+            CoerceValues();
         }
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
             OnDataRowRemoved(e.Model.GetHierarchicalLevel(), e.Index);
-            CoerceEofRow();
+            CoerceValues();
         }
 
         private void OnDataRowRemoved(int hierarchicalLevel, int ordinal)
@@ -303,6 +303,12 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
             RowMappings_Remove(hierarchicalLevel, ordinal);
+        }
+
+        private void CoerceValues()
+        {
+            CoerceEofRow();
+            CoerceCurrentRow();
         }
 
         private void CoerceEofRow()
@@ -362,6 +368,14 @@ namespace DevZest.Data.Windows.Primitives
         private RowPresenter LastHierarchicalRow
         {
             get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_hierarchicalRows.Count - 1]; }
+        }
+
+        private void CoerceCurrentRow()
+        {
+            if (Rows.Count > 0 && CurrentRow == null)
+                CurrentRow = Rows[0];
+            else if (Rows.Count == 0 && CurrentRow != null)
+                CurrentRow = null;
         }
 
         private DataRow _viewUpdateSuppressed;
@@ -444,7 +458,7 @@ namespace DevZest.Data.Windows.Primitives
             EditingEofRow = eofRow;
             EditingEofRow.DataRow = new DataRow();
             DataSet.Add(EditingEofRow.DataRow);
-            CoerceEofRow();
+            CoerceValues();
             InvalidateView();
         }
 
@@ -456,7 +470,7 @@ namespace DevZest.Data.Windows.Primitives
             EditingEofRow.DataRow = null;
             if (eofRow != null)
                 RemoveEofRow(eofRow);
-            CoerceEofRow();
+            CoerceValues();
             EditingEofRow = null;
         }
 
