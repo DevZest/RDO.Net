@@ -1,77 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using DevZest.Samples.AdventureWorksLT;
-using System.Globalization;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
-    public class RowManagerTests
+    public class RowManagerTests : RowManagerTestsBase
     {
-        private static DataSet<ProductCategory> MockProductCategories(int count)
-        {
-            var dataSet = DataSet<ProductCategory>.New();
-            var model = dataSet._;
-
-            string namePrefix = "Name";
-            AddRows(dataSet, namePrefix, count);
-            for (int i = 0; i < dataSet.Count; i++)
-            {
-                var children = dataSet[i].Children(model.SubCategories);
-                AddRows(children, GetName(namePrefix, i), count);
-                for (int j = 0; j < children.Count; j++)
-                {
-                    var grandChildren = children[j].Children(children._.SubCategories);
-                    AddRows(grandChildren, GetName(GetName(namePrefix, i), j), count);
-                }
-            }
-
-            return dataSet;
-        }
-
-        private static void AddRows(DataSet<ProductCategory> dataSet, string namePrefix, int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                var dataRow = dataSet.AddRow();
-                dataSet._.Name[dataRow] = GetName(namePrefix, i);
-            }
-        }
-
-        private static string GetName(string namePrefix, int index)
-        {
-            return string.Format("{0}-{1}", namePrefix, (index + 1).ToString(CultureInfo.InvariantCulture));
-        }
-
-        private sealed class ConcreteRowManager : RowManager
-        {
-            public ConcreteRowManager(DataSet dataSet)
-                : base(dataSet)
-            {
-            }
-
-            internal override void InvalidateView()
-            {
-            }
-        }
-
-        private static RowManager CreateRowManager(DataSet<Adhoc> dataSet, EofRowMapping eofRowMapping)
-        {
-            RowManager result = new ConcreteRowManager(dataSet);
-            result.Template.EofRowMapping = eofRowMapping;
-            result.Initialize();
-            return result;
-        }
-
-        private static RowManager CreateRowManager(DataSet<ProductCategory> productCategories)
-        {
-            RowManager result = new ConcreteRowManager(productCategories);
-            result.Template.HierarchicalModelOrdinal = 0;
-            result.Initialize();
-            return result;
-        }
-
         [TestMethod]
         public void RowManager_EofRowMapping_Never()
         {
@@ -147,25 +80,6 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int i = 0; i < rows.Count; i++)
                 Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
-        }
-
-        [TestMethod]
-        public void RowManager_EofRow_BeginEdit_CancelEdit()
-        {
-            var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
-            var rows = rowManager.Rows;
-
-            Assert.AreEqual(1, rows.Count);
-            Assert.IsTrue(rows[0].IsEof);
-
-            rows[0].BeginEdit();
-            Assert.AreEqual(2, rows.Count);
-            Assert.IsFalse(rows[0].IsEof);
-
-            rows[0].CancelEdit();
-            Assert.AreEqual(1, rows.Count);
-            Assert.IsTrue(rows[0].IsEof);
         }
     }
 }

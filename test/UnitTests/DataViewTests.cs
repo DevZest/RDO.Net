@@ -13,21 +13,21 @@ namespace DevZest.Data.Windows
     [TestClass]
     public class DataViewTests
     {
-        [TestMethod]
-        public void DataView_properly_initialized()
-        {
-            var dataView = new DataView();
-            dataView.Show(DataPresenter.Create(DataSet<Adhoc>.New()));
+        //[TestMethod]
+        //public void DataView_properly_initialized()
+        //{
+        //    var dataView = new DataView();
+        //    dataView.Show(DataPresenter.Create(DataSet<Adhoc>.New()));
 
-            dataView.RunAfterLoaded(x =>
-            {
-                //var layoutManager = dataView.DataPresenter.LayoutManager;
-                var dataPanel = x.FindVisualChild<DataPanel>();
-                Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
-                //Verify(dataPanel, layoutManager.Elements);
-                Assert.Fail("To be implemented.");
-            });
-        }
+        //    dataView.RunAfterLoaded(x =>
+        //    {
+        //        //var layoutManager = dataView.DataPresenter.LayoutManager;
+        //        var dataPanel = x.FindVisualChild<DataPanel>();
+        //        Assert.IsTrue(dataPanel != null, "Failed to resolve DataSetPanel from control template.");
+        //        //Verify(dataPanel, layoutManager.Elements);
+        //        Assert.Fail("To be implemented.");
+        //    });
+        //}
 
         private static void Verify(DataPanel dataPanel, IReadOnlyList<UIElement> elements)
         {

@@ -79,6 +79,7 @@
     <Compile Include="DataViewTests.cs" />
     <Compile Include="Primitives\GridRowSetTests.cs" />
     <Compile Include="Primitives\GridColumnSetTests.cs" />
+    <Compile Include="Primitives\RowManagerTestsBase.cs" />
     <Compile Include="RowPresenterTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
