@@ -528,5 +528,22 @@ namespace DevZest.Data.Windows.Primitives
             HierarchicalRows_RemoveRange(nextOrdinal, count);
             HierarchicalRows_UpdateOrdinal(nextOrdinal);
         }
+
+        public RowPresenter InsertRow(int ordinal)
+        {
+            if (ordinal < 0 || ordinal > Rows.Count)
+                throw new ArgumentOutOfRangeException(nameof(ordinal));
+
+
+            var row = ordinal < Rows.Count ? Rows[ordinal] : null;
+            if (row != null && row.HierarchicalLevel != 0)
+                throw new ArgumentException(Strings.RowManager_OrdinalNotTopLevel, nameof(ordinal));
+
+            var index = row == null ? DataSet.Count : row.DataRow.Index;
+            DataSet.Add(new DataRow());
+            var result = Rows[ordinal];
+            result.BeginEdit(true);
+            return result;
+        }
     }
 }

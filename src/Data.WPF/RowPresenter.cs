@@ -382,6 +382,17 @@ namespace DevZest.Data.Windows
 
         public void BeginEdit()
         {
+            if (IsEditing)
+                return;
+
+            BeginEdit(false);
+        }
+
+        private bool _isNew;
+        internal void BeginEdit(bool isNew)
+        {
+            _isNew = isNew;
+
             bool isEof = IsEof;
             if (isEof)
                 RowManager.BeginEditEof();
@@ -394,7 +405,7 @@ namespace DevZest.Data.Windows
             if (editingRow != null)
                 editingRow.EndEdit();
 
-            if (!isEof)
+            if (!isEof && !_isNew)
                 DataRow.Save();
             IsEditing = true;
         }
@@ -404,14 +415,22 @@ namespace DevZest.Data.Windows
             if (!IsEditing)
                 return;
 
+            _isNew = false;
             IsEditing = false;
         }
 
         public void CancelEdit()
         {
+            if (!IsEditing)
+                return;
+
+            bool isNew = _isNew;
+            _isNew = false;
             IsEditing = false;  // IsEditing must be changed first because it requires non null DataRow
 
-            if (RowManager.EditingEofRow == this)
+            if (isNew)
+                Delete();
+            else if (RowManager.EditingEofRow == this)
                 RowManager.CancelEditEof();
             else
                 DataRow.Load();

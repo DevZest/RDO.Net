@@ -60,6 +60,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The specified ordinal must be a top level row.
+        /// </summary>
+        public static string RowManager_OrdinalNotTopLevel
+        {
+            get { return GetString("RowManager_OrdinalNotTopLevel"); }
+        }
+
+        /// <summary>
         /// The EOF row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteEof

@@ -135,6 +135,9 @@
   <data name="RowManager_InvalidCurrentRow" xml:space="preserve">
     <value>The value is invalid. It does not belong to this RowManager.</value>
   </data>
+  <data name="RowManager_OrdinalNotTopLevel" xml:space="preserve">
+    <value>The specified ordinal must be a top level row.</value>
+  </data>
   <data name="RowPresenter_DeleteEof" xml:space="preserve">
     <value>The EOF row cannot be deleted.</value>
   </data>
