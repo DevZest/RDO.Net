@@ -25,13 +25,18 @@ namespace DevZest.Data.Windows
             _subviewPresenters = null;
         }
 
+        private void VerifyDisposed()
+        {
+            if (_rowManager == null)
+                throw new ObjectDisposedException(GetType().FullName);
+        }
+
         private RowManager _rowManager;
         internal RowManager RowManager
         {
             get
             {
-                if (_rowManager == null)
-                    throw new ObjectDisposedException(GetType().FullName);
+                VerifyDisposed();
                 return _rowManager;
             }
         }
@@ -410,6 +415,15 @@ namespace DevZest.Data.Windows
                 RowManager.CancelEditEof();
             else
                 DataRow.Load();
+        }
+
+        public void Delete()
+        {
+            VerifyDisposed();
+            if (IsEof)
+                throw new InvalidOperationException(Strings.RowPresenter_DeleteEof);
+
+            DataRow.DataSet.RemoveAt(DataRow.Index);
         }
 
         internal RowView View { get; set; }

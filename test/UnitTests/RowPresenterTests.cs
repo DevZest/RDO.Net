@@ -65,5 +65,29 @@ namespace DevZest.Data.Windows.Primitives
             rowManager.Rows[0].Expand();
             VerifyHierarchicalLevel(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
         }
+
+        [TestMethod]
+        public void RowPresenter_Delete()
+        {
+            var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var rowManager = CreateRowManager(dataSet, EofRowMapping.Never);
+            var rows = rowManager.Rows;
+            Assert.AreEqual(1, rows.Count);
+            rows[0].Delete();
+            Assert.AreEqual(0, rows.Count);
+        }
+
+        [TestMethod]
+        public void RowPresenter_Delete_Hierarchical()
+        {
+            var dataSet = MockProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            VerifyRowOrdinal(rows);
+            VerifyHierarchicalLevel(rows, 0, 0, 0);
+            rows[0].Delete();
+            VerifyRowOrdinal(rows);
+            VerifyHierarchicalLevel(rows, 0, 0);
+        }
     }
 }

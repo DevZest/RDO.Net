@@ -309,10 +309,11 @@ namespace DevZest.Data.Windows.Primitives
             if (IsHierarchical)
             {
                 var row = RowMappings_GetRow(hierarchicalLevel, ordinal);
-                if (row.Ordinal >= 0)
+                var hierarchicalOrdinal = row.Ordinal;
+                if (hierarchicalOrdinal >= 0)
                 {
-                    HierarchicalRows_RemoveAt(row.Ordinal);
-                    HierarchicalRows_UpdateOrdinal(row.Ordinal);
+                    HierarchicalRows_RemoveAt(hierarchicalOrdinal);
+                    HierarchicalRows_UpdateOrdinal(hierarchicalOrdinal);
                 }
             }
             RowMappings_Remove(hierarchicalLevel, ordinal);

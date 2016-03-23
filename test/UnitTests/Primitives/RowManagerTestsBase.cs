@@ -79,5 +79,11 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < rows.Count; i++)
                 Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
         }
+
+        protected static void VerifyRowOrdinal(IReadOnlyList<RowPresenter> rows)
+        {
+            for (int i = 0; i < rows.Count; i++)
+                Assert.AreEqual(i, rows[i].Ordinal);
+        }
     }
 }

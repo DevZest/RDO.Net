@@ -60,6 +60,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The EOF row cannot be deleted.
+        /// </summary>
+        public static string RowPresenter_DeleteEof
+        {
+            get { return GetString("RowPresenter_DeleteEof"); }
+        }
+
+        /// <summary>
         /// The column is invalid. It does not belong to the DataSet.
         /// </summary>
         public static string RowPresenter_VerifyColumn
