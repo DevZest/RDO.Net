@@ -437,8 +437,11 @@ namespace DevZest.Data.Windows.Primitives
                 if (_currentRow == value)
                     return;
 
-                if (value != null && value.RowManager != this)
-                    throw new ArgumentException(Strings.RowManager_InvalidCurrentRow, nameof(value));
+                if (value != null)
+                {
+                    if (value.RowManager != this || value.Ordinal < 0)
+                        throw new ArgumentException(Strings.RowManager_InvalidCurrentRow, nameof(value));
+                }
 
                 var oldValue = _currentRow;
                 if (_currentRow != null)
