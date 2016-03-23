@@ -1,4 +1,6 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace DevZest.Data.Windows.Primitives
@@ -68,6 +70,14 @@ namespace DevZest.Data.Windows.Primitives
             result.Template.HierarchicalModelOrdinal = hierarchicalModelOrdinal;
             result.Initialize();
             return result;
+        }
+
+        protected static void VerifyHierarchicalLevel(IReadOnlyList<RowPresenter> rows, params int[] hiearchicalLevels)
+        {
+            Assert.AreEqual(rows.Count, hiearchicalLevels.Length);
+
+            for (int i = 0; i < rows.Count; i++)
+                Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
         }
     }
 }

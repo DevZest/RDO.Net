@@ -47,5 +47,26 @@ namespace DevZest.Data.Windows.Primitives
             Assert.IsTrue(row.IsEof);
             Assert.AreEqual(1, rows.Count);
         }
+
+        [TestMethod]
+        public void RowPresenter_Expand_Collapse()
+        {
+            var productCategories = MockProductCategories(3);
+            var rowManager = CreateRowManager(productCategories);
+            var rows = rowManager.Rows;
+            VerifyHierarchicalLevel(rows, 0, 0, 0);
+
+            rowManager.Rows[0].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 0, 0);
+
+            rowManager.Rows[1].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
+
+            rowManager.Rows[0].Collapse();
+            VerifyHierarchicalLevel(rows, 0, 0, 0);
+
+            rowManager.Rows[0].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
+        }
     }
 }
