@@ -126,7 +126,6 @@ namespace DevZest.Data.Windows.Primitives
             var productCategories = MockProductCategories(3);
             var rowManager = CreateRowManager(productCategories);
             VerifyHierarchicalLevel(rowManager, 0, 0, 0);
-            VerifyHierarchicalChildrenCount(rowManager, 3, 3, 3);
 
             rowManager.Rows[0].Expand();
             VerifyHierarchicalLevel(rowManager, 0, 1, 1, 1, 0, 0);
@@ -135,7 +134,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyHierarchicalLevel(rowManager, 0, 1, 2, 2, 2, 1, 1, 0, 0);
 
             rowManager.Rows[0].Collapse();
-            VerifyHierarchicalChildrenCount(rowManager, 3, 3, 3);
+            VerifyHierarchicalLevel(rowManager, 0, 0, 0);
 
             rowManager.Rows[0].Expand();
             VerifyHierarchicalLevel(rowManager, 0, 1, 2, 2, 2, 1, 1, 0, 0);
@@ -148,15 +147,6 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int i = 0; i < rows.Count; i++)
                 Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
-        }
-
-        private static void VerifyHierarchicalChildrenCount(RowManager rowManager, params int[] hiearchicalChildrenCounts)
-        {
-            var rows = rowManager.Rows;
-            Assert.AreEqual(rows.Count, hiearchicalChildrenCounts.Length);
-
-            for (int i = 0; i < rows.Count; i++)
-                Assert.AreEqual(hiearchicalChildrenCounts[i], rows[i].HierarchicalChildrenCount);
         }
     }
 }
