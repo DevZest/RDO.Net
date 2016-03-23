@@ -404,11 +404,12 @@ namespace DevZest.Data.Windows
 
         public void CancelEdit()
         {
+            IsEditing = false;  // IsEditing must be changed first because it requires non null DataRow
+
             if (RowManager.EditingEofRow == this)
                 RowManager.CancelEditEof();
             else
                 DataRow.Load();
-            IsEditing = false;
         }
 
         internal RowView View { get; set; }

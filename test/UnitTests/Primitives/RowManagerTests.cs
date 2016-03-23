@@ -148,5 +148,24 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < rows.Count; i++)
                 Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
         }
+
+        [TestMethod]
+        public void RowManager_EofRow_BeginEdit_CancelEdit()
+        {
+            var dataSet = DataSet<Adhoc>.New();
+            var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
+            var rows = rowManager.Rows;
+
+            Assert.AreEqual(1, rows.Count);
+            Assert.IsTrue(rows[0].IsEof);
+
+            rows[0].BeginEdit();
+            Assert.AreEqual(2, rows.Count);
+            Assert.IsFalse(rows[0].IsEof);
+
+            rows[0].CancelEdit();
+            Assert.AreEqual(1, rows.Count);
+            Assert.IsTrue(rows[0].IsEof);
+        }
     }
 }
