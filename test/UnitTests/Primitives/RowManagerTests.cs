@@ -121,7 +121,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_HierarchicalProductCategories()
+        public void RowManager_HierarchicalDataSet()
         {
             var productCategories = MockProductCategories(3);
             var rowManager = CreateRowManager(productCategories);
