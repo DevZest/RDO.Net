@@ -83,7 +83,16 @@ namespace DevZest.Data.Windows
                     return 0;
 
                 OnGetState(RowPresenterState.HierarchicalChildren);
-                return DataRow[Template.HierarchicalModelOrdinal].Count;
+                return ChildDataSet.Count;
+            }
+        }
+
+        private DataSet ChildDataSet
+        {
+            get
+            {
+                Debug.Assert(IsHierarchical);
+                return DataRow[Template.HierarchicalModelOrdinal];
             }
         }
 
@@ -93,7 +102,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             OnGetState(RowPresenterState.HierarchicalChildren);
-            return RowManager.RowMappings_GetRow(DataRow[Template.HierarchicalModelOrdinal][index]);
+            return RowManager.RowMappings_GetRow(ChildDataSet[index]);
         }
 
         private IReadOnlyList<DataPresenter> _subviewPresenters;
@@ -443,6 +452,22 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.RowPresenter_DeleteEof);
 
             DataRow.DataSet.RemoveAt(DataRow.Index);
+        }
+
+        public RowPresenter InsertChildRow(int ordinal)
+        {
+            VerifyHierarchical();
+
+            if (ordinal < 0 || ordinal > HierarchicalChildrenCount)
+                throw new ArgumentOutOfRangeException(nameof(ordinal));
+
+            var childRow = ordinal == HierarchicalChildrenCount ? null : GetHierarchicalChild(ordinal);
+            var childDataSet = ChildDataSet;
+            var index = childRow == null ? childDataSet.Count : childRow.DataRow.Index;
+            childDataSet.Insert(index, new DataRow());
+            var result = GetHierarchicalChild(ordinal);
+            result.BeginEdit(true);
+            return result;
         }
 
         internal RowView View { get; set; }

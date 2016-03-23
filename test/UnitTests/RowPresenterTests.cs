@@ -89,5 +89,21 @@ namespace DevZest.Data.Windows.Primitives
             VerifyRowOrdinal(rows);
             VerifyHierarchicalLevel(rows, 0, 0);
         }
+
+        [TestMethod]
+        public void RowPresenter_InsertChildRow()
+        {
+            var dataSet = MockProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            rows[0].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 0, 0);
+
+            var newChildRow = rows[0].InsertChildRow(1);
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 1, 0, 0);
+
+            newChildRow.CancelEdit();
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 0, 0);
+        }
     }
 }

@@ -540,7 +540,7 @@ namespace DevZest.Data.Windows.Primitives
                 throw new ArgumentException(Strings.RowManager_OrdinalNotTopLevel, nameof(ordinal));
 
             var index = row == null ? DataSet.Count : row.DataRow.Index;
-            DataSet.Add(new DataRow());
+            DataSet.Insert(index, new DataRow());
             var result = Rows[ordinal];
             result.BeginEdit(true);
             return result;
