@@ -3,6 +3,7 @@ using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
@@ -375,6 +376,22 @@ namespace DevZest.Data
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
             Assert.AreEqual(1, childRowUpdated);
             Assert.AreEqual(1, rowUpdated);
+        }
+
+        [TestMethod]
+        public void DataSet_HierarchicalLevel()
+        {
+            int count = 3;
+            var dataSet = GetDataSet(count);
+            Assert.AreEqual(0, dataSet.Model.GetHierarchicalLevel());
+
+            var childModel = dataSet.Model.ChildModels[0];
+            Assert.AreEqual(1, childModel.GetHierarchicalLevel());
+            Assert.AreEqual(childModel, childModel.GetDataSet().Model);
+
+            var grandChildModel = childModel.ChildModels[0];
+            Assert.AreEqual(2, grandChildModel.GetHierarchicalLevel());
+            Assert.AreEqual(grandChildModel, grandChildModel.GetDataSet().Model);
         }
     }
 }
