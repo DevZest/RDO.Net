@@ -287,6 +287,25 @@ namespace DevZest.Data.Windows
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
             }
+            set
+            {
+                VerifyColumn(column, nameof(column));
+
+                if (HierarchicalLevel > 0)
+                    column = DataRow.Model.GetColumns()[column.Ordinal];
+
+                BeginEdit();
+                SuppressViewUpdate();
+
+                try
+                {
+                    column.SetValue(DataRow, value);
+                }
+                finally
+                {
+                    ResumeViewUpdate();
+                }
+            }
         }
 
         private void SuppressViewUpdate()
@@ -301,15 +320,15 @@ namespace DevZest.Data.Windows
             RowManager.ResumeViewUpdate();
         }
 
-        public void SetValue<T>(Column<T> column, T value, bool suppressViewUpdate = true)
+        public void SetValue<T>(Column<T> column, T value)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
+            VerifyColumn(column, nameof(column));
+
+            if (HierarchicalLevel > 0)
+                column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             BeginEdit();
-
-            if (suppressViewUpdate)
-                SuppressViewUpdate();
+            SuppressViewUpdate();
 
             try
             {
@@ -317,29 +336,7 @@ namespace DevZest.Data.Windows
             }
             finally
             {
-                if (suppressViewUpdate)
-                    ResumeViewUpdate();
-            }
-        }
-
-        public void SetValue(Column column, object value, bool suppressUpdateTarget = true)
-        {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-
-            BeginEdit();
-
-            if (suppressUpdateTarget)
-                SuppressViewUpdate();
-
-            try
-            {
-                column.SetValue(DataRow, value);
-            }
-            finally
-            {
-                if (suppressUpdateTarget)
-                    ResumeViewUpdate();
+                ResumeViewUpdate();
             }
         }
 

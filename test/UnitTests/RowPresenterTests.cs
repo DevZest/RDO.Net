@@ -7,6 +7,42 @@ namespace DevZest.Data.Windows.Primitives
     public class RowPresenterTests : RowManagerTestsBase
     {
         [TestMethod]
+        public void RowPresenter_GetSetValue()
+        {
+            var dataSet = MockProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            rows[0].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 0, 0);
+
+            Assert.AreEqual("Name-1", rows[0].GetValue(dataSet._.Name));
+            Assert.AreEqual("Name-1-1", rows[1].GetValue(dataSet._.Name));
+
+            rows[0].SetValue(dataSet._.Name, "NewName-1");
+            rows[1].SetValue(dataSet._.Name, "NewName-1-1");
+            Assert.AreEqual("NewName-1", rows[0].GetValue(dataSet._.Name));
+            Assert.AreEqual("NewName-1-1", rows[1].GetValue(dataSet._.Name));
+        }
+
+        [TestMethod]
+        public void RowPresenter_GetSetValue_Object()
+        {
+            var dataSet = MockProductCategories(3);
+            var rowManager = CreateRowManager(dataSet);
+            var rows = rowManager.Rows;
+            rows[0].Expand();
+            VerifyHierarchicalLevel(rows, 0, 1, 1, 1, 0, 0);
+
+            Assert.AreEqual("Name-1", rows[0][dataSet._.Name]);
+            Assert.AreEqual("Name-1-1", rows[1][dataSet._.Name]);
+
+            rows[0][dataSet._.Name] = "NewName-1";
+            rows[1][dataSet._.Name] = "NewName-1-1";
+            Assert.AreEqual("NewName-1", rows[0][dataSet._.Name]);
+            Assert.AreEqual("NewName-1-1", rows[1][dataSet._.Name]);
+        }
+
+        [TestMethod]
         public void RowPresenter_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
