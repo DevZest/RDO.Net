@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows
 
             return new SubviewItem.Builder<TView>(this, rowPresenter =>
             {
-                if (rowPresenter.DataRow == null)
+                if (rowPresenter.IsEof)
                     return null;
                 return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
             });

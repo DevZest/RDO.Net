@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
             get { return RowManager.Template; }
         }
 
-        public DataRow DataRow { get; internal set; }
+        internal DataRow DataRow { get; set; }
 
         public bool IsEof
         {
