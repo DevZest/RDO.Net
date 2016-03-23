@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
                     return 0;
 
                 OnGetState(RowPresenterState.HierarchicalChildren);
-                return DataRow.ParentDataRow[Template.HierarchicalModelOrdinal].Count;
+                return DataRow[Template.HierarchicalModelOrdinal].Count;
             }
         }
 
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             OnGetState(RowPresenterState.HierarchicalChildren);
-            return RowManager.RowMappings_GetRow(DataRow.ParentDataRow[Template.HierarchicalModelOrdinal][index]);
+            return RowManager.RowMappings_GetRow(DataRow[Template.HierarchicalModelOrdinal][index]);
         }
 
         private IReadOnlyList<DataPresenter> _subviewPresenters;

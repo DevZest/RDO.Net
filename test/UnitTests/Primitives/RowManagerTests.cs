@@ -64,6 +64,14 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
+        private static RowManager CreateRowManager(DataSet<ProductCategory> productCategories)
+        {
+            RowManager result = new ConcreteRowManager(productCategories);
+            result.Template.HierarchicalModelOrdinal = 0;
+            result.Initialize();
+            return result;
+        }
+
         [TestMethod]
         public void RowManager_EofRowMapping_Never()
         {
@@ -112,11 +120,43 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
-        //[TestMethod]
-        //public void RowManager_GetHierarchicalDataSet()
-        //{
-        //    var productCategories = MockProductCategories(3);
-        //    Assert.AreEqual("", productCategories.ToJsonString(true));
-        //}
+        [TestMethod]
+        public void RowManager_HierarchicalProductCategories()
+        {
+            var productCategories = MockProductCategories(3);
+            var rowManager = CreateRowManager(productCategories);
+            VerifyHierarchicalLevel(rowManager, 0, 0, 0);
+            VerifyHierarchicalChildrenCount(rowManager, 3, 3, 3);
+
+            rowManager.Rows[0].Expand();
+            VerifyHierarchicalLevel(rowManager, 0, 1, 1, 1, 0, 0);
+
+            rowManager.Rows[1].Expand();
+            VerifyHierarchicalLevel(rowManager, 0, 1, 2, 2, 2, 1, 1, 0, 0);
+
+            rowManager.Rows[0].Collapse();
+            VerifyHierarchicalChildrenCount(rowManager, 3, 3, 3);
+
+            rowManager.Rows[0].Expand();
+            VerifyHierarchicalLevel(rowManager, 0, 1, 2, 2, 2, 1, 1, 0, 0);
+        }
+
+        private static void VerifyHierarchicalLevel(RowManager rowManager, params int[] hiearchicalLevels)
+        {
+            var rows = rowManager.Rows;
+            Assert.AreEqual(rows.Count, hiearchicalLevels.Length);
+
+            for (int i = 0; i < rows.Count; i++)
+                Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
+        }
+
+        private static void VerifyHierarchicalChildrenCount(RowManager rowManager, params int[] hiearchicalChildrenCounts)
+        {
+            var rows = rowManager.Rows;
+            Assert.AreEqual(rows.Count, hiearchicalChildrenCounts.Length);
+
+            for (int i = 0; i < rows.Count; i++)
+                Assert.AreEqual(hiearchicalChildrenCounts[i], rows[i].HierarchicalChildrenCount);
+        }
     }
 }

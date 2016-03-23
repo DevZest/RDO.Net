@@ -200,7 +200,7 @@ namespace DevZest.Data.Windows.Primitives
             for (var dataSet = DataSet; dataSet != null; dataSet = GetChildDataSet(dataSet))
             {
                 _rowMappings.Add(new List<RowPresenter>());
-                foreach (var dataRow in DataSet)
+                foreach (var dataRow in dataSet)
                     RowMappings_CreateRow(dataRow);
 
                 dataSet.RowAdded += OnDataRowAdded;
