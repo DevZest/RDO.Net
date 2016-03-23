@@ -207,7 +207,8 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                OnSetState(RowPresenterState.IsCurrent);
+                if (_rowManager !=null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
+                    OnSetState(RowPresenterState.IsCurrent);
             }
         }
 

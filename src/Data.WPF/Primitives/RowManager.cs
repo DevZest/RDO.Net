@@ -148,6 +148,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void HierarchicalRows_RemoveAt(int ordinal)
         {
+            SetPrevCurrentRowOrdinal(ordinal, 1);
             _hierarchicalRows[ordinal].Ordinal = -1;
             _hierarchicalRows.RemoveAt(ordinal);
             OnSetState(DataPresenterState.Rows);
@@ -157,11 +158,23 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(count > 0);
 
+            SetPrevCurrentRowOrdinal(ordinal, count);
             for (int i = 0; i < count; i++)
                 _hierarchicalRows[ordinal + i].Ordinal = -1;
 
             _hierarchicalRows.RemoveRange(ordinal, count);
             OnSetState(DataPresenterState.Rows);
+        }
+
+        private int _prevCurrentRowOrdinal = -1;
+        private void SetPrevCurrentRowOrdinal(int startRemovalOrdinal, int count)
+        {
+            if (_currentRow != null)
+            {
+                var currentRowOrdinal = _currentRow.Ordinal;
+                if (currentRowOrdinal >= startRemovalOrdinal && currentRowOrdinal < startRemovalOrdinal + count)
+                    _prevCurrentRowOrdinal = currentRowOrdinal;
+            }
         }
 
         private void HierarchicalRows_UpdateOrdinal(int startOrdinal)
@@ -372,10 +385,22 @@ namespace DevZest.Data.Windows.Primitives
 
         private void CoerceCurrentRow()
         {
-            if (Rows.Count > 0 && CurrentRow == null)
-                CurrentRow = Rows[0];
-            else if (Rows.Count == 0 && CurrentRow != null)
-                CurrentRow = null;
+            if (_currentRow == null)
+            {
+                if (Rows.Count > 0)
+                    CurrentRow = Rows[0];
+            }
+            else
+            {
+                if (_prevCurrentRowOrdinal != -1)
+                {
+                    var currentRowOrdinal = Math.Min(Rows.Count - 1, _prevCurrentRowOrdinal);
+                    CurrentRow = currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
+                    _prevCurrentRowOrdinal = -1;
+                }
+                else if (Rows.Count == 0)
+                    CurrentRow = null;
+            }
         }
 
         private DataRow _viewUpdateSuppressed;

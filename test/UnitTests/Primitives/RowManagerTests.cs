@@ -71,10 +71,12 @@ namespace DevZest.Data.Windows.Primitives
             var rowManager = CreateRowManager(dataSet, EofRowMapping.Never);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
+            Assert.AreEqual(null, rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsFalse(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
         [TestMethod]
@@ -85,11 +87,13 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.AreEqual(true, rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(2, rowManager.Rows.Count);
             Assert.IsFalse(rowManager.Rows[0].IsEof);
             Assert.IsTrue(rowManager.Rows[1].IsEof);
+            Assert.AreEqual(rowManager.Rows[1], rowManager.CurrentRow);
         }
 
         [TestMethod]
@@ -100,17 +104,19 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsTrue(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsFalse(rowManager.Rows[0].IsEof);
+            Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
-        [TestMethod]
-        public void RowManager_GetHierarchicalDataSet()
-        {
-            var productCategories = MockProductCategories(3);
-            Assert.AreEqual("", productCategories.ToJsonString(true));
-        }
+        //[TestMethod]
+        //public void RowManager_GetHierarchicalDataSet()
+        //{
+        //    var productCategories = MockProductCategories(3);
+        //    Assert.AreEqual("", productCategories.ToJsonString(true));
+        //}
     }
 }
