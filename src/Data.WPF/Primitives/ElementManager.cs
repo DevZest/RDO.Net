@@ -69,7 +69,20 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private class RealizedRowCollection : IReadOnlyList<RowPresenter>
+        internal interface IRealizedRowCollection : IReadOnlyList<RowPresenter>
+        {
+            RowPresenter First { get; }
+            RowPresenter Last { get; }
+            bool Contains(RowPresenter row);
+            void VirtualizeAll();
+            void VirtualizeTop(int count);
+            void VirtualizeBottom(int count);
+            void RealizeFirst(RowPresenter row);
+            void RealizePrev();
+            void RealizeNext();
+        }
+
+        private class RealizedRowCollection : IRealizedRowCollection
         {
             public RealizedRowCollection(ElementManager elementManager)
             {
@@ -82,6 +95,16 @@ namespace DevZest.Data.Windows.Primitives
             private IReadOnlyList<RowPresenter> Rows
             {
                 get { return _elementManager.Rows; }
+            }
+
+            private IElementCollection Elements
+            {
+                get { return _elementManager._elements; }
+            }
+
+            private int ScalarElementsCountBeforeRepeat
+            {
+                get { return _elementManager._scalarElementsCountBeforeRepeat; }
             }
 
             public RowPresenter First { get; private set; }
@@ -185,6 +208,8 @@ namespace DevZest.Data.Windows.Primitives
                     First = Last = null;
                 else
                     First = Rows[First.Ordinal + count];
+
+                Elements.RemoveRange(ScalarElementsCountBeforeRepeat, count);
             }
 
             public void VirtualizeBottom(int count)
@@ -201,6 +226,8 @@ namespace DevZest.Data.Windows.Primitives
                     First = Last = null;
                 else
                     Last = Rows[Last.Ordinal - count];
+
+                Elements.RemoveRange(ScalarElementsCountBeforeRepeat + (Count - count), count);
             }
 
             public void RealizeFirst(RowPresenter row)
@@ -208,6 +235,8 @@ namespace DevZest.Data.Windows.Primitives
                 Debug.Assert(Count == 0 && row != null);
                 Realize(row);
                 First = Last = row;
+
+                Elements.Insert(ScalarElementsCountBeforeRepeat, row.View);
             }
 
             public void RealizePrev()
@@ -215,6 +244,8 @@ namespace DevZest.Data.Windows.Primitives
                 var prevRow = _elementManager.Rows[First.Ordinal - 1];
                 Realize(prevRow);
                 First = prevRow;
+
+                Elements.Insert(ScalarElementsCountBeforeRepeat, prevRow.View);
             }
 
             public void RealizeNext()
@@ -222,6 +253,8 @@ namespace DevZest.Data.Windows.Primitives
                 var nextRow = _elementManager.Rows[Last.Ordinal + 1];
                 Realize(nextRow);
                 Last = nextRow;
+
+                Elements.Insert(ScalarElementsCountBeforeRepeat + Count, nextRow.View);
             }
         }
 
@@ -250,12 +283,13 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private RealizedRowCollection _realizedRows;
-        internal IReadOnlyList<RowPresenter> RealizedRows
+        internal IRealizedRowCollection RealizedRows
         {
             get { return _realizedRows; }
         }
 
         private IElementCollection _elements;
+        private int _scalarElementsCountBeforeRepeat;
         internal IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
@@ -266,14 +300,32 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(_elements == null && RealizedRows.Count == 0);
 
             _elements = CreateElementCollection(elementsPanel);
-            var scalarItems = Template.ScalarItems;
 
+            var scalarItems = Template.ScalarItems;
             for (int i = 0; i < scalarItems.Count; i++)
+                InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
+            _scalarElementsCountBeforeRepeat = Template.ScalarItemsCountBeforeRepeat;
+        }
+
+        private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        {
+            for (int i = 0; i < count; i++)
             {
-                var scalarItem = scalarItems[i];
                 var element = scalarItem.Generate();
                 scalarItem.Initialize(element);
-                _elements.Add(element);
+                _elements.Insert(index + i + 1, element);
+            }
+            return index + count;
+        }
+
+        private void RemoveScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var element = Elements[index];
+                Debug.Assert(element.GetTemplateItem() == scalarItem);
+                scalarItem.Recycle(element);
+                _elements.RemoveAt(index + 1);
             }
         }
 
@@ -283,11 +335,43 @@ namespace DevZest.Data.Windows.Primitives
             get { return _flowCount; }
             set
             {
+                Debug.Assert(value >= 1);
+
                 if (_flowCount == value)
                     return;
 
+                var delta = value - _flowCount;
                 _flowCount = value;
+                OnFlowCountChanged(delta);
             }
+        }
+
+        private void OnFlowCountChanged(int flowCountDelta)
+        {
+            Debug.Assert(flowCountDelta > 0);
+
+            var index = -1;
+            var delta = 0;
+            var scalarItems = Template.ScalarItems;
+            for (int i = 0; i < scalarItems.Count; i++)
+            {
+                index++;
+                if (i == Template.ScalarItemsCountBeforeRepeat)
+                    index += RealizedRows.Count;
+                var scalarItem = scalarItems[i];
+                if (scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow)
+                    continue;
+
+                if (i < Template.ScalarItemsCountBeforeRepeat)
+                    delta += flowCountDelta;
+
+                if (flowCountDelta > 0)
+                    index = InsertScalarElementsAfter(scalarItem, index, flowCountDelta);
+                else
+                    RemoveScalarElementsAfter(scalarItem, index, -flowCountDelta);
+            }
+
+            _scalarElementsCountBeforeRepeat += delta;
         }
 
         internal sealed override void InvalidateView()
