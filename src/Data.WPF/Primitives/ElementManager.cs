@@ -130,7 +130,7 @@ namespace DevZest.Data.Windows.Primitives
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
-                    return Rows[index - First.Ordinal];
+                    return Rows[index + First.Ordinal];
                 }
             }
 
@@ -204,12 +204,12 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < count; i++)
                     Virtualize(this[i]);
 
+                Elements.RemoveRange(ScalarElementsCountBeforeRepeat, count);
+
                 if (count == Count)
                     First = Last = null;
                 else
                     First = Rows[First.Ordinal + count];
-
-                Elements.RemoveRange(ScalarElementsCountBeforeRepeat, count);
             }
 
             public void VirtualizeBottom(int count)
@@ -219,15 +219,16 @@ namespace DevZest.Data.Windows.Primitives
                 if (count == 0)
                     return;
 
+                var startIndex = Count - count;
                 for (int i = 0; i < count; i++)
-                    Virtualize(this[Count - i - 1]);
+                    Virtualize(this[startIndex + i]);
+
+                Elements.RemoveRange(ScalarElementsCountBeforeRepeat + startIndex, count);
 
                 if (count == Count)
                     First = Last = null;
                 else
                     Last = Rows[Last.Ordinal - count];
-
-                Elements.RemoveRange(ScalarElementsCountBeforeRepeat + (Count - count), count);
             }
 
             public void RealizeFirst(RowPresenter row)
@@ -243,18 +244,16 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var prevRow = _elementManager.Rows[First.Ordinal - 1];
                 Realize(prevRow);
-                First = prevRow;
-
                 Elements.Insert(ScalarElementsCountBeforeRepeat, prevRow.View);
+                First = prevRow;
             }
 
             public void RealizeNext()
             {
                 var nextRow = _elementManager.Rows[Last.Ordinal + 1];
                 Realize(nextRow);
-                Last = nextRow;
-
                 Elements.Insert(ScalarElementsCountBeforeRepeat + Count, nextRow.View);
+                Last = nextRow; // This line will change the Count property, must be executed last
             }
         }
 
@@ -348,7 +347,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnFlowCountChanged(int flowCountDelta)
         {
-            Debug.Assert(flowCountDelta > 0);
+            Debug.Assert(flowCountDelta != 0);
 
             var index = -1;
             var delta = 0;
