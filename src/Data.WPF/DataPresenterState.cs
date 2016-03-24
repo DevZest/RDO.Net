@@ -5,6 +5,7 @@
         Rows = 0,
         FlattenedRows,
         CurrentRow,
+        EditingRow,
         SelectedRows
     }
 }

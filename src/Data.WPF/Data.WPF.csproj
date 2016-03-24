@@ -68,10 +68,10 @@
     <Compile Include="Primitives\TemplateItem.Builder.cs" />
     <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IBehavior.cs" />
-    <Compile Include="IElementCollection.cs" />
+    <Compile Include="Primitives\IElementCollection.cs" />
     <Compile Include="Primitives\RepeatItem.cs" />
     <Compile Include="ScalarRepeatMode.cs" />
-    <Compile Include="IElementCollectionFactory.cs" />
+    <Compile Include="Primitives\IElementCollectionFactory.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />

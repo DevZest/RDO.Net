@@ -478,6 +478,21 @@ namespace DevZest.Data.Windows.Primitives
             OnSetState(DataPresenterState.SelectedRows);
         }
 
+        private RowPresenter _editingRow;
+        public virtual RowPresenter EditingRow
+        {
+            get
+            {
+                OnGetState(DataPresenterState.EditingRow);
+                return _editingRow;
+            }
+            internal set
+            {
+                _editingRow = value;
+                OnSetState(DataPresenterState.EditingRow);
+            }
+        }
+
         internal RowPresenter EditingEofRow { get; private set; }
 
         internal void BeginEditEof()

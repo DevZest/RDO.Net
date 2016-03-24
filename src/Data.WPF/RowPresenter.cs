@@ -350,17 +350,16 @@ namespace DevZest.Data.Windows
             get { return DataRow == null ? null : DataRow.MergedValidationMessages; }
         }
 
-        private static ConditionalWeakTable<Model, RowPresenter> s_editingRows = new ConditionalWeakTable<Model, RowPresenter>();
-
         private RowPresenter EditingRow
         {
             get
             {
                 Debug.Assert(DataRow != null);
-
-                RowPresenter result;
-                Model model = DataRow.Model;
-                return s_editingRows.TryGetValue(model, out result) ? result : null;
+                return RowManager.EditingRow;
+            }
+            set
+            {
+                RowManager.EditingRow = value;
             }
         }
 
@@ -376,12 +375,7 @@ namespace DevZest.Data.Windows
                 Debug.Assert(DataRow != null);
                 Debug.Assert(IsEditing != value);
 
-                Model model = DataRow.Model;
-                if (value)
-                    s_editingRows.Add(model, this);
-                else
-                    s_editingRows.Remove(model);
-
+                EditingRow = value ? this : null;
                 OnSetState(RowPresenterState.IsEditing);
             }
         }

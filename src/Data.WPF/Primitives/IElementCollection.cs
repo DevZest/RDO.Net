@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     internal interface IElementCollection : IList<UIElement>, IReadOnlyList<UIElement>
     {
