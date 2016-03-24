@@ -15,24 +15,24 @@ namespace DevZest.Data.Windows.Primitives
                 return behavior == null ? null : new Behavior(x => behavior.Attach((T)x), x => behavior.Detach((T)x));
             }
 
-            private Behavior(Action<UIElement> attach, Action<UIElement> detach)
+            private Behavior(Action<UIElement> attachAction, Action<UIElement> detachAction)
             {
-                Debug.Assert(attach != null);
-                Debug.Assert(detach != null);
-                _attach = attach;
-                _detach = detach;
+                Debug.Assert(attachAction != null);
+                Debug.Assert(detachAction != null);
+                _attachAction = attachAction;
+                _detachAction = detachAction;
             }
 
-            Action<UIElement> _attach;
+            Action<UIElement> _attachAction;
             public void Attach(UIElement element)
             {
-                _attach(element);
+                _attachAction(element);
             }
 
-            Action<UIElement> _detach;
+            Action<UIElement> _detachAction;
             public void Detach(UIElement element)
             {
-                _detach(element);
+                _detachAction(element);
             }
         }
 

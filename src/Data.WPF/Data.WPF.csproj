@@ -45,7 +45,6 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="BindingSource.cs" />
-    <Compile Include="ElementsManager.cs" />
     <Compile Include="EofRowMapping.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridRowSet.cs" />
