@@ -2,11 +2,73 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
     public abstract class ElementManager : RowManager
     {
+        private interface IElementCollection : IList<UIElement>, IReadOnlyList<UIElement>
+        {
+            FrameworkElement Parent { get; }
+
+            void RemoveRange(int index, int count);
+        }
+
+        private static IElementCollection CreateElementCollection(FrameworkElement parent)
+        {
+            if (parent == null)
+                return new ElementList();
+            else
+                return new ChildElementCollection(parent);
+        }
+
+        private sealed class ElementList : List<UIElement>, IElementCollection
+        {
+            public FrameworkElement Parent
+            {
+                get { return null; }
+            }
+        }
+
+        private sealed class ChildElementCollection : UIElementCollection, IElementCollection
+        {
+            public ChildElementCollection(FrameworkElement parent)
+                : base(parent, parent)
+            {
+                Parent = parent;
+            }
+
+            public FrameworkElement Parent { get; private set; }
+
+            public bool IsReadOnly
+            {
+                get { return false; }
+            }
+
+            void ICollection<UIElement>.Add(UIElement item)
+            {
+                base.Add(item);
+            }
+
+            IEnumerator<UIElement> IEnumerable<UIElement>.GetEnumerator()
+            {
+                for (int i = 0; i < Count; i++)
+                    yield return this[i];
+            }
+
+            bool ICollection<UIElement>.Remove(UIElement item)
+            {
+                if (Contains(item))
+                {
+                    base.Remove(item);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         private class RealizedRowCollection : IReadOnlyList<RowPresenter>
         {
             public RealizedRowCollection(ElementManager elementManager)
@@ -16,12 +78,15 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             private ElementManager _elementManager;
-            private List<RowPresenter> _realizedRows = new List<RowPresenter>();
 
-            private Template Template
+            private IReadOnlyList<RowPresenter> Rows
             {
-                get { return _elementManager.Template; }
+                get { return _elementManager.Rows; }
             }
+
+            public RowPresenter First { get; private set; }
+
+            public RowPresenter Last { get; private set; }
 
             public bool Contains(RowPresenter row)
             {
@@ -34,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public int Count
             {
-                get { return _realizedRows.Count; }
+                get { return First == null ? 0 : Last.Ordinal - First.Ordinal + 1 ; }
             }
 
             public RowPresenter this[int index]
@@ -42,7 +107,7 @@ namespace DevZest.Data.Windows.Primitives
                 get
                 {
                     Debug.Assert(index >= 0 && index < Count);
-                    return _realizedRows[index];
+                    return Rows[index - First.Ordinal];
                 }
             }
 
@@ -103,43 +168,60 @@ namespace DevZest.Data.Windows.Primitives
 
             public void VirtualizeAll()
             {
-                for (int i = 0; i < Count; i++)
-                {
-                    var row = this[i];
-                    Virtualize(row);
-                }
-                _realizedRows.Clear();
+                VirtualizeTop(Count);
+            }
+
+            public void VirtualizeTop(int count)
+            {
+                Debug.Assert(count >= 0 && count <= Count);
+
+                if (count == 0)
+                    return;
+
+                for (int i = 0; i < count; i++)
+                    Virtualize(this[i]);
+
+                if (count == Count)
+                    First = Last = null;
+                else
+                    First = Rows[First.Ordinal + count];
+            }
+
+            public void VirtualizeBottom(int count)
+            {
+                Debug.Assert(count >= 0 && count <= Count);
+
+                if (count == 0)
+                    return;
+
+                for (int i = 0; i < count; i++)
+                    Virtualize(this[Count - i - 1]);
+
+                if (count == Count)
+                    First = Last = null;
+                else
+                    Last = Rows[Last.Ordinal - count];
             }
 
             public void RealizeFirst(RowPresenter row)
             {
-                Debug.Assert(Count == 0 && row != null && row.Ordinal >= 0);
+                Debug.Assert(Count == 0 && row != null);
                 Realize(row);
-                _realizedRows.Add(row);
+                First = Last = row;
             }
 
             public void RealizePrev()
             {
                 var prevRow = _elementManager.Rows[First.Ordinal - 1];
                 Realize(prevRow);
-                _realizedRows.Insert(0, prevRow);
+                First = prevRow;
             }
 
             public void RealizeNext()
             {
                 var nextRow = _elementManager.Rows[Last.Ordinal + 1];
                 Realize(nextRow);
-                _realizedRows.Add(nextRow);
-            }
-
-            public RowPresenter First
-            {
-                get { return Count > 0 ? this[0] : null; }
-            }
-
-            public RowPresenter Last
-            {
-                get { return Count > 0 ? this[Count - 1] : null; }
+                Last = nextRow;
             }
         }
 
@@ -160,58 +242,30 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldValue != null && _realizedRows.Contains(oldValue))
                     _realizedRows.Virtualize(oldValue);
 
+                if (value != null)
+                    _realizedRows.Realize(value);
+
                 base.EditingRow = value;
             }
         }
 
         private RealizedRowCollection _realizedRows;
-        private FrameworkElement _elementsPanel;
+        internal IReadOnlyList<RowPresenter> RealizedRows
+        {
+            get { return _realizedRows; }
+        }
+
         private IElementCollection _elements;
-        private IElementCollection Elements
+        internal IReadOnlyList<UIElement> Elements
         {
-            get
-            {
-                EnsureElementCollectionInitialized();
-                return _elements;
-            }
+            get { return _elements; }
         }
 
-        internal IReadOnlyList<UIElement> ElementList
+        internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            get
-            {
-                EnsureElementCollectionInitialized();
-                return _elements;
-            }
-        }
+            Debug.Assert(_elements == null && RealizedRows.Count == 0);
 
-        internal void SetElementsPanel(FrameworkElement elementsPanel)
-        {
-            Debug.Assert(_elementsPanel != elementsPanel);
-
-            _elementsPanel = elementsPanel;
-
-            if (_elements != null)
-            {
-                _realizedRows.VirtualizeAll();
-                var scalarItems = Template.ScalarItems;
-                for (int i = 0; i < scalarItems.Count; i++)
-                {
-                    var scalarItem = scalarItems[i];
-                    var element = ElementList[i];
-                    scalarItem.Cleanup(element);
-                }
-                _elements.Clear();
-                _elements = null;
-            }
-        }
-
-        private void EnsureElementCollectionInitialized()
-        {
-            if (_elements != null)
-                return;
-            _elements = IElementCollectionFactory.Create(_elementsPanel);
-
+            _elements = CreateElementCollection(elementsPanel);
             var scalarItems = Template.ScalarItems;
 
             for (int i = 0; i < scalarItems.Count; i++)
@@ -235,7 +289,6 @@ namespace DevZest.Data.Windows.Primitives
                 _flowCount = value;
             }
         }
-
 
         internal sealed override void InvalidateView()
         {

@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -14,11 +15,9 @@ namespace DevZest.Data.Windows
 
         public RowPresenter RowPresenter { get; private set; }
 
-        private bool _elementsCreated;
-        private IElementCollection _elements;
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return _elements; }
+            get { throw new NotImplementedException(); }
         }
 
         public override void OnApplyTemplate()
@@ -27,8 +26,6 @@ namespace DevZest.Data.Windows
 
             Debug.Assert(RowPresenter == null);
             var rowPanel = GetTemplateChild(PART_RowPanel) as RowPanel;
-            _elements = rowPanel == null ? IElementCollectionFactory.Create(null) : rowPanel.ElementCollection;
-            _elementsCreated = false;
         }
 
         //internal void Initialize(RowPresenter rowPresenter)

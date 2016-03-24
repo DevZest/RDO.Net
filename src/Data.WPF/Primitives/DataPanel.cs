@@ -215,10 +215,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return TemplatedParent as DataView; }
         }
 
-        private IReadOnlyList<UIElement> _elements;
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return _elements; }
+            get { throw new NotImplementedException(); }
         }
 
         int ElementsCount

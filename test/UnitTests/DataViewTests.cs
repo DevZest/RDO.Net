@@ -29,10 +29,10 @@ namespace DevZest.Data.Windows
         //    });
         //}
 
-        private static void Verify(DataPanel dataPanel, IReadOnlyList<UIElement> elements)
-        {
-            Assert.IsTrue(dataPanel.Elements == elements);
-            Assert.IsTrue(((IElementCollection)elements).Parent == dataPanel);
-        }
+        //private static void Verify(DataPanel dataPanel, IReadOnlyList<UIElement> elements)
+        //{
+        //    Assert.IsTrue(dataPanel.Elements == elements);
+        //    Assert.IsTrue(((IElementCollection)elements).Parent == dataPanel);
+        //}
     }
 }

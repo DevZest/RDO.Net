@@ -9,13 +9,11 @@ namespace DevZest.Data.Windows.Primitives
     {
         public RowPanel()
         {
-            ElementCollection = IElementCollectionFactory.Create(this);
         }
 
-        internal IElementCollection ElementCollection { get; private set; }
         private IReadOnlyList<UIElement> Elements
         {
-            get { return ElementCollection; }
+            get { throw new NotImplementedException(); }
         }
 
         protected override int VisualChildrenCount
