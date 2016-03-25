@@ -521,5 +521,20 @@ namespace DevZest.Data.Windows
             _elements.RemoveRange(0, Elements.Count);
             _elements = null;
         }
+
+        internal void RefreshElements()
+        {
+            if (Elements == null)
+                return;
+
+            var repeatItems = Template.RepeatItems;
+            Debug.Assert(Elements.Count == repeatItems.Count);
+            for (int i = 0; i < repeatItems.Count; i++)
+            {
+                var repeatItem = repeatItems[i];
+                var element = Elements[i];
+                repeatItem.Refresh(element);
+            }
+        }
     }
 }

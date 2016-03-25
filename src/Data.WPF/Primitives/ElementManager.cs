@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -243,6 +244,46 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
                 InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
             _scalarElementsCountBeforeRepeat = Template.ScalarItemsCountBeforeRepeat;
+        }
+
+        internal void RefreshElements()
+        {
+            if (Elements.Count == 0)
+                return;
+
+            var index = RefreshScalarElements(0, Template.ScalarItemsCountBeforeRepeat, 0);
+            Debug.Assert(index == _scalarElementsCountBeforeRepeat);
+
+            index += RefreshRealizedRows();
+            index = RefreshScalarElements(Template.ScalarItemsCountBeforeRepeat, Template.ScalarItems.Count, index);
+            Debug.Assert(index == Elements.Count);
+        }
+
+        private int RefreshScalarElements(int scalarItemIndex, int scalarItemCount, int elementIndex)
+        {
+            var scalarItems = Template.ScalarItems;
+            for (int i = scalarItemIndex; i < scalarItemCount; i++)
+            {
+                var scalarItem = scalarItems[i];
+                var flowCount = scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow ? 1 : FlowCount;
+                for (int j = 0; j < flowCount; j++)
+                {
+                    var element = Elements[elementIndex++];
+                    Debug.Assert(element.GetTemplateItem() == scalarItem);
+                    scalarItem.Refresh(element);
+                }
+            }
+            return elementIndex;
+        }
+
+        private int RefreshRealizedRows()
+        {
+            for (int i = 0; i < RealizedRows.Count; i++)
+            {
+                var row = RealizedRows[i];
+                row.RefreshElements();
+            }
+            return RealizedRows.Count;
         }
 
         internal void ClearElements()

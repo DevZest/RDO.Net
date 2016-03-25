@@ -73,7 +73,7 @@
     <Compile Include="RowHeader.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="SubviewItem.cs" />
+    <Compile Include="Primitives\SubviewItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\EmptyArray.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />

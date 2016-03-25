@@ -114,14 +114,19 @@ namespace DevZest.Data.Windows.Primitives
             if (_initializer != null)
                 _initializer(element);
 
+            Refresh(element);
+
+            foreach (var behavior in _behaviors)
+                behavior.Attach(element);
+        }
+
+        internal void Refresh(UIElement element)
+        {
             foreach (var binding in _bindings)
             {
                 foreach (var trigger in binding.Triggers)
                     trigger.Attach(element);
             }
-
-            foreach (var behavior in _behaviors)
-                behavior.Attach(element);
         }
 
         internal void Recycle(UIElement element)
