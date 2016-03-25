@@ -312,6 +312,8 @@ namespace DevZest.Data.Windows.Primitives
 
         public Action<RowView> RowViewInitializer { get; internal set; }
 
+        public Action<RowView> RowViewCleanupAction { get; internal set; }
+
         public int VirtualizationThreshold { get; internal set; }
     }
 }

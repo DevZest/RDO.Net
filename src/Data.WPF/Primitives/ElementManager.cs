@@ -32,7 +32,12 @@ namespace DevZest.Data.Windows.Primitives
                 _elementManager = elementManager;
             }
 
-            private ElementManager _elementManager;
+            private readonly ElementManager _elementManager;
+
+            private Template Template
+            {
+                get { return _elementManager.Template; }
+            }
 
             private IReadOnlyList<RowPresenter> Rows
             {
@@ -91,7 +96,7 @@ namespace DevZest.Data.Windows.Primitives
             private RowView GetOrCreateRowView()
             {
                 if (_cachedRowViews == null || _cachedRowViews.Count == 0)
-                    return new RowView();
+                    return Template.RowViewConstructor();
 
                 var last = _cachedRowViews.Count - 1;
                 var result = _cachedRowViews[last];
@@ -117,6 +122,9 @@ namespace DevZest.Data.Windows.Primitives
 
                 var rowView = GetOrCreateRowView();
                 row.View = rowView;
+                rowView.Initialize(row);
+                if (Template.RowViewInitializer != null)
+                    Template.RowViewInitializer(rowView);
             }
 
             public void Virtualize(RowPresenter row)
@@ -127,7 +135,10 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 var rowView = row.View;
+                if (Template.RowViewCleanupAction != null)
+                    Template.RowViewCleanupAction(rowView);
                 row.View = null;
+                rowView.Cleanup();
                 Recycle(rowView);
             }
 

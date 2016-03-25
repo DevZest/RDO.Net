@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -16,20 +18,32 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager<T>(DataSet<T> dataSet, ScalarRepeatMode[] scalarItemsBefore, ScalarRepeatMode[] scalarItemsAfter)
-            where T : Model, new()
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, ScalarRepeatMode[] scalarItemsBefore, ScalarRepeatMode[] scalarItemsAfter)
         {
-            return CreateElementManager<T>(dataSet, (builder, model) =>
+            return CreateElementManager(dataSet, (builder, model) =>
             {
-                builder.AddGridColumns("100").AddGridRows("100", "100", "100").WithOrientation(RepeatOrientation.XY);
+                builder.AddGridColumns("100")
+                    .AddGridRows("100", "100", "100")
+                    .WithOrientation(RepeatOrientation.XY)
+                    .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
+                        (RowView rowView) => rowView.RowPresenter.ClearElements());
 
                 for (int i = 0; i < scalarItemsBefore.Length; i++)
-                    builder.Range(0, 0).BeginScalarItem<UIElement>().Repeat(scalarItemsBefore[i]).End();
+                    builder.Range(0, 0).BeginScalarItem<TextBlock>()
+                        .Repeat(scalarItemsBefore[i])
+                        .Bind((src, element) => element.Text = "Scalar:" + scalarItemsBefore[i])
+                        .End();
 
-                builder.Range(0, 1).BeginRepeatItem<UIElement>().End();
+                builder.Range(0, 1).BeginRepeatItem<TextBlock>()
+                    .Bind((src, element) => element.Text = src.RowPresenter.GetValue(model.Name))
+                    .End();
 
                 for (int i = 0; i < scalarItemsAfter.Length; i++)
-                    builder.Range(0, 2).BeginScalarItem<UIElement>().Repeat(scalarItemsAfter[i]).End();
+                    builder.Range(0, 2)
+                    .BeginScalarItem<TextBlock>()
+                    .Repeat(scalarItemsAfter[i])
+                    .Bind((src, element) => element.Text = "Scalar:" + scalarItemsBefore[i])
+                    .End();
             });
         }
 
