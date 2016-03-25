@@ -11,9 +11,30 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private IReadOnlyList<UIElement> Elements
+        RowPresenter _rowPresenter;
+        private RowPresenter RowPresenter
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                var value = RowView == null ? null : RowView.RowPresenter;
+                if (_rowPresenter != value)
+                {
+                    if (value != null)
+                        value.RowPanel = this;
+                    _rowPresenter = value;
+                }
+                return _rowPresenter;
+            }
+        }
+
+        private RowView RowView
+        {
+            get { return TemplatedParent as RowView; }
+        }
+
+        internal IReadOnlyList<UIElement> Elements
+        {
+            get { return RowPresenter == null ? EmptyArray<UIElement>.Singleton : RowPresenter.Elements; }
         }
 
         protected override int VisualChildrenCount
@@ -29,14 +50,14 @@ namespace DevZest.Data.Windows.Primitives
             return Elements[index];
         }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            return base.MeasureOverride(availableSize);
-        }
+        //protected override Size MeasureOverride(Size availableSize)
+        //{
+        //    return base.MeasureOverride(availableSize);
+        //}
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            return base.ArrangeOverride(finalSize);
-        }
+        //protected override Size ArrangeOverride(Size finalSize)
+        //{
+        //    return base.ArrangeOverride(finalSize);
+        //}
     }
 }

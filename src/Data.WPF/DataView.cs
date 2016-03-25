@@ -76,8 +76,11 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
-            Debug.Assert(DataPresenter != null);
-            DataPresenter = null;
+            if (DataPresenter != null)
+            {
+                DataPresenter.DataPanel = null;
+                DataPresenter = null;
+            }
         }
 
         public void Show<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
@@ -85,6 +88,8 @@ namespace DevZest.Data.Windows
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
+
+            Cleanup();
 
             var dataPresenter = DataPresenter.Create(dataSet, buildTemplateAction);
             Initialize(dataPresenter);

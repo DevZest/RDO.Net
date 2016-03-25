@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -462,5 +463,43 @@ namespace DevZest.Data.Windows
         }
 
         internal RowView View { get; set; }
+
+        private RowPanel _rowPanel;
+        internal RowPanel RowPanel
+        {
+            get { return _rowPanel; }
+            set
+            {
+                if (_rowPanel == value)
+                    return;
+
+                if (_rowPanel != null)
+                    ClearElements();
+
+                _rowPanel = value;
+
+                if (_rowPanel != null)
+                    InitializeElements(_rowPanel);
+            }
+        }
+
+        private IElementCollection _elements;
+        internal IReadOnlyList<UIElement> Elements
+        {
+            get { return _elements; }
+        }
+
+        internal void InitializeElements(FrameworkElement elementsPanel)
+        {
+            Debug.Assert(_elements == null);
+
+            _elements = ElementCollectionFactory.Create(elementsPanel);
+        }
+
+        internal void ClearElements()
+        {
+            Debug.Assert(_elements != null);
+            _elements = null;
+        }
     }
 }

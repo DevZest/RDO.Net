@@ -153,14 +153,6 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private static readonly DependencyProperty DataPresenterProperty = DependencyProperty.Register(nameof(DataPresenter), typeof(DataPresenter),
-            typeof(DataPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnDataPresenterChanged));
-
-        private static void OnDataPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DataPanel)d).OnDataPresenterChanged((DataPresenter)e.OldValue, (DataPresenter)e.NewValue);
-        }
-
         static DataPanel()
         {
             ClipToBoundsProperty.OverrideMetadata(typeof(DataPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
@@ -170,26 +162,20 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            var binding = new System.Windows.Data.Binding(DataView.DataPresenterProperty.Name);
-            binding.RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent);
-            BindingOperations.SetBinding(this, DataPresenterProperty, binding);
-        }
-
+        private DataPresenter _dataPresenter;
         private DataPresenter DataPresenter
         {
-            get { return (DataPresenter)GetValue(DataPresenterProperty); }
-        }
-
-        private void OnDataPresenterChanged(DataPresenter oldValue, DataPresenter newValue)
-        {
-            if (oldValue != null)
-                oldValue.DataPanel = null;
-
-            if (newValue != null)
-                newValue.DataPanel = this;
+            get
+            {
+                var value = DataView == null ? null : DataView.DataPresenter;
+                if (_dataPresenter != value)
+                {
+                    if (value != null)
+                        value.DataPanel = this;
+                    _dataPresenter = value;
+                }
+                return _dataPresenter;
+            }
         }
 
         private DataView DataView
