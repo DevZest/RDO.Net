@@ -306,6 +306,22 @@ namespace DevZest.Data.Windows.Primitives
             _scalarElementsCountBeforeRepeat = Template.ScalarItemsCountBeforeRepeat;
         }
 
+        internal void ClearElements()
+        {
+            Debug.Assert(_elements != null);
+
+            _realizedRows.VirtualizeAll();
+            var scalarItems = Template.ScalarItems;
+            for (int i = 0; i < scalarItems.Count; i++)
+            {
+                var scalarItem = scalarItems[i];
+                int count = scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow ? 1 : FlowCount;
+                RemoveScalarElementsAfter(scalarItem, -1, count);
+            }
+            Debug.Assert(Elements.Count == 0);
+            _elements = null;
+        }
+
         private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
@@ -321,7 +337,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             for (int i = 0; i < count; i++)
             {
-                var element = Elements[index];
+                var element = Elements[index + 1];
                 Debug.Assert(element.GetTemplateItem() == scalarItem);
                 scalarItem.Recycle(element);
                 _elements.RemoveAt(index + 1);

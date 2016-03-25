@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows.Primitives
             base.Initialize(element);
             var dataView = (DataView)element;
             var parentRow = dataView.GetRowPresenter();
-            dataView.Show(parentRow.SubviewPresenters[Index]);
+            dataView.Initialize(parentRow.SubviewPresenters[Index]);
         }
 
         internal sealed override void Cleanup(UIElement element)

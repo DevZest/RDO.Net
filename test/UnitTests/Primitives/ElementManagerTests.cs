@@ -115,6 +115,9 @@ namespace DevZest.Data.Windows.Primitives
 
             elementManager.RealizedRows.VirtualizeAll();
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
+
+            elementManager.ClearElements();
+            Assert.IsNull(elementManager.Elements);
         }
     }
 }

@@ -64,7 +64,6 @@
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataViewFactory.cs" />
-    <Compile Include="ScalarElementsContainer.cs" />
     <Compile Include="Primitives\TemplateItem.Builder.cs" />
     <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IBehavior.cs" />

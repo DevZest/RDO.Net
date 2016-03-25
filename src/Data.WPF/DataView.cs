@@ -1,7 +1,5 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -39,10 +37,10 @@ namespace DevZest.Data.Windows
         {
             var oldValue = (DataPresenter)e.OldValue;
             var newValue = (DataPresenter)e.NewValue;
-            ((DataView)d).OnPresenterChanged(oldValue, newValue);
+            ((DataView)d).OnDataPresenterChanged(oldValue, newValue);
         }
 
-        private void OnPresenterChanged(DataPresenter oldValue, DataPresenter newValue)
+        private void OnDataPresenterChanged(DataPresenter oldValue, DataPresenter newValue)
         {
         }
 
@@ -82,12 +80,10 @@ namespace DevZest.Data.Windows
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
-        public void Show(DataPresenter presenter)
+        internal void Initialize(DataPresenter dataPresenter)
         {
-            if (presenter == null)
-                throw new ArgumentNullException(nameof(presenter));
-
-            DataPresenter = presenter;
+            Debug.Assert(dataPresenter != null && DataPresenter == null);
+            DataPresenter = dataPresenter;
         }
 
         internal void Cleanup()

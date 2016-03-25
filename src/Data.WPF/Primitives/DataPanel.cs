@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private static readonly DependencyProperty DataPresenterProperty = DependencyProperty.Register(nameof(Presenter), typeof(DataPresenter),
+        private static readonly DependencyProperty DataPresenterProperty = DependencyProperty.Register(nameof(DataPresenter), typeof(DataPresenter),
             typeof(DataPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsMeasure, OnDataPresenterChanged));
 
         private static void OnDataPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -180,7 +180,7 @@ namespace DevZest.Data.Windows.Primitives
             BindingOperations.SetBinding(this, DataPresenterProperty, binding);
         }
 
-        private DataPresenter Presenter
+        private DataPresenter DataPresenter
         {
             get { return (DataPresenter)GetValue(DataPresenterProperty); }
         }
