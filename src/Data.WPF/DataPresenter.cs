@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        public static DataPresenter Create<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
+        internal static DataPresenter Create<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
             where T : Model, new()
         {
             if (dataSet == null)

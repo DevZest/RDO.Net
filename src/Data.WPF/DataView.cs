@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows
     public class DataView : Control
     {
         private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
-            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnPresenterChanged));
+            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null));
 
         public static readonly DependencyProperty DataPresenterProperty = DataPresenterPropertyKey.DependencyProperty;
 
@@ -30,18 +30,6 @@ namespace DevZest.Data.Windows
         static DataView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(typeof(DataView)));
-        }
-
-
-        private static void OnPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var oldValue = (DataPresenter)e.OldValue;
-            var newValue = (DataPresenter)e.NewValue;
-            ((DataView)d).OnDataPresenterChanged(oldValue, newValue);
-        }
-
-        private void OnDataPresenterChanged(DataPresenter oldValue, DataPresenter newValue)
-        {
         }
 
         public DataPresenter DataPresenter
@@ -90,6 +78,16 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(DataPresenter != null);
             DataPresenter = null;
+        }
+
+        public void Show<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
+            where T : Model, new()
+        {
+            if (dataSet == null)
+                throw new ArgumentNullException(nameof(dataSet));
+
+            var dataPresenter = DataPresenter.Create(dataSet, buildTemplateAction);
+            Initialize(dataPresenter);
         }
     }
 }
