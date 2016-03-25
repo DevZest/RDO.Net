@@ -51,6 +51,7 @@
     <Compile Include="Primitives\GridColumnSet.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
     <Compile Include="Primitives\GridTrackSet.cs" />
+    <Compile Include="Primitives\IElementCollection.cs" />
     <Compile Include="Primitives\IGridColumnSet.cs" />
     <Compile Include="Primitives\IGridRowSet.cs" />
     <Compile Include="Primitives\IGridTrackSet.cs" />
