@@ -64,10 +64,10 @@ namespace DevZest.Data.Windows.Primitives
         internal void OnSetState(RowPresenter rowPresenter, RowPresenterState rowPresenterState)
         {
             if (GetStateFlag(rowPresenterState))
-                InvalidateView();
+                Invalidate(rowPresenter);
         }
 
-        internal abstract void InvalidateView();
+        internal abstract void Invalidate(RowPresenter rowPresenter);
 
         int _dataPresenterStateFlags;
 
@@ -96,7 +96,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void OnSetState(DataPresenterState dataPresenterState)
         {
             if (BindingSource.Current.RowManager == this && GetStateFlag(dataPresenterState))
-                InvalidateView();
+                Invalidate(null);
         }
 
         private List<List<RowPresenter>> _rowMappings;
@@ -421,7 +421,10 @@ namespace DevZest.Data.Windows.Primitives
         private void OnDataRowUpdated(object sender, DataRow dataRow)
         {
             if (_viewUpdateSuppressed != dataRow)
-                InvalidateView();
+            {
+                var row = RowMappings_GetRow(dataRow);
+                Invalidate(row);
+            }
         }
 
         private RowPresenter _currentRow;
@@ -503,7 +506,7 @@ namespace DevZest.Data.Windows.Primitives
             EditingEofRow.DataRow = new DataRow();
             DataSet.Add(EditingEofRow.DataRow);
             CoerceValues();
-            InvalidateView();
+            Invalidate(eofRow);
         }
 
         internal void CancelEditEof()

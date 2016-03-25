@@ -49,7 +49,7 @@ namespace DevZest.Data.Windows.Primitives
             {
             }
 
-            internal override void InvalidateView()
+            internal override void Invalidate(RowPresenter row)
             {
             }
         }

@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -257,6 +259,8 @@ namespace DevZest.Data.Windows.Primitives
             index += RefreshRealizedRows();
             index = RefreshScalarElements(Template.ScalarItemsCountBeforeRepeat, Template.ScalarItems.Count, index);
             Debug.Assert(index == Elements.Count);
+
+            _isDirty = false;
         }
 
         private int RefreshScalarElements(int scalarItemIndex, int scalarItemCount, int elementIndex)
@@ -369,8 +373,33 @@ namespace DevZest.Data.Windows.Primitives
             _scalarElementsCountBeforeRepeat += delta;
         }
 
-        internal sealed override void InvalidateView()
+        private bool _isDirty;
+        internal sealed override void Invalidate(RowPresenter row)
         {
+            if (_isDirty || _elements == null)
+                return;
+
+            if (row == null || (RealizedRows.Contains(row) && row.Elements != null))
+            {
+                _isDirty = true;
+                BeginRefreshElements();
+            }
+        }
+
+        private void BeginRefreshElements()
+        {
+            Debug.Assert(_elements != null && _isDirty);
+
+            var panel = _elements.Parent;
+            if (panel == null)
+                RefreshElements();
+            else
+            {
+                panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
+                    RefreshElements();
+                }));
+            }
         }
     }
 }
