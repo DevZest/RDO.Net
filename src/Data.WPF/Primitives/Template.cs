@@ -303,6 +303,15 @@ namespace DevZest.Data.Windows.Primitives
 
         public int HierarchicalModelOrdinal { get; internal set; }
 
+        private Func<RowView> _rowViewConstructor;
+        public Func<RowView> RowViewConstructor
+        {
+            get { return _rowViewConstructor ?? (() => new RowView()); }
+            internal set { _rowViewConstructor = value; }
+        }
+
+        public Action<RowView> RowViewInitializer { get; internal set; }
+
         public int VirtualizationThreshold { get; internal set; }
     }
 }

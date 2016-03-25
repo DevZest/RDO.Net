@@ -125,5 +125,16 @@ namespace DevZest.Data.Windows
             Template.HierarchicalModelOrdinal = childModel.GetOrdinal();
             return this;
         }
+
+        public TemplateBuilder RowView<T>(Action<T> rowViewIntializer = null)
+            where T : RowView, new()
+        {
+            Template.RowViewConstructor = () => new T();
+            if (rowViewIntializer == null)
+                Template.RowViewInitializer = null;
+            else
+                Template.RowViewInitializer = rowView => rowViewIntializer((T)rowView);
+            return this;
+        }
     }
 }
