@@ -494,11 +494,31 @@ namespace DevZest.Data.Windows
             Debug.Assert(_elements == null);
 
             _elements = ElementCollectionFactory.Create(elementsPanel);
+            var repeatItems = Template.RepeatItems;
+            for (int i = 0; i < repeatItems.Count; i++)
+            {
+                var repeatItem = repeatItems[i];
+                var element = repeatItem.Generate();
+                element.SetRowPresenter(this);
+                repeatItem.Initialize(element);
+                _elements.Add(element);
+            }
         }
 
         internal void ClearElements()
         {
             Debug.Assert(_elements != null);
+
+            var repeatItems = Template.RepeatItems;
+            Debug.Assert(Elements.Count == repeatItems.Count);
+            for (int i = 0; i < repeatItems.Count; i++)
+            {
+                var repeatItem = repeatItems[i];
+                var element = Elements[i];
+                repeatItem.Recycle(element);
+                element.SetRowPresenter(null);
+            }
+            _elements.RemoveRange(0, Elements.Count);
             _elements = null;
         }
     }
