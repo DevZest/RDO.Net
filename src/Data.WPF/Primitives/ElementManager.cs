@@ -285,7 +285,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var element = Elements[elementIndex++];
                     Debug.Assert(element.GetTemplateItem() == scalarItem);
-                    scalarItem.Refresh(element);
+                    scalarItem.UpdateTarget(element);
                 }
             }
             return elementIndex;
@@ -324,8 +324,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < count; i++)
             {
                 var element = scalarItem.Generate();
-                scalarItem.Initialize(element);
                 _elements.Insert(index + i + 1, element);
+                scalarItem.Initialize(element);
             }
             return index + count;
         }
@@ -336,7 +336,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var element = Elements[index + 1];
                 Debug.Assert(element.GetTemplateItem() == scalarItem);
-                scalarItem.Recycle(element);
+                scalarItem.Cleanup(element);
                 _elements.RemoveAt(index + 1);
             }
         }

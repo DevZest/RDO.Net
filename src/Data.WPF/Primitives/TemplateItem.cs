@@ -114,22 +114,19 @@ namespace DevZest.Data.Windows.Primitives
             if (_initializer != null)
                 _initializer(element);
 
-            Refresh(element);
-
-            foreach (var behavior in _behaviors)
-                behavior.Attach(element);
-        }
-
-        internal void Refresh(UIElement element)
-        {
             foreach (var binding in _bindings)
             {
                 foreach (var trigger in binding.Triggers)
                     trigger.Attach(element);
             }
+
+            foreach (var behavior in _behaviors)
+                behavior.Attach(element);
+
+            UpdateTarget(element);
         }
 
-        internal void Recycle(UIElement element)
+        private void Recycle(UIElement element)
         {
             Debug.Assert(element != null && element.GetTemplateItem() == this);
 
@@ -161,6 +158,8 @@ namespace DevZest.Data.Windows.Primitives
 
             if (_cleanup != null)
                 _cleanup(element);
+
+            Recycle(element);
         }
 
         private IList<Binding> _bindings = EmptyArray<Binding>.Singleton;

@@ -28,9 +28,6 @@ namespace DevZest.Data.Windows.Primitives
             Assert.IsTrue(element.GetTemplateItem() == item);
 
             item.Initialize(element);
-            Assert.AreEqual(INITIALIZED, element.Text);
-
-            item.UpdateTarget(element);
             Assert.AreEqual(SOURCE, element.Text);
 
             source = SOURCE_CHANGED;

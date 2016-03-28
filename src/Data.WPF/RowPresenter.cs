@@ -500,8 +500,8 @@ namespace DevZest.Data.Windows
                 var repeatItem = repeatItems[i];
                 var element = repeatItem.Generate();
                 element.SetRowPresenter(this);
-                repeatItem.Initialize(element);
                 _elements.Add(element);
+                repeatItem.Initialize(element);
             }
         }
 
@@ -515,7 +515,7 @@ namespace DevZest.Data.Windows
             {
                 var repeatItem = repeatItems[i];
                 var element = Elements[i];
-                repeatItem.Recycle(element);
+                repeatItem.Cleanup(element);
                 element.SetRowPresenter(null);
             }
             _elements.RemoveRange(0, Elements.Count);
@@ -533,7 +533,7 @@ namespace DevZest.Data.Windows
             {
                 var repeatItem = repeatItems[i];
                 var element = Elements[i];
-                repeatItem.Refresh(element);
+                repeatItem.UpdateTarget(element);
             }
         }
     }
