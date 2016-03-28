@@ -57,11 +57,6 @@ namespace DevZest.Data.Windows.Primitives
             return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
         }
 
-        public bool IsRepeatable
-        {
-            get { return RepeatMode == ScalarRepeatMode.Flow || RepeatMode == ScalarRepeatMode.Grow; }
-        }
-
         private void InitRepeatMode(ScalarRepeatMode value)
         {
             _repeatMode = value;

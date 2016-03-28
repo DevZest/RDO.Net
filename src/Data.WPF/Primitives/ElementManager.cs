@@ -280,7 +280,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = scalarItemIndex; i < scalarItemCount; i++)
             {
                 var scalarItem = scalarItems[i];
-                var flowCount = scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow ? 1 : FlowCount;
+                var flowCount = scalarItem.RepeatMode == ScalarRepeatMode.Flow ? FlowCount : 1;
                 for (int j = 0; j < flowCount; j++)
                 {
                     var element = Elements[elementIndex++];
@@ -310,10 +310,12 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
             {
                 var scalarItem = scalarItems[i];
-                int count = scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow ? 1 : FlowCount;
+                scalarItem.AccumulatedFlowCountDelta = 0;
+                int count = scalarItem.RepeatMode == ScalarRepeatMode.Flow ? FlowCount : 1;
                 RemoveScalarElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
+            _flowCount = 1;
             _elements = null;
         }
 
@@ -369,8 +371,14 @@ namespace DevZest.Data.Windows.Primitives
                 if (i == Template.ScalarItemsCountBeforeRepeat)
                     index += RealizedRows.Count;
                 var scalarItem = scalarItems[i];
-                if (scalarItem.RepeatMode == ScalarRepeatMode.None || scalarItem.RepeatMode == ScalarRepeatMode.Grow)
+
+                var prevAccumulatedFlowCountDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedFlowCountDelta;
+                if (scalarItem.RepeatMode != ScalarRepeatMode.Flow)
+                {
+                    scalarItem.AccumulatedFlowCountDelta = prevAccumulatedFlowCountDelta + (FlowCount - 1);
                     continue;
+                }
+                scalarItem.AccumulatedFlowCountDelta = prevAccumulatedFlowCountDelta;
 
                 if (i < Template.ScalarItemsCountBeforeRepeat)
                     delta += flowCountDelta;

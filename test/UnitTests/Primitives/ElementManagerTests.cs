@@ -67,6 +67,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private static void VerifyElements(ElementManager elementManager, int[] scalarItemsBefore, int[] realizedRows, int[] scalarItemsAfter)
         {
+            VerifyAccumulatedFlowCountDelta(elementManager);
             var template = elementManager.Template;
             var rows = elementManager.Rows;
             var elements = elementManager.Elements;
@@ -93,6 +94,18 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
         }
+
+        private static void VerifyAccumulatedFlowCountDelta(ElementManager elementManager)
+        {
+            var template = elementManager.Template;
+            var scalarItems = template.ScalarItems;
+            if (scalarItems.Count == 0)
+                return;
+            var lastScalarItem = scalarItems[scalarItems.Count - 1];
+            Assert.AreEqual(elementManager.Elements.Count - elementManager.RealizedRows.Count,
+                scalarItems.Count * elementManager.FlowCount - lastScalarItem.AccumulatedFlowCountDelta);
+        }
+
         #endregion
 
         [TestMethod]
