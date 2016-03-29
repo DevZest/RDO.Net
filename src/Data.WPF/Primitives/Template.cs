@@ -92,16 +92,22 @@ namespace DevZest.Data.Windows.Primitives
             get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
             internal set
             {
-                if (!value.Contains(AutoRepeatRange))
-                    throw new ArgumentOutOfRangeException(nameof(value));
-
                 _repeatRange = value;
+                VerifyRepeatRange();
             }
+        }
+
+        private void VerifyRepeatRange()
+        {
+            var repeatRange = RepeatRange;
+            var autoRepeatRange = AutoRepeatRange;
+            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(AutoRepeatRange)) || ScalarItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
+                throw new InvalidOperationException(Strings.Template_InvalidRepeatRange);
         }
 
         private GridRange AutoRepeatRange
         {
-            get { return _repeatItems.Range.Union(_subviewItems.Range); }
+            get { return _repeatItems.Range; }
         }
 
         internal int AddGridColumn(string width)
@@ -184,36 +190,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int ScalarItemsCountBeforeRepeat { get; private set; }
 
-        //internal int StarWidthColumnsCount
-        //{
-        //    get { return GridColumns.StarLengthCount; }
-        //}
-
-        //internal int StarHeightRowsCount
-        //{
-        //    get { return GridRows.StarLengthCount; }
-        //}
-
-        //internal int AutoWidthColumnsCount
-        //{
-        //    get { return GridColumns.AutoLengthCount; }
-        //}
-
-        //internal int AutoHeightRowsCount
-        //{
-        //    get { return GridRows.AutoLengthCount; }
-        //}
-
-        //internal double AbsoluteWidthTotal
-        //{
-        //    get { return GridColumns.AbsoluteLengthTotal; }
-        //}
-
-        //internal double AbsouteHeightTotal
-        //{
-        //    get { return GridRows.AbsoluteLengthTotal; }
-        //}
-
         internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
         {
             VerifyAddTemplateItem(gridRange, scalarItem, nameof(scalarItem), true);
@@ -221,6 +197,7 @@ namespace DevZest.Data.Windows.Primitives
             _scalarItems.Add(gridRange, scalarItem);
             if (_repeatItems.Count == 0)
                 ScalarItemsCountBeforeRepeat = _scalarItems.Count;
+            VerifyRepeatRange();
         }
 
         internal void AddRepeatItem(GridRange gridRange, RepeatItem repeatItem)
@@ -228,6 +205,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyAddTemplateItem(gridRange, repeatItem, nameof(repeatItem), true);
             repeatItem.Construct(this, gridRange, _repeatItems.Count);
             _repeatItems.Add(gridRange, repeatItem);
+            VerifyRepeatRange();
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
@@ -236,6 +214,7 @@ namespace DevZest.Data.Windows.Primitives
             subviewItem.Seal(this, gridRange, _repeatItems.Count, _subviewItems.Count);
             _repeatItems.Add(gridRange, subviewItem);
             _subviewItems.Add(gridRange, subviewItem);
+            VerifyRepeatRange();
         }
 
         private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -34,7 +33,7 @@ namespace DevZest.Data.Windows.Primitives
 
                 protected override int CalculateFlowCount()
                 {
-                    return SizeToContentX ? 1 : (int)(AvailableWidth / (Template.GridColumns.Sum(x => x.Width.Value)));
+                    return SizeToContentX ? 1 : (int)(AvailableWidth / Template.GridColumns.AbsoluteLengthTotal);
                 }
             }
 
@@ -55,7 +54,7 @@ namespace DevZest.Data.Windows.Primitives
 
                 protected override int CalculateFlowCount()
                 {
-                    return SizeToContentY ? 1 : (int)(AvailableHeight / (Template.GridRows.Sum(x => x.Height.Value)));
+                    return SizeToContentY ? 1 : (int)(AvailableHeight / Template.GridRows.AbsoluteLengthTotal);
                 }
             }
 

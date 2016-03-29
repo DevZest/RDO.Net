@@ -99,6 +99,14 @@ namespace DevZest.Data.Windows
             get { return GetString("TemplateBuilder_InvalidFlattenHierarchyChildModel"); }
         }
 
+        /// <summary>
+        /// The RepeatRange is invalid. It must contain all RepeatItems and no ScalarItem.
+        /// </summary>
+        public static string Template_InvalidRepeatRange
+        {
+            get { return GetString("Template_InvalidRepeatRange"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
