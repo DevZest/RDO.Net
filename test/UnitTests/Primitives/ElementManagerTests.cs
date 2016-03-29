@@ -20,12 +20,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, ScalarRepeatMode[] scalarItemsBefore, ScalarRepeatMode[] scalarItemsAfter)
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, FlowMode[] scalarItemsBefore, FlowMode[] scalarItemsAfter)
         {
             return CreateElementManager(dataSet, (builder, model) =>
             {
+                for (int i = 0; i < scalarItemsBefore.Length + scalarItemsAfter.Length + 1; i++)
+                    builder.AddGridRow("100");
+
                 builder.AddGridColumns("100")
-                    .AddGridRows("100", "100", "100")
                     .WithOrientation(RepeatOrientation.XY)
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
@@ -34,24 +36,24 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItemsBefore.Length; i++)
                 {
                     var index = scalarItemIndex++;
-                    var repeatMode = scalarItemsBefore[i];
-                    builder.Range(0, 0).BeginScalarItem<TextBlock>()
-                        .Repeat(repeatMode)
+                    var flowMode = scalarItemsBefore[i];
+                    builder.Range(0, index).BeginScalarItem<TextBlock>()
+                        .Flow(flowMode)
                         .Bind((src, element) => element.Text = GetScalarItemText(index))
                         .End();
                 }
 
-                builder.Range(0, 1).BeginRepeatItem<TextBlock>()
+                builder.Range(0, scalarItemIndex).BeginRepeatItem<TextBlock>()
                     .Bind((src, element) => element.Text = src.RowPresenter.GetValue(model.Name))
                     .End();
 
                 for (int i = 0; i < scalarItemsAfter.Length; i++)
                 {
                     var index = scalarItemIndex++;
-                    var repeatMode = scalarItemsAfter[i];
-                    builder.Range(0, 2)
+                    var flowMode = scalarItemsAfter[i];
+                    builder.Range(0, index + 1)
                     .BeginScalarItem<TextBlock>()
-                    .Repeat(repeatMode)
+                    .Flow(flowMode)
                     .Bind((src, element) => element.Text = GetScalarItemText(index))
                     .End();
                 }
@@ -158,8 +160,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var dataSet = MockProductCategories(3);
             var elementManager = MockElementManager(dataSet,
-                Array<ScalarRepeatMode>(ScalarRepeatMode.None, ScalarRepeatMode.Flow),
-                Array<ScalarRepeatMode>(ScalarRepeatMode.Grow));
+                Array<FlowMode>(FlowMode.Stretch, FlowMode.Repeat),
+                Array<FlowMode>(FlowMode.Stretch));
             var rows = elementManager.Rows;
 
             VerifyElements(elementManager, dataSet._);
@@ -206,8 +208,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var dataSet = MockProductCategories(3);
             var elementManager = MockElementManager(dataSet,
-                Array<ScalarRepeatMode>(ScalarRepeatMode.None, ScalarRepeatMode.Flow),
-                Array<ScalarRepeatMode>(ScalarRepeatMode.Grow));
+                Array<FlowMode>(FlowMode.Stretch, FlowMode.Repeat),
+                Array<FlowMode>(FlowMode.Stretch));
             var rows = elementManager.Rows;
 
             elementManager.RefreshElements();

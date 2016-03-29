@@ -70,7 +70,7 @@
     <Compile Include="GridRangeBuilder.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="Primitives\RepeatItem.cs" />
-    <Compile Include="ScalarRepeatMode.cs" />
+    <Compile Include="FlowMode.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />

@@ -280,7 +280,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = scalarItemIndex; i < scalarItemCount; i++)
             {
                 var scalarItem = scalarItems[i];
-                var flowCount = scalarItem.RepeatMode == ScalarRepeatMode.Flow ? FlowCount : 1;
+                var flowCount = scalarItem.IsRepeat ? FlowCount : 1;
                 for (int j = 0; j < flowCount; j++)
                 {
                     var element = Elements[elementIndex++];
@@ -311,7 +311,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var scalarItem = scalarItems[i];
                 scalarItem.AccumulatedFlowCountDelta = 0;
-                int count = scalarItem.RepeatMode == ScalarRepeatMode.Flow ? FlowCount : 1;
+                int count = scalarItem.IsRepeat ? FlowCount : 1;
                 RemoveScalarElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
@@ -373,7 +373,7 @@ namespace DevZest.Data.Windows.Primitives
                 var scalarItem = scalarItems[i];
 
                 var prevAccumulatedFlowCountDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedFlowCountDelta;
-                if (scalarItem.RepeatMode != ScalarRepeatMode.Flow)
+                if (!scalarItem.IsRepeat)
                 {
                     scalarItem.AccumulatedFlowCountDelta = prevAccumulatedFlowCountDelta + (FlowCount - 1);
                     continue;
