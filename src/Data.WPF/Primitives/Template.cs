@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var repeatRange = RepeatRange;
             var autoRepeatRange = AutoRepeatRange;
-            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(AutoRepeatRange)) || ScalarItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
+            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(autoRepeatRange)) || ScalarItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
                 throw new InvalidOperationException(Strings.Template_InvalidRepeatRange);
         }
 
