@@ -59,6 +59,7 @@
     <Compile Include="DataPresenterState.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
+    <Compile Include="Primitives\LayoutManager.Repeater.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="TemplateBuilder.cs" />

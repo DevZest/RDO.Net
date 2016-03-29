@@ -114,8 +114,10 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private Size _availableSize;
         internal Size Measure(Size availableSize)
         {
+            _availableSize = availableSize;
             throw new NotImplementedException();
         }
 

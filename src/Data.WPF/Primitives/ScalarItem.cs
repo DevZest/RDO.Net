@@ -15,27 +15,29 @@ namespace DevZest.Data.Windows.Primitives
         private ScalarItem(Func<UIElement> constructor)
             : base(constructor)
         {
+            RepeatMode = ScalarRepeatMode.None;
         }
 
-        private ScalarRepeatMode _repeatMode = ScalarRepeatMode.None;
-        public ScalarRepeatMode RepeatMode
+        public ScalarRepeatMode RepeatMode { get; private set; }
+
+        internal ScalarRepeatMode CoercedRepeatMode
         {
             get
             {
-                if (_repeatMode == ScalarRepeatMode.None)
+                if (RepeatMode == ScalarRepeatMode.None)
                     return ScalarRepeatMode.None;
 
-                if (_repeatMode == ScalarRepeatMode.Flow)
+                if (RepeatMode == ScalarRepeatMode.Flow)
                     return CoerceFlowRepeatMode();
 
-                Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
+                Debug.Assert(RepeatMode == ScalarRepeatMode.Grow);
                 return CoerceGrowRepeatMode();
             }
         }
 
         private ScalarRepeatMode CoerceFlowRepeatMode()
         {
-            Debug.Assert(_repeatMode == ScalarRepeatMode.Flow);
+            Debug.Assert(RepeatMode == ScalarRepeatMode.Flow);
             bool isValid = false;
             if (Template.RepeatOrientation == RepeatOrientation.XY)
                 isValid = Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
@@ -47,7 +49,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private ScalarRepeatMode CoerceGrowRepeatMode()
         {
-            Debug.Assert(_repeatMode == ScalarRepeatMode.Grow);
+            Debug.Assert(RepeatMode == ScalarRepeatMode.Grow);
             bool isValid = false;
             if (Template.RepeatOrientation == RepeatOrientation.Y || Template.RepeatOrientation == RepeatOrientation.XY)
                 isValid = Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
@@ -55,11 +57,6 @@ namespace DevZest.Data.Windows.Primitives
                 isValid = Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
 
             return isValid ? ScalarRepeatMode.Grow : ScalarRepeatMode.None;
-        }
-
-        private void InitRepeatMode(ScalarRepeatMode value)
-        {
-            _repeatMode = value;
         }
 
         public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
@@ -82,7 +79,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public Builder<T> Repeat(ScalarRepeatMode value)
             {
-                Item.InitRepeatMode(value);
+                Item.RepeatMode = value;
                 return this;
             }
         }
