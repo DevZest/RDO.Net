@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class LayoutManager : ElementManager
+    public abstract partial class LayoutManager : ElementManager
     {
         internal LayoutManager(DataSet dataSet)
             : base(dataSet)
