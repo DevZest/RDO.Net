@@ -82,6 +82,16 @@ namespace DevZest.Data.Windows.Primitives
             return GetOrCreate();
         }
 
+        private IList<BindingBase> _bindings = EmptyArray<BindingBase>.Singleton;
+
+        internal void AddBinding(BindingBase binding)
+        {
+            Debug.Assert(binding != null);
+            if (_bindings == EmptyArray<BindingBase>.Singleton)
+                _bindings = new List<BindingBase>();
+            _bindings.Add(binding);
+        }
+
         private IList<Behavior> _behaviors = EmptyArray<Behavior>.Singleton;
 
         private void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
@@ -162,16 +172,6 @@ namespace DevZest.Data.Windows.Primitives
             Recycle(element);
         }
 
-        private IList<Binding> _bindings = EmptyArray<Binding>.Singleton;
-
-        private void AddBinding(Binding binding)
-        {
-            Debug.Assert(binding != null);
-            if (_bindings == EmptyArray<Binding>.Singleton)
-                _bindings = new List<Binding>();
-            _bindings.Add(binding);
-        }
-
         internal void UpdateTarget(UIElement element)
         {
             var bindingSource = BindingSource.Current;
@@ -179,10 +179,7 @@ namespace DevZest.Data.Windows.Primitives
             try
             {
                 foreach (var binding in _bindings)
-                {
-                    if (binding.UpdateTargetAction != null)
-                        binding.UpdateTargetAction(bindingSource, element);
-                }
+                    binding.UpdateTarget(bindingSource, element);
             }
             finally
             {
@@ -197,10 +194,7 @@ namespace DevZest.Data.Windows.Primitives
             try
             {
                 foreach (var binding in _bindings)
-                {
-                    if (binding.UpdateSourceAction != null)
-                        binding.UpdateSourceAction(element, bindingSource);
-                }
+                    binding.UpdateSource(element, bindingSource);
             }
             finally
             {

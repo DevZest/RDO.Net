@@ -60,24 +60,6 @@ namespace DevZest.Data.Windows.Primitives
                 Item.InitBehaviors(behaviors);
                 return This;
             }
-
-            public TBuilder Bind(Action<BindingSource, TElement> updateTarget)
-            {
-                Item.AddBinding(Binding.Bind(Item, updateTarget));
-                return This;
-            }
-
-            public TBuilder BindToSource(Action<TElement, BindingSource> updateSource, params BindingTrigger[] triggers)
-            {
-                Item.AddBinding(Binding.BindToSource(Item, updateSource, triggers));
-                return This;
-            }
-
-            public TBuilder BindTwoWay(Action<BindingSource, TElement> updateTarget, Action<TElement, BindingSource> updateSource, params BindingTrigger[] triggers)
-            {
-                Item.AddBinding(Binding.BindTwoWay(Item, updateTarget, updateSource, triggers));
-                return This;
-            }
         }
     }
 }

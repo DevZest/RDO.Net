@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
                 }
 
                 builder.Range(0, scalarItemIndex).BeginRepeatItem<TextBlock>()
-                    .Bind((src, element) => element.Text = src.RowPresenter.GetValue(model.Name))
+                    .Bind((row, element) => element.Text = row.GetValue(model.Name))
                     .End();
 
                 for (int i = 0; i < scalarItemsAfter.Length; i++)

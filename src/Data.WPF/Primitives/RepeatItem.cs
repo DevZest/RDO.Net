@@ -5,15 +5,48 @@ namespace DevZest.Data.Windows.Primitives
 {
     public class RepeatItem : TemplateItem
     {
-        internal static RepeatItem Create<T>()
-            where T : UIElement, new()
+        private sealed class Binding : BindingBase
         {
-            return new RepeatItem(() => new T());
-        }
+            internal static Binding Bind<T>(TemplateItem templateItem, Action<RowPresenter, T> updateTarget)
+                where T : UIElement
+            {
+                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), null, null);
+            }
 
-        internal RepeatItem(Func<UIElement> constructor)
-            : base(constructor)
-        {
+            internal static Binding BindToSource<T>(TemplateItem templateItem, Action<T, RowPresenter> updateSource, BindingTrigger[] triggers)
+                where T : UIElement
+            {
+                return new Binding(templateItem, null, (element, source) => updateSource((T)element, source), triggers);
+            }
+
+            internal static Binding BindTwoWay<T>(TemplateItem templateItem, Action<RowPresenter, T> updateTarget, Action<T, RowPresenter> updateSource, BindingTrigger[] triggers)
+                where T : UIElement
+            {
+                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
+            }
+
+            private Binding(TemplateItem templateItem, Action<RowPresenter, UIElement> updateTarget, Action<UIElement, RowPresenter> updateSource, BindingTrigger[] triggers)
+                : base(templateItem, triggers)
+            {
+                _updateTargetAction = updateTarget;
+                _updateSourceAction = updateSource;
+            }
+
+            private Action<RowPresenter, UIElement> _updateTargetAction;
+
+            private Action<UIElement, RowPresenter> _updateSourceAction;
+
+            public override void UpdateTarget(BindingSource bindingSource, UIElement element)
+            {
+                if (_updateTargetAction != null)
+                    _updateTargetAction(bindingSource.RowPresenter, element);
+            }
+
+            public override void UpdateSource(UIElement element, BindingSource bindingSource)
+            {
+                if (_updateSourceAction != null)
+                    _updateSourceAction(element, bindingSource.RowPresenter);
+            }
         }
 
         public sealed class Builder<T> : TemplateItem.Builder<T, RepeatItem, Builder<T>>
@@ -33,6 +66,35 @@ namespace DevZest.Data.Windows.Primitives
             {
                 return rangeConfig.End(item);
             }
+
+            public Builder<T> Bind(Action<RowPresenter, T> updateTargetAction)
+            {
+                Item.AddBinding(Binding.Bind(Item, updateTargetAction));
+                return This;
+            }
+
+            public Builder<T> BindToSource(Action<T, RowPresenter> updateSourceAction, params BindingTrigger[] triggers)
+            {
+                Item.AddBinding(Binding.BindToSource(Item, updateSourceAction, triggers));
+                return This;
+            }
+
+            public Builder<T> BindTwoWay(Action<RowPresenter, T> updateTargetAction, Action<T, RowPresenter> updateSourceAction, params BindingTrigger[] triggers)
+            {
+                Item.AddBinding(Binding.BindTwoWay(Item, updateTargetAction, updateSourceAction, triggers));
+                return This;
+            }
+        }
+
+        internal static RepeatItem Create<T>()
+            where T : UIElement, new()
+        {
+            return new RepeatItem(() => new T());
+        }
+
+        internal RepeatItem(Func<UIElement> constructor)
+            : base(constructor)
+        {
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class BindingSource
+    internal sealed class BindingSource
     {
         internal static readonly BindingSource Current = new BindingSource();
 
