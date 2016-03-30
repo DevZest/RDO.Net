@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, FlowMode[] scalarItemsBefore, FlowMode[] scalarItemsAfter)
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, bool[] scalarItemsBefore, bool[] scalarItemsAfter)
         {
             return CreateElementManager(dataSet, (builder, model) =>
             {
@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
                     builder.AddGridRow("100");
 
                 builder.AddGridColumns("100")
-                    .WithOrientation(RepeatOrientation.XY)
+                    .Repeat(RepeatOrientation.Y, 0)
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
 
@@ -36,9 +36,9 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItemsBefore.Length; i++)
                 {
                     var index = scalarItemIndex++;
-                    var flowMode = scalarItemsBefore[i];
+                    var isRepeatable = scalarItemsBefore[i];
                     builder.Range(0, index).BeginScalarItem<TextBlock>()
-                        .Flow(flowMode)
+                        .IsRepeatable(isRepeatable)
                         .Bind((src, element) => element.Text = GetScalarItemText(index))
                         .End();
                 }
@@ -50,10 +50,10 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItemsAfter.Length; i++)
                 {
                     var index = scalarItemIndex++;
-                    var flowMode = scalarItemsAfter[i];
+                    var isRepeatable = scalarItemsAfter[i];
                     builder.Range(0, index + 1)
                     .BeginScalarItem<TextBlock>()
-                    .Flow(flowMode)
+                    .IsRepeatable(isRepeatable)
                     .Bind((src, element) => element.Text = GetScalarItemText(index))
                     .End();
                 }
@@ -159,9 +159,7 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_Elements()
         {
             var dataSet = MockProductCategories(3);
-            var elementManager = MockElementManager(dataSet,
-                Array<FlowMode>(FlowMode.Stretch, FlowMode.Repeat),
-                Array<FlowMode>(FlowMode.Stretch));
+            var elementManager = MockElementManager(dataSet, Array<bool>(false, true), Array<bool>(false));
             var rows = elementManager.Rows;
 
             VerifyElements(elementManager, dataSet._);
@@ -207,9 +205,7 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements()
         {
             var dataSet = MockProductCategories(3);
-            var elementManager = MockElementManager(dataSet,
-                Array<FlowMode>(FlowMode.Stretch, FlowMode.Repeat),
-                Array<FlowMode>(FlowMode.Stretch));
+            var elementManager = MockElementManager(dataSet, Array<bool>(false, true), Array<bool>(false));
             var rows = elementManager.Rows;
 
             elementManager.RefreshElements();

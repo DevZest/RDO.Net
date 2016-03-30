@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -52,16 +53,23 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as DataPresenter; }
         }
 
-        private RepeatOrientation _repeatOrientation = RepeatOrientation.Y;
+        private RepeatOrientation _repeatOrientation = RepeatOrientation.Z;
         public RepeatOrientation RepeatOrientation
         {
             get { return _repeatOrientation; }
             internal set
             {
-                VerifyGridColumnWidth(value, 0, GridColumns.Count - 1, nameof(value));
-                VerifyGridRowHeight(value, 0, GridRows.Count - 1, nameof(value));
                 _repeatOrientation = value;
+                VerifyGridLengths();
             }
+        }
+
+        private void VerifyGridLengths()
+        {
+            if (GridColumns.Count > 0)
+                VerifyGridColumnWidth(0, GridColumns.Count - 1);
+            if (GridRows.Count > 0)
+                VerifyGridRowHeight(0, GridRows.Count - 1);
         }
 
         public GridTrackCollection<GridColumn> GridColumns { get; private set; }
@@ -114,7 +122,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
             var result = GridColumns.Count - 1;
-            VerifyGridColumnWidth(RepeatOrientation, result, result, nameof(width));
+            VerifyGridColumnWidth(result, result);
             return result;
         }
 
@@ -130,7 +138,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
             var result = GridRows.Count - 1;
-            VerifyGridRowHeight(RepeatOrientation, result, result, nameof(height));
+            VerifyGridRowHeight(result, result);
             return result;
         }
 
@@ -142,50 +150,56 @@ namespace DevZest.Data.Windows.Primitives
                 AddGridRow(height);
         }
 
-        private void VerifyGridRowHeight(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
+        private void VerifyGridRowHeight(int startIndex, int endIndex)
         {
             for (int i = startIndex; i <= endIndex; i++)
-            {
-                if (!IsValidGridRowHeight(GridRows[i], orientation))
-                    throw new ArgumentException(Strings.GridTemplate_InvalidGridRowHeightOrientation(i, GridRows[i].Height, orientation), paramName);
-            }
+                VerifyGridRowHeight(GridRows[i]);
         }
 
-        private static bool IsValidGridRowHeight(GridRow gridRow, RepeatOrientation orentation)
+        private void VerifyGridRowHeight(GridRow gridRow)
         {
             var height = gridRow.Height;
 
             if (height.IsAbsolute)
-                return true;
+                return;
 
             if (height.IsStar)
-                return orentation != RepeatOrientation.Y && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
-
-            Debug.Assert(height.IsAuto);
-            return orentation != RepeatOrientation.YX;
-        }
-
-        private void VerifyGridColumnWidth(RepeatOrientation orientation, int startIndex, int endIndex, string paramName)
-        {
-            for (int i = startIndex; i <= endIndex; i++)
             {
-                if (!IsValidGridColumnWidth(GridColumns[i], orientation))
-                    throw new ArgumentException(Strings.GridTemplate_InvalidGridColumnWidthOrientation(i, GridColumns[i].Width, orientation), paramName);
+                if (IsVerticalRepeatable)
+                    throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
+            }
+            else
+            {
+                Debug.Assert(height.IsAuto);
+                if (RepeatOrientation == RepeatOrientation.X && IsHorizontalRepeatable)
+                    throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
             }
         }
 
-        private static bool IsValidGridColumnWidth(GridColumn gridColumn, RepeatOrientation orentation)
+        private void VerifyGridColumnWidth(int startIndex, int endIndex)
+        {
+            for (int i = startIndex; i <= endIndex; i++)
+                VerifyGridColumnWidth(GridColumns[i]);
+        }
+
+        private void VerifyGridColumnWidth(GridColumn gridColumn)
         {
             var width = gridColumn.Width;
 
             if (width.IsAbsolute)
-                return true;
+                return;
 
             if (width.IsStar)
-                return orentation != RepeatOrientation.X && orentation != RepeatOrientation.YX && orentation != RepeatOrientation.XY;
-
-            Debug.Assert(width.IsAuto);
-            return orentation != RepeatOrientation.XY;
+            {
+                if (IsHorizontalRepeatable)
+                    throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
+            }
+            else
+            {
+                Debug.Assert(width.IsAuto);
+                if (RepeatOrientation == RepeatOrientation.Y && IsHorizontalRepeatable)
+                    throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
+            }
         }
 
         internal int ScalarItemsCountBeforeRepeat { get; private set; }
@@ -268,6 +282,28 @@ namespace DevZest.Data.Windows.Primitives
             if (bottom < top)
                 throw new ArgumentOutOfRangeException(nameof(bottom));
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
+        }
+
+        private int _flowDimension = 1;
+        public int FlowDimension
+        {
+            get { return _flowDimension; }
+            internal set
+            {
+                Debug.Assert(_flowDimension >= 0);
+                _flowDimension = value;
+                VerifyGridLengths();
+            }
+        }
+
+        public bool IsHorizontalRepeatable
+        {
+            get { return RepeatOrientation == RepeatOrientation.Z ? false : RepeatOrientation == RepeatOrientation.X || FlowDimension != 1; }
+        }
+
+        public bool IsVerticalRepeatable
+        {
+            get { return RepeatOrientation == RepeatOrientation.Z ? false : RepeatOrientation == RepeatOrientation.Y || FlowDimension != 1; }
         }
 
         public int PinnedLeft { get; internal set; }

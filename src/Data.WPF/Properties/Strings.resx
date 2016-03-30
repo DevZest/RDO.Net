@@ -126,12 +126,6 @@
   <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>
   </data>
-  <data name="GridTemplate_InvalidGridColumnWidthOrientation" xml:space="preserve">
-    <value>Invalid GridColumn.Width/Orientation combination: GridColumns[{index}]="{gridColumnWidth}", Orientation="{orientation}".</value>
-  </data>
-  <data name="GridTemplate_InvalidGridRowHeightOrientation" xml:space="preserve">
-    <value>Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".</value>
-  </data>
   <data name="RowManager_InvalidCurrentRow" xml:space="preserve">
     <value>The value is invalid. It does not belong to this RowManager.</value>
   </data>
@@ -150,7 +144,19 @@
   <data name="TemplateBuilder_InvalidFlattenHierarchyChildModel" xml:space="preserve">
     <value>The child model is invalid. It must be direct child model and has the same type.</value>
   </data>
+  <data name="Template_InvalidAutoHeightGridRow" xml:space="preserve">
+    <value>Cannot flow auto height GridRows[{index}].</value>
+  </data>
+  <data name="Template_InvalidAutoWidthGridColumn" xml:space="preserve">
+    <value>Cannot flow auto width GridColumns[{index}].</value>
+  </data>
   <data name="Template_InvalidRepeatRange" xml:space="preserve">
     <value>The RepeatRange is invalid. It must contain all RepeatItems and no ScalarItem.</value>
+  </data>
+  <data name="Template_InvalidStarHeightGridRow" xml:space="preserve">
+    <value>Cannot repeat star height GridRows[{index}].</value>
+  </data>
+  <data name="Template_InvalidStarWidthGridColumn" xml:space="preserve">
+    <value>Cannot repeat star width GridColumns[{index}].</value>
   </data>
 </root>

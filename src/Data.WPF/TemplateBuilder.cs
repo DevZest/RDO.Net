@@ -65,9 +65,13 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder WithOrientation(RepeatOrientation value)
+        public TemplateBuilder Repeat(RepeatOrientation repeatOrientation, int flowDimension = 1)
         {
-            Template.RepeatOrientation = value;
+            if (flowDimension < 0)
+                throw new ArgumentOutOfRangeException(nameof(flowDimension));
+
+            Template.RepeatOrientation = repeatOrientation;
+            Template.FlowDimension = flowDimension;
             return this;
         }
 

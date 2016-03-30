@@ -36,22 +36,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Invalid GridColumn.Width/Orientation combination: GridColumns[{index}]="{gridColumnWidth}", Orientation="{orientation}".
-        /// </summary>
-        public static string GridTemplate_InvalidGridColumnWidthOrientation(object index, object gridColumnWidth, object orientation)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridColumnWidthOrientation", "index", "gridColumnWidth", "orientation"), index, gridColumnWidth, orientation);
-        }
-
-        /// <summary>
-        /// Invalid GridRow.Height/Orientation combination: GridRows[{index}]="{gridRowHeight}", Orientation="{orientation}".
-        /// </summary>
-        public static string GridTemplate_InvalidGridRowHeightOrientation(object index, object gridRowHeight, object orientation)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("GridTemplate_InvalidGridRowHeightOrientation", "index", "gridRowHeight", "orientation"), index, gridRowHeight, orientation);
-        }
-
-        /// <summary>
         /// The value is invalid. It does not belong to this RowManager.
         /// </summary>
         public static string RowManager_InvalidCurrentRow
@@ -100,11 +84,43 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Cannot flow auto height GridRows[{index}].
+        /// </summary>
+        public static string Template_InvalidAutoHeightGridRow(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidAutoHeightGridRow", "index"), index);
+        }
+
+        /// <summary>
+        /// Cannot flow auto width GridColumns[{index}].
+        /// </summary>
+        public static string Template_InvalidAutoWidthGridColumn(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidAutoWidthGridColumn", "index"), index);
+        }
+
+        /// <summary>
         /// The RepeatRange is invalid. It must contain all RepeatItems and no ScalarItem.
         /// </summary>
         public static string Template_InvalidRepeatRange
         {
             get { return GetString("Template_InvalidRepeatRange"); }
+        }
+
+        /// <summary>
+        /// Cannot repeat star height GridRows[{index}].
+        /// </summary>
+        public static string Template_InvalidStarHeightGridRow(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStarHeightGridRow", "index"), index);
+        }
+
+        /// <summary>
+        /// Cannot repeat star width GridColumns[{index}].
+        /// </summary>
+        public static string Template_InvalidStarWidthGridColumn(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStarWidthGridColumn", "index"), index);
         }
 
         private static string GetString(string name, params string[] formatterNames)

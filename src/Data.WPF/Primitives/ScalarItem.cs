@@ -69,9 +69,9 @@ namespace DevZest.Data.Windows.Primitives
                 return rangeConfig.End(item);
             }
 
-            public Builder<T> Flow(FlowMode value)
+            public Builder<T> IsRepeatable(bool value)
             {
-                Item.FlowMode = value;
+                Item.IsRepeatable = value;
                 return this;
             }
 
@@ -103,20 +103,19 @@ namespace DevZest.Data.Windows.Primitives
         private ScalarItem(Func<UIElement> constructor)
             : base(constructor)
         {
-            FlowMode = FlowMode.Repeat;
         }
 
-        public FlowMode FlowMode { get; private set; }
+        public bool IsRepeatable { get; private set; }
 
-        internal bool IsRepeat
+        internal bool ShouldFlow
         {
             get
             {
-                if (FlowMode == FlowMode.Stretch)
+                if (!IsRepeatable)
                     return false;
-                else if (Template.RepeatOrientation == RepeatOrientation.XY)
+                else if (Template.RepeatOrientation == RepeatOrientation.Y && Template.FlowDimension != 1)
                     return Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
-                else if (Template.RepeatOrientation == RepeatOrientation.YX)
+                else if (Template.RepeatOrientation == RepeatOrientation.X && Template.FlowDimension != 1)
                     return Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
                 else
                     return false;
