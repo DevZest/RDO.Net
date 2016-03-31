@@ -66,12 +66,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Repeat(Orientation orientation, int crossRepeats = 1)
+        public TemplateBuilder Stack(Orientation orientation, int stackDimensions = 1)
         {
-            if (crossRepeats < 0)
-                throw new ArgumentOutOfRangeException(nameof(crossRepeats));
+            if (stackDimensions < 0)
+                throw new ArgumentOutOfRangeException(nameof(stackDimensions));
 
-            Template.Repeat(orientation, crossRepeats);
+            Template.Stack(orientation, stackDimensions);
             return this;
         }
 

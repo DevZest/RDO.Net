@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public Builder<T> Repeat(bool value)
             {
-                Item.Repeatable = value;
+                Item.IsRepeatable = value;
                 return this;
             }
         }
@@ -42,23 +42,23 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public bool Repeatable { get; private set; }
+        public bool IsRepeatable { get; private set; }
 
-        internal bool CrossRepeatable
+        internal bool IsMultidimensional
         {
             get
             {
-                if (!Repeatable)
+                if (!IsRepeatable)
                     return false;
-                else if (Template.CrossRepeatable(Orientation.Horizontal))
+                else if (Template.IsMultidimensional(Orientation.Horizontal))
                     return Template.RowRange.Contains(GridRange.Left) && Template.RowRange.Contains(GridRange.Right);
-                else if (Template.CrossRepeatable(Orientation.Vertical))
+                else if (Template.IsMultidimensional(Orientation.Vertical))
                     return Template.RowRange.Contains(GridRange.Top) && Template.RowRange.Contains(GridRange.Bottom);
                 else
                     return false;
             }
         }
 
-        internal int AccumulatedCrossRepeatsDelta { get; set; }
+        internal int AccumulatedStackDimensionsDelta { get; set; }
     }
 }

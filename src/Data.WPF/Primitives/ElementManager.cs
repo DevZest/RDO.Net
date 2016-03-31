@@ -278,8 +278,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = dataItemIndex; i < dataItemCount; i++)
             {
                 var dataItem = dataItems[i];
-                var crossRepeats = dataItem.CrossRepeatable ? CrossRepeats : 1;
-                for (int j = 0; j < crossRepeats; j++)
+                var stackDimensions = dataItem.IsMultidimensional ? StackDimensions : 1;
+                for (int j = 0; j < stackDimensions; j++)
                 {
                     var element = Elements[elementIndex++];
                     Debug.Assert(element.GetTemplateItem() == dataItem);
@@ -308,12 +308,12 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < dataItems.Count; i++)
             {
                 var dataItem = dataItems[i];
-                dataItem.AccumulatedCrossRepeatsDelta = 0;
-                int count = dataItem.CrossRepeatable ? CrossRepeats : 1;
+                dataItem.AccumulatedStackDimensionsDelta = 0;
+                int count = dataItem.IsMultidimensional ? StackDimensions : 1;
                 RemoveDataElementsAfter(dataItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _crossRepeats = 1;
+            _stackDimensions = 1;
             _elements = null;
         }
 
@@ -339,26 +339,26 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int _crossRepeats = 1;
-        internal int CrossRepeats
+        private int _stackDimensions = 1;
+        internal int StackDimensions
         {
-            get { return _crossRepeats; }
+            get { return _stackDimensions; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_crossRepeats == value)
+                if (_stackDimensions == value)
                     return;
 
-                var delta = value - _crossRepeats;
-                _crossRepeats = value;
-                OnCrossRepeatsChanged(delta);
+                var delta = value - _stackDimensions;
+                _stackDimensions = value;
+                OnStackDimensionsChanged(delta);
             }
         }
 
-        private void OnCrossRepeatsChanged(int crossRepeatsDelta)
+        private void OnStackDimensionsChanged(int stackDimensionsDelta)
         {
-            Debug.Assert(crossRepeatsDelta != 0);
+            Debug.Assert(stackDimensionsDelta != 0);
 
             var index = -1;
             var delta = 0;
@@ -370,21 +370,21 @@ namespace DevZest.Data.Windows.Primitives
                     index += RealizedRows.Count;
                 var dataItem = dataItems[i];
 
-                var prevAccumulatedCrossRepeatsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedCrossRepeatsDelta;
-                if (!dataItem.CrossRepeatable)
+                var prevAccumulatedstackDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedStackDimensionsDelta;
+                if (!dataItem.IsMultidimensional)
                 {
-                    dataItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta + (CrossRepeats - 1);
+                    dataItem.AccumulatedStackDimensionsDelta = prevAccumulatedstackDimensionsDelta + (StackDimensions - 1);
                     continue;
                 }
-                dataItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta;
+                dataItem.AccumulatedStackDimensionsDelta = prevAccumulatedstackDimensionsDelta;
 
                 if (i < Template.DataItemsCountBeforeRepeat)
-                    delta += crossRepeatsDelta;
+                    delta += stackDimensionsDelta;
 
-                if (crossRepeatsDelta > 0)
-                    index = InsertDataElementsAfter(dataItem, index, crossRepeatsDelta);
+                if (stackDimensionsDelta > 0)
+                    index = InsertDataElementsAfter(dataItem, index, stackDimensionsDelta);
                 else
-                    RemoveDataElementsAfter(dataItem, index, -crossRepeatsDelta);
+                    RemoveDataElementsAfter(dataItem, index, -stackDimensionsDelta);
             }
 
             _dataElementsCountBeforeRepeat += delta;

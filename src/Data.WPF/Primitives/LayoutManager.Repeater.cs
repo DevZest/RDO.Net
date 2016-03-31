@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
-            protected virtual int CalculateCrossRepeats()
+            protected virtual int CalculateStackDimensions()
             {
                 return 1;
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private void RealizeElements()
             {
-                LayoutManager.CrossRepeats = CalculateCrossRepeats();
+                LayoutManager.StackDimensions = CalculateStackDimensions();
 
             }
 

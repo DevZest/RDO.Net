@@ -84,7 +84,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot repeat auto height GridRows[{index}] on cross axis.
+        /// Auto height GridRows[{index}] is invalid for multidimensional stack.
         /// </summary>
         public static string Template_InvalidAutoHeightGridRow(object index)
         {
@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot repeat auto width GridColumns[{index}] on cross axis.
+        /// Auto width GridColumns[{index}] is invalid for multidimensional stack.
         /// </summary>
         public static string Template_InvalidAutoWidthGridColumn(object index)
         {
@@ -108,7 +108,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot repeat star height GridRows[{index}].
+        /// Star height GridRows[{index}] is invalid for repeating.
         /// </summary>
         public static string Template_InvalidStarHeightGridRow(object index)
         {
@@ -116,7 +116,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot repeat star width GridColumns[{index}].
+        /// Star width GridColumns[{index}] is invalid for repeating.
         /// </summary>
         public static string Template_InvalidStarWidthGridColumn(object index)
         {

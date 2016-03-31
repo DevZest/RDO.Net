@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Primitives
             RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
-            CrossRepeats = 1;
+            StackDimensions = 1;
             HierarchicalModelOrdinal = -1;
             VirtualizationThreshold = 50;
         }
@@ -54,15 +54,15 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as DataPresenter; }
         }
 
-        public Orientation? RepeatOrientation { get; private set; }
+        public Orientation? StackOrientation { get; private set; }
 
-        public int CrossRepeats { get; private set; }
+        public int StackDimensions { get; private set; }
 
-        internal void Repeat(Orientation orientation, int crossRepeats = 1)
+        internal void Stack(Orientation orientation, int stackDimensions = 1)
         {
-            Debug.Assert(crossRepeats >= 0);
-            RepeatOrientation = orientation;
-            CrossRepeats = crossRepeats;
+            Debug.Assert(stackDimensions >= 0);
+            StackOrientation = orientation;
+            StackDimensions = stackDimensions;
             VerifyGridLengths();
         }
 
@@ -173,13 +173,13 @@ namespace DevZest.Data.Windows.Primitives
 
             if (height.IsStar)
             {
-                if (Repeatable(System.Windows.Controls.Orientation.Vertical))
+                if (IsRepeatable(Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
             }
             else
             {
                 Debug.Assert(height.IsAuto);
-                if (CrossRepeatable(System.Windows.Controls.Orientation.Vertical))
+                if (IsMultidimensional(Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
             }
         }
@@ -199,25 +199,25 @@ namespace DevZest.Data.Windows.Primitives
 
             if (width.IsStar)
             {
-                if (Repeatable(System.Windows.Controls.Orientation.Horizontal))
+                if (IsRepeatable(Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
             }
             else
             {
                 Debug.Assert(width.IsAuto);
-                if (CrossRepeatable(System.Windows.Controls.Orientation.Horizontal))
+                if (IsMultidimensional(Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
             }
         }
 
-        private bool Repeatable(Orientation orientation)
+        private bool IsRepeatable(Orientation orientation)
         {
-            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() == orientation || CrossRepeats != 1;
+            return !StackOrientation.HasValue ? false : StackOrientation.GetValueOrDefault() == orientation || StackDimensions != 1;
         }
 
-        internal bool CrossRepeatable(Orientation orientation)
+        internal bool IsMultidimensional(Orientation orientation)
         {
-            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() != orientation && CrossRepeats != 1;
+            return !StackOrientation.HasValue ? false : StackOrientation.GetValueOrDefault() != orientation && StackDimensions != 1;
         }
 
         internal int DataItemsCountBeforeRepeat { get; private set; }
