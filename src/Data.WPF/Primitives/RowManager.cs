@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void OnGetState(RowPresenter rowPresenter, RowPresenterState rowPresenterState)
         {
-            if (BindingSource.Current.RowPresenter == rowPresenter)
+            if (BindingContext.Current.RowPresenter == rowPresenter)
                 SetStateFlag(rowPresenterState);
         }
 
@@ -89,13 +89,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void OnGetState(DataPresenterState dataPresenterState)
         {
-            if (BindingSource.Current.RowManager == this)
+            if (BindingContext.Current.RowManager == this)
                 SetStateFlag(dataPresenterState);
         }
 
         internal void OnSetState(DataPresenterState dataPresenterState)
         {
-            if (BindingSource.Current.RowManager == this && GetStateFlag(dataPresenterState))
+            if (BindingContext.Current.RowManager == this && GetStateFlag(dataPresenterState))
                 Invalidate(null);
         }
 

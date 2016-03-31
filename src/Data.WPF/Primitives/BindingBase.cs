@@ -17,9 +17,9 @@ namespace DevZest.Data.Windows.Primitives
 
         public TemplateItem TemplateItem { get; private set; }
 
-        public abstract void UpdateTarget(BindingSource bindingSource, UIElement element);
+        public abstract void UpdateTarget(BindingContext bindingContext, UIElement element);
 
-        public abstract void UpdateSource(UIElement element, BindingSource bindingSource);
+        public abstract void UpdateSource(BindingContext bindingContext, UIElement element);
 
         IReadOnlyList<BindingTrigger> _triggers;
         public IReadOnlyList<BindingTrigger> Triggers

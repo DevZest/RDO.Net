@@ -174,31 +174,31 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void UpdateTarget(UIElement element)
         {
-            var bindingSource = BindingSource.Current;
-            bindingSource.Enter(this, element);
+            var bindingContext = BindingContext.Current;
+            bindingContext.Enter(this, element);
             try
             {
                 foreach (var binding in _bindings)
-                    binding.UpdateTarget(bindingSource, element);
+                    binding.UpdateTarget(bindingContext, element);
             }
             finally
             {
-                bindingSource.Exit();
+                bindingContext.Exit();
             }
         }
 
         internal void UpdateSource(UIElement element)
         {
-            var bindingSource = BindingSource.Current;
-            bindingSource.Enter(this, element);
+            var bindingContext = BindingContext.Current;
+            bindingContext.Enter(this, element);
             try
             {
                 foreach (var binding in _bindings)
-                    binding.UpdateSource(element, bindingSource);
+                    binding.UpdateSource(bindingContext, element);
             }
             finally
             {
-                bindingSource.Exit();
+                bindingContext.Exit();
             }
         }
 

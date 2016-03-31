@@ -36,16 +36,16 @@ namespace DevZest.Data.Windows.Primitives
 
             private Action<UIElement, RowPresenter> _updateSourceAction;
 
-            public override void UpdateTarget(BindingSource bindingSource, UIElement element)
+            public override void UpdateTarget(BindingContext bindingContext, UIElement element)
             {
                 if (_updateTargetAction != null)
-                    _updateTargetAction(bindingSource.RowPresenter, element);
+                    _updateTargetAction(bindingContext.RowPresenter, element);
             }
 
-            public override void UpdateSource(UIElement element, BindingSource bindingSource)
+            public override void UpdateSource(BindingContext bindingContext, UIElement element)
             {
                 if (_updateSourceAction != null)
-                    _updateSourceAction(element, bindingSource.RowPresenter);
+                    _updateSourceAction(element, bindingContext.RowPresenter);
             }
         }
 

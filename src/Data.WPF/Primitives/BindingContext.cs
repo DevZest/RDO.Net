@@ -1,17 +1,16 @@
-﻿using DevZest.Data.Windows.Primitives;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class BindingSource
+    internal sealed class BindingContext
     {
-        internal static readonly BindingSource Current = new BindingSource();
+        internal static readonly BindingContext Current = new BindingContext();
 
         private Stack<Template> _templates = new Stack<Template>();
         private Stack<RowPresenter> _rowPresenters = new Stack<RowPresenter>();
 
-        private BindingSource()
+        private BindingContext()
         {
         }
 
@@ -35,16 +34,6 @@ namespace DevZest.Data.Windows.Primitives
         internal RowManager RowManager
         {
             get { return Template == null ? null : Template.RowManager; }
-        }
-
-        internal ElementManager ElementManager
-        {
-            get { return Template == null ? null : Template.ElementManager; }
-        }
-
-        internal LayoutManager LayoutManager
-        {
-            get { return Template == null ? null : Template.LayoutManager; }
         }
 
         public DataPresenter DataPresenter
