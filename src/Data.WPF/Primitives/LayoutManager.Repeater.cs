@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
-            protected virtual int CalculateRepeatCross()
+            protected virtual int CalculateCrossRepeats()
             {
                 return 1;
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private void RealizeElements()
             {
-                LayoutManager.RepeatCross = CalculateRepeatCross();
+                LayoutManager.CrossRepeats = CalculateCrossRepeats();
 
             }
 

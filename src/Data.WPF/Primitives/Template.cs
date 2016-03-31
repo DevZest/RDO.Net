@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Primitives
             RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
-            RepeatCross = 1;
+            CrossRepeats = 1;
             HierarchicalModelOrdinal = -1;
             VirtualizationThreshold = 50;
         }
@@ -56,13 +56,13 @@ namespace DevZest.Data.Windows.Primitives
 
         public Orientation? RepeatOrientation { get; private set; }
 
-        public int RepeatCross { get; private set; }
+        public int CrossRepeats { get; private set; }
 
-        internal void Repeat(Orientation orientation, int repeatCross = 1)
+        internal void Repeat(Orientation orientation, int crossRepeats = 1)
         {
-            Debug.Assert(repeatCross >= 0);
+            Debug.Assert(crossRepeats >= 0);
             RepeatOrientation = orientation;
-            RepeatCross = repeatCross;
+            CrossRepeats = crossRepeats;
             VerifyGridLengths();
         }
 
@@ -167,13 +167,13 @@ namespace DevZest.Data.Windows.Primitives
 
             if (height.IsStar)
             {
-                if (IsRepeat(System.Windows.Controls.Orientation.Vertical))
+                if (Repeatable(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
             }
             else
             {
                 Debug.Assert(height.IsAuto);
-                if (IsRepeatCross(System.Windows.Controls.Orientation.Vertical))
+                if (CrossRepeatable(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
             }
         }
@@ -193,25 +193,25 @@ namespace DevZest.Data.Windows.Primitives
 
             if (width.IsStar)
             {
-                if (IsRepeat(System.Windows.Controls.Orientation.Horizontal))
+                if (Repeatable(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
             }
             else
             {
                 Debug.Assert(width.IsAuto);
-                if (IsRepeatCross(System.Windows.Controls.Orientation.Horizontal))
+                if (CrossRepeatable(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
             }
         }
 
-        private bool IsRepeat(Orientation orientation)
+        private bool Repeatable(Orientation orientation)
         {
-            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() == orientation || RepeatCross != 1;
+            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() == orientation || CrossRepeats != 1;
         }
 
-        internal bool IsRepeatCross(Orientation orientation)
+        internal bool CrossRepeatable(Orientation orientation)
         {
-            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() != orientation && RepeatCross != 1;
+            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() != orientation && CrossRepeats != 1;
         }
 
         internal int ScalarItemsCountBeforeRepeat { get; private set; }

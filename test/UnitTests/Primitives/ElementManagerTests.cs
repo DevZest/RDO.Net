@@ -90,7 +90,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private static void VerifyElements(ElementManager elementManager, int[] scalarItemsBefore, int[] realizedRows, int[] scalarItemsAfter)
         {
-            VerifyAccumulatedRepeatCrossDelta(elementManager);
+            VerifyAccumulatedCrossRepeatsDelta(elementManager);
             var template = elementManager.Template;
             var rows = elementManager.Rows;
             var elements = elementManager.Elements;
@@ -118,7 +118,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static void VerifyAccumulatedRepeatCrossDelta(ElementManager elementManager)
+        private static void VerifyAccumulatedCrossRepeatsDelta(ElementManager elementManager)
         {
             var template = elementManager.Template;
             var scalarItems = template.ScalarItems;
@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows.Primitives
                 return;
             var lastScalarItem = scalarItems[scalarItems.Count - 1];
             Assert.AreEqual(elementManager.Elements.Count - elementManager.RealizedRows.Count,
-                scalarItems.Count * elementManager.RepeatCross - lastScalarItem.AccumulatedRepeatCrossDelta);
+                scalarItems.Count * elementManager.CrossRepeats - lastScalarItem.AccumulatedCrossRepeatsDelta);
         }
 
         private static void VerifyElements(ElementManager elementManager, ProductCategory productCategory)
@@ -165,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1), Array<int>(), Array<int>(2));
 
-            elementManager.RepeatCross = 3;
+            elementManager.CrossRepeats = 3;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(), Array<int>(2));
 
@@ -181,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.RepeatCross = 2;
+            elementManager.CrossRepeats = 2;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
@@ -211,7 +211,7 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.RepeatCross = 3;
+            elementManager.CrossRepeats = 3;
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
@@ -227,7 +227,7 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.RepeatCross = 2;
+            elementManager.CrossRepeats = 2;
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 

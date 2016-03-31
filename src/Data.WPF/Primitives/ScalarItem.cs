@@ -72,7 +72,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public Builder<T> Repeat(bool value)
             {
-                Item.IsRepeat = value;
+                Item.Repeatable = value;
                 return this;
             }
 
@@ -106,21 +106,23 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public bool IsRepeat { get; private set; }
+        public bool Repeatable { get; private set; }
 
-        internal bool IsRepeatCross
+        internal bool CrossRepeatable
         {
             get
             {
-                if (!IsRepeat)
+                if (!Repeatable)
                     return false;
-                else if (Template.IsRepeatCross(Orientation.Horizontal))
+                else if (Template.CrossRepeatable(Orientation.Horizontal))
                     return Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
-                else if (Template.IsRepeatCross(Orientation.Vertical))
+                else if (Template.CrossRepeatable(Orientation.Vertical))
                     return Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
                 else
                     return false;
             }
         }
+
+        internal int AccumulatedCrossRepeatsDelta { get; set; }
     }
 }

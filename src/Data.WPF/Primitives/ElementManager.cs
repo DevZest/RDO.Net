@@ -278,8 +278,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = scalarItemIndex; i < scalarItemCount; i++)
             {
                 var scalarItem = scalarItems[i];
-                var repeatCross = scalarItem.IsRepeatCross ? RepeatCross : 1;
-                for (int j = 0; j < repeatCross; j++)
+                var crossRepeats = scalarItem.CrossRepeatable ? CrossRepeats : 1;
+                for (int j = 0; j < crossRepeats; j++)
                 {
                     var element = Elements[elementIndex++];
                     Debug.Assert(element.GetTemplateItem() == scalarItem);
@@ -308,12 +308,12 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
             {
                 var scalarItem = scalarItems[i];
-                scalarItem.AccumulatedRepeatCrossDelta = 0;
-                int count = scalarItem.IsRepeatCross ? RepeatCross : 1;
+                scalarItem.AccumulatedCrossRepeatsDelta = 0;
+                int count = scalarItem.CrossRepeatable ? CrossRepeats : 1;
                 RemoveScalarElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _repeatCross = 1;
+            _crossRepeats = 1;
             _elements = null;
         }
 
@@ -339,26 +339,26 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int _repeatCross = 1;
-        internal int RepeatCross
+        private int _crossRepeats = 1;
+        internal int CrossRepeats
         {
-            get { return _repeatCross; }
+            get { return _crossRepeats; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_repeatCross == value)
+                if (_crossRepeats == value)
                     return;
 
-                var delta = value - _repeatCross;
-                _repeatCross = value;
-                OnRepeatCrossChanged(delta);
+                var delta = value - _crossRepeats;
+                _crossRepeats = value;
+                OnCrossRepeatsChanged(delta);
             }
         }
 
-        private void OnRepeatCrossChanged(int repeatCrossDelta)
+        private void OnCrossRepeatsChanged(int crossRepeatsDelta)
         {
-            Debug.Assert(repeatCrossDelta != 0);
+            Debug.Assert(crossRepeatsDelta != 0);
 
             var index = -1;
             var delta = 0;
@@ -370,21 +370,21 @@ namespace DevZest.Data.Windows.Primitives
                     index += RealizedRows.Count;
                 var scalarItem = scalarItems[i];
 
-                var prevAccumulatedRepeatCrossDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedRepeatCrossDelta;
-                if (!scalarItem.IsRepeatCross)
+                var prevAccumulatedCrossRepeatsDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedCrossRepeatsDelta;
+                if (!scalarItem.CrossRepeatable)
                 {
-                    scalarItem.AccumulatedRepeatCrossDelta = prevAccumulatedRepeatCrossDelta + (RepeatCross - 1);
+                    scalarItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta + (CrossRepeats - 1);
                     continue;
                 }
-                scalarItem.AccumulatedRepeatCrossDelta = prevAccumulatedRepeatCrossDelta;
+                scalarItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta;
 
                 if (i < Template.ScalarItemsCountBeforeRepeat)
-                    delta += repeatCrossDelta;
+                    delta += crossRepeatsDelta;
 
-                if (repeatCrossDelta > 0)
-                    index = InsertScalarElementsAfter(scalarItem, index, repeatCrossDelta);
+                if (crossRepeatsDelta > 0)
+                    index = InsertScalarElementsAfter(scalarItem, index, crossRepeatsDelta);
                 else
-                    RemoveScalarElementsAfter(scalarItem, index, -repeatCrossDelta);
+                    RemoveScalarElementsAfter(scalarItem, index, -crossRepeatsDelta);
             }
 
             _scalarElementsCountBeforeRepeat += delta;
