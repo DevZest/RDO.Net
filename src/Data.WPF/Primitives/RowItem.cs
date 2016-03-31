@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class RepeatItem : TemplateItem
+    public class RowItem : TemplateItem
     {
         private sealed class Binding : BindingBase
         {
@@ -49,11 +49,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, RepeatItem, Builder<T>>
+        public sealed class Builder<T> : TemplateItem.Builder<T, RowItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeBuilder rangeConfig)
-                : base(rangeConfig, RepeatItem.Create<T>())
+                : base(rangeConfig, RowItem.Create<T>())
             {
             }
 
@@ -62,7 +62,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, RepeatItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, RowItem item)
             {
                 return rangeConfig.End(item);
             }
@@ -86,13 +86,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RepeatItem Create<T>()
+        internal static RowItem Create<T>()
             where T : UIElement, new()
         {
-            return new RepeatItem(() => new T());
+            return new RowItem(() => new T());
         }
 
-        internal RepeatItem(Func<UIElement> constructor)
+        internal RowItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }

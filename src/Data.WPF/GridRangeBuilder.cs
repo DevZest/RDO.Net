@@ -34,31 +34,31 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
         }
 
-        public ScalarItem.Builder<T> BeginScalarItem<T>()
+        public DataItem.Builder<T> BeginDataItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new ScalarItem.Builder<T>(this);
+            return new DataItem.Builder<T>(this);
         }
 
-        internal TemplateBuilder End(ScalarItem scalarItem)
+        internal TemplateBuilder End(DataItem dataItem)
         {
-            scalarItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddScalarItem(_gridRange, scalarItem);
+            dataItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddDataItem(_gridRange, dataItem);
             return _templateBuilder;
         }
 
-        public RepeatItem.Builder<T> BeginRepeatItem<T>()
+        public RowItem.Builder<T> BeginRowItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new RepeatItem.Builder<T>(this);
+            return new RowItem.Builder<T>(this);
         }
 
-        internal TemplateBuilder End(RepeatItem repeatItem)
+        internal TemplateBuilder End(RowItem rowItem)
         {
-            repeatItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddRepeatItem(_gridRange, repeatItem);
+            rowItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
+            Template.AddRowItem(_gridRange, rowItem);
             return _templateBuilder;
         }
 

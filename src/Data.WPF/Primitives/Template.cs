@@ -78,16 +78,16 @@ namespace DevZest.Data.Windows.Primitives
 
         public GridTrackCollection<GridRow> GridRows { get; private set; }
 
-        private TemplateItemCollection<ScalarItem> _scalarItems = new TemplateItemCollection<ScalarItem>();
-        public ReadOnlyCollection<ScalarItem> ScalarItems
+        private TemplateItemCollection<DataItem> _dataItems = new TemplateItemCollection<DataItem>();
+        public ReadOnlyCollection<DataItem> DataItems
         {
-            get { return _scalarItems; }
+            get { return _dataItems; }
         }
 
-        private TemplateItemCollection<RepeatItem> _repeatItems = new TemplateItemCollection<RepeatItem>();
-        public ReadOnlyCollection<RepeatItem> RepeatItems
+        private TemplateItemCollection<RowItem> _rowItems = new TemplateItemCollection<RowItem>();
+        public ReadOnlyCollection<RowItem> RowItems
         {
-            get { return _repeatItems; }
+            get { return _rowItems; }
         }
 
         private TemplateItemCollection<SubviewItem> _subviewItems = new TemplateItemCollection<SubviewItem>();
@@ -111,13 +111,13 @@ namespace DevZest.Data.Windows.Primitives
         {
             var repeatRange = RepeatRange;
             var autoRepeatRange = AutoRepeatRange;
-            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(autoRepeatRange)) || ScalarItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
+            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(autoRepeatRange)) || DataItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
                 throw new InvalidOperationException(Strings.Template_InvalidRepeatRange);
         }
 
         private GridRange AutoRepeatRange
         {
-            get { return _repeatItems.Range; }
+            get { return _rowItems.Range; }
         }
 
         internal int AddGridColumn(string width)
@@ -214,31 +214,31 @@ namespace DevZest.Data.Windows.Primitives
             return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() != orientation && CrossRepeats != 1;
         }
 
-        internal int ScalarItemsCountBeforeRepeat { get; private set; }
+        internal int DataItemsCountBeforeRepeat { get; private set; }
 
-        internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
+        internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
-            VerifyAddTemplateItem(gridRange, scalarItem, nameof(scalarItem), true);
-            scalarItem.Construct(this, gridRange, _scalarItems.Count);
-            _scalarItems.Add(gridRange, scalarItem);
-            if (_repeatItems.Count == 0)
-                ScalarItemsCountBeforeRepeat = _scalarItems.Count;
+            VerifyAddTemplateItem(gridRange, dataItem, nameof(dataItem), true);
+            dataItem.Construct(this, gridRange, _dataItems.Count);
+            _dataItems.Add(gridRange, dataItem);
+            if (_rowItems.Count == 0)
+                DataItemsCountBeforeRepeat = _dataItems.Count;
             VerifyRepeatRange();
         }
 
-        internal void AddRepeatItem(GridRange gridRange, RepeatItem repeatItem)
+        internal void AddRowItem(GridRange gridRange, RowItem rowItem)
         {
-            VerifyAddTemplateItem(gridRange, repeatItem, nameof(repeatItem), true);
-            repeatItem.Construct(this, gridRange, _repeatItems.Count);
-            _repeatItems.Add(gridRange, repeatItem);
+            VerifyAddTemplateItem(gridRange, rowItem, nameof(rowItem), true);
+            rowItem.Construct(this, gridRange, _rowItems.Count);
+            _rowItems.Add(gridRange, rowItem);
             VerifyRepeatRange();
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
         {
             VerifyAddTemplateItem(gridRange, subviewItem, nameof(subviewItem), false);
-            subviewItem.Seal(this, gridRange, _repeatItems.Count, _subviewItems.Count);
-            _repeatItems.Add(gridRange, subviewItem);
+            subviewItem.Seal(this, gridRange, _rowItems.Count, _subviewItems.Count);
+            _rowItems.Add(gridRange, subviewItem);
             _subviewItems.Add(gridRange, subviewItem);
             VerifyRepeatRange();
         }

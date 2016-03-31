@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class SubviewItem : RepeatItem
+    public sealed class SubviewItem : RowItem
     {
         public sealed new class Builder<T> : TemplateItem.Builder<T, SubviewItem, Builder<T>>
             where T : DataView, new()

@@ -84,7 +84,7 @@ namespace DevZest.Data.Windows.Primitives
 
             }
 
-            private void MeasureAuto(ScalarItem scalarItem)
+            private void MeasureAuto(DataItem dataItem)
             {
                 throw new NotImplementedException();
             }

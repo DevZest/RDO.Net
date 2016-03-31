@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The GridRange does not belong to the same GridTemplate.
+        /// The GridRange does not belong to the same Template.
         /// </summary>
         public static string GridRange_InvalidOwner
         {
@@ -100,7 +100,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The RepeatRange is invalid. It must contain all RepeatItems and no ScalarItem.
+        /// The RepeatRange is invalid. It must contain all RowItems and no DataItem.
         /// </summary>
         public static string Template_InvalidRepeatRange
         {

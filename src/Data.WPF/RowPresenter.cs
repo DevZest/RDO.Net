@@ -494,14 +494,14 @@ namespace DevZest.Data.Windows
             Debug.Assert(_elements == null);
 
             _elements = ElementCollectionFactory.Create(elementsPanel);
-            var repeatItems = Template.RepeatItems;
-            for (int i = 0; i < repeatItems.Count; i++)
+            var rowItems = Template.RowItems;
+            for (int i = 0; i < rowItems.Count; i++)
             {
-                var repeatItem = repeatItems[i];
-                var element = repeatItem.Generate();
+                var rowItem = rowItems[i];
+                var element = rowItem.Generate();
                 element.SetRowPresenter(this);
                 _elements.Add(element);
-                repeatItem.Initialize(element);
+                rowItem.Initialize(element);
             }
         }
 
@@ -509,13 +509,13 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(_elements != null);
 
-            var repeatItems = Template.RepeatItems;
-            Debug.Assert(Elements.Count == repeatItems.Count);
-            for (int i = 0; i < repeatItems.Count; i++)
+            var rowItems = Template.RowItems;
+            Debug.Assert(Elements.Count == rowItems.Count);
+            for (int i = 0; i < rowItems.Count; i++)
             {
-                var repeatItem = repeatItems[i];
+                var rowItem = rowItems[i];
                 var element = Elements[i];
-                repeatItem.Cleanup(element);
+                rowItem.Cleanup(element);
                 element.SetRowPresenter(null);
             }
             _elements.RemoveRange(0, Elements.Count);
@@ -527,13 +527,13 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            var repeatItems = Template.RepeatItems;
-            Debug.Assert(Elements.Count == repeatItems.Count);
-            for (int i = 0; i < repeatItems.Count; i++)
+            var rowItems = Template.RowItems;
+            Debug.Assert(Elements.Count == rowItems.Count);
+            for (int i = 0; i < rowItems.Count; i++)
             {
-                var repeatItem = repeatItems[i];
+                var rowItem = rowItems[i];
                 var element = Elements[i];
-                repeatItem.UpdateTarget(element);
+                rowItem.UpdateTarget(element);
             }
         }
     }

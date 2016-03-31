@@ -6,7 +6,7 @@ namespace DevZest.Data.Windows.Factories
     {
         public static TemplateBuilder ColumnHeader(this GridRangeBuilder rangeConfig, Column column, Action<ColumnHeader> initializer = null)
         {
-            return rangeConfig.BeginRepeatItem<ColumnHeader>()
+            return rangeConfig.BeginRowItem<ColumnHeader>()
                 .Initialize(initializer)
                 .End();
         }

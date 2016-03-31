@@ -14,11 +14,11 @@ namespace DevZest.Data.Windows.Primitives
         const string TARGET_CHANGED = "Target changed";
 
         [TestMethod]
-        public void ScalarItemBuilder_Bind()
+        public void DataItemBuilder_Bind()
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeBuilder));
+            var builder = new DataItem.Builder<TextBlock>(default(GridRangeBuilder));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
@@ -39,11 +39,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void ScalarItemBuilder_BindToSource()
+        public void DataItemBuilder_BindToSource()
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(GridRangeBuilder));
+            var builder = new DataItem.Builder<TextBlock>(default(GridRangeBuilder));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);

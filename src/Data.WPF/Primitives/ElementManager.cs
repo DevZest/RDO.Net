@@ -47,9 +47,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _elementManager._elements; }
             }
 
-            private int ScalarElementsCountBeforeRepeat
+            private int DataElementsCountBeforeRepeat
             {
-                get { return _elementManager._scalarElementsCountBeforeRepeat; }
+                get { return _elementManager._dataElementsCountBeforeRepeat; }
             }
 
             public RowPresenter First { get; private set; }
@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < count; i++)
                     Virtualize(this[i]);
 
-                Elements.RemoveRange(ScalarElementsCountBeforeRepeat, count);
+                Elements.RemoveRange(DataElementsCountBeforeRepeat, count);
 
                 if (count == Count)
                     First = Last = null;
@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < count; i++)
                     Virtualize(this[startIndex + i]);
 
-                Elements.RemoveRange(ScalarElementsCountBeforeRepeat + startIndex, count);
+                Elements.RemoveRange(DataElementsCountBeforeRepeat + startIndex, count);
 
                 if (count == Count)
                     First = Last = null;
@@ -188,14 +188,14 @@ namespace DevZest.Data.Windows.Primitives
                 Realize(row);
                 First = Last = row;
 
-                Elements.Insert(ScalarElementsCountBeforeRepeat, row.View);
+                Elements.Insert(DataElementsCountBeforeRepeat, row.View);
             }
 
             public void RealizePrev()
             {
                 var prevRow = _elementManager.Rows[First.Ordinal - 1];
                 Realize(prevRow);
-                Elements.Insert(ScalarElementsCountBeforeRepeat, prevRow.View);
+                Elements.Insert(DataElementsCountBeforeRepeat, prevRow.View);
                 First = prevRow;
             }
 
@@ -203,7 +203,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var nextRow = _elementManager.Rows[Last.Ordinal + 1];
                 Realize(nextRow);
-                Elements.Insert(ScalarElementsCountBeforeRepeat + Count, nextRow.View);
+                Elements.Insert(DataElementsCountBeforeRepeat + Count, nextRow.View);
                 Last = nextRow; // This line will change the Count property, must be executed last
             }
         }
@@ -239,7 +239,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private IElementCollection _elements;
-        private int _scalarElementsCountBeforeRepeat;
+        private int _dataElementsCountBeforeRepeat;
         internal IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
@@ -251,10 +251,10 @@ namespace DevZest.Data.Windows.Primitives
 
             _elements = ElementCollectionFactory.Create(elementsPanel);
 
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
-                InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
-            _scalarElementsCountBeforeRepeat = Template.ScalarItemsCountBeforeRepeat;
+            var dataItems = Template.DataItems;
+            for (int i = 0; i < dataItems.Count; i++)
+                InsertDataElementsAfter(dataItems[i], Elements.Count - 1, 1);
+            _dataElementsCountBeforeRepeat = Template.DataItemsCountBeforeRepeat;
         }
 
         internal void RefreshElements()
@@ -262,28 +262,28 @@ namespace DevZest.Data.Windows.Primitives
             if (Elements.Count == 0)
                 return;
 
-            var index = RefreshScalarElements(0, Template.ScalarItemsCountBeforeRepeat, 0);
-            Debug.Assert(index == _scalarElementsCountBeforeRepeat);
+            var index = RefreshDataElements(0, Template.DataItemsCountBeforeRepeat, 0);
+            Debug.Assert(index == _dataElementsCountBeforeRepeat);
 
             index += RefreshRealizedRows();
-            index = RefreshScalarElements(Template.ScalarItemsCountBeforeRepeat, Template.ScalarItems.Count, index);
+            index = RefreshDataElements(Template.DataItemsCountBeforeRepeat, Template.DataItems.Count, index);
             Debug.Assert(index == Elements.Count);
 
             _isDirty = false;
         }
 
-        private int RefreshScalarElements(int scalarItemIndex, int scalarItemCount, int elementIndex)
+        private int RefreshDataElements(int dataItemIndex, int dataItemCount, int elementIndex)
         {
-            var scalarItems = Template.ScalarItems;
-            for (int i = scalarItemIndex; i < scalarItemCount; i++)
+            var dataItems = Template.DataItems;
+            for (int i = dataItemIndex; i < dataItemCount; i++)
             {
-                var scalarItem = scalarItems[i];
-                var crossRepeats = scalarItem.CrossRepeatable ? CrossRepeats : 1;
+                var dataItem = dataItems[i];
+                var crossRepeats = dataItem.CrossRepeatable ? CrossRepeats : 1;
                 for (int j = 0; j < crossRepeats; j++)
                 {
                     var element = Elements[elementIndex++];
-                    Debug.Assert(element.GetTemplateItem() == scalarItem);
-                    scalarItem.UpdateTarget(element);
+                    Debug.Assert(element.GetTemplateItem() == dataItem);
+                    dataItem.UpdateTarget(element);
                 }
             }
             return elementIndex;
@@ -304,37 +304,37 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(_elements != null);
 
             _realizedRows.VirtualizeAll();
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
+            var dataItems = Template.DataItems;
+            for (int i = 0; i < dataItems.Count; i++)
             {
-                var scalarItem = scalarItems[i];
-                scalarItem.AccumulatedCrossRepeatsDelta = 0;
-                int count = scalarItem.CrossRepeatable ? CrossRepeats : 1;
-                RemoveScalarElementsAfter(scalarItem, -1, count);
+                var dataItem = dataItems[i];
+                dataItem.AccumulatedCrossRepeatsDelta = 0;
+                int count = dataItem.CrossRepeatable ? CrossRepeats : 1;
+                RemoveDataElementsAfter(dataItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
             _crossRepeats = 1;
             _elements = null;
         }
 
-        private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        private int InsertDataElementsAfter(DataItem dataItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                var element = scalarItem.Generate();
+                var element = dataItem.Generate();
                 _elements.Insert(index + i + 1, element);
-                scalarItem.Initialize(element);
+                dataItem.Initialize(element);
             }
             return index + count;
         }
 
-        private void RemoveScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        private void RemoveDataElementsAfter(DataItem dataItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
                 var element = Elements[index + 1];
-                Debug.Assert(element.GetTemplateItem() == scalarItem);
-                scalarItem.Cleanup(element);
+                Debug.Assert(element.GetTemplateItem() == dataItem);
+                dataItem.Cleanup(element);
                 _elements.RemoveAt(index + 1);
             }
         }
@@ -362,32 +362,32 @@ namespace DevZest.Data.Windows.Primitives
 
             var index = -1;
             var delta = 0;
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
+            var dataItems = Template.DataItems;
+            for (int i = 0; i < dataItems.Count; i++)
             {
                 index++;
-                if (i == Template.ScalarItemsCountBeforeRepeat)
+                if (i == Template.DataItemsCountBeforeRepeat)
                     index += RealizedRows.Count;
-                var scalarItem = scalarItems[i];
+                var dataItem = dataItems[i];
 
-                var prevAccumulatedCrossRepeatsDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedCrossRepeatsDelta;
-                if (!scalarItem.CrossRepeatable)
+                var prevAccumulatedCrossRepeatsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedCrossRepeatsDelta;
+                if (!dataItem.CrossRepeatable)
                 {
-                    scalarItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta + (CrossRepeats - 1);
+                    dataItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta + (CrossRepeats - 1);
                     continue;
                 }
-                scalarItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta;
+                dataItem.AccumulatedCrossRepeatsDelta = prevAccumulatedCrossRepeatsDelta;
 
-                if (i < Template.ScalarItemsCountBeforeRepeat)
+                if (i < Template.DataItemsCountBeforeRepeat)
                     delta += crossRepeatsDelta;
 
                 if (crossRepeatsDelta > 0)
-                    index = InsertScalarElementsAfter(scalarItem, index, crossRepeatsDelta);
+                    index = InsertDataElementsAfter(dataItem, index, crossRepeatsDelta);
                 else
-                    RemoveScalarElementsAfter(scalarItem, index, -crossRepeatsDelta);
+                    RemoveDataElementsAfter(dataItem, index, -crossRepeatsDelta);
             }
 
-            _scalarElementsCountBeforeRepeat += delta;
+            _dataElementsCountBeforeRepeat += delta;
         }
 
         private bool _isDirty;

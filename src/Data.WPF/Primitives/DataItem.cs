@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class ScalarItem : TemplateItem
+    public sealed class DataItem : TemplateItem
     {
         private sealed class Binding : BindingBase
         {
@@ -52,11 +50,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
+        public sealed class Builder<T> : TemplateItem.Builder<T, DataItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeBuilder rangeConfig)
-                : base(rangeConfig, ScalarItem.Create<T>())
+                : base(rangeConfig, DataItem.Create<T>())
             {
             }
 
@@ -65,7 +63,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, ScalarItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, DataItem item)
             {
                 return rangeConfig.End(item);
             }
@@ -95,13 +93,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static ScalarItem Create<T>()
+        internal static DataItem Create<T>()
             where T : UIElement, new()
         {
-            return new ScalarItem(() => new T());
+            return new DataItem(() => new T());
         }
 
-        private ScalarItem(Func<UIElement> constructor)
+        private DataItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }

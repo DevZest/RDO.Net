@@ -20,11 +20,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, bool[] scalarItemsBefore, bool[] scalarItemsAfter)
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, bool[] dataItemsBefore, bool[] dataItemsAfter)
         {
             return CreateElementManager(dataSet, (builder, model) =>
             {
-                for (int i = 0; i < scalarItemsBefore.Length + scalarItemsAfter.Length + 1; i++)
+                for (int i = 0; i < dataItemsBefore.Length + dataItemsAfter.Length + 1; i++)
                     builder.AddGridRow("100");
 
                 builder.AddGridColumns("100")
@@ -32,42 +32,42 @@ namespace DevZest.Data.Windows.Primitives
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
 
-                int scalarItemIndex = 0;
-                for (int i = 0; i < scalarItemsBefore.Length; i++)
+                int dataItemIndex = 0;
+                for (int i = 0; i < dataItemsBefore.Length; i++)
                 {
-                    var index = scalarItemIndex++;
-                    var isRepeatable = scalarItemsBefore[i];
-                    builder.Range(0, index).BeginScalarItem<TextBlock>()
+                    var index = dataItemIndex++;
+                    var isRepeatable = dataItemsBefore[i];
+                    builder.Range(0, index).BeginDataItem<TextBlock>()
                         .Repeat(isRepeatable)
-                        .Bind((src, element) => element.Text = GetScalarItemText(index))
+                        .Bind((src, element) => element.Text = GetDataItemText(index))
                         .End();
                 }
 
-                builder.Range(0, scalarItemIndex).BeginRepeatItem<TextBlock>()
+                builder.Range(0, dataItemIndex).BeginRowItem<TextBlock>()
                     .Bind((row, element) => element.Text = row.GetValue(model.Name))
                     .End();
 
-                for (int i = 0; i < scalarItemsAfter.Length; i++)
+                for (int i = 0; i < dataItemsAfter.Length; i++)
                 {
-                    var index = scalarItemIndex++;
-                    var isRepeatable = scalarItemsAfter[i];
+                    var index = dataItemIndex++;
+                    var isRepeatable = dataItemsAfter[i];
                     builder.Range(0, index + 1)
-                    .BeginScalarItem<TextBlock>()
+                    .BeginDataItem<TextBlock>()
                     .Repeat(isRepeatable)
-                    .Bind((src, element) => element.Text = GetScalarItemText(index))
+                    .Bind((src, element) => element.Text = GetDataItemText(index))
                     .End();
                 }
             });
         }
 
-        private static string GetScalarItemText(ScalarItem scalarItem)
+        private static string GetDataItemText(DataItem dataItem)
         {
-            return GetScalarItemText(scalarItem.Ordinal);
+            return GetDataItemText(dataItem.Ordinal);
         }
 
-        private static string GetScalarItemText(int scalarItemIndex)
+        private static string GetDataItemText(int dataItemIndex)
         {
-            return string.Format(CultureInfo.InvariantCulture, "Scalar_{0}", scalarItemIndex);
+            return string.Format(CultureInfo.InvariantCulture, "Data_{0}", dataItemIndex);
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
@@ -88,32 +88,32 @@ namespace DevZest.Data.Windows.Primitives
             return array ?? EmptyArray<T>.Singleton;
         }
 
-        private static void VerifyElements(ElementManager elementManager, int[] scalarItemsBefore, int[] realizedRows, int[] scalarItemsAfter)
+        private static void VerifyElements(ElementManager elementManager, int[] dataItemsBefore, int[] realizedRows, int[] dataItemsAfter)
         {
             VerifyAccumulatedCrossRepeatsDelta(elementManager);
             var template = elementManager.Template;
             var rows = elementManager.Rows;
             var elements = elementManager.Elements;
-            Assert.AreEqual(scalarItemsBefore.Length + realizedRows.Length + scalarItemsAfter.Length, elements.Count);
+            Assert.AreEqual(dataItemsBefore.Length + realizedRows.Length + dataItemsAfter.Length, elements.Count);
 
             for (int i = 0; i < elements.Count; i++)
             {
-                if (i < scalarItemsBefore.Length)
+                if (i < dataItemsBefore.Length)
                 {
-                    var expectedIndex = scalarItemsBefore[i];
-                    Assert.AreEqual(template.ScalarItems[expectedIndex], elements[i].GetTemplateItem());
+                    var expectedIndex = dataItemsBefore[i];
+                    Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
                 }
-                else if (i < scalarItemsBefore.Length + realizedRows.Length)
+                else if (i < dataItemsBefore.Length + realizedRows.Length)
                 {
-                    var expectedOrdinal = realizedRows[i - scalarItemsBefore.Length];
+                    var expectedOrdinal = realizedRows[i - dataItemsBefore.Length];
                     var expectedRow = rows[expectedOrdinal];
                     Assert.IsNotNull(expectedRow.View);
                     Assert.AreEqual(expectedRow.View, elements[i]);
                 }
                 else
                 {
-                    var expectedIndex = scalarItemsAfter[i - realizedRows.Length - scalarItemsBefore.Length];
-                    Assert.AreEqual(template.ScalarItems[expectedIndex], elements[i].GetTemplateItem());
+                    var expectedIndex = dataItemsAfter[i - realizedRows.Length - dataItemsBefore.Length];
+                    Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
                 }
             }
         }
@@ -121,12 +121,12 @@ namespace DevZest.Data.Windows.Primitives
         private static void VerifyAccumulatedCrossRepeatsDelta(ElementManager elementManager)
         {
             var template = elementManager.Template;
-            var scalarItems = template.ScalarItems;
-            if (scalarItems.Count == 0)
+            var dataItems = template.DataItems;
+            if (dataItems.Count == 0)
                 return;
-            var lastScalarItem = scalarItems[scalarItems.Count - 1];
+            var lastDataItem = dataItems[dataItems.Count - 1];
             Assert.AreEqual(elementManager.Elements.Count - elementManager.RealizedRows.Count,
-                scalarItems.Count * elementManager.CrossRepeats - lastScalarItem.AccumulatedCrossRepeatsDelta);
+                dataItems.Count * elementManager.CrossRepeats - lastDataItem.AccumulatedCrossRepeatsDelta);
         }
 
         private static void VerifyElements(ElementManager elementManager, ProductCategory productCategory)
@@ -147,9 +147,9 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var templateItem = element.GetTemplateItem();
                     Assert.IsNotNull(templateItem);
-                    var scalarItem = templateItem as ScalarItem;
-                    Assert.IsNotNull(scalarItem != null);
-                    Assert.AreEqual(GetScalarItemText(scalarItem), ((TextBlock)element).Text);
+                    var dataItem = templateItem as DataItem;
+                    Assert.IsNotNull(dataItem != null);
+                    Assert.AreEqual(GetDataItemText(dataItem), ((TextBlock)element).Text);
                 }
             }
         }
