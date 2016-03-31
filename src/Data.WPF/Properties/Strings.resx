@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DataItem_IntersectsWithRowRange" xml:space="preserve">
+    <value>DataItems[{index}] intersects with RowRange.</value>
+  </data>
+  <data name="DataItem_NonMultidimensionalTemplate" xml:space="preserve">
+    <value>Multidimensional DataItems[{index}] conflicts with non multidimensional Template (Template.StackDimensions=1).</value>
+  </data>
+  <data name="DataItem_OutOfHorizontalRowRange" xml:space="preserve">
+    <value>Multidimensional DataItems[{index}] is out of horizontal side of RowRange.</value>
+  </data>
+  <data name="DataItem_OutOfVerticalRowRange" xml:space="preserve">
+    <value>Multidimensional DataItems[{index}] is out of vertical side of RowRange.</value>
+  </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
   </data>
@@ -125,6 +137,9 @@
   </data>
   <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>
+  </data>
+  <data name="RowItem_OutOfRowRange" xml:space="preserve">
+    <value>RowItems[{index}] is out of the RowRange.</value>
   </data>
   <data name="RowManager_InvalidCurrentRow" xml:space="preserve">
     <value>The value is invalid. It does not belong to this RowManager.</value>
@@ -141,6 +156,18 @@
   <data name="RowPresenter_VerifyHierarchical" xml:space="preserve">
     <value>The row must be hierarchical.</value>
   </data>
+  <data name="StackItem_IntersectsWithRowRange" xml:space="preserve">
+    <value>StackItems[{index}] intersects with RowRange.</value>
+  </data>
+  <data name="StackItem_NullStackOrientation" xml:space="preserve">
+    <value>StackItem is invalid when Template.StackOrientation is null.</value>
+  </data>
+  <data name="StackItem_OutOfHorizontalRowRange" xml:space="preserve">
+    <value>StackItems[{index}] is out of horizontal side of RowRange.</value>
+  </data>
+  <data name="StackItem_OutOfVerticalRowRange" xml:space="preserve">
+    <value>StackItems[{index}] is out of vertical side of RowRange.</value>
+  </data>
   <data name="TemplateBuilder_InvalidFlattenHierarchyChildModel" xml:space="preserve">
     <value>The child model is invalid. It must be direct child model and has the same type.</value>
   </data>
@@ -149,9 +176,6 @@
   </data>
   <data name="Template_InvalidAutoWidthGridColumn" xml:space="preserve">
     <value>Auto width GridColumns[{index}] is invalid for multidimensional stack.</value>
-  </data>
-  <data name="Template_InvalidRowRange" xml:space="preserve">
-    <value>The RowRange is invalid. It must contain all RowItems and no DataItem.</value>
   </data>
   <data name="Template_InvalidStarHeightGridRow" xml:space="preserve">
     <value>Star height GridRows[{index}] is invalid for repeating.</value>

@@ -12,6 +12,38 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// DataItems[{index}] intersects with RowRange.
+        /// </summary>
+        public static string DataItem_IntersectsWithRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_IntersectsWithRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional DataItems[{index}] conflicts with non multidimensional Template (Template.StackDimensions=1).
+        /// </summary>
+        public static string DataItem_NonMultidimensionalTemplate(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_NonMultidimensionalTemplate", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional DataItems[{index}] is out of horizontal side of RowRange.
+        /// </summary>
+        public static string DataItem_OutOfHorizontalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OutOfHorizontalRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional DataItems[{index}] is out of vertical side of RowRange.
+        /// </summary>
+        public static string DataItem_OutOfVerticalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OutOfVerticalRowRange", "index"), index);
+        }
+
+        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)
@@ -33,6 +65,14 @@ namespace DevZest.Data.Windows
         public static string GridRange_VerifyNotEmpty
         {
             get { return GetString("GridRange_VerifyNotEmpty"); }
+        }
+
+        /// <summary>
+        /// RowItems[{index}] is out of the RowRange.
+        /// </summary>
+        public static string RowItem_OutOfRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("RowItem_OutOfRowRange", "index"), index);
         }
 
         /// <summary>
@@ -76,6 +116,38 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// StackItems[{index}] intersects with RowRange.
+        /// </summary>
+        public static string StackItem_IntersectsWithRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_IntersectsWithRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// StackItem is invalid when Template.StackOrientation is null.
+        /// </summary>
+        public static string StackItem_NullStackOrientation
+        {
+            get { return GetString("StackItem_NullStackOrientation"); }
+        }
+
+        /// <summary>
+        /// StackItems[{index}] is out of horizontal side of RowRange.
+        /// </summary>
+        public static string StackItem_OutOfHorizontalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_OutOfHorizontalRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// StackItems[{index}] is out of vertical side of RowRange.
+        /// </summary>
+        public static string StackItem_OutOfVerticalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_OutOfVerticalRowRange", "index"), index);
+        }
+
+        /// <summary>
         /// The child model is invalid. It must be direct child model and has the same type.
         /// </summary>
         public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
@@ -97,14 +169,6 @@ namespace DevZest.Data.Windows
         public static string Template_InvalidAutoWidthGridColumn(object index)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidAutoWidthGridColumn", "index"), index);
-        }
-
-        /// <summary>
-        /// The RowRange is invalid. It must contain all RowItems and no DataItem.
-        /// </summary>
-        public static string Template_InvalidRowRange
-        {
-            get { return GetString("Template_InvalidRowRange"); }
         }
 
         /// <summary>

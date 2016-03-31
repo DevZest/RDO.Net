@@ -24,9 +24,9 @@ namespace DevZest.Data.Windows.Primitives
                 return rangeConfig.End(item);
             }
 
-            public Builder<T> Repeat(bool value)
+            public Builder<T> Multidimensioinal(bool value)
             {
-                Item.IsRepeatable = value;
+                Item.IsMultidimensional = value;
                 return this;
             }
         }
@@ -42,23 +42,30 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public bool IsRepeatable { get; private set; }
-
-        internal bool IsMultidimensional
-        {
-            get
-            {
-                if (!IsRepeatable)
-                    return false;
-                else if (Template.IsMultidimensional(Orientation.Horizontal))
-                    return Template.RowRange.Contains(GridRange.Left) && Template.RowRange.Contains(GridRange.Right);
-                else if (Template.IsMultidimensional(Orientation.Vertical))
-                    return Template.RowRange.Contains(GridRange.Top) && Template.RowRange.Contains(GridRange.Bottom);
-                else
-                    return false;
-            }
-        }
+        public bool IsMultidimensional { get; private set; }
 
         internal int AccumulatedStackDimensionsDelta { get; set; }
+
+        internal override void VerifyGridRange(GridRange rowRange)
+        {
+            if (GridRange.IntersectsWith(rowRange))
+                throw new InvalidOperationException(Strings.DataItem_IntersectsWithRowRange(Ordinal));
+
+            if (!IsMultidimensional)
+                return;
+
+            if (Template.IsMultidimensional(Orientation.Horizontal))
+            {
+                if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
+                    throw new InvalidOperationException(Strings.DataItem_OutOfHorizontalRowRange(Ordinal));
+            }
+            else if (Template.IsMultidimensional(Orientation.Vertical))
+            {
+                if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
+                    throw new InvalidOperationException(Strings.DataItem_OutOfVerticalRowRange(Ordinal));
+            }
+            else
+                throw new InvalidOperationException(Strings.DataItem_NonMultidimensionalTemplate(Ordinal));
+        }
     }
 }

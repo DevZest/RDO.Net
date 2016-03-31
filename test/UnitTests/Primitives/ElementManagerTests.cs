@@ -36,9 +36,9 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < dataItemsBefore.Length; i++)
                 {
                     var index = dataItemIndex++;
-                    var isRepeatable = dataItemsBefore[i];
+                    var isMultidimensional = dataItemsBefore[i];
                     builder.Range(0, index).BeginDataItem<TextBlock>()
-                        .Repeat(isRepeatable)
+                        .Multidimensioinal(isMultidimensional)
                         .Bind((src, element) => element.Text = GetDataItemText(index))
                         .End();
                 }
@@ -50,10 +50,10 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < dataItemsAfter.Length; i++)
                 {
                     var index = dataItemIndex++;
-                    var isRepeatable = dataItemsAfter[i];
+                    var isMultidimensional = dataItemsAfter[i];
                     builder.Range(0, index + 1)
                     .BeginDataItem<TextBlock>()
-                    .Repeat(isRepeatable)
+                    .Multidimensioinal(isMultidimensional)
                     .Bind((src, element) => element.Text = GetDataItemText(index))
                     .End();
                 }

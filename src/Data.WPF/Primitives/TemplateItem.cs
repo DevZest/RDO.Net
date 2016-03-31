@@ -202,6 +202,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        internal void VerifyGridRange()
+        {
+            VerifyGridRange(Template.RowRange);
+        }
+
+        internal abstract void VerifyGridRange(GridRange rowRange);
+
         public int AutoSizeMeasureOrder { get; internal set; }
     }
 }

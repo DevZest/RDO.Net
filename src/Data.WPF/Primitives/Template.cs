@@ -105,25 +105,20 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange? _rowRange;
         public GridRange RowRange
         {
-            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : AutoRowRange; }
-            internal set
-            {
-                _rowRange = value;
-                VerifyRowRange();
-            }
+            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : _rowItems.Range; }
+            internal set { _rowRange = value; }
         }
 
-        private void VerifyRowRange()
+        internal void VerifyTemplateItemGridRange()
         {
-            var rowRange = RowRange;
-            var autoRowRange = AutoRowRange;
-            if ((!autoRowRange.IsEmpty && !rowRange.Contains(autoRowRange)) || DataItems.Any(x => rowRange.IntersectsWith(x.GridRange)))
-                throw new InvalidOperationException(Strings.Template_InvalidRowRange);
-        }
+            for (int i = 0; i < RowItems.Count; i++)
+                RowItems[i].VerifyGridRange();
 
-        private GridRange AutoRowRange
-        {
-            get { return _rowItems.Range; }
+            for (int i = 0; i < DataItems.Count; i++)
+                DataItems[i].VerifyGridRange();
+
+            for (int i = 0; i < StackItems.Count; i++)
+                StackItems[i].VerifyGridRange();
         }
 
         internal int AddGridColumn(string width)
@@ -226,47 +221,40 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
-            VerifyAddTemplateItem(gridRange, dataItem, nameof(dataItem), true);
+            Debug.Assert(IsValid(gridRange));
             dataItem.Construct(this, gridRange, _dataItems.Count);
             _dataItems.Add(gridRange, dataItem);
             if (_rowItems.Count == 0)
                 DataItemsCountBeforeRepeat = _dataItems.Count;
-            VerifyRowRange();
         }
 
         internal void AddStackItem(GridRange gridRange, StackItem stackItem)
         {
-            VerifyAddTemplateItem(gridRange, stackItem, nameof(stackItem), true);
+            Debug.Assert(IsValid(gridRange));
             stackItem.Construct(this, gridRange, _stackItems.Count);
             _stackItems.Add(gridRange, stackItem);
             if (_rowItems.Count == 0)
                 StackItemsCountBeforeRepeat = _stackItems.Count;
-            VerifyRowRange();
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
         {
-            VerifyAddTemplateItem(gridRange, rowItem, nameof(rowItem), true);
+            Debug.Assert(IsValid(gridRange));
             rowItem.Construct(this, gridRange, _rowItems.Count);
             _rowItems.Add(gridRange, rowItem);
-            VerifyRowRange();
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
         {
-            VerifyAddTemplateItem(gridRange, subviewItem, nameof(subviewItem), false);
+            Debug.Assert(IsValid(gridRange));
             subviewItem.Seal(this, gridRange, _rowItems.Count, _subviewItems.Count);
             _rowItems.Add(gridRange, subviewItem);
             _subviewItems.Add(gridRange, subviewItem);
-            VerifyRowRange();
         }
 
-        private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)
+        internal bool IsValid(GridRange gridRange)
         {
-            if (!GetGridRangeAll().Contains(gridRange))
-                throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _rowRange.HasValue && !_rowRange.GetValueOrDefault().Contains(gridRange))
-                throw new ArgumentOutOfRangeException(nameof(gridRange));
+            return !gridRange.IsEmpty && Range().Contains(gridRange);
         }
 
         private void VerifyGridColumn(int index, string paramName)
@@ -279,14 +267,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (index < 0 || index >= GridRows.Count)
                 throw new ArgumentOutOfRangeException(paramName);
-        }
-
-        private GridRange GetGridRangeAll()
-        {
-            if (GridColumns.Count == 0 || GridRows.Count == 0)
-                return new GridRange();
-
-            return new GridRange(GridColumns[0], GridRows[0], GridColumns[GridColumns.Count - 1], GridRows[GridRows.Count - 1]);
         }
 
         public GridRange Range()

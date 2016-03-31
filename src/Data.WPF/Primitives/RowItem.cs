@@ -96,5 +96,11 @@ namespace DevZest.Data.Windows.Primitives
             : base(constructor)
         {
         }
+
+        internal sealed override void VerifyGridRange(GridRange rowRange)
+        {
+            if (!rowRange.Contains(GridRange))
+                throw new InvalidOperationException(Strings.RowItem_OutOfRowRange(Ordinal));
+        }
     }
 }
