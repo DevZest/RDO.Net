@@ -84,7 +84,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot flow auto height GridRows[{index}].
+        /// Cannot repeat auto height GridRows[{index}] on cross axis.
         /// </summary>
         public static string Template_InvalidAutoHeightGridRow(object index)
         {
@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Cannot flow auto width GridColumns[{index}].
+        /// Cannot repeat auto width GridColumns[{index}] on cross axis.
         /// </summary>
         public static string Template_InvalidAutoWidthGridColumn(object index)
         {

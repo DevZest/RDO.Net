@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -38,53 +39,43 @@ namespace DevZest.Data.Windows.Primitives
         public void Template_InvalidGridColumnWidth_throws_exception()
         {
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.X;
+                x.Repeat(Orientation.Horizontal);
                 x.AddGridColumns("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 x.AddGridColumns("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 x.AddGridColumns("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 x.AddGridColumns("Auto; min: 10");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.RepeatOrientation = RepeatOrientation.X;
+                x.Repeat(Orientation.Horizontal);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("*");
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridColumns("Auto; min: 10");
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 });
         }
 
@@ -92,53 +83,43 @@ namespace DevZest.Data.Windows.Primitives
         public void Template_InvalidGridRowHeight_throws_exception()
         {
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Y;
+                x.Repeat(Orientation.Vertical);
                 x.AddGridRows("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 x.AddGridRows("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 x.AddGridRows("*");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 x.AddGridRows("Auto; min: 10");
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.RepeatOrientation = RepeatOrientation.Y;
+                x.Repeat(Orientation.Vertical);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.RepeatOrientation = RepeatOrientation.Y;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Vertical, 0);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("*");
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 });
 
             ExpectInvalidOperationException(x => {
-                x.RepeatOrientation = RepeatOrientation.Z;
                 x.AddGridRows("Auto");
-                x.RepeatOrientation = RepeatOrientation.X;
-                x.FlowDimension = 0;
+                x.Repeat(Orientation.Horizontal, 0);
                 });
         }
 

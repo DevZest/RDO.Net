@@ -202,7 +202,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal int AccumulatedFlowCountDelta { get; set; }
+        internal int AccumulatedRepeatCrossDelta { get; set; }
 
         public int AutoSizeMeasureOrder { get; internal set; }
     }

@@ -88,7 +88,6 @@
     <Compile Include="Primitives\GridColumn.cs" />
     <Compile Include="Primitives\GridTrack.cs" />
     <Compile Include="Primitives\GridRow.cs" />
-    <Compile Include="RepeatOrientation.cs" />
     <Compile Include="RowSelector.cs" />
     <Compile Include="Primitives\DataPanel.cs" />
     <Compile Include="Primitives\Template.cs" />

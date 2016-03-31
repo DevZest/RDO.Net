@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -69,9 +70,9 @@ namespace DevZest.Data.Windows.Primitives
                 return rangeConfig.End(item);
             }
 
-            public Builder<T> IsRepeatable(bool value)
+            public Builder<T> Repeat(bool value)
             {
-                Item.IsRepeatable = value;
+                Item.IsRepeat = value;
                 return this;
             }
 
@@ -105,17 +106,17 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public bool IsRepeatable { get; private set; }
+        public bool IsRepeat { get; private set; }
 
-        internal bool ShouldFlow
+        internal bool IsRepeatCross
         {
             get
             {
-                if (!IsRepeatable)
+                if (!IsRepeat)
                     return false;
-                else if (Template.RepeatOrientation == RepeatOrientation.Y && Template.FlowDimension != 1)
+                else if (Template.IsRepeatCross(Orientation.Horizontal))
                     return Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
-                else if (Template.RepeatOrientation == RepeatOrientation.X && Template.FlowDimension != 1)
+                else if (Template.IsRepeatCross(Orientation.Vertical))
                     return Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
                 else
                     return false;

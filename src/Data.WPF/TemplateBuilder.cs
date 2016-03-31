@@ -2,6 +2,7 @@
 using DevZest.Data.Primitives;
 using System;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -65,13 +66,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Repeat(RepeatOrientation repeatOrientation, int flowDimension = 1)
+        public TemplateBuilder Repeat(Orientation orientation, int repeatCross = 1)
         {
-            if (flowDimension < 0)
-                throw new ArgumentOutOfRangeException(nameof(flowDimension));
+            if (repeatCross < 0)
+                throw new ArgumentOutOfRangeException(nameof(repeatCross));
 
-            Template.RepeatOrientation = repeatOrientation;
-            Template.FlowDimension = flowDimension;
+            Template.Repeat(orientation, repeatCross);
             return this;
         }
 

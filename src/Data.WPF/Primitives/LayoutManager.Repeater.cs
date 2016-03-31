@@ -24,37 +24,11 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            private sealed class RepeaterXY : RepeaterY
-            {
-                public RepeaterXY(LayoutManager layoutManager)
-                    : base(layoutManager)
-                {
-                }
-
-                protected override int CalculateFlowCount()
-                {
-                    return SizeToContentX ? 1 : (int)(AvailableWidth / Template.GridColumns.AbsoluteLengthTotal);
-                }
-            }
-
             private class RepeaterX : Repeater
             {
                 public RepeaterX(LayoutManager layoutManager)
                     : base(layoutManager)
                 {
-                }
-            }
-
-            private sealed class RepeaterYX : RepeaterX
-            {
-                public RepeaterYX(LayoutManager layoutManager)
-                    : base(layoutManager)
-                {
-                }
-
-                protected override int CalculateFlowCount()
-                {
-                    return SizeToContentY ? 1 : (int)(AvailableHeight / Template.GridRows.AbsoluteLengthTotal);
                 }
             }
 
@@ -71,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
-            protected virtual int CalculateFlowCount()
+            protected virtual int CalculateRepeatCross()
             {
                 return 1;
             }
@@ -106,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private void RealizeElements()
             {
-                LayoutManager.FlowCount = CalculateFlowCount();
+                LayoutManager.RepeatCross = CalculateRepeatCross();
 
             }
 

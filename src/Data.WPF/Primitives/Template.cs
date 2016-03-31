@@ -32,6 +32,7 @@ namespace DevZest.Data.Windows.Primitives
             RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
+            RepeatCross = 1;
             HierarchicalModelOrdinal = -1;
             VirtualizationThreshold = 50;
         }
@@ -53,15 +54,16 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as DataPresenter; }
         }
 
-        private RepeatOrientation _repeatOrientation = RepeatOrientation.Z;
-        public RepeatOrientation RepeatOrientation
+        public Orientation? RepeatOrientation { get; private set; }
+
+        public int RepeatCross { get; private set; }
+
+        internal void Repeat(Orientation orientation, int repeatCross = 1)
         {
-            get { return _repeatOrientation; }
-            internal set
-            {
-                _repeatOrientation = value;
-                VerifyGridLengths();
-            }
+            Debug.Assert(repeatCross >= 0);
+            RepeatOrientation = orientation;
+            RepeatCross = repeatCross;
+            VerifyGridLengths();
         }
 
         private void VerifyGridLengths()
@@ -165,13 +167,13 @@ namespace DevZest.Data.Windows.Primitives
 
             if (height.IsStar)
             {
-                if (IsVerticalRepeatable)
+                if (IsRepeat(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
             }
             else
             {
                 Debug.Assert(height.IsAuto);
-                if (RepeatOrientation == RepeatOrientation.X && IsHorizontalRepeatable)
+                if (IsRepeatCross(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
             }
         }
@@ -191,15 +193,25 @@ namespace DevZest.Data.Windows.Primitives
 
             if (width.IsStar)
             {
-                if (IsHorizontalRepeatable)
+                if (IsRepeat(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
             }
             else
             {
                 Debug.Assert(width.IsAuto);
-                if (RepeatOrientation == RepeatOrientation.Y && IsHorizontalRepeatable)
+                if (IsRepeatCross(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
             }
+        }
+
+        private bool IsRepeat(Orientation orientation)
+        {
+            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() == orientation || RepeatCross != 1;
+        }
+
+        internal bool IsRepeatCross(Orientation orientation)
+        {
+            return !RepeatOrientation.HasValue ? false : RepeatOrientation.GetValueOrDefault() != orientation && RepeatCross != 1;
         }
 
         internal int ScalarItemsCountBeforeRepeat { get; private set; }
@@ -282,28 +294,6 @@ namespace DevZest.Data.Windows.Primitives
             if (bottom < top)
                 throw new ArgumentOutOfRangeException(nameof(bottom));
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
-        }
-
-        private int _flowDimension = 1;
-        public int FlowDimension
-        {
-            get { return _flowDimension; }
-            internal set
-            {
-                Debug.Assert(_flowDimension >= 0);
-                _flowDimension = value;
-                VerifyGridLengths();
-            }
-        }
-
-        public bool IsHorizontalRepeatable
-        {
-            get { return RepeatOrientation == RepeatOrientation.Z ? false : RepeatOrientation == RepeatOrientation.X || FlowDimension != 1; }
-        }
-
-        public bool IsVerticalRepeatable
-        {
-            get { return RepeatOrientation == RepeatOrientation.Z ? false : RepeatOrientation == RepeatOrientation.Y || FlowDimension != 1; }
         }
 
         public int PinnedLeft { get; internal set; }

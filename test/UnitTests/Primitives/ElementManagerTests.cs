@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
                     builder.AddGridRow("100");
 
                 builder.AddGridColumns("100")
-                    .Repeat(RepeatOrientation.Y, 0)
+                    .Repeat(Orientation.Vertical, 0)
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
 
@@ -38,7 +38,7 @@ namespace DevZest.Data.Windows.Primitives
                     var index = scalarItemIndex++;
                     var isRepeatable = scalarItemsBefore[i];
                     builder.Range(0, index).BeginScalarItem<TextBlock>()
-                        .IsRepeatable(isRepeatable)
+                        .Repeat(isRepeatable)
                         .Bind((src, element) => element.Text = GetScalarItemText(index))
                         .End();
                 }
@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows.Primitives
                     var isRepeatable = scalarItemsAfter[i];
                     builder.Range(0, index + 1)
                     .BeginScalarItem<TextBlock>()
-                    .IsRepeatable(isRepeatable)
+                    .Repeat(isRepeatable)
                     .Bind((src, element) => element.Text = GetScalarItemText(index))
                     .End();
                 }
@@ -90,7 +90,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private static void VerifyElements(ElementManager elementManager, int[] scalarItemsBefore, int[] realizedRows, int[] scalarItemsAfter)
         {
-            VerifyAccumulatedFlowCountDelta(elementManager);
+            VerifyAccumulatedRepeatCrossDelta(elementManager);
             var template = elementManager.Template;
             var rows = elementManager.Rows;
             var elements = elementManager.Elements;
@@ -118,7 +118,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static void VerifyAccumulatedFlowCountDelta(ElementManager elementManager)
+        private static void VerifyAccumulatedRepeatCrossDelta(ElementManager elementManager)
         {
             var template = elementManager.Template;
             var scalarItems = template.ScalarItems;
@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows.Primitives
                 return;
             var lastScalarItem = scalarItems[scalarItems.Count - 1];
             Assert.AreEqual(elementManager.Elements.Count - elementManager.RealizedRows.Count,
-                scalarItems.Count * elementManager.FlowCount - lastScalarItem.AccumulatedFlowCountDelta);
+                scalarItems.Count * elementManager.RepeatCross - lastScalarItem.AccumulatedRepeatCrossDelta);
         }
 
         private static void VerifyElements(ElementManager elementManager, ProductCategory productCategory)
@@ -165,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1), Array<int>(), Array<int>(2));
 
-            elementManager.FlowCount = 3;
+            elementManager.RepeatCross = 3;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(), Array<int>(2));
 
@@ -181,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.FlowCount = 2;
+            elementManager.RepeatCross = 2;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
@@ -211,7 +211,7 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.FlowCount = 3;
+            elementManager.RepeatCross = 3;
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
@@ -227,7 +227,7 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.FlowCount = 2;
+            elementManager.RepeatCross = 2;
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 

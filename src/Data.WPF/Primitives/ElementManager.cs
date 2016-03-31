@@ -278,8 +278,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = scalarItemIndex; i < scalarItemCount; i++)
             {
                 var scalarItem = scalarItems[i];
-                var flowCount = scalarItem.ShouldFlow ? FlowCount : 1;
-                for (int j = 0; j < flowCount; j++)
+                var repeatCross = scalarItem.IsRepeatCross ? RepeatCross : 1;
+                for (int j = 0; j < repeatCross; j++)
                 {
                     var element = Elements[elementIndex++];
                     Debug.Assert(element.GetTemplateItem() == scalarItem);
@@ -308,12 +308,12 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
             {
                 var scalarItem = scalarItems[i];
-                scalarItem.AccumulatedFlowCountDelta = 0;
-                int count = scalarItem.ShouldFlow ? FlowCount : 1;
+                scalarItem.AccumulatedRepeatCrossDelta = 0;
+                int count = scalarItem.IsRepeatCross ? RepeatCross : 1;
                 RemoveScalarElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _flowCount = 1;
+            _repeatCross = 1;
             _elements = null;
         }
 
@@ -339,26 +339,26 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int _flowCount = 1;
-        internal int FlowCount
+        private int _repeatCross = 1;
+        internal int RepeatCross
         {
-            get { return _flowCount; }
+            get { return _repeatCross; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_flowCount == value)
+                if (_repeatCross == value)
                     return;
 
-                var delta = value - _flowCount;
-                _flowCount = value;
-                OnFlowCountChanged(delta);
+                var delta = value - _repeatCross;
+                _repeatCross = value;
+                OnRepeatCrossChanged(delta);
             }
         }
 
-        private void OnFlowCountChanged(int flowCountDelta)
+        private void OnRepeatCrossChanged(int repeatCrossDelta)
         {
-            Debug.Assert(flowCountDelta != 0);
+            Debug.Assert(repeatCrossDelta != 0);
 
             var index = -1;
             var delta = 0;
@@ -370,21 +370,21 @@ namespace DevZest.Data.Windows.Primitives
                     index += RealizedRows.Count;
                 var scalarItem = scalarItems[i];
 
-                var prevAccumulatedFlowCountDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedFlowCountDelta;
-                if (!scalarItem.ShouldFlow)
+                var prevAccumulatedRepeatCrossDelta = i == 0 ? 0 : scalarItems[i - 1].AccumulatedRepeatCrossDelta;
+                if (!scalarItem.IsRepeatCross)
                 {
-                    scalarItem.AccumulatedFlowCountDelta = prevAccumulatedFlowCountDelta + (FlowCount - 1);
+                    scalarItem.AccumulatedRepeatCrossDelta = prevAccumulatedRepeatCrossDelta + (RepeatCross - 1);
                     continue;
                 }
-                scalarItem.AccumulatedFlowCountDelta = prevAccumulatedFlowCountDelta;
+                scalarItem.AccumulatedRepeatCrossDelta = prevAccumulatedRepeatCrossDelta;
 
                 if (i < Template.ScalarItemsCountBeforeRepeat)
-                    delta += flowCountDelta;
+                    delta += repeatCrossDelta;
 
-                if (flowCountDelta > 0)
-                    index = InsertScalarElementsAfter(scalarItem, index, flowCountDelta);
+                if (repeatCrossDelta > 0)
+                    index = InsertScalarElementsAfter(scalarItem, index, repeatCrossDelta);
                 else
-                    RemoveScalarElementsAfter(scalarItem, index, -flowCountDelta);
+                    RemoveScalarElementsAfter(scalarItem, index, -repeatCrossDelta);
             }
 
             _scalarElementsCountBeforeRepeat += delta;
