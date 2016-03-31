@@ -49,7 +49,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private int DataElementsCountBeforeRepeat
             {
-                get { return _elementManager._dataElementsCountBeforeRepeat; }
+                get { return _elementManager._dataElementsSplit; }
             }
 
             public RowPresenter First { get; private set; }
@@ -239,7 +239,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private IElementCollection _elements;
-        private int _dataElementsCountBeforeRepeat;
+        private int _dataElementsSplit;
         internal IReadOnlyList<UIElement> Elements
         {
             get { return _elements; }
@@ -254,7 +254,7 @@ namespace DevZest.Data.Windows.Primitives
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
                 InsertDataElementsAfter(dataItems[i], Elements.Count - 1, 1);
-            _dataElementsCountBeforeRepeat = Template.DataItemsCountBeforeRepeat;
+            _dataElementsSplit = Template.DataItemsSplit;
         }
 
         internal void RefreshElements()
@@ -262,11 +262,11 @@ namespace DevZest.Data.Windows.Primitives
             if (Elements.Count == 0)
                 return;
 
-            var index = RefreshDataElements(0, Template.DataItemsCountBeforeRepeat, 0);
-            Debug.Assert(index == _dataElementsCountBeforeRepeat);
+            var index = RefreshDataElements(0, Template.DataItemsSplit, 0);
+            Debug.Assert(index == _dataElementsSplit);
 
             index += RefreshRealizedRows();
-            index = RefreshDataElements(Template.DataItemsCountBeforeRepeat, Template.DataItems.Count, index);
+            index = RefreshDataElements(Template.DataItemsSplit, Template.DataItems.Count, index);
             Debug.Assert(index == Elements.Count);
 
             _isDirty = false;
@@ -366,7 +366,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < dataItems.Count; i++)
             {
                 index++;
-                if (i == Template.DataItemsCountBeforeRepeat)
+                if (i == Template.DataItemsSplit)
                     index += RealizedRows.Count;
                 var dataItem = dataItems[i];
 
@@ -378,7 +378,7 @@ namespace DevZest.Data.Windows.Primitives
                 }
                 dataItem.AccumulatedStackDimensionsDelta = prevAccumulatedstackDimensionsDelta;
 
-                if (i < Template.DataItemsCountBeforeRepeat)
+                if (i < Template.DataItemsSplit)
                     delta += stackDimensionsDelta;
 
                 if (stackDimensionsDelta > 0)
@@ -387,7 +387,7 @@ namespace DevZest.Data.Windows.Primitives
                     RemoveDataElementsAfter(dataItem, index, -stackDimensionsDelta);
             }
 
-            _dataElementsCountBeforeRepeat += delta;
+            _dataElementsSplit += delta;
         }
 
         private bool _isDirty;

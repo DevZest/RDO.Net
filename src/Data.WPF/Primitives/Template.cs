@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -215,9 +214,9 @@ namespace DevZest.Data.Windows.Primitives
             return !StackOrientation.HasValue ? false : StackOrientation.GetValueOrDefault() != orientation && StackDimensions != 1;
         }
 
-        internal int DataItemsCountBeforeRepeat { get; private set; }
+        internal int DataItemsSplit { get; private set; }
 
-        internal int StackItemsCountBeforeRepeat { get; private set; }
+        internal int StackItemsSplit { get; private set; }
 
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
@@ -225,7 +224,7 @@ namespace DevZest.Data.Windows.Primitives
             dataItem.Construct(this, gridRange, _dataItems.Count);
             _dataItems.Add(gridRange, dataItem);
             if (_rowItems.Count == 0)
-                DataItemsCountBeforeRepeat = _dataItems.Count;
+                DataItemsSplit = _dataItems.Count;
         }
 
         internal void AddStackItem(GridRange gridRange, StackItem stackItem)
@@ -234,7 +233,7 @@ namespace DevZest.Data.Windows.Primitives
             stackItem.Construct(this, gridRange, _stackItems.Count);
             _stackItems.Add(gridRange, stackItem);
             if (_rowItems.Count == 0)
-                StackItemsCountBeforeRepeat = _stackItems.Count;
+                StackItemsSplit = _stackItems.Count;
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
