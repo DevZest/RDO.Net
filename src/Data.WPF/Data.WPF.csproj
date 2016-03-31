@@ -46,6 +46,8 @@
     </Compile>
     <Compile Include="Primitives\BindingContext.cs" />
     <Compile Include="EofRowMapping.cs" />
+    <Compile Include="Primitives\DataItemBase.cs" />
+    <Compile Include="Primitives\StackItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridRowSet.cs" />
     <Compile Include="Primitives\GridColumnSet.cs" />

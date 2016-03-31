@@ -84,6 +84,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return _dataItems; }
         }
 
+        private TemplateItemCollection<StackItem> _stackItems = new TemplateItemCollection<StackItem>();
+        public ReadOnlyCollection<StackItem> StackItems
+        {
+            get { return _stackItems; }
+        }
+
         private TemplateItemCollection<RowItem> _rowItems = new TemplateItemCollection<RowItem>();
         public ReadOnlyCollection<RowItem> RowItems
         {
@@ -216,6 +222,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int DataItemsCountBeforeRepeat { get; private set; }
 
+        internal int StackItemsCountBeforeRepeat { get; private set; }
+
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
             VerifyAddTemplateItem(gridRange, dataItem, nameof(dataItem), true);
@@ -223,6 +231,16 @@ namespace DevZest.Data.Windows.Primitives
             _dataItems.Add(gridRange, dataItem);
             if (_rowItems.Count == 0)
                 DataItemsCountBeforeRepeat = _dataItems.Count;
+            VerifyRowRange();
+        }
+
+        internal void AddStackItem(GridRange gridRange, StackItem stackItem)
+        {
+            VerifyAddTemplateItem(gridRange, stackItem, nameof(stackItem), true);
+            stackItem.Construct(this, gridRange, _stackItems.Count);
+            _stackItems.Add(gridRange, stackItem);
+            if (_rowItems.Count == 0)
+                StackItemsCountBeforeRepeat = _stackItems.Count;
             VerifyRowRange();
         }
 

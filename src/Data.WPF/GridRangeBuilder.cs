@@ -48,6 +48,19 @@ namespace DevZest.Data.Windows
             return _templateBuilder;
         }
 
+        public StackItem.Builder<T> BeginStackItem<T>()
+            where T : UIElement, new()
+        {
+            VerifyNotEmpty();
+            return new StackItem.Builder<T>(this);
+        }
+
+        internal TemplateBuilder End(StackItem stackItem)
+        {
+            Template.AddStackItem(_gridRange, stackItem);
+            return _templateBuilder;
+        }
+
         public RowItem.Builder<T> BeginRowItem<T>()
             where T : UIElement, new()
         {
