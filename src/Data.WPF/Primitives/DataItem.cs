@@ -113,9 +113,9 @@ namespace DevZest.Data.Windows.Primitives
                 if (!Repeatable)
                     return false;
                 else if (Template.CrossRepeatable(Orientation.Horizontal))
-                    return Template.RepeatRange.Contains(GridRange.Left) && Template.RepeatRange.Contains(GridRange.Right);
+                    return Template.RowRange.Contains(GridRange.Left) && Template.RowRange.Contains(GridRange.Right);
                 else if (Template.CrossRepeatable(Orientation.Vertical))
-                    return Template.RepeatRange.Contains(GridRange.Top) && Template.RepeatRange.Contains(GridRange.Bottom);
+                    return Template.RowRange.Contains(GridRange.Top) && Template.RowRange.Contains(GridRange.Bottom);
                 else
                     return false;
             }

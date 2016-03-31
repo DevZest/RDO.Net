@@ -150,8 +150,8 @@
   <data name="Template_InvalidAutoWidthGridColumn" xml:space="preserve">
     <value>Cannot repeat auto width GridColumns[{index}] on cross axis.</value>
   </data>
-  <data name="Template_InvalidRepeatRange" xml:space="preserve">
-    <value>The RepeatRange is invalid. It must contain all RowItems and no DataItem.</value>
+  <data name="Template_InvalidRowRange" xml:space="preserve">
+    <value>The RowRange is invalid. It must contain all RowItems and no DataItem.</value>
   </data>
   <data name="Template_InvalidStarHeightGridRow" xml:space="preserve">
     <value>Cannot repeat star height GridRows[{index}].</value>

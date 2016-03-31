@@ -111,7 +111,7 @@ namespace DevZest.Data.Windows
         {
             VerifyNotEmpty();
 
-            Template.RepeatRange = _gridRange;
+            Template.RowRange = _gridRange;
             return _templateBuilder;
         }
     }

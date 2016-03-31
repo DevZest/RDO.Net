@@ -96,26 +96,26 @@ namespace DevZest.Data.Windows.Primitives
             get { return _subviewItems; }
         }
 
-        private GridRange? _repeatRange;
-        public GridRange RepeatRange
+        private GridRange? _rowRange;
+        public GridRange RowRange
         {
-            get { return _repeatRange.HasValue ? _repeatRange.GetValueOrDefault() : AutoRepeatRange; }
+            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : AutoRowRange; }
             internal set
             {
-                _repeatRange = value;
-                VerifyRepeatRange();
+                _rowRange = value;
+                VerifyRowRange();
             }
         }
 
-        private void VerifyRepeatRange()
+        private void VerifyRowRange()
         {
-            var repeatRange = RepeatRange;
-            var autoRepeatRange = AutoRepeatRange;
-            if ((!autoRepeatRange.IsEmpty && !repeatRange.Contains(autoRepeatRange)) || DataItems.Any(x => repeatRange.IntersectsWith(x.GridRange)))
-                throw new InvalidOperationException(Strings.Template_InvalidRepeatRange);
+            var rowRange = RowRange;
+            var autoRowRange = AutoRowRange;
+            if ((!autoRowRange.IsEmpty && !rowRange.Contains(autoRowRange)) || DataItems.Any(x => rowRange.IntersectsWith(x.GridRange)))
+                throw new InvalidOperationException(Strings.Template_InvalidRowRange);
         }
 
-        private GridRange AutoRepeatRange
+        private GridRange AutoRowRange
         {
             get { return _rowItems.Range; }
         }
@@ -223,7 +223,7 @@ namespace DevZest.Data.Windows.Primitives
             _dataItems.Add(gridRange, dataItem);
             if (_rowItems.Count == 0)
                 DataItemsCountBeforeRepeat = _dataItems.Count;
-            VerifyRepeatRange();
+            VerifyRowRange();
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
@@ -231,7 +231,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyAddTemplateItem(gridRange, rowItem, nameof(rowItem), true);
             rowItem.Construct(this, gridRange, _rowItems.Count);
             _rowItems.Add(gridRange, rowItem);
-            VerifyRepeatRange();
+            VerifyRowRange();
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
@@ -240,14 +240,14 @@ namespace DevZest.Data.Windows.Primitives
             subviewItem.Seal(this, gridRange, _rowItems.Count, _subviewItems.Count);
             _rowItems.Add(gridRange, subviewItem);
             _subviewItems.Add(gridRange, subviewItem);
-            VerifyRepeatRange();
+            VerifyRowRange();
         }
 
         private void VerifyAddTemplateItem(GridRange gridRange, TemplateItem templateItem, string paramTemplateItemName, bool isScalar)
         {
             if (!GetGridRangeAll().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
-            if (!isScalar && _repeatRange.HasValue && !_repeatRange.GetValueOrDefault().Contains(gridRange))
+            if (!isScalar && _rowRange.HasValue && !_rowRange.GetValueOrDefault().Contains(gridRange))
                 throw new ArgumentOutOfRangeException(nameof(gridRange));
         }
 

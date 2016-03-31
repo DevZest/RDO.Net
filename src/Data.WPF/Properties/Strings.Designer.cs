@@ -100,11 +100,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The RepeatRange is invalid. It must contain all RowItems and no DataItem.
+        /// The RowRange is invalid. It must contain all RowItems and no DataItem.
         /// </summary>
-        public static string Template_InvalidRepeatRange
+        public static string Template_InvalidRowRange
         {
-            get { return GetString("Template_InvalidRepeatRange"); }
+            get { return GetString("Template_InvalidRowRange"); }
         }
 
         /// <summary>
