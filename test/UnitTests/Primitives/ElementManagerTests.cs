@@ -185,11 +185,11 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.RealizedRows.VirtualizeTop(1);
+            elementManager.RealizedRows.VirtualizeHead(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1, 2), Array<int>(2));
 
-            elementManager.RealizedRows.VirtualizeBottom(1);
+            elementManager.RealizedRows.VirtualizeTail(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
 
@@ -231,11 +231,11 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.RealizedRows.VirtualizeTop(1);
+            elementManager.RealizedRows.VirtualizeHead(1);
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 
-            elementManager.RealizedRows.VirtualizeBottom(1);
+            elementManager.RealizedRows.VirtualizeTail(1);
             elementManager.RefreshElements();
             VerifyElements(elementManager, dataSet._);
 

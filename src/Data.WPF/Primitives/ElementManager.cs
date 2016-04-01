@@ -15,8 +15,8 @@ namespace DevZest.Data.Windows.Primitives
             RowPresenter Last { get; }
             bool Contains(RowPresenter row);
             void VirtualizeAll();
-            void VirtualizeTop(int count);
-            void VirtualizeBottom(int count);
+            void VirtualizeHead(int count);
+            void VirtualizeTail(int count);
             void RealizeFirst(RowPresenter row);
             void RealizePrev();
             void RealizeNext();
@@ -47,7 +47,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _elementManager._elements; }
             }
 
-            private int DataElementsCountBeforeRepeat
+            private int DataElementsSplit
             {
                 get { return _elementManager._dataElementsSplit; }
             }
@@ -142,10 +142,10 @@ namespace DevZest.Data.Windows.Primitives
 
             public void VirtualizeAll()
             {
-                VirtualizeTop(Count);
+                VirtualizeHead(Count);
             }
 
-            public void VirtualizeTop(int count)
+            public void VirtualizeHead(int count)
             {
                 Debug.Assert(count >= 0 && count <= Count);
 
@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < count; i++)
                     Virtualize(this[i]);
 
-                Elements.RemoveRange(DataElementsCountBeforeRepeat, count);
+                Elements.RemoveRange(DataElementsSplit, count);
 
                 if (count == Count)
                     First = Last = null;
@@ -163,7 +163,7 @@ namespace DevZest.Data.Windows.Primitives
                     First = Rows[First.Ordinal + count];
             }
 
-            public void VirtualizeBottom(int count)
+            public void VirtualizeTail(int count)
             {
                 Debug.Assert(count >= 0 && count <= Count);
 
@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < count; i++)
                     Virtualize(this[startIndex + i]);
 
-                Elements.RemoveRange(DataElementsCountBeforeRepeat + startIndex, count);
+                Elements.RemoveRange(DataElementsSplit + startIndex, count);
 
                 if (count == Count)
                     First = Last = null;
@@ -188,14 +188,14 @@ namespace DevZest.Data.Windows.Primitives
                 Realize(row);
                 First = Last = row;
 
-                Elements.Insert(DataElementsCountBeforeRepeat, row.View);
+                Elements.Insert(DataElementsSplit, row.View);
             }
 
             public void RealizePrev()
             {
                 var prevRow = _elementManager.Rows[First.Ordinal - 1];
                 Realize(prevRow);
-                Elements.Insert(DataElementsCountBeforeRepeat, prevRow.View);
+                Elements.Insert(DataElementsSplit, prevRow.View);
                 First = prevRow;
             }
 
@@ -203,7 +203,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var nextRow = _elementManager.Rows[Last.Ordinal + 1];
                 Realize(nextRow);
-                Elements.Insert(DataElementsCountBeforeRepeat + Count, nextRow.View);
+                Elements.Insert(DataElementsSplit + Count, nextRow.View);
                 Last = nextRow; // This line will change the Count property, must be executed last
             }
         }
