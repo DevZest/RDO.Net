@@ -1,13 +1,15 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections;
 
 namespace DevZest.Data.Windows
 {
-    public class StackView : Control
+    public class StackView : Control, IReadOnlyList<RowPresenter>
     {
         public StackView()
         {
@@ -31,6 +33,42 @@ namespace DevZest.Data.Windows
 
         public int Index { get; private set; }
 
+        public int Count
+        {
+            get
+            {
+                if (ElementManager == null)
+                    return 0;
+
+                var stackDimensions = ElementManager.StackDimensions;
+                var nextStackFirstRowOrdinal = (Index + 1) * stackDimensions;
+                var rowCount = ElementManager.Rows.Count;
+                return nextStackFirstRowOrdinal <= rowCount ? stackDimensions : stackDimensions - (nextStackFirstRowOrdinal - rowCount);
+            }
+        }
+
+        public RowPresenter this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return ElementManager.Rows[Index * ElementManager.StackDimensions + index];
+            }
+        }
+
+        public IEnumerator<RowPresenter> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+                yield return this[i];
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         private ReadOnlyCollection<StackItem> StackItems
         {
             get { return ElementManager.Template.StackItems; }
@@ -41,20 +79,21 @@ namespace DevZest.Data.Windows
             get { return ElementManager.Template.StackItemsSplit; }
         }
 
-        private IElementCollection _elements;
+        internal IElementCollection ElementCollection { get; private set; }
+
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return _elements; }
+            get { return ElementCollection; }
         }
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(_elements == null);
+            Debug.Assert(ElementCollection == null);
 
             if (ElementManager == null)
                 return;
 
-            _elements = ElementCollectionFactory.Create(elementsPanel);
+            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
             var stackItems = StackItems;
             for (int i = 0; i < StackItemsSplit; i++)
@@ -77,7 +116,7 @@ namespace DevZest.Data.Windows
         private void AddElement(StackItem stackItem)
         {
             var element = stackItem.Generate();
-            _elements.Add(element);
+            ElementCollection.Add(element);
             stackItem.Initialize(element);
         }
 
@@ -89,13 +128,13 @@ namespace DevZest.Data.Windows
                 return false;
             var row = rows[index];
             var rowView = ElementManager.Realize(row);
-            _elements.Add(rowView);
+            ElementCollection.Add(rowView);
             return true;
         }
 
         private void CleanupElements()
         {
-            if (_elements == null)
+            if (ElementCollection == null)
                 return;
 
             int stackDimensions = Elements.Count - StackItems.Count;
@@ -110,7 +149,7 @@ namespace DevZest.Data.Windows
             for (int i = StackItemsSplit - 1; i >= 0 ; i--)
                 RemoveLastElement(stackItems[i]);
 
-            _elements = null;
+            ElementCollection = null;
         }
 
         private void RemoveLastElement(StackItem stackItem)
@@ -118,7 +157,7 @@ namespace DevZest.Data.Windows
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
             stackItem.Cleanup(element);
-            _elements.RemoveAt(lastIndex);
+            ElementCollection.RemoveAt(lastIndex);
         }
 
         private void RemoveLastRow()
@@ -126,7 +165,7 @@ namespace DevZest.Data.Windows
             var lastIndex = Elements.Count - 1;
             var rowView = (RowView)Elements[lastIndex];
             ElementManager.Virtualize(rowView.RowPresenter);
-            _elements.RemoveAt(lastIndex);
+            ElementCollection.RemoveAt(lastIndex);
         }
 
         internal void RefreshElements()
