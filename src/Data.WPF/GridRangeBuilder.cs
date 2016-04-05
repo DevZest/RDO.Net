@@ -48,16 +48,16 @@ namespace DevZest.Data.Windows
             return _templateBuilder;
         }
 
-        public StackItem.Builder<T> BeginStackItem<T>()
+        public BlockItem.Builder<T> BeginBlockItem<T>()
             where T : UIElement, new()
         {
             VerifyNotEmpty();
-            return new StackItem.Builder<T>(this);
+            return new BlockItem.Builder<T>(this);
         }
 
-        internal TemplateBuilder End(StackItem stackItem)
+        internal TemplateBuilder End(BlockItem blockItem)
         {
-            Template.AddStackItem(_gridRange, stackItem);
+            Template.AddBlockItem(_gridRange, blockItem);
             return _templateBuilder;
         }
 

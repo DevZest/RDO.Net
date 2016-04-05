@@ -9,9 +9,9 @@ using System.Collections;
 
 namespace DevZest.Data.Windows
 {
-    public class StackView : Control, IReadOnlyList<RowPresenter>
+    public class BlockView : Control, IReadOnlyList<RowPresenter>
     {
-        public StackView()
+        public BlockView()
         {
             Index = -1;
         }
@@ -40,10 +40,10 @@ namespace DevZest.Data.Windows
                 if (ElementManager == null)
                     return 0;
 
-                var stackDimensions = ElementManager.StackDimensions;
-                var nextStackFirstRowOrdinal = (Index + 1) * stackDimensions;
+                var blockDimensions = ElementManager.BlockDimensions;
+                var nextBlockFirstRowOrdinal = (Index + 1) * blockDimensions;
                 var rowCount = ElementManager.Rows.Count;
-                return nextStackFirstRowOrdinal <= rowCount ? stackDimensions : stackDimensions - (nextStackFirstRowOrdinal - rowCount);
+                return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
             }
         }
 
@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ElementManager.Rows[Index * ElementManager.StackDimensions + index];
+                return ElementManager.Rows[Index * ElementManager.BlockDimensions + index];
             }
         }
 
@@ -69,14 +69,14 @@ namespace DevZest.Data.Windows
             return GetEnumerator();
         }
 
-        private ReadOnlyCollection<StackItem> StackItems
+        private ReadOnlyCollection<BlockItem> BlockItems
         {
-            get { return ElementManager.Template.StackItems; }
+            get { return ElementManager.Template.BlockItems; }
         }
 
-        private int StackItemsSplit
+        private int BlockItemsSplit
         {
-            get { return ElementManager.Template.StackItemsSplit; }
+            get { return ElementManager.Template.BlockItemsSplit; }
         }
 
         internal IElementCollection ElementCollection { get; private set; }
@@ -95,35 +95,35 @@ namespace DevZest.Data.Windows
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
-            var stackItems = StackItems;
-            for (int i = 0; i < StackItemsSplit; i++)
-                AddElement(stackItems[i]);
+            var blockItems = BlockItems;
+            for (int i = 0; i < BlockItemsSplit; i++)
+                AddElement(blockItems[i]);
 
-            for (int i = 0; i < ElementManager.StackDimensions; i++)
+            for (int i = 0; i < ElementManager.BlockDimensions; i++)
             {
                 var success = AddElement(Index, i);
                 if (!success)   // Exceeded the total count of the rows
                     break;
             }
 
-            for (int i = StackItemsSplit; i < StackItems.Count; i++)
-                AddElement(stackItems[i]);
+            for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
+                AddElement(blockItems[i]);
 
-            if (ElementManager.Template.StackViewInitializer != null)
-                ElementManager.Template.StackViewInitializer(this);
+            if (ElementManager.Template.BlockViewInitializer != null)
+                ElementManager.Template.BlockViewInitializer(this);
         }
 
-        private void AddElement(StackItem stackItem)
+        private void AddElement(BlockItem blockItem)
         {
-            var element = stackItem.Generate();
+            var element = blockItem.Generate();
             ElementCollection.Add(element);
-            stackItem.Initialize(element);
+            blockItem.Initialize(element);
         }
 
-        private bool AddElement(int stackIndex, int offset)
+        private bool AddElement(int blockIndex, int offset)
         {
             var rows = ElementManager.Rows;
-            var index = stackIndex * ElementManager.StackDimensions + offset;
+            var index = blockIndex * ElementManager.BlockDimensions + offset;
             if (index >= rows.Count)
                 return false;
             var row = rows[index];
@@ -137,26 +137,26 @@ namespace DevZest.Data.Windows
             if (ElementCollection == null)
                 return;
 
-            int stackDimensions = Elements.Count - StackItems.Count;
+            int blockDimensions = Elements.Count - BlockItems.Count;
 
-            var stackItems = StackItems;
-            for (int i = StackItems.Count - 1; i >= StackItemsSplit; i--)
-                RemoveLastElement(stackItems[i]);
+            var blockItems = BlockItems;
+            for (int i = BlockItems.Count - 1; i >= BlockItemsSplit; i--)
+                RemoveLastElement(blockItems[i]);
 
-            for (int i = stackDimensions - 1; i >= 0; i--)
+            for (int i = blockDimensions - 1; i >= 0; i--)
                 RemoveLastRow();
 
-            for (int i = StackItemsSplit - 1; i >= 0 ; i--)
-                RemoveLastElement(stackItems[i]);
+            for (int i = BlockItemsSplit - 1; i >= 0 ; i--)
+                RemoveLastElement(blockItems[i]);
 
             ElementCollection = null;
         }
 
-        private void RemoveLastElement(StackItem stackItem)
+        private void RemoveLastElement(BlockItem blockItem)
         {
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
-            stackItem.Cleanup(element);
+            blockItem.Cleanup(element);
             ElementCollection.RemoveAt(lastIndex);
         }
 
@@ -173,24 +173,24 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            var stackItems = StackItems;
-            int stackDimensions = Elements.Count - stackItems.Count;
+            var blockItems = BlockItems;
+            int blockDimensions = Elements.Count - blockItems.Count;
             var index = 0;
 
-            for (int i = 0; i < StackItemsSplit; i++)
-                RefreshElement(stackItems[i], index++);
+            for (int i = 0; i < BlockItemsSplit; i++)
+                RefreshElement(blockItems[i], index++);
 
-            for (int i = 0; i < stackDimensions; i++)
+            for (int i = 0; i < blockDimensions; i++)
                 ((RowView)Elements[index++]).RowPresenter.RefreshElements();
 
-            for (int i = StackItemsSplit; i < StackItems.Count; i++)
-                RefreshElement(stackItems[i], index++);
+            for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
+                RefreshElement(blockItems[i], index++);
         }
 
-        private void RefreshElement(StackItem stackItem, int index)
+        private void RefreshElement(BlockItem blockItem, int index)
         {
             var element = Elements[index];
-            stackItem.UpdateTarget(element);
+            blockItem.UpdateTarget(element);
         }
     }
 }

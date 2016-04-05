@@ -47,8 +47,8 @@
     <Compile Include="Primitives\BindingContext.cs" />
     <Compile Include="EofRowMapping.cs" />
     <Compile Include="Primitives\DataItemBase.cs" />
-    <Compile Include="Primitives\StackElementPanel.cs" />
-    <Compile Include="Primitives\StackItem.cs" />
+    <Compile Include="Primitives\BlockElementPanel.cs" />
+    <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridRowSet.cs" />
     <Compile Include="Primitives\GridColumnSet.cs" />
@@ -65,8 +65,8 @@
     <Compile Include="Primitives\LayoutManager.Repeater.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
-    <Compile Include="StackView.cs" />
-    <Compile Include="StackViewCollection.cs" />
+    <Compile Include="BlockView.cs" />
+    <Compile Include="BlockViewCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />

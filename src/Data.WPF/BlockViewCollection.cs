@@ -8,9 +8,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    internal class StackViewCollection : IReadOnlyList<StackView>
+    internal class BlockViewCollection : IReadOnlyList<BlockView>
     {
-        internal StackViewCollection(ElementManager elementManager)
+        internal BlockViewCollection(ElementManager elementManager)
         {
             Debug.Assert(elementManager != null);
             _elementManager = elementManager;
@@ -33,38 +33,38 @@ namespace DevZest.Data.Windows
             get { return _elementManager.Elements; }
         }
 
-        private int StackViewStartIndex
+        private int BlockViewStartIndex
         {
-            get { return _elementManager.StackViewStartIndex; }
+            get { return _elementManager.BlockViewStartIndex; }
         }
 
-        List<StackView> _cachedStackViews;
+        List<BlockView> _cachedBlockViews;
 
-        private StackView Realize(int stackIndex)
+        private BlockView Realize(int index)
         {
-            var stackView = CachedList.GetOrCreate(ref _cachedStackViews, Template.StackViewConstructor);
-            stackView.Initialize(_elementManager, stackIndex);
-            return stackView;
+            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
+            blockView.Initialize(_elementManager, index);
+            return blockView;
         }
 
-        private void Virtualize(StackView stackView)
+        private void Virtualize(BlockView blockView)
         {
-            Debug.Assert(stackView != null);
+            Debug.Assert(blockView != null);
 
-            if (Template.StackViewCleanupAction != null)
-                Template.StackViewCleanupAction(stackView);
-            stackView.Cleanup();
-            CachedList.Recycle(ref _cachedStackViews, stackView);
+            if (Template.BlockViewCleanupAction != null)
+                Template.BlockViewCleanupAction(blockView);
+            blockView.Cleanup();
+            CachedList.Recycle(ref _cachedBlockViews, blockView);
         }
 
-        public StackView First
+        public BlockView First
         {
-            get { return Count == 0 ? null : (StackView)Elements[StackViewStartIndex]; }
+            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex]; }
         }
 
-        public StackView Last
+        public BlockView Last
         {
-            get { return Count == 0 ? null : (StackView)Elements[StackViewStartIndex + Count - 1]; }
+            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex + Count - 1]; }
         }
 
         private IReadOnlyList<RowPresenter> Rows
@@ -72,19 +72,19 @@ namespace DevZest.Data.Windows
             get { return _elementManager.Rows; }
         }
 
-        private int StackDimensions
+        private int BlockDimensions
         {
-            get { return _elementManager.StackDimensions; }
+            get { return _elementManager.BlockDimensions; }
         }
 
         public RowPresenter FirstRow
         {
-            get { return Count == 0 ? null : Rows[First.Index * StackDimensions]; }
+            get { return Count == 0 ? null : Rows[First.Index * BlockDimensions]; }
         }
 
         public RowPresenter LastRow
         {
-            get { return Count == 0 ? null : Rows[Math.Min(Rows.Count - 1, (Last.Index + 1) * StackDimensions - 1)]; }
+            get { return Count == 0 ? null : Rows[Math.Min(Rows.Count - 1, (Last.Index + 1) * BlockDimensions - 1)]; }
         }
 
         public bool Contains(RowPresenter row)
@@ -97,16 +97,16 @@ namespace DevZest.Data.Windows
 
         public int Count { get; private set; }
 
-        public StackView this[int index]
+        public BlockView this[int index]
         {
             get
             {
                 Debug.Assert(index >= 0 && index < Count);
-                return (StackView)Elements[StackViewStartIndex + index];
+                return (BlockView)Elements[BlockViewStartIndex + index];
             }
         }
 
-        public IEnumerator<StackView> GetEnumerator()
+        public IEnumerator<BlockView> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
                 yield return this[i];
@@ -119,10 +119,10 @@ namespace DevZest.Data.Windows
 
         internal void RealizeFirst(int index)
         {
-            Debug.Assert(Count == 0 && index >= 0 && index * StackDimensions < Rows.Count);
+            Debug.Assert(Count == 0 && index >= 0 && index * BlockDimensions < Rows.Count);
 
-            var stackView = Realize(index);
-            ElementCollection.Insert(StackViewStartIndex, stackView);
+            var blockView = Realize(index);
+            ElementCollection.Insert(BlockViewStartIndex, blockView);
             Count = 1;
         }
 
@@ -130,8 +130,8 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(First != null && First.Index > 0);
 
-            var stackView = Realize(First.Index - 1);
-            ElementCollection.Insert(StackViewStartIndex, stackView);
+            var blockView = Realize(First.Index - 1);
+            ElementCollection.Insert(BlockViewStartIndex, blockView);
             Count++;
         }
 
@@ -139,8 +139,8 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(LastRow != null && LastRow.Ordinal < Rows.Count - 1);
 
-            var stackView = Realize(Last.Index + 1);
-            ElementCollection.Insert(StackViewStartIndex + Count, stackView);
+            var blockView = Realize(Last.Index + 1);
+            ElementCollection.Insert(BlockViewStartIndex + Count, blockView);
             Count++;
         }
 
@@ -154,7 +154,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < count; i++)
                 Virtualize(this[i]);
 
-            ElementCollection.RemoveRange(StackViewStartIndex, count);
+            ElementCollection.RemoveRange(BlockViewStartIndex, count);
             Count -= count;
         }
 
@@ -169,7 +169,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < count; i++)
                 Virtualize(this[offset + i]);
 
-            ElementCollection.RemoveRange(StackViewStartIndex + offset, count);
+            ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
             Count -= count;
         }
 

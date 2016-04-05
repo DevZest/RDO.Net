@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BlockItem_IntersectsWithRowRange" xml:space="preserve">
+    <value>BlockItems[{index}] intersects with RowRange.</value>
+  </data>
+  <data name="BlockItem_NullOrientation" xml:space="preserve">
+    <value>BlockItem is invalid when Template.Orientation is null.</value>
+  </data>
+  <data name="BlockItem_OutOfHorizontalRowRange" xml:space="preserve">
+    <value>BlockItems[{index}] is out of horizontal side of RowRange.</value>
+  </data>
+  <data name="BlockItem_OutOfVerticalRowRange" xml:space="preserve">
+    <value>BlockItems[{index}] is out of vertical side of RowRange.</value>
+  </data>
   <data name="DataItem_IntersectsWithRowRange" xml:space="preserve">
     <value>DataItems[{index}] intersects with RowRange.</value>
   </data>
-  <data name="DataItem_NonMultidimensionalTemplate" xml:space="preserve">
-    <value>Multidimensional DataItems[{index}] conflicts with non multidimensional Template (Template.StackDimensions=1).</value>
+  <data name="DataItem_OneDimensionalTemplate" xml:space="preserve">
+    <value>Multidimensional DataItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).</value>
   </data>
   <data name="DataItem_OutOfHorizontalRowRange" xml:space="preserve">
     <value>Multidimensional DataItems[{index}] is out of horizontal side of RowRange.</value>
@@ -156,26 +168,14 @@
   <data name="RowPresenter_VerifyHierarchical" xml:space="preserve">
     <value>The row must be hierarchical.</value>
   </data>
-  <data name="StackItem_IntersectsWithRowRange" xml:space="preserve">
-    <value>StackItems[{index}] intersects with RowRange.</value>
-  </data>
-  <data name="StackItem_NullStackOrientation" xml:space="preserve">
-    <value>StackItem is invalid when Template.StackOrientation is null.</value>
-  </data>
-  <data name="StackItem_OutOfHorizontalRowRange" xml:space="preserve">
-    <value>StackItems[{index}] is out of horizontal side of RowRange.</value>
-  </data>
-  <data name="StackItem_OutOfVerticalRowRange" xml:space="preserve">
-    <value>StackItems[{index}] is out of vertical side of RowRange.</value>
-  </data>
   <data name="TemplateBuilder_InvalidFlattenHierarchyChildModel" xml:space="preserve">
     <value>The child model is invalid. It must be direct child model and has the same type.</value>
   </data>
   <data name="Template_InvalidAutoHeightGridRow" xml:space="preserve">
-    <value>Auto height GridRows[{index}] is invalid for multidimensional stack.</value>
+    <value>Auto height GridRows[{index}] is invalid for multi-row block.</value>
   </data>
   <data name="Template_InvalidAutoWidthGridColumn" xml:space="preserve">
-    <value>Auto width GridColumns[{index}] is invalid for multidimensional stack.</value>
+    <value>Auto width GridColumns[{index}] is invalid for multi-row block.</value>
   </data>
   <data name="Template_InvalidStarHeightGridRow" xml:space="preserve">
     <value>Star height GridRows[{index}] is invalid for repeating.</value>

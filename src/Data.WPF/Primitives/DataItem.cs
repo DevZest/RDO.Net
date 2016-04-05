@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool IsMultidimensional { get; private set; }
 
-        internal int AccumulatedStackDimensionsDelta { get; set; }
+        internal int AccumulatedBlockDimensionsDelta { get; set; }
 
         internal override void VerifyGridRange(GridRange rowRange)
         {
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
                     throw new InvalidOperationException(Strings.DataItem_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.DataItem_NonMultidimensionalTemplate(Ordinal));
+                throw new InvalidOperationException(Strings.DataItem_OneDimensionalTemplate(Ordinal));
         }
     }
 }

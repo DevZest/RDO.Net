@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows.Primitives
             RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
-            StackDimensions = 1;
+            BlockDimensions = 1;
             HierarchicalModelOrdinal = -1;
             VirtualizationThreshold = 50;
         }
@@ -53,15 +53,15 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as DataPresenter; }
         }
 
-        public Orientation? StackOrientation { get; private set; }
+        public Orientation? Orientation { get; private set; }
 
-        public int StackDimensions { get; private set; }
+        public int BlockDimensions { get; private set; }
 
-        internal void Stack(Orientation orientation, int stackDimensions = 1)
+        internal void Block(Orientation orientation, int blockDimensions = 1)
         {
-            Debug.Assert(stackDimensions >= 0);
-            StackOrientation = orientation;
-            StackDimensions = stackDimensions;
+            Debug.Assert(blockDimensions >= 0);
+            Orientation = orientation;
+            BlockDimensions = blockDimensions;
             VerifyGridLengths();
         }
 
@@ -83,10 +83,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return _dataItems; }
         }
 
-        private TemplateItemCollection<StackItem> _stackItems = new TemplateItemCollection<StackItem>();
-        public ReadOnlyCollection<StackItem> StackItems
+        private TemplateItemCollection<BlockItem> _blockItems = new TemplateItemCollection<BlockItem>();
+        public ReadOnlyCollection<BlockItem> BlockItems
         {
-            get { return _stackItems; }
+            get { return _blockItems; }
         }
 
         private TemplateItemCollection<RowItem> _rowItems = new TemplateItemCollection<RowItem>();
@@ -116,8 +116,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < DataItems.Count; i++)
                 DataItems[i].VerifyGridRange();
 
-            for (int i = 0; i < StackItems.Count; i++)
-                StackItems[i].VerifyGridRange();
+            for (int i = 0; i < BlockItems.Count; i++)
+                BlockItems[i].VerifyGridRange();
         }
 
         internal int AddGridColumn(string width)
@@ -167,13 +167,13 @@ namespace DevZest.Data.Windows.Primitives
 
             if (height.IsStar)
             {
-                if (IsRepeatable(Orientation.Vertical))
+                if (IsRepeatable(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
             }
             else
             {
                 Debug.Assert(height.IsAuto);
-                if (IsMultidimensional(Orientation.Vertical))
+                if (IsMultidimensional(System.Windows.Controls.Orientation.Vertical))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
             }
         }
@@ -193,30 +193,30 @@ namespace DevZest.Data.Windows.Primitives
 
             if (width.IsStar)
             {
-                if (IsRepeatable(Orientation.Horizontal))
+                if (IsRepeatable(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
             }
             else
             {
                 Debug.Assert(width.IsAuto);
-                if (IsMultidimensional(Orientation.Horizontal))
+                if (IsMultidimensional(System.Windows.Controls.Orientation.Horizontal))
                     throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
             }
         }
 
         private bool IsRepeatable(Orientation orientation)
         {
-            return !StackOrientation.HasValue ? false : StackOrientation.GetValueOrDefault() == orientation || StackDimensions != 1;
+            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() == orientation || BlockDimensions != 1;
         }
 
         internal bool IsMultidimensional(Orientation orientation)
         {
-            return !StackOrientation.HasValue ? false : StackOrientation.GetValueOrDefault() != orientation && StackDimensions != 1;
+            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && BlockDimensions != 1;
         }
 
         internal int DataItemsSplit { get; private set; }
 
-        internal int StackItemsSplit { get; private set; }
+        internal int BlockItemsSplit { get; private set; }
 
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
@@ -227,13 +227,13 @@ namespace DevZest.Data.Windows.Primitives
                 DataItemsSplit = _dataItems.Count;
         }
 
-        internal void AddStackItem(GridRange gridRange, StackItem stackItem)
+        internal void AddBlockItem(GridRange gridRange, BlockItem blockItem)
         {
             Debug.Assert(IsValid(gridRange));
-            stackItem.Construct(this, gridRange, _stackItems.Count);
-            _stackItems.Add(gridRange, stackItem);
+            blockItem.Construct(this, gridRange, _blockItems.Count);
+            _blockItems.Add(gridRange, blockItem);
             if (_rowItems.Count == 0)
-                StackItemsSplit = _stackItems.Count;
+                BlockItemsSplit = _blockItems.Count;
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
@@ -305,16 +305,16 @@ namespace DevZest.Data.Windows.Primitives
 
         public int HierarchicalModelOrdinal { get; internal set; }
 
-        private Func<StackView> _stackViewConstructor;
-        public Func<StackView> StackViewConstructor
+        private Func<BlockView> _blockViewConstructor;
+        public Func<BlockView> BlockViewConstructor
         {
-            get { return _stackViewConstructor ?? (() => new StackView()); }
-            internal set { _stackViewConstructor = value; }
+            get { return _blockViewConstructor ?? (() => new BlockView()); }
+            internal set { _blockViewConstructor = value; }
         }
 
-        public Action<StackView> StackViewInitializer { get; internal set; }
+        public Action<BlockView> BlockViewInitializer { get; internal set; }
 
-        public Action<StackView> StackViewCleanupAction { get; internal set; }
+        public Action<BlockView> BlockViewCleanupAction { get; internal set; }
 
         private Func<RowView> _rowViewConstructor;
         public Func<RowView> RowViewConstructor

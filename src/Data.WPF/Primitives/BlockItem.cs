@@ -5,13 +5,13 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class StackItem : DataItemBase
+    public sealed class BlockItem : DataItemBase
     {
-        public sealed class Builder<T> : DataItemBase.Builder<T, StackItem, Builder<T>>
+        public sealed class Builder<T> : DataItemBase.Builder<T, BlockItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeBuilder rangeConfig)
-                : base(rangeConfig, StackItem.Create<T>())
+                : base(rangeConfig, BlockItem.Create<T>())
             {
             }
 
@@ -20,19 +20,19 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, StackItem item)
+            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, BlockItem item)
             {
                 return rangeConfig.End(item);
             }
         }
 
-        internal static StackItem Create<T>()
+        internal static BlockItem Create<T>()
             where T : UIElement, new()
         {
-            return new StackItem(() => new T());
+            return new BlockItem(() => new T());
         }
 
-        private StackItem(Func<UIElement> constructor)
+        private BlockItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -40,16 +40,16 @@ namespace DevZest.Data.Windows.Primitives
         internal override void VerifyGridRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.StackItem_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(Strings.BlockItem_IntersectsWithRowRange(Ordinal));
 
-            if (!Template.StackOrientation.HasValue)
-                throw new InvalidOperationException(Strings.StackItem_NullStackOrientation);
+            if (!Template.Orientation.HasValue)
+                throw new InvalidOperationException(Strings.BlockItem_NullOrientation);
 
-            var orientation = Template.StackOrientation.GetValueOrDefault();
+            var orientation = Template.Orientation.GetValueOrDefault();
             if (orientation == Orientation.Horizontal)
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.StackItem_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.BlockItem_OutOfHorizontalRowRange(Ordinal));
             }
             else
             {

@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class StackElementPanel : FrameworkElement
+    public class BlockElementPanel : FrameworkElement
     {
     }
 }

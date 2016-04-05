@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
                     builder.AddGridRow("100");
 
                 builder.AddGridColumns("100")
-                    .Stack(Orientation.Vertical, 0)
+                    .Block(Orientation.Vertical, 0)
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
 
@@ -88,13 +88,13 @@ namespace DevZest.Data.Windows.Primitives
             return array ?? EmptyArray<T>.Singleton;
         }
 
-        private static void VerifyElements(ElementManager elementManager, int[] dataItemsBefore, int[] realizedStacks, int[] dataItemsAfter)
+        private static void VerifyElements(ElementManager elementManager, int[] dataItemsBefore, int[] realizedBlocks, int[] dataItemsAfter)
         {
-            VerifyAccumulatedStackDimensionsDelta(elementManager);
+            VerifyAccumulatedBlockDimensionsDelta(elementManager);
             var template = elementManager.Template;
-            var stacks = elementManager.Stacks;
+            var blocks = elementManager.Blocks;
             var elements = elementManager.Elements;
-            Assert.AreEqual(dataItemsBefore.Length + realizedStacks.Length + dataItemsAfter.Length, elements.Count);
+            Assert.AreEqual(dataItemsBefore.Length + realizedBlocks.Length + dataItemsAfter.Length, elements.Count);
 
             for (int i = 0; i < elements.Count; i++)
             {
@@ -103,43 +103,43 @@ namespace DevZest.Data.Windows.Primitives
                     var expectedIndex = dataItemsBefore[i];
                     Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
                 }
-                else if (i < dataItemsBefore.Length + realizedStacks.Length)
+                else if (i < dataItemsBefore.Length + realizedBlocks.Length)
                 {
-                    var stackView = elements[i] as StackView;
-                    Assert.IsNotNull(stackView);
-                    var expectedIndex = realizedStacks[i - dataItemsBefore.Length];
-                    Assert.AreEqual(expectedIndex, stackView.Index);
+                    var blockView = elements[i] as BlockView;
+                    Assert.IsNotNull(blockView);
+                    var expectedIndex = realizedBlocks[i - dataItemsBefore.Length];
+                    Assert.AreEqual(expectedIndex, blockView.Index);
                 }
                 else
                 {
-                    var expectedIndex = dataItemsAfter[i - realizedStacks.Length - dataItemsBefore.Length];
+                    var expectedIndex = dataItemsAfter[i - realizedBlocks.Length - dataItemsBefore.Length];
                     Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
                 }
             }
         }
 
-        private static void VerifyAccumulatedStackDimensionsDelta(ElementManager elementManager)
+        private static void VerifyAccumulatedBlockDimensionsDelta(ElementManager elementManager)
         {
             var template = elementManager.Template;
             var dataItems = template.DataItems;
             if (dataItems.Count == 0)
                 return;
             var lastDataItem = dataItems[dataItems.Count - 1];
-            Assert.AreEqual(elementManager.Elements.Count - elementManager.Stacks.Count,
-                dataItems.Count * elementManager.StackDimensions - lastDataItem.AccumulatedStackDimensionsDelta);
+            Assert.AreEqual(elementManager.Elements.Count - elementManager.Blocks.Count,
+                dataItems.Count * elementManager.BlockDimensions - lastDataItem.AccumulatedBlockDimensionsDelta);
         }
 
         private static void VerifyElements(ElementManager elementManager, ProductCategory productCategory)
         {
             var elements = elementManager.Elements;
-            int stackViewIndex = 0;
+            int blockViewIndex = 0;
             for (int i = 0; i < elements.Count; i++)
             {
                 var element = elements[i];
                 Assert.IsNotNull(element);
-                if (element is StackView)
+                if (element is BlockView)
                 {
-                    Assert.AreEqual(element, elementManager.Stacks[stackViewIndex++]);
+                    Assert.AreEqual(element, elementManager.Blocks[blockViewIndex++]);
                 }
                 else
                 {
@@ -163,47 +163,47 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1), Array<int>(), Array<int>(2));
 
-            elementManager.StackDimensions = 3;
+            elementManager.BlockDimensions = 3;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(), Array<int>(2));
 
-            elementManager.Stacks.RealizeFirst(1);
+            elementManager.Blocks.RealizeFirst(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Stacks.RealizePrev();
+            elementManager.Blocks.RealizePrev();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1), Array<int>(2));
 
-            elementManager.Stacks.RealizeNext();
+            elementManager.Blocks.RealizeNext();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.StackDimensions = 2;
+            elementManager.BlockDimensions = 2;
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
 
-            elementManager.Stacks.RealizeFirst(1);
+            elementManager.Blocks.RealizeFirst(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Stacks.RealizePrev();
+            elementManager.Blocks.RealizePrev();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1), Array<int>(2));
 
-            elementManager.Stacks.RealizeNext();
+            elementManager.Blocks.RealizeNext();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.Stacks.VirtualizeHead(1);
+            elementManager.Blocks.VirtualizeHead(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1, 2), Array<int>(2));
 
-            elementManager.Stacks.VirtualizeTail(1);
+            elementManager.Blocks.VirtualizeTail(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Stacks.VirtualizeAll();
+            elementManager.Blocks.VirtualizeAll();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
 

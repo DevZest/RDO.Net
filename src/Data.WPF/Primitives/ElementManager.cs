@@ -13,10 +13,10 @@ namespace DevZest.Data.Windows.Primitives
         internal ElementManager(DataSet dataSet)
             : base(dataSet)
         {
-            Stacks = new StackViewCollection(this);
+            Blocks = new BlockViewCollection(this);
         }
 
-        internal StackViewCollection Stacks { get; private set; }
+        internal BlockViewCollection Blocks { get; private set; }
 
         List<RowView> _cachedRowViews;
 
@@ -58,7 +58,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldValue == value)
                     return;
 
-                if (oldValue != null && Stacks.Contains(oldValue))
+                if (oldValue != null && Blocks.Contains(oldValue))
                     Virtualize(oldValue);
 
                 if (value != null)
@@ -75,18 +75,18 @@ namespace DevZest.Data.Windows.Primitives
             get { return ElementCollection; }
         }
 
-        internal int StackViewStartIndex { get; private set; }
+        internal int BlockViewStartIndex { get; private set; }
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(ElementCollection == null && Stacks.Count == 0 && StackDimensions == 1);
+            Debug.Assert(ElementCollection == null && Blocks.Count == 0 && BlockDimensions == 1);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
                 InsertDataElementsAfter(dataItems[i], Elements.Count - 1, 1);
-            StackViewStartIndex = Template.DataItemsSplit;
+            BlockViewStartIndex = Template.DataItemsSplit;
         }
 
         internal void RefreshElements()
@@ -95,9 +95,9 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             var index = RefreshDataElements(0, Template.DataItemsSplit, 0);
-            Debug.Assert(index == StackViewStartIndex);
+            Debug.Assert(index == BlockViewStartIndex);
 
-            index += RefreshStacks();
+            index += RefreshBlocks();
             index = RefreshDataElements(Template.DataItemsSplit, Template.DataItems.Count, index);
             Debug.Assert(index == Elements.Count);
 
@@ -110,8 +110,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = dataItemIndex; i < dataItemCount; i++)
             {
                 var dataItem = dataItems[i];
-                var stackDimensions = dataItem.IsMultidimensional ? StackDimensions : 1;
-                for (int j = 0; j < stackDimensions; j++)
+                var blockDimensions = dataItem.IsMultidimensional ? BlockDimensions : 1;
+                for (int j = 0; j < blockDimensions; j++)
                 {
                     var element = Elements[elementIndex++];
                     Debug.Assert(element.GetTemplateItem() == dataItem);
@@ -121,13 +121,13 @@ namespace DevZest.Data.Windows.Primitives
             return elementIndex;
         }
 
-        private int RefreshStacks()
+        private int RefreshBlocks()
         {
-            var count = Stacks.Count;
+            var count = Blocks.Count;
             for (int i = 0; i < count; i++)
             {
-                var stackView = Stacks[i];
-                stackView.RefreshElements();
+                var blockView = Blocks[i];
+                blockView.RefreshElements();
             }
             return count;
         }
@@ -136,17 +136,17 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(ElementCollection != null);
 
-            Stacks.VirtualizeAll();
+            Blocks.VirtualizeAll();
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
             {
                 var dataItem = dataItems[i];
-                dataItem.AccumulatedStackDimensionsDelta = 0;
-                int count = dataItem.IsMultidimensional ? StackDimensions : 1;
+                dataItem.AccumulatedBlockDimensionsDelta = 0;
+                int count = dataItem.IsMultidimensional ? BlockDimensions : 1;
                 RemoveDataElementsAfter(dataItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _stackDimensions = 1;
+            _blockDimensions = 1;
             ElementCollection = null;
         }
 
@@ -172,28 +172,28 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int _stackDimensions = 1;
-        internal int StackDimensions
+        private int _blockDimensions = 1;
+        internal int BlockDimensions
         {
-            get { return _stackDimensions; }
+            get { return _blockDimensions; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_stackDimensions == value)
+                if (_blockDimensions == value)
                     return;
 
-                var delta = value - _stackDimensions;
-                _stackDimensions = value;
-                OnStackDimensionsChanged(delta);
+                var delta = value - _blockDimensions;
+                _blockDimensions = value;
+                OnBlockDimensionsChanged(delta);
             }
         }
 
-        private void OnStackDimensionsChanged(int stackDimensionsDelta)
+        private void OnBlockDimensionsChanged(int blockDimensionsDelta)
         {
-            Debug.Assert(stackDimensionsDelta != 0);
+            Debug.Assert(blockDimensionsDelta != 0);
 
-            Stacks.VirtualizeAll();
+            Blocks.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
@@ -203,24 +203,24 @@ namespace DevZest.Data.Windows.Primitives
                 index++;
                 var dataItem = dataItems[i];
 
-                var prevAccumulatedstackDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedStackDimensionsDelta;
+                var prevAccumulatedBlockDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedBlockDimensionsDelta;
                 if (!dataItem.IsMultidimensional)
                 {
-                    dataItem.AccumulatedStackDimensionsDelta = prevAccumulatedstackDimensionsDelta + (StackDimensions - 1);
+                    dataItem.AccumulatedBlockDimensionsDelta = prevAccumulatedBlockDimensionsDelta + (BlockDimensions - 1);
                     continue;
                 }
-                dataItem.AccumulatedStackDimensionsDelta = prevAccumulatedstackDimensionsDelta;
+                dataItem.AccumulatedBlockDimensionsDelta = prevAccumulatedBlockDimensionsDelta;
 
                 if (i < Template.DataItemsSplit)
-                    delta += stackDimensionsDelta;
+                    delta += blockDimensionsDelta;
 
-                if (stackDimensionsDelta > 0)
-                    index = InsertDataElementsAfter(dataItem, index, stackDimensionsDelta);
+                if (blockDimensionsDelta > 0)
+                    index = InsertDataElementsAfter(dataItem, index, blockDimensionsDelta);
                 else
-                    RemoveDataElementsAfter(dataItem, index, -stackDimensionsDelta);
+                    RemoveDataElementsAfter(dataItem, index, -blockDimensionsDelta);
             }
 
-            StackViewStartIndex += delta;
+            BlockViewStartIndex += delta;
         }
 
         private bool _isDirty;
@@ -229,7 +229,7 @@ namespace DevZest.Data.Windows.Primitives
             if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || (Stacks.Contains(row) && row.Elements != null))
+            if (row == null || (Blocks.Contains(row) && row.Elements != null))
             {
                 _isDirty = true;
                 BeginRefreshElements();

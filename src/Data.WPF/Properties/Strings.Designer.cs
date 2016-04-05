@@ -12,6 +12,38 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// BlockItems[{index}] intersects with RowRange.
+        /// </summary>
+        public static string BlockItem_IntersectsWithRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_IntersectsWithRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// BlockItem is invalid when Template.Orientation is null.
+        /// </summary>
+        public static string BlockItem_NullOrientation
+        {
+            get { return GetString("BlockItem_NullOrientation"); }
+        }
+
+        /// <summary>
+        /// BlockItems[{index}] is out of horizontal side of RowRange.
+        /// </summary>
+        public static string BlockItem_OutOfHorizontalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_OutOfHorizontalRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// BlockItems[{index}] is out of vertical side of RowRange.
+        /// </summary>
+        public static string BlockItem_OutOfVerticalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_OutOfVerticalRowRange", "index"), index);
+        }
+
+        /// <summary>
         /// DataItems[{index}] intersects with RowRange.
         /// </summary>
         public static string DataItem_IntersectsWithRowRange(object index)
@@ -20,11 +52,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Multidimensional DataItems[{index}] conflicts with non multidimensional Template (Template.StackDimensions=1).
+        /// Multidimensional DataItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
         /// </summary>
-        public static string DataItem_NonMultidimensionalTemplate(object index)
+        public static string DataItem_OneDimensionalTemplate(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_NonMultidimensionalTemplate", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OneDimensionalTemplate", "index"), index);
         }
 
         /// <summary>
@@ -116,38 +148,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// StackItems[{index}] intersects with RowRange.
-        /// </summary>
-        public static string StackItem_IntersectsWithRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_IntersectsWithRowRange", "index"), index);
-        }
-
-        /// <summary>
-        /// StackItem is invalid when Template.StackOrientation is null.
-        /// </summary>
-        public static string StackItem_NullStackOrientation
-        {
-            get { return GetString("StackItem_NullStackOrientation"); }
-        }
-
-        /// <summary>
-        /// StackItems[{index}] is out of horizontal side of RowRange.
-        /// </summary>
-        public static string StackItem_OutOfHorizontalRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_OutOfHorizontalRowRange", "index"), index);
-        }
-
-        /// <summary>
-        /// StackItems[{index}] is out of vertical side of RowRange.
-        /// </summary>
-        public static string StackItem_OutOfVerticalRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("StackItem_OutOfVerticalRowRange", "index"), index);
-        }
-
-        /// <summary>
         /// The child model is invalid. It must be direct child model and has the same type.
         /// </summary>
         public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
@@ -156,7 +156,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Auto height GridRows[{index}] is invalid for multidimensional stack.
+        /// Auto height GridRows[{index}] is invalid for multi-row block.
         /// </summary>
         public static string Template_InvalidAutoHeightGridRow(object index)
         {
@@ -164,7 +164,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Auto width GridColumns[{index}] is invalid for multidimensional stack.
+        /// Auto width GridColumns[{index}] is invalid for multi-row block.
         /// </summary>
         public static string Template_InvalidAutoWidthGridColumn(object index)
         {

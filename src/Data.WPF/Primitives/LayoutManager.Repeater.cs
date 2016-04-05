@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
-            protected virtual int CalculateStackDimensions()
+            protected virtual int CalculateBlockDimensions()
             {
                 return 1;
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private void RealizeElements()
             {
-                LayoutManager.StackDimensions = CalculateStackDimensions();
+                LayoutManager.BlockDimensions = CalculateBlockDimensions();
 
             }
 
