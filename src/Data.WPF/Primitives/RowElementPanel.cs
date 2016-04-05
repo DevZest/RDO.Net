@@ -5,9 +5,9 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class RowPanel : FrameworkElement
+    public class RowElementPanel : FrameworkElement
     {
-        public RowPanel()
+        public RowElementPanel()
         {
         }
 

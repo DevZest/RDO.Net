@@ -47,6 +47,7 @@
     <Compile Include="Primitives\BindingContext.cs" />
     <Compile Include="EofRowMapping.cs" />
     <Compile Include="Primitives\DataItemBase.cs" />
+    <Compile Include="Primitives\StackElementPanel.cs" />
     <Compile Include="Primitives\StackItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridRowSet.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="Primitives\LayoutManager.Repeater.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
+    <Compile Include="StackView.cs" />
+    <Compile Include="StackViewCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
@@ -77,9 +80,10 @@
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="Primitives\SubviewItem.cs" />
     <Compile Include="ColumnHeader.cs" />
+    <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\EmptyArray.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
-    <Compile Include="Primitives\RowPanel.cs" />
+    <Compile Include="Primitives\RowElementPanel.cs" />
     <Compile Include="RowView.cs" />
     <Compile Include="RowPresenter.cs" />
     <Compile Include="Primitives\GridLengthParser.cs" />
@@ -91,7 +95,7 @@
     <Compile Include="Primitives\GridTrack.cs" />
     <Compile Include="Primitives\GridRow.cs" />
     <Compile Include="RowSelector.cs" />
-    <Compile Include="Primitives\DataPanel.cs" />
+    <Compile Include="Primitives\DataElementPanel.cs" />
     <Compile Include="Primitives\Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">

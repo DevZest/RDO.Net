@@ -464,8 +464,8 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        private RowPanel _rowPanel;
-        internal RowPanel RowPanel
+        private RowElementPanel _rowPanel;
+        internal RowElementPanel RowPanel
         {
             get { return _rowPanel; }
             set

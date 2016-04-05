@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,209 +10,44 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class ElementManager : RowManager
     {
-        internal interface IRealizedRowCollection : IReadOnlyList<RowPresenter>
-        {
-            RowPresenter First { get; }
-            RowPresenter Last { get; }
-            bool Contains(RowPresenter row);
-            void VirtualizeAll();
-            void VirtualizeHead(int count);
-            void VirtualizeTail(int count);
-            void RealizeFirst(RowPresenter row);
-            void RealizePrev();
-            void RealizeNext();
-        }
-
-        private class RealizedRowCollection : IRealizedRowCollection
-        {
-            public RealizedRowCollection(ElementManager elementManager)
-            {
-                Debug.Assert(elementManager != null);
-                _elementManager = elementManager;
-            }
-
-            private readonly ElementManager _elementManager;
-
-            private Template Template
-            {
-                get { return _elementManager.Template; }
-            }
-
-            private IReadOnlyList<RowPresenter> Rows
-            {
-                get { return _elementManager.Rows; }
-            }
-
-            private IElementCollection Elements
-            {
-                get { return _elementManager._elements; }
-            }
-
-            private int DataElementsSplit
-            {
-                get { return _elementManager._dataElementsSplit; }
-            }
-
-            public RowPresenter First { get; private set; }
-
-            public RowPresenter Last { get; private set; }
-
-            public bool Contains(RowPresenter row)
-            {
-                Debug.Assert(row != null && row.RowManager == _elementManager);
-                if (Count == 0)
-                    return false;
-                var ordinal = row.Ordinal;
-                return ordinal >= First.Ordinal && ordinal <= Last.Ordinal;
-            }
-
-            public int Count
-            {
-                get { return First == null ? 0 : Last.Ordinal - First.Ordinal + 1 ; }
-            }
-
-            public RowPresenter this[int index]
-            {
-                get
-                {
-                    Debug.Assert(index >= 0 && index < Count);
-                    return Rows[index + First.Ordinal];
-                }
-            }
-
-            public IEnumerator<RowPresenter> GetEnumerator()
-            {
-                for (int i = 0; i < Count; i++)
-                    yield return this[i];
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-
-            List<RowView> _cachedRowViews;
-            private RowView GetOrCreateRowView()
-            {
-                if (_cachedRowViews == null || _cachedRowViews.Count == 0)
-                    return Template.RowViewConstructor();
-
-                var last = _cachedRowViews.Count - 1;
-                var result = _cachedRowViews[last];
-                _cachedRowViews.RemoveAt(last);
-                return result;
-            }
-
-            private void Recycle(RowView rowView)
-            {
-                Debug.Assert(rowView != null);
-
-                if (_cachedRowViews == null)
-                    _cachedRowViews = new List<RowView>();
-                _cachedRowViews.Add(rowView);
-            }
-
-            public void Realize(RowPresenter row)
-            {
-                Debug.Assert(row != null);
-
-                if (row.View != null)
-                    return;
-
-                var rowView = GetOrCreateRowView();
-                row.View = rowView;
-                rowView.Initialize(row);
-                if (Template.RowViewInitializer != null)
-                    Template.RowViewInitializer(rowView);
-            }
-
-            public void Virtualize(RowPresenter row)
-            {
-                Debug.Assert(row != null && row.View != null);
-
-                if (row.IsEditing)
-                    return;
-
-                var rowView = row.View;
-                if (Template.RowViewCleanupAction != null)
-                    Template.RowViewCleanupAction(rowView);
-                row.View = null;
-                rowView.Cleanup();
-                Recycle(rowView);
-            }
-
-            public void VirtualizeAll()
-            {
-                VirtualizeHead(Count);
-            }
-
-            public void VirtualizeHead(int count)
-            {
-                Debug.Assert(count >= 0 && count <= Count);
-
-                if (count == 0)
-                    return;
-
-                for (int i = 0; i < count; i++)
-                    Virtualize(this[i]);
-
-                Elements.RemoveRange(DataElementsSplit, count);
-
-                if (count == Count)
-                    First = Last = null;
-                else
-                    First = Rows[First.Ordinal + count];
-            }
-
-            public void VirtualizeTail(int count)
-            {
-                Debug.Assert(count >= 0 && count <= Count);
-
-                if (count == 0)
-                    return;
-
-                var startIndex = Count - count;
-                for (int i = 0; i < count; i++)
-                    Virtualize(this[startIndex + i]);
-
-                Elements.RemoveRange(DataElementsSplit + startIndex, count);
-
-                if (count == Count)
-                    First = Last = null;
-                else
-                    Last = Rows[Last.Ordinal - count];
-            }
-
-            public void RealizeFirst(RowPresenter row)
-            {
-                Debug.Assert(Count == 0 && row != null);
-                Realize(row);
-                First = Last = row;
-
-                Elements.Insert(DataElementsSplit, row.View);
-            }
-
-            public void RealizePrev()
-            {
-                var prevRow = _elementManager.Rows[First.Ordinal - 1];
-                Realize(prevRow);
-                Elements.Insert(DataElementsSplit, prevRow.View);
-                First = prevRow;
-            }
-
-            public void RealizeNext()
-            {
-                var nextRow = _elementManager.Rows[Last.Ordinal + 1];
-                Realize(nextRow);
-                Elements.Insert(DataElementsSplit + Count, nextRow.View);
-                Last = nextRow; // This line will change the Count property, must be executed last
-            }
-        }
-
         internal ElementManager(DataSet dataSet)
             : base(dataSet)
         {
-            _realizedRows = new RealizedRowCollection(this);
+            Stacks = new StackViewCollection(this);
+        }
+
+        internal StackViewCollection Stacks { get; private set; }
+
+        List<RowView> _cachedRowViews;
+
+        internal RowView Realize(RowPresenter row)
+        {
+            Debug.Assert(row != null);
+
+            if (row.View != null)
+                return row.View;
+
+            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.RowViewConstructor);
+            row.View = rowView;
+            rowView.Initialize(row);
+            if (Template.RowViewInitializer != null)
+                Template.RowViewInitializer(rowView);
+            return rowView;
+        }
+
+        internal void Virtualize(RowPresenter row)
+        {
+            Debug.Assert(row != null && row.View != null);
+
+            if (row.IsEditing)
+                return;
+
+            var rowView = row.View;
+            if (Template.RowViewCleanupAction != null)
+                Template.RowViewCleanupAction(rowView);
+            row.View = null;
+            rowView.Cleanup();
+            CachedList.Recycle(ref _cachedRowViews, rowView);
         }
 
         public sealed override RowPresenter EditingRow
@@ -222,39 +58,35 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldValue == value)
                     return;
 
-                if (oldValue != null && _realizedRows.Contains(oldValue))
-                    _realizedRows.Virtualize(oldValue);
+                if (oldValue != null && Stacks.Contains(oldValue))
+                    Virtualize(oldValue);
 
                 if (value != null)
-                    _realizedRows.Realize(value);
+                    Realize(value);
 
                 base.EditingRow = value;
             }
         }
 
-        private RealizedRowCollection _realizedRows;
-        internal IRealizedRowCollection RealizedRows
-        {
-            get { return _realizedRows; }
-        }
+        internal IElementCollection ElementCollection { get; private set; }
 
-        private IElementCollection _elements;
-        private int _dataElementsSplit;
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return _elements; }
+            get { return ElementCollection; }
         }
+
+        internal int StackViewStartIndex { get; private set; }
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(_elements == null && RealizedRows.Count == 0);
+            Debug.Assert(ElementCollection == null && Stacks.Count == 0 && StackDimensions == 1);
 
-            _elements = ElementCollectionFactory.Create(elementsPanel);
+            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
                 InsertDataElementsAfter(dataItems[i], Elements.Count - 1, 1);
-            _dataElementsSplit = Template.DataItemsSplit;
+            StackViewStartIndex = Template.DataItemsSplit;
         }
 
         internal void RefreshElements()
@@ -263,9 +95,9 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             var index = RefreshDataElements(0, Template.DataItemsSplit, 0);
-            Debug.Assert(index == _dataElementsSplit);
+            Debug.Assert(index == StackViewStartIndex);
 
-            index += RefreshRealizedRows();
+            index += RefreshStacks();
             index = RefreshDataElements(Template.DataItemsSplit, Template.DataItems.Count, index);
             Debug.Assert(index == Elements.Count);
 
@@ -289,21 +121,22 @@ namespace DevZest.Data.Windows.Primitives
             return elementIndex;
         }
 
-        private int RefreshRealizedRows()
+        private int RefreshStacks()
         {
-            for (int i = 0; i < RealizedRows.Count; i++)
+            var count = Stacks.Count;
+            for (int i = 0; i < count; i++)
             {
-                var row = RealizedRows[i];
-                row.RefreshElements();
+                var stackView = Stacks[i];
+                stackView.RefreshElements();
             }
-            return RealizedRows.Count;
+            return count;
         }
 
         internal void ClearElements()
         {
-            Debug.Assert(_elements != null);
+            Debug.Assert(ElementCollection != null);
 
-            _realizedRows.VirtualizeAll();
+            Stacks.VirtualizeAll();
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
             {
@@ -314,7 +147,7 @@ namespace DevZest.Data.Windows.Primitives
             }
             Debug.Assert(Elements.Count == 0);
             _stackDimensions = 1;
-            _elements = null;
+            ElementCollection = null;
         }
 
         private int InsertDataElementsAfter(DataItem dataItem, int index, int count)
@@ -322,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < count; i++)
             {
                 var element = dataItem.Generate();
-                _elements.Insert(index + i + 1, element);
+                ElementCollection.Insert(index + i + 1, element);
                 dataItem.Initialize(element);
             }
             return index + count;
@@ -335,7 +168,7 @@ namespace DevZest.Data.Windows.Primitives
                 var element = Elements[index + 1];
                 Debug.Assert(element.GetTemplateItem() == dataItem);
                 dataItem.Cleanup(element);
-                _elements.RemoveAt(index + 1);
+                ElementCollection.RemoveAt(index + 1);
             }
         }
 
@@ -360,14 +193,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(stackDimensionsDelta != 0);
 
+            Stacks.VirtualizeAll();
+
             var index = -1;
             var delta = 0;
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
             {
                 index++;
-                if (i == Template.DataItemsSplit)
-                    index += RealizedRows.Count;
                 var dataItem = dataItems[i];
 
                 var prevAccumulatedstackDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedStackDimensionsDelta;
@@ -387,16 +220,16 @@ namespace DevZest.Data.Windows.Primitives
                     RemoveDataElementsAfter(dataItem, index, -stackDimensionsDelta);
             }
 
-            _dataElementsSplit += delta;
+            StackViewStartIndex += delta;
         }
 
         private bool _isDirty;
         internal sealed override void Invalidate(RowPresenter row)
         {
-            if (_isDirty || _elements == null)
+            if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || (RealizedRows.Contains(row) && row.Elements != null))
+            if (row == null || (Stacks.Contains(row) && row.Elements != null))
             {
                 _isDirty = true;
                 BeginRefreshElements();
@@ -405,9 +238,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void BeginRefreshElements()
         {
-            Debug.Assert(_elements != null && _isDirty);
+            Debug.Assert(ElementCollection != null && _isDirty);
 
-            var panel = _elements.Parent;
+            var panel = ElementCollection.Parent;
             if (panel == null)
                 RefreshElements();
             else

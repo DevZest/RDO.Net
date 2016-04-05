@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataPanel : FrameworkElement, IScrollInfo
+    public sealed class DataElementPanel : FrameworkElement, IScrollInfo
     {
         #region IScrollInfo
 
@@ -153,12 +153,12 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        static DataPanel()
+        static DataElementPanel()
         {
-            ClipToBoundsProperty.OverrideMetadata(typeof(DataPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            ClipToBoundsProperty.OverrideMetadata(typeof(DataElementPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
-        public DataPanel()
+        public DataElementPanel()
         {
         }
 

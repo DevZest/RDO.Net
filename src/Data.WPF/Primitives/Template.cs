@@ -305,6 +305,17 @@ namespace DevZest.Data.Windows.Primitives
 
         public int HierarchicalModelOrdinal { get; internal set; }
 
+        private Func<StackView> _stackViewConstructor;
+        public Func<StackView> StackViewConstructor
+        {
+            get { return _stackViewConstructor ?? (() => new StackView()); }
+            internal set { _stackViewConstructor = value; }
+        }
+
+        public Action<StackView> StackViewInitializer { get; internal set; }
+
+        public Action<StackView> StackViewCleanupAction { get; internal set; }
+
         private Func<RowView> _rowViewConstructor;
         public Func<RowView> RowViewConstructor
         {

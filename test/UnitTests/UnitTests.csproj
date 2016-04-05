@@ -75,7 +75,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Primitives\DataPanelTests.cs" />
+    <Compile Include="Primitives\DataElementPanelTests.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\GridRowSetTests.cs" />

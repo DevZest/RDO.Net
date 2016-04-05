@@ -13,8 +13,8 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private DataPanel _dataPanel;
-        internal DataPanel DataPanel
+        private DataElementPanel _dataPanel;
+        internal DataElementPanel DataPanel
         {
             get { return _dataPanel; }
             set
