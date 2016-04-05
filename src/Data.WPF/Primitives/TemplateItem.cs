@@ -130,20 +130,17 @@ namespace DevZest.Data.Windows.Primitives
         private void Recycle(UIElement element)
         {
             Debug.Assert(element != null && element.GetTemplateItem() == this);
-
-            if (_cachedUIElements == null)
-                _cachedUIElements = new List<UIElement>();
-            _cachedUIElements.Add(element);
+            CachedList.Recycle(ref _cachedUIElements, element);
         }
 
-        private Action<UIElement> _cleanup;
-        private void InitCleanup<T>(Action<T> cleanup)
+        private Action<UIElement> _cleanupAction;
+        private void InitCleanupAction<T>(Action<T> cleanupAction)
             where T : UIElement
         {
-            if (cleanup == null)
-                _cleanup = null;
+            if (cleanupAction == null)
+                _cleanupAction = null;
             else
-                _cleanup = x => cleanup((T)x);
+                _cleanupAction = x => cleanupAction((T)x);
         }
 
         internal virtual void Cleanup(UIElement element)
@@ -157,8 +154,8 @@ namespace DevZest.Data.Windows.Primitives
             foreach (var behavior in _behaviors)
                 behavior.Detach(element);
 
-            if (_cleanup != null)
-                _cleanup(element);
+            if (_cleanupAction != null)
+                _cleanupAction(element);
 
             Recycle(element);
         }

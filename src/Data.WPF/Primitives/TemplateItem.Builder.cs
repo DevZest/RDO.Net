@@ -49,9 +49,9 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public TBuilder Cleanup(Action<TElement> cleanup)
+            public TBuilder Cleanup(Action<TElement> cleanupAction)
             {
-                Item.InitCleanup(cleanup);
+                Item.InitCleanupAction(cleanupAction);
                 return This;
             }
 
