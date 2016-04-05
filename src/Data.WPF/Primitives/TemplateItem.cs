@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -59,16 +60,6 @@ namespace DevZest.Data.Windows.Primitives
 
         Func<UIElement> _constructor;
         List<UIElement> _cachedUIElements;
-        private UIElement GetOrCreate()
-        {
-            if (_cachedUIElements == null || _cachedUIElements.Count == 0)
-                return Create();
-
-            var last = _cachedUIElements.Count - 1;
-            var result = _cachedUIElements[last];
-            _cachedUIElements.RemoveAt(last);
-            return result;
-        }
 
         private UIElement Create()
         {
@@ -79,7 +70,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal UIElement Generate()
         {
-            return GetOrCreate();
+            return CachedList.GetOrCreate(ref _cachedUIElements, Create);
         }
 
         private IList<BindingBase> _bindings = EmptyArray<BindingBase>.Singleton;
