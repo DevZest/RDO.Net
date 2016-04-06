@@ -311,44 +311,24 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_RefreshElements()
         {
-            //var dataSet = MockProductCategories(3);
-            //var elementManager = MockElementManager(dataSet, Array<bool>(false, true), Array<bool>(false));
-            //var rows = elementManager.Rows;
+            var dataSet = MockProductCategories(8, false);
+            var _ = dataSet._;
+            var elementManager = MockElementManager(dataSet);
+            var template = elementManager.Template;
+            var rows = elementManager.Rows;
 
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.StackDimensions = 3;
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.RealizeFirst(rows[1]);
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.RealizePrevStack();
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.RealizeNextStack();
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.StackDimensions = 2;
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.VirtualizeHead(1);
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.VirtualizeTail(1);
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
-
-            //elementManager.RealizedRows.VirtualizeAll();
-            //elementManager.RefreshElements();
-            //VerifyElements(elementManager, dataSet._);
+            elementManager.BlockViews.RealizeFirst(1);
+            dataSet._.Name[1] = "CHANGED NAME";
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], "CHANGED NAME"))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
         }
     }
 }
