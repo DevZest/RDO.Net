@@ -60,12 +60,13 @@ namespace DevZest.Data.Windows
 
             templateBuilder.AddGridColumns(columns.Select(x => "Auto").ToArray())
                 .AddGridRows("Auto", "Auto")
-                .Range(0, 1, columns.Count - 1, 1).Repeat();
+                .RowRange(0, 1, columns.Count - 1, 1);
 
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                templateBuilder.Range(i, 0).ColumnHeader(column).Range(i, 1).TextBlock(column);
+                templateBuilder[i, 0].ColumnHeader(column)
+                    [i, 1].TextBlock(column);
             }
         }
 

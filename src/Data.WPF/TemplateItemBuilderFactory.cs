@@ -4,75 +4,47 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class GridRangeBuilder
+    public sealed class TemplateItemBuilderFactory
     {
-        internal GridRangeBuilder(TemplateBuilder templateBuilder, GridRange gridRange)
+        internal TemplateItemBuilderFactory(TemplateBuilder templateBuilder, GridRange gridRange)
         {
-            _templateBuilder = templateBuilder;
-            _gridRange = gridRange;
+            TemplateBuilder = templateBuilder;
+            GridRange = gridRange;
         }
 
-        private readonly TemplateBuilder _templateBuilder;
+        internal readonly TemplateBuilder TemplateBuilder;
 
-        private readonly GridRange _gridRange;
+        internal readonly GridRange GridRange;
 
-        int _autoSizeMeasureOrder;
-        public GridRangeBuilder AutoSizeMeasureOrder(int value)
+        internal int AutoSizeMeasureOrder { get; private set; }
+
+        public TemplateItemBuilderFactory MeasureAutoSize(int order)
         {
-            _autoSizeMeasureOrder = value;
+            AutoSizeMeasureOrder = order;
             return this;
         }
 
-        private Template Template
+        internal Template Template
         {
-            get { return _templateBuilder.Template; }
-        }
-
-        private void VerifyNotEmpty()
-        {
-            if (_gridRange.IsEmpty)
-                throw new InvalidOperationException(Strings.GridRange_VerifyNotEmpty);
+            get { return TemplateBuilder.Template; }
         }
 
         public DataItem.Builder<T> BeginDataItem<T>()
             where T : UIElement, new()
         {
-            VerifyNotEmpty();
             return new DataItem.Builder<T>(this);
-        }
-
-        internal TemplateBuilder End(DataItem dataItem)
-        {
-            dataItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddDataItem(_gridRange, dataItem);
-            return _templateBuilder;
         }
 
         public BlockItem.Builder<T> BeginBlockItem<T>()
             where T : UIElement, new()
         {
-            VerifyNotEmpty();
             return new BlockItem.Builder<T>(this);
-        }
-
-        internal TemplateBuilder End(BlockItem blockItem)
-        {
-            Template.AddBlockItem(_gridRange, blockItem);
-            return _templateBuilder;
         }
 
         public RowItem.Builder<T> BeginRowItem<T>()
             where T : UIElement, new()
         {
-            VerifyNotEmpty();
             return new RowItem.Builder<T>(this);
-        }
-
-        internal TemplateBuilder End(RowItem rowItem)
-        {
-            rowItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddRowItem(_gridRange, rowItem);
-            return _templateBuilder;
         }
 
         public SubviewItem.Builder<TView> BeginSubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> buildTemplateAction)
@@ -111,21 +83,6 @@ namespace DevZest.Data.Windows
                     return null;
                 return DataPresenter.Create(childDataSet, buildTemplateAction);
             });
-        }
-
-        internal TemplateBuilder End(SubviewItem subviewItem)
-        {
-            subviewItem.AutoSizeMeasureOrder = _autoSizeMeasureOrder;
-            Template.AddSubviewItem(_gridRange, subviewItem);
-            return _templateBuilder;
-        }
-
-        public TemplateBuilder Repeat()
-        {
-            VerifyNotEmpty();
-
-            Template.RowRange = _gridRange;
-            return _templateBuilder;
         }
     }
 }

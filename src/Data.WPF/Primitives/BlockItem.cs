@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows.Primitives
         public sealed class Builder<T> : TemplateItem.Builder<T, BlockItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(GridRangeBuilder rangeConfig)
+            internal Builder(TemplateItemBuilderFactory rangeConfig)
                 : base(rangeConfig, BlockItem.Create<T>())
             {
             }
@@ -64,9 +64,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override TemplateBuilder End(GridRangeBuilder rangeConfig, BlockItem item)
+            internal override void AddItem(Template template, GridRange gridRange, BlockItem item)
             {
-                return rangeConfig.End(item);
+                template.AddBlockItem(gridRange, item);
             }
 
             public Builder<T> Bind(Action<IBlockPresenter, T> updateTarget)

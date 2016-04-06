@@ -67,7 +67,19 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Block(Orientation orientation, int blockDimensions = 1)
+        public TemplateBuilder RowRange(int column, int row)
+        {
+            Template.RowRange = Template.Range(column, row);
+            return this;
+        }
+
+        public TemplateBuilder RowRange(int left, int top, int right, int bottom)
+        {
+            Template.RowRange = Template.Range(left, top, right, bottom);
+            return this;
+        }
+
+        public TemplateBuilder Orientation(Orientation orientation, int blockDimensions = 1)
         {
             if (blockDimensions < 0)
                 throw new ArgumentOutOfRangeException(nameof(blockDimensions));
@@ -76,14 +88,14 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public GridRangeBuilder Range(int column, int row)
+        public TemplateItemBuilderFactory this[int column, int row]
         {
-            return new GridRangeBuilder(this, Template.Range(column, row));
+            get { return new TemplateItemBuilderFactory(this, Template.Range(column, row)); }
         }
 
-        public GridRangeBuilder Range(int left, int top, int right, int bottom)
+        public TemplateItemBuilderFactory this[int left, int top, int right, int bottom]
         {
-            return new GridRangeBuilder(this, Template.Range(left, top, right, bottom));
+            get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
         public TemplateBuilder PinLeft(int value)

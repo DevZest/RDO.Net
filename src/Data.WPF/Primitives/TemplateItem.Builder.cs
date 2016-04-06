@@ -10,9 +10,9 @@ namespace DevZest.Data.Windows.Primitives
             where TItem : TemplateItem
             where TBuilder : Builder<TElement, TItem, TBuilder>
         {
-            internal Builder(GridRangeBuilder rangeConfig, TItem item)
+            internal Builder(TemplateItemBuilderFactory templateItemBuilder, TItem item)
             {
-                _rangeConfig = rangeConfig;
+                _templateItemBuilder = templateItemBuilder;
                 _item = item;
             }
 
@@ -21,13 +21,15 @@ namespace DevZest.Data.Windows.Primitives
                 _item = null;
             }
 
-            private GridRangeBuilder _rangeConfig;
+            private TemplateItemBuilderFactory _templateItemBuilder;
             public TemplateBuilder End()
             {
-                return End(_rangeConfig, Item);
+                Item.AutoSizeMeasureOrder = _templateItemBuilder.AutoSizeMeasureOrder;
+                AddItem(_templateItemBuilder.Template, _templateItemBuilder.GridRange, Item);
+                return _templateItemBuilder.TemplateBuilder;
             }
 
-            internal abstract TemplateBuilder End(GridRangeBuilder rangeConfig, TItem item);
+            internal abstract void AddItem(Template template, GridRange gridRange, TItem item);
 
             internal abstract TBuilder This { get; }
 

@@ -60,7 +60,6 @@
     <Compile Include="Primitives\IGridTrackSet.cs" />
     <Compile Include="Primitives\BindingBase.cs" />
     <Compile Include="DataPresenterState.cs" />
-    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutManager.Repeater.cs" />
     <Compile Include="Primitives\RowManager.cs" />
@@ -72,7 +71,7 @@
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
     <Compile Include="Factories\DataViewFactory.cs" />
     <Compile Include="Primitives\TemplateItem.Builder.cs" />
-    <Compile Include="GridRangeBuilder.cs" />
+    <Compile Include="TemplateItemBuilderFactory.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="Primitives\RowItem.cs" />
     <Compile Include="RowHeader.cs" />

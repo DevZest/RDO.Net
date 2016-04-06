@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
                     builder.AddGridRow("100");
 
                 builder.AddGridColumns("100")
-                    .Block(Orientation.Vertical, 0)
+                    .Orientation(Orientation.Vertical, 0)
                     .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
                         (RowView rowView) => rowView.RowPresenter.ClearElements());
 
@@ -37,13 +37,13 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var index = dataItemIndex++;
                     var isMultidimensional = isMultidimensionalsBefore[i];
-                    builder.Range(0, index).BeginDataItem<TextBlock>()
+                    builder[0, index].BeginDataItem<TextBlock>()
                         .Multidimensioinal(isMultidimensional)
                         .Bind((src, element) => element.Text = GetDataItemText(index))
                         .End();
                 }
 
-                builder.Range(0, dataItemIndex).BeginRowItem<TextBlock>()
+                builder[0, dataItemIndex].BeginRowItem<TextBlock>()
                     .Bind((row, element) => element.Text = row.GetValue(model.Name))
                     .End();
 
@@ -51,11 +51,11 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var index = dataItemIndex++;
                     var isMultidimensional = isMultidimensionalsAfter[i];
-                    builder.Range(0, index + 1)
-                    .BeginDataItem<TextBlock>()
-                    .Multidimensioinal(isMultidimensional)
-                    .Bind((src, element) => element.Text = GetDataItemText(index))
-                    .End();
+                    builder[0, index + 1]
+                        .BeginDataItem<TextBlock>()
+                        .Multidimensioinal(isMultidimensional)
+                        .Bind((src, element) => element.Text = GetDataItemText(index))
+                        .End();
                 }
             });
         }
