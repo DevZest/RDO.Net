@@ -98,6 +98,9 @@ namespace DevZest.Data.Windows
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
+            if (ElementCollection != null && ElementCollection.Parent == elementsPanel) // Prevent re-entrance. This only happens in unit testing
+                return;
+
             Debug.Assert(ElementCollection == null);
 
             if (ElementManager == null)
@@ -126,7 +129,7 @@ namespace DevZest.Data.Windows
         private void AddElement(BlockItem blockItem)
         {
             var element = blockItem.Generate();
-            ElementCollection.Add(element);
+            AddElement(element);
             blockItem.Initialize(element);
         }
 
@@ -138,8 +141,14 @@ namespace DevZest.Data.Windows
                 return false;
             var row = rows[index];
             var rowView = ElementManager.Realize(row);
-            ElementCollection.Add(rowView);
+            AddElement(rowView);
             return true;
+        }
+
+        private void AddElement(UIElement element)
+        {
+            ElementCollection.Add(element);
+            element.SetBlockPresenter(this);
         }
 
         private void CleanupElements()
@@ -167,7 +176,7 @@ namespace DevZest.Data.Windows
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
             blockItem.Cleanup(element);
-            ElementCollection.RemoveAt(lastIndex);
+            RemoveAt(lastIndex);
         }
 
         private void RemoveLastRow()
@@ -175,7 +184,13 @@ namespace DevZest.Data.Windows
             var lastIndex = Elements.Count - 1;
             var rowView = (RowView)Elements[lastIndex];
             ElementManager.Virtualize(rowView.RowPresenter);
-            ElementCollection.RemoveAt(lastIndex);
+            RemoveAt(lastIndex);
+        }
+
+        private void RemoveAt(int index)
+        {
+            Elements[index].SetBlockPresenter(null);
+            ElementCollection.RemoveAt(index);
         }
 
         internal void RefreshElements()

@@ -53,9 +53,10 @@ namespace DevZest.Data.Windows.Primitives
         public sealed class Builder<T> : TemplateItem.Builder<T, DataItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(TemplateItemBuilderFactory rangeConfig)
-                : base(rangeConfig, DataItem.Create<T>())
+            internal Builder(TemplateItemBuilderFactory builderFactory, bool isMultidimensional = false)
+                : base(builderFactory, DataItem.Create<T>())
             {
+                Item.IsMultidimensional = isMultidimensional;
             }
 
             internal override Builder<T> This
@@ -84,12 +85,6 @@ namespace DevZest.Data.Windows.Primitives
             {
                 Item.AddBinding(Binding.BindTwoWay(Item, updateTarget, updateSource, triggers));
                 return This;
-            }
-
-            public Builder<T> Multidimensioinal(bool value)
-            {
-                Item.IsMultidimensional = value;
-                return this;
             }
         }
 

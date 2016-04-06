@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         private static readonly DependencyProperty TemplateItemProperty = DependencyProperty.RegisterAttached(nameof(TemplateItem),
             typeof(TemplateItem), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static TemplateItem GetTemplateItem(this UIElement element)
+        internal static TemplateItem GetTemplateItem(this UIElement element)
         {
             return (TemplateItem)element.GetValue(TemplateItemProperty);
         }
@@ -21,15 +21,32 @@ namespace DevZest.Data.Windows.Primitives
             element.SetValue(TemplateItemProperty, value);
         }
 
-        public static IBlockPresenter GetBlockPresenter(this UIElement element)
+        private static readonly DependencyProperty BlockPresenterProperty = DependencyProperty.RegisterAttached(nameof(IBlockPresenter),
+            typeof(IBlockPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
+
+        internal static IBlockPresenter GetBlockPresenter(this UIElement element)
         {
-            return element.GetParent<BlockView>();
+            return (IBlockPresenter)element.GetValue(BlockPresenterProperty);
+        }
+
+        internal static void SetBlockPresenter(this UIElement element, IBlockPresenter value)
+        {
+            if (value == null)
+            {
+                Debug.Assert(element.GetBlockPresenter() != null);
+                element.ClearValue(BlockPresenterProperty);
+            }
+            else
+            {
+                Debug.Assert(element.GetBlockPresenter() == null);
+                element.SetValue(BlockPresenterProperty, value);
+            }
         }
 
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
             typeof(RowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static RowPresenter GetRowPresenter(this UIElement element)
+        internal static RowPresenter GetRowPresenter(this UIElement element)
         {
             return (RowPresenter)element.GetValue(RowPresenterProperty);
         }

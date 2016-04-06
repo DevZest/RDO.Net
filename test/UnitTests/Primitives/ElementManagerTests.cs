@@ -20,54 +20,22 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, bool[] isMultidimensionalsBefore, bool[] isMultidimensionalsAfter)
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet)
         {
-            return CreateElementManager(dataSet, (builder, model) =>
-            {
-                for (int i = 0; i < isMultidimensionalsBefore.Length + isMultidimensionalsAfter.Length + 1; i++)
-                    builder.AddGridRow("100");
-
-                builder.AddGridColumns("100")
-                    .Orientation(Orientation.Vertical, 0)
-                    .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null),
-                        (RowView rowView) => rowView.RowPresenter.ClearElements());
-
-                int dataItemIndex = 0;
-                for (int i = 0; i < isMultidimensionalsBefore.Length; i++)
-                {
-                    var index = dataItemIndex++;
-                    var isMultidimensional = isMultidimensionalsBefore[i];
-                    builder[0, index].BeginDataItem<TextBlock>()
-                        .Multidimensioinal(isMultidimensional)
-                        .Bind((src, element) => element.Text = GetDataItemText(index))
-                        .End();
-                }
-
-                builder[0, dataItemIndex].BeginRowItem<TextBlock>()
-                    .Bind((row, element) => element.Text = row.GetValue(model.Name))
-                    .End();
-
-                for (int i = 0; i < isMultidimensionalsAfter.Length; i++)
-                {
-                    var index = dataItemIndex++;
-                    var isMultidimensional = isMultidimensionalsAfter[i];
-                    builder[0, index + 1]
-                        .BeginDataItem<TextBlock>()
-                        .Multidimensioinal(isMultidimensional)
-                        .Bind((src, element) => element.Text = GetDataItemText(index))
-                        .End();
-                }
-            });
+            return CreateElementManager(dataSet, BuildTemplate);
         }
 
-        private static string GetDataItemText(DataItem dataItem)
+        private static void BuildTemplate(TemplateBuilder builder, ProductCategory _)
         {
-            return GetDataItemText(dataItem.Ordinal);
-        }
-
-        private static string GetDataItemText(int dataItemIndex)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Data_{0}", dataItemIndex);
+            builder.AddGridColumns("100", "100")
+                .AddGridRows("100", "100", "100")
+                [1, 0].BeginDataItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).End()
+                [0, 1].BeginBlockItem<TextBlock>().Bind((s, e) => e.Text = s.Index.ToString()).End()
+                [1, 1].BeginRowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).End()
+                [1, 2].BeginDataItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End()
+                .Orientation(Orientation.Vertical, 0)
+                .BlockView((BlockView blockView) => blockView.InitializeElements(null))
+                .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null), (RowView rowView) => rowView.RowPresenter.ClearElements());
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
@@ -83,129 +51,258 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private static T[] Array<T>(params T[] array)
+        private static void Verify(TextBlock textBlock, TemplateItem templateItem, string text)
         {
-            return array ?? EmptyArray<T>.Singleton;
+            Assert.AreEqual(templateItem, textBlock.GetTemplateItem());
+            Assert.AreEqual(text, textBlock.Text);
         }
 
-        private static void VerifyElements(ElementManager elementManager, int[] dataItemsBefore, int[] realizedBlocks, int[] dataItemsAfter)
-        {
-            VerifyAccumulatedBlockDimensionsDelta(elementManager);
-            var template = elementManager.Template;
-            var blocks = elementManager.BlockViews;
-            var elements = elementManager.Elements;
-            Assert.AreEqual(dataItemsBefore.Length + realizedBlocks.Length + dataItemsAfter.Length, elements.Count);
-
-            for (int i = 0; i < elements.Count; i++)
-            {
-                if (i < dataItemsBefore.Length)
-                {
-                    var expectedIndex = dataItemsBefore[i];
-                    Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
-                }
-                else if (i < dataItemsBefore.Length + realizedBlocks.Length)
-                {
-                    var blockView = elements[i] as BlockView;
-                    Assert.IsNotNull(blockView);
-                    var expectedIndex = realizedBlocks[i - dataItemsBefore.Length];
-                    Assert.AreEqual(expectedIndex, blockView.Index);
-                }
-                else
-                {
-                    var expectedIndex = dataItemsAfter[i - realizedBlocks.Length - dataItemsBefore.Length];
-                    Assert.AreEqual(template.DataItems[expectedIndex], elements[i].GetTemplateItem());
-                }
-            }
-        }
-
-        private static void VerifyAccumulatedBlockDimensionsDelta(ElementManager elementManager)
-        {
-            var template = elementManager.Template;
-            var dataItems = template.DataItems;
-            if (dataItems.Count == 0)
-                return;
-            var lastDataItem = dataItems[dataItems.Count - 1];
-            Assert.AreEqual(elementManager.Elements.Count - elementManager.BlockViews.Count,
-                dataItems.Count * elementManager.BlockDimensions - lastDataItem.AccumulatedBlockDimensionsDelta);
-        }
-
-        private static void VerifyElements(ElementManager elementManager, ProductCategory productCategory)
-        {
-            var elements = elementManager.Elements;
-            int blockViewIndex = 0;
-            for (int i = 0; i < elements.Count; i++)
-            {
-                var element = elements[i];
-                Assert.IsNotNull(element);
-                if (element is BlockView)
-                {
-                    Assert.AreEqual(element, elementManager.BlockViews[blockViewIndex++]);
-                }
-                else
-                {
-                    var templateItem = element.GetTemplateItem();
-                    Assert.IsNotNull(templateItem);
-                    var dataItem = templateItem as DataItem;
-                    Assert.IsNotNull(dataItem != null);
-                    Assert.AreEqual(GetDataItemText(dataItem), ((TextBlock)element).Text);
-                }
-            }
-        }
         #endregion
 
         [TestMethod]
         public void ElementManager_Elements()
         {
-            var dataSet = MockProductCategories(9);
-            var elementManager = MockElementManager(dataSet, Array<bool>(false, true), Array<bool>(false));
+            var dataSet = MockProductCategories(8, false);
+            var _ = dataSet._;
+            var elementManager = MockElementManager(dataSet);
+            var template = elementManager.Template;
             var rows = elementManager.Rows;
 
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1), Array<int>(), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockDimensions = 3;
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizeFirst(1);
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(1), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizePrev();
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizeNext();
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "2"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[6].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[7].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockDimensions = 2;
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizeFirst(1);
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizePrev();
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.RealizeNext();
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "2"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.VirtualizeHead(1);
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1, 2), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "2"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.VirtualizeTail(1);
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((BlockView b) => b.Elements
+                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .VerifyEof())
+                    .Verify((RowView r) => r.RowPresenter.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .VerifyEof())
+                    .VerifyEof())
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.BlockViews.VirtualizeAll();
-            VerifyElements(elementManager, dataSet._);
-            VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
+            elementManager.Elements
+                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .VerifyEof();
 
             elementManager.ClearElements();
             Assert.IsNull(elementManager.Elements);

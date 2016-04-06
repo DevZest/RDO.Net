@@ -121,12 +121,19 @@ namespace DevZest.Data.Windows
             return GetEnumerator();
         }
 
+        private void Insert(int index, BlockView blockView)
+        {
+            ElementCollection.Insert(index, blockView);
+            if (Template.BlockViewInitializer != null)
+                Template.BlockViewInitializer(blockView);
+        }
+
         internal void RealizeFirst(int index)
         {
             Debug.Assert(Count == 0 && index >= 0 && index * BlockDimensions < Rows.Count);
 
             var blockView = Realize(index);
-            ElementCollection.Insert(BlockViewStartIndex, blockView);
+            Insert(BlockViewStartIndex, blockView);
             Count = 1;
         }
 
@@ -135,7 +142,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(First != null && First.Index > 0);
 
             var blockView = Realize(First.Index - 1);
-            ElementCollection.Insert(BlockViewStartIndex, blockView);
+            Insert(BlockViewStartIndex, blockView);
             Count++;
         }
 
@@ -144,7 +151,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(LastRow != null && LastRow.Ordinal < Rows.Count - 1);
 
             var blockView = Realize(Last.Index + 1);
-            ElementCollection.Insert(BlockViewStartIndex + Count, blockView);
+            Insert(BlockViewStartIndex + Count, blockView);
             Count++;
         }
 

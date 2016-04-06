@@ -7,21 +7,24 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class RowManagerTestsBase
     {
-        protected static DataSet<ProductCategory> MockProductCategories(int count)
+        protected static DataSet<ProductCategory> MockProductCategories(int count, bool multiLevel = true)
         {
             var dataSet = DataSet<ProductCategory>.New();
             var model = dataSet._;
 
             string namePrefix = "Name";
             AddRows(dataSet, namePrefix, count);
-            for (int i = 0; i < dataSet.Count; i++)
+            if (multiLevel)
             {
-                var children = dataSet[i].Children(model.SubCategories);
-                AddRows(children, GetName(namePrefix, i), count);
-                for (int j = 0; j < children.Count; j++)
+                for (int i = 0; i < dataSet.Count; i++)
                 {
-                    var grandChildren = children[j].Children(children._.SubCategories);
-                    AddRows(grandChildren, GetName(GetName(namePrefix, i), j), count);
+                    var children = dataSet[i].Children(model.SubCategories);
+                    AddRows(children, GetName(namePrefix, i), count);
+                    for (int j = 0; j < children.Count; j++)
+                    {
+                        var grandChildren = children[j].Children(children._.SubCategories);
+                        AddRows(grandChildren, GetName(GetName(namePrefix, i), j), count);
+                    }
                 }
             }
 
