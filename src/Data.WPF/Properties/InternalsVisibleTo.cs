@@ -2,7 +2,7 @@
 
 #if !DEPLOY
 
-[assembly: InternalsVisibleTo("Data.PresentationFramework.UnitTests")]
+[assembly: InternalsVisibleTo("DevZest.Data.Wpf.UnitTests")]
 
 // for Moq
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
