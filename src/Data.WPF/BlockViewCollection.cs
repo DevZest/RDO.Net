@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    internal class BlockViewCollection : IReadOnlyList<BlockView>
+    internal sealed class BlockViewCollection : IReadOnlyList<BlockView>
     {
         internal BlockViewCollection(ElementManager elementManager)
         {
