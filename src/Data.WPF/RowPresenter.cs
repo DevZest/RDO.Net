@@ -464,25 +464,6 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        private RowElementPanel _rowPanel;
-        internal RowElementPanel RowPanel
-        {
-            get { return _rowPanel; }
-            set
-            {
-                if (_rowPanel == value)
-                    return;
-
-                if (_rowPanel != null)
-                    ClearElements();
-
-                _rowPanel = value;
-
-                if (_rowPanel != null)
-                    InitializeElements(_rowPanel);
-            }
-        }
-
         private IElementCollection _elements;
         internal IReadOnlyList<UIElement> Elements
         {

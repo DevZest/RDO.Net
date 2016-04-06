@@ -35,7 +35,7 @@ namespace DevZest.Data.Windows.Primitives
                 [1, 2].BeginDataItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End()
                 .Orientation(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
-                .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null), (RowView rowView) => rowView.RowPresenter.ClearElements());
+                .RowView((RowView rowView) => rowView.RowPresenter.InitializeElements(null));
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)

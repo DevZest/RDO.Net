@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (_rowPresenter != value)
                 {
                     if (value != null)
-                        value.RowPanel = this;
+                        value.InitializeElements(this);
                     _rowPresenter = value;
                 }
                 return _rowPresenter;
