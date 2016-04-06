@@ -2,17 +2,11 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace DevZest.Data.Windows
+namespace DevZest
 {
-    public static class Helper
+    static partial class Extension
     {
-        internal static DataPresenter GetDataPresenter(this DependencyObject reference)
-        {
-            var dataView = reference.GetParent<DataView>();
-            return dataView == null ? null : dataView.DataPresenter;
-        }
-
-        private static T GetParent<T>(this DependencyObject reference)
+        public static T GetParent<T>(this DependencyObject reference)
             where T : UIElement
         {
             Debug.Assert(reference != null);

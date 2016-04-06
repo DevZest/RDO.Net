@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DevZest
 {
-    internal static partial class Extension
+    static partial class Extension
     {
         /*
         const double Epsilon = 1e-8;

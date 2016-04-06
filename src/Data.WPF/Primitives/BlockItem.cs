@@ -5,9 +5,53 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class BlockItem : DataItemBase
+    public sealed class BlockItem : TemplateItem
     {
-        public sealed class Builder<T> : DataItemBase.Builder<T, BlockItem, Builder<T>>
+        private sealed class Binding : BindingBase
+        {
+            internal static Binding Bind<T>(TemplateItem templateItem, Action<IBlockPresenter, T> updateTarget)
+                where T : UIElement
+            {
+                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), null, null);
+            }
+
+            internal static Binding BindToSource<T>(TemplateItem templateItem, Action<T, IBlockPresenter> updateSource, BindingTrigger[] triggers)
+                where T : UIElement
+            {
+                return new Binding(templateItem, null, (element, source) => updateSource((T)element, source), triggers);
+            }
+
+            internal static Binding BindTwoWay<T>(TemplateItem templateItem, Action<IBlockPresenter, T> updateTarget, Action<T, IBlockPresenter> updateSource, BindingTrigger[] triggers)
+                where T : UIElement
+            {
+                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
+            }
+
+            private Binding(TemplateItem templateItem, Action<IBlockPresenter, UIElement> updateTarget, Action<UIElement, IBlockPresenter> updateSource, BindingTrigger[] triggers)
+                : base(templateItem, triggers)
+            {
+                _updateTargetAction = updateTarget;
+                _updateSourceAction = updateSource;
+            }
+
+            private Action<IBlockPresenter, UIElement> _updateTargetAction;
+
+            private Action<UIElement, IBlockPresenter> _updateSourceAction;
+
+            public override void UpdateTarget(BindingContext bindingContext, UIElement element)
+            {
+                if (_updateTargetAction != null)
+                    _updateTargetAction(bindingContext.BlockPresenter, element);
+            }
+
+            public override void UpdateSource(BindingContext bindingContext, UIElement element)
+            {
+                if (_updateSourceAction != null)
+                    _updateSourceAction(element, bindingContext.BlockPresenter);
+            }
+        }
+
+        public sealed class Builder<T> : TemplateItem.Builder<T, BlockItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(GridRangeBuilder rangeConfig)
@@ -23,6 +67,24 @@ namespace DevZest.Data.Windows.Primitives
             internal override TemplateBuilder End(GridRangeBuilder rangeConfig, BlockItem item)
             {
                 return rangeConfig.End(item);
+            }
+
+            public Builder<T> Bind(Action<IBlockPresenter, T> updateTarget)
+            {
+                Item.AddBinding(Binding.Bind(Item, updateTarget));
+                return This;
+            }
+
+            public Builder<T> BindToSource(Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
+            {
+                Item.AddBinding(Binding.BindToSource(Item, updateSource, triggers));
+                return This;
+            }
+
+            public Builder<T> BindTwoWay(Action<IBlockPresenter, T> updateTarget, Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
+            {
+                Item.AddBinding(Binding.BindTwoWay(Item, updateTarget, updateSource, triggers));
+                return This;
             }
         }
 

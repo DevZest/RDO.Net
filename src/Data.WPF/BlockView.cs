@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace DevZest.Data.Windows
 {
-    public class BlockView : Control, IReadOnlyList<RowPresenter>
+    public class BlockView : Control, IBlockPresenter
     {
         public BlockView()
         {
@@ -30,6 +30,16 @@ namespace DevZest.Data.Windows
         }
 
         internal ElementManager ElementManager { get; private set; }
+
+        public DataPresenter DataPresenter
+        {
+            get { return ElementManager as DataPresenter; }
+        }
+
+        public int Dimensions
+        {
+            get { return ElementManager == null ? 1 : ElementManager.BlockDimensions; }
+        }
 
         public int Index { get; private set; }
 

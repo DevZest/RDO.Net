@@ -8,6 +8,7 @@ namespace DevZest.Data.Windows.Primitives
         internal static readonly BindingContext Current = new BindingContext();
 
         private Stack<Template> _templates = new Stack<Template>();
+        private Stack<IBlockPresenter> _blockPresenters = new Stack<IBlockPresenter>();
         private Stack<RowPresenter> _rowPresenters = new Stack<RowPresenter>();
 
         private BindingContext()
@@ -17,12 +18,14 @@ namespace DevZest.Data.Windows.Primitives
         internal void Enter(TemplateItem templateItem, UIElement uiElement)
         {
             _templates.Push(templateItem.Template);
+            _blockPresenters.Push(uiElement.GetBlockPresenter());
             _rowPresenters.Push(uiElement.GetRowPresenter());
         }
 
         internal void Exit()
         {
             _templates.Pop();
+            _blockPresenters.Pop();
             _rowPresenters.Pop();
         }
 
@@ -39,6 +42,11 @@ namespace DevZest.Data.Windows.Primitives
         public DataPresenter DataPresenter
         {
             get { return Template == null ? null : Template.DataPresenter; }
+        }
+
+        public IBlockPresenter BlockPresenter
+        {
+            get { return _blockPresenters.Count == 0 ? null : _blockPresenters.Peek(); }
         }
 
         public RowPresenter RowPresenter

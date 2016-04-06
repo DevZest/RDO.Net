@@ -159,5 +159,22 @@ namespace DevZest.Data.Windows
                 Template.RowViewCleanupAction = rowView => rowViewCleanupAction((T)rowView);
             return this;
         }
+
+        public TemplateBuilder BlockView<T>(Action<T> blockViewIntializer = null, Action<T> blockViewCleanupAction = null)
+            where T : BlockView, new()
+        {
+            Template.BlockViewConstructor = () => new T();
+
+            if (blockViewIntializer == null)
+                Template.BlockViewInitializer = null;
+            else
+                Template.BlockViewInitializer = rowView => blockViewIntializer((T)rowView);
+
+            if (blockViewCleanupAction == null)
+                Template.BlockViewCleanupAction = null;
+            else
+                Template.BlockViewCleanupAction = rowView => blockViewCleanupAction((T)rowView);
+            return this;
+        }
     }
 }

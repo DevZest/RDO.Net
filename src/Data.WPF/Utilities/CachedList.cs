@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DevZest.Data.Windows.Utilities
+namespace DevZest
 {
     internal static class CachedList
     {

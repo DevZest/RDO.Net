@@ -21,6 +21,11 @@ namespace DevZest.Data.Windows.Primitives
             element.SetValue(TemplateItemProperty, value);
         }
 
+        public static IBlockPresenter GetBlockPresenter(this UIElement element)
+        {
+            return element.GetParent<BlockView>();
+        }
+
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
             typeof(RowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 

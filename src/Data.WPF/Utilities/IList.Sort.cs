@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DevZest
 {
-    internal static partial class Extension
+    static partial class Extension
     {
         public static void Sort<T>(this IList<T> list, Func<T, T, int> comparer)
         {
