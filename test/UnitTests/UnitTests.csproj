@@ -92,6 +92,7 @@
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DispatcherObjectExtensions.cs" />
+    <Compile Include="Utilities\IListVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
