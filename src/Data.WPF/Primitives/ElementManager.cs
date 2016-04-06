@@ -11,10 +11,15 @@ namespace DevZest.Data.Windows.Primitives
         internal ElementManager(DataSet dataSet)
             : base(dataSet)
         {
-            Blocks = new BlockViewCollection(this);
+            BlockViews = new BlockViewCollection(this);
         }
 
-        internal BlockViewCollection Blocks { get; private set; }
+        internal BlockViewCollection BlockViews { get; private set; }
+
+        public IReadOnlyList<IBlockPresenter> Blocks
+        {
+            get { return BlockViews; }
+        }
 
         List<RowView> _cachedRowViews;
 
@@ -56,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldValue == value)
                     return;
 
-                if (oldValue != null && Blocks.Contains(oldValue))
+                if (oldValue != null && BlockViews.Contains(oldValue))
                     Virtualize(oldValue);
 
                 if (value != null)
@@ -77,7 +82,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(ElementCollection == null && Blocks.Count == 0 && BlockDimensions == 1);
+            Debug.Assert(ElementCollection == null && BlockViews.Count == 0 && BlockDimensions == 1);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
@@ -121,10 +126,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private int RefreshBlocks()
         {
-            var count = Blocks.Count;
+            var count = BlockViews.Count;
             for (int i = 0; i < count; i++)
             {
-                var blockView = Blocks[i];
+                var blockView = BlockViews[i];
                 blockView.RefreshElements();
             }
             return count;
@@ -134,7 +139,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(ElementCollection != null);
 
-            Blocks.VirtualizeAll();
+            BlockViews.VirtualizeAll();
             var dataItems = Template.DataItems;
             for (int i = 0; i < dataItems.Count; i++)
             {
@@ -191,7 +196,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(blockDimensionsDelta != 0);
 
-            Blocks.VirtualizeAll();
+            BlockViews.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
@@ -227,7 +232,7 @@ namespace DevZest.Data.Windows.Primitives
             if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || (Blocks.Contains(row) && row.Elements != null))
+            if (row == null || (BlockViews.Contains(row) && row.Elements != null))
             {
                 _isDirty = true;
                 BeginRefreshElements();

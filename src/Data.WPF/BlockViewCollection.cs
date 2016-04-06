@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    internal sealed class BlockViewCollection : IReadOnlyList<BlockView>
+    internal sealed class BlockViewCollection : IReadOnlyList<IBlockPresenter>
     {
         internal BlockViewCollection(ElementManager elementManager)
         {
@@ -105,7 +105,12 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public IEnumerator<BlockView> GetEnumerator()
+        IBlockPresenter IReadOnlyList<IBlockPresenter>.this[int index]
+        {
+            get { return this[index]; }
+        }
+
+        public IEnumerator<IBlockPresenter> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
                 yield return this[i];

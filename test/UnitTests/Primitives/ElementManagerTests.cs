@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             VerifyAccumulatedBlockDimensionsDelta(elementManager);
             var template = elementManager.Template;
-            var blocks = elementManager.Blocks;
+            var blocks = elementManager.BlockViews;
             var elements = elementManager.Elements;
             Assert.AreEqual(dataItemsBefore.Length + realizedBlocks.Length + dataItemsAfter.Length, elements.Count);
 
@@ -125,7 +125,7 @@ namespace DevZest.Data.Windows.Primitives
             if (dataItems.Count == 0)
                 return;
             var lastDataItem = dataItems[dataItems.Count - 1];
-            Assert.AreEqual(elementManager.Elements.Count - elementManager.Blocks.Count,
+            Assert.AreEqual(elementManager.Elements.Count - elementManager.BlockViews.Count,
                 dataItems.Count * elementManager.BlockDimensions - lastDataItem.AccumulatedBlockDimensionsDelta);
         }
 
@@ -139,7 +139,7 @@ namespace DevZest.Data.Windows.Primitives
                 Assert.IsNotNull(element);
                 if (element is BlockView)
                 {
-                    Assert.AreEqual(element, elementManager.Blocks[blockViewIndex++]);
+                    Assert.AreEqual(element, elementManager.BlockViews[blockViewIndex++]);
                 }
                 else
                 {
@@ -167,15 +167,15 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(), Array<int>(2));
 
-            elementManager.Blocks.RealizeFirst(1);
+            elementManager.BlockViews.RealizeFirst(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Blocks.RealizePrev();
+            elementManager.BlockViews.RealizePrev();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1), Array<int>(2));
 
-            elementManager.Blocks.RealizeNext();
+            elementManager.BlockViews.RealizeNext();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
@@ -183,27 +183,27 @@ namespace DevZest.Data.Windows.Primitives
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
 
-            elementManager.Blocks.RealizeFirst(1);
+            elementManager.BlockViews.RealizeFirst(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Blocks.RealizePrev();
+            elementManager.BlockViews.RealizePrev();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1), Array<int>(2));
 
-            elementManager.Blocks.RealizeNext();
+            elementManager.BlockViews.RealizeNext();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(0, 1, 2), Array<int>(2));
 
-            elementManager.Blocks.VirtualizeHead(1);
+            elementManager.BlockViews.VirtualizeHead(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1, 2), Array<int>(2));
 
-            elementManager.Blocks.VirtualizeTail(1);
+            elementManager.BlockViews.VirtualizeTail(1);
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(1), Array<int>(2));
 
-            elementManager.Blocks.VirtualizeAll();
+            elementManager.BlockViews.VirtualizeAll();
             VerifyElements(elementManager, dataSet._);
             VerifyElements(elementManager, Array<int>(0, 1, 1), Array<int>(), Array<int>(2));
 
