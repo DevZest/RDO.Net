@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal IElementCollection ElementCollection { get; private set; }
 
-        internal IReadOnlyList<UIElement> Elements
+        public IReadOnlyList<UIElement> Elements
         {
             get { return ElementCollection; }
         }
