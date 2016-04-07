@@ -80,12 +80,18 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int BlockViewStartIndex { get; private set; }
 
+        internal void SetElementsPanel(FrameworkElement elementsPanel)
+        {
+            Debug.Assert(elementsPanel != null);
+
+            if (ElementCollection != null)
+                ClearElements();
+            InitializeElements(elementsPanel);
+        }
+
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            if (ElementCollection != null)
-                throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
-
-            Debug.Assert(BlockViews.Count == 0 && BlockDimensions == 1);
+            Debug.Assert(ElementCollection == null && BlockViews.Count == 0 && BlockDimensions == 1);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 

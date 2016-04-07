@@ -464,32 +464,40 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        private IElementCollection _elements;
+        internal IElementCollection ElementCollection { get; private set; }
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return _elements; }
+            get { return ElementCollection; }
+        }
+
+        internal void SetElementsPanel(RowElementPanel elementsPanel)
+        {
+            Debug.Assert(elementsPanel != null);
+
+            if (ElementCollection != null)
+                ClearElements();
+            InitializeElements(elementsPanel);
         }
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            if (_elements != null)
-                throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
+            Debug.Assert(ElementCollection == null);
 
-            _elements = ElementCollectionFactory.Create(elementsPanel);
+            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
             var rowItems = Template.RowItems;
             for (int i = 0; i < rowItems.Count; i++)
             {
                 var rowItem = rowItems[i];
                 var element = rowItem.Generate();
                 element.SetRowPresenter(this);
-                _elements.Add(element);
+                ElementCollection.Add(element);
                 rowItem.Initialize(element);
             }
         }
 
         internal void ClearElements()
         {
-            Debug.Assert(_elements != null);
+            Debug.Assert(ElementCollection != null);
 
             var rowItems = Template.RowItems;
             Debug.Assert(Elements.Count == rowItems.Count);
@@ -500,8 +508,8 @@ namespace DevZest.Data.Windows
                 rowItem.Cleanup(element);
                 element.SetRowPresenter(null);
             }
-            _elements.RemoveRange(0, Elements.Count);
-            _elements = null;
+            ElementCollection.RemoveRange(0, Elements.Count);
+            ElementCollection = null;
         }
 
         internal void RefreshElements()

@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
-            CleanupElements();
+            ClearElements();
             Index = -1;
             ElementManager = null;
         }
@@ -96,16 +96,22 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
+        internal void SetElementsPanel(BlockElementPanel elementsPanel)
+        {
+            Debug.Assert(elementsPanel != null);
+
+            if (ElementCollection != null)
+                ClearElements();
+            InitializeElements(elementsPanel);
+        }
+
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            if (ElementCollection != null)
-            {
-                // Prevent re-entrance. This only happens in unit testing because BlockView implements both view and presenter all together.
-                if (ElementCollection.Parent == null && elementsPanel == null)
-                    return;
-                else
-                    throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
-            }
+            // Prevent re-entrance. This only happens in unit testing because BlockView implements both view and presenter all together.
+            if (ElementCollection != null && ElementCollection.Parent == null && elementsPanel == null)
+                return;
+
+            Debug.Assert(ElementCollection == null);
 
             if (ElementManager == null)
                 return;
@@ -156,7 +162,7 @@ namespace DevZest.Data.Windows
             element.SetBlockPresenter(this);
         }
 
-        private void CleanupElements()
+        private void ClearElements()
         {
             if (ElementCollection == null)
                 return;

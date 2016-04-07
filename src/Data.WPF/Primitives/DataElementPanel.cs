@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -162,30 +163,34 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private DataPresenter _dataPresenter;
-        private DataPresenter DataPresenter
-        {
-            get
-            {
-                var value = DataView == null ? null : DataView.DataPresenter;
-                if (_dataPresenter != value)
-                {
-                    if (value != null)
-                        value.DataPanel = this;
-                    _dataPresenter = value;
-                }
-                return _dataPresenter;
-            }
-        }
-
         private DataView DataView
         {
             get { return TemplatedParent as DataView; }
         }
 
+        private DataPresenter DataPresenter
+        {
+            get
+            {
+                var dataView = DataView;
+                return dataView == null ? null : dataView.DataPresenter;
+            }
+        }
+
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return DataPresenter == null ? EmptyArray<UIElement>.Singleton : DataPresenter.Elements; }
+            get
+            {
+                var dataPresenter = DataPresenter;
+                if (dataPresenter == null)
+                    return EmptyArray<UIElement>.Singleton;
+
+                if (dataPresenter.ElementCollection == null || dataPresenter.ElementCollection.Parent != this)
+                    dataPresenter.SetElementsPanel(this);
+
+                Debug.Assert(dataPresenter.ElementCollection.Parent == this);
+                return dataPresenter.ElementCollection;
+            }
         }
 
         protected override int VisualChildrenCount

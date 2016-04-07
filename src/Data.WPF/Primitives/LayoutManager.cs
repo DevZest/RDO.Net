@@ -13,25 +13,6 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private DataElementPanel _dataPanel;
-        internal DataElementPanel DataPanel
-        {
-            get { return _dataPanel; }
-            set
-            {
-                if (_dataPanel == value)
-                    return;
-
-                if (_dataPanel != null)
-                    ClearElements();
-
-                _dataPanel = value;
-
-                if (_dataPanel != null)
-                    InitializeElements(_dataPanel);
-            }
-        }
-
         internal double ViewportWidth { get; private set; }
 
         internal double ViewportHeight { get; private set; }

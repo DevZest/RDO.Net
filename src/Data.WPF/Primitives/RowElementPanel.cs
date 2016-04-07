@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -11,30 +12,34 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        RowPresenter _rowPresenter;
-        private RowPresenter RowPresenter
-        {
-            get
-            {
-                var value = RowView == null ? null : RowView.RowPresenter;
-                if (_rowPresenter != value)
-                {
-                    if (value != null)
-                        value.InitializeElements(this);
-                    _rowPresenter = value;
-                }
-                return _rowPresenter;
-            }
-        }
-
         private RowView RowView
         {
             get { return TemplatedParent as RowView; }
         }
 
+        private RowPresenter RowPresenter
+        {
+            get
+            {
+                var rowView = RowView;
+                return rowView == null ? null : rowView.RowPresenter;
+            }
+        }
+
         internal IReadOnlyList<UIElement> Elements
         {
-            get { return RowPresenter == null ? EmptyArray<UIElement>.Singleton : RowPresenter.Elements; }
+            get
+            {
+                var rowPresenter = RowPresenter;
+                if (rowPresenter == null)
+                    return EmptyArray<UIElement>.Singleton;
+
+                if (rowPresenter.ElementCollection == null || rowPresenter.ElementCollection.Parent != this)
+                    rowPresenter.SetElementsPanel(this);
+
+                Debug.Assert(rowPresenter.ElementCollection.Parent == this);
+                return rowPresenter.ElementCollection;
+            }
         }
 
         protected override int VisualChildrenCount

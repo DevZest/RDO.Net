@@ -141,9 +141,6 @@
   <data name="DataItem_OutOfVerticalRowRange" xml:space="preserve">
     <value>Multidimensional DataItems[{index}] is out of vertical side of RowRange.</value>
   </data>
-  <data name="ElementsPanel_ElementsAlreadyInitialized" xml:space="preserve">
-    <value>The elements is initialized already. Only one elements panel is allowed in the control template.</value>
-  </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
   </data>
