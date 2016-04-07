@@ -50,14 +50,8 @@
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
-    <Compile Include="Primitives\GridRowSet.cs" />
-    <Compile Include="Primitives\GridColumnSet.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
-    <Compile Include="Primitives\GridTrackSet.cs" />
     <Compile Include="Primitives\IElementCollection.cs" />
-    <Compile Include="Primitives\IGridColumnSet.cs" />
-    <Compile Include="Primitives\IGridRowSet.cs" />
-    <Compile Include="Primitives\IGridTrackSet.cs" />
     <Compile Include="Primitives\BindingBase.cs" />
     <Compile Include="DataPresenterState.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
@@ -103,6 +97,7 @@
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Utilities\DependencyObject.GetParent.cs" />
     <Compile Include="Primitives\TemplateItem.cs" />
+    <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="ValidationMessageView.cs" />

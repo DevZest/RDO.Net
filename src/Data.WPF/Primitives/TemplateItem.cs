@@ -208,54 +208,54 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.SizeToContentY; }
         }
 
-        private IGridColumnSet _autoWidthGridColumns;
+        private IConcatList<GridColumn> _autoWidthGridColumns;
         internal void InvalidateAutoWidthGridColumns()
         {
             _autoWidthGridColumns = null;
         }
 
-        internal IGridColumnSet AutoWidthGridColumns
+        internal IConcatList<GridColumn> AutoWidthGridColumns
         {
             get
             {
                 if (AutoSizeMeasureOrder < 0)
-                    return GridColumnSet.Empty;
+                    return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
                 {
-                    _autoWidthGridColumns = GridColumnSet.Empty;
+                    _autoWidthGridColumns = ConcatList<GridColumn>.Empty;
                     for (int x = GridRange.Left.Ordinal; x <= GridRange.Right.Ordinal; x++)
                     {
                         var column = Template.GridColumns[x];
                         if (column.IsAutoLength(SizeToContentX))
-                            _autoWidthGridColumns = _autoWidthGridColumns.Merge(column);
+                            _autoWidthGridColumns = _autoWidthGridColumns.Concat(column);
                     }
                 }
                 return _autoWidthGridColumns;
             }
         }
 
-        private IGridRowSet _autoHeightGridRows;
+        private IConcatList<GridRow> _autoHeightGridRows;
         internal void InvalidateAutoHeightGridRows()
         {
             _autoHeightGridRows = null;
         }
 
-        internal IGridRowSet AutoHeightGridRows
+        internal IConcatList<GridRow> AutoHeightGridRows
         {
             get
             {
                 if (AutoSizeMeasureOrder < 0)
-                    return GridRowSet.Empty;
+                    return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)
                 {
-                    _autoHeightGridRows = GridRowSet.Empty;
+                    _autoHeightGridRows = ConcatList<GridRow>.Empty;
                     for (int y = GridRange.Top.Ordinal; y <= GridRange.Bottom.Ordinal; y++)
                     {
                         var row = Template.GridRows[y];
                         if (row.IsAutoLength(SizeToContentY))
-                            _autoHeightGridRows = _autoHeightGridRows.Merge(row);
+                            _autoHeightGridRows = _autoHeightGridRows.Concat(row);
                     }
                 }
                 return _autoHeightGridRows;

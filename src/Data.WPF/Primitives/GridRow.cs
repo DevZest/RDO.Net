@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class GridRow : GridTrack, IGridRowSet
+    public sealed class GridRow : GridTrack, IConcatList<GridRow>
     {
         internal GridRow(Template owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
@@ -26,18 +29,44 @@ namespace DevZest.Data.Windows.Primitives
             get { return MaxLength; }
         }
 
-        GridRow IGridTrackSet<GridRow>.this[int index]
+        public override Orientation Orientation
+        {
+            get { return Orientation.Vertical; }
+        }
+
+        bool IConcatList<GridRow>.IsReadOnly
+        {
+            get { return true; }
+        }
+
+        int IReadOnlyCollection<GridRow>.Count
+        {
+            get { return 1; }
+        }
+
+        GridRow IReadOnlyList<GridRow>.this[int index]
         {
             get
             {
-                Debug.Assert(index == 0);
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 return this;
             }
         }
 
-        public override Orientation Orientation
+        IConcatList<GridRow> IConcatList<GridRow>.Concat(IConcatList<GridRow> items)
         {
-            get { return Orientation.Vertical; }
+            throw new NotSupportedException();
+        }
+
+        IEnumerator<GridRow> IEnumerable<GridRow>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class GridColumn : GridTrack, IGridColumnSet
+    public sealed class GridColumn : GridTrack, IConcatList<GridColumn>
     {
         internal GridColumn(Template owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
@@ -26,18 +29,44 @@ namespace DevZest.Data.Windows.Primitives
             get { return MaxLength; }
         }
 
-        GridColumn IGridTrackSet<GridColumn>.this[int index]
+        public override Orientation Orientation
+        {
+            get { return Orientation.Horizontal; }
+        }
+
+        bool IConcatList<GridColumn>.IsReadOnly
+        {
+            get { return true; }
+        }
+
+        int IReadOnlyCollection<GridColumn>.Count
+        {
+            get { return 1; }
+        }
+
+        GridColumn IReadOnlyList<GridColumn>.this[int index]
         {
             get
             {
-                Debug.Assert(index == 0);
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 return this;
             }
         }
 
-        public override Orientation Orientation
+        IConcatList<GridColumn> IConcatList<GridColumn>.Concat(IConcatList<GridColumn> items)
         {
-            get { return Orientation.Horizontal; }
+            throw new NotSupportedException();
+        }
+
+        IEnumerator<GridColumn> IEnumerable<GridColumn>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
         }
     }
 }

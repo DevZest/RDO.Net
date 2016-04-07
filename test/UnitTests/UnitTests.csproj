@@ -78,8 +78,6 @@
     <Compile Include="Primitives\DataElementPanelTests.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
-    <Compile Include="Primitives\GridRowSetTests.cs" />
-    <Compile Include="Primitives\GridColumnSetTests.cs" />
     <Compile Include="Primitives\RowManagerTestsBase.cs" />
     <Compile Include="RowPresenterTests.cs" />
     <Compile Include="StringRes.Designer.cs">

@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class GridTrack : IGridTrackSet
+    public abstract class GridTrack
     {
         internal GridTrack(Template owner, int ordinal, GridLengthParser.Result result)
         {
@@ -40,31 +40,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double MeasuredLength { get; set; }
 
-        int IGridTrackSet.Count
-        {
-            get { return 1; }
-        }
-
-        GridTrack IGridTrackSet.this[int index]
-        {
-            get
-            {
-                Debug.Assert(index == 0);
-                return this;
-            }
-        }
-
         public abstract Orientation Orientation { get; }
-
-        internal IReadOnlyList<GridTrack> GridTracks
-        {
-            get
-            {
-                if (Orientation == Orientation.Horizontal)
-                    return Owner.GridColumns;
-                else
-                    return Owner.GridRows;
-            }
-        }
     }
 }

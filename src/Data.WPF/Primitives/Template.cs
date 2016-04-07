@@ -374,20 +374,20 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private double _totalStarWidth;
-        private IGridColumnSet _starWidthGridColumns;
-        private IGridColumnSet StarWidthGridColumns
+        private IConcatList<GridColumn> _starWidthGridColumns;
+        private IConcatList<GridColumn> StarWidthGridColumns
         {
             get
             {
                 if (_starWidthGridColumns == null)
                 {
-                    _starWidthGridColumns = GridColumnSet.Empty;
+                    _starWidthGridColumns = ConcatList<GridColumn>.Empty;
                     foreach (var column in GridColumns)
                     {
                         if (column.IsStarLength(SizeToContentX))
                         {
                             _totalStarWidth += column.Width.Value;
-                            _starWidthGridColumns = _starWidthGridColumns.Merge(column);
+                            _starWidthGridColumns = _starWidthGridColumns.Concat(column);
                         }
                     }
                 }
@@ -396,20 +396,20 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private double _totalStarHeight;
-        private IGridRowSet _starHeightGridRows;
-        private IGridRowSet StarHeightGridRows
+        private IConcatList<GridRow> _starHeightGridRows;
+        private IConcatList<GridRow> StarHeightGridRows
         {
             get
             {
                 if (_starHeightGridRows == null)
                 {
-                    _starHeightGridRows = GridRowSet.Empty;
+                    _starHeightGridRows = ConcatList<GridRow>.Empty;
                     foreach (var row in GridRows)
                     {
                         if (row.IsStarLength(SizeToContentY))
                         {
                             _totalStarHeight += row.Height.Value;
-                            _starHeightGridRows = _starHeightGridRows.Merge(row);
+                            _starHeightGridRows = _starHeightGridRows.Concat(row);
                         }
                     }
                 }
@@ -417,36 +417,36 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private IGridColumnSet _autoWidthGridColumns;
-        private IGridColumnSet AutoWidthGridColumns
+        private IConcatList<GridColumn> _autoWidthGridColumns;
+        private IConcatList<GridColumn> AutoWidthGridColumns
         {
             get
             {
                 if (_autoWidthGridColumns == null)
                 {
-                    _autoWidthGridColumns = GridColumnSet.Empty;
+                    _autoWidthGridColumns = ConcatList<GridColumn>.Empty;
                     foreach (var column in GridColumns)
                     {
                         if (column.IsAutoLength(SizeToContentX))
-                            _autoWidthGridColumns = _autoWidthGridColumns.Merge(column);
+                            _autoWidthGridColumns = _autoWidthGridColumns.Concat(column);
                     }
                 }
                 return _autoWidthGridColumns;
             }
         }
 
-        private IGridRowSet _autoHeightGridRows;
-        private IGridRowSet AutoHeightGridRows
+        private IConcatList<GridRow> _autoHeightGridRows;
+        private IConcatList<GridRow> AutoHeightGridRows
         {
             get
             {
                 if (_autoHeightGridRows == null)
                 {
-                    _autoHeightGridRows = GridRowSet.Empty;
+                    _autoHeightGridRows = ConcatList<GridRow>.Empty;
                     foreach (var row in GridRows)
                     {
                         if (row.IsAutoLength(SizeToContentY))
-                            _autoHeightGridRows = _autoHeightGridRows.Merge(row);
+                            _autoHeightGridRows = _autoHeightGridRows.Concat(row);
                     }
                 }
                 return _autoHeightGridRows;
