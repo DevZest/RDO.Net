@@ -222,15 +222,7 @@ namespace DevZest.Data.Windows.Primitives
                     return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
-                {
-                    _autoWidthGridColumns = ConcatList<GridColumn>.Empty;
-                    for (int x = GridRange.Left.Ordinal; x <= GridRange.Right.Ordinal; x++)
-                    {
-                        var column = Template.GridColumns[x];
-                        if (column.IsAutoLength(SizeToContentX))
-                            _autoWidthGridColumns = _autoWidthGridColumns.Concat(column);
-                    }
-                }
+                    _autoWidthGridColumns = GridRange.FilterColumns(x => x.IsAutoLength(SizeToContentX));
                 return _autoWidthGridColumns;
             }
         }
@@ -249,15 +241,7 @@ namespace DevZest.Data.Windows.Primitives
                     return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)
-                {
-                    _autoHeightGridRows = ConcatList<GridRow>.Empty;
-                    for (int y = GridRange.Top.Ordinal; y <= GridRange.Bottom.Ordinal; y++)
-                    {
-                        var row = Template.GridRows[y];
-                        if (row.IsAutoLength(SizeToContentY))
-                            _autoHeightGridRows = _autoHeightGridRows.Concat(row);
-                    }
-                }
+                    _autoHeightGridRows = GridRange.FilterRows(x => x.IsAutoLength(SizeToContentY));
                 return _autoHeightGridRows;
             }
         }

@@ -380,17 +380,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_starWidthGridColumns == null)
-                {
-                    _starWidthGridColumns = ConcatList<GridColumn>.Empty;
-                    foreach (var column in GridColumns)
-                    {
-                        if (column.IsStarLength(SizeToContentX))
-                        {
-                            _totalStarWidth += column.Width.Value;
-                            _starWidthGridColumns = _starWidthGridColumns.Concat(column);
-                        }
-                    }
-                }
+                    _starWidthGridColumns = GridColumns.Filter(x => x.IsStarLength(SizeToContentX), x => _totalStarWidth += x.Width.Value);
                 return _starWidthGridColumns;
             }
         }
@@ -402,17 +392,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_starHeightGridRows == null)
-                {
-                    _starHeightGridRows = ConcatList<GridRow>.Empty;
-                    foreach (var row in GridRows)
-                    {
-                        if (row.IsStarLength(SizeToContentY))
-                        {
-                            _totalStarHeight += row.Height.Value;
-                            _starHeightGridRows = _starHeightGridRows.Concat(row);
-                        }
-                    }
-                }
+                    _starHeightGridRows = GridRows.Filter(x => x.IsStarLength(SizeToContentY), x => _totalStarHeight += x.Height.Value);
                 return _starHeightGridRows;
             }
         }
@@ -423,14 +403,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_autoWidthGridColumns == null)
-                {
-                    _autoWidthGridColumns = ConcatList<GridColumn>.Empty;
-                    foreach (var column in GridColumns)
-                    {
-                        if (column.IsAutoLength(SizeToContentX))
-                            _autoWidthGridColumns = _autoWidthGridColumns.Concat(column);
-                    }
-                }
+                    _autoWidthGridColumns = GridColumns.Filter(x => x.IsAutoLength(SizeToContentX));
                 return _autoWidthGridColumns;
             }
         }
@@ -441,14 +414,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_autoHeightGridRows == null)
-                {
-                    _autoHeightGridRows = ConcatList<GridRow>.Empty;
-                    foreach (var row in GridRows)
-                    {
-                        if (row.IsAutoLength(SizeToContentY))
-                            _autoHeightGridRows = _autoHeightGridRows.Concat(row);
-                    }
-                }
+                    _autoHeightGridRows = GridRows.Filter(x => x.IsAutoLength(SizeToContentY));
                 return _autoHeightGridRows;
             }
         }

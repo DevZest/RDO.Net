@@ -89,5 +89,17 @@ namespace DevZest.Data.Windows.Primitives
                 Right.Ordinal > gridRange.Right.Ordinal ? Right : gridRange.Right,
                 Bottom.Ordinal > gridRange.Bottom.Ordinal ? Bottom : gridRange.Bottom);
         }
+
+        internal IConcatList<GridColumn> FilterColumns(Func<GridColumn, bool> predict, Action<GridColumn> action = null)
+        {
+            Debug.Assert(!IsEmpty);
+            return Template.GridColumns.Filter(Left.Ordinal, Right.Ordinal, predict, action);
+        }
+
+        internal IConcatList<GridRow> FilterRows(Func<GridRow, bool> predict, Action<GridRow> action = null)
+        {
+            Debug.Assert(!IsEmpty);
+            return Template.GridRows.Filter(Top.Ordinal, Bottom.Ordinal, predict, action);
+        }
     }
 }

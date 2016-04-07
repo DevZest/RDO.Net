@@ -8,6 +8,7 @@ namespace DevZest
     internal interface IConcatList<T> : IReadOnlyList<T>
     {
         bool IsReadOnly { get; }
+        IConcatList<T> Concat(T item);
         IConcatList<T> Concat(IConcatList<T> items);
     }
 
@@ -24,6 +25,12 @@ namespace DevZest
             public bool IsReadOnly
             {
                 get { return false; }
+            }
+
+            public IConcatList<T> Concat(T item)
+            {
+                Add(item);
+                return this;
             }
 
             public IConcatList<T> Concat(IConcatList<T> items)
@@ -63,6 +70,11 @@ namespace DevZest
             public bool IsReadOnly
             {
                 get { return true; }
+            }
+
+            public IConcatList<T> Concat(T item)
+            {
+                throw new NotSupportedException();
             }
 
             public IConcatList<T> Concat(IConcatList<T> items)
