@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var blockView = BlockView;
                 if (blockView == null)
-                    return EmptyArray<UIElement>.Singleton;
+                    return Array<UIElement>.Empty;
 
                 if (blockView.ElementCollection == null || blockView.ElementCollection.Parent != this)
                     blockView.SetElementsPanel(this);

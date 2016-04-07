@@ -79,7 +79,7 @@
     <Compile Include="Primitives\SubviewItem.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
-    <Compile Include="Utilities\EmptyArray.cs" />
+    <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowElementPanel.cs" />
     <Compile Include="RowView.cs" />

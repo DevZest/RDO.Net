@@ -345,7 +345,9 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _sizeToContentX = value;
+                _totalStarWidth = 0;
                 _starWidthGridColumns = null;
+                _autoWidthGridColumns = null;
                 DataItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
                 BlockItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
                 RowItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
@@ -362,13 +364,16 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _sizeToContentY = value;
+                _totalStarHeight = 0;
                 _starHeightGridRows = null;
+                _autoHeightGridRows = null;
                 DataItems.ForEach(x => x.InvalidateAutoHeightGridRows());
                 BlockItems.ForEach(x => x.InvalidateAutoHeightGridRows());
                 RowItems.ForEach(x => x.InvalidateAutoHeightGridRows());
             }
         }
 
+        private double _totalStarWidth;
         private IGridColumnSet _starWidthGridColumns;
         private IGridColumnSet StarWidthGridColumns
         {
@@ -380,13 +385,17 @@ namespace DevZest.Data.Windows.Primitives
                     foreach (var column in GridColumns)
                     {
                         if (column.IsStarLength(SizeToContentX))
+                        {
+                            _totalStarWidth += column.Width.Value;
                             _starWidthGridColumns = _starWidthGridColumns.Merge(column);
+                        }
                     }
                 }
                 return _starWidthGridColumns;
             }
         }
 
+        private double _totalStarHeight;
         private IGridRowSet _starHeightGridRows;
         private IGridRowSet StarHeightGridRows
         {
@@ -398,10 +407,49 @@ namespace DevZest.Data.Windows.Primitives
                     foreach (var row in GridRows)
                     {
                         if (row.IsStarLength(SizeToContentY))
+                        {
+                            _totalStarHeight += row.Height.Value;
                             _starHeightGridRows = _starHeightGridRows.Merge(row);
+                        }
                     }
                 }
                 return _starHeightGridRows;
+            }
+        }
+
+        private IGridColumnSet _autoWidthGridColumns;
+        private IGridColumnSet AutoWidthGridColumns
+        {
+            get
+            {
+                if (_autoWidthGridColumns == null)
+                {
+                    _autoWidthGridColumns = GridColumnSet.Empty;
+                    foreach (var column in GridColumns)
+                    {
+                        if (column.IsAutoLength(SizeToContentX))
+                            _autoWidthGridColumns = _autoWidthGridColumns.Merge(column);
+                    }
+                }
+                return _autoWidthGridColumns;
+            }
+        }
+
+        private IGridRowSet _autoHeightGridRows;
+        private IGridRowSet AutoHeightGridRows
+        {
+            get
+            {
+                if (_autoHeightGridRows == null)
+                {
+                    _autoHeightGridRows = GridRowSet.Empty;
+                    foreach (var row in GridRows)
+                    {
+                        if (row.IsAutoLength(SizeToContentY))
+                            _autoHeightGridRows = _autoHeightGridRows.Merge(row);
+                    }
+                }
+                return _autoHeightGridRows;
             }
         }
 

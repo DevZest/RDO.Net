@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var rowPresenter = RowPresenter;
                 if (rowPresenter == null)
-                    return EmptyArray<UIElement>.Singleton;
+                    return Array<UIElement>.Empty;
 
                 if (rowPresenter.ElementCollection == null || rowPresenter.ElementCollection.Parent != this)
                     rowPresenter.SetElementsPanel(this);

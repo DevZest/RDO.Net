@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             TemplateItem = templateItem;
             if (triggers == null || triggers.Length == 0)
-                _triggers = EmptyArray<BindingTrigger>.Singleton;
+                _triggers = Array<BindingTrigger>.Empty;
             else
                 _triggers = triggers;
         }

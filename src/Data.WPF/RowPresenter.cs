@@ -120,11 +120,11 @@ namespace DevZest.Data.Windows
         private IReadOnlyList<DataPresenter> InitSubviewPresenters()
         {
             if (IsEof)
-                return EmptyArray<DataPresenter>.Singleton;
+                return Array<DataPresenter>.Empty;
 
             var subviewItems = Template.SubviewItems;
             if (subviewItems.Count == 0)
-                return EmptyArray<DataPresenter>.Singleton;
+                return Array<DataPresenter>.Empty;
 
             var result = new DataPresenter[subviewItems.Count];
             for (int i = 0; i < subviewItems.Count; i++)

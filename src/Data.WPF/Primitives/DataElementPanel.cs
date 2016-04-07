@@ -182,7 +182,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var dataPresenter = DataPresenter;
                 if (dataPresenter == null)
-                    return EmptyArray<UIElement>.Singleton;
+                    return Array<UIElement>.Empty;
 
                 if (dataPresenter.ElementCollection == null || dataPresenter.ElementCollection.Parent != this)
                     dataPresenter.SetElementsPanel(this);

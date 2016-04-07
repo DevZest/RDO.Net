@@ -7,17 +7,6 @@ namespace DevZest.Data.Windows.Primitives
     public class GridTrackCollection<T> : ReadOnlyCollection<T>
         where T : GridTrack
     {
-        internal int StarLengthCount { get; private set; }
-
-        internal int AutoLengthCount { get; private set; }
-
-        internal int AbsoluteLengthCount
-        {
-            get { return Count - StarLengthCount - AutoLengthCount; }
-        }
-
-        internal double AbsoluteLengthTotal { get; private set; }
-
         internal GridTrackCollection()
             : base(new List<T>())
         {
@@ -27,55 +16,13 @@ namespace DevZest.Data.Windows.Primitives
         {
             Items.Add(item);
 
-            if (item.Length.IsAuto)
-                AutoLengthCount++;
-            else if (item.Length.IsStar)
-                StarLengthCount++;
-            else
+            if (item.Length.IsAbsolute)
             {
                 item.MeasuredLength = item.Length.Value;
                 AbsoluteLengthTotal += item.MeasuredLength;
             }
         }
 
-        internal bool Classify(bool sizeToContent, ref T[] autoLengthTracks, ref T[] starLengthTracks)
-        {
-            var autoLengthCount = AutoLengthCount;
-            if (sizeToContent)
-                autoLengthCount += StarLengthCount;
-
-            var starLengthCount = sizeToContent ? 0 : StarLengthCount;
-
-            if (autoLengthTracks != null && autoLengthTracks.Length == autoLengthCount)
-            {
-                Debug.Assert(starLengthTracks != null && starLengthTracks.Length == starLengthCount);
-                return false;
-            }
-
-            autoLengthTracks = autoLengthCount == 0 ? EmptyArray<T>.Singleton : new T[autoLengthCount];
-            starLengthTracks = starLengthCount == 0 ? EmptyArray<T>.Singleton : new T[starLengthCount];
-            DoClassify(sizeToContent, autoLengthTracks, starLengthTracks);
-            return true;
-        }
-
-        private void DoClassify(bool sizeToContent, T[] autoLengthTracks, T[] starLengthTracks)
-        {
-            var indexAuto = 0;
-            var indexStar = 0;
-            foreach (var track in this)
-            {
-                var length = track.Length;
-                if (length.IsAuto || (length.IsStar && sizeToContent))  // Auto
-                {
-                    track.AutoLengthIndex = indexAuto;
-                    autoLengthTracks[indexAuto++] = track;
-                    continue;
-                }
-
-                track.AutoLengthIndex = -1;
-                if (length.IsStar && !sizeToContent)    // Star
-                    starLengthTracks[indexStar++] = track;
-            }
-        }
+        internal double AbsoluteLengthTotal { get; private set; }
     }
 }

@@ -72,22 +72,22 @@ namespace DevZest.Data.Windows.Primitives
             return CachedList.GetOrCreate(ref _cachedUIElements, Create);
         }
 
-        private IList<BindingBase> _bindings = EmptyArray<BindingBase>.Singleton;
+        private IList<BindingBase> _bindings = Array<BindingBase>.Empty;
 
         internal void AddBinding(BindingBase binding)
         {
             Debug.Assert(binding != null);
-            if (_bindings == EmptyArray<BindingBase>.Singleton)
+            if (_bindings == Array<BindingBase>.Empty)
                 _bindings = new List<BindingBase>();
             _bindings.Add(binding);
         }
 
-        private IList<Behavior> _behaviors = EmptyArray<Behavior>.Singleton;
+        private IList<Behavior> _behaviors = Array<Behavior>.Empty;
 
         private void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
             where T : UIElement, new()
         {
-            Debug.Assert(_behaviors == EmptyArray<Behavior>.Singleton);
+            Debug.Assert(_behaviors == Array<Behavior>.Empty);
 
             if (behaviors == null || behaviors.Count == 0)
                 return;
