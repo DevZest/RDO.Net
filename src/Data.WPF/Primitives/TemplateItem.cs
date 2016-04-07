@@ -197,5 +197,74 @@ namespace DevZest.Data.Windows.Primitives
         internal abstract void VerifyGridRange(GridRange rowRange);
 
         public int AutoSizeMeasureOrder { get; internal set; }
+
+        private bool SizeToContentX
+        {
+            get { return Template.SizeToContentX; }
+        }
+
+        private bool SizeToContentY
+        {
+            get { return Template.SizeToContentY; }
+        }
+
+        private IGridColumnSet _autoWidthGridColumns;
+        internal void InvalidateAutoWidthGridColumns()
+        {
+            _autoWidthGridColumns = null;
+        }
+
+        internal IGridColumnSet AutoWidthGridColumns
+        {
+            get
+            {
+                if (AutoSizeMeasureOrder < 0)
+                    return GridColumnSet.Empty;
+
+                if (_autoWidthGridColumns == null)
+                {
+                    _autoWidthGridColumns = GridColumnSet.Empty;
+                    for (int x = GridRange.Left.Ordinal; x <= GridRange.Right.Ordinal; x++)
+                    {
+                        var column = Template.GridColumns[x];
+                        if (column.IsAutoLength(SizeToContentX))
+                            _autoWidthGridColumns = _autoWidthGridColumns.Merge(column);
+                    }
+                }
+                return _autoWidthGridColumns;
+            }
+        }
+
+        private IGridRowSet _autoHeightGridRows;
+        internal void InvalidateAutoHeightGridRows()
+        {
+            _autoHeightGridRows = null;
+        }
+
+        internal IGridRowSet AutoHeightGridRows
+        {
+            get
+            {
+                if (AutoSizeMeasureOrder < 0)
+                    return GridRowSet.Empty;
+
+                if (_autoHeightGridRows == null)
+                {
+                    _autoHeightGridRows = GridRowSet.Empty;
+                    for (int y = GridRange.Top.Ordinal; y <= GridRange.Bottom.Ordinal; y++)
+                    {
+                        var row = Template.GridRows[y];
+                        if (row.IsAutoLength(SizeToContentY))
+                            _autoHeightGridRows = _autoHeightGridRows.Merge(row);
+                    }
+                }
+                return _autoHeightGridRows;
+            }
+        }
+
+        internal bool IsAutoSize
+        {
+            get { return AutoWidthGridColumns.Count > 0 || AutoHeightGridRows.Count > 0; }
+        }
     }
 }

@@ -61,7 +61,6 @@
     <Compile Include="Primitives\BindingBase.cs" />
     <Compile Include="DataPresenterState.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
-    <Compile Include="Primitives\LayoutManager.Repeater.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
@@ -104,6 +103,7 @@
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Utilities\DependencyObject.GetParent.cs" />
     <Compile Include="Primitives\TemplateItem.cs" />
+    <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />

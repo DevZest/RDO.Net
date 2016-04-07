@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -326,6 +328,82 @@ namespace DevZest.Data.Windows.Primitives
         public Action<RowView> RowViewInitializer { get; internal set; }
 
         public Action<RowView> RowViewCleanupAction { get; internal set; }
+
+        internal void InitMeasure(Size availableSize)
+        {
+            SizeToContentX = double.IsPositiveInfinity(availableSize.Width);
+            SizeToContentY = double.IsPositiveInfinity(availableSize.Height);
+        }
+
+        private bool _sizeToContentX;
+        internal bool SizeToContentX
+        {
+            get { return _sizeToContentX; }
+            private set
+            {
+                if (_sizeToContentX == value)
+                    return;
+
+                _sizeToContentX = value;
+                _starWidthGridColumns = null;
+                DataItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
+                BlockItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
+                RowItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
+            }
+        }
+
+        private bool _sizeToContentY;
+        internal bool SizeToContentY
+        {
+            get { return _sizeToContentY; }
+            private set
+            {
+                if (_sizeToContentY == value)
+                    return;
+
+                _sizeToContentY = value;
+                _starHeightGridRows = null;
+                DataItems.ForEach(x => x.InvalidateAutoHeightGridRows());
+                BlockItems.ForEach(x => x.InvalidateAutoHeightGridRows());
+                RowItems.ForEach(x => x.InvalidateAutoHeightGridRows());
+            }
+        }
+
+        private IGridColumnSet _starWidthGridColumns;
+        private IGridColumnSet StarWidthGridColumns
+        {
+            get
+            {
+                if (_starWidthGridColumns == null)
+                {
+                    _starWidthGridColumns = GridColumnSet.Empty;
+                    foreach (var column in GridColumns)
+                    {
+                        if (column.IsStarLength(SizeToContentX))
+                            _starWidthGridColumns = _starWidthGridColumns.Merge(column);
+                    }
+                }
+                return _starWidthGridColumns;
+            }
+        }
+
+        private IGridRowSet _starHeightGridRows;
+        private IGridRowSet StarHeightGridRows
+        {
+            get
+            {
+                if (_starHeightGridRows == null)
+                {
+                    _starHeightGridRows = GridRowSet.Empty;
+                    foreach (var row in GridRows)
+                    {
+                        if (row.IsStarLength(SizeToContentY))
+                            _starHeightGridRows = _starHeightGridRows.Merge(row);
+                    }
+                }
+                return _starHeightGridRows;
+            }
+        }
 
         public int VirtualizationThreshold { get; internal set; }
     }

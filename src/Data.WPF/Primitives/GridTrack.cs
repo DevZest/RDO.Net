@@ -26,11 +26,19 @@ namespace DevZest.Data.Windows.Primitives
 
         public double MaxLength { get; private set; }
 
+        internal bool IsAutoLength(bool sizeToContent)
+        {
+            return Length.IsAuto || (Length.IsStar && sizeToContent);
+        }
+
+        internal bool IsStarLength(bool sizeToContent)
+        {
+            return Length.IsStar && !sizeToContent;
+        }
+
         internal int AutoLengthIndex { get; set; }
 
         internal double MeasuredLength { get; set; }
-
-        internal double AccumulatedLength { get; set; }
 
         int IGridTrackSet.Count
         {
