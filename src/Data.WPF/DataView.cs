@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows
         {
             if (DataPresenter != null)
             {
-                DataPresenter.DataPanel = null;
+                DataPresenter.ClearElements();
                 DataPresenter = null;
             }
         }

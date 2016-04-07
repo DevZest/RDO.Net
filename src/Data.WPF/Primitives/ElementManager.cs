@@ -82,7 +82,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(ElementCollection == null && BlockViews.Count == 0 && BlockDimensions == 1);
+            if (ElementCollection != null)
+                throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
+
+            Debug.Assert(BlockViews.Count == 0 && BlockDimensions == 1);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
@@ -137,7 +140,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void ClearElements()
         {
-            Debug.Assert(ElementCollection != null);
+            if (ElementCollection == null)
+                return;
 
             BlockViews.VirtualizeAll();
             var dataItems = Template.DataItems;

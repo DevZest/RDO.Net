@@ -98,10 +98,14 @@ namespace DevZest.Data.Windows
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            if (ElementCollection != null && ElementCollection.Parent == elementsPanel) // Prevent re-entrance. This only happens in unit testing
-                return;
-
-            Debug.Assert(ElementCollection == null);
+            if (ElementCollection != null)
+            {
+                // Prevent re-entrance. This only happens in unit testing because BlockView implements both view and presenter all together.
+                if (ElementCollection.Parent == null && elementsPanel == null)
+                    return;
+                else
+                    throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
+            }
 
             if (ElementManager == null)
                 return;
@@ -122,6 +126,7 @@ namespace DevZest.Data.Windows
             for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
                 AddElement(blockItems[i]);
 
+            // Initialization happens only after all elements are generated because BlockView implements both view and presenter all together.
             if (ElementManager.Template.BlockViewInitializer != null)
                 ElementManager.Template.BlockViewInitializer(this);
         }

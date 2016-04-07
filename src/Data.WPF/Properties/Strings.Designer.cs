@@ -76,6 +76,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The elements is initialized already. Only one elements panel is allowed in the control template.
+        /// </summary>
+        public static string ElementsPanel_ElementsAlreadyInitialized
+        {
+            get { return GetString("ElementsPanel_ElementsAlreadyInitialized"); }
+        }
+
+        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)

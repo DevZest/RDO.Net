@@ -472,7 +472,8 @@ namespace DevZest.Data.Windows
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(_elements == null);
+            if (_elements != null)
+                throw new InvalidOperationException(Strings.ElementsPanel_ElementsAlreadyInitialized);
 
             _elements = ElementCollectionFactory.Create(elementsPanel);
             var rowItems = Template.RowItems;
