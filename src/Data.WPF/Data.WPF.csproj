@@ -55,6 +55,10 @@
     <Compile Include="Primitives\BindingBase.cs" />
     <Compile Include="DataPresenterState.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
+    <Compile Include="Primitives\LayoutManager._Measurer.cs" />
+    <Compile Include="Primitives\LayoutManager._Measurer.X.cs" />
+    <Compile Include="Primitives\LayoutManager._Measurer.Z.cs" />
+    <Compile Include="Primitives\LayoutManager._Measurer.Y.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />

@@ -95,10 +95,16 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private Size _availableSize;
+        private _Measurer _measurer;
+        private _Measurer Measurer
+        {
+            get { return _measurer ?? (_measurer = _Measurer.Create(this)); }
+        }
+
         internal Size Measure(Size availableSize)
         {
-            _availableSize = availableSize;
+            Template.InitMeasure(availableSize);
+            BlockDimensions = Measurer.CoerceBlockDimensions();
             throw new NotImplementedException();
         }
 

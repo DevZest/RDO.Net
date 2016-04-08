@@ -444,6 +444,25 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        internal int CoerceHorizontalBlockDimensions()
+        {
+            return CoerceBlockDimensions(SizeToContentX, AvailableWidth, GridColumns);
+        }
+
+        internal int CoerceVerticalBlockDimensions()
+        {
+            return CoerceBlockDimensions(SizeToContentY, AvailableHeight, GridRows);
+        }
+
+        private int CoerceBlockDimensions<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
+            where T : GridTrack
+        {
+            if (sizeToContent)
+                return 1;
+
+            return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
+        }
+
         public int VirtualizationThreshold { get; internal set; }
     }
 }
