@@ -331,91 +331,116 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void InitMeasure(Size availableSize)
         {
-            SizeToContentX = double.IsPositiveInfinity(availableSize.Width);
-            SizeToContentY = double.IsPositiveInfinity(availableSize.Height);
+            AvailableSize = availableSize;
+            InitMeasuredAutoLengths();
+            DistributeStarLengths();
         }
 
-        private bool _sizeToContentX;
-        internal bool SizeToContentX
+        private void InitMeasuredAutoLengths()
         {
-            get { return _sizeToContentX; }
+            GridColumns.InitMeasuredAutoLengths(SizeToContentX);
+            GridRows.InitMeasuredAutoLengths(SizeToContentY);
+        }
+
+        internal void DistributeStarLengths()
+        {
+            DistributeStarLengths(AvailableWidth, GridColumns, StarWidthGridColumns);
+            DistributeStarLengths(AvailableHeight, GridRows, StarHeightGridRows);
+        }
+
+        private static void DistributeStarLengths<T>(double totalLength, GridTrackCollection<T> gridTracks, IReadOnlyList<T> starGridTracks)
+            where T : GridTrack
+        {
+            if (starGridTracks.Count == 0)
+                return;
+
+            totalLength = Math.Max(0d, totalLength - gridTracks.TotalAbsoluteLength - gridTracks.TotalAutoLength);
+            var totalStarFactor = gridTracks.TotalStarFactor;
+            foreach (var gridTrack in starGridTracks)
+                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+        }
+
+        internal Size AvailableSize
+        {
+            get { return new Size(_availableWidth, _availableHeight); }
             private set
             {
-                if (_sizeToContentX == value)
+                AvailableWidth = value.Width;
+                AvailableHeight = value.Height;
+            }
+        }
+
+        private double _availableWidth;
+        internal double AvailableWidth
+        {
+            get { return _availableWidth; }
+            private set
+            {
+                bool oldSizeToContentX = double.IsPositiveInfinity(_availableWidth);
+                bool newSizeToContentX = double.IsPositiveInfinity(value);
+
+                _availableWidth = value;
+
+                if (oldSizeToContentX == newSizeToContentX)
                     return;
 
-                _sizeToContentX = value;
-                _totalStarWidth = 0;
                 _starWidthGridColumns = null;
-                _autoWidthGridColumns = null;
                 DataItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
                 BlockItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
                 RowItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
             }
         }
 
-        private bool _sizeToContentY;
-        internal bool SizeToContentY
+        private double _availableHeight;
+        internal double AvailableHeight
         {
-            get { return _sizeToContentY; }
+            get { return _availableHeight; }
             private set
             {
-                if (_sizeToContentY == value)
+                bool oldSizeToContentY = double.IsPositiveInfinity(_availableHeight);
+                bool newSizeToContentY = double.IsPositiveInfinity(value);
+
+                _availableHeight = value;
+
+                if (oldSizeToContentY == newSizeToContentY)
                     return;
 
-                _sizeToContentY = value;
-                _totalStarHeight = 0;
                 _starHeightGridRows = null;
-                _autoHeightGridRows = null;
                 DataItems.ForEach(x => x.InvalidateAutoHeightGridRows());
                 BlockItems.ForEach(x => x.InvalidateAutoHeightGridRows());
                 RowItems.ForEach(x => x.InvalidateAutoHeightGridRows());
             }
         }
 
-        private double _totalStarWidth;
+        internal bool SizeToContentX
+        {
+            get { return double.IsPositiveInfinity(_availableWidth); }
+        }
+
+        internal bool SizeToContentY
+        {
+            get { return double.IsPositiveInfinity(_availableHeight); }
+        }
+
         private IConcatList<GridColumn> _starWidthGridColumns;
         private IConcatList<GridColumn> StarWidthGridColumns
         {
             get
             {
                 if (_starWidthGridColumns == null)
-                    _starWidthGridColumns = GridColumns.Filter(x => x.IsStarLength(SizeToContentX), x => _totalStarWidth += x.Width.Value);
+                    _starWidthGridColumns = GridColumns.Filter(x => x.IsStarLength(SizeToContentX));
                 return _starWidthGridColumns;
             }
         }
 
-        private double _totalStarHeight;
         private IConcatList<GridRow> _starHeightGridRows;
         private IConcatList<GridRow> StarHeightGridRows
         {
             get
             {
                 if (_starHeightGridRows == null)
-                    _starHeightGridRows = GridRows.Filter(x => x.IsStarLength(SizeToContentY), x => _totalStarHeight += x.Height.Value);
+                    _starHeightGridRows = GridRows.Filter(x => x.IsStarLength(SizeToContentY));
                 return _starHeightGridRows;
-            }
-        }
-
-        private IConcatList<GridColumn> _autoWidthGridColumns;
-        private IConcatList<GridColumn> AutoWidthGridColumns
-        {
-            get
-            {
-                if (_autoWidthGridColumns == null)
-                    _autoWidthGridColumns = GridColumns.Filter(x => x.IsAutoLength(SizeToContentX));
-                return _autoWidthGridColumns;
-            }
-        }
-
-        private IConcatList<GridRow> _autoHeightGridRows;
-        private IConcatList<GridRow> AutoHeightGridRows
-        {
-            get
-            {
-                if (_autoHeightGridRows == null)
-                    _autoHeightGridRows = GridRows.Filter(x => x.IsAutoLength(SizeToContentY));
-                return _autoHeightGridRows;
             }
         }
 

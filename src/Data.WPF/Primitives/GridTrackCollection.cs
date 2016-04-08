@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -20,11 +19,17 @@ namespace DevZest.Data.Windows.Primitives
             if (item.Length.IsAbsolute)
             {
                 item.MeasuredLength = item.Length.Value;
-                AbsoluteLengthTotal += item.MeasuredLength;
+                TotalAbsoluteLength += item.MeasuredLength;
             }
+            else if (item.Length.IsStar)
+                TotalStarFactor += item.Length.Value;
         }
 
-        internal double AbsoluteLengthTotal { get; private set; }
+        internal double TotalAbsoluteLength { get; private set; }
+
+        internal double TotalAutoLength { get; private set; }
+
+        internal double TotalStarFactor { get; private set; }
 
         internal IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
         {
@@ -43,6 +48,12 @@ namespace DevZest.Data.Windows.Primitives
                     action(track);
             }
             return result;
+        }
+
+        internal void InitMeasuredAutoLengths(bool sizeToContent)
+        {
+            TotalAutoLength = 0;
+            Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
         }
     }
 }
