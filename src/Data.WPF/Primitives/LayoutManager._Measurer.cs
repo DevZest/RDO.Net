@@ -31,16 +31,6 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
-            private bool SizeToContentX
-            {
-                get { return Template.SizeToContentX; }
-            }
-
-            private bool SizeToContentY
-            {
-                get { return Template.SizeToContentY; }
-            }
-
             public abstract int CoerceBlockDimensions();
         }
     }
