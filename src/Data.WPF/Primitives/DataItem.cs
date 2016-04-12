@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -123,6 +124,32 @@ namespace DevZest.Data.Windows.Primitives
             }
             else
                 throw new InvalidOperationException(Strings.DataItem_OneDimensionalTemplate(Ordinal));
+        }
+
+        private ElementManager ElementManager
+        {
+            get { return Template.ElementManager; }
+        }
+
+        public int BlockDimensions
+        {
+            get { return IsMultidimensional ? ElementManager.BlockDimensions : 1; }
+        }
+
+        public UIElement this[int blockDimension]
+        {
+            get
+            {
+                if (blockDimension < 0 || blockDimension >= BlockDimensions)
+                    throw new ArgumentOutOfRangeException(nameof(blockDimension));
+
+                var ordinal = Ordinal;
+                int prevAccumulatedBlockDimensionsDelta = ordinal == 0 ? 0 : Template.DataItems[ordinal - 1].AccumulatedBlockDimensionsDelta;
+                var elementIndex = ordinal * BlockDimensions - prevAccumulatedBlockDimensionsDelta + blockDimension;
+                if (ordinal >= Template.DataItemsSplit)
+                    elementIndex += ElementManager.Blocks.Count;
+                return ElementManager.Elements[elementIndex];
+            }
         }
     }
 }

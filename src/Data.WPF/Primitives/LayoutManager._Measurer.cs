@@ -32,11 +32,19 @@ namespace DevZest.Data.Windows.Primitives
                 get { return LayoutManager.Template; }
             }
 
+            private TemplateItemCollection<DataItem> DataItems
+            {
+                get { return Template.InternalDataItems; }
+            }
+
             public abstract int CoerceBlockDimensions();
 
             public void MeasureAutoSizeDataItems()
             {
-                throw new NotImplementedException();
+                foreach (var dataItem in DataItems.AutoSizeItems)
+                {
+                    
+                }
             }
         }
     }

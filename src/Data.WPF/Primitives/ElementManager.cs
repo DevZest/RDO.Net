@@ -106,34 +106,26 @@ namespace DevZest.Data.Windows.Primitives
             if (Elements.Count == 0)
                 return;
 
-            var index = RefreshDataElements(0, Template.DataItemsSplit, 0);
-            Debug.Assert(index == BlockViewStartIndex);
-
-            index += RefreshBlocks();
-            index = RefreshDataElements(Template.DataItemsSplit, Template.DataItems.Count, index);
-            Debug.Assert(index == Elements.Count);
+            RefreshDataElements();
+            RefreshBlocks();
 
             _isDirty = false;
         }
 
-        private int RefreshDataElements(int dataItemIndex, int dataItemCount, int elementIndex)
+        private void RefreshDataElements()
         {
             var dataItems = Template.DataItems;
-            for (int i = dataItemIndex; i < dataItemCount; i++)
+            foreach (var dataItem in dataItems)
             {
-                var dataItem = dataItems[i];
-                var blockDimensions = dataItem.IsMultidimensional ? BlockDimensions : 1;
-                for (int j = 0; j < blockDimensions; j++)
+                for (int i = 0; i < dataItem.BlockDimensions; i++)
                 {
-                    var element = Elements[elementIndex++];
-                    Debug.Assert(element.GetTemplateItem() == dataItem);
+                    var element = dataItem[i];
                     dataItem.UpdateTarget(element);
                 }
             }
-            return elementIndex;
         }
 
-        private int RefreshBlocks()
+        private void RefreshBlocks()
         {
             var count = BlockViews.Count;
             for (int i = 0; i < count; i++)
@@ -141,7 +133,6 @@ namespace DevZest.Data.Windows.Primitives
                 var blockView = BlockViews[i];
                 blockView.RefreshElements();
             }
-            return count;
         }
 
         internal void ClearElements()

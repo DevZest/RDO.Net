@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -19,6 +20,11 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(item != null);
             Items.Add(item);
             Range = Range.Union(gridRange);
+        }
+
+        internal IEnumerable<T> AutoSizeItems
+        {
+            get { return this.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureOrder); }
         }
     }
 }
