@@ -60,6 +60,7 @@
     <Compile Include="Primitives\LayoutManager._Measurer.Z.cs" />
     <Compile Include="Primitives\LayoutManager._Measurer.Y.cs" />
     <Compile Include="Primitives\RowManager.cs" />
+    <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="BlockViewCollection.cs" />

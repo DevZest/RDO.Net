@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -32,6 +33,11 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             public abstract int CoerceBlockDimensions();
+
+            public void MeasureAutoSizeDataItems()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -10,24 +10,6 @@ namespace DevZest.Data.Windows.Primitives
 {
     public sealed partial class Template
     {
-        private sealed class TemplateItemCollection<T> : ReadOnlyCollection<T>
-            where T : TemplateItem
-        {
-            internal TemplateItemCollection()
-                : base(new List<T>())
-            {
-            }
-
-            internal GridRange Range { get; private set; }
-
-            internal void Add(GridRange gridRange, T item)
-            {
-                Debug.Assert(item != null);
-                Items.Add(item);
-                Range = Range.Union(gridRange);
-            }
-        }
-
         internal Template(RowManager rowManager)
         {
             RowManager = rowManager;
@@ -79,25 +61,26 @@ namespace DevZest.Data.Windows.Primitives
 
         public GridTrackCollection<GridRow> GridRows { get; private set; }
 
-        private TemplateItemCollection<DataItem> _dataItems = new TemplateItemCollection<DataItem>();
+        internal readonly TemplateItemCollection<DataItem> InternalDataItems = new TemplateItemCollection<DataItem>();
+
         public ReadOnlyCollection<DataItem> DataItems
         {
-            get { return _dataItems; }
+            get { return InternalDataItems; }
         }
 
-        private TemplateItemCollection<BlockItem> _blockItems = new TemplateItemCollection<BlockItem>();
+        internal readonly TemplateItemCollection<BlockItem> InternalBlockItems = new TemplateItemCollection<BlockItem>();
         public ReadOnlyCollection<BlockItem> BlockItems
         {
-            get { return _blockItems; }
+            get { return InternalBlockItems; }
         }
 
-        private TemplateItemCollection<RowItem> _rowItems = new TemplateItemCollection<RowItem>();
+        internal readonly TemplateItemCollection<RowItem> InternalRowItems = new TemplateItemCollection<RowItem>();
         public ReadOnlyCollection<RowItem> RowItems
         {
-            get { return _rowItems; }
+            get { return InternalRowItems; }
         }
 
-        private TemplateItemCollection<SubviewItem> _subviewItems = new TemplateItemCollection<SubviewItem>();
+        private readonly TemplateItemCollection<SubviewItem> _subviewItems = new TemplateItemCollection<SubviewItem>();
         public ReadOnlyCollection<SubviewItem> SubviewItems
         {
             get { return _subviewItems; }
@@ -106,7 +89,7 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange? _rowRange;
         public GridRange RowRange
         {
-            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : _rowItems.Range; }
+            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : InternalRowItems.Range; }
             internal set { _rowRange = value; }
         }
 
@@ -223,33 +206,33 @@ namespace DevZest.Data.Windows.Primitives
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
             Debug.Assert(IsValid(gridRange));
-            dataItem.Construct(this, gridRange, _dataItems.Count);
-            _dataItems.Add(gridRange, dataItem);
-            if (_rowItems.Count == 0)
-                DataItemsSplit = _dataItems.Count;
+            dataItem.Construct(this, gridRange, InternalDataItems.Count);
+            InternalDataItems.Add(gridRange, dataItem);
+            if (InternalRowItems.Count == 0)
+                DataItemsSplit = InternalDataItems.Count;
         }
 
         internal void AddBlockItem(GridRange gridRange, BlockItem blockItem)
         {
             Debug.Assert(IsValid(gridRange));
-            blockItem.Construct(this, gridRange, _blockItems.Count);
-            _blockItems.Add(gridRange, blockItem);
-            if (_rowItems.Count == 0)
-                BlockItemsSplit = _blockItems.Count;
+            blockItem.Construct(this, gridRange, InternalBlockItems.Count);
+            InternalBlockItems.Add(gridRange, blockItem);
+            if (InternalRowItems.Count == 0)
+                BlockItemsSplit = InternalBlockItems.Count;
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
         {
             Debug.Assert(IsValid(gridRange));
-            rowItem.Construct(this, gridRange, _rowItems.Count);
-            _rowItems.Add(gridRange, rowItem);
+            rowItem.Construct(this, gridRange, InternalRowItems.Count);
+            InternalRowItems.Add(gridRange, rowItem);
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
         {
             Debug.Assert(IsValid(gridRange));
-            subviewItem.Seal(this, gridRange, _rowItems.Count, _subviewItems.Count);
-            _rowItems.Add(gridRange, subviewItem);
+            subviewItem.Seal(this, gridRange, InternalRowItems.Count, _subviewItems.Count);
+            InternalRowItems.Add(gridRange, subviewItem);
             _subviewItems.Add(gridRange, subviewItem);
         }
 
