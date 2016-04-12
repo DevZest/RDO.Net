@@ -101,5 +101,15 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(!IsEmpty);
             return Template.GridRows.Filter(Top.Ordinal, Bottom.Ordinal, predict, action);
         }
+
+        internal double MeasuredWidth
+        {
+            get { return Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal); }
+        }
+
+        internal double MeasuredHeight
+        {
+            get { return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal); }
+        }
     }
 }

@@ -55,5 +55,13 @@ namespace DevZest.Data.Windows.Primitives
             TotalAutoLength = 0;
             Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
         }
+
+        internal double GetMeasuredLength(int startIndex, int endIndex)
+        {
+            double result = 0d;
+            for (int i = startIndex; i <= endIndex; i++)
+                result += this[i].MeasuredLength;
+            return result;
+        }
     }
 }

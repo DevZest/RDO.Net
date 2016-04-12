@@ -43,7 +43,9 @@ namespace DevZest.Data.Windows.Primitives
             {
                 foreach (var dataItem in DataItems.AutoSizeItems)
                 {
-                    
+                    Debug.Assert(dataItem.BlockDimensions == 1);
+                    var element = dataItem[0];
+                    element.Measure(dataItem.AvailableAutoSize);
                 }
             }
         }
