@@ -22,9 +22,22 @@ namespace DevZest.Data.Windows.Primitives
             Range = Range.Union(gridRange);
         }
 
-        internal IEnumerable<T> AutoSizeItems
+        private IReadOnlyList<T> _autoSizeItems;
+        internal void InvalidateAutoWidthItems()
         {
-            get { return this.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureOrder); }
+            _autoSizeItems = null;
+            this.ForEach(x => x.InvalidateAutoWidthGridColumns());
+        }
+
+        internal void InvalidateAutoHeightItems()
+        {
+            _autoSizeItems = null;
+            this.ForEach(x => x.InvalidateAutoHeightGridRows());
+        }
+
+        internal IReadOnlyList<T> AutoSizeItems
+        {
+            get {  return _autoSizeItems ?? (_autoSizeItems = this.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureOrder).ToArray()); }
         }
     }
 }

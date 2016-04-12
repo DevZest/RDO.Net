@@ -45,11 +45,16 @@ namespace DevZest.Data.Windows.Primitives
             {
                 foreach (var dataItem in DataItems.AutoSizeItems)
                 {
-                    Debug.Assert(dataItem.BlockDimensions == 1);
+                    Debug.Assert(dataItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional DataItem.");
                     var element = dataItem[0];
                     element.Measure(dataItem.AvailableAutoSize);
                     dataItem.UpdateAutoSize(element.DesiredSize);
                 }
+            }
+
+            public void FitBlocks()
+            {
+                throw new NotImplementedException();
             }
         }
     }

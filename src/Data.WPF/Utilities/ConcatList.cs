@@ -9,14 +9,14 @@ namespace DevZest
     {
         bool IsReadOnly { get; }
         IConcatList<T> Concat(T item);
-        IConcatList<T> Concat(IConcatList<T> items);
+        IConcatList<T> Concat(IReadOnlyList<T> items);
     }
 
     internal static class ConcatListExtensions
     {
         private sealed class ConcatList<T> : List<T>, IConcatList<T>
         {
-            public ConcatList(IConcatList<T> list1, IConcatList<T> list2)
+            public ConcatList(IConcatList<T> list1, IReadOnlyList<T> list2)
                 : base(list1)
             {
                 AddRange(list2);
@@ -33,7 +33,7 @@ namespace DevZest
                 return this;
             }
 
-            public IConcatList<T> Concat(IConcatList<T> items)
+            public IConcatList<T> Concat(IReadOnlyList<T> items)
             {
                 AddRange(items);
                 return this;
@@ -77,7 +77,7 @@ namespace DevZest
                 throw new NotSupportedException();
             }
 
-            public IConcatList<T> Concat(IConcatList<T> items)
+            public IConcatList<T> Concat(IReadOnlyList<T> items)
             {
                 throw new NotSupportedException();
             }

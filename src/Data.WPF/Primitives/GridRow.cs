@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotSupportedException();
         }
 
-        IConcatList<GridRow> IConcatList<GridRow>.Concat(IConcatList<GridRow> items)
+        IConcatList<GridRow> IConcatList<GridRow>.Concat(IReadOnlyList<GridRow> items)
         {
             throw new NotSupportedException();
         }

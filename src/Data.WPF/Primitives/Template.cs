@@ -378,9 +378,9 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _starWidthGridColumns = null;
-                DataItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
-                BlockItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
-                RowItems.ForEach(x => x.InvalidateAutoWidthGridColumns());
+                InternalDataItems.InvalidateAutoWidthItems();
+                InternalBlockItems.InvalidateAutoWidthItems();
+                InternalRowItems.InvalidateAutoWidthItems();
             }
         }
 
@@ -399,9 +399,9 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _starHeightGridRows = null;
-                DataItems.ForEach(x => x.InvalidateAutoHeightGridRows());
-                BlockItems.ForEach(x => x.InvalidateAutoHeightGridRows());
-                RowItems.ForEach(x => x.InvalidateAutoHeightGridRows());
+                InternalDataItems.InvalidateAutoHeightItems();
+                InternalBlockItems.InvalidateAutoHeightItems();
+                InternalRowItems.InvalidateAutoHeightItems();
             }
         }
 
