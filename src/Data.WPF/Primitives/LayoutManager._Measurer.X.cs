@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                 }
 
-                public override int CoerceBlockDimensions()
+                protected override int CoerceBlockDimensions()
                 {
                     return Template.CoerceVerticalBlockDimensions();
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -39,9 +40,17 @@ namespace DevZest.Data.Windows.Primitives
                 get { return Template.InternalDataItems; }
             }
 
-            public abstract int CoerceBlockDimensions();
+            public Size Measure(Size availableSize)
+            {
+                Template.InitMeasure(availableSize);
+                LayoutManager.BlockDimensions = CoerceBlockDimensions();
+                MeasureAutoSizeDataItems();
+                throw new NotImplementedException();
+            }
 
-            public void MeasureAutoSizeDataItems()
+            protected abstract int CoerceBlockDimensions();
+
+            private void MeasureAutoSizeDataItems()
             {
                 foreach (var dataItem in DataItems.AutoSizeItems)
                 {
@@ -52,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            public void FitBlocks()
+            private void FitBlocks()
             {
                 throw new NotImplementedException();
             }
