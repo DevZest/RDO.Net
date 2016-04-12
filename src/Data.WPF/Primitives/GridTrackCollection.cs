@@ -56,11 +56,15 @@ namespace DevZest.Data.Windows.Primitives
             Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
         }
 
-        internal double GetMeasuredLength(int startIndex, int endIndex)
+        internal double GetMeasuredLength(int startIndex, int endIndex, Func<T, bool> predict = null)
         {
             double result = 0d;
             for (int i = startIndex; i <= endIndex; i++)
-                result += this[i].MeasuredLength;
+            {
+                var track = this[i];
+                if (predict == null || predict(track))
+                    result += track.MeasuredLength;
+            }
             return result;
         }
     }

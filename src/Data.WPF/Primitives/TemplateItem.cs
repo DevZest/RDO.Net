@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -249,6 +250,68 @@ namespace DevZest.Data.Windows.Primitives
         internal bool IsAutoSize
         {
             get { return AutoWidthGridColumns.Count > 0 || AutoHeightGridRows.Count > 0; }
+        }
+
+        internal void UpdateAutoSize(Size measuredSize)
+        {
+            Debug.Assert(IsAutoSize);
+
+            if (AutoWidthGridColumns.Count > 0)
+            {
+                double totalAutoWidth = measuredSize.Width - GridRange.GetMeasuredWidth(x => !x.IsAutoLength(SizeToContentX));
+                if (totalAutoWidth > 0)
+                {
+                    DistributeAutoLength(totalAutoWidth, AutoWidthGridColumns);
+                    Template.DistributeStarWidths();
+                }
+            }
+
+            if (AutoHeightGridRows.Count > 0)
+            {
+                double totalAutoHeight = measuredSize.Height - GridRange.GetMeasuredHeight(x => !x.IsAutoLength(SizeToContentY));
+                if (totalAutoHeight > 0)
+                {
+                    DistributeAutoLength(totalAutoHeight, AutoHeightGridRows);
+                    Template.DistributeStarHeights();
+                }
+            }
+        }
+
+        private static void DistributeAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> autoLengthTracks)
+            where T : GridTrack
+        {
+            Debug.Assert(autoLengthTracks.Count > 0);
+            Debug.Assert(totalMeasuredLength > 0);
+
+            if (autoLengthTracks.Count == 1)
+            {
+                if (totalMeasuredLength > autoLengthTracks[0].MeasuredLength)
+                    autoLengthTracks[0].MeasuredLength = totalMeasuredLength;
+                return;
+            }
+
+            DistributeOrderedAutoLength(totalMeasuredLength, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray());
+        }
+
+        private static void DistributeOrderedAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> orderedAutoLengthTracks)
+            where T : GridTrack
+        {
+            Debug.Assert(orderedAutoLengthTracks.Count > 0);
+            Debug.Assert(totalMeasuredLength > 0);
+
+            var count = orderedAutoLengthTracks.Count;
+            double avgLength = totalMeasuredLength / count;
+            for (int i = 0; i < count; i++)
+            {
+                var track = orderedAutoLengthTracks[i];
+                if (track.MeasuredLength >= avgLength)
+                {
+                    totalMeasuredLength -= track.MeasuredLength;
+                    avgLength = totalMeasuredLength / (count - i + 1);
+                }
+                else
+                    track.MeasuredLength = avgLength;
+            }
         }
     }
 }

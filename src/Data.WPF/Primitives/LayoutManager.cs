@@ -104,7 +104,9 @@ namespace DevZest.Data.Windows.Primitives
         internal Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
-            BlockDimensions = Measurer.CoerceBlockDimensions();
+            var measurer = Measurer;
+            BlockDimensions = measurer.CoerceBlockDimensions();
+            measurer.MeasureAutoSizeDataItems();
             throw new NotImplementedException();
         }
 

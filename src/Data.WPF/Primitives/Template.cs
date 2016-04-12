@@ -325,9 +325,19 @@ namespace DevZest.Data.Windows.Primitives
             GridRows.InitMeasuredAutoLengths(SizeToContentY);
         }
 
-        internal void DistributeStarLengths()
+        private void DistributeStarLengths()
+        {
+            DistributeStarWidths();
+            DistributeStarHeights();
+        }
+
+        internal void DistributeStarWidths()
         {
             DistributeStarLengths(AvailableWidth, GridColumns, StarWidthGridColumns);
+        }
+
+        internal void DistributeStarHeights()
+        {
             DistributeStarLengths(AvailableHeight, GridRows, StarHeightGridRows);
         }
 

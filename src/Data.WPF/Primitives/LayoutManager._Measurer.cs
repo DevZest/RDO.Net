@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -46,6 +48,7 @@ namespace DevZest.Data.Windows.Primitives
                     Debug.Assert(dataItem.BlockDimensions == 1);
                     var element = dataItem[0];
                     element.Measure(dataItem.AvailableAutoSize);
+                    dataItem.UpdateAutoSize(element.DesiredSize);
                 }
             }
         }

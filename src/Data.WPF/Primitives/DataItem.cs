@@ -157,8 +157,8 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(IsAutoSize);
-                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredWidth;
-                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredHeight;
+                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredWidth();
+                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredHeight();
                 return new Size(width, height);
             }
         }
