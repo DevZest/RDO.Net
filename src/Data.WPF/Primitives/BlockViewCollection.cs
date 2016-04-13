@@ -1,12 +1,11 @@
-﻿using DevZest.Data.Windows.Primitives;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     internal sealed class BlockViewCollection : IReadOnlyList<IBlockPresenter>
     {

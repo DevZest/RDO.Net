@@ -63,7 +63,7 @@
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
-    <Compile Include="BlockViewCollection.cs" />
+    <Compile Include="Primitives\BlockViewCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Factories\ColumnHeaderFactory.cs" />
