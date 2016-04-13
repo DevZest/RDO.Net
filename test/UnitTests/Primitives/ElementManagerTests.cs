@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizeFirst(1);
+            elementManager.BlockViews.RealizeFirstUnpinned(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizePrev();
+            elementManager.BlockViews.RealizePrevUnpinned();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizeNext();
+            elementManager.BlockViews.RealizeNextUnpinned();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -181,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizeFirst(1);
+            elementManager.BlockViews.RealizeFirstUnpinned(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -197,7 +197,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizePrev();
+            elementManager.BlockViews.RealizePrevUnpinned();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -222,7 +222,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.RealizeNext();
+            elementManager.BlockViews.RealizeNextUnpinned();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -256,7 +256,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.VirtualizeHead(1);
+            elementManager.BlockViews.VirtualizeUnpinnedHead(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -281,7 +281,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViews.VirtualizeTail(1);
+            elementManager.BlockViews.VirtualizeUnpinnedTail(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -317,7 +317,7 @@ namespace DevZest.Data.Windows.Primitives
             var template = elementManager.Template;
             var rows = elementManager.Rows;
 
-            elementManager.BlockViews.RealizeFirst(1);
+            elementManager.BlockViews.RealizeFirstUnpinned(1);
             dataSet._.Name[1] = "CHANGED NAME";
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))

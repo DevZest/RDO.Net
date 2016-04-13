@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -56,14 +57,14 @@ namespace DevZest.Data.Windows
             CachedList.Recycle(ref _cachedBlockViews, blockView);
         }
 
-        public BlockView First
+        public BlockView FirstUnpinned
         {
-            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex]; }
+            get { return CountUnpinned == 0 ? null : (BlockView)Elements[BlockViewStartIndex + CountPinnedHead]; }
         }
 
-        public BlockView Last
+        public BlockView LastUnpinned
         {
-            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex + Count - 1]; }
+            get { return CountUnpinned == 0 ? null : (BlockView)Elements[BlockViewStartIndex + CountPinnedHead + CountUnpinned - 1]; }
         }
 
         private IReadOnlyList<RowPresenter> Rows
@@ -76,31 +77,177 @@ namespace DevZest.Data.Windows
             get { return _elementManager.BlockDimensions; }
         }
 
-        public RowPresenter FirstRow
-        {
-            get { return Count == 0 ? null : Rows[First.Index * BlockDimensions]; }
-        }
-
-        public RowPresenter LastRow
-        {
-            get { return Count == 0 ? null : Rows[Math.Min(Rows.Count - 1, (Last.Index + 1) * BlockDimensions - 1)]; }
-        }
-
         public bool Contains(RowPresenter row)
         {
             Debug.Assert(row != null && row.RowManager == _elementManager);
+
+            EnsurePinnedBlocksInitialized();
             if (Count == 0)
                 return false;
-            return row.Ordinal >= FirstRow.Ordinal && row.Ordinal <= LastRow.Ordinal;
+
+            var index = row.Ordinal / BlockDimensions;
+            if (index < CountPinnedHead)
+                return true;
+            if (index >= MaxBlockCount - CountPinnedTail)
+                return true;
+            return FirstUnpinned == null ? false : index >= FirstUnpinned.Index && index <= LastUnpinned.Index;
         }
 
-        public int Count { get; private set; }
+        private int _countPinnedHead = -1;
+        public int CountPinnedHead
+        {
+            get
+            {
+                EnsurePinnedBlocksInitialized();
+                return _countPinnedHead;
+            }
+        }
+
+        private int _countPinnedTail = -1;
+        public int CountPinnedTail
+        {
+            get
+            {
+                EnsurePinnedBlocksInitialized();
+                return _countPinnedTail;
+            }
+        }
+
+        public int CountUnpinned { get; private set; }
+
+        public void EnsurePinnedBlocksInitialized()
+        {
+            if (IsPinnedBlocksInitialized)
+                return;
+
+            _countPinnedHead = CoerceCountPinnedHead();
+            Debug.Assert(CountPinnedHead >= 0);
+            for (int i = 0; i < _countPinnedHead; i++)
+            {
+                var blockView = Realize(i);
+                Insert(BlockViewStartIndex + i, blockView);
+            }
+
+            _countPinnedTail = CoerceCountPinnedTail();
+            Debug.Assert(CountPinnedTail >= 0);
+            if (_countPinnedTail == 0)
+                return;
+
+            var startIndex = MaxBlockCount - _countPinnedTail;
+            for (int i = 0; i < _countPinnedTail; i++)
+            {
+                var blockView = Realize(i + startIndex);
+                Insert(BlockViewStartIndex + _countPinnedHead + i, blockView);
+            }
+        }
+
+        private GridRange RowRange
+        {
+            get { return Template.RowRange; }
+        }
+
+        private Orientation? Orientation
+        {
+            get { return Template.Orientation; }
+        }
+
+        private int PinnedHeadLastTrack
+        {
+            get
+            {
+                Debug.Assert(Orientation.HasValue);
+                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.PinnedTop : Template.PinnedLeft) - 1;
+            }
+        }
+
+        private int PinnedTailFirstTrack
+        {
+            get
+            {
+                Debug.Assert(Orientation.HasValue);
+                var pinnedTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.PinnedBottom : Template.PinnedRight;
+                var lastTrackOrdinal = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.Range().Bottom.Ordinal : Template.Range().Right.Ordinal;
+                return lastTrackOrdinal - pinnedTail + 1;
+            }
+        }
+
+        private int RowRangeStartTrack
+        {
+            get
+            {
+                Debug.Assert(Orientation.HasValue);
+                return Orientation == System.Windows.Controls.Orientation.Vertical ? RowRange.Top.Ordinal : RowRange.Left.Ordinal;
+            }
+        }
+
+        private int RowRangeEndTrack
+        {
+            get
+            {
+                Debug.Assert(Orientation.HasValue);
+                return Orientation == System.Windows.Controls.Orientation.Vertical ? RowRange.Bottom.Ordinal : RowRange.Right.Ordinal;
+            }
+        }
+
+        private int RowRangeTracks
+        {
+            get { return RowRangeEndTrack - RowRangeStartTrack + 1; }
+        }
+
+        private int MaxBlockCount
+        {
+            get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
+        }
+
+        private int CoerceCountPinnedHead()
+        {
+            if (!Template.Orientation.HasValue)
+                return 0;
+
+            var pinnedHeadLastTrack = PinnedHeadLastTrack;
+            var rowRangeStartTrack = RowRangeStartTrack;
+            if (pinnedHeadLastTrack < rowRangeStartTrack)
+                return 0;
+
+            var repeatTracks = pinnedHeadLastTrack - rowRangeStartTrack + 1;
+            var rowRangeTracks = RowRangeTracks;
+            var repeat = ((repeatTracks - 1) / rowRangeTracks) + 1;
+            return Math.Min(repeat, MaxBlockCount);
+        }
+
+        private int CoerceCountPinnedTail()
+        {
+            if (!Template.Orientation.HasValue)
+                return 0;
+
+            var pinnedTailFirstTrack = PinnedTailFirstTrack;
+            var rowRangeEndTrack = RowRangeEndTrack;
+            if (pinnedTailFirstTrack > rowRangeEndTrack)
+                return 0;
+
+            var repeatTracks = rowRangeEndTrack - pinnedTailFirstTrack + 1;
+            var rowRangeTracks = RowRangeTracks;
+            var repeat = ((repeatTracks - 1) / rowRangeTracks) + 1;
+            return Math.Min(repeat, Math.Max(0, MaxBlockCount - CountPinnedHead));
+
+        }
+
+        public bool IsPinnedBlocksInitialized
+        {
+            get { return _countPinnedHead >= 0; }
+        }
+
+        public int Count
+        {
+            get { return CountPinnedHead + CountUnpinned + CountPinnedTail; }
+        }
 
         public BlockView this[int index]
         {
             get
             {
-                Debug.Assert(index >= 0 && index < Count);
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 return (BlockView)Elements[BlockViewStartIndex + index];
             }
         }
@@ -128,65 +275,74 @@ namespace DevZest.Data.Windows
                 Template.BlockViewInitializer(blockView);
         }
 
-        internal void RealizeFirst(int index)
+        internal void RealizeFirstUnpinned(int index)
         {
-            Debug.Assert(Count == 0 && index >= 0 && index * BlockDimensions < Rows.Count);
+            EnsurePinnedBlocksInitialized();
+            Debug.Assert(Count == 0 && index >= CountPinnedHead && index < MaxBlockCount - CountPinnedTail);
 
             var blockView = Realize(index);
-            Insert(BlockViewStartIndex, blockView);
-            Count = 1;
+            Insert(BlockViewStartIndex + CountPinnedHead, blockView);
+            CountUnpinned = 1;
         }
 
-        internal void RealizePrev()
+        internal void RealizePrevUnpinned()
         {
-            Debug.Assert(First != null && First.Index > 0);
+            Debug.Assert(FirstUnpinned != null && FirstUnpinned.Index - 1 >= CountPinnedHead);
 
-            var blockView = Realize(First.Index - 1);
+            var blockView = Realize(FirstUnpinned.Index - 1);
             Insert(BlockViewStartIndex, blockView);
-            Count++;
+            CountUnpinned++;
         }
 
-        internal void RealizeNext()
+        internal void RealizeNextUnpinned()
         {
-            Debug.Assert(LastRow != null && LastRow.Ordinal < Rows.Count - 1);
+            Debug.Assert(LastUnpinned != null && LastUnpinned.Index + 1 < MaxBlockCount - CountPinnedTail);
 
-            var blockView = Realize(Last.Index + 1);
+            var blockView = Realize(LastUnpinned.Index + 1);
             Insert(BlockViewStartIndex + Count, blockView);
-            Count++;
+            CountUnpinned++;
         }
 
-        internal void VirtualizeHead(int count)
+        internal void VirtualizeUnpinnedHead(int count)
         {
-            Debug.Assert(count >= 0 && count <= Count);
+            Debug.Assert(count >= 0 && count <= CountUnpinned);
 
             if (count == 0)
                 return;
 
             for (int i = 0; i < count; i++)
-                Virtualize(this[i]);
+                Virtualize(this[CountPinnedHead + i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex, count);
-            Count -= count;
+            ElementCollection.RemoveRange(BlockViewStartIndex + CountPinnedHead, count);
+            CountUnpinned -= count;
         }
 
-        internal void VirtualizeTail(int count)
+        internal void VirtualizeUnpinnedTail(int count)
         {
-            Debug.Assert(count >= 0 && count <= Count);
+            Debug.Assert(count >= 0 && count <= CountUnpinned);
 
             if (count == 0)
                 return;
 
-            var offset = Count - count;
+            var offset = CountUnpinned - count;
             for (int i = 0; i < count; i++)
-                Virtualize(this[offset + i]);
+                Virtualize(this[CountPinnedHead + offset + i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
-            Count -= count;
+            ElementCollection.RemoveRange(BlockViewStartIndex + CountPinnedHead + offset, count);
+            CountUnpinned -= count;
         }
 
         internal void VirtualizeAll()
         {
-            VirtualizeHead(Count);
+            if (!IsPinnedBlocksInitialized)
+                return;
+
+            for (int i = 0; i < Count; i++)
+                Virtualize(this[i]);
+            ElementCollection.RemoveRange(BlockViewStartIndex, Count);
+
+            _countPinnedHead = _countPinnedTail = -1;
+            CountUnpinned = 0;
         }
     }
 }

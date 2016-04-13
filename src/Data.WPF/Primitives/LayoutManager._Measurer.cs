@@ -45,6 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                 Template.InitMeasure(availableSize);
                 LayoutManager.BlockDimensions = CoerceBlockDimensions();
                 MeasureAutoSizeDataItems();
+                FitBlocks();
                 throw new NotImplementedException();
             }
 
