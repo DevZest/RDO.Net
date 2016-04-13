@@ -10,9 +10,8 @@ namespace DevZest.Data.Windows.Primitives
 {
     public sealed partial class Template
     {
-        internal Template(RowManager rowManager)
+        internal Template()
         {
-            RowManager = rowManager;
             GridColumns = new GridTrackCollection<GridColumn>();
             GridRows = new GridTrackCollection<GridRow>();
             BlockDimensions = 1;
@@ -20,7 +19,7 @@ namespace DevZest.Data.Windows.Primitives
             VirtualizationThreshold = 50;
         }
 
-        internal RowManager RowManager { get; private set; }
+        internal RowManager RowManager { get; set; }
 
         internal ElementManager ElementManager
         {
@@ -34,7 +33,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public DataPresenter DataPresenter
         {
-            get { return RowManager as DataPresenter; }
+            get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }
         }
 
         public Orientation? Orientation { get; private set; }
@@ -437,14 +436,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal int CoerceHorizontalBlockDimensions()
+        internal int CoerceBlockDimensions()
         {
-            return CoerceBlockDimensions(SizeToContentX, AvailableWidth, GridColumns);
-        }
+            if (!Orientation.HasValue)
+                return 1;
 
-        internal int CoerceVerticalBlockDimensions()
-        {
-            return CoerceBlockDimensions(SizeToContentY, AvailableHeight, GridRows);
+            return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Horizontal
+                ? CoerceBlockDimensions(SizeToContentX, AvailableWidth, GridColumns)
+                : CoerceBlockDimensions(SizeToContentY, AvailableHeight, GridRows);
         }
 
         private int CoerceBlockDimensions<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)

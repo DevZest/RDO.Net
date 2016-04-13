@@ -6,10 +6,10 @@ using System.Windows.Threading;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class ElementManager : RowManager
+    internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(DataSet dataSet)
-            : base(dataSet)
+        internal ElementManager(Template template, DataSet dataSet)
+            : base(template, dataSet)
         {
             BlockViews = new BlockViewCollection(this);
         }
@@ -228,7 +228,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private bool _isDirty;
-        internal sealed override void Invalidate(RowPresenter row)
+        protected sealed override void Invalidate(RowPresenter row)
         {
             if (_isDirty || ElementCollection == null)
                 return;

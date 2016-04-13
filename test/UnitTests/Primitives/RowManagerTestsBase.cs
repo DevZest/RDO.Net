@@ -48,16 +48,16 @@ namespace DevZest.Data.Windows.Primitives
         private sealed class ConcreteRowManager : RowManager
         {
             public ConcreteRowManager(DataSet dataSet)
-                : base(dataSet)
+                : base(new Template(), dataSet)
             {
             }
 
-            internal override void Invalidate(RowPresenter row)
+            protected override void Invalidate(RowPresenter row)
             {
             }
         }
 
-        protected static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofRowMapping eofRowMapping)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofRowMapping eofRowMapping)
             where T : Model, new()
         {
             RowManager result = new ConcreteRowManager(dataSet);
@@ -66,7 +66,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected static RowManager CreateRowManager<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0)
             where T : Model, new()
         {
             RowManager result = new ConcreteRowManager(dataSet);

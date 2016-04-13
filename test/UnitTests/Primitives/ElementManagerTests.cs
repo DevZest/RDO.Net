@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows.Primitives
         private sealed class ConcreteElementManager : ElementManager
         {
             public ConcreteElementManager(DataSet dataSet)
-                : base(dataSet)
+                : base(new Template(), dataSet)
             {
             }
         }

@@ -1,15 +1,15 @@
 ﻿using DevZest.Data.Primitives;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Collections;
 using System;
 using System.Linq;
 using DevZest.Data.Windows.Factories;
 using DevZest.Data.Windows.Primitives;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed partial class DataPresenter : LayoutManager
+    public sealed partial class DataPresenter
     {
         internal static DataPresenter Create<T>(RowPresenter owner, T childModel, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
@@ -76,14 +76,66 @@ namespace DevZest.Data.Windows
             get { return _parent; }
         }
 
+        private readonly DataSet _dataSet;
+        public DataSet DataSet
+        {
+            get { return _dataSet; }
+        }
 
         private DataPresenter(RowPresenter parent, DataSet dataSet)
-            : base(dataSet)
         {
             Debug.Assert(dataSet != null);
             Debug.Assert(dataSet.ParentRow == null || dataSet.ParentRow == parent.DataRow);
 
             _parent = parent;
+            _dataSet = dataSet;
+        }
+
+        private readonly Template _template = new Template();
+        public Template Template
+        {
+            get { return _template; }
+        }
+
+        public bool IsHierarchical
+        {
+            get { return Template.HierarchicalModelOrdinal >= 0; }
+        }
+
+        private LayoutManager _layoutManager;
+        internal LayoutManager LayoutManager
+        {
+            get { return _layoutManager ?? (_layoutManager = LayoutManager.Create(this)); }
+        }
+
+        public IReadOnlyList<RowPresenter> Rows
+        {
+            get { return LayoutManager.Rows; }
+        }
+
+        public RowPresenter CurrentRow
+        {
+            get { return LayoutManager.CurrentRow; }
+        }
+
+        public RowPresenter EditingRow
+        {
+            get { return LayoutManager.EditingRow; }
+        }
+
+        public IReadOnlyCollection<RowPresenter> SelectedRows
+        {
+            get { return LayoutManager.SelectedRows; }
+        }
+
+        public IReadOnlyList<IBlockPresenter> Blocks
+        {
+            get { return LayoutManager.Blocks; }
+        }
+
+        public IReadOnlyList<UIElement> Elements
+        {
+            get { return LayoutManager.Elements; }
         }
     }
 }

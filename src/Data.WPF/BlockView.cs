@@ -31,9 +31,14 @@ namespace DevZest.Data.Windows
 
         internal ElementManager ElementManager { get; private set; }
 
+        private LayoutManager LayoutManager
+        {
+            get { return ElementManager as LayoutManager; }
+        }
+
         public DataPresenter DataPresenter
         {
-            get { return ElementManager as DataPresenter; }
+            get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }
         }
 
         public int Dimensions

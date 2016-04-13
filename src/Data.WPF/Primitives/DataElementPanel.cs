@@ -8,148 +8,148 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataElementPanel : FrameworkElement, IScrollInfo
+    public sealed class DataElementPanel : FrameworkElement//, IScrollInfo
     {
         #region IScrollInfo
 
-        private double ScrollLineHeight
-        {
-            get { return DataView.ScrollLineHeight; }
-        }
+        //private double ScrollLineHeight
+        //{
+        //    get { return DataView.ScrollLineHeight; }
+        //}
 
-        private double ScrollLineWidth
-        {
-            get { return DataView.ScrollLineWidth; }
-        }
+        //private double ScrollLineWidth
+        //{
+        //    get { return DataView.ScrollLineWidth; }
+        //}
 
-        bool _canVerticallyScroll;
-        bool IScrollInfo.CanVerticallyScroll
-        {
-            get { return _canVerticallyScroll; }
-            set { _canVerticallyScroll = value; }
-        }
+        //bool _canVerticallyScroll;
+        //bool IScrollInfo.CanVerticallyScroll
+        //{
+        //    get { return _canVerticallyScroll; }
+        //    set { _canVerticallyScroll = value; }
+        //}
 
-        bool _canHorizontallyScroll;
-        bool IScrollInfo.CanHorizontallyScroll
-        {
-            get { return _canHorizontallyScroll; }
-            set { _canHorizontallyScroll = value; }
-        }
+        //bool _canHorizontallyScroll;
+        //bool IScrollInfo.CanHorizontallyScroll
+        //{
+        //    get { return _canHorizontallyScroll; }
+        //    set { _canHorizontallyScroll = value; }
+        //}
 
-        double IScrollInfo.ExtentWidth
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.ExtentWidth; }
-        }
+        //double IScrollInfo.ExtentWidth
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.ExtentWidth; }
+        //}
 
-        double IScrollInfo.ExtentHeight
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.ExtentHeight; }
-        }
+        //double IScrollInfo.ExtentHeight
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.ExtentHeight; }
+        //}
 
-        double IScrollInfo.ViewportWidth
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.ViewportWidth; }
-        }
+        //double IScrollInfo.ViewportWidth
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.ViewportWidth; }
+        //}
 
-        double IScrollInfo.ViewportHeight
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.ViewportHeight; }
-        }
+        //double IScrollInfo.ViewportHeight
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.ViewportHeight; }
+        //}
 
-        double IScrollInfo.HorizontalOffset
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.HorizontalOffset; }
-        }
+        //double IScrollInfo.HorizontalOffset
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.HorizontalOffset; }
+        //}
 
-        double IScrollInfo.VerticalOffset
-        {
-            get { return DataPresenter == null ? 0.0d : DataPresenter.VerticalOffset; }
-        }
+        //double IScrollInfo.VerticalOffset
+        //{
+        //    get { return DataPresenter == null ? 0.0d : DataPresenter.VerticalOffset; }
+        //}
 
-        ScrollViewer IScrollInfo.ScrollOwner
-        {
-            get { return DataPresenter == null ? null : DataPresenter.ScrollOwner; }
-            set
-            {
-                if (DataPresenter != null)
-                    DataPresenter.ScrollOwner = value;
-            }
-        }
+        //ScrollViewer IScrollInfo.ScrollOwner
+        //{
+        //    get { return DataPresenter == null ? null : DataPresenter.ScrollOwner; }
+        //    set
+        //    {
+        //        if (DataPresenter != null)
+        //            DataPresenter.ScrollOwner = value;
+        //    }
+        //}
 
-        void IScrollInfo.LineUp()
-        {
-            DataPresenter.VerticalOffset -= ScrollLineHeight;
-        }
+        //void IScrollInfo.LineUp()
+        //{
+        //    DataPresenter.VerticalOffset -= ScrollLineHeight;
+        //}
 
-        void IScrollInfo.LineDown()
-        {
-            DataPresenter.VerticalOffset += ScrollLineHeight;
-        }
+        //void IScrollInfo.LineDown()
+        //{
+        //    DataPresenter.VerticalOffset += ScrollLineHeight;
+        //}
 
-        void IScrollInfo.LineLeft()
-        {
-            DataPresenter.HorizontalOffset -= ScrollLineWidth;
-        }
+        //void IScrollInfo.LineLeft()
+        //{
+        //    DataPresenter.HorizontalOffset -= ScrollLineWidth;
+        //}
 
-        void IScrollInfo.LineRight()
-        {
-            DataPresenter.HorizontalOffset += ScrollLineWidth;
-        }
+        //void IScrollInfo.LineRight()
+        //{
+        //    DataPresenter.HorizontalOffset += ScrollLineWidth;
+        //}
 
-        void IScrollInfo.PageUp()
-        {
-            DataPresenter.VerticalOffset -= DataPresenter.ViewportHeight;
-        }
+        //void IScrollInfo.PageUp()
+        //{
+        //    DataPresenter.VerticalOffset -= DataPresenter.ViewportHeight;
+        //}
 
-        void IScrollInfo.PageDown()
-        {
-            DataPresenter.VerticalOffset += DataPresenter.ViewportHeight;
-        }
+        //void IScrollInfo.PageDown()
+        //{
+        //    DataPresenter.VerticalOffset += DataPresenter.ViewportHeight;
+        //}
 
-        void IScrollInfo.PageLeft()
-        {
-            DataPresenter.HorizontalOffset -= DataPresenter.ViewportWidth;
-        }
+        //void IScrollInfo.PageLeft()
+        //{
+        //    DataPresenter.HorizontalOffset -= DataPresenter.ViewportWidth;
+        //}
 
-        void IScrollInfo.PageRight()
-        {
-            DataPresenter.HorizontalOffset += DataPresenter.ViewportWidth;
-        }
+        //void IScrollInfo.PageRight()
+        //{
+        //    DataPresenter.HorizontalOffset += DataPresenter.ViewportWidth;
+        //}
 
-        void IScrollInfo.MouseWheelUp()
-        {
-            DataPresenter.VerticalOffset -= SystemParameters.WheelScrollLines * ScrollLineHeight;
-        }
+        //void IScrollInfo.MouseWheelUp()
+        //{
+        //    DataPresenter.VerticalOffset -= SystemParameters.WheelScrollLines * ScrollLineHeight;
+        //}
 
-        void IScrollInfo.MouseWheelDown()
-        {
-            DataPresenter.VerticalOffset += SystemParameters.WheelScrollLines * ScrollLineHeight;
-        }
+        //void IScrollInfo.MouseWheelDown()
+        //{
+        //    DataPresenter.VerticalOffset += SystemParameters.WheelScrollLines * ScrollLineHeight;
+        //}
 
-        void IScrollInfo.MouseWheelLeft()
-        {
-            DataPresenter.HorizontalOffset -= SystemParameters.WheelScrollLines * ScrollLineWidth;
-        }
+        //void IScrollInfo.MouseWheelLeft()
+        //{
+        //    DataPresenter.HorizontalOffset -= SystemParameters.WheelScrollLines * ScrollLineWidth;
+        //}
 
-        void IScrollInfo.MouseWheelRight()
-        {
-            DataPresenter.HorizontalOffset += SystemParameters.WheelScrollLines * ScrollLineWidth;
-        }
+        //void IScrollInfo.MouseWheelRight()
+        //{
+        //    DataPresenter.HorizontalOffset += SystemParameters.WheelScrollLines * ScrollLineWidth;
+        //}
 
-        void IScrollInfo.SetHorizontalOffset(double offset)
-        {
-            DataPresenter.HorizontalOffset = offset;
-        }
+        //void IScrollInfo.SetHorizontalOffset(double offset)
+        //{
+        //    DataPresenter.HorizontalOffset = offset;
+        //}
 
-        void IScrollInfo.SetVerticalOffset(double offset)
-        {
-            DataPresenter.VerticalOffset = offset;
-        }
+        //void IScrollInfo.SetVerticalOffset(double offset)
+        //{
+        //    DataPresenter.VerticalOffset = offset;
+        //}
 
-        Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
-        {
-            return DataPresenter.MakeVisible(visual, rectangle);
-        }
+        //Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
+        //{
+        //    return DataPresenter.MakeVisible(visual, rectangle);
+        //}
 
         #endregion
 
@@ -176,19 +176,24 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private LayoutManager LayoutManager
+        {
+            get { return DataPresenter == null ? null : DataPresenter.LayoutManager; }
+        }
+
         internal IReadOnlyList<UIElement> Elements
         {
             get
             {
-                var dataPresenter = DataPresenter;
-                if (dataPresenter == null)
+                var layoutManager = LayoutManager;
+                if (layoutManager == null)
                     return Array<UIElement>.Empty;
 
-                if (dataPresenter.ElementCollection == null || dataPresenter.ElementCollection.Parent != this)
-                    dataPresenter.SetElementsPanel(this);
+                if (layoutManager.ElementCollection == null || layoutManager.ElementCollection.Parent != this)
+                    layoutManager.SetElementsPanel(this);
 
-                Debug.Assert(dataPresenter.ElementCollection.Parent == this);
-                return dataPresenter.ElementCollection;
+                Debug.Assert(layoutManager.ElementCollection.Parent == this);
+                return layoutManager.ElementCollection;
             }
         }
 
@@ -205,11 +210,11 @@ namespace DevZest.Data.Windows.Primitives
             return Elements[index];
         }
 
-        //protected override Size MeasureOverride(Size availableSize)
-        //{
-        //    var dataPresenter = DataPresenter;
-        //    return dataPresenter == null ? base.MeasureOverride(availableSize) : dataPresenter.Measure(availableSize);
-        //}
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var layoutManager = LayoutManager;
+            return layoutManager == null ? base.MeasureOverride(availableSize) : layoutManager.Measure(availableSize);
+        }
 
         //protected override Size ArrangeOverride(Size finalSize)
         //{

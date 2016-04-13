@@ -5,11 +5,14 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class RowManager
+    internal abstract class RowManager
     {
-        internal RowManager(DataSet dataSet)
+        internal RowManager(Template template, DataSet dataSet)
         {
-            _template = new Template(this);
+            Debug.Assert(template != null && template.RowManager == null);
+            Debug.Assert(dataSet != null);
+            _template = template;
+            _template.RowManager = this;
             _dataSet = dataSet;
         }
 
@@ -67,7 +70,7 @@ namespace DevZest.Data.Windows.Primitives
                 Invalidate(rowPresenter);
         }
 
-        internal abstract void Invalidate(RowPresenter rowPresenter);
+        protected abstract void Invalidate(RowPresenter rowPresenter);
 
         int _dataPresenterStateFlags;
 
@@ -87,13 +90,13 @@ namespace DevZest.Data.Windows.Primitives
 
         }
 
-        internal void OnGetState(DataPresenterState dataPresenterState)
+        protected void OnGetState(DataPresenterState dataPresenterState)
         {
             if (BindingContext.Current.RowManager == this)
                 SetStateFlag(dataPresenterState);
         }
 
-        internal void OnSetState(DataPresenterState dataPresenterState)
+        protected void OnSetState(DataPresenterState dataPresenterState)
         {
             if (BindingContext.Current.RowManager == this && GetStateFlag(dataPresenterState))
                 Invalidate(null);

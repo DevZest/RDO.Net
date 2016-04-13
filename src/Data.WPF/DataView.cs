@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +37,11 @@ namespace DevZest.Data.Windows
         {
             get { return (DataPresenter)GetValue(DataPresenterProperty); }
             private set { SetValue(DataPresenterPropertyKey, value); }
+        }
+
+        private LayoutManager LayoutManager
+        {
+            get { return DataPresenter == null ? null : DataPresenter.LayoutManager; }
         }
 
         public bool Scrollable
@@ -76,9 +82,9 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
-            if (DataPresenter != null)
+            if (LayoutManager != null)
             {
-                DataPresenter.ClearElements();
+                LayoutManager.ClearElements();
                 DataPresenter = null;
             }
         }

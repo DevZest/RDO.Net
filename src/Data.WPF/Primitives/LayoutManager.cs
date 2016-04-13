@@ -1,109 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract partial class LayoutManager : ElementManager
+    internal abstract partial class LayoutManager : ElementManager
     {
-        internal LayoutManager(DataSet dataSet)
-            : base(dataSet)
+        internal static LayoutManager Create(DataPresenter dataPresenter)
+        {
+            var result = LayoutManager.Create(dataPresenter.Template, dataPresenter.DataSet);
+            result.DataPresenter = dataPresenter;
+            return result;
+        }
+
+        internal static LayoutManager Create(Template template, DataSet dataSet)
+        {
+            if (!template.Orientation.HasValue)
+                return new Z(template, dataSet);
+            else
+                return new XY(template, dataSet);
+        }
+
+        private LayoutManager(Template template, DataSet dataSet)
+            : base(template, dataSet)
         {
         }
 
-        internal double ViewportWidth { get; private set; }
+        internal DataPresenter DataPresenter { get; set; }
 
-        internal double ViewportHeight { get; private set; }
-
-        internal double ExtentHeight { get; private set; }
-
-        internal double ExtentWidth { get; private set; }
-
-        private Size ExtentSize
+        private TemplateItemCollection<DataItem> DataItems
         {
-            set
-            {
-                if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
-                    return;
-                ExtentHeight = value.Height;
-                ExtentWidth = value.Width;
-                InvalidateScrollInfo();
-            }
+            get { return Template.InternalDataItems; }
         }
 
-        private double _horizontalOffset;
-        internal double HorizontalOffset
+        public Size Measure(Size availableSize)
         {
-            get { return _horizontalOffset; }
-            set
-            {
-                if (_horizontalOffset.IsClose(value))
-                    return;
-
-                HorizontalOffsetDelta += (value - _horizontalOffset);
-                _horizontalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        internal double HorizontalOffsetDelta { get; private set; }
-
-        private double _verticalOffset;
-        public double VerticalOffset
-        {
-            get { return _verticalOffset; }
-            set
-            {
-                if (_verticalOffset.IsClose(value))
-                    return;
-
-                VerticalOffsetDelta += (value - _verticalOffset);
-                _verticalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        protected double VerticalOffsetDelta { get; private set; }
-
-        internal ScrollViewer ScrollOwner { get; set; }
-
-        private void InvalidateScrollInfo()
-        {
-            if (ScrollOwner != null)
-                ScrollOwner.InvalidateScrollInfo();
-        }
-
-        public Rect MakeVisible(Visual visual, Rect rectangle)
-        {
+            Template.InitMeasure(availableSize);
+            BlockDimensions = Template.CoerceBlockDimensions();
+            MeasureAutoSizeDataItems();
+            FillBlocks();
             throw new NotImplementedException();
         }
 
-        private Size ViewportSize
+        private void MeasureAutoSizeDataItems()
         {
-            get { return new Size(ViewportWidth, ViewportHeight); }
-            set
+            foreach (var dataItem in DataItems.AutoSizeItems)
             {
-                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
-                    return;
-
-                ViewportWidth = value.Width;
-                ViewportHeight = value.Height;
-
-                InvalidateScrollInfo();
+                Debug.Assert(dataItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional DataItem.");
+                var element = dataItem[0];
+                element.Measure(dataItem.AvailableAutoSize);
+                dataItem.UpdateAutoSize(element.DesiredSize);
             }
         }
 
-        private _Measurer _measurer;
-        private _Measurer Measurer
+        private void FillBlocks()
         {
-            get { return _measurer ?? (_measurer = _Measurer.Create(this)); }
-        }
-
-        internal Size Measure(Size availableSize)
-        {
-            return Measurer.Measure(availableSize);
         }
 
         internal Size Arrange(Size finalSize)
