@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(row != null && row.RowManager == _elementManager);
 
-            EnsurePinnedBlocksInitialized();
+            EnsureInitialized();
             if (Count == 0)
                 return false;
 
@@ -98,7 +98,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                EnsurePinnedBlocksInitialized();
+                EnsureInitialized();
                 return _countPinnedHead;
             }
         }
@@ -108,16 +108,16 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                EnsurePinnedBlocksInitialized();
+                EnsureInitialized();
                 return _countPinnedTail;
             }
         }
 
         public int CountUnpinned { get; private set; }
 
-        public void EnsurePinnedBlocksInitialized()
+        public void EnsureInitialized()
         {
-            if (IsPinnedBlocksInitialized)
+            if (IsInitialized)
                 return;
 
             _countPinnedHead = CoerceCountPinnedHead();
@@ -232,7 +232,7 @@ namespace DevZest.Data.Windows
 
         }
 
-        public bool IsPinnedBlocksInitialized
+        public bool IsInitialized
         {
             get { return _countPinnedHead >= 0; }
         }
@@ -277,8 +277,8 @@ namespace DevZest.Data.Windows
 
         internal void RealizeFirstUnpinned(int index)
         {
-            EnsurePinnedBlocksInitialized();
-            Debug.Assert(Count == 0 && index >= CountPinnedHead && index < MaxBlockCount - CountPinnedTail);
+            EnsureInitialized();
+            Debug.Assert(CountUnpinned == 0 && index >= CountPinnedHead && index < MaxBlockCount - CountPinnedTail);
 
             var blockView = Realize(index);
             Insert(BlockViewStartIndex + CountPinnedHead, blockView);
@@ -290,7 +290,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(FirstUnpinned != null && FirstUnpinned.Index - 1 >= CountPinnedHead);
 
             var blockView = Realize(FirstUnpinned.Index - 1);
-            Insert(BlockViewStartIndex, blockView);
+            Insert(BlockViewStartIndex + CountPinnedHead, blockView);
             CountUnpinned++;
         }
 
@@ -299,7 +299,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(LastUnpinned != null && LastUnpinned.Index + 1 < MaxBlockCount - CountPinnedTail);
 
             var blockView = Realize(LastUnpinned.Index + 1);
-            Insert(BlockViewStartIndex + Count, blockView);
+            Insert(BlockViewStartIndex + CountPinnedHead + CountUnpinned, blockView);
             CountUnpinned++;
         }
 
@@ -334,7 +334,7 @@ namespace DevZest.Data.Windows
 
         internal void VirtualizeAll()
         {
-            if (!IsPinnedBlocksInitialized)
+            if (!IsInitialized)
                 return;
 
             for (int i = 0; i < Count; i++)

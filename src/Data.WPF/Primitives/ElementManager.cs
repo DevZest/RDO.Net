@@ -91,7 +91,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            Debug.Assert(ElementCollection == null && BlockViews.Count == 0 && BlockDimensions == 1);
+            Debug.Assert(ElementCollection == null && !BlockViews.IsInitialized);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
