@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -252,7 +253,18 @@ namespace DevZest.Data.Windows.Primitives
             get { return AutoWidthGridColumns.Count > 0 || AutoHeightGridRows.Count > 0; }
         }
 
-        internal void UpdateAutoSize(Size measuredSize)
+        internal Size AvailableAutoSize
+        {
+            get
+            {
+                Debug.Assert(IsAutoSize);
+                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredWidth();
+                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredHeight();
+                return new Size(width, height);
+            }
+        }
+
+        internal void UpdateAutoSize(Size measuredSize, BlockView blockView)
         {
             Debug.Assert(IsAutoSize);
 
@@ -261,7 +273,7 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoWidth = measuredSize.Width - GridRange.GetMeasuredWidth(x => !x.IsAutoLength(SizeToContentX));
                 if (totalAutoWidth > 0)
                 {
-                    DistributeAutoLength(totalAutoWidth, AutoWidthGridColumns);
+                    DistributeAutoLength(totalAutoWidth, AutoWidthGridColumns, Template.Orientation == Orientation.Horizontal ? blockView : null);
                     Template.DistributeStarWidths();
                 }
             }
@@ -271,13 +283,13 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoHeight = measuredSize.Height - GridRange.GetMeasuredHeight(x => !x.IsAutoLength(SizeToContentY));
                 if (totalAutoHeight > 0)
                 {
-                    DistributeAutoLength(totalAutoHeight, AutoHeightGridRows);
+                    DistributeAutoLength(totalAutoHeight, AutoHeightGridRows, Template.Orientation == Orientation.Vertical ? blockView : null);
                     Template.DistributeStarHeights();
                 }
             }
         }
 
-        private static void DistributeAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> autoLengthTracks)
+        private static void DistributeAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> autoLengthTracks, BlockView blockView)
             where T : GridTrack
         {
             Debug.Assert(autoLengthTracks.Count > 0);
@@ -285,15 +297,15 @@ namespace DevZest.Data.Windows.Primitives
 
             if (autoLengthTracks.Count == 1)
             {
-                if (totalMeasuredLength > autoLengthTracks[0].MeasuredLength)
-                    autoLengthTracks[0].MeasuredLength = totalMeasuredLength;
+                if (totalMeasuredLength > autoLengthTracks[0].GetMeasuredLength(blockView))
+                    autoLengthTracks[0].SetMeasuredLength(blockView, totalMeasuredLength);
                 return;
             }
 
-            DistributeOrderedAutoLength(totalMeasuredLength, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray());
+            DistributeOrderedAutoLength(totalMeasuredLength, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), blockView);
         }
 
-        private static void DistributeOrderedAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> orderedAutoLengthTracks)
+        private static void DistributeOrderedAutoLength<T>(double totalMeasuredLength, IReadOnlyList<T> orderedAutoLengthTracks, BlockView blockView)
             where T : GridTrack
         {
             Debug.Assert(orderedAutoLengthTracks.Count > 0);
@@ -304,13 +316,14 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < count; i++)
             {
                 var track = orderedAutoLengthTracks[i];
-                if (track.MeasuredLength >= avgLength)
+                var trackMeasuredLength = track.GetMeasuredLength(blockView);
+                if (trackMeasuredLength >= avgLength)
                 {
-                    totalMeasuredLength -= track.MeasuredLength;
+                    totalMeasuredLength -= trackMeasuredLength;
                     avgLength = totalMeasuredLength / (count - i + 1);
                 }
                 else
-                    track.MeasuredLength = avgLength;
+                    track.SetMeasuredLength(blockView, avgLength);
             }
         }
     }

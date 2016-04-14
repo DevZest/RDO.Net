@@ -151,16 +151,5 @@ namespace DevZest.Data.Windows.Primitives
                 return ElementManager.Elements[elementIndex];
             }
         }
-
-        internal Size AvailableAutoSize
-        {
-            get
-            {
-                Debug.Assert(IsAutoSize);
-                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredWidth();
-                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.GetMeasuredHeight();
-                return new Size(width, height);
-            }
-        }
     }
 }

@@ -23,6 +23,16 @@ namespace DevZest.Data.Windows.Primitives
                     return Template.Orientation.GetValueOrDefault();
                 }
             }
+
+            protected override void PrepareMeasure()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Size MeasuredSize
+            {
+                get { throw new NotImplementedException(); }
+            }
         }
 
         internal double ViewportWidth { get; private set; }

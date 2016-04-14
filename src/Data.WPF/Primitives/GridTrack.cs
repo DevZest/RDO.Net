@@ -41,5 +41,18 @@ namespace DevZest.Data.Windows.Primitives
         internal double MeasuredLength { get; set; }
 
         public abstract Orientation Orientation { get; }
+
+        internal double GetMeasuredLength(BlockView blockView)
+        {
+            return blockView == null ? MeasuredLength : blockView.GetMeasuredLength(this);
+        }
+
+        internal void SetMeasuredLength(BlockView blockView, double value)
+        {
+            if (blockView == null)
+                MeasuredLength = value;
+            else
+                blockView.SetMeasuredLength(this, value);
+        }
     }
 }

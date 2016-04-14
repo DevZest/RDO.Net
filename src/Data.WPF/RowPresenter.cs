@@ -42,15 +42,24 @@ namespace DevZest.Data.Windows
             }
         }
 
+        internal LayoutManager LayoutManager
+        {
+            get { return RowManager as LayoutManager; }
+        }
+
         private bool IsHierarchical
         {
             get { return !IsEof && RowManager.IsHierarchical; }
         }
 
-        //public DataPresenter DataPresenter
-        //{
-        //    get { return RowManager as DataPresenter; }
-        //}
+        public DataPresenter DataPresenter
+        {
+            get
+            {
+                var layoutManager = LayoutManager;
+                return layoutManager == null ? null : layoutManager.DataPresenter;
+            }
+        }
 
         private Template Template
         {

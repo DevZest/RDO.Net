@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -111,6 +112,21 @@ namespace DevZest.Data.Windows.Primitives
         internal double GetMeasuredHeight(Func<GridRow, bool> predict = null)
         {
             return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
+        }
+
+        internal Size GetMeasuredSize(BlockView blockView)
+        {
+            double width = 0;
+            var blockViewX = Template.Orientation == Orientation.Horizontal ? blockView : null;
+            for (int i = Left.Ordinal; i <= Right.Ordinal; i++)
+                width += Template.GridColumns[i].GetMeasuredLength(blockViewX);
+
+            double height = 0;
+            var blockViewY = Template.Orientation == Orientation.Vertical ? blockView : null;
+            for (int i = Top.Ordinal; i <= Bottom.Ordinal; i++)
+                height += Template.GridRows[i].GetMeasuredLength(blockViewY);
+
+            return new Size(width, height);
         }
     }
 }

@@ -81,15 +81,44 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(row != null && row.RowManager == _elementManager);
 
             EnsureInitialized();
-            if (Count == 0)
-                return false;
+            //if (Count == 0)
+            //    return false;
 
-            var index = row.Ordinal / BlockDimensions;
-            if (index < CountPinnedHead)
-                return true;
-            if (index >= MaxBlockCount - CountPinnedTail)
-                return true;
-            return FirstUnpinned == null ? false : index >= FirstUnpinned.Index && index <= LastUnpinned.Index;
+            //var index = row.Ordinal / BlockDimensions;
+            //if (index < CountPinnedHead)
+            //    return true;
+            //if (index >= MaxBlockCount - CountPinnedTail)
+            //    return true;
+            //return FirstUnpinned == null ? false : index >= FirstUnpinned.Index && index <= LastUnpinned.Index;
+            return this[row] != null;
+        }
+
+        internal BlockView this[RowPresenter row]
+        {
+            get
+            {
+                Debug.Assert(IsInitialized);
+
+                if (Count == 0)
+                    return null;
+
+                var index = row.Ordinal / BlockDimensions;
+
+                if (index < CountPinnedHead)
+                    return this[index];
+
+                var pinnedTailStartIndex = MaxBlockCount - CountPinnedTail;
+                if (index >= pinnedTailStartIndex)
+                    return this[CountPinnedHead + CountUnpinned + (index - pinnedTailStartIndex)];
+
+                var firstUnpinned = FirstUnpinned;
+                if (firstUnpinned == null)
+                    return null;
+
+                if (index >= firstUnpinned.Index && index <= LastUnpinned.Index)
+                    return this[CountPinnedHead + (index - firstUnpinned.Index)];
+                return null;
+            }
         }
 
         private int _countPinnedHead = -1;

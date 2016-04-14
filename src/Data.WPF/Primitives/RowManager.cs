@@ -96,7 +96,7 @@ namespace DevZest.Data.Windows.Primitives
                 SetStateFlag(dataPresenterState);
         }
 
-        protected void OnSetState(DataPresenterState dataPresenterState)
+        protected virtual void OnSetState(DataPresenterState dataPresenterState)
         {
             if (BindingContext.Current.RowManager == this && GetStateFlag(dataPresenterState))
                 Invalidate(null);

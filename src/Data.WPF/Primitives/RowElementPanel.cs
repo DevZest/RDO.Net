@@ -26,6 +26,15 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private LayoutManager LayoutManager
+        {
+            get
+            {
+                var rowPresenter = RowPresenter;
+                return rowPresenter == null ? null : rowPresenter.LayoutManager;
+            }
+        }
+
         internal IReadOnlyList<UIElement> Elements
         {
             get
@@ -55,10 +64,11 @@ namespace DevZest.Data.Windows.Primitives
             return Elements[index];
         }
 
-        //protected override Size MeasureOverride(Size availableSize)
-        //{
-        //    return base.MeasureOverride(availableSize);
-        //}
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var layoutManager = LayoutManager;
+            return layoutManager == null ? base.MeasureOverride(availableSize) : layoutManager.Measure(RowPresenter, availableSize);
+        }
 
         //protected override Size ArrangeOverride(Size finalSize)
         //{

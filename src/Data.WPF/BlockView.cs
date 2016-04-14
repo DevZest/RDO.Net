@@ -25,13 +25,14 @@ namespace DevZest.Data.Windows
         internal void Cleanup()
         {
             ClearElements();
+            ClearMeasuredLengths();
             Index = -1;
             ElementManager = null;
         }
 
         internal ElementManager ElementManager { get; private set; }
 
-        private LayoutManager LayoutManager
+        internal LayoutManager LayoutManager
         {
             get { return ElementManager as LayoutManager; }
         }
@@ -84,9 +85,9 @@ namespace DevZest.Data.Windows
             return GetEnumerator();
         }
 
-        private ReadOnlyCollection<BlockItem> BlockItems
+        private TemplateItemCollection<BlockItem> BlockItems
         {
-            get { return ElementManager.Template.BlockItems; }
+            get { return ElementManager.Template.InternalBlockItems; }
         }
 
         private int BlockItemsSplit
@@ -232,6 +233,43 @@ namespace DevZest.Data.Windows
         {
             var element = Elements[index];
             blockItem.UpdateTarget(element);
+        }
+
+        private Dictionary<GridTrack, double> _measuredLengths;
+        private Dictionary<GridTrack, double> MeasuredLengths
+        {
+            get { return _measuredLengths ?? (_measuredLengths = new Dictionary<GridTrack, double>()); }
+        }
+
+        private void ClearMeasuredLengths()
+        {
+            _measuredLengths = null;
+        }
+
+        internal double GetMeasuredLength(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack != null);
+            double result;
+            return MeasuredLengths.TryGetValue(gridTrack, out result) ? result : 0;
+        }
+
+        internal void SetMeasuredLength(GridTrack gridTrack, double value)
+        {
+            if (value == 0)
+                MeasuredLengths.Remove(gridTrack);
+            else
+                MeasuredLengths[gridTrack] = value;
+        }
+
+        internal UIElement this[BlockItem blockItem]
+        {
+            get
+            {
+                var index = blockItem.Ordinal;
+                if (index >= BlockItemsSplit)
+                    index += Count;
+                return Elements[index];
+            }
         }
     }
 }
