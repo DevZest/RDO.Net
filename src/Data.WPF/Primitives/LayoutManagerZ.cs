@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -34,20 +35,30 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        internal override Size GetMeasuredSize(DataItem dataItem, int blockDimension)
+        protected override Size GetMeasuredSize(DataItem dataItem)
         {
             return dataItem.GridRange.MeasuredSize;
         }
 
-        internal override Rect GetArrangeRect(DataItem dataItem, int blockDimension)
-        {
-            var gridRange = dataItem.GridRange;
-            return new Rect(gridRange.MeasuredPoint, gridRange.MeasuredSize);
-        }
-
-        internal override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
             return gridRange.MeasuredSize;
+        }
+
+        protected override Point Offset(Point point, int blockDimension)
+        {
+            Debug.Assert(blockDimension == 0);
+            return point;
+        }
+
+        protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
+        {
+            Debug.Assert(Template.BlockRange.Contains(baseGridRange));
+            Debug.Assert(baseGridRange.Contains(gridRange));
+
+            var basePoint = baseGridRange.MeasuredPoint;
+            var point = gridRange.MeasuredPoint;
+            return new Point(point.X - basePoint.X, point.Y - basePoint.Y);
         }
 
         protected override void FinalizeMeasureBlocks()

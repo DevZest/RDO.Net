@@ -152,17 +152,26 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        internal override Size GetMeasuredSize(DataItem dataItem, int blockDimension)
+        protected override Size GetMeasuredSize(DataItem dataItem)
         {
             throw new NotImplementedException();
         }
 
-        internal override Rect GetArrangeRect(DataItem dataItem, int blockDimension)
+        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
             throw new NotImplementedException();
         }
 
-        internal override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        protected override Point Offset(Point point, int blockDimension)
+        {
+            if (Orientation == Orientation.Horizontal)
+                point.Offset(Template.RowRange.MeasuredWidth * blockDimension, 0);
+            else
+                point.Offset(0, Template.RowRange.MeasuredHeight * blockDimension);
+            return point;
+        }
+
+        protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
         {
             throw new NotImplementedException();
         }
@@ -175,6 +184,12 @@ namespace DevZest.Data.Windows.Primitives
         protected override Size MeasuredSize
         {
             get { return Template.AvailableSize; }
+        }
+
+        internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
+        {
+            throw new NotImplementedException();
+            return base.GetArrangeRect(blockView, blockItem);
         }
     }
 }
