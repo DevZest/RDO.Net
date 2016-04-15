@@ -20,6 +20,16 @@ namespace DevZest.Data.Windows.Primitives
                 point.Offset(Template.RowRange.MeasuredWidth * blockDimension, 0);
                 return point;
             }
+
+            protected override Size GetMeasuredSize(DataItem dataItem)
+            {
+                var gridRange = dataItem.GridRange;
+                var width = gridRange.MeasuredWidth;
+                var height = gridRange.MeasuredHeight;
+                if (dataItem.BlockDimensions > 1)
+                    width += Template.RowRange.MeasuredWidth * (BlockDimensions - 1);
+                return new Size(width, height);
+            }
         }
     }
 }

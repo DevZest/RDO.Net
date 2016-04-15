@@ -186,11 +186,6 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        protected override Size GetMeasuredSize(DataItem dataItem)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
             throw new NotImplementedException();

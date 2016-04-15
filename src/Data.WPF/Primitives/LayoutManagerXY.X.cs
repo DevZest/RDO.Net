@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -19,6 +20,16 @@ namespace DevZest.Data.Windows.Primitives
             {
                 point.Offset(Template.RowRange.MeasuredHeight * blockDimension, 0);
                 return point;
+            }
+
+            protected override Size GetMeasuredSize(DataItem dataItem)
+            {
+                var gridRange = dataItem.GridRange;
+                var width = gridRange.MeasuredWidth;
+                var height = gridRange.MeasuredHeight;
+                if (dataItem.BlockDimensions > 1)
+                    height += Template.RowRange.MeasuredHeight * (BlockDimensions - 1);
+                return new Size(width, height);
             }
         }
     }
