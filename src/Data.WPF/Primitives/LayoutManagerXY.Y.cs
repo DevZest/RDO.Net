@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -14,6 +16,10 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             private readonly IConcatList<GridRow> _variantAutoHeightRows;
+            protected override IReadOnlyList<GridTrack> VariantAutoLengthTracks
+            {
+                get { return _variantAutoHeightRows; }
+            }
 
             protected override Point Offset(Point point, int blockDimension)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -165,6 +166,8 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
+        protected abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
+
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
             return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
@@ -181,8 +184,13 @@ namespace DevZest.Data.Windows.Primitives
                 return base.SetMeasuredAutoLength(blockView, gridTrack, value);
         }
 
-        protected override void PrepareMeasureBlocks()
+        protected sealed override void PrepareMeasureBlocks()
         {
+            if (VariantAutoLengthTracks.Count > 0)
+            {
+                for (int i = 0; i < BlockViews.Count; i++)
+                    BlockViews[i].ClearMeasuredLengths();
+            }
             throw new NotImplementedException();
         }
 

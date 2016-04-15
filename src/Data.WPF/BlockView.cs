@@ -241,7 +241,7 @@ namespace DevZest.Data.Windows
             get { return _measuredLengths ?? (_measuredLengths = new Dictionary<GridTrack, double>()); }
         }
 
-        private void ClearMeasuredLengths()
+        internal void ClearMeasuredLengths()
         {
             if (_measuredLengths != null)
                 _measuredLengths.Clear();
