@@ -129,6 +129,9 @@
   <data name="BlockItem_OutOfVerticalRowRange" xml:space="preserve">
     <value>BlockItems[{index}] is out of vertical side of RowRange.</value>
   </data>
+  <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
+    <value>DataElementPanel must be element of DataView's control template in order to handle IScrollInfo.</value>
+  </data>
   <data name="DataItem_IntersectsWithRowRange" xml:space="preserve">
     <value>DataItems[{index}] intersects with RowRange.</value>
   </data>

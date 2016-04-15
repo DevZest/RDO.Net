@@ -2,14 +2,120 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
     partial class LayoutManager
     {
-        private sealed class XY : LayoutManager
+        private sealed class XY : LayoutManager, IScrollHandler
         {
+            #region IScrollHandler
+
+            public ScrollViewer ScrollOwner { get; set; }
+
+            private void InvalidateScrollInfo()
+            {
+                if (ScrollOwner != null)
+                    ScrollOwner.InvalidateScrollInfo();
+            }
+
+            public double ViewportWidth
+            {
+                get { return Template.AvailableWidth; }
+            }
+
+            public double ViewportHeight
+            {
+                get { return Template.AvailableHeight; }
+            }
+
+            public double ExtentHeight { get; private set; }
+
+            public double ExtentWidth { get; private set; }
+
+            private Size ExtentSize
+            {
+                set
+                {
+                    if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
+                        return;
+                    ExtentHeight = value.Height;
+                    ExtentWidth = value.Width;
+                    InvalidateScrollInfo();
+                }
+            }
+
+            private double _horizontalOffset;
+            public double HorizontalOffset
+            {
+                get { return _horizontalOffset; }
+                set
+                {
+                    if (_horizontalOffset.IsClose(value))
+                        return;
+                    _horizontalOffset = value;
+                    InvalidateScrollInfo();
+                }
+            }
+
+            private double _verticalOffset;
+            public double VerticalOffset
+            {
+                get { return _verticalOffset; }
+                set
+                {
+                    if (_verticalOffset.IsClose(value))
+                        return;
+                    _verticalOffset = value;
+                    InvalidateScrollInfo();
+                }
+            }
+
+            private double _deltaHorizontalOffset;
+            public double DeltaHorizontalOffset
+            {
+                get { return _deltaHorizontalOffset; }
+                set
+                {
+                    if (_deltaHorizontalOffset.IsClose(value))
+                        return;
+                    _deltaHorizontalOffset = value;
+                    InvalidateScrollInfo();
+                }
+            }
+
+            private double _deltaVerticalOffset;
+            public double DeltaVerticalOffset
+            {
+                get { return _deltaVerticalOffset; }
+                set
+                {
+                    if (_deltaVerticalOffset.IsClose(value))
+                        return;
+                    _deltaVerticalOffset = value;
+                    InvalidateScrollInfo();
+                }
+            }
+
+            public void SetHorizontalOffset(double offset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetVerticalOffset(double offset)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Rect MakeVisible(Visual visual, Rect rectangle)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
+
             public XY(Template template, DataSet dataSet)
                 : base(template, dataSet)
             {
@@ -32,88 +138,6 @@ namespace DevZest.Data.Windows.Primitives
             protected override Size MeasuredSize
             {
                 get { throw new NotImplementedException(); }
-            }
-        }
-
-        internal double ViewportWidth { get; private set; }
-
-        internal double ViewportHeight { get; private set; }
-
-        internal double ExtentHeight { get; private set; }
-
-        internal double ExtentWidth { get; private set; }
-
-        private Size ExtentSize
-        {
-            set
-            {
-                if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
-                    return;
-                ExtentHeight = value.Height;
-                ExtentWidth = value.Width;
-                InvalidateScrollInfo();
-            }
-        }
-
-        private double _horizontalOffset;
-        internal double HorizontalOffset
-        {
-            get { return _horizontalOffset; }
-            set
-            {
-                if (_horizontalOffset.IsClose(value))
-                    return;
-
-                HorizontalOffsetDelta += (value - _horizontalOffset);
-                _horizontalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        internal double HorizontalOffsetDelta { get; private set; }
-
-        private double _verticalOffset;
-        public double VerticalOffset
-        {
-            get { return _verticalOffset; }
-            set
-            {
-                if (_verticalOffset.IsClose(value))
-                    return;
-
-                VerticalOffsetDelta += (value - _verticalOffset);
-                _verticalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        protected double VerticalOffsetDelta { get; private set; }
-
-        internal ScrollViewer ScrollOwner { get; set; }
-
-        private void InvalidateScrollInfo()
-        {
-            if (ScrollOwner != null)
-                ScrollOwner.InvalidateScrollInfo();
-        }
-
-        public Rect MakeVisible(Visual visual, Rect rectangle)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Size ViewportSize
-        {
-            get { return new Size(ViewportWidth, ViewportHeight); }
-            set
-            {
-                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
-                    return;
-
-                ViewportWidth = value.Width;
-                ViewportHeight = value.Height;
-
-                InvalidateScrollInfo();
             }
         }
     }
