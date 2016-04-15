@@ -42,6 +42,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
+            Debug.Assert(Template.BlockRange.Contains(gridRange));
             return gridRange.MeasuredSize;
         }
 
