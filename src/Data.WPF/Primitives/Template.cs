@@ -92,11 +92,9 @@ namespace DevZest.Data.Windows.Primitives
             internal set { _rowRange = value; }
         }
 
-        private GridRange? _blockRange;
         public GridRange BlockRange
         {
-            get { return _blockRange.HasValue ? _blockRange.GetValueOrDefault() : InternalRowItems.Range.Union(InternalBlockItems.Range); }
-            internal set { _blockRange = value; }
+            get { return InternalRowItems.Range.Union(InternalBlockItems.Range); }
         }
 
         internal void VerifyTemplateItemGridRange()

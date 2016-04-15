@@ -271,5 +271,17 @@ namespace DevZest.Data.Windows
                 return Elements[index];
             }
         }
+
+        protected override Size MeasureOverride(Size constraint)
+        {
+            var layoutManager = LayoutManager;
+            return layoutManager == null ? base.MeasureOverride(constraint) : layoutManager.Measure(this, constraint);
+        }
+
+        //protected override Size ArrangeOverride(Size arrangeBounds)
+        //{
+        //    var layoutManager = LayoutManager;
+        //    return layoutManager == null ? base.ArrangeOverride(arrangeBounds) : layoutManager.Arrange(this, arrangeBounds);
+        //}
     }
 }

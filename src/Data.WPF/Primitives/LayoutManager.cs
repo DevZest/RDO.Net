@@ -85,18 +85,11 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            if (BlockViews.Count > 0)
-            {
-                var blockRange = Template.BlockRange;
-                for (int i = 0; i < BlockViews.Count; i++)
-                {
-                    var blockView = BlockViews[i];
-                    blockView.Measure(blockRange.GetMeasuredSize(blockView));
-                }
-            }
-
+            FinalizeMeasureBlocks();
             return MeasuredSize;
         }
+
+        protected abstract void FinalizeMeasureBlocks();
 
         protected abstract Size MeasuredSize { get; }
 

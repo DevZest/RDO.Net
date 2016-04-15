@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -37,27 +35,24 @@ namespace DevZest.Data.Windows.Primitives
 
         internal override Size GetMeasuredSize(DataItem dataItem, int blockDimension)
         {
-            Debug.Assert(blockDimension == 0);
-            return dataItem.GridRange.GetMeasuredSize(null);
+            return dataItem.GridRange.MeasuredSize;
         }
 
         internal override Rect GetArrangeRect(DataItem dataItem, int blockDimension)
         {
-            var size = GetMeasuredSize(dataItem, blockDimension);
-            var point = new Point(dataItem.GridRange.Left.MeasuredStartOffset, dataItem.GridRange.Top.MeasuredStartOffset);
-            return new Rect(point, size);
+            var gridRange = dataItem.GridRange;
+            return new Rect(gridRange.MeasuredPoint, gridRange.MeasuredSize);
+        }
+
+        protected override void FinalizeMeasureBlocks()
+        {
+            if (BlockViews.Count == 1)
+                BlockViews[0].Measure(Template.BlockRange.MeasuredSize);
         }
 
         protected override Size MeasuredSize
         {
-            get
-            {
-                var lastGridColumn = Template.GridColumns.Last;
-                double width = lastGridColumn == null ? 0 : lastGridColumn.MeasuredEndOffset;
-                var lastGridRow = Template.GridRows.Last;
-                double height = lastGridRow == null ? 0 : lastGridRow.MeasuredEndOffset;
-                return new Size(width, height);
-            }
+            get { return Template.Range().MeasuredSize; }
         }
     }
 }

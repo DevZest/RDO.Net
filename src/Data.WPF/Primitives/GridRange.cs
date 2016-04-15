@@ -104,24 +104,34 @@ namespace DevZest.Data.Windows.Primitives
             return Template.GridRows.Filter(Top.Ordinal, Bottom.Ordinal, predict, action);
         }
 
+        internal Point MeasuredPoint
+        {
+            get { return new Point(Left == null ? 0 : Left.MeasuredStartOffset, Top == null ? 0 : Top.MeasuredStartOffset); }
+        }
+
+        internal Size MeasuredSize
+        {
+            get { return new Size(MeasuredWidth, MeasuredHeight); }
+        }
+
         internal double MeasuredWidth
         {
-            get { return Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal); }
+            get { return IsEmpty ? 0 : Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal); }
         }
 
         internal double GetMeasuredWidth(Func<GridColumn, bool> predict)
         {
-            return Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal, predict);
+            return IsEmpty ? 0 : Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal, predict);
         }
 
         internal double MeasuredHeight
         {
-            get { return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal); }
+            get { return IsEmpty? 0 : Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal); }
         }
 
         internal double GetMeasuredHeight(Func<GridRow, bool> predict)
         {
-            return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
+            return IsEmpty ? 0 : Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
         }
 
         internal Size GetMeasuredSize(BlockView blockView)

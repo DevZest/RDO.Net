@@ -162,6 +162,11 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
+        protected override void FinalizeMeasureBlocks()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Size MeasuredSize
         {
             get { return Template.AvailableSize; }

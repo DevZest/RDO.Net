@@ -81,10 +81,5 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < Count; i++)
                 this[i].MeasuredStartOffset = this[i - 1].MeasuredStartOffset + this[i - 1].MeasuredLength;
         }
-
-        internal T Last
-        {
-            get { return Count == 0 ? null : this[Count - 1]; }
-        }
     }
 }
