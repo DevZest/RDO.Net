@@ -11,6 +11,26 @@ namespace DevZest.Data.Windows.Primitives
     {
         private sealed class XY : LayoutManager, IScrollHandler
         {
+            private struct GridTrackPoint
+            {
+                private double _value;
+
+                public GridTrackPoint(int index, double proportion)
+                {
+                    _value = index + proportion;
+                }
+
+                public int Index
+                {
+                    get { return (int)_value; }
+                }
+
+                public double Proportion
+                {
+                    get { return _value - Index; }
+                }
+            }
+
             #region IScrollHandler
 
             public ScrollViewer ScrollOwner { get; set; }
