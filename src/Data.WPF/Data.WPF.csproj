@@ -57,7 +57,7 @@
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutManager.XY.cs" />
-    <Compile Include="Primitives\LayoutManager.Z.cs" />
+    <Compile Include="Primitives\LayoutManagerZ.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="RowPresenterState.cs" />

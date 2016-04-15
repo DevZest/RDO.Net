@@ -13,8 +13,10 @@ namespace DevZest.Data.Windows
 
         public static readonly DependencyProperty DataPresenterProperty = DataPresenterPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ScrollableProperty = DependencyProperty.Register(nameof(Scrollable),
-            typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.True));
+        private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
+            typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+
+        public static readonly DependencyProperty ScrollableProperty = ScrollablePropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility),
             typeof(ScrollBarVisibility), typeof(DataView), new PropertyMetadata(ScrollBarVisibility.Auto));
@@ -47,7 +49,7 @@ namespace DevZest.Data.Windows
         public bool Scrollable
         {
             get { return (bool)GetValue(ScrollableProperty); }
-            set { SetValue(ScrollableProperty, value); }
+            private set { SetValue(ScrollablePropertyKey, value); }
         }
 
         public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -76,8 +78,9 @@ namespace DevZest.Data.Windows
 
         internal void Initialize(DataPresenter dataPresenter)
         {
-            Debug.Assert(dataPresenter != null && DataPresenter == null);
+            Debug.Assert(dataPresenter != null);
             DataPresenter = dataPresenter;
+            Scrollable = dataPresenter.Template.Orientation.HasValue;
         }
 
         internal void Cleanup()

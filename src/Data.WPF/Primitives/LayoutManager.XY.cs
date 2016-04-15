@@ -2,163 +2,159 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutManager
+    internal sealed class LayoutManagerXY : LayoutManager, IScrollHandler
     {
-        private sealed class XY : LayoutManager, IScrollHandler
+        private struct GridTrackPoint
         {
-            private struct GridTrackPoint
+            private double _value;
+
+            public GridTrackPoint(int index, double proportion)
             {
-                private double _value;
-
-                public GridTrackPoint(int index, double proportion)
-                {
-                    _value = index + proportion;
-                }
-
-                public int Index
-                {
-                    get { return (int)_value; }
-                }
-
-                public double Proportion
-                {
-                    get { return _value - Index; }
-                }
+                _value = index + proportion;
             }
 
-            #region IScrollHandler
-
-            public ScrollViewer ScrollOwner { get; set; }
-
-            private void InvalidateScrollInfo()
+            public int Index
             {
-                if (ScrollOwner != null)
-                    ScrollOwner.InvalidateScrollInfo();
+                get { return (int)_value; }
             }
 
-            public double ViewportWidth
+            public double Proportion
             {
-                get { return Template.AvailableWidth; }
+                get { return _value - Index; }
             }
+        }
 
-            public double ViewportHeight
+        #region IScrollHandler
+
+        public ScrollViewer ScrollOwner { get; set; }
+
+        private void InvalidateScrollInfo()
+        {
+            if (ScrollOwner != null)
+                ScrollOwner.InvalidateScrollInfo();
+        }
+
+        public double ViewportWidth
+        {
+            get { return Template.AvailableWidth; }
+        }
+
+        public double ViewportHeight
+        {
+            get { return Template.AvailableHeight; }
+        }
+
+        public double ExtentHeight { get; private set; }
+
+        public double ExtentWidth { get; private set; }
+
+        private Size ExtentSize
+        {
+            set
             {
-                get { return Template.AvailableHeight; }
+                if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
+                    return;
+                ExtentHeight = value.Height;
+                ExtentWidth = value.Width;
+                InvalidateScrollInfo();
             }
+        }
 
-            public double ExtentHeight { get; private set; }
-
-            public double ExtentWidth { get; private set; }
-
-            private Size ExtentSize
+        private double _horizontalOffset;
+        public double HorizontalOffset
+        {
+            get { return _horizontalOffset; }
+            set
             {
-                set
-                {
-                    if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
-                        return;
-                    ExtentHeight = value.Height;
-                    ExtentWidth = value.Width;
-                    InvalidateScrollInfo();
-                }
+                if (_horizontalOffset.IsClose(value))
+                    return;
+                _horizontalOffset = value;
+                InvalidateScrollInfo();
             }
+        }
 
-            private double _horizontalOffset;
-            public double HorizontalOffset
+        private double _verticalOffset;
+        public double VerticalOffset
+        {
+            get { return _verticalOffset; }
+            set
             {
-                get { return _horizontalOffset; }
-                set
-                {
-                    if (_horizontalOffset.IsClose(value))
-                        return;
-                    _horizontalOffset = value;
-                    InvalidateScrollInfo();
-                }
+                if (_verticalOffset.IsClose(value))
+                    return;
+                _verticalOffset = value;
+                InvalidateScrollInfo();
             }
+        }
 
-            private double _verticalOffset;
-            public double VerticalOffset
+        private double _deltaHorizontalOffset;
+        public double DeltaHorizontalOffset
+        {
+            get { return _deltaHorizontalOffset; }
+            set
             {
-                get { return _verticalOffset; }
-                set
-                {
-                    if (_verticalOffset.IsClose(value))
-                        return;
-                    _verticalOffset = value;
-                    InvalidateScrollInfo();
-                }
+                if (_deltaHorizontalOffset.IsClose(value))
+                    return;
+                _deltaHorizontalOffset = value;
+                InvalidateScrollInfo();
             }
+        }
 
-            private double _deltaHorizontalOffset;
-            public double DeltaHorizontalOffset
+        private double _deltaVerticalOffset;
+        public double DeltaVerticalOffset
+        {
+            get { return _deltaVerticalOffset; }
+            set
             {
-                get { return _deltaHorizontalOffset; }
-                set
-                {
-                    if (_deltaHorizontalOffset.IsClose(value))
-                        return;
-                    _deltaHorizontalOffset = value;
-                    InvalidateScrollInfo();
-                }
+                if (_deltaVerticalOffset.IsClose(value))
+                    return;
+                _deltaVerticalOffset = value;
+                InvalidateScrollInfo();
             }
+        }
 
-            private double _deltaVerticalOffset;
-            public double DeltaVerticalOffset
+        public void SetHorizontalOffset(double offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetVerticalOffset(double offset)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Rect MakeVisible(Visual visual, Rect rectangle)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        public LayoutManagerXY(Template template, DataSet dataSet)
+            : base(template, dataSet)
+        {
+        }
+
+        private Orientation Orientation
+        {
+            get
             {
-                get { return _deltaVerticalOffset; }
-                set
-                {
-                    if (_deltaVerticalOffset.IsClose(value))
-                        return;
-                    _deltaVerticalOffset = value;
-                    InvalidateScrollInfo();
-                }
+                Debug.Assert(Template.Orientation.HasValue);
+                return Template.Orientation.GetValueOrDefault();
             }
+        }
 
-            public void SetHorizontalOffset(double offset)
-            {
-                throw new NotImplementedException();
-            }
+        protected override void PrepareMeasure()
+        {
+            throw new NotImplementedException();
+        }
 
-            public void SetVerticalOffset(double offset)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Rect MakeVisible(Visual visual, Rect rectangle)
-            {
-                throw new NotImplementedException();
-            }
-
-            #endregion
-
-            public XY(Template template, DataSet dataSet)
-                : base(template, dataSet)
-            {
-            }
-
-            private Orientation Orientation
-            {
-                get
-                {
-                    Debug.Assert(Template.Orientation.HasValue);
-                    return Template.Orientation.GetValueOrDefault();
-                }
-            }
-
-            protected override void PrepareMeasure()
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override Size MeasuredSize
-            {
-                get { throw new NotImplementedException(); }
-            }
+        protected override Size MeasuredSize
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }
