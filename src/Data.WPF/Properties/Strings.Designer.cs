@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// DataElementPanel must be element of DataView's control template in order to handle IScrollInfo.
+        /// DataElementPanel must be element of DataView's control template to implement IScrollInfo.
         /// </summary>
         public static string DataElementPanel_NullScrollHandler
         {
