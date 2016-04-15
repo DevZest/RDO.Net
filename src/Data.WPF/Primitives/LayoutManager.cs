@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -43,6 +46,97 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.InternalRowItems; }
         }
 
+        private void UpdateAutoSize(BlockView blockView, TemplateItem templateItem, Size measuredSize)
+        {
+            Debug.Assert(templateItem.IsAutoSize);
+
+            var gridRange = templateItem.GridRange;
+            if (templateItem.AutoWidthGridColumns.Count > 0)
+            {
+                double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength(Template.SizeToContentX));
+                if (totalAutoWidth > 0)
+                {
+                    var changed = DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
+                    if (changed)
+                    {
+                        Template.DistributeStarWidths();
+                        Template.GridColumns.RefreshMeasuredOffset();
+                    }
+                }
+            }
+
+            if (templateItem.AutoHeightGridRows.Count > 0)
+            {
+                double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength(Template.SizeToContentY));
+                if (totalAutoHeight > 0)
+                {
+                    var changed = DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
+                    if (changed)
+                    {
+                        Template.DistributeStarHeights();
+                        Template.GridRows.RefreshMeasuredOffset();
+                    }
+                }
+            }
+        }
+
+        private bool DistributeAutoLength<T>(BlockView blockView, IReadOnlyList<T> autoLengthTracks, double totalMeasuredLength)
+            where T : GridTrack
+        {
+            Debug.Assert(autoLengthTracks.Count > 0);
+            Debug.Assert(totalMeasuredLength > 0);
+
+            if (autoLengthTracks.Count == 1)
+            {
+                var track = autoLengthTracks[0];
+                if (totalMeasuredLength > GetMeasuredLength(blockView, track))
+                    return SetMeasuredAutoLength(blockView, track, totalMeasuredLength);
+            }
+
+            return DistributeOrderedAutoLength(blockView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
+        }
+
+        private bool DistributeOrderedAutoLength<T>(BlockView blockView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
+            where T : GridTrack
+        {
+            Debug.Assert(orderedAutoLengthTracks.Count > 0);
+            Debug.Assert(totalMeasuredLength > 0);
+
+            var count = orderedAutoLengthTracks.Count;
+            double avgLength = totalMeasuredLength / count;
+            var result = false;
+            for (int i = 0; i < count; i++)
+            {
+                var track = orderedAutoLengthTracks[i];
+                var trackMeasuredLength = GetMeasuredLength(blockView, track);
+                if (trackMeasuredLength >= avgLength)
+                {
+                    totalMeasuredLength -= trackMeasuredLength;
+                    avgLength = totalMeasuredLength / (count - i + 1);
+                }
+                else
+                    result = SetMeasuredAutoLength(blockView, track, avgLength);
+            }
+            return result;
+        }
+
+        protected virtual double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        {
+            return gridTrack.MeasuredLength;
+        }
+
+        protected virtual bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
+        {
+            var delta = value - gridTrack.MeasuredLength;
+            Debug.Assert(delta > 0);
+            gridTrack.MeasuredLength = value;
+            if (gridTrack.Orientation == Orientation.Horizontal)
+                Template.GridColumns.TotalAutoLength += delta;
+            else
+                Template.GridRows.TotalAutoLength += delta;
+            return true;
+        }
+
         protected abstract Size GetMeasuredSize(DataItem dataItem);
 
         protected abstract Size GetMeasuredSize(BlockView blockView, GridRange gridRange);
@@ -68,7 +162,7 @@ namespace DevZest.Data.Windows.Primitives
                 Debug.Assert(dataItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional DataItem.");
                 var element = dataItem[0];
                 element.Measure(dataItem.AvailableAutoSize);
-                dataItem.UpdateAutoSize(element.DesiredSize, null);
+                UpdateAutoSize(null, dataItem, element.DesiredSize);
             }
 
             PrepareMeasureBlocks();
@@ -112,7 +206,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var element = blockView[blockItem];
                 element.Measure(blockItem.AvailableAutoSize);
-                blockItem.UpdateAutoSize(element.DesiredSize, blockView);
+                UpdateAutoSize(blockView, blockItem, element.DesiredSize);
             }
 
             for (int i = 0; i < blockView.Count; i++)
@@ -157,7 +251,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var element = row.Elements[rowItem.Ordinal];
                 element.Measure(rowItem.AvailableAutoSize);
-                rowItem.UpdateAutoSize(element.DesiredSize, blockView);
+                UpdateAutoSize(blockView, rowItem, element.DesiredSize);
             }
         }
 

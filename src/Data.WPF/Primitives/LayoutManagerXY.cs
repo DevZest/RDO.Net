@@ -147,6 +147,22 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        protected override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        {
+            if (blockView == null)
+                return base.GetMeasuredLength(blockView, gridTrack);
+            throw new NotImplementedException();
+        }
+
+        protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
+        {
+            if (blockView == null)
+                return base.SetMeasuredAutoLength(blockView, gridTrack, value);
+
+            //blockView.SetMeasuredLength(gridTrack, value);
+            throw new NotImplementedException();
+        }
+
         protected override void PrepareMeasureBlocks()
         {
             throw new NotImplementedException();

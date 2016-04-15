@@ -48,30 +48,5 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public abstract Orientation Orientation { get; }
-
-        internal double GetMeasuredLength(BlockView blockView)
-        {
-            return blockView == null ? MeasuredLength : blockView.GetMeasuredLength(this);
-        }
-
-        internal bool SetMeasuredAutoLength(BlockView blockView, double value)
-        {
-            if (blockView == null)
-            {
-                var delta = value - MeasuredLength;
-                Debug.Assert(delta > 0);
-                MeasuredLength = value;
-                if (Orientation == Orientation.Horizontal)
-                    Owner.GridColumns.TotalAutoLength += delta;
-                else
-                    Owner.GridRows.TotalAutoLength += delta;
-                return true;
-            }
-            else
-            {
-                blockView.SetMeasuredLength(this, value);
-                return false;
-            }
-        }
     }
 }
