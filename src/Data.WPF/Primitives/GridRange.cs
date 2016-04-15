@@ -133,20 +133,5 @@ namespace DevZest.Data.Windows.Primitives
         {
             return IsEmpty ? 0 : Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
         }
-
-        internal Size GetMeasuredSize(BlockView blockView)
-        {
-            double width = 0;
-            var blockViewX = Template.Orientation == Orientation.Horizontal ? blockView : null;
-            for (int i = Left.Ordinal; i <= Right.Ordinal; i++)
-                width += Template.GridColumns[i].GetMeasuredLength(blockViewX);
-
-            double height = 0;
-            var blockViewY = Template.Orientation == Orientation.Vertical ? blockView : null;
-            for (int i = Top.Ordinal; i <= Bottom.Ordinal; i++)
-                height += Template.GridRows[i].GetMeasuredLength(blockViewY);
-
-            return new Size(width, height);
-        }
     }
 }

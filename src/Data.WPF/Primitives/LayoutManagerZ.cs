@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -42,6 +43,11 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridRange = dataItem.GridRange;
             return new Rect(gridRange.MeasuredPoint, gridRange.MeasuredSize);
+        }
+
+        internal override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        {
+            return gridRange.MeasuredSize;
         }
 
         protected override void FinalizeMeasureBlocks()

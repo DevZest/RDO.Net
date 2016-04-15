@@ -162,6 +162,11 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
+        internal override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void FinalizeMeasureBlocks()
         {
             throw new NotImplementedException();

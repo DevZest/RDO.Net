@@ -47,6 +47,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract Rect GetArrangeRect(DataItem dataItem, int blockDimension);
 
+        internal abstract Size GetMeasuredSize(BlockView blockView, GridRange gridRange);
+
         public Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
@@ -124,12 +126,12 @@ namespace DevZest.Data.Windows.Primitives
             foreach (var blockItem in BlockItems)
             {
                 var element = blockView[blockItem];
-                element.Measure(blockItem.GridRange.GetMeasuredSize(blockView));
+                element.Measure(GetMeasuredSize(blockView, blockItem.GridRange));
             }
 
             if (blockView.Count > 0)
             {
-                var size = Template.RowRange.GetMeasuredSize(blockView);
+                var size = GetMeasuredSize(blockView, Template.RowRange);
                 for (int i = 0; i < blockView.Count; i++)
                     blockView[i].View.Measure(size);
             }
@@ -169,7 +171,7 @@ namespace DevZest.Data.Windows.Primitives
             foreach (var rowItem in RowItems)
             {
                 var element = row.Elements[rowItem.Ordinal];
-                element.Measure(rowItem.GridRange.GetMeasuredSize(blockView));
+                element.Measure(GetMeasuredSize(blockView, rowItem.GridRange));
             }
         }
 
