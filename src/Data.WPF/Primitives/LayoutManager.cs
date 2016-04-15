@@ -43,18 +43,23 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.InternalRowItems; }
         }
 
+        internal abstract Size GetMeasuredSize(DataItem dataItem, int blockDimension);
+
+        internal abstract Rect GetArrangeRect(DataItem dataItem, int blockDimension);
+
         public Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
             BlockDimensions = Template.CoerceBlockDimensions();
-            MeasureAutoSizeDataItems();
             IsPreparingMeasure = true;
             PrepareMeasure();
             IsPreparingMeasure = false;
             return FinalizeMeasure();
         }
 
-        private void MeasureAutoSizeDataItems()
+        private bool IsPreparingMeasure;
+
+        private void PrepareMeasure()
         {
             foreach (var dataItem in DataItems.AutoSizeItems)
             {
@@ -63,11 +68,37 @@ namespace DevZest.Data.Windows.Primitives
                 element.Measure(dataItem.AvailableAutoSize);
                 dataItem.UpdateAutoSize(element.DesiredSize, null);
             }
+
+            PrepareMeasureBlocks();
         }
 
-        private bool IsPreparingMeasure;
+        protected abstract void PrepareMeasureBlocks();
 
-        protected abstract void PrepareMeasure();
+        private Size FinalizeMeasure()
+        {
+            foreach (var dataItem in DataItems)
+            {
+                for (int i = 0; i < dataItem.BlockDimensions; i++)
+                {
+                    var element = dataItem[i];
+                    element.Measure(GetMeasuredSize(dataItem, i));
+                }
+            }
+
+            if (BlockViews.Count > 0)
+            {
+                var blockRange = Template.BlockRange;
+                for (int i = 0; i < BlockViews.Count; i++)
+                {
+                    var blockView = BlockViews[i];
+                    blockView.Measure(blockRange.GetMeasuredSize(blockView));
+                }
+            }
+
+            return MeasuredSize;
+        }
+
+        protected abstract Size MeasuredSize { get; }
 
         internal Size Measure(BlockView blockView, Size constraintSize)
         {
@@ -80,6 +111,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure(BlockView blockView)
         {
+            Debug.Assert(IsPreparingMeasure);
+
             foreach (var blockItem in BlockItems.AutoSizeItems)
             {
                 var element = blockView[blockItem];
@@ -93,6 +126,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void FinalizeMeasure(BlockView blockView)
         {
+            Debug.Assert(!IsPreparingMeasure);
+
             foreach (var blockItem in BlockItems)
             {
                 var element = blockView[blockItem];
@@ -144,32 +179,6 @@ namespace DevZest.Data.Windows.Primitives
                 element.Measure(rowItem.GridRange.GetMeasuredSize(blockView));
             }
         }
-
-        private Size FinalizeMeasure()
-        {
-            foreach (var dataItem in DataItems)
-            {
-                for (int i = 0; i < BlockDimensions; i++)
-                {
-                    var element = dataItem[0];
-                    element.Measure(dataItem.GridRange.GetMeasuredSize(null));
-                }
-            }
-
-            if (BlockViews.Count > 0)
-            {
-                var blockRange = Template.BlockRange;
-                for (int i = 0; i < BlockViews.Count; i++)
-                {
-                    var blockView = BlockViews[i];
-                    blockView.Measure(blockRange.GetMeasuredSize(blockView));
-                }
-            }
-
-            return MeasuredSize;
-        }
-
-        protected abstract Size MeasuredSize { get; }
 
         internal Size Arrange(Size finalSize)
         {

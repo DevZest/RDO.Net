@@ -147,14 +147,24 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected override void PrepareMeasure()
+        protected override void PrepareMeasureBlocks()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override Size GetMeasuredSize(DataItem dataItem, int blockDimension)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override Rect GetArrangeRect(DataItem dataItem, int blockDimension)
         {
             throw new NotImplementedException();
         }
 
         protected override Size MeasuredSize
         {
-            get { throw new NotImplementedException(); }
+            get { return Template.AvailableSize; }
         }
     }
 }

@@ -104,12 +104,22 @@ namespace DevZest.Data.Windows.Primitives
             return Template.GridRows.Filter(Top.Ordinal, Bottom.Ordinal, predict, action);
         }
 
-        internal double GetMeasuredWidth(Func<GridColumn, bool> predict = null)
+        internal double MeasuredWidth
+        {
+            get { return Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal); }
+        }
+
+        internal double GetMeasuredWidth(Func<GridColumn, bool> predict)
         {
             return Template.GridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal, predict);
         }
 
-        internal double GetMeasuredHeight(Func<GridRow, bool> predict = null)
+        internal double MeasuredHeight
+        {
+            get { return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal); }
+        }
+
+        internal double GetMeasuredHeight(Func<GridRow, bool> predict)
         {
             return Template.GridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -27,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double TotalAbsoluteLength { get; private set; }
 
-        internal double TotalAutoLength { get; private set; }
+        internal double TotalAutoLength { get; set; }
 
         internal double TotalStarFactor { get; private set; }
 
@@ -56,8 +57,15 @@ namespace DevZest.Data.Windows.Primitives
             Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
         }
 
-        internal double GetMeasuredLength(int startIndex, int endIndex, Func<T, bool> predict = null)
+        internal double GetMeasuredLength(int startIndex, int endIndex)
         {
+            Debug.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex < Count);
+            return this[endIndex].MeasuredEndOffset - this[startIndex].MeasuredStartOffset;
+        }
+
+        internal double GetMeasuredLength(int startIndex, int endIndex, Func<T, bool> predict)
+        {
+            Debug.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex < Count);
             double result = 0d;
             for (int i = startIndex; i <= endIndex; i++)
             {
@@ -66,6 +74,17 @@ namespace DevZest.Data.Windows.Primitives
                     result += track.MeasuredLength;
             }
             return result;
+        }
+
+        internal void RefreshMeasuredOffset()
+        {
+            for (int i = 1; i < Count; i++)
+                this[i].MeasuredStartOffset = this[i - 1].MeasuredStartOffset + this[i - 1].MeasuredLength;
+        }
+
+        internal T Last
+        {
+            get { return Count == 0 ? null : this[Count - 1]; }
         }
     }
 }

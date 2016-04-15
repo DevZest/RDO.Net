@@ -40,6 +40,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double MeasuredLength { get; set; }
 
+        internal double MeasuredStartOffset { get; set; }
+
+        internal double MeasuredEndOffset
+        {
+            get { return MeasuredStartOffset + MeasuredLength; }
+        }
+
         public abstract Orientation Orientation { get; }
 
         internal double GetMeasuredLength(BlockView blockView)
@@ -47,12 +54,24 @@ namespace DevZest.Data.Windows.Primitives
             return blockView == null ? MeasuredLength : blockView.GetMeasuredLength(this);
         }
 
-        internal void SetMeasuredLength(BlockView blockView, double value)
+        internal bool SetMeasuredAutoLength(BlockView blockView, double value)
         {
             if (blockView == null)
+            {
+                var delta = value - MeasuredLength;
+                Debug.Assert(delta > 0);
                 MeasuredLength = value;
+                if (Orientation == Orientation.Horizontal)
+                    Owner.GridColumns.TotalAutoLength += delta;
+                else
+                    Owner.GridRows.TotalAutoLength += delta;
+                return true;
+            }
             else
+            {
                 blockView.SetMeasuredLength(this, value);
+                return false;
+            }
         }
     }
 }
