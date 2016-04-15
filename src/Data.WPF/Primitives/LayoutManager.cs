@@ -21,7 +21,7 @@ namespace DevZest.Data.Windows.Primitives
             if (!template.Orientation.HasValue)
                 return new LayoutManagerZ(template, dataSet);
             else
-                return new LayoutManagerXY(template, dataSet);
+                return LayoutManagerXY.Create(template, dataSet);
         }
 
         protected LayoutManager(Template template, DataSet dataSet)

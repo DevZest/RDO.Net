@@ -243,18 +243,20 @@ namespace DevZest.Data.Windows
 
         private void ClearMeasuredLengths()
         {
-            _measuredLengths = null;
+            if (_measuredLengths != null)
+                _measuredLengths.Clear();
         }
 
         internal double GetMeasuredLength(GridTrack gridTrack)
         {
-            Debug.Assert(gridTrack != null);
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
             double result;
             return MeasuredLengths.TryGetValue(gridTrack, out result) ? result : 0;
         }
 
         internal void SetMeasuredLength(GridTrack gridTrack, double value)
         {
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
             if (value == 0)
                 MeasuredLengths.Remove(gridTrack);
             else

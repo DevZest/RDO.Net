@@ -6,8 +6,16 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class LayoutManagerXY : LayoutManager, IScrollHandler
+    internal abstract partial class LayoutManagerXY : LayoutManager, IScrollHandler
     {
+        public static new LayoutManagerXY Create(Template template, DataSet dataSet)
+        {
+            if (template.Orientation.Value == Orientation.Horizontal)
+                return new X(template, dataSet);
+            else
+                return new Y(template, dataSet);
+        }
+
         private struct GridTrackPoint
         {
             private double _value;
@@ -133,34 +141,44 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public LayoutManagerXY(Template template, DataSet dataSet)
+        private LayoutManagerXY(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
         }
 
-        private Orientation Orientation
+        private static IConcatList<T> CalcVariantAutoLengthTracks<T>(GridTrackCollection<T> gridTracks, T startTrack, T endTrack)
+            where T : GridTrack
         {
-            get
+            var result = ConcatList<T>.Empty;
+            if (startTrack == null)
+                return result;
+
+            for (int i = startTrack.Ordinal; i <= startTrack.Ordinal; i++)
             {
-                Debug.Assert(Template.Orientation.HasValue);
-                return Template.Orientation.GetValueOrDefault();
+                var gridTrack = gridTracks[i];
+                if (gridTrack.Length.IsAuto)
+                {
+                    result = result.Concat(gridTrack);
+                    gridTrack.IsVariantAutoLength = true;
+                }
             }
+            return result;
         }
 
-        protected override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            if (blockView == null)
-                return base.GetMeasuredLength(blockView, gridTrack);
-            throw new NotImplementedException();
+            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
         }
 
         protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
-            if (blockView == null)
+            if (blockView != null && gridTrack.IsVariantAutoLength)
+            {
+                blockView.SetMeasuredLength(gridTrack, value);
+                return false;
+            }
+            else
                 return base.SetMeasuredAutoLength(blockView, gridTrack, value);
-
-            //blockView.SetMeasuredLength(gridTrack, value);
-            throw new NotImplementedException();
         }
 
         protected override void PrepareMeasureBlocks()
@@ -178,15 +196,6 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        protected override Point Offset(Point point, int blockDimension)
-        {
-            if (Orientation == Orientation.Horizontal)
-                point.Offset(Template.RowRange.MeasuredWidth * blockDimension, 0);
-            else
-                point.Offset(0, Template.RowRange.MeasuredHeight * blockDimension);
-            return point;
-        }
-
         protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
         {
             throw new NotImplementedException();
@@ -197,15 +206,25 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        protected override Size MeasuredSize
+        protected sealed override Size MeasuredSize
         {
-            get { return Template.AvailableSize; }
+            get
+            {
+                var width = Template.AvailableWidth;
+                if (double.IsPositiveInfinity(width))
+                    width = ExtentWidth;
+
+                var height = Template.AvailableHeight;
+                if (double.IsPositiveInfinity(height))
+                    height = ExtentHeight;
+
+                return new Size(width, height);
+            }
         }
 
         internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
         {
             throw new NotImplementedException();
-            return base.GetArrangeRect(blockView, blockItem);
         }
     }
 }

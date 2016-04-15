@@ -47,6 +47,8 @@ namespace DevZest.Data.Windows.Primitives
             get { return MeasuredStartOffset + MeasuredLength; }
         }
 
+        internal bool IsVariantAutoLength { get; set; }
+
         public abstract Orientation Orientation { get; }
     }
 }
