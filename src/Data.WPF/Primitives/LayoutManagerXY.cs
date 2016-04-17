@@ -159,7 +159,7 @@ namespace DevZest.Data.Windows.Primitives
                 var gridTrack = gridTracks[i];
                 if (gridTrack.Length.IsAuto)
                 {
-                    result = result.Concat(gridTrack);
+                    result = result.Concat((IConcatList<T>)gridTrack);
                     gridTrack.IsVariantAutoLength = true;
                 }
             }

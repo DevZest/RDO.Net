@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class SubviewItem : RowItem
+    public sealed class SubviewItem : RowItem, IConcatList<SubviewItem>
     {
         public sealed new class Builder<T> : TemplateItem.Builder<T, SubviewItem, Builder<T>>
             where T : DataView, new()
@@ -53,7 +56,7 @@ namespace DevZest.Data.Windows.Primitives
             base.Initialize(element);
             var dataView = (DataView)element;
             var parentRow = dataView.GetRowPresenter();
-            dataView.Initialize(parentRow.SubviewPresenters[Index]);
+            dataView.Initialize(this[parentRow]);
         }
 
         internal sealed override void Cleanup(UIElement element)
@@ -61,6 +64,53 @@ namespace DevZest.Data.Windows.Primitives
             base.Cleanup(element);
             var dataView = (DataView)element;
             dataView.Cleanup();
+        }
+
+        bool IConcatList<SubviewItem>.IsReadOnly
+        {
+            get { return true; }
+        }
+
+        int IReadOnlyCollection<SubviewItem>.Count
+        {
+            get { return 1; }
+        }
+
+        SubviewItem IReadOnlyList<SubviewItem>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        IEnumerator<SubviewItem> IEnumerable<SubviewItem>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        private ConditionalWeakTable<RowPresenter, DataPresenter> _dataPresenters = new ConditionalWeakTable<RowPresenter, DataPresenter>();
+
+        internal DataPresenter this[RowPresenter row]
+        {
+            get
+            {
+                Debug.Assert(row != null && row.Template == Template);
+                DataPresenter result;
+                if (!_dataPresenters.TryGetValue(row, out result))
+                {
+                    result = DataPresenterConstructor(row);
+                    _dataPresenters.Add(row, result);
+                }
+                return result;
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(rowManager != null);
             _rowManager = rowManager;
             DataRow = dataRow;
+            _rowItemsId = -1;
         }
 
         internal void Dispose()
@@ -23,7 +24,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowManager = null;
             _ordinal = -1;
-            _subviewPresenters = null;
+            _rowItemsId = -1;
         }
 
         private void VerifyDisposed()
@@ -61,7 +62,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private Template Template
+        internal Template Template
         {
             get { return RowManager.Template; }
         }
@@ -115,31 +116,16 @@ namespace DevZest.Data.Windows
             return RowManager.RowMappings_GetRow(ChildDataSet[index]);
         }
 
-        private IReadOnlyList<DataPresenter> _subviewPresenters;
-        public IReadOnlyList<DataPresenter> SubviewPresenters
+        public DataPresenter this[SubviewItem subviewItem]
         {
             get
             {
-                if (_subviewPresenters == null)
-                    _subviewPresenters = InitSubviewPresenters();
-                return _subviewPresenters;
+                if (subviewItem == null)
+                    throw new ArgumentNullException(nameof(subviewItem));
+                if (subviewItem.Template != Template)
+                    throw new ArgumentException(Strings.RowPresenter_InvalidSubviewItem);
+                return subviewItem[this];
             }
-        }
-
-        private IReadOnlyList<DataPresenter> InitSubviewPresenters()
-        {
-            if (IsEof)
-                return Array<DataPresenter>.Empty;
-
-            var subviewItems = Template.SubviewItems;
-            if (subviewItems.Count == 0)
-                return Array<DataPresenter>.Empty;
-
-            var result = new DataPresenter[subviewItems.Count];
-            for (int i = 0; i < subviewItems.Count; i++)
-                result[i] = subviewItems[i].DataPresenterConstructor(this);
-
-            return result;
         }
 
         private void OnGetState(RowPresenterState rowPresenterState)
@@ -484,16 +470,43 @@ namespace DevZest.Data.Windows
             Debug.Assert(elementsPanel != null);
 
             if (ElementCollection != null)
-                ClearElements();
-            InitializeElements(elementsPanel);
+                Cleanup();
+            Initialize(elementsPanel);
         }
 
-        internal void InitializeElements(FrameworkElement elementsPanel)
+        private int _rowItemsId;
+        private void SelectRowItems()
+        {
+            var newValue = Template.RowItemsSelector(this);
+            if (newValue < 0 || newValue >= Template.RowItemsList.Count)
+                throw new InvalidOperationException();
+
+            if (_rowItemsId == newValue)
+                return;
+
+            if (_rowItemsId >= 0)
+                ClearElements();
+
+            _rowItemsId = newValue;
+            InitializeElements();
+        }
+
+        internal TemplateItemCollection<RowItem> RowItems
+        {
+            get { return Template.InternalRowItemsList[_rowItemsId]; }
+        }
+
+        internal void Initialize(FrameworkElement elementsPanel)
         {
             Debug.Assert(ElementCollection == null);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
-            var rowItems = Template.RowItems;
+            SelectRowItems();
+        }
+
+        private void InitializeElements()
+        {
+            var rowItems = RowItems;
             for (int i = 0; i < rowItems.Count; i++)
             {
                 var rowItem = rowItems[i];
@@ -504,11 +517,18 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal void ClearElements()
+        internal void Cleanup()
         {
             Debug.Assert(ElementCollection != null);
 
-            var rowItems = Template.RowItems;
+            ClearElements();
+            ElementCollection = null;
+            _rowItemsId = -1;
+        }
+
+        private void ClearElements()
+        {
+            var rowItems = RowItems;
             Debug.Assert(Elements.Count == rowItems.Count);
             for (int i = 0; i < rowItems.Count; i++)
             {
@@ -518,7 +538,6 @@ namespace DevZest.Data.Windows
                 element.SetRowPresenter(null);
             }
             ElementCollection.RemoveRange(0, Elements.Count);
-            ElementCollection = null;
         }
 
         internal void RefreshElements()
@@ -526,7 +545,8 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            var rowItems = Template.RowItems;
+            SelectRowItems();
+            var rowItems = RowItems;
             Debug.Assert(Elements.Count == rowItems.Count);
             for (int i = 0; i < rowItems.Count; i++)
             {

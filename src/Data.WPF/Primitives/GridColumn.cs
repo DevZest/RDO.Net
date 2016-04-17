@@ -30,16 +30,6 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        IConcatList<GridColumn> IConcatList<GridColumn>.Concat(GridColumn item)
-        {
-            throw new NotSupportedException();
-        }
-
-        IConcatList<GridColumn> IConcatList<GridColumn>.Concat(IReadOnlyList<GridColumn> items)
-        {
-            throw new NotSupportedException();
-        }
-
         IEnumerator<GridColumn> IEnumerable<GridColumn>.GetEnumerator()
         {
             yield return this;

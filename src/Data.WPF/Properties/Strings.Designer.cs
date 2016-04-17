@@ -140,6 +140,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The SubviewItem is invalid.
+        /// </summary>
+        public static string RowPresenter_InvalidSubviewItem
+        {
+            get { return GetString("RowPresenter_InvalidSubviewItem"); }
+        }
+
+        /// <summary>
         /// The column is invalid. It does not belong to the DataSet.
         /// </summary>
         public static string RowPresenter_VerifyColumn

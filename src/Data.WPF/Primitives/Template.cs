@@ -62,25 +62,45 @@ namespace DevZest.Data.Windows.Primitives
 
         internal readonly TemplateItemCollection<DataItem> InternalDataItems = new TemplateItemCollection<DataItem>();
 
-        public ReadOnlyCollection<DataItem> DataItems
+        public IReadOnlyList<DataItem> DataItems
         {
             get { return InternalDataItems; }
         }
 
         internal readonly TemplateItemCollection<BlockItem> InternalBlockItems = new TemplateItemCollection<BlockItem>();
-        public ReadOnlyCollection<BlockItem> BlockItems
+        public IReadOnlyList<BlockItem> BlockItems
         {
             get { return InternalBlockItems; }
         }
 
-        internal readonly TemplateItemCollection<RowItem> InternalRowItems = new TemplateItemCollection<RowItem>();
-        public ReadOnlyCollection<RowItem> RowItems
+        private Func<RowPresenter, int> _rowItemsSelector;
+        public Func<RowPresenter, int> RowItemsSelector
         {
-            get { return InternalRowItems; }
+            get { return _rowItemsSelector ?? (rowPresenter => 0); }
         }
 
-        private readonly TemplateItemCollection<SubviewItem> _subviewItems = new TemplateItemCollection<SubviewItem>();
-        public ReadOnlyCollection<SubviewItem> SubviewItems
+        internal void SetRowItemsSelector(Func<RowPresenter, int> rowItemsSelector)
+        {
+            _rowItemsSelector = rowItemsSelector;
+        }
+
+        private IConcatList<TemplateItemCollection<RowItem>> _rowItemsList = new TemplateItemCollection<RowItem>();
+        internal IReadOnlyList<TemplateItemCollection<RowItem>> InternalRowItemsList
+        {
+            get { return _rowItemsList; }
+        }
+        public IReadOnlyList<IReadOnlyList<RowItem>> RowItemsList
+        {
+            get { return _rowItemsList; }
+        }
+
+        internal void NextRowItems()
+        {
+            _rowItemsList = _rowItemsList.Concat(new TemplateItemCollection<RowItem>());
+        }
+
+        private IConcatList<SubviewItem> _subviewItems = ConcatList<SubviewItem>.Empty;
+        public IReadOnlyList<SubviewItem> SubviewItems
         {
             get { return _subviewItems; }
         }
@@ -88,19 +108,31 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange? _rowRange;
         public GridRange RowRange
         {
-            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : InternalRowItems.Range; }
+            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : CalcRowRange(); }
             internal set { _rowRange = value; }
+        }
+
+        private GridRange CalcRowRange()
+        {
+            var result = new GridRange();
+            foreach (var rowItems in InternalRowItemsList)
+                result = result.Union(rowItems.Range);
+            return result;
         }
 
         public GridRange BlockRange
         {
-            get { return InternalRowItems.Range.Union(InternalBlockItems.Range); }
+            get { return RowRange.Union(InternalBlockItems.Range); }
         }
 
         internal void VerifyTemplateItemGridRange()
         {
-            for (int i = 0; i < RowItems.Count; i++)
-                RowItems[i].VerifyGridRange();
+            for (int i = 0; i < RowItemsList.Count; i++)
+            {
+                var rowItems = RowItemsList[i];
+                for (int j = 0; j < rowItems.Count; j++)
+                    rowItems[i].VerifyGridRange();
+            }
 
             for (int i = 0; i < DataItems.Count; i++)
                 DataItems[i].VerifyGridRange();
@@ -207,12 +239,25 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int BlockItemsSplit { get; private set; }
 
+        private bool HasRowItem
+        {
+            get
+            {
+                foreach (var rowItems in RowItemsList)
+                {
+                    if (rowItems.Count > 0)
+                        return true;
+                }
+                return false;
+            }
+        }
+
         internal void AddDataItem(GridRange gridRange, DataItem dataItem)
         {
             Debug.Assert(IsValid(gridRange));
             dataItem.Construct(this, gridRange, InternalDataItems.Count);
             InternalDataItems.Add(gridRange, dataItem);
-            if (InternalRowItems.Count == 0)
+            if (!HasRowItem)
                 DataItemsSplit = InternalDataItems.Count;
         }
 
@@ -221,23 +266,30 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(IsValid(gridRange));
             blockItem.Construct(this, gridRange, InternalBlockItems.Count);
             InternalBlockItems.Add(gridRange, blockItem);
-            if (InternalRowItems.Count == 0)
+            if (!HasRowItem)
                 BlockItemsSplit = InternalBlockItems.Count;
+        }
+
+        private TemplateItemCollection<RowItem> CurrentRowItems
+        {
+            get { return InternalRowItemsList[InternalRowItemsList.Count - 1]; }
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
         {
             Debug.Assert(IsValid(gridRange));
-            rowItem.Construct(this, gridRange, InternalRowItems.Count);
-            InternalRowItems.Add(gridRange, rowItem);
+            var currentRowItems = CurrentRowItems;
+            rowItem.Construct(this, gridRange, CurrentRowItems.Count);
+            CurrentRowItems.Add(gridRange, rowItem);
         }
 
         internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
         {
             Debug.Assert(IsValid(gridRange));
-            subviewItem.Seal(this, gridRange, InternalRowItems.Count, _subviewItems.Count);
-            InternalRowItems.Add(gridRange, subviewItem);
-            _subviewItems.Add(gridRange, subviewItem);
+            var currentRowItems = CurrentRowItems;
+            subviewItem.Seal(this, gridRange, currentRowItems.Count, SubviewItems.Count);
+            currentRowItems.Add(gridRange, subviewItem);
+            _subviewItems = _subviewItems.Concat(subviewItem);
         }
 
         internal bool IsValid(GridRange gridRange)
@@ -391,7 +443,8 @@ namespace DevZest.Data.Windows.Primitives
                 _starWidthGridColumns = null;
                 InternalDataItems.InvalidateAutoWidthItems();
                 InternalBlockItems.InvalidateAutoWidthItems();
-                InternalRowItems.InvalidateAutoWidthItems();
+                foreach (var rowItems in InternalRowItemsList)
+                    rowItems.InvalidateAutoWidthItems();
             }
         }
 
@@ -412,7 +465,8 @@ namespace DevZest.Data.Windows.Primitives
                 _starHeightGridRows = null;
                 InternalDataItems.InvalidateAutoHeightItems();
                 InternalBlockItems.InvalidateAutoHeightItems();
-                InternalRowItems.InvalidateAutoHeightItems();
+                foreach (var rowItems in InternalRowItemsList)
+                    rowItems.InvalidateAutoHeightItems();
             }
         }
 

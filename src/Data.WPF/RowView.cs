@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
         internal void Cleanup()
         {
             Debug.Assert(RowPresenter != null);
-            RowPresenter.ClearElements();
+            RowPresenter.Cleanup();
             RowPresenter = null;
         }
 

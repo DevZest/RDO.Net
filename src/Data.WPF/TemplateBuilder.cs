@@ -188,5 +188,11 @@ namespace DevZest.Data.Windows
                 Template.BlockViewCleanupAction = rowView => blockViewCleanupAction((T)rowView);
             return this;
         }
+
+        public TemplateBuilder SelectRowItems(Func<RowPresenter, int> rowItemsSelector)
+        {
+            Template.SetRowItemsSelector(rowItemsSelector);
+            return this;
+        }
     }
 }

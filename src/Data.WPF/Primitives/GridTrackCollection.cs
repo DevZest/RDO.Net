@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var track = this[i];
                 if (predict(track))
-                    result = result.Concat(track);
+                    result = result.Concat((IConcatList<T>)track);
                 if (action != null)
                     action(track);
             }

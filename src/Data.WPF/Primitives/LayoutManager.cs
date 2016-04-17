@@ -41,11 +41,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.InternalBlockItems; }
         }
 
-        private TemplateItemCollection<RowItem> RowItems
-        {
-            get { return Template.InternalRowItems; }
-        }
-
         private void UpdateAutoSize(BlockView blockView, TemplateItem templateItem, Size measuredSize)
         {
             Debug.Assert(templateItem.IsAutoSize);
@@ -242,12 +237,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure(RowPresenter row)
         {
-            if (RowItems.AutoSizeItems.Count == 0)
+            var rowItems = row.RowItems;
+            if (rowItems.AutoSizeItems.Count == 0)
                 return;
 
             var blockView = BlockViews[row];
             Debug.Assert(blockView != null);
-            foreach (var rowItem in RowItems.AutoSizeItems)
+            foreach (var rowItem in rowItems.AutoSizeItems)
             {
                 var element = row.Elements[rowItem.Ordinal];
                 element.Measure(rowItem.AvailableAutoSize);
@@ -257,12 +253,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void FinalizeMeasure(RowPresenter row)
         {
-            if (RowItems.Count == 0)
+            var rowItems = row.RowItems;
+            if (rowItems.Count == 0)
                 return;
 
             var blockView = BlockViews[row];
             Debug.Assert(blockView != null);
-            foreach (var rowItem in RowItems)
+            foreach (var rowItem in rowItems)
             {
                 var element = row.Elements[rowItem.Ordinal];
                 element.Measure(GetMeasuredSize(blockView, rowItem.GridRange));
@@ -348,12 +345,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Arrange(RowPresenter row)
         {
-            if (RowItems.Count == 0)
+            var rowItems = row.RowItems;
+            if (rowItems.Count == 0)
                 return;
 
             var blockView = BlockViews[row];
             Debug.Assert(blockView != null);
-            foreach (var rowItem in RowItems)
+            foreach (var rowItem in rowItems)
             {
                 var element = row.Elements[rowItem.Ordinal];
                 element.Arrange(GetArrangeRect(blockView, rowItem));

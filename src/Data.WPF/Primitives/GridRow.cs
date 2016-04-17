@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,16 +28,6 @@ namespace DevZest.Data.Windows.Primitives
                     throw new ArgumentOutOfRangeException(nameof(index));
                 return this;
             }
-        }
-
-        IConcatList<GridRow> IConcatList<GridRow>.Concat(GridRow item)
-        {
-            throw new NotSupportedException();
-        }
-
-        IConcatList<GridRow> IConcatList<GridRow>.Concat(IReadOnlyList<GridRow> items)
-        {
-            throw new NotSupportedException();
         }
 
         IEnumerator<GridRow> IEnumerable<GridRow>.GetEnumerator()
