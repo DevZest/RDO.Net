@@ -15,6 +15,13 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
+        internal void Enter(RowPresenter row)
+        {
+            _templates.Push(row.Template);
+            _blockPresenters.Push(null);
+            _rowPresenters.Push(row);
+        }
+
         internal void Enter(TemplateItem templateItem, UIElement uiElement)
         {
             _templates.Push(templateItem.Template);

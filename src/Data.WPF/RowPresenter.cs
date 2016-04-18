@@ -484,11 +484,20 @@ namespace DevZest.Data.Windows
             if (_rowItemsId == newValue)
                 return;
 
-            if (_rowItemsId >= 0)
-                ClearElements();
+            var bindingContext = BindingContext.Current;
+            bindingContext.Enter(this);
+            try
+            {
+                if (_rowItemsId >= 0)
+                    ClearElements();
 
-            _rowItemsId = newValue;
-            InitializeElements();
+                _rowItemsId = newValue;
+                InitializeElements();
+            }
+            finally
+            {
+                bindingContext.Exit();
+            }
         }
 
         internal TemplateItemCollection<RowItem> RowItems
