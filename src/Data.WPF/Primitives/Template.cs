@@ -16,7 +16,6 @@ namespace DevZest.Data.Windows.Primitives
             GridRows = new GridTrackCollection<GridRow>();
             BlockDimensions = 1;
             HierarchicalModelOrdinal = -1;
-            VirtualizationThreshold = 50;
         }
 
         internal RowManager RowManager { get; set; }
@@ -77,11 +76,7 @@ namespace DevZest.Data.Windows.Primitives
         public Func<RowPresenter, int> RowItemGroupSelector
         {
             get { return _rowItemGroupSelector ?? (rowPresenter => 0); }
-        }
-
-        internal void SetRowItemGroupSelector(Func<RowPresenter, int> rowItemGroupSelector)
-        {
-            _rowItemGroupSelector = rowItemGroupSelector;
+            internal set { _rowItemGroupSelector = value; }
         }
 
         private IConcatList<TemplateItemCollection<RowItem>> _rowItemGroups = new TemplateItemCollection<RowItem>();
@@ -531,6 +526,6 @@ namespace DevZest.Data.Windows.Primitives
             return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
         }
 
-        public int VirtualizationThreshold { get; internal set; }
+        public int PinnedTail { get; internal set; }
     }
 }

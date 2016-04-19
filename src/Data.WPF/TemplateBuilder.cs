@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Orientation(Orientation orientation, int blockDimensions = 1)
+        public TemplateBuilder Layout(Orientation orientation, int blockDimensions = 1)
         {
             if (blockDimensions < 0)
                 throw new ArgumentOutOfRangeException(nameof(blockDimensions));
@@ -110,12 +110,6 @@ namespace DevZest.Data.Windows
         public TemplateBuilder EOF(EofVisibility value)
         {
             Template.EofVisibility = value;
-            return this;
-        }
-
-        public TemplateBuilder SetVirtualizationThreshold(int value)
-        {
-            Template.VirtualizationThreshold = value;
             return this;
         }
 
@@ -165,9 +159,15 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder SelectRowItems(Func<RowPresenter, int> rowItemsSelector)
+        public TemplateBuilder RowItemGroup(Func<RowPresenter, int> rowItemsSelector)
         {
-            Template.SetRowItemGroupSelector(rowItemsSelector);
+            Template.RowItemGroupSelector = rowItemsSelector;
+            return this;
+        }
+
+        public TemplateBuilder Pin(int value)
+        {
+            Template.PinnedTail = value;
             return this;
         }
     }
