@@ -25,12 +25,11 @@ namespace DevZest.Data.Windows.Primitives
             return CreateElementManager(dataSet, (builder, model) => BuildTemplate(builder, model, pinnedTop, pinnedBottom));
         }
 
-        private static void BuildTemplate(TemplateBuilder builder, ProductCategory _, int pinnedTop, int pinnedBottom)
+        private static void BuildTemplate(TemplateBuilder builder, ProductCategory _, int viewportTopMargin, int viewportBottomMargin)
         {
             builder.AddGridColumns("100", "100")
                 .AddGridRows("100", "100", "100")
-                .PinTop(pinnedTop)
-                .PinBottom(pinnedBottom)
+                .ViewportMargin(top: viewportTopMargin, bottom: viewportBottomMargin)
                 .Orientation(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))

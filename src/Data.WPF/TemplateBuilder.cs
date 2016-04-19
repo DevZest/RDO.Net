@@ -98,36 +98,12 @@ namespace DevZest.Data.Windows
             get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
-        public TemplateBuilder PinLeft(int value)
+        public TemplateBuilder ViewportMargin(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
-            Template.PinnedLeft = value;
-            return this;
-        }
-
-        public TemplateBuilder PinTop(int value)
-        {
-            Template.PinnedTop = value;
-            return this;
-        }
-
-        public TemplateBuilder PinRight(int value)
-        {
-            Template.PinnedRight = value;
-            return this;
-        }
-
-        public TemplateBuilder PinBottom(int value)
-        {
-            Template.PinnedBottom = value;
-            return this;
-        }
-
-        public TemplateBuilder Pin(int left, int top, int right, int bottom)
-        {
-            Template.PinnedLeft = left;
-            Template.PinnedTop = top;
-            Template.PinnedRight = right;
-            Template.PinnedBottom = bottom;
+            Template.ViewportLeftMargin = left;
+            Template.ViewportTopMargin = top;
+            Template.ViewportRightMargin = right;
+            Template.ViewportBottomMargin = bottom;
             return this;
         }
 

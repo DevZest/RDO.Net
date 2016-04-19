@@ -334,13 +334,13 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        public int PinnedLeft { get; internal set; }
+        public int ViewportLeftMargin { get; internal set; }
 
-        public int PinnedTop { get; internal set; }
+        public int ViewportTopMargin { get; internal set; }
 
-        public int PinnedRight { get; internal set; }
+        public int ViewportRightMargin { get; internal set; }
 
-        public int PinnedBottom { get; internal set; }
+        public int ViewportBottomMargin { get; internal set; }
 
         public EofRowMapping EofRowMapping { get; internal set; }
 

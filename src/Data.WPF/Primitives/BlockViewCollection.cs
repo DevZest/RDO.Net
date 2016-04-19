@@ -184,7 +184,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(Orientation.HasValue);
-                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.PinnedTop : Template.PinnedLeft) - 1;
+                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.ViewportTopMargin : Template.ViewportLeftMargin) - 1;
             }
         }
 
@@ -193,7 +193,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(Orientation.HasValue);
-                var pinnedTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.PinnedBottom : Template.PinnedRight;
+                var pinnedTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.ViewportBottomMargin : Template.ViewportRightMargin;
                 var lastTrackOrdinal = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.Range().Bottom.Ordinal : Template.Range().Right.Ordinal;
                 return lastTrackOrdinal - pinnedTail + 1;
             }
