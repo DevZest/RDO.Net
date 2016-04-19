@@ -98,12 +98,12 @@ namespace DevZest.Data.Windows
             get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
-        public TemplateBuilder ViewportMargin(int left = 0, int top = 0, int right = 0, int bottom = 0)
+        public TemplateBuilder Fix(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
-            Template.ViewportLeftMargin = left;
-            Template.ViewportTopMargin = top;
-            Template.ViewportRightMargin = right;
-            Template.ViewportBottomMargin = bottom;
+            Template.FixedLeft = left;
+            Template.FixedTop = top;
+            Template.FixedRight = right;
+            Template.FixedBottom = bottom;
             return this;
         }
 

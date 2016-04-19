@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshBlock()
         {
             if (CurrentRow != null && Blocks.Count == 0)
-                BlockViews.RealizeFirstUnpinned(CurrentRow.Ordinal);
+                BlockViews.RealizeFirst(CurrentRow.Ordinal);
         }
 
         protected override void OnSetState(DataPresenterState dataPresenterState)
