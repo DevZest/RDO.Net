@@ -191,7 +191,7 @@ namespace DevZest.Data.Windows
 
         public TemplateBuilder SelectRowItems(Func<RowPresenter, int> rowItemsSelector)
         {
-            Template.SetRowItemsSelector(rowItemsSelector);
+            Template.SetRowItemGroupSelector(rowItemsSelector);
             return this;
         }
     }

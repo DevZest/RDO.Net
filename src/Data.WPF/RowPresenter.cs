@@ -475,10 +475,10 @@ namespace DevZest.Data.Windows
         }
 
         private int _rowItemsId;
-        private void SelectRowItems()
+        private void SelectRowItemGroup()
         {
-            var newValue = Template.RowItemsSelector(this);
-            if (newValue < 0 || newValue >= Template.RowItemsList.Count)
+            var newValue = Template.RowItemGroupSelector(this);
+            if (newValue < 0 || newValue >= Template.RowItemGroups.Count)
                 throw new InvalidOperationException();
 
             if (_rowItemsId == newValue)
@@ -502,7 +502,7 @@ namespace DevZest.Data.Windows
 
         internal TemplateItemCollection<RowItem> RowItems
         {
-            get { return Template.InternalRowItemsList[_rowItemsId]; }
+            get { return Template.InternalRowItemGroups[_rowItemsId]; }
         }
 
         internal void Initialize(FrameworkElement elementsPanel)
@@ -510,7 +510,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(ElementCollection == null);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
-            SelectRowItems();
+            SelectRowItemGroup();
         }
 
         private void InitializeElements()
@@ -554,7 +554,7 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            SelectRowItems();
+            SelectRowItemGroup();
             var rowItems = RowItems;
             Debug.Assert(Elements.Count == rowItems.Count);
             for (int i = 0; i < rowItems.Count; i++)

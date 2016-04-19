@@ -73,30 +73,30 @@ namespace DevZest.Data.Windows.Primitives
             get { return InternalBlockItems; }
         }
 
-        private Func<RowPresenter, int> _rowItemsSelector;
-        public Func<RowPresenter, int> RowItemsSelector
+        private Func<RowPresenter, int> _rowItemGroupSelector;
+        public Func<RowPresenter, int> RowItemGroupSelector
         {
-            get { return _rowItemsSelector ?? (rowPresenter => 0); }
+            get { return _rowItemGroupSelector ?? (rowPresenter => 0); }
         }
 
-        internal void SetRowItemsSelector(Func<RowPresenter, int> rowItemsSelector)
+        internal void SetRowItemGroupSelector(Func<RowPresenter, int> rowItemGroupSelector)
         {
-            _rowItemsSelector = rowItemsSelector;
+            _rowItemGroupSelector = rowItemGroupSelector;
         }
 
-        private IConcatList<TemplateItemCollection<RowItem>> _rowItemsList = new TemplateItemCollection<RowItem>();
-        internal IReadOnlyList<TemplateItemCollection<RowItem>> InternalRowItemsList
+        private IConcatList<TemplateItemCollection<RowItem>> _rowItemGroups = new TemplateItemCollection<RowItem>();
+        internal IReadOnlyList<TemplateItemCollection<RowItem>> InternalRowItemGroups
         {
-            get { return _rowItemsList; }
+            get { return _rowItemGroups; }
         }
-        public IReadOnlyList<IReadOnlyList<RowItem>> RowItemsList
+        public IReadOnlyList<IReadOnlyList<RowItem>> RowItemGroups
         {
-            get { return _rowItemsList; }
+            get { return _rowItemGroups; }
         }
 
-        internal void NextRowItems()
+        internal void NextRowItemGroup()
         {
-            _rowItemsList = _rowItemsList.Concat(new TemplateItemCollection<RowItem>());
+            _rowItemGroups = _rowItemGroups.Concat(new TemplateItemCollection<RowItem>());
         }
 
         private IConcatList<SubviewItem> _subviewItems = ConcatList<SubviewItem>.Empty;
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange CalcRowRange()
         {
             var result = new GridRange();
-            foreach (var rowItems in InternalRowItemsList)
+            foreach (var rowItems in InternalRowItemGroups)
                 result = result.Union(rowItems.Range);
             return result;
         }
@@ -127,9 +127,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void VerifyTemplateItemGridRange()
         {
-            for (int i = 0; i < RowItemsList.Count; i++)
+            for (int i = 0; i < RowItemGroups.Count; i++)
             {
-                var rowItems = RowItemsList[i];
+                var rowItems = RowItemGroups[i];
                 for (int j = 0; j < rowItems.Count; j++)
                     rowItems[i].VerifyGridRange();
             }
@@ -243,7 +243,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                foreach (var rowItems in RowItemsList)
+                foreach (var rowItems in RowItemGroups)
                 {
                     if (rowItems.Count > 0)
                         return true;
@@ -272,7 +272,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private TemplateItemCollection<RowItem> CurrentRowItems
         {
-            get { return InternalRowItemsList[InternalRowItemsList.Count - 1]; }
+            get { return InternalRowItemGroups[InternalRowItemGroups.Count - 1]; }
         }
 
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
@@ -443,7 +443,7 @@ namespace DevZest.Data.Windows.Primitives
                 _starWidthGridColumns = null;
                 InternalDataItems.InvalidateAutoWidthItems();
                 InternalBlockItems.InvalidateAutoWidthItems();
-                foreach (var rowItems in InternalRowItemsList)
+                foreach (var rowItems in InternalRowItemGroups)
                     rowItems.InvalidateAutoWidthItems();
             }
         }
@@ -465,7 +465,7 @@ namespace DevZest.Data.Windows.Primitives
                 _starHeightGridRows = null;
                 InternalDataItems.InvalidateAutoHeightItems();
                 InternalBlockItems.InvalidateAutoHeightItems();
-                foreach (var rowItems in InternalRowItemsList)
+                foreach (var rowItems in InternalRowItemGroups)
                     rowItems.InvalidateAutoHeightItems();
             }
         }
