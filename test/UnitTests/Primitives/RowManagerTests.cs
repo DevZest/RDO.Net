@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_Never()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowMapping.Never);
+            var rowManager = CreateRowManager(dataSet, EofVisibility.Never);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);
@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_Always()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
+            var rowManager = CreateRowManager(dataSet, EofVisibility.Always);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.AreEqual(true, rowManager.Rows[0].IsEof);
@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_NoData()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EofRowMapping.NoData);
+            var rowManager = CreateRowManager(dataSet, EofVisibility.NoData);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsTrue(rowManager.Rows[0].IsEof);
@@ -60,7 +60,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_InsertRow()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, EofRowMapping.Always);
+            var rowManager = CreateRowManager(dataSet, EofVisibility.Always);
             var rows = rowManager.Rows;
 
             var row = rowManager.InsertRow(0);

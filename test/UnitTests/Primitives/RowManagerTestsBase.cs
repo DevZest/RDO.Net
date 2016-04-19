@@ -57,11 +57,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofRowMapping eofRowMapping)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofVisibility eofRowMapping)
             where T : Model, new()
         {
             RowManager result = new ConcreteRowManager(dataSet);
-            result.Template.EofRowMapping = eofRowMapping;
+            result.Template.EofVisibility = eofRowMapping;
             result.Initialize();
             return result;
         }

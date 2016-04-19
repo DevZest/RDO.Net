@@ -334,6 +334,20 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
+        private EofVisibility _eofVisibility = EofVisibility.Never;
+        public EofVisibility EofVisibility
+        {
+            get { return IsHierarchical ? EofVisibility.Never : _eofVisibility; }
+            internal set { _eofVisibility = value; }
+        }
+
+        public int HierarchicalModelOrdinal { get; internal set; }
+
+        public bool IsHierarchical
+        {
+            get { return HierarchicalModelOrdinal >= 0; }
+        }
+
         public int FixedLeft { get; internal set; }
 
         public int FixedTop { get; internal set; }
@@ -341,10 +355,6 @@ namespace DevZest.Data.Windows.Primitives
         public int FixedRight { get; internal set; }
 
         public int FixedBottom { get; internal set; }
-
-        public EofRowMapping EofRowMapping { get; internal set; }
-
-        public int HierarchicalModelOrdinal { get; internal set; }
 
         private Func<BlockView> _blockViewConstructor;
         public Func<BlockView> BlockViewConstructor

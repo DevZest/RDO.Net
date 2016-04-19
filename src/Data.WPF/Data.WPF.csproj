@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BindingContext.cs" />
-    <Compile Include="EofRowMapping.cs" />
+    <Compile Include="EofVisibility.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />

@@ -1,10 +1,10 @@
 ﻿namespace DevZest.Data.Windows
 {
     /// <summary>Specifies condition for generating EOF <see cref="RowPresenter"/>.</summary>
-    public enum EofRowMapping
+    public enum EofVisibility
     {
         /// <summary>No EOF <see cref="RowPresenter"/> will be generated.</summary>
-        Never,
+        Never = 0,
 
         /// <summary>EOF <see cref="RowPresenter"/> will always be generated.</summary>
         Always,

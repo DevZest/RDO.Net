@@ -330,7 +330,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void CoerceEofRow()
         {
-            if (ShouldHaveEofRow)
+            if (HasEof)
             {
                 if (EofRow == null)
                     AddEofRow();
@@ -343,14 +343,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private bool ShouldHaveEofRow
+        private bool HasEof
         {
             get
             {
-                var eofRowMapping = Template.EofRowMapping;
-                if (IsHierarchical || eofRowMapping == EofRowMapping.Never)
+                var eofVisibility = Template.EofVisibility;
+                if (eofVisibility == EofVisibility.Never)
                     return false;
-                else if (eofRowMapping == EofRowMapping.NoData)
+                else if (eofVisibility == EofVisibility.NoData)
                     return DataSet.Count == 0;
                 else
                     return true;

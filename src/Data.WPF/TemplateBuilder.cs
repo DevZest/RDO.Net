@@ -107,9 +107,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder EofRow(EofRowMapping value)
+        public TemplateBuilder EOF(EofVisibility value)
         {
-            Template.EofRowMapping = value;
+            Template.EofVisibility = value;
             return this;
         }
 
