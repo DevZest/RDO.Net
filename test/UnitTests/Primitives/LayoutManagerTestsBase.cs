@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal static void VerifyArrangeRect(LayoutManager layoutManager, int rowItemIndex, RowPresenter row, Rect expectedRect)
+        internal static void VerifyArrangeRect(LayoutManager layoutManager, RowPresenter row, int rowItemIndex, Rect expectedRect)
         {
             var blockView = layoutManager.BlockViews[row];
             var rowItems = row.RowItems;
