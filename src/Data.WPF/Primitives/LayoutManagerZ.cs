@@ -53,7 +53,6 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
         {
-            Debug.Assert(Template.BlockRange.Contains(baseGridRange));
             Debug.Assert(baseGridRange.Contains(gridRange));
 
             var basePoint = baseGridRange.MeasuredPoint;

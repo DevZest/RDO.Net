@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -132,6 +133,15 @@ namespace DevZest.Data.Windows.Primitives
         internal double GetMeasuredHeight(Func<GridRow, bool> predict)
         {
             return IsEmpty ? 0 : Template.InternalGridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
+        }
+
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture, "[({0},{1}),({2},{3})]",
+                Left == null ? string.Empty : Left.Ordinal.ToString(CultureInfo.InvariantCulture),
+                Top == null ? string.Empty : Top.Ordinal.ToString(CultureInfo.InvariantCulture),
+                Right == null ? string.Empty : Right.Ordinal.ToString(CultureInfo.InvariantCulture),
+                Bottom == null ? string.Empty : Bottom.Ordinal.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
