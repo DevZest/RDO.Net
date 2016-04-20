@@ -14,8 +14,8 @@ namespace DevZest.Data.Windows.Primitives
         #region Helpers
         private sealed class ConcreteElementManager : ElementManager
         {
-            public ConcreteElementManager(DataSet dataSet)
-                : base(new Template(), dataSet)
+            public ConcreteElementManager(Template template, DataSet dataSet)
+                : base(template, dataSet)
             {
             }
         }
@@ -42,12 +42,12 @@ namespace DevZest.Data.Windows.Primitives
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
         {
-            var result = new ConcreteElementManager(dataSet);
-            using (var templateBuilder = new TemplateBuilder(result.Template, dataSet.Model))
+            var template = new Template();
+            using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
             {
                 buildTemplateAction(templateBuilder, dataSet._);
             }
-            result.Initialize();
+            var result = new ConcreteElementManager(template, dataSet);
             result.InitializeElements(null);
             return result;
         }

@@ -14,6 +14,11 @@ namespace DevZest.Data.Windows.Primitives
             _template = template;
             _template.RowManager = this;
             _dataSet = dataSet;
+
+            InitializeRowMappings();
+            InitializeHierarchicalRows();
+            CoerceEofRow();
+            SetCurrentRow(CoerceCurrentRow());
         }
 
         private readonly Template _template;
@@ -31,13 +36,6 @@ namespace DevZest.Data.Windows.Primitives
         public DataSet DataSet
         {
             get { return _dataSet; }
-        }
-
-        internal virtual void Initialize()
-        {
-            InitializeRowMappings();
-            InitializeHierarchicalRows();
-            CoerceValues();
         }
 
         int _rowPresenterStateFlags;
@@ -146,7 +144,6 @@ namespace DevZest.Data.Windows.Primitives
                 Debug.Assert(row.Ordinal == -1);
                 row.Ordinal = ordinal;
             }
-            OnSetState(DataPresenterState.Rows);
         }
 
         private void HierarchicalRows_RemoveAt(int ordinal)
@@ -154,7 +151,6 @@ namespace DevZest.Data.Windows.Primitives
             SetPrevCurrentRowOrdinal(ordinal, 1);
             _hierarchicalRows[ordinal].Ordinal = -1;
             _hierarchicalRows.RemoveAt(ordinal);
-            OnSetState(DataPresenterState.Rows);
         }
 
         private void HierarchicalRows_RemoveRange(int ordinal, int count)
@@ -166,7 +162,6 @@ namespace DevZest.Data.Windows.Primitives
                 _hierarchicalRows[ordinal + i].Ordinal = -1;
 
             _hierarchicalRows.RemoveRange(ordinal, count);
-            OnSetState(DataPresenterState.Rows);
         }
 
         private int _prevCurrentRowOrdinal = -1;
@@ -298,13 +293,13 @@ namespace DevZest.Data.Windows.Primitives
             }
             else
                 OnSetState(DataPresenterState.Rows);
-            CoerceValues();
+            OnRowsChanged();
         }
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
             OnDataRowRemoved(e.Model.GetHierarchicalLevel(), e.Index);
-            CoerceValues();
+            OnRowsChanged();
         }
 
         private void OnDataRowRemoved(int hierarchicalLevel, int ordinal)
@@ -322,10 +317,11 @@ namespace DevZest.Data.Windows.Primitives
             RowMappings_Remove(hierarchicalLevel, ordinal);
         }
 
-        private void CoerceValues()
+        private void OnRowsChanged()
         {
             CoerceEofRow();
-            CoerceCurrentRow();
+            CurrentRow = CoerceCurrentRow();
+            OnSetState(DataPresenterState.Rows);
         }
 
         private void CoerceEofRow()
@@ -387,24 +383,26 @@ namespace DevZest.Data.Windows.Primitives
             get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_hierarchicalRows.Count - 1]; }
         }
 
-        private void CoerceCurrentRow()
+        private RowPresenter CoerceCurrentRow()
         {
             if (_currentRow == null)
             {
                 if (Rows.Count > 0)
-                    CurrentRow = Rows[0];
+                    return Rows[0];
             }
             else
             {
                 if (_prevCurrentRowOrdinal != -1)
                 {
                     var currentRowOrdinal = Math.Min(Rows.Count - 1, _prevCurrentRowOrdinal);
-                    CurrentRow = currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
                     _prevCurrentRowOrdinal = -1;
+                    return currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
                 }
                 else if (Rows.Count == 0)
-                    CurrentRow = null;
+                    return null;
             }
+
+            return _currentRow;
         }
 
         private DataRow _viewUpdateSuppressed;
@@ -431,7 +429,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private RowPresenter _currentRow;
-        public RowPresenter CurrentRow
+        public virtual RowPresenter CurrentRow
         {
             get
             {
@@ -440,26 +438,30 @@ namespace DevZest.Data.Windows.Primitives
             }
             set
             {
-                if (_currentRow == value)
-                    return;
-
-                if (value != null)
-                {
-                    if (value.RowManager != this || value.Ordinal < 0)
-                        throw new ArgumentException(Strings.RowManager_InvalidCurrentRow, nameof(value));
-                }
-
-                var oldValue = _currentRow;
-                if (_currentRow != null)
-                    _currentRow.IsCurrent = false;
-
-                _currentRow = value;
-
-                if (_currentRow != null)
-                    _currentRow.IsCurrent = true;
-
+                SetCurrentRow(value);
                 OnSetState(DataPresenterState.CurrentRow);
             }
+        }
+
+        private void SetCurrentRow(RowPresenter value)
+        {
+            if (_currentRow == value)
+                return;
+
+            if (value != null)
+            {
+                if (value.RowManager != this || value.Ordinal < 0)
+                    throw new ArgumentException(Strings.RowManager_InvalidCurrentRow, nameof(value));
+            }
+
+            var oldValue = _currentRow;
+            if (_currentRow != null)
+                _currentRow.IsCurrent = false;
+
+            _currentRow = value;
+
+            if (_currentRow != null)
+                _currentRow.IsCurrent = true;
         }
 
         private HashSet<RowPresenter> _selectedRows = new HashSet<RowPresenter>();
@@ -508,7 +510,7 @@ namespace DevZest.Data.Windows.Primitives
             EditingEofRow = eofRow;
             EditingEofRow.DataRow = new DataRow();
             DataSet.Add(EditingEofRow.DataRow);
-            CoerceValues();
+            OnRowsChanged();
             Invalidate(eofRow);
         }
 
@@ -519,8 +521,10 @@ namespace DevZest.Data.Windows.Primitives
             var eofRow = EofRow;
             EditingEofRow.DataRow = null;
             if (eofRow != null)
+            {
                 RemoveEofRow(eofRow);
-            CoerceValues();
+                OnRowsChanged();
+            }
             EditingEofRow = null;
         }
 
@@ -535,6 +539,7 @@ namespace DevZest.Data.Windows.Primitives
                 nextOrdinal = InsertHierarchicalRow(nextOrdinal, childRow);
             }
             HierarchicalRows_UpdateOrdinal(nextOrdinal);
+            OnSetState(DataPresenterState.Rows);
         }
 
         internal void Collapse(RowPresenter row)
@@ -548,6 +553,7 @@ namespace DevZest.Data.Windows.Primitives
 
             HierarchicalRows_RemoveRange(nextOrdinal, count);
             HierarchicalRows_UpdateOrdinal(nextOrdinal);
+            OnSetState(DataPresenterState.Rows);
         }
 
         public RowPresenter InsertRow(int ordinal)

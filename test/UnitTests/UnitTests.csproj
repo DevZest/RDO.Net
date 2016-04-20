@@ -75,8 +75,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Factories\PlaceHolderFactory.cs" />
     <Compile Include="Primitives\DataElementPanelTests.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
+    <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
+    <Compile Include="Primitives\LayoutManagerZTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTestsBase.cs" />
     <Compile Include="RowPresenterTests.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DispatcherObjectExtensions.cs" />
     <Compile Include="Utilities\IReadOnlyListVerifier.cs" />
+    <Compile Include="Factories\PlaceHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">

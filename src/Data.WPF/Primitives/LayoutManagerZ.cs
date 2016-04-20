@@ -9,7 +9,6 @@ namespace DevZest.Data.Windows.Primitives
         internal LayoutManagerZ(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
-            RefreshBlock();
         }
 
         private void RefreshBlock()

@@ -47,8 +47,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(DataSet dataSet)
-                : base(new Template(), dataSet)
+            public ConcreteRowManager(Template template, DataSet dataSet)
+                : base(template, dataSet)
             {
             }
 
@@ -57,21 +57,21 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofVisibility eofRowMapping)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofVisibility eofVisibility)
             where T : Model, new()
         {
-            RowManager result = new ConcreteRowManager(dataSet);
-            result.Template.EofVisibility = eofRowMapping;
-            result.Initialize();
+            var template = new Template();
+            template.EofVisibility = eofVisibility;
+            RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
 
         internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0)
             where T : Model, new()
         {
-            RowManager result = new ConcreteRowManager(dataSet);
-            result.Template.HierarchicalModelOrdinal = hierarchicalModelOrdinal;
-            result.Initialize();
+            var template = new Template();
+            template.HierarchicalModelOrdinal = hierarchicalModelOrdinal;
+            RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
 
