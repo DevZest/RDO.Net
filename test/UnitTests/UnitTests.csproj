@@ -57,8 +57,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -95,6 +97,7 @@
     <Compile Include="Utilities\DispatcherObjectExtensions.cs" />
     <Compile Include="Utilities\IReadOnlyListVerifier.cs" />
     <Compile Include="Factories\PlaceHolder.cs" />
+    <Compile Include="Utilities\UIElementExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">

@@ -5,6 +5,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/DataView.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/BlockView.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

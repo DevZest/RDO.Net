@@ -290,8 +290,7 @@ namespace DevZest.Data.Windows.Primitives
         private void Insert(int index, BlockView blockView)
         {
             ElementCollection.Insert(index, blockView);
-            if (Template.BlockViewInitializer != null)
-                Template.BlockViewInitializer(blockView);
+            Template.InitializeBlockView(blockView);
         }
 
         internal void RealizeFirst(int index)

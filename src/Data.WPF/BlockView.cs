@@ -11,6 +11,11 @@ namespace DevZest.Data.Windows
 {
     public class BlockView : Control, IBlockPresenter
     {
+        static BlockView()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(typeof(BlockView)));
+        }
+
         public BlockView()
         {
             Index = -1;
@@ -139,8 +144,7 @@ namespace DevZest.Data.Windows
                 AddElement(blockItems[i]);
 
             // Initialization happens only after all elements are generated because BlockView implements both view and presenter all together.
-            if (ElementManager.Template.BlockViewInitializer != null)
-                ElementManager.Template.BlockViewInitializer(this);
+            ElementManager.Template.InitializeBlockView(this);
         }
 
         private void AddElement(BlockItem blockItem)
@@ -272,22 +276,6 @@ namespace DevZest.Data.Windows
                     index += Count;
                 return Elements[index];
             }
-        }
-
-        protected override Size MeasureOverride(Size constraint)
-        {
-            var layoutManager = LayoutManager;
-            return layoutManager == null ? base.MeasureOverride(constraint) : layoutManager.Measure(this, constraint);
-        }
-
-        protected override Size ArrangeOverride(Size arrangeBounds)
-        {
-            var layoutManager = LayoutManager;
-            if (layoutManager == null)
-                return base.ArrangeOverride(arrangeBounds);
-
-            layoutManager.Arrange(this);
-            return arrangeBounds;
         }
     }
 }

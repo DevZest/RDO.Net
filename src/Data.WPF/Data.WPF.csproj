@@ -141,6 +141,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Themes\BlockView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\RowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

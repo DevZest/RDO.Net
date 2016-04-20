@@ -15,6 +15,11 @@ namespace DevZest.Data.Windows
 
         public static readonly DependencyProperty RowPresenterProperty = RowPresenterPropertyKey.DependencyProperty;
 
+        static RowView()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
+        }
+
         public RowPresenter RowPresenter
         {
             get { return (RowPresenter)GetValue(RowPresenterProperty); }

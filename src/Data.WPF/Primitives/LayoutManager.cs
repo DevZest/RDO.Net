@@ -143,7 +143,8 @@ namespace DevZest.Data.Windows.Primitives
             Template.InitMeasure(availableSize);
             BlockDimensions = Template.CoerceBlockDimensions();
             PrepareMeasure();
-            return FinalizeMeasure();
+            var result = FinalizeMeasure();
+            return result;
         }
 
         private bool IsPreparingMeasure;

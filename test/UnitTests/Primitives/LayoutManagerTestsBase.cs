@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -12,8 +14,7 @@ namespace DevZest.Data.Windows.Primitives
             using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
             {
                 buildTemplateAction(templateBuilder, dataSet._);
-                templateBuilder.BlockView((BlockView blockView) => blockView.InitializeElements(null))
-                    .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null));
+                templateBuilder.BlockView((BlockView blockView) => blockView.CreateVisualTree());
             }
             var result = LayoutManager.Create(template, dataSet);
             result.InitializeElements(null);

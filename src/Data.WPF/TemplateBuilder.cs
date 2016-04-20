@@ -150,12 +150,12 @@ namespace DevZest.Data.Windows
             if (blockViewIntializer == null)
                 Template.BlockViewInitializer = null;
             else
-                Template.BlockViewInitializer = rowView => blockViewIntializer((T)rowView);
+                Template.BlockViewInitializer = blockView => blockViewIntializer((T)blockView);
 
             if (blockViewCleanupAction == null)
                 Template.BlockViewCleanupAction = null;
             else
-                Template.BlockViewCleanupAction = rowView => blockViewCleanupAction((T)rowView);
+                Template.BlockViewCleanupAction = blockView => blockViewCleanupAction((T)blockView);
             return this;
         }
 
