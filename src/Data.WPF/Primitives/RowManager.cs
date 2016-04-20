@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
             InitializeRowMappings();
             InitializeHierarchicalRows();
             CoerceEofRow();
-            SetCurrentRow(CoerceCurrentRow());
+            SetCurrentRow(CoercedCurrentRow);
         }
 
         private readonly Template _template;
@@ -320,7 +320,7 @@ namespace DevZest.Data.Windows.Primitives
         private void OnRowsChanged()
         {
             CoerceEofRow();
-            CurrentRow = CoerceCurrentRow();
+            CurrentRow = CoercedCurrentRow;
             OnSetState(DataPresenterState.Rows);
         }
 
@@ -383,26 +383,28 @@ namespace DevZest.Data.Windows.Primitives
             get { return _hierarchicalRows.Count == 0 ? null : _hierarchicalRows[_hierarchicalRows.Count - 1]; }
         }
 
-        private RowPresenter CoerceCurrentRow()
+        private RowPresenter CoercedCurrentRow
         {
-            if (_currentRow == null)
+            get
             {
-                if (Rows.Count > 0)
-                    return Rows[0];
-            }
-            else
-            {
-                if (_prevCurrentRowOrdinal != -1)
+                if (_currentRow == null)
                 {
-                    var currentRowOrdinal = Math.Min(Rows.Count - 1, _prevCurrentRowOrdinal);
-                    _prevCurrentRowOrdinal = -1;
-                    return currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
+                    if (Rows.Count > 0)
+                        return Rows[0];
                 }
-                else if (Rows.Count == 0)
-                    return null;
+                else
+                {
+                    if (_prevCurrentRowOrdinal != -1)
+                    {
+                        var currentRowOrdinal = Math.Min(Rows.Count - 1, _prevCurrentRowOrdinal);
+                        _prevCurrentRowOrdinal = -1;
+                        return currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
+                    }
+                    else if (Rows.Count == 0)
+                        return null;
+                }
+                return _currentRow;
             }
-
-            return _currentRow;
         }
 
         private DataRow _viewUpdateSuppressed;
