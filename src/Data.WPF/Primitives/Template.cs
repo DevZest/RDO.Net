@@ -12,8 +12,8 @@ namespace DevZest.Data.Windows.Primitives
     {
         internal Template()
         {
-            GridColumns = new GridTrackCollection<GridColumn>();
-            GridRows = new GridTrackCollection<GridRow>();
+            InternalGridColumns = new GridTrackCollection<GridColumn>();
+            InternalGridRows = new GridTrackCollection<GridRow>();
             BlockDimensions = 1;
             HierarchicalModelOrdinal = -1;
         }
@@ -49,15 +49,25 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyGridLengths()
         {
-            if (GridColumns.Count > 0)
-                VerifyGridColumnWidth(0, GridColumns.Count - 1);
-            if (GridRows.Count > 0)
-                VerifyGridRowHeight(0, GridRows.Count - 1);
+            if (InternalGridColumns.Count > 0)
+                VerifyGridColumnWidth(0, InternalGridColumns.Count - 1);
+            if (InternalGridRows.Count > 0)
+                VerifyGridRowHeight(0, InternalGridRows.Count - 1);
         }
 
-        public GridTrackCollection<GridColumn> GridColumns { get; private set; }
+        internal GridTrackCollection<GridColumn> InternalGridColumns { get; private set; }
 
-        public GridTrackCollection<GridRow> GridRows { get; private set; }
+        public ReadOnlyCollection<GridColumn> GridColumns
+        {
+            get { return InternalGridColumns; }
+        }
+
+        internal GridTrackCollection<GridRow> InternalGridRows { get; private set; }
+
+        public ReadOnlyCollection<GridRow> GridRows
+        {
+            get { return InternalGridRows; }
+        }
 
         internal readonly TemplateItemCollection<DataItem> InternalDataItems = new TemplateItemCollection<DataItem>();
 
@@ -138,8 +148,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int AddGridColumn(string width)
         {
-            GridColumns.Add(new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width)));
-            var result = GridColumns.Count - 1;
+            InternalGridColumns.Add(new GridColumn(this, InternalGridColumns.Count, GridLengthParser.Parse(width)));
+            var result = InternalGridColumns.Count - 1;
             VerifyGridColumnWidth(result, result);
             return result;
         }
@@ -154,8 +164,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int AddGridRow(string height)
         {
-            GridRows.Add(new GridRow(this, GridRows.Count, GridLengthParser.Parse(height)));
-            var result = GridRows.Count - 1;
+            InternalGridRows.Add(new GridRow(this, InternalGridRows.Count, GridLengthParser.Parse(height)));
+            var result = InternalGridRows.Count - 1;
             VerifyGridRowHeight(result, result);
             return result;
         }
@@ -171,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
         private void VerifyGridRowHeight(int startIndex, int endIndex)
         {
             for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridRowHeight(GridRows[i]);
+                VerifyGridRowHeight(InternalGridRows[i]);
         }
 
         private void VerifyGridRowHeight(GridRow gridRow)
@@ -197,7 +207,7 @@ namespace DevZest.Data.Windows.Primitives
         private void VerifyGridColumnWidth(int startIndex, int endIndex)
         {
             for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridColumnWidth(GridColumns[i]);
+                VerifyGridColumnWidth(InternalGridColumns[i]);
         }
 
         private void VerifyGridColumnWidth(GridColumn gridColumn)
@@ -294,26 +304,26 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyGridColumn(int index, string paramName)
         {
-            if (index < 0 || index >= GridColumns.Count)
+            if (index < 0 || index >= InternalGridColumns.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
         private void VerifyGridRow(int index, string paramName)
         {
-            if (index < 0 || index >= GridRows.Count)
+            if (index < 0 || index >= InternalGridRows.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
         public GridRange Range()
         {
-            return GridColumns.Count == 0 || GridRows.Count == 0 ? new GridRange() : Range(0, 0, GridColumns.Count - 1, GridRows.Count - 1);
+            return InternalGridColumns.Count == 0 || InternalGridRows.Count == 0 ? new GridRange() : Range(0, 0, InternalGridColumns.Count - 1, InternalGridRows.Count - 1);
         }
 
         public GridRange Range(int column, int row)
         {
             VerifyGridColumn(column, nameof(column));
             VerifyGridRow(row, nameof(row));
-            return new GridRange(GridColumns[column], GridRows[row]);
+            return new GridRange(InternalGridColumns[column], InternalGridRows[row]);
         }
 
         public GridRange Range(int left, int top, int right, int bottom)
@@ -326,7 +336,7 @@ namespace DevZest.Data.Windows.Primitives
                 throw new ArgumentOutOfRangeException(nameof(right));
             if (bottom < top)
                 throw new ArgumentOutOfRangeException(nameof(bottom));
-            return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
+            return new GridRange(InternalGridColumns[left], InternalGridRows[top], InternalGridColumns[right], InternalGridRows[bottom]);
         }
 
         private EofVisibility _eofVisibility = EofVisibility.Never;
@@ -383,8 +393,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitMeasuredAutoLengths()
         {
-            GridColumns.InitMeasuredAutoLengths(SizeToContentX);
-            GridRows.InitMeasuredAutoLengths(SizeToContentY);
+            InternalGridColumns.InitMeasuredAutoLengths(SizeToContentX);
+            InternalGridRows.InitMeasuredAutoLengths(SizeToContentY);
         }
 
         private void DistributeStarLengths()
@@ -395,22 +405,22 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshMeasuredOffset()
         {
-            GridColumns.RefreshMeasuredOffset();
-            GridRows.RefreshMeasuredOffset();
+            InternalGridColumns.RefreshMeasuredOffset();
+            InternalGridRows.RefreshMeasuredOffset();
         }
 
         internal void DistributeStarWidths()
         {
-            DistributeStarLengths(AvailableWidth, GridColumns, StarWidthGridColumns);
+            DistributeStarLengths(AvailableWidth, InternalGridColumns, StarWidthGridColumns);
         }
 
         internal void DistributeStarHeights()
         {
-            DistributeStarLengths(AvailableHeight, GridRows, StarHeightGridRows);
+            DistributeStarLengths(AvailableHeight, InternalGridRows, StarHeightGridRows);
         }
 
         private static void DistributeStarLengths<T>(double totalLength, GridTrackCollection<T> gridTracks, IReadOnlyList<T> starGridTracks)
-            where T : GridTrack
+            where T : GridTrack, IConcatList<T>
         {
             if (starGridTracks.Count == 0)
                 return;
@@ -491,7 +501,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_starWidthGridColumns == null)
-                    _starWidthGridColumns = GridColumns.Filter(x => x.IsStarLength(SizeToContentX));
+                    _starWidthGridColumns = InternalGridColumns.Filter(x => x.IsStarLength(SizeToContentX));
                 return _starWidthGridColumns;
             }
         }
@@ -502,7 +512,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_starHeightGridRows == null)
-                    _starHeightGridRows = GridRows.Filter(x => x.IsStarLength(SizeToContentY));
+                    _starHeightGridRows = InternalGridRows.Filter(x => x.IsStarLength(SizeToContentY));
                 return _starHeightGridRows;
             }
         }
@@ -513,12 +523,12 @@ namespace DevZest.Data.Windows.Primitives
                 return 1;
 
             return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Horizontal
-                ? CoerceBlockDimensions(SizeToContentX, AvailableWidth, GridColumns)
-                : CoerceBlockDimensions(SizeToContentY, AvailableHeight, GridRows);
+                ? CoerceBlockDimensions(SizeToContentX, AvailableWidth, InternalGridColumns)
+                : CoerceBlockDimensions(SizeToContentY, AvailableHeight, InternalGridRows);
         }
 
         private int CoerceBlockDimensions<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
-            where T : GridTrack
+            where T : GridTrack, IConcatList<T>
         {
             if (sizeToContent)
                 return 1;

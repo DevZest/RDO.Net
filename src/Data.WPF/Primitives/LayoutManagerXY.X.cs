@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Primitives
                 : base(template, dataSet)
             {
                 var rowRange = template.RowRange;
-                _variantAutoWidthColumns = CalcVariantAutoLengthTracks(template.GridColumns, rowRange.Left, rowRange.Right);
+                _variantAutoWidthColumns = CalcVariantAutoLengthTracks(template.InternalGridColumns, rowRange.Left, rowRange.Right);
             }
 
             private readonly IConcatList<GridColumn> _variantAutoWidthColumns;

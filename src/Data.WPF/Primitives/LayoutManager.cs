@@ -55,7 +55,7 @@ namespace DevZest.Data.Windows.Primitives
                     if (changed)
                     {
                         Template.DistributeStarWidths();
-                        Template.GridColumns.RefreshMeasuredOffset();
+                        Template.InternalGridColumns.RefreshMeasuredOffset();
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows.Primitives
                     if (changed)
                     {
                         Template.DistributeStarHeights();
-                        Template.GridRows.RefreshMeasuredOffset();
+                        Template.InternalGridRows.RefreshMeasuredOffset();
                     }
                 }
             }
@@ -126,9 +126,9 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(delta > 0);
             gridTrack.MeasuredLength = value;
             if (gridTrack.Orientation == Orientation.Horizontal)
-                Template.GridColumns.TotalAutoLength += delta;
+                Template.InternalGridColumns.TotalAutoLength += delta;
             else
-                Template.GridRows.TotalAutoLength += delta;
+                Template.InternalGridRows.TotalAutoLength += delta;
             return true;
         }
 
@@ -138,13 +138,11 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange);
 
-        public Size Measure(Size availableSize)
+        internal Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
             BlockDimensions = Template.CoerceBlockDimensions();
-            IsPreparingMeasure = true;
             PrepareMeasure();
-            IsPreparingMeasure = false;
             return FinalizeMeasure();
         }
 
@@ -160,7 +158,9 @@ namespace DevZest.Data.Windows.Primitives
                 UpdateAutoSize(null, dataItem, element.DesiredSize);
             }
 
+            IsPreparingMeasure = true;
             PrepareMeasureBlocks();
+            IsPreparingMeasure = false;
         }
 
         protected abstract void PrepareMeasureBlocks();

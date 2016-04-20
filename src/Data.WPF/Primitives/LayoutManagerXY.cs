@@ -49,12 +49,12 @@ namespace DevZest.Data.Windows.Primitives
 
         public double ViewportWidth
         {
-            get { return Template.AvailableWidth; }
+            get { return Template.SizeToContentX ? ExtentWidth : Template.AvailableWidth; }
         }
 
         public double ViewportHeight
         {
-            get { return Template.AvailableHeight; }
+            get { return Template.SizeToContentY ? ExtentHeight : Template.AvailableHeight; }
         }
 
         public double ExtentHeight { get; private set; }
@@ -148,7 +148,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private static IConcatList<T> CalcVariantAutoLengthTracks<T>(GridTrackCollection<T> gridTracks, T startTrack, T endTrack)
-            where T : GridTrack
+            where T : GridTrack, IConcatList<T>
         {
             var result = ConcatList<T>.Empty;
             if (startTrack == null)
@@ -159,7 +159,7 @@ namespace DevZest.Data.Windows.Primitives
                 var gridTrack = gridTracks[i];
                 if (gridTrack.Length.IsAuto)
                 {
-                    result = result.Concat((IConcatList<T>)gridTrack);
+                    result = result.Concat(gridTrack);
                     gridTrack.IsVariantAutoLength = true;
                 }
             }
@@ -211,18 +211,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override Size MeasuredSize
         {
-            get
-            {
-                var width = Template.AvailableWidth;
-                if (double.IsPositiveInfinity(width))
-                    width = ExtentWidth;
-
-                var height = Template.AvailableHeight;
-                if (double.IsPositiveInfinity(height))
-                    height = ExtentHeight;
-
-                return new Size(width, height);
-            }
+            get { return new Size(ViewportWidth, ViewportHeight); }
         }
 
         internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)

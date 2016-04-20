@@ -5,8 +5,8 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class GridTrackCollection<T> : ReadOnlyCollection<T>
-        where T : GridTrack
+    internal class GridTrackCollection<T> : ReadOnlyCollection<T>
+        where T : GridTrack, IConcatList<T>
     {
         internal GridTrackCollection()
             : base(new List<T>())
@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var track = this[i];
                 if (predict(track))
-                    result = result.Concat((IConcatList<T>)track);
+                    result = result.Concat(track);
                 if (action != null)
                     action(track);
             }
