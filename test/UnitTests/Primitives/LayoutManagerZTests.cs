@@ -1,8 +1,6 @@
 ﻿using DevZest.Data.Windows.Factories;
-using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -28,6 +26,21 @@ namespace DevZest.Data.Windows.Primitives
 
             var measuredSize = layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Assert.AreEqual(new Size(330, 65), measuredSize);
+            VerifyArrangeRect(layoutManager, 0, layoutManager.CurrentRow, new Rect(0, 0, 110, 25));
+            VerifyArrangeRect(layoutManager, 1, layoutManager.CurrentRow, new Rect(110, 0, 200, 25));
+            VerifyArrangeRect(layoutManager, 2, layoutManager.CurrentRow, new Rect(0, 25, 110, 20));
+            VerifyArrangeRect(layoutManager, 3, layoutManager.CurrentRow, new Rect(110, 25, 200, 20));
+            VerifyArrangeRect(layoutManager, 4, layoutManager.CurrentRow, new Rect(0, 45, 110, 20));
+            VerifyArrangeRect(layoutManager, 5, layoutManager.CurrentRow, new Rect(110, 45, 200, 20));
+
+            measuredSize = layoutManager.Measure(new Size(300, 300));
+            Assert.AreEqual(new Size(300, 300), measuredSize);
+            VerifyArrangeRect(layoutManager, 0, layoutManager.CurrentRow, new Rect(0, 0, 110, 25));
+            VerifyArrangeRect(layoutManager, 1, layoutManager.CurrentRow, new Rect(110, 0, 170, 25));
+            VerifyArrangeRect(layoutManager, 2, layoutManager.CurrentRow, new Rect(0, 25, 110, 255));
+            VerifyArrangeRect(layoutManager, 3, layoutManager.CurrentRow, new Rect(110, 25, 170, 255));
+            VerifyArrangeRect(layoutManager, 4, layoutManager.CurrentRow, new Rect(0, 280, 110, 20));
+            VerifyArrangeRect(layoutManager, 5, layoutManager.CurrentRow, new Rect(110, 280, 170, 20));
         }
     }
 }

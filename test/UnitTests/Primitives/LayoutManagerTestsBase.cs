@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Utilities;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -21,5 +22,12 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
+        internal static void VerifyArrangeRect(LayoutManager layoutManager, int rowItemIndex, RowPresenter row, Rect expectedRect)
+        {
+            var blockView = layoutManager.BlockViews[row];
+            var rowItems = row.RowItems;
+            var rect = layoutManager.GetArrangeRect(blockView, rowItems[rowItemIndex]);
+            Assert.AreEqual(expectedRect, rect);
+        }
     }
 }
