@@ -407,7 +407,7 @@ namespace DevZest.Data.Windows.Primitives
             AvailableSize = availableSize;
             InitMeasuredAutoLengths();
             DistributeStarLengths();
-            RefreshMeasuredOffset();
+            RefreshOffset();
         }
 
         private void InitMeasuredAutoLengths()
@@ -422,7 +422,7 @@ namespace DevZest.Data.Windows.Primitives
             DistributeStarHeights();
         }
 
-        private void RefreshMeasuredOffset()
+        private void RefreshOffset()
         {
             InternalGridColumns.RefreshOffset();
             InternalGridRows.RefreshOffset();
