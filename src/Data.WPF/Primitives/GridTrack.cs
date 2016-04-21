@@ -7,9 +7,9 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class GridTrack
     {
-        internal GridTrack(Template owner, int ordinal, GridLengthParser.Result result)
+        internal GridTrack(Template template, int ordinal, GridLengthParser.Result result)
         {
-            Owner = owner;
+            Template = template;
             Ordinal = ordinal;
             Length = result.Length;
             MinLength = result.MinLength;
@@ -17,9 +17,11 @@ namespace DevZest.Data.Windows.Primitives
             VariantAutoLengthIndex = -1;
         }
 
-        internal Template Owner { get; private set; }
+        internal Template Template { get; private set; }
 
         internal int Ordinal { get; private set; }
+
+        public abstract Orientation Orientation { get; }
 
         public GridLength Length { get; private set; }
 
@@ -37,8 +39,6 @@ namespace DevZest.Data.Windows.Primitives
             return Length.IsStar && !sizeToContent;
         }
 
-        internal int AutoLengthIndex { get; set; }
-
         internal double MeasuredLength { get; set; }
 
         internal double StartOffset { get; set; }
@@ -54,7 +54,5 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return VariantAutoLengthIndex >= 0; }
         }
-
-        public abstract Orientation Orientation { get; }
     }
 }

@@ -16,9 +16,9 @@ namespace DevZest.Data.Windows.Primitives
         internal GridRange(GridColumn left, GridRow top, GridColumn right, GridRow bottom)
         {
             Debug.Assert(left != null);
-            Debug.Assert(top != null && top.Owner == left.Owner);
-            Debug.Assert(right != null && right.Owner == top.Owner);
-            Debug.Assert(bottom != null && bottom.Owner == right.Owner);
+            Debug.Assert(top != null && top.Template == left.Template);
+            Debug.Assert(right != null && right.Template == top.Template);
+            Debug.Assert(bottom != null && bottom.Template == right.Template);
             Left = left;
             Top = top;
             Right = right;
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Template Template
         {
-            get { return Left == null ? null : Left.Owner; }
+            get { return Left == null ? null : Left.Template; }
         }
 
         public bool IsEmpty
@@ -50,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool Contains(GridColumn gridColumn)
         {
-            if (IsEmpty || Template != gridColumn.Owner)
+            if (IsEmpty || Template != gridColumn.Template)
                 return false;
 
             return Left.Ordinal <= gridColumn.Ordinal && Right.Ordinal >= gridColumn.Ordinal;
@@ -58,7 +58,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool Contains(GridRow gridRow)
         {
-            if (IsEmpty || Template != gridRow.Owner)
+            if (IsEmpty || Template != gridRow.Template)
                 return false;
 
             return Top.Ordinal <= gridRow.Ordinal && Bottom.Ordinal >= gridRow.Ordinal;
