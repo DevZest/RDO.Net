@@ -19,20 +19,27 @@ namespace DevZest.Data.Windows
         public BlockView()
         {
             Index = -1;
+            Id = ++s_id;
         }
+
+        private static int s_id = 0;
+        public int Id { get; private set; }
 
         internal void Initialize(ElementManager elementManager, int index)
         {
+            Debug.Assert(ElementManager == null);
             ElementManager = elementManager;
             Index = index;
+            if (ElementCollection != null)
+                InitializeElements();
         }
 
         internal void Cleanup()
         {
             ClearElements();
-            ClearAutoLengths();
             Index = -1;
             ElementManager = null;
+            ClearAutoLengths();
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -42,9 +49,14 @@ namespace DevZest.Data.Windows
             get { return ElementManager as LayoutManager; }
         }
 
-        internal LayoutManagerXY LayoutManagerXY
+        private LayoutManagerXY LayoutManagerXY
         {
             get { return LayoutManager as LayoutManagerXY; }
+        }
+
+        private BlockViewCollection BlockViews
+        {
+            get { return LayoutManager == null ? null : LayoutManager.BlockViews; }
         }
 
         public DataPresenter DataPresenter
@@ -129,11 +141,16 @@ namespace DevZest.Data.Windows
 
             Debug.Assert(ElementCollection == null);
 
-            if (ElementManager == null)
-                return;
-
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
+            if (ElementManager != null)
+                InitializeElements();
+
+        }
+
+        private void InitializeElements()
+        {
+            Debug.Assert(ElementManager != null);
             var blockItems = BlockItems;
             for (int i = 0; i < BlockItemsSplit; i++)
                 AddElement(blockItems[i]);
@@ -283,15 +300,16 @@ namespace DevZest.Data.Windows
                 CumulativeAutoLengths[i] += delta;
         }
 
-        internal double GetCumulativeAutoLength(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            return CumulativeAutoLengths[gridTrack.VariantAutoLengthIndex];
-        }
-
-        internal double CumulativeAutoLength
+        internal double TotalAutoLength
         {
             get { return _cumulativeAutoLengths == null ? 0 : _cumulativeAutoLengths[_cumulativeAutoLengths.Length - 1]; }
+        }
+
+        internal double StartAutoLengthOffset { get; set; }
+
+        internal double EndAutoLengthOffset
+        {
+            get { return StartAutoLengthOffset + TotalAutoLength; }
         }
 
         internal UIElement this[BlockItem blockItem]

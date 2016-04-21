@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal class GridTrackCollection<T> : ReadOnlyCollection<T>
+    internal class GridTrackCollection<T> : ReadOnlyCollection<T>, IGridTrackOffsetManager
         where T : GridTrack, IConcatList<T>
     {
         internal GridTrackCollection()
@@ -76,8 +76,19 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal void RefreshOffset()
+        private bool _isOffsetValid = true;
+
+        void IGridTrackOffsetManager.InvalidateOffset()
         {
+            _isOffsetValid = false;
+        }
+
+        void IGridTrackOffsetManager.RefreshOffset()
+        {
+            if (_isOffsetValid)
+                return;
+
+            _isOffsetValid = true;  // prevent re-entrance
             for (int i = 1; i < Count; i++)
                 this[i].StartOffset = this[i - 1].StartOffset + this[i - 1].MeasuredLength;
         }

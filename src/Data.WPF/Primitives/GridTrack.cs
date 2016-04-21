@@ -19,6 +19,17 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Template Template { get; private set; }
 
+        private IGridTrackOffsetManager OffsetManager
+        {
+            get
+            {
+                if (Orientation == Orientation.Vertical)
+                    return Template.InternalGridRows;
+                else
+                    return Template.InternalGridColumns;
+            }
+        }
+
         internal int Ordinal { get; private set; }
 
         public abstract Orientation Orientation { get; }
@@ -39,9 +50,30 @@ namespace DevZest.Data.Windows.Primitives
             return Length.IsStar && !sizeToContent;
         }
 
-        internal double MeasuredLength { get; set; }
+        private double _measuredLength;
+        internal double MeasuredLength
+        {
+            get { return _measuredLength; }
+            set
+            {
+                if (_measuredLength == value)
+                    return;
 
-        internal double StartOffset { get; set; }
+                _measuredLength = value;
+                OffsetManager.InvalidateOffset();
+            }
+        }
+
+        private double _startOffset;
+        internal double StartOffset
+        {
+            get
+            {
+                OffsetManager.RefreshOffset();
+                return _startOffset;
+            }
+            set { _startOffset = value; }
+        }
 
         internal double EndOffset
         {

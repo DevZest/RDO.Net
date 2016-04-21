@@ -55,6 +55,7 @@
     <Compile Include="Primitives\IElementCollection.cs" />
     <Compile Include="Primitives\BindingBase.cs" />
     <Compile Include="DataPresenterState.cs" />
+    <Compile Include="Primitives\IGridTrackOffsetManager.cs" />
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutManagerXY.X.cs" />

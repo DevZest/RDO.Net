@@ -61,28 +61,15 @@ namespace DevZest.Data.Windows.Primitives
             return Elements[index];
         }
 
-        private LayoutManager SafeLayoutManager
-        {
-            get
-            {
-                var result = LayoutManager;
-#if DEBUG
-                if (result != null && Template.IsInitializingBlockView)
-                    return null;
-#endif
-                return result;
-            }
-        }
-
         protected override Size MeasureOverride(Size availableSize)
         {
-            var layoutManager = SafeLayoutManager;
+            var layoutManager = LayoutManager;
             return layoutManager != null ? layoutManager.Measure(BlockView, availableSize) : base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
         {
-            var layoutManager = SafeLayoutManager;
+            var layoutManager = LayoutManager;
             if (layoutManager == null)
                 return base.ArrangeOverride(arrangeBounds);
 

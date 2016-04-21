@@ -6,6 +6,14 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class LayoutManagerTestsBase : RowManagerTestsBase
     {
+        private class AutoInitBlockView : BlockView
+        {
+            public AutoInitBlockView()
+            {
+                this.CreateVisualTree();
+            }
+        }
+
         internal static LayoutManager CreateLayoutManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()
         {
@@ -13,7 +21,7 @@ namespace DevZest.Data.Windows.Primitives
             using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
             {
                 buildTemplateAction(templateBuilder, dataSet._);
-                templateBuilder.BlockView((BlockView blockView) => blockView.CreateVisualTree());
+                templateBuilder.BlockView<AutoInitBlockView>();
             }
             var result = LayoutManager.Create(template, dataSet);
             result.InitializeElements(null);

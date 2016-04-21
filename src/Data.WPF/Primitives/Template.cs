@@ -370,23 +370,10 @@ namespace DevZest.Data.Windows.Primitives
 
         public Action<BlockView> BlockViewInitializer { get; internal set; }
 
-#if DEBUG
-        private int _initializingBlockViewLevel;    // For unit test only - flag to bypass layout processing.
-        internal bool IsInitializingBlockView
-        {
-            get { return _initializingBlockViewLevel > 0; }
-        }
-#endif
         internal void InitializeBlockView(BlockView blockView)
         {
-#if DEBUG
-            _initializingBlockViewLevel++;
-#endif
             if (BlockViewInitializer != null)
                 BlockViewInitializer(blockView);
-#if DEBUG
-            _initializingBlockViewLevel--;
-#endif
         }
 
         public Action<BlockView> BlockViewCleanupAction { get; internal set; }
@@ -407,7 +394,6 @@ namespace DevZest.Data.Windows.Primitives
             AvailableSize = availableSize;
             InitMeasuredAutoLengths();
             DistributeStarLengths();
-            RefreshOffset();
         }
 
         private void InitMeasuredAutoLengths()
@@ -420,12 +406,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             DistributeStarWidths();
             DistributeStarHeights();
-        }
-
-        private void RefreshOffset()
-        {
-            InternalGridColumns.RefreshOffset();
-            InternalGridRows.RefreshOffset();
         }
 
         internal void DistributeStarWidths()

@@ -362,5 +362,11 @@ namespace DevZest.Data.Windows.Primitives
             _fixedHeadBlockCount = _fixedTailBlockCount = -1;
             ScrollableBlockCount = 0;
         }
+
+        internal void RefreshAutoLengthOffset(int from)
+        {
+            for (int i = from + 1; i < Count; i++)
+                this[i].StartAutoLengthOffset = this[i - 1].EndAutoLengthOffset + this[i - 1].TotalAutoLength;
+        }
     }
 }

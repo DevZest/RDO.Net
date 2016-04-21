@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Windows.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {

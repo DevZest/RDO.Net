@@ -53,10 +53,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var changed = DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
                     if (changed)
-                    {
                         Template.DistributeStarWidths();
-                        Template.InternalGridColumns.RefreshOffset();
-                    }
                 }
             }
 
@@ -67,10 +64,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     var changed = DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
                     if (changed)
-                    {
                         Template.DistributeStarHeights();
-                        Template.InternalGridRows.RefreshOffset();
-                    }
                 }
             }
         }

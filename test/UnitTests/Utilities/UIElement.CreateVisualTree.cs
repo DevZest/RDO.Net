@@ -1,8 +1,5 @@
-﻿using System.IO;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Markup;
-using System.Windows.Xps.Serialization;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest
 {
@@ -14,22 +11,10 @@ namespace DevZest
         /// </summary>
         internal static void CreateVisualTree(this UIElement element)
         {
-            if (LogicalTreeHelper.GetParent(element) != null)
-                return;
+            var box = new Viewbox { Child = element };
 
-            var fixedDoc = new FixedDocument();
-            var pageContent = new PageContent();
-            var fixedPage = new FixedPage();
-            fixedPage.Children.Add(element);
-            ((IAddChild)pageContent).AddChild(fixedPage);
-            fixedDoc.Pages.Add(pageContent);
-
-            var f = new XpsSerializerFactory();
-            using (var stream = new MemoryStream())
-            {
-                var w = f.CreateSerializerWriter(stream);
-                w.Write(fixedDoc);
-            }
+            box.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            box.Arrange(new Rect(box.DesiredSize));
         }
     }
 }
