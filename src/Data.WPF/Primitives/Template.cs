@@ -424,8 +424,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshMeasuredOffset()
         {
-            InternalGridColumns.RefreshMeasuredOffset();
-            InternalGridRows.RefreshMeasuredOffset();
+            InternalGridColumns.RefreshOffset();
+            InternalGridRows.RefreshOffset();
         }
 
         internal void DistributeStarWidths()

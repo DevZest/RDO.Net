@@ -107,7 +107,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Point MeasuredPoint
         {
-            get { return new Point(Left == null ? 0 : Left.MeasuredStartOffset, Top == null ? 0 : Top.MeasuredStartOffset); }
+            get { return new Point(Left == null ? 0 : Left.StartOffset, Top == null ? 0 : Top.StartOffset); }
         }
 
         internal Size MeasuredSize

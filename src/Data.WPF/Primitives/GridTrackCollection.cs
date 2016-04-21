@@ -60,7 +60,7 @@ namespace DevZest.Data.Windows.Primitives
         internal double GetMeasuredLength(int startIndex, int endIndex)
         {
             Debug.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex < Count);
-            return this[endIndex].MeasuredEndOffset - this[startIndex].MeasuredStartOffset;
+            return this[endIndex].EndOffset - this[startIndex].StartOffset;
         }
 
         internal double GetMeasuredLength(int startIndex, int endIndex, Func<T, bool> predict)
@@ -76,10 +76,10 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal void RefreshMeasuredOffset()
+        internal void RefreshOffset()
         {
             for (int i = 1; i < Count; i++)
-                this[i].MeasuredStartOffset = this[i - 1].MeasuredStartOffset + this[i - 1].MeasuredLength;
+                this[i].StartOffset = this[i - 1].StartOffset + this[i - 1].MeasuredLength;
         }
     }
 }

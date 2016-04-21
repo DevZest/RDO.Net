@@ -47,14 +47,21 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollOwner.InvalidateScrollInfo();
         }
 
-        public double ViewportWidth
-        {
-            get { return Template.SizeToContentX ? ExtentWidth : Template.AvailableWidth; }
-        }
+        public double ViewportWidth { get; private set; }
 
-        public double ViewportHeight
+        public double ViewportHeight { get; private set; }
+
+        protected Size ViewportSize
         {
-            get { return Template.SizeToContentY ? ExtentHeight : Template.AvailableHeight; }
+            get { return new Size(ViewportWidth, ViewportHeight); }
+            private set
+            {
+                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
+                    return;
+                ViewportWidth = value.Width;
+                ViewportHeight = value.Height;
+                InvalidateScrollInfo();
+            }
         }
 
         public double ExtentHeight { get; private set; }
@@ -77,7 +84,7 @@ namespace DevZest.Data.Windows.Primitives
         public double HorizontalOffset
         {
             get { return _horizontalOffset; }
-            set
+            private set
             {
                 if (_horizontalOffset.IsClose(value))
                     return;
@@ -90,7 +97,7 @@ namespace DevZest.Data.Windows.Primitives
         public double VerticalOffset
         {
             get { return _verticalOffset; }
-            set
+            private set
             {
                 if (_verticalOffset.IsClose(value))
                     return;
@@ -191,7 +198,21 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < BlockViews.Count; i++)
                     BlockViews[i].ClearMeasuredLengths();
             }
+
+            RefreshExtentSize();
+            RefreshViewportSize();
+        }
+
+        private void RefreshExtentSize()
+        {
             throw new NotImplementedException();
+        }
+
+        private void RefreshViewportSize()
+        {
+            var width = Template.SizeToContentX ? ExtentWidth : Template.AvailableWidth;
+            var height = Template.SizeToContentY ? ExtentHeight : Template.AvailableHeight;
+            ViewportSize = new Size(width, height);
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
@@ -211,7 +232,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override Size MeasuredSize
         {
-            get { return new Size(ViewportWidth, ViewportHeight); }
+            get { return ViewportSize; }
         }
 
         internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)

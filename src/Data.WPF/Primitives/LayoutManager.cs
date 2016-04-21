@@ -55,7 +55,7 @@ namespace DevZest.Data.Windows.Primitives
                     if (changed)
                     {
                         Template.DistributeStarWidths();
-                        Template.InternalGridColumns.RefreshMeasuredOffset();
+                        Template.InternalGridColumns.RefreshOffset();
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows.Primitives
                     if (changed)
                     {
                         Template.DistributeStarHeights();
-                        Template.InternalGridRows.RefreshMeasuredOffset();
+                        Template.InternalGridRows.RefreshOffset();
                     }
                 }
             }

@@ -145,7 +145,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < dataItems.Count; i++)
             {
                 var dataItem = dataItems[i];
-                dataItem.AccumulatedBlockDimensionsDelta = 0;
+                dataItem.CumulativeBlockDimensionsDelta = 0;
                 int count = dataItem.IsMultidimensional ? BlockDimensions : 1;
                 RemoveDataElementsAfter(dataItem, -1, count);
             }
@@ -207,13 +207,13 @@ namespace DevZest.Data.Windows.Primitives
                 index++;
                 var dataItem = dataItems[i];
 
-                var prevAccumulatedBlockDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].AccumulatedBlockDimensionsDelta;
+                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].CumulativeBlockDimensionsDelta;
                 if (!dataItem.IsMultidimensional)
                 {
-                    dataItem.AccumulatedBlockDimensionsDelta = prevAccumulatedBlockDimensionsDelta + (BlockDimensions - 1);
+                    dataItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
                     continue;
                 }
-                dataItem.AccumulatedBlockDimensionsDelta = prevAccumulatedBlockDimensionsDelta;
+                dataItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
 
                 if (i < Template.DataItemsSplit)
                     delta += blockDimensionsDelta;

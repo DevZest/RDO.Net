@@ -102,7 +102,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool IsMultidimensional { get; private set; }
 
-        internal int AccumulatedBlockDimensionsDelta { get; set; }
+        internal int CumulativeBlockDimensionsDelta { get; set; }
 
         internal override void VerifyGridRange(GridRange rowRange)
         {
@@ -144,8 +144,8 @@ namespace DevZest.Data.Windows.Primitives
                     throw new ArgumentOutOfRangeException(nameof(blockDimension));
 
                 var ordinal = Ordinal;
-                int prevAccumulatedBlockDimensionsDelta = ordinal == 0 ? 0 : Template.DataItems[ordinal - 1].AccumulatedBlockDimensionsDelta;
-                var elementIndex = ordinal * BlockDimensions - prevAccumulatedBlockDimensionsDelta + blockDimension;
+                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.DataItems[ordinal - 1].CumulativeBlockDimensionsDelta;
+                var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
                 if (ordinal >= Template.DataItemsSplit)
                     elementIndex += ElementManager.Blocks.Count;
                 return ElementManager.Elements[elementIndex];

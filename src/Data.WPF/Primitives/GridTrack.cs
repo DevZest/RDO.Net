@@ -40,11 +40,11 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double MeasuredLength { get; set; }
 
-        internal double MeasuredStartOffset { get; set; }
+        internal double StartOffset { get; set; }
 
-        internal double MeasuredEndOffset
+        internal double EndOffset
         {
-            get { return MeasuredStartOffset + MeasuredLength; }
+            get { return StartOffset + MeasuredLength; }
         }
 
         internal bool IsVariantAutoLength { get; set; }
