@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             private readonly IConcatList<GridRow> _variantAutoHeightRows;
-            protected override IReadOnlyList<GridTrack> VariantAutoLengthTracks
+            internal override IReadOnlyList<GridTrack> VariantAutoLengthTracks
             {
                 get { return _variantAutoHeightRows; }
             }

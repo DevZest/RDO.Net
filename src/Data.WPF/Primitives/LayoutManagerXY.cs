@@ -167,13 +167,13 @@ namespace DevZest.Data.Windows.Primitives
                 if (gridTrack.Length.IsAuto)
                 {
                     result = result.Concat(gridTrack);
-                    gridTrack.IsVariantAutoLength = true;
+                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
                 }
             }
             return result;
         }
 
-        protected abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
+        internal abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {

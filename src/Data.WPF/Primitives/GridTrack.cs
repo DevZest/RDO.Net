@@ -14,6 +14,7 @@ namespace DevZest.Data.Windows.Primitives
             Length = result.Length;
             MinLength = result.MinLength;
             MaxLength = result.MaxLength;
+            VariantAutoLengthIndex = -1;
         }
 
         internal Template Owner { get; private set; }
@@ -47,7 +48,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return StartOffset + MeasuredLength; }
         }
 
-        internal bool IsVariantAutoLength { get; set; }
+        internal int VariantAutoLengthIndex { get; set; }
+
+        internal bool IsVariantAutoLength
+        {
+            get { return VariantAutoLengthIndex >= 0; }
+        }
 
         public abstract Orientation Orientation { get; }
     }

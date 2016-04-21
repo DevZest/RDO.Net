@@ -42,6 +42,11 @@ namespace DevZest.Data.Windows
             get { return ElementManager as LayoutManager; }
         }
 
+        internal LayoutManagerXY LayoutManagerXY
+        {
+            get { return LayoutManager as LayoutManagerXY; }
+        }
+
         public DataPresenter DataPresenter
         {
             get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }
@@ -239,32 +244,35 @@ namespace DevZest.Data.Windows
             blockItem.UpdateTarget(element);
         }
 
-        private Dictionary<GridTrack, double> _measuredLengths;
-        private Dictionary<GridTrack, double> MeasuredLengths
+        private double[] _measuredLengths;
+        private double[] MeasuredLengths
         {
-            get { return _measuredLengths ?? (_measuredLengths = new Dictionary<GridTrack, double>()); }
+            get
+            {
+                Debug.Assert(LayoutManagerXY.VariantAutoLengthTracks.Count > 0);
+                return _measuredLengths ?? (_measuredLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
+            }
         }
 
         internal void ClearMeasuredLengths()
         {
             if (_measuredLengths != null)
-                _measuredLengths.Clear();
+            {
+                for (int i = 0; i < _measuredLengths.Length; i++)
+                    _measuredLengths[i] = 0;
+            }
         }
 
         internal double GetMeasuredLength(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            double result;
-            return MeasuredLengths.TryGetValue(gridTrack, out result) ? result : 0;
+            return MeasuredLengths[gridTrack.VariantAutoLengthIndex];
         }
 
         internal void SetMeasuredLength(GridTrack gridTrack, double value)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            if (value == 0)
-                MeasuredLengths.Remove(gridTrack);
-            else
-                MeasuredLengths[gridTrack] = value;
+            MeasuredLengths[gridTrack.VariantAutoLengthIndex] = value;
         }
 
         internal UIElement this[BlockItem blockItem]
