@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,11 +18,7 @@ namespace DevZest.Data.Windows
         public BlockView()
         {
             Index = -1;
-            Id = ++s_id;
         }
-
-        private static int s_id = 0;
-        public int Id { get; private set; }
 
         internal void Initialize(ElementManager elementManager, int index)
         {
