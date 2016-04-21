@@ -177,14 +177,14 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
+            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
         }
 
         protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
             if (blockView != null && gridTrack.IsVariantAutoLength)
             {
-                blockView.SetMeasuredLength(gridTrack, value);
+                blockView.SetAutoLength(gridTrack, value);
                 return false;
             }
             else
@@ -196,7 +196,7 @@ namespace DevZest.Data.Windows.Primitives
             if (VariantAutoLengthTracks.Count > 0)
             {
                 for (int i = 0; i < BlockViews.Count; i++)
-                    BlockViews[i].ClearMeasuredLengths();
+                    BlockViews[i].ClearAutoLengths();
             }
 
             RefreshExtentSize();

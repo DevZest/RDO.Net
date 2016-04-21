@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
         internal void Cleanup()
         {
             ClearElements();
-            ClearMeasuredLengths();
+            ClearAutoLengths();
             Index = -1;
             ElementManager = null;
         }
@@ -244,35 +244,54 @@ namespace DevZest.Data.Windows
             blockItem.UpdateTarget(element);
         }
 
-        private double[] _measuredLengths;
-        private double[] MeasuredLengths
+        private double[] _cumulativeAutoLengths;
+        private double[] CumulativeAutoLengths
         {
             get
             {
                 Debug.Assert(LayoutManagerXY.VariantAutoLengthTracks.Count > 0);
-                return _measuredLengths ?? (_measuredLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
+                return _cumulativeAutoLengths ?? (_cumulativeAutoLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
             }
         }
 
-        internal void ClearMeasuredLengths()
+        internal void ClearAutoLengths()
         {
-            if (_measuredLengths != null)
+            if (_cumulativeAutoLengths != null)
             {
-                for (int i = 0; i < _measuredLengths.Length; i++)
-                    _measuredLengths[i] = 0;
+                for (int i = 0; i < _cumulativeAutoLengths.Length; i++)
+                    _cumulativeAutoLengths[i] = 0;
             }
         }
 
-        internal double GetMeasuredLength(GridTrack gridTrack)
+        internal double GetAutoLength(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            return MeasuredLengths[gridTrack.VariantAutoLengthIndex];
+            int index = gridTrack.VariantAutoLengthIndex;
+            return index == 0 ? CumulativeAutoLengths[0] : CumulativeAutoLengths[index] - CumulativeAutoLengths[index - 1];
         }
 
-        internal void SetMeasuredLength(GridTrack gridTrack, double value)
+        internal void SetAutoLength(GridTrack gridTrack, double value)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            MeasuredLengths[gridTrack.VariantAutoLengthIndex] = value;
+            var oldValue = GetAutoLength(gridTrack);
+            var delta = value - oldValue;
+            if (delta == 0)
+                return;
+
+            var index = gridTrack.VariantAutoLengthIndex;
+            for (int i = index; i < CumulativeAutoLengths.Length; i++)
+                CumulativeAutoLengths[i] += delta;
+        }
+
+        internal double GetCumulativeAutoLength(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
+            return CumulativeAutoLengths[gridTrack.VariantAutoLengthIndex];
+        }
+
+        internal double CumulativeAutoLength
+        {
+            get { return _cumulativeAutoLengths == null ? 0 : _cumulativeAutoLengths[_cumulativeAutoLengths.Length - 1]; }
         }
 
         internal UIElement this[BlockItem blockItem]
