@@ -1,7 +1,5 @@
-﻿using DevZest.Data.Windows.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives

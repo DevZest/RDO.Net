@@ -4,16 +4,15 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Xps.Serialization;
 
-namespace DevZest.Data.Windows.Utilities
+namespace DevZest
 {
-    internal static class UIElementExtensions
+    internal static partial class UIElementExtensions
     {
         /// <summary>
         /// Render a UIElement such that the visual tree is generated, 
-        /// without actually displaying the UIElement
-        /// anywhere
+        /// without actually displaying the UIElement anywhere
         /// </summary>
-        public static void CreateVisualTree(this UIElement element)
+        internal static void CreateVisualTree(this UIElement element)
         {
             if (LogicalTreeHelper.GetParent(element) != null)
                 return;
@@ -26,8 +25,11 @@ namespace DevZest.Data.Windows.Utilities
             fixedDoc.Pages.Add(pageContent);
 
             var f = new XpsSerializerFactory();
-            var w = f.CreateSerializerWriter(new MemoryStream());
-            w.Write(fixedDoc);
+            using (var stream = new MemoryStream())
+            {
+                var w = f.CreateSerializerWriter(stream);
+                w.Write(fixedDoc);
+            }
         }
     }
 }
