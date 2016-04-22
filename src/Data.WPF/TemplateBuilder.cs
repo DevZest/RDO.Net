@@ -98,12 +98,12 @@ namespace DevZest.Data.Windows
             get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
-        public TemplateBuilder Fix(int left = 0, int top = 0, int right = 0, int bottom = 0)
+        public TemplateBuilder Freeze(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
-            Template.FixedLeft = left;
-            Template.FixedTop = top;
-            Template.FixedRight = right;
-            Template.FixedBottom = bottom;
+            Template.FrozenLeft = left;
+            Template.FrozenTop = top;
+            Template.FrozenRight = right;
+            Template.FrozenBottom = bottom;
             return this;
         }
 

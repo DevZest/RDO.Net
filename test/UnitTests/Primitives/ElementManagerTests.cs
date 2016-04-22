@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             builder.AddGridColumns("100", "100")
                 .AddGridRows("100", "100", "100")
-                .Fix(top: fixedTop, bottom: fixedBottom)
+                .Freeze(top: fixedTop, bottom: fixedBottom)
                 .Layout(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))

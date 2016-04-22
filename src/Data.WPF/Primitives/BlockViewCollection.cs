@@ -58,12 +58,12 @@ namespace DevZest.Data.Windows.Primitives
 
         public BlockView FirstScrollable
         {
-            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FixedHeadBlockCount]; }
+            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FrozenHeadBlockCount]; }
         }
 
         public BlockView LastScrollable
         {
-            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FixedHeadBlockCount + ScrollableBlockCount - 1]; }
+            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FrozenHeadBlockCount + ScrollableBlockCount - 1]; }
         }
 
         private IReadOnlyList<RowPresenter> Rows
@@ -102,39 +102,39 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(ordinal >= 0 && ordinal < MaxBlockCount);
 
-            if (ordinal < FixedHeadBlockCount)
+            if (ordinal < FrozenHeadBlockCount)
                 return ordinal;
 
-            var fixedTailStartOrdinal = MaxBlockCount - FixedTailBlockCount;
-            if (ordinal >= fixedTailStartOrdinal)
-                return FixedHeadBlockCount + ScrollableBlockCount + (ordinal - fixedTailStartOrdinal);
+            var frozenTailStartOrdinal = MaxBlockCount - FrozenTailBlockCount;
+            if (ordinal >= frozenTailStartOrdinal)
+                return FrozenHeadBlockCount + ScrollableBlockCount + (ordinal - frozenTailStartOrdinal);
 
             var firstScrollable = FirstScrollable;
             if (firstScrollable == null)
                 return -1;
 
             if (ordinal >= firstScrollable.Ordinal && ordinal <= LastScrollable.Ordinal)
-                return FixedHeadBlockCount + (ordinal - firstScrollable.Ordinal);
+                return FrozenHeadBlockCount + (ordinal - firstScrollable.Ordinal);
             return -1;
         }
 
-        private int _fixedHeadBlockCount = -1;
-        public int FixedHeadBlockCount
+        private int _frozenHeadBlockCount = -1;
+        public int FrozenHeadBlockCount
         {
             get
             {
                 EnsureInitialized();
-                return _fixedHeadBlockCount;
+                return _frozenHeadBlockCount;
             }
         }
 
-        private int _fixedTailBlockCount = -1;
-        public int FixedTailBlockCount
+        private int _frozenTailBlockCount = -1;
+        public int FrozenTailBlockCount
         {
             get
             {
                 EnsureInitialized();
-                return _fixedTailBlockCount;
+                return _frozenTailBlockCount;
             }
         }
 
@@ -145,24 +145,24 @@ namespace DevZest.Data.Windows.Primitives
             if (IsInitialized)
                 return;
 
-            _fixedHeadBlockCount = CoerceFixedHeadBlockCount();
-            Debug.Assert(FixedHeadBlockCount >= 0);
-            for (int i = 0; i < _fixedHeadBlockCount; i++)
+            _frozenHeadBlockCount = CoerceFrozenHeadBlockCount();
+            Debug.Assert(FrozenHeadBlockCount >= 0);
+            for (int i = 0; i < _frozenHeadBlockCount; i++)
             {
                 var blockView = Realize(i);
                 Insert(BlockViewStartIndex + i, blockView);
             }
 
-            _fixedTailBlockCount = CoerceFixedTailBlockCount();
-            Debug.Assert(FixedTailBlockCount >= 0);
-            if (_fixedTailBlockCount == 0)
+            _frozenTailBlockCount = CoerceFrozenTailBlockCount();
+            Debug.Assert(FrozenTailBlockCount >= 0);
+            if (_frozenTailBlockCount == 0)
                 return;
 
-            var startIndex = MaxBlockCount - _fixedTailBlockCount;
-            for (int i = 0; i < _fixedTailBlockCount; i++)
+            var startIndex = MaxBlockCount - _frozenTailBlockCount;
+            for (int i = 0; i < _frozenTailBlockCount; i++)
             {
                 var blockView = Realize(i + startIndex);
-                Insert(BlockViewStartIndex + _fixedHeadBlockCount + i, blockView);
+                Insert(BlockViewStartIndex + _frozenHeadBlockCount + i, blockView);
             }
         }
 
@@ -176,23 +176,23 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.Orientation; }
         }
 
-        private int FixedHeadLastTrack
+        private int FrozenHeadLastTrack
         {
             get
             {
                 Debug.Assert(Orientation.HasValue);
-                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FixedTop : Template.FixedLeft) - 1;
+                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FrozenTop : Template.FrozenLeft) - 1;
             }
         }
 
-        private int FixedTailFirstTrack
+        private int FrozenTailFirstTrack
         {
             get
             {
                 Debug.Assert(Orientation.HasValue);
-                var fixedTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FixedBottom : Template.FixedRight;
+                var frozenTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FrozenBottom : Template.FrozenRight;
                 var lastTrackOrdinal = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.Range().Bottom.Ordinal : Template.Range().Right.Ordinal;
-                return lastTrackOrdinal - fixedTail + 1;
+                return lastTrackOrdinal - frozenTail + 1;
             }
         }
 
@@ -224,47 +224,47 @@ namespace DevZest.Data.Windows.Primitives
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
         }
 
-        private int CoerceFixedHeadBlockCount()
+        private int CoerceFrozenHeadBlockCount()
         {
             if (!Template.Orientation.HasValue)
                 return 0;
 
-            var fixedHeadLastTrack = FixedHeadLastTrack;
+            var frozenHeadLastTrack = FrozenHeadLastTrack;
             var rowRangeStartTrack = RowRangeStartTrack;
-            if (fixedHeadLastTrack < rowRangeStartTrack)
+            if (frozenHeadLastTrack < rowRangeStartTrack)
                 return 0;
 
-            var repeatTracks = fixedHeadLastTrack - rowRangeStartTrack + 1;
+            var repeatTracks = frozenHeadLastTrack - rowRangeStartTrack + 1;
             var rowRangeTracks = RowRangeTracks;
             var blockCount = ((repeatTracks - 1) / rowRangeTracks) + 1;
             return Math.Min(blockCount, MaxBlockCount);
         }
 
-        private int CoerceFixedTailBlockCount()
+        private int CoerceFrozenTailBlockCount()
         {
             if (!Template.Orientation.HasValue)
                 return 0;
 
-            var fixedTailFirstTrack = FixedTailFirstTrack;
+            var frozenTailFirstTrack = FrozenTailFirstTrack;
             var rowRangeEndTrack = RowRangeEndTrack;
-            if (fixedTailFirstTrack > rowRangeEndTrack)
+            if (frozenTailFirstTrack > rowRangeEndTrack)
                 return 0;
 
-            var repeatTracks = rowRangeEndTrack - fixedTailFirstTrack + 1;
+            var repeatTracks = rowRangeEndTrack - frozenTailFirstTrack + 1;
             var rowRangeTracks = RowRangeTracks;
             var blockCount = ((repeatTracks - 1) / rowRangeTracks) + 1;
-            return Math.Min(blockCount, Math.Max(0, MaxBlockCount - FixedHeadBlockCount));
+            return Math.Min(blockCount, Math.Max(0, MaxBlockCount - FrozenHeadBlockCount));
 
         }
 
         public bool IsInitialized
         {
-            get { return _fixedHeadBlockCount >= 0; }
+            get { return _frozenHeadBlockCount >= 0; }
         }
 
         public int Count
         {
-            get { return FixedHeadBlockCount + ScrollableBlockCount + FixedTailBlockCount; }
+            get { return FrozenHeadBlockCount + ScrollableBlockCount + FrozenTailBlockCount; }
         }
 
         public BlockView this[int index]
@@ -302,28 +302,28 @@ namespace DevZest.Data.Windows.Primitives
         internal void RealizeFirst(int index)
         {
             EnsureInitialized();
-            Debug.Assert(ScrollableBlockCount == 0 && index >= FixedHeadBlockCount && index < MaxBlockCount - FixedTailBlockCount);
+            Debug.Assert(ScrollableBlockCount == 0 && index >= FrozenHeadBlockCount && index < MaxBlockCount - FrozenTailBlockCount);
 
             var blockView = Realize(index);
-            Insert(BlockViewStartIndex + FixedHeadBlockCount, blockView);
+            Insert(BlockViewStartIndex + FrozenHeadBlockCount, blockView);
             ScrollableBlockCount = 1;
         }
 
         internal void RealizePrev()
         {
-            Debug.Assert(FirstScrollable != null && FirstScrollable.Ordinal - 1 >= FixedHeadBlockCount);
+            Debug.Assert(FirstScrollable != null && FirstScrollable.Ordinal - 1 >= FrozenHeadBlockCount);
 
             var blockView = Realize(FirstScrollable.Ordinal - 1);
-            Insert(BlockViewStartIndex + FixedHeadBlockCount, blockView);
+            Insert(BlockViewStartIndex + FrozenHeadBlockCount, blockView);
             ScrollableBlockCount++;
         }
 
         internal void RealizeNext()
         {
-            Debug.Assert(LastScrollable != null && LastScrollable.Ordinal + 1 < MaxBlockCount - FixedTailBlockCount);
+            Debug.Assert(LastScrollable != null && LastScrollable.Ordinal + 1 < MaxBlockCount - FrozenTailBlockCount);
 
             var blockView = Realize(LastScrollable.Ordinal + 1);
-            Insert(BlockViewStartIndex + FixedHeadBlockCount + ScrollableBlockCount, blockView);
+            Insert(BlockViewStartIndex + FrozenHeadBlockCount + ScrollableBlockCount, blockView);
             ScrollableBlockCount++;
         }
 
@@ -335,9 +335,9 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             for (int i = 0; i < count; i++)
-                Virtualize(this[FixedHeadBlockCount + i]);
+                Virtualize(this[FrozenHeadBlockCount + i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex + FixedHeadBlockCount, count);
+            ElementCollection.RemoveRange(BlockViewStartIndex + FrozenHeadBlockCount, count);
             ScrollableBlockCount -= count;
         }
 
@@ -350,9 +350,9 @@ namespace DevZest.Data.Windows.Primitives
 
             var offset = ScrollableBlockCount - count;
             for (int i = 0; i < count; i++)
-                Virtualize(this[FixedHeadBlockCount + offset + i]);
+                Virtualize(this[FrozenHeadBlockCount + offset + i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex + FixedHeadBlockCount + offset, count);
+            ElementCollection.RemoveRange(BlockViewStartIndex + FrozenHeadBlockCount + offset, count);
             ScrollableBlockCount -= count;
         }
 
@@ -365,7 +365,7 @@ namespace DevZest.Data.Windows.Primitives
                 Virtualize(this[i]);
             ElementCollection.RemoveRange(BlockViewStartIndex, Count);
 
-            _fixedHeadBlockCount = _fixedTailBlockCount = -1;
+            _frozenHeadBlockCount = _frozenTailBlockCount = -1;
             ScrollableBlockCount = 0;
         }
     }

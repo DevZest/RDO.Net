@@ -353,13 +353,13 @@ namespace DevZest.Data.Windows.Primitives
             get { return HierarchicalModelOrdinal >= 0; }
         }
 
-        public int FixedLeft { get; internal set; }
+        public int FrozenLeft { get; internal set; }
 
-        public int FixedTop { get; internal set; }
+        public int FrozenTop { get; internal set; }
 
-        public int FixedRight { get; internal set; }
+        public int FrozenRight { get; internal set; }
 
-        public int FixedBottom { get; internal set; }
+        public int FrozenBottom { get; internal set; }
 
         private Func<BlockView> _blockViewConstructor;
         public Func<BlockView> BlockViewConstructor
