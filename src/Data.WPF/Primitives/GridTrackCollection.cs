@@ -90,7 +90,7 @@ namespace DevZest.Data.Windows.Primitives
 
             _isOffsetValid = true;  // prevent re-entrance
             for (int i = 1; i < Count; i++)
-                this[i].StartOffset = this[i - 1].StartOffset + this[i - 1].MeasuredLength;
+                this[i].StartOffset = this[i - 1].EndOffset;
         }
     }
 }

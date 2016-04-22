@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows
             ClearElements();
             Index = -1;
             ElementManager = null;
-            ClearAutoLengths();
+            ClearMeasuredAutoLengths();
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -256,55 +256,65 @@ namespace DevZest.Data.Windows
             blockItem.UpdateTarget(element);
         }
 
-        private double[] _cumulativeAutoLengths;
-        private double[] CumulativeAutoLengths
+        private double[] _cumulativeMeasuredAutoLengths;
+        private double[] CumulativeMeasuredAutoLengths
         {
             get
             {
                 Debug.Assert(LayoutManagerXY.VariantAutoLengthTracks.Count > 0);
-                return _cumulativeAutoLengths ?? (_cumulativeAutoLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
+                return _cumulativeMeasuredAutoLengths ?? (_cumulativeMeasuredAutoLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
             }
         }
 
-        internal void ClearAutoLengths()
+        internal void ClearMeasuredAutoLengths()
         {
-            if (_cumulativeAutoLengths != null)
+            if (_cumulativeMeasuredAutoLengths != null)
             {
-                for (int i = 0; i < _cumulativeAutoLengths.Length; i++)
-                    _cumulativeAutoLengths[i] = 0;
+                for (int i = 0; i < _cumulativeMeasuredAutoLengths.Length; i++)
+                    _cumulativeMeasuredAutoLengths[i] = 0;
             }
         }
 
-        internal double GetAutoLength(GridTrack gridTrack)
+        internal double GetMeasuredAutoLength(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
             int index = gridTrack.VariantAutoLengthIndex;
-            return index == 0 ? CumulativeAutoLengths[0] : CumulativeAutoLengths[index] - CumulativeAutoLengths[index - 1];
+            return index == 0 ? CumulativeMeasuredAutoLengths[0] : CumulativeMeasuredAutoLengths[index] - CumulativeMeasuredAutoLengths[index - 1];
         }
 
-        internal void SetAutoLength(GridTrack gridTrack, double value)
+        internal void SetMeasuredAutoLength(GridTrack gridTrack, double value)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            var oldValue = GetAutoLength(gridTrack);
+            var oldValue = GetMeasuredAutoLength(gridTrack);
             var delta = value - oldValue;
             if (delta == 0)
                 return;
 
             var index = gridTrack.VariantAutoLengthIndex;
-            for (int i = index; i < CumulativeAutoLengths.Length; i++)
-                CumulativeAutoLengths[i] += delta;
+            for (int i = index; i < CumulativeMeasuredAutoLengths.Length; i++)
+                CumulativeMeasuredAutoLengths[i] += delta;
+            LayoutManagerXY.InvalidateVariantAutoLengthOffset();
         }
 
-        internal double TotalAutoLength
+        internal double TotalMeasuredAutoLength
         {
-            get { return _cumulativeAutoLengths == null ? 0 : _cumulativeAutoLengths[_cumulativeAutoLengths.Length - 1]; }
+            get { return _cumulativeMeasuredAutoLengths == null ? 0 : _cumulativeMeasuredAutoLengths[_cumulativeMeasuredAutoLengths.Length - 1]; }
         }
 
-        internal double StartAutoLengthOffset { get; set; }
-
-        internal double EndAutoLengthOffset
+        private double _startMeasuredAutoLengthOffset;
+        internal double StartMeasuredAutoLengthOffset
         {
-            get { return StartAutoLengthOffset + TotalAutoLength; }
+            get
+            {
+                LayoutManagerXY.InvalidateVariantAutoLengthOffset();
+                return _startMeasuredAutoLengthOffset;
+            }
+            set { _startMeasuredAutoLengthOffset = value; }
+        }
+
+        internal double EndMeasuredAutoLengthOffset
+        {
+            get { return StartMeasuredAutoLengthOffset + TotalMeasuredAutoLength; }
         }
 
         internal UIElement this[BlockItem blockItem]

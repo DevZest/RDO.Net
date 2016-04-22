@@ -178,18 +178,34 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
+            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
         }
 
         protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
             if (blockView != null && gridTrack.IsVariantAutoLength)
             {
-                blockView.SetAutoLength(gridTrack, value);
+                blockView.SetMeasuredAutoLength(gridTrack, value);
                 return false;
             }
             else
                 return base.SetMeasuredAutoLength(blockView, gridTrack, value);
+        }
+
+        private bool _isVariantAutoLengthOffsetValid = true;
+        internal void InvalidateVariantAutoLengthOffset()
+        {
+            _isVariantAutoLengthOffsetValid = false;
+        }
+
+        internal void RefreshVariantAutoLengthOffset()
+        {
+            if (_isVariantAutoLengthOffsetValid)
+                return;
+
+            _isVariantAutoLengthOffsetValid = true; // Avoid re-entrance
+            for (int i = 1; i < BlockViews.Count; i++)
+                BlockViews[i].StartMeasuredAutoLengthOffset = BlockViews[i - 1].EndMeasuredAutoLengthOffset;
         }
 
         protected sealed override void PrepareMeasureBlocks()
@@ -197,7 +213,7 @@ namespace DevZest.Data.Windows.Primitives
             if (VariantAutoLengthTracks.Count > 0)
             {
                 for (int i = 0; i < BlockViews.Count; i++)
-                    BlockViews[i].ClearAutoLengths();
+                    BlockViews[i].ClearMeasuredAutoLengths();
             }
 
             RefreshExtentSize();
