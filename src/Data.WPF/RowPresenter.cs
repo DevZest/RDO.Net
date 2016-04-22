@@ -43,6 +43,11 @@ namespace DevZest.Data.Windows
             }
         }
 
+        internal ElementManager ElementManager
+        {
+            get { return RowManager as ElementManager; }
+        }
+
         internal LayoutManager LayoutManager
         {
             get { return RowManager as LayoutManager; }
@@ -563,6 +568,11 @@ namespace DevZest.Data.Windows
                 var element = Elements[i];
                 rowItem.UpdateTarget(element);
             }
+        }
+
+        internal int BlockOrdinal
+        {
+            get { return Ordinal / ElementManager.BlockDimensions; }
         }
     }
 }

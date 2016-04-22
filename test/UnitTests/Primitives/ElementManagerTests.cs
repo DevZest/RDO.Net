@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows.Primitives
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))
                 [1, 0].BeginDataItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).End()
-                [0, 1].BeginBlockItem<TextBlock>().Bind((s, e) => e.Text = s.Index.ToString()).End()
+                [0, 1].BeginBlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).End()
                 [1, 1].BeginRowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).End()
                 [1, 2].BeginDataItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End();
         }

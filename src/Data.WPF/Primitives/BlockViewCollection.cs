@@ -93,27 +93,33 @@ namespace DevZest.Data.Windows.Primitives
                 if (Count == 0)
                     return null;
 
-                var index = row.Ordinal / BlockDimensions;
-
-                if (index < FixedHeadBlockCount)
-                    return this[index];
-
-                var fixedTailStartIndex = MaxBlockCount - FixedTailBlockCount;
-                if (index >= fixedTailStartIndex)
-                    return this[FixedHeadBlockCount + ScrollableBlockCount + (index - fixedTailStartIndex)];
-
-                var firstScrollable = FirstScrollable;
-                if (firstScrollable == null)
-                    return null;
-
-                if (index >= firstScrollable.Index && index <= LastScrollable.Index)
-                    return this[FixedHeadBlockCount + (index - firstScrollable.Index)];
-                return null;
+                var index = IndexOf(row.BlockOrdinal);
+                return index == -1 ? null : this[index];
             }
         }
 
+        internal int IndexOf(int ordinal)
+        {
+            Debug.Assert(ordinal >= 0 && ordinal < MaxBlockCount);
+
+            if (ordinal < FixedHeadBlockCount)
+                return ordinal;
+
+            var fixedTailStartIndex = MaxBlockCount - FixedTailBlockCount;
+            if (ordinal >= fixedTailStartIndex)
+                return FixedHeadBlockCount + ScrollableBlockCount + (ordinal - fixedTailStartIndex);
+
+            var firstScrollable = FirstScrollable;
+            if (firstScrollable == null)
+                return -1;
+
+            if (ordinal >= firstScrollable.Ordinal && ordinal <= LastScrollable.Ordinal)
+                return FixedHeadBlockCount + (ordinal - firstScrollable.Ordinal);
+            return -1;
+        }
+
         private int _fixedHeadBlockCount = -1;
-        public int FixedHeadBlockCount
+        private int FixedHeadBlockCount
         {
             get
             {
@@ -123,7 +129,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private int _fixedTailBlockCount = -1;
-        public int FixedTailBlockCount
+        private int FixedTailBlockCount
         {
             get
             {
@@ -305,18 +311,18 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void RealizePrev()
         {
-            Debug.Assert(FirstScrollable != null && FirstScrollable.Index - 1 >= FixedHeadBlockCount);
+            Debug.Assert(FirstScrollable != null && FirstScrollable.Ordinal - 1 >= FixedHeadBlockCount);
 
-            var blockView = Realize(FirstScrollable.Index - 1);
+            var blockView = Realize(FirstScrollable.Ordinal - 1);
             Insert(BlockViewStartIndex + FixedHeadBlockCount, blockView);
             ScrollableBlockCount++;
         }
 
         internal void RealizeNext()
         {
-            Debug.Assert(LastScrollable != null && LastScrollable.Index + 1 < MaxBlockCount - FixedTailBlockCount);
+            Debug.Assert(LastScrollable != null && LastScrollable.Ordinal + 1 < MaxBlockCount - FixedTailBlockCount);
 
-            var blockView = Realize(LastScrollable.Index + 1);
+            var blockView = Realize(LastScrollable.Ordinal + 1);
             Insert(BlockViewStartIndex + FixedHeadBlockCount + ScrollableBlockCount, blockView);
             ScrollableBlockCount++;
         }

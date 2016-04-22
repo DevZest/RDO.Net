@@ -17,14 +17,14 @@ namespace DevZest.Data.Windows
 
         public BlockView()
         {
-            Index = -1;
+            Ordinal = -1;
         }
 
-        internal void Initialize(ElementManager elementManager, int index)
+        internal void Initialize(ElementManager elementManager, int ordinal)
         {
             Debug.Assert(ElementManager == null);
             ElementManager = elementManager;
-            Index = index;
+            Ordinal = ordinal;
             if (ElementCollection != null)
                 InitializeElements();
         }
@@ -32,7 +32,7 @@ namespace DevZest.Data.Windows
         internal void Cleanup()
         {
             ClearElements();
-            Index = -1;
+            Ordinal = -1;
             ElementManager = null;
             ClearMeasuredAutoLengths();
         }
@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows
             get { return ElementManager == null ? 1 : ElementManager.BlockDimensions; }
         }
 
-        public int Index { get; private set; }
+        public int Ordinal { get; private set; }
 
         public int Count
         {
@@ -74,7 +74,7 @@ namespace DevZest.Data.Windows
                     return 0;
 
                 var blockDimensions = ElementManager.BlockDimensions;
-                var nextBlockFirstRowOrdinal = (Index + 1) * blockDimensions;
+                var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
                 var rowCount = ElementManager.Rows.Count;
                 return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
             }
@@ -87,7 +87,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ElementManager.Rows[Index * ElementManager.BlockDimensions + index];
+                return ElementManager.Rows[Ordinal * ElementManager.BlockDimensions + index];
             }
         }
 
@@ -152,7 +152,7 @@ namespace DevZest.Data.Windows
 
             for (int i = 0; i < ElementManager.BlockDimensions; i++)
             {
-                var success = AddElement(Index, i);
+                var success = AddElement(Ordinal, i);
                 if (!success)   // Exceeded the total count of the rows
                     break;
             }
