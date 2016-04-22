@@ -105,9 +105,9 @@ namespace DevZest.Data.Windows.Primitives
             if (ordinal < FixedHeadBlockCount)
                 return ordinal;
 
-            var fixedTailStartIndex = MaxBlockCount - FixedTailBlockCount;
-            if (ordinal >= fixedTailStartIndex)
-                return FixedHeadBlockCount + ScrollableBlockCount + (ordinal - fixedTailStartIndex);
+            var fixedTailStartOrdinal = MaxBlockCount - FixedTailBlockCount;
+            if (ordinal >= fixedTailStartOrdinal)
+                return FixedHeadBlockCount + ScrollableBlockCount + (ordinal - fixedTailStartOrdinal);
 
             var firstScrollable = FirstScrollable;
             if (firstScrollable == null)
