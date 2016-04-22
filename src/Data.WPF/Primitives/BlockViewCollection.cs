@@ -119,7 +119,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private int _fixedHeadBlockCount = -1;
-        private int FixedHeadBlockCount
+        public int FixedHeadBlockCount
         {
             get
             {
@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private int _fixedTailBlockCount = -1;
-        private int FixedTailBlockCount
+        public int FixedTailBlockCount
         {
             get
             {
