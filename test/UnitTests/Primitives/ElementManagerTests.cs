@@ -33,10 +33,10 @@ namespace DevZest.Data.Windows.Primitives
                 .Layout(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))
-                [1, 0].BeginDataItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).End()
+                [1, 0].BeginScalarItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).End()
                 [0, 1].BeginBlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).End()
                 [1, 1].BeginRowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).End()
-                [1, 2].BeginDataItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End();
+                [1, 2].BeginScalarItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End();
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
@@ -70,21 +70,21 @@ namespace DevZest.Data.Windows.Primitives
             var rows = elementManager.Rows;
 
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockDimensions = 3;
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeFirst(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -97,14 +97,14 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizePrev();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -129,14 +129,14 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeNext();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -170,21 +170,21 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[7].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockDimensions = 2;
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeFirst(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -194,13 +194,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizePrev();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -219,13 +219,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeNext();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -253,13 +253,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeHead(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -278,13 +278,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeTail(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -294,15 +294,15 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeAll();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.ClearElements();
@@ -321,14 +321,14 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.BlockViews.RealizeFirst(1);
             dataSet._.Name[1] = "CHANGED NAME";
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
                     .Verify((RowView r) => r.RowPresenter.Elements
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], "CHANGED NAME"))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
         }
 
@@ -343,7 +343,7 @@ namespace DevZest.Data.Windows.Primitives
 
             elementManager.BlockViews.EnsureInitialized();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -362,13 +362,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockDimensions = 2;
             elementManager.BlockViews.EnsureInitialized();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -393,13 +393,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeFirst(5);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -433,13 +433,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizePrev();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -482,13 +482,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.RealizeNext();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -540,13 +540,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeHead(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -589,13 +589,13 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeTail(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
                     .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
                     .Verify((RowView r) => r.RowPresenter.Elements
@@ -629,15 +629,15 @@ namespace DevZest.Data.Windows.Primitives
                         .Verify((TextBlock t) => Verify(t, template.RowItemGroups[0][0], rows[18].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViews.VirtualizeAll();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.DataItems[0], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.DataItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.ClearElements();

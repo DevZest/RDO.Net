@@ -52,38 +52,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// DataItems[{index}] intersects with RowRange.
-        /// </summary>
-        public static string DataItem_IntersectsWithRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_IntersectsWithRowRange", "index"), index);
-        }
-
-        /// <summary>
-        /// Multidimensional DataItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
-        /// </summary>
-        public static string DataItem_OneDimensionalTemplate(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OneDimensionalTemplate", "index"), index);
-        }
-
-        /// <summary>
-        /// Multidimensional DataItems[{index}] is out of horizontal side of RowRange.
-        /// </summary>
-        public static string DataItem_OutOfHorizontalRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OutOfHorizontalRowRange", "index"), index);
-        }
-
-        /// <summary>
-        /// Multidimensional DataItems[{index}] is out of vertical side of RowRange.
-        /// </summary>
-        public static string DataItem_OutOfVerticalRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DataItem_OutOfVerticalRowRange", "index"), index);
-        }
-
-        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)
@@ -161,6 +129,38 @@ namespace DevZest.Data.Windows
         public static string RowPresenter_VerifyHierarchical
         {
             get { return GetString("RowPresenter_VerifyHierarchical"); }
+        }
+
+        /// <summary>
+        /// ScalarItems[{index}] intersects with RowRange.
+        /// </summary>
+        public static string ScalarItem_IntersectsWithRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_IntersectsWithRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional ScalarItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
+        /// </summary>
+        public static string ScalarItem_OneDimensionalTemplate(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OneDimensionalTemplate", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional ScalarItems[{index}] is out of horizontal side of RowRange.
+        /// </summary>
+        public static string ScalarItem_OutOfHorizontalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OutOfHorizontalRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// Multidimensional ScalarItems[{index}] is out of vertical side of RowRange.
+        /// </summary>
+        public static string ScalarItem_OutOfVerticalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OutOfVerticalRowRange", "index"), index);
         }
 
         /// <summary>

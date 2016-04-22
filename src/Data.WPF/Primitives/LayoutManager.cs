@@ -31,9 +31,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal DataPresenter DataPresenter { get; private set; }
 
-        private TemplateItemCollection<DataItem> DataItems
+        private TemplateItemCollection<ScalarItem> ScalarItems
         {
-            get { return Template.InternalDataItems; }
+            get { return Template.InternalScalarItems; }
         }
 
         private TemplateItemCollection<BlockItem> BlockItems
@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows.Primitives
             return true;
         }
 
-        protected abstract Size GetMeasuredSize(DataItem dataItem);
+        protected abstract Size GetMeasuredSize(ScalarItem scalarItem);
 
         protected abstract Size GetMeasuredSize(BlockView blockView, GridRange gridRange);
 
@@ -145,12 +145,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure()
         {
-            foreach (var dataItem in DataItems.AutoSizeItems)
+            foreach (var scalarItem in ScalarItems.AutoSizeItems)
             {
-                Debug.Assert(dataItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional DataItem.");
-                var element = dataItem[0];
-                element.Measure(dataItem.AvailableAutoSize);
-                UpdateAutoSize(null, dataItem, element.DesiredSize);
+                Debug.Assert(scalarItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional ScalarItem.");
+                var element = scalarItem[0];
+                element.Measure(scalarItem.AvailableAutoSize);
+                UpdateAutoSize(null, scalarItem, element.DesiredSize);
             }
 
             IsPreparingMeasure = true;
@@ -162,12 +162,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private Size FinalizeMeasure()
         {
-            foreach (var dataItem in DataItems)
+            foreach (var scalarItem in ScalarItems)
             {
-                for (int i = 0; i < dataItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
-                    var element = dataItem[i];
-                    element.Measure(GetMeasuredSize(dataItem));
+                    var element = scalarItem[i];
+                    element.Measure(GetMeasuredSize(scalarItem));
                 }
             }
 
@@ -263,21 +263,21 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Point Offset(Point point, int blockDimension);
 
-        internal Rect GetArrangeRect(DataItem dataItem, int blockDimension)
+        internal Rect GetArrangeRect(ScalarItem scalarItem, int blockDimension)
         {
-            var size = GetMeasuredSize(dataItem);
-            var point = Offset(dataItem.GridRange.MeasuredPoint, blockDimension);
+            var size = GetMeasuredSize(scalarItem);
+            var point = Offset(scalarItem.GridRange.MeasuredPoint, blockDimension);
             return new Rect(point, size);
         }
 
         internal Size Arrange(Size finalSize)
         {
-            foreach (var dataItem in DataItems)
+            foreach (var scalarItem in ScalarItems)
             {
-                for (int i = 0; i < dataItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
-                    var element = dataItem[i];
-                    element.Arrange(GetArrangeRect(dataItem, i));
+                    var element = scalarItem[i];
+                    element.Arrange(GetArrangeRect(scalarItem, i));
                 }
             }
 

@@ -95,10 +95,10 @@ namespace DevZest.Data.Windows.Primitives
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
-            var dataItems = Template.DataItems;
-            for (int i = 0; i < dataItems.Count; i++)
-                InsertDataElementsAfter(dataItems[i], Elements.Count - 1, 1);
-            BlockViewStartIndex = Template.DataItemsSplit;
+            var scalarItems = Template.ScalarItems;
+            for (int i = 0; i < scalarItems.Count; i++)
+                InsertDataElementsAfter(scalarItems[i], Elements.Count - 1, 1);
+            BlockViewStartIndex = Template.ScalarItemsSplit;
         }
 
         internal void RefreshElements()
@@ -114,13 +114,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshDataElements()
         {
-            var dataItems = Template.DataItems;
-            foreach (var dataItem in dataItems)
+            var scalarItems = Template.ScalarItems;
+            foreach (var scalarItem in scalarItems)
             {
-                for (int i = 0; i < dataItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
-                    var element = dataItem[i];
-                    dataItem.UpdateTarget(element);
+                    var element = scalarItem[i];
+                    scalarItem.UpdateTarget(element);
                 }
             }
         }
@@ -141,37 +141,37 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             BlockViews.VirtualizeAll();
-            var dataItems = Template.DataItems;
-            for (int i = 0; i < dataItems.Count; i++)
+            var scalarItems = Template.ScalarItems;
+            for (int i = 0; i < scalarItems.Count; i++)
             {
-                var dataItem = dataItems[i];
-                dataItem.CumulativeBlockDimensionsDelta = 0;
-                int count = dataItem.IsMultidimensional ? BlockDimensions : 1;
-                RemoveDataElementsAfter(dataItem, -1, count);
+                var scalarItem = scalarItems[i];
+                scalarItem.CumulativeBlockDimensionsDelta = 0;
+                int count = scalarItem.IsMultidimensional ? BlockDimensions : 1;
+                RemoveDataElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
             _blockDimensions = 1;
             ElementCollection = null;
         }
 
-        private int InsertDataElementsAfter(DataItem dataItem, int index, int count)
+        private int InsertDataElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                var element = dataItem.Generate();
+                var element = scalarItem.Generate();
                 ElementCollection.Insert(index + i + 1, element);
-                dataItem.Initialize(element);
+                scalarItem.Initialize(element);
             }
             return index + count;
         }
 
-        private void RemoveDataElementsAfter(DataItem dataItem, int index, int count)
+        private void RemoveDataElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
                 var element = Elements[index + 1];
-                Debug.Assert(element.GetTemplateItem() == dataItem);
-                dataItem.Cleanup(element);
+                Debug.Assert(element.GetTemplateItem() == scalarItem);
+                scalarItem.Cleanup(element);
                 ElementCollection.RemoveAt(index + 1);
             }
         }
@@ -201,27 +201,27 @@ namespace DevZest.Data.Windows.Primitives
 
             var index = -1;
             var delta = 0;
-            var dataItems = Template.DataItems;
-            for (int i = 0; i < dataItems.Count; i++)
+            var scalarItems = Template.ScalarItems;
+            for (int i = 0; i < scalarItems.Count; i++)
             {
                 index++;
-                var dataItem = dataItems[i];
+                var scalarItem = scalarItems[i];
 
-                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : dataItems[i - 1].CumulativeBlockDimensionsDelta;
-                if (!dataItem.IsMultidimensional)
+                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : scalarItems[i - 1].CumulativeBlockDimensionsDelta;
+                if (!scalarItem.IsMultidimensional)
                 {
-                    dataItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
+                    scalarItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
                     continue;
                 }
-                dataItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
+                scalarItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
 
-                if (i < Template.DataItemsSplit)
+                if (i < Template.ScalarItemsSplit)
                     delta += blockDimensionsDelta;
 
                 if (blockDimensionsDelta > 0)
-                    index = InsertDataElementsAfter(dataItem, index, blockDimensionsDelta);
+                    index = InsertDataElementsAfter(scalarItem, index, blockDimensionsDelta);
                 else
-                    RemoveDataElementsAfter(dataItem, index, -blockDimensionsDelta);
+                    RemoveDataElementsAfter(scalarItem, index, -blockDimensionsDelta);
             }
 
             BlockViewStartIndex += delta;

@@ -6,7 +6,7 @@ namespace DevZest.Data.Windows.Factories
     {
         public static TemplateBuilder ColumnHeader(this TemplateItemBuilderFactory builderFactory, Column column, Action<ColumnHeader> initializer = null)
         {
-            return builderFactory.BeginDataItem<ColumnHeader>()
+            return builderFactory.BeginScalarItem<ColumnHeader>()
                 .Initialize(initializer)
                 .End();
         }

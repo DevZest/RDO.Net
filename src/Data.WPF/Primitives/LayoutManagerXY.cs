@@ -210,14 +210,18 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override void PrepareMeasureBlocks()
         {
+
+            RefreshExtentSize();
+            RefreshViewportSize();
+        }
+
+        private void ClearMeasuredAutoLengths()
+        {
             if (VariantAutoLengthTracks.Count > 0)
             {
                 for (int i = 0; i < BlockViews.Count; i++)
                     BlockViews[i].ClearMeasuredAutoLengths();
             }
-
-            RefreshExtentSize();
-            RefreshViewportSize();
         }
 
         private void RefreshExtentSize()

@@ -27,12 +27,12 @@ namespace DevZest.Data.Windows.Primitives
                 return point;
             }
 
-            protected override Size GetMeasuredSize(DataItem dataItem)
+            protected override Size GetMeasuredSize(ScalarItem scalarItem)
             {
-                var gridRange = dataItem.GridRange;
+                var gridRange = scalarItem.GridRange;
                 var width = gridRange.MeasuredWidth;
                 var height = gridRange.MeasuredHeight;
-                if (dataItem.BlockDimensions > 1)
+                if (scalarItem.BlockDimensions > 1)
                     width += Template.RowRange.MeasuredWidth * (BlockDimensions - 1);
                 return new Size(width, height);
             }

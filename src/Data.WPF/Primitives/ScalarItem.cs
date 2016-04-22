@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataItem : TemplateItem
+    public sealed class ScalarItem : TemplateItem
     {
         private sealed class Binding : BindingBase
         {
@@ -51,11 +50,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, DataItem, Builder<T>>
+        public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(TemplateItemBuilderFactory builderFactory, bool isMultidimensional = false)
-                : base(builderFactory, DataItem.Create<T>())
+                : base(builderFactory, ScalarItem.Create<T>())
             {
                 Item.IsMultidimensional = isMultidimensional;
             }
@@ -65,9 +64,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override void AddItem(Template template, GridRange gridRange, DataItem item)
+            internal override void AddItem(Template template, GridRange gridRange, ScalarItem item)
             {
-                template.AddDataItem(gridRange, item);
+                template.AddScalarItem(gridRange, item);
             }
 
             public Builder<T> Bind(Action<DataPresenter, T> updateTarget)
@@ -89,13 +88,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static DataItem Create<T>()
+        internal static ScalarItem Create<T>()
             where T : UIElement, new()
         {
-            return new DataItem(() => new T());
+            return new ScalarItem(() => new T());
         }
 
-        private DataItem(Func<UIElement> constructor)
+        private ScalarItem(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -107,7 +106,7 @@ namespace DevZest.Data.Windows.Primitives
         internal override void VerifyGridRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.DataItem_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarItem_IntersectsWithRowRange(Ordinal));
 
             if (!IsMultidimensional)
                 return;
@@ -115,15 +114,15 @@ namespace DevZest.Data.Windows.Primitives
             if (Template.IsMultidimensional(Orientation.Horizontal))
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.DataItem_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.ScalarItem_OutOfHorizontalRowRange(Ordinal));
             }
             else if (Template.IsMultidimensional(Orientation.Vertical))
             {
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.DataItem_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.ScalarItem_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.DataItem_OneDimensionalTemplate(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarItem_OneDimensionalTemplate(Ordinal));
         }
 
         private ElementManager ElementManager
@@ -144,9 +143,9 @@ namespace DevZest.Data.Windows.Primitives
                     throw new ArgumentOutOfRangeException(nameof(blockDimension));
 
                 var ordinal = Ordinal;
-                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.DataItems[ordinal - 1].CumulativeBlockDimensionsDelta;
+                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.ScalarItems[ordinal - 1].CumulativeBlockDimensionsDelta;
                 var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
-                if (ordinal >= Template.DataItemsSplit)
+                if (ordinal >= Template.ScalarItemsSplit)
                     elementIndex += ElementManager.Blocks.Count;
                 return ElementManager.Elements[elementIndex];
             }

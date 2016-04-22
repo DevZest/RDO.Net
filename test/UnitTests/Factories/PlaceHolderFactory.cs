@@ -4,7 +4,7 @@
     {
         public static TemplateBuilder DataElement(this TemplateItemBuilderFactory builderFactory, bool isMultidimensional = false, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return builderFactory.BeginDataItem<PlaceHolder>(isMultidimensional)
+            return builderFactory.BeginScalarItem<PlaceHolder>(isMultidimensional)
                 .Initialize(x =>
                 {
                     x.DesiredWidth = desiredWidth;

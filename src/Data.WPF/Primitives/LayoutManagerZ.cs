@@ -34,9 +34,9 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Size GetMeasuredSize(DataItem dataItem)
+        protected override Size GetMeasuredSize(ScalarItem scalarItem)
         {
-            return dataItem.GridRange.MeasuredSize;
+            return scalarItem.GridRange.MeasuredSize;
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)

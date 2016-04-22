@@ -101,7 +101,7 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\DataItem.cs" />
+    <Compile Include="Primitives\ScalarItem.cs" />
     <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Utilities\DependencyObject.GetParent.cs" />
     <Compile Include="Primitives\TemplateItem.cs" />

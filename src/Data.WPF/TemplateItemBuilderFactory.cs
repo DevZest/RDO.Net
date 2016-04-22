@@ -29,10 +29,10 @@ namespace DevZest.Data.Windows
             get { return TemplateBuilder.Template; }
         }
 
-        public DataItem.Builder<T> BeginDataItem<T>(bool isMultidimensional = false)
+        public ScalarItem.Builder<T> BeginScalarItem<T>(bool isMultidimensional = false)
             where T : UIElement, new()
         {
-            return new DataItem.Builder<T>(this, isMultidimensional);
+            return new ScalarItem.Builder<T>(this, isMultidimensional);
         }
 
         public BlockItem.Builder<T> BeginBlockItem<T>()

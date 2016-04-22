@@ -69,11 +69,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return InternalGridRows; }
         }
 
-        internal readonly TemplateItemCollection<DataItem> InternalDataItems = new TemplateItemCollection<DataItem>();
+        internal readonly TemplateItemCollection<ScalarItem> InternalScalarItems = new TemplateItemCollection<ScalarItem>();
 
-        public IReadOnlyList<DataItem> DataItems
+        public IReadOnlyList<ScalarItem> ScalarItems
         {
-            get { return InternalDataItems; }
+            get { return InternalScalarItems; }
         }
 
         internal readonly TemplateItemCollection<BlockItem> InternalBlockItems = new TemplateItemCollection<BlockItem>();
@@ -139,8 +139,8 @@ namespace DevZest.Data.Windows.Primitives
                     rowItems[i].VerifyGridRange();
             }
 
-            for (int i = 0; i < DataItems.Count; i++)
-                DataItems[i].VerifyGridRange();
+            for (int i = 0; i < ScalarItems.Count; i++)
+                ScalarItems[i].VerifyGridRange();
 
             for (int i = 0; i < BlockItems.Count; i++)
                 BlockItems[i].VerifyGridRange();
@@ -240,7 +240,7 @@ namespace DevZest.Data.Windows.Primitives
             return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && BlockDimensions != 1;
         }
 
-        internal int DataItemsSplit { get; private set; }
+        internal int ScalarItemsSplit { get; private set; }
 
         internal int BlockItemsSplit { get; private set; }
 
@@ -257,13 +257,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal void AddDataItem(GridRange gridRange, DataItem dataItem)
+        internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
         {
             Debug.Assert(IsValid(gridRange));
-            dataItem.Construct(this, gridRange, InternalDataItems.Count);
-            InternalDataItems.Add(gridRange, dataItem);
+            scalarItem.Construct(this, gridRange, InternalScalarItems.Count);
+            InternalScalarItems.Add(gridRange, scalarItem);
             if (!HasRowItem)
-                DataItemsSplit = InternalDataItems.Count;
+                ScalarItemsSplit = InternalScalarItems.Count;
         }
 
         internal void AddBlockItem(GridRange gridRange, BlockItem blockItem)
@@ -455,7 +455,7 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _starWidthGridColumns = null;
-                InternalDataItems.InvalidateAutoWidthItems();
+                InternalScalarItems.InvalidateAutoWidthItems();
                 InternalBlockItems.InvalidateAutoWidthItems();
                 foreach (var rowItems in InternalRowItemGroups)
                     rowItems.InvalidateAutoWidthItems();
@@ -477,7 +477,7 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _starHeightGridRows = null;
-                InternalDataItems.InvalidateAutoHeightItems();
+                InternalScalarItems.InvalidateAutoHeightItems();
                 InternalBlockItems.InvalidateAutoHeightItems();
                 foreach (var rowItems in InternalRowItemGroups)
                     rowItems.InvalidateAutoHeightItems();

@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             string source = SOURCE;
 
-            var builder = new DataItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
+            var builder = new ScalarItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             string source = SOURCE;
 
-            var builder = new DataItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
+            var builder = new ScalarItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);

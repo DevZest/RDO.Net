@@ -117,7 +117,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 Debug.Assert(orientation == Orientation.Vertical);
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.DataItem_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.ScalarItem_OutOfVerticalRowRange(Ordinal));
             }
         }
     }
