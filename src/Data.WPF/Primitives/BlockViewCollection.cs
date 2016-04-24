@@ -56,14 +56,14 @@ namespace DevZest.Data.Windows.Primitives
             CachedList.Recycle(ref _cachedBlockViews, blockView);
         }
 
-        public BlockView FirstScrollable
+        public BlockView First
         {
-            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FrozenHeadBlockCount]; }
+            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex]; }
         }
 
-        public BlockView LastScrollable
+        public BlockView Last
         {
-            get { return ScrollableBlockCount == 0 ? null : (BlockView)Elements[BlockViewStartIndex + FrozenHeadBlockCount + ScrollableBlockCount - 1]; }
+            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex + Count - 1]; }
         }
 
         private IReadOnlyList<RowPresenter> Rows
@@ -79,8 +79,6 @@ namespace DevZest.Data.Windows.Primitives
         public bool Contains(RowPresenter row)
         {
             Debug.Assert(row != null && row.RowManager == _elementManager);
-
-            EnsureInitialized();
             return this[row] != null;
         }
 
@@ -88,8 +86,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                Debug.Assert(IsInitialized);
-
                 if (Count == 0)
                     return null;
 
@@ -102,68 +98,13 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(ordinal >= 0 && ordinal < MaxBlockCount);
 
-            if (ordinal < FrozenHeadBlockCount)
-                return ordinal;
-
-            var frozenTailStartOrdinal = MaxBlockCount - FrozenTailBlockCount;
-            if (ordinal >= frozenTailStartOrdinal)
-                return FrozenHeadBlockCount + ScrollableBlockCount + (ordinal - frozenTailStartOrdinal);
-
-            var firstScrollable = FirstScrollable;
-            if (firstScrollable == null)
+            var first = First;
+            if (first == null)
                 return -1;
 
-            if (ordinal >= firstScrollable.Ordinal && ordinal <= LastScrollable.Ordinal)
-                return FrozenHeadBlockCount + (ordinal - firstScrollable.Ordinal);
+            if (ordinal >= first.Ordinal && ordinal <= Last.Ordinal)
+                return ordinal - first.Ordinal;
             return -1;
-        }
-
-        private int _frozenHeadBlockCount = -1;
-        public int FrozenHeadBlockCount
-        {
-            get
-            {
-                EnsureInitialized();
-                return _frozenHeadBlockCount;
-            }
-        }
-
-        private int _frozenTailBlockCount = -1;
-        public int FrozenTailBlockCount
-        {
-            get
-            {
-                EnsureInitialized();
-                return _frozenTailBlockCount;
-            }
-        }
-
-        public int ScrollableBlockCount { get; private set; }
-
-        public void EnsureInitialized()
-        {
-            if (IsInitialized)
-                return;
-
-            _frozenHeadBlockCount = CoerceFrozenHeadBlockCount();
-            Debug.Assert(FrozenHeadBlockCount >= 0);
-            for (int i = 0; i < _frozenHeadBlockCount; i++)
-            {
-                var blockView = Realize(i);
-                Insert(BlockViewStartIndex + i, blockView);
-            }
-
-            _frozenTailBlockCount = CoerceFrozenTailBlockCount();
-            Debug.Assert(FrozenTailBlockCount >= 0);
-            if (_frozenTailBlockCount == 0)
-                return;
-
-            var startIndex = MaxBlockCount - _frozenTailBlockCount;
-            for (int i = 0; i < _frozenTailBlockCount; i++)
-            {
-                var blockView = Realize(i + startIndex);
-                Insert(BlockViewStartIndex + _frozenHeadBlockCount + i, blockView);
-            }
         }
 
         private GridRange RowRange
@@ -224,48 +165,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
         }
 
-        private int CoerceFrozenHeadBlockCount()
-        {
-            if (!Template.Orientation.HasValue)
-                return 0;
-
-            var frozenHeadLastTrack = FrozenHeadLastTrack;
-            var rowRangeStartTrack = RowRangeStartTrack;
-            if (frozenHeadLastTrack < rowRangeStartTrack)
-                return 0;
-
-            var repeatTracks = frozenHeadLastTrack - rowRangeStartTrack + 1;
-            var rowRangeTracks = RowRangeTracks;
-            var blockCount = ((repeatTracks - 1) / rowRangeTracks) + 1;
-            return Math.Min(blockCount, MaxBlockCount);
-        }
-
-        private int CoerceFrozenTailBlockCount()
-        {
-            if (!Template.Orientation.HasValue)
-                return 0;
-
-            var frozenTailFirstTrack = FrozenTailFirstTrack;
-            var rowRangeEndTrack = RowRangeEndTrack;
-            if (frozenTailFirstTrack > rowRangeEndTrack)
-                return 0;
-
-            var repeatTracks = rowRangeEndTrack - frozenTailFirstTrack + 1;
-            var rowRangeTracks = RowRangeTracks;
-            var blockCount = ((repeatTracks - 1) / rowRangeTracks) + 1;
-            return Math.Min(blockCount, Math.Max(0, MaxBlockCount - FrozenHeadBlockCount));
-
-        }
-
-        public bool IsInitialized
-        {
-            get { return _frozenHeadBlockCount >= 0; }
-        }
-
-        public int Count
-        {
-            get { return FrozenHeadBlockCount + ScrollableBlockCount + FrozenTailBlockCount; }
-        }
+        public int Count { get; private set; }
 
         public BlockView this[int index]
         {
@@ -301,72 +201,66 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void RealizeFirst(int index)
         {
-            EnsureInitialized();
-            Debug.Assert(ScrollableBlockCount == 0 && index >= FrozenHeadBlockCount && index < MaxBlockCount - FrozenTailBlockCount);
+            Debug.Assert(Count == 0 && index >= 0 && index < MaxBlockCount);
 
             var blockView = Realize(index);
-            Insert(BlockViewStartIndex + FrozenHeadBlockCount, blockView);
-            ScrollableBlockCount = 1;
+            Insert(BlockViewStartIndex, blockView);
+            Count = 1;
         }
 
         internal void RealizePrev()
         {
-            Debug.Assert(FirstScrollable != null && FirstScrollable.Ordinal - 1 >= FrozenHeadBlockCount);
+            Debug.Assert(First != null && First.Ordinal >= 1);
 
-            var blockView = Realize(FirstScrollable.Ordinal - 1);
-            Insert(BlockViewStartIndex + FrozenHeadBlockCount, blockView);
-            ScrollableBlockCount++;
+            var blockView = Realize(First.Ordinal - 1);
+            Insert(BlockViewStartIndex, blockView);
+            Count++;
         }
 
         internal void RealizeNext()
         {
-            Debug.Assert(LastScrollable != null && LastScrollable.Ordinal + 1 < MaxBlockCount - FrozenTailBlockCount);
+            Debug.Assert(Last != null && Last.Ordinal + 1 < MaxBlockCount);
 
-            var blockView = Realize(LastScrollable.Ordinal + 1);
-            Insert(BlockViewStartIndex + FrozenHeadBlockCount + ScrollableBlockCount, blockView);
-            ScrollableBlockCount++;
+            var blockView = Realize(Last.Ordinal + 1);
+            Insert(BlockViewStartIndex + Count, blockView);
+            Count++;
         }
 
         internal void VirtualizeHead(int count)
         {
-            Debug.Assert(count >= 0 && count <= ScrollableBlockCount);
+            Debug.Assert(count >= 0 && count <= Count);
 
             if (count == 0)
                 return;
 
             for (int i = 0; i < count; i++)
-                Virtualize(this[FrozenHeadBlockCount + i]);
+                Virtualize(this[i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex + FrozenHeadBlockCount, count);
-            ScrollableBlockCount -= count;
+            ElementCollection.RemoveRange(BlockViewStartIndex, count);
+            Count -= count;
         }
 
         internal void VirtualizeTail(int count)
         {
-            Debug.Assert(count >= 0 && count <= ScrollableBlockCount);
+            Debug.Assert(count >= 0 && count <= Count);
 
             if (count == 0)
                 return;
 
-            var offset = ScrollableBlockCount - count;
+            var offset = Count - count;
             for (int i = 0; i < count; i++)
-                Virtualize(this[FrozenHeadBlockCount + offset + i]);
+                Virtualize(this[offset + i]);
 
-            ElementCollection.RemoveRange(BlockViewStartIndex + FrozenHeadBlockCount + offset, count);
-            ScrollableBlockCount -= count;
+            ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
+            Count -= count;
         }
 
         internal void VirtualizeAll()
         {
-            if (!IsInitialized)
-                return;
-
             for (int i = 0; i < Count; i++)
                 Virtualize(this[i]);
             ElementCollection.RemoveRange(BlockViewStartIndex, Count);
-
-            _frozenHeadBlockCount = _frozenTailBlockCount = -1;
-            ScrollableBlockCount = 0;
+            Count = 0;
         }
     }
 }
