@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -155,24 +154,23 @@ namespace DevZest.Data.Windows.Primitives
             if (!Orientation.HasValue)
                 return;
 
-            if (FrozenLeft > MaxFrozenLeft)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenLeft)));
-            if (FrozenRight > MaxFrozenRight)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenRight)));
-            if (FrozenTop > MaxFrozenTop)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenTop)));
-            if (FrozenBottom > MaxFrozenBottom)
-                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenBottom)));
-
             var orientation = Orientation.GetValueOrDefault();
             if (orientation == System.Windows.Controls.Orientation.Horizontal)
             {
+                if (FrozenLeft > MaxFrozenLeft)
+                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenLeft)));
+                if (FrozenRight > MaxFrozenRight)
+                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenRight)));
                 if (Stretches > FrozenRight)
                     throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenRight)));
             }
             else
             {
                 Debug.Assert(orientation == System.Windows.Controls.Orientation.Vertical);
+                if (FrozenTop > MaxFrozenTop)
+                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenTop)));
+                if (FrozenBottom > MaxFrozenBottom)
+                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenBottom)));
                 if (Stretches > FrozenBottom)
                     throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenBottom)));
             }
