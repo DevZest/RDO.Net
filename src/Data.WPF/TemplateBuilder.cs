@@ -98,12 +98,35 @@ namespace DevZest.Data.Windows
             get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
-        public TemplateBuilder Freeze(int left = 0, int top = 0, int right = 0, int bottom = 0)
+        public TemplateBuilder FreezeLeft(int tracks)
         {
-            Template.FrozenLeft = left;
-            Template.FrozenTop = top;
-            Template.FrozenRight = right;
-            Template.FrozenBottom = bottom;
+            if (tracks < 0)
+                throw new ArgumentOutOfRangeException(nameof(tracks));
+            Template.FrozenLeft = tracks;
+            return this;
+        }
+
+        public TemplateBuilder FreezeTop(int tracks)
+        {
+            if (tracks < 0)
+                throw new ArgumentOutOfRangeException(nameof(tracks));
+            Template.FrozenTop = tracks;
+            return this;
+        }
+
+        public TemplateBuilder FreezeRight(int tracks)
+        {
+            if (tracks < 0)
+                throw new ArgumentOutOfRangeException(nameof(tracks));
+            Template.FrozenRight = tracks;
+            return this;
+        }
+
+        public TemplateBuilder FreezeBottom(int tracks)
+        {
+            if (tracks < 0)
+                throw new ArgumentOutOfRangeException(nameof(tracks));
+            Template.FrozenBottom = tracks;
             return this;
         }
 

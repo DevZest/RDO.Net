@@ -126,6 +126,7 @@ namespace DevZest.Data.Windows.Primitives
             VerifyGridUnitType();
             VerifyRowRange();
             VerifyFrozenMargins();
+            VerifyStretches();
         }
 
         internal void VerifyGridUnitType()
@@ -155,25 +156,32 @@ namespace DevZest.Data.Windows.Primitives
             if (!Orientation.HasValue)
                 return;
 
+            if (FrozenLeft > MaxFrozenLeft)
+                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenLeft)));
+            if (FrozenRight > MaxFrozenRight)
+                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenRight)));
+            if (FrozenTop > MaxFrozenTop)
+                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenTop)));
+            if (FrozenBottom > MaxFrozenBottom)
+                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenBottom)));
+        }
+
+        private void VerifyStretches()
+        {
+            if (!Orientation.HasValue)
+                return;
+
             var orientation = Orientation.GetValueOrDefault();
             if (orientation == System.Windows.Controls.Orientation.Horizontal)
             {
-                if (FrozenTop > RowRange.Top.Ordinal)
-                    throw new InvalidOperationException();
-                if (GridRows.Count - FrozenBottom < RowRange.Bottom.Ordinal)
-                    throw new InvalidOperationException();
-                if (Stretches > FrozenBottom)
-                    throw new InvalidOperationException();
+                if (Stretches > FrozenRight)
+                    throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenRight)));
             }
             else
             {
                 Debug.Assert(orientation == System.Windows.Controls.Orientation.Vertical);
-                if (FrozenLeft > RowRange.Left.Ordinal)
-                    throw new InvalidOperationException();
-                if (GridColumns.Count - FrozenRight < RowRange.Right.Ordinal)
-                    throw new InvalidOperationException();
-                if (Stretches > FrozenRight)
-                    throw new InvalidOperationException();
+                if (Stretches > FrozenBottom)
+                    throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenBottom)));
             }
         }
 
@@ -501,11 +509,47 @@ namespace DevZest.Data.Windows.Primitives
 
         public int FrozenLeft { get; internal set; }
 
+        private int MaxFrozenLeft
+        {
+            get
+            {
+                var rowRange = RowRange;
+                return rowRange.IsEmpty ? 0 : rowRange.Left.Ordinal;
+            }
+        }
+
         public int FrozenTop { get; internal set; }
+
+        private int MaxFrozenTop
+        {
+            get
+            {
+                var rowRange = RowRange;
+                return rowRange.IsEmpty ? 0 : rowRange.Top.Ordinal;
+            }
+        }
 
         public int FrozenRight { get; internal set; }
 
+        private int MaxFrozenRight
+        {
+            get
+            {
+                var rowRange = RowRange;
+                return rowRange.IsEmpty ? GridColumns.Count : GridColumns.Count - rowRange.Right.Ordinal;
+            }
+        }
+
         public int FrozenBottom { get; internal set; }
+
+        private int MaxFrozenBottom
+        {
+            get
+            {
+                var rowRange = RowRange;
+                return rowRange.IsEmpty ? GridRows.Count : GridRows.Count - rowRange.Bottom.Ordinal;
+            }
+        }
 
         public int Stretches { get; internal set; }
     }

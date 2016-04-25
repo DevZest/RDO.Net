@@ -203,6 +203,22 @@ namespace DevZest.Data.Windows
             get { return GetString("TemplateBuilder_InvalidFlattenHierarchyChildModel"); }
         }
 
+        /// <summary>
+        /// The {frozen} value is invalid. The frozen area cannot intersects with RowRange.
+        /// </summary>
+        public static string Template_FrozenIntersectsWithRowRange(object frozen)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_FrozenIntersectsWithRowRange", "frozen"), frozen);
+        }
+
+        /// <summary>
+        /// The Stretches value must be less or equal to {frozen}.
+        /// </summary>
+        public static string Template_InvalidStretches(object frozen)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStretches", "frozen"), frozen);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
