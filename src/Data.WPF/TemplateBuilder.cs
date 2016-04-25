@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows
 
         public void Dispose()
         {
-            Template.VerifyTemplateItemGridRange();
+            Template.VerifyLayout();
             Template = null;
         }
 

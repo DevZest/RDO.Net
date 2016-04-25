@@ -123,7 +123,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowRange.Union(InternalBlockItems.Range); }
         }
 
-        internal void VerifyTemplateItemGridRange()
+        internal void VerifyLayout()
+        {
+            VerifyRowRange();
+        }
+
+        private void VerifyRowRange()
         {
             for (int i = 0; i < RowItemGroups.Count; i++)
             {
