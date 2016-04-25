@@ -44,15 +44,8 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(blockDimensions >= 0);
             Orientation = orientation;
             BlockDimensions = blockDimensions;
-            VerifyGridLengths();
-        }
-
-        private void VerifyGridLengths()
-        {
-            if (GridColumns.Count > 0)
-                VerifyGridColumnWidth(0, GridColumns.Count - 1);
-            if (GridRows.Count > 0)
-                VerifyGridRowHeight(0, GridRows.Count - 1);
+            GridColumns.ForEach(x => VerifyGridUnitType(x));
+            GridRows.ForEach(x => VerifyGridUnitType(x));
         }
 
         internal GridTrackCollection<GridColumn> InternalGridColumns { get; private set; }
@@ -136,22 +129,22 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var rowItems = RowItemGroups[i];
                 for (int j = 0; j < rowItems.Count; j++)
-                    rowItems[i].VerifyGridRange();
+                    rowItems[i].VerifyRowRange();
             }
 
             for (int i = 0; i < ScalarItems.Count; i++)
-                ScalarItems[i].VerifyGridRange();
+                ScalarItems[i].VerifyRowRange();
 
             for (int i = 0; i < BlockItems.Count; i++)
-                BlockItems[i].VerifyGridRange();
+                BlockItems[i].VerifyRowRange();
         }
 
         internal int AddGridColumn(string width)
         {
-            InternalGridColumns.Add(new GridColumn(this, InternalGridColumns.Count, GridLengthParser.Parse(width)));
-            var result = InternalGridColumns.Count - 1;
-            VerifyGridColumnWidth(result, result);
-            return result;
+            var gridColumn = new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width));
+            InternalGridColumns.Add(gridColumn);
+            VerifyGridUnitType(gridColumn);
+            return gridColumn.Ordinal;
         }
 
         internal void AddGridColumns(params string[] widths)
@@ -164,10 +157,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int AddGridRow(string height)
         {
-            InternalGridRows.Add(new GridRow(this, InternalGridRows.Count, GridLengthParser.Parse(height)));
-            var result = InternalGridRows.Count - 1;
-            VerifyGridRowHeight(result, result);
-            return result;
+            var gridRow = new GridRow(this, GridRows.Count, GridLengthParser.Parse(height));
+            InternalGridRows.Add(gridRow);
+            VerifyGridUnitType(gridRow);
+            return gridRow.Ordinal;
         }
 
         internal void AddGridRows(params string[] heights)
@@ -178,19 +171,7 @@ namespace DevZest.Data.Windows.Primitives
                 AddGridRow(height);
         }
 
-        private void VerifyGridColumnWidth(int startIndex, int endIndex)
-        {
-            for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridTrackLength(GridColumns[i]);
-        }
-
-        private void VerifyGridRowHeight(int startIndex, int endIndex)
-        {
-            for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridTrackLength(GridRows[i]);
-        }
-
-        private void VerifyGridTrackLength(GridTrack gridTrack)
+        private void VerifyGridUnitType(GridTrack gridTrack)
         {
             var length = gridTrack.Length;
 
@@ -298,26 +279,26 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyGridColumn(int index, string paramName)
         {
-            if (index < 0 || index >= InternalGridColumns.Count)
+            if (index < 0 || index >= GridColumns.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
         private void VerifyGridRow(int index, string paramName)
         {
-            if (index < 0 || index >= InternalGridRows.Count)
+            if (index < 0 || index >= GridRows.Count)
                 throw new ArgumentOutOfRangeException(paramName);
         }
 
         public GridRange Range()
         {
-            return InternalGridColumns.Count == 0 || InternalGridRows.Count == 0 ? new GridRange() : Range(0, 0, InternalGridColumns.Count - 1, InternalGridRows.Count - 1);
+            return GridColumns.Count == 0 || GridRows.Count == 0 ? new GridRange() : Range(0, 0, GridColumns.Count - 1, GridRows.Count - 1);
         }
 
         public GridRange Range(int column, int row)
         {
             VerifyGridColumn(column, nameof(column));
             VerifyGridRow(row, nameof(row));
-            return new GridRange(InternalGridColumns[column], InternalGridRows[row]);
+            return new GridRange(GridColumns[column], GridRows[row]);
         }
 
         public GridRange Range(int left, int top, int right, int bottom)
@@ -330,7 +311,7 @@ namespace DevZest.Data.Windows.Primitives
                 throw new ArgumentOutOfRangeException(nameof(right));
             if (bottom < top)
                 throw new ArgumentOutOfRangeException(nameof(bottom));
-            return new GridRange(InternalGridColumns[left], InternalGridRows[top], InternalGridColumns[right], InternalGridRows[bottom]);
+            return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
         private EofVisibility _eofVisibility = EofVisibility.Never;
@@ -346,14 +327,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return HierarchicalModelOrdinal >= 0; }
         }
-
-        public int FrozenLeft { get; internal set; }
-
-        public int FrozenTop { get; internal set; }
-
-        public int FrozenRight { get; internal set; }
-
-        public int FrozenBottom { get; internal set; }
 
         private Func<BlockView> _blockViewConstructor;
         public Func<BlockView> BlockViewConstructor
@@ -528,6 +501,14 @@ namespace DevZest.Data.Windows.Primitives
 
             return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
         }
+
+        public int FrozenLeft { get; internal set; }
+
+        public int FrozenTop { get; internal set; }
+
+        public int FrozenRight { get; internal set; }
+
+        public int FrozenBottom { get; internal set; }
 
         public int Stretches { get; internal set; }
     }

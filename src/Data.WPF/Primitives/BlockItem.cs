@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        internal override void VerifyGridRange(GridRange rowRange)
+        internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
                 throw new InvalidOperationException(Strings.BlockItem_IntersectsWithRowRange(Ordinal));
