@@ -132,6 +132,12 @@
   <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
     <value>DataElementPanel must be element of DataView's control template to implement IScrollInfo.</value>
   </data>
+  <data name="GridColumn_InvalidAutoWidth" xml:space="preserve">
+    <value>Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.</value>
+  </data>
+  <data name="GridColumn_InvalidStarWidth" xml:space="preserve">
+    <value>Star width GridColumns[{ordinal}] is invalid for horizontal or multidimensional layout.</value>
+  </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
   </data>
@@ -140,6 +146,12 @@
   </data>
   <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
     <value>The GridRange is empty.</value>
+  </data>
+  <data name="GridRow_InvalidAutoHeight" xml:space="preserve">
+    <value>Auto height GridRows[{ordinal}] is invalid for multidimensional layout.</value>
+  </data>
+  <data name="GridRow_InvalidStarHeight" xml:space="preserve">
+    <value>Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.</value>
   </data>
   <data name="RowItem_OutOfRowRange" xml:space="preserve">
     <value>RowItems[{index}] is out of the RowRange.</value>
@@ -176,17 +188,5 @@
   </data>
   <data name="TemplateBuilder_InvalidFlattenHierarchyChildModel" xml:space="preserve">
     <value>The child model is invalid. It must be direct child model and has the same type.</value>
-  </data>
-  <data name="Template_InvalidAutoHeightGridRow" xml:space="preserve">
-    <value>Auto height GridRows[{index}] is invalid for multi-row block.</value>
-  </data>
-  <data name="Template_InvalidAutoWidthGridColumn" xml:space="preserve">
-    <value>Auto width GridColumns[{index}] is invalid for multi-row block.</value>
-  </data>
-  <data name="Template_InvalidStarHeightGridRow" xml:space="preserve">
-    <value>Star height GridRows[{index}] is invalid for repeating.</value>
-  </data>
-  <data name="Template_InvalidStarWidthGridColumn" xml:space="preserve">
-    <value>Star width GridColumns[{index}] is invalid for repeating.</value>
   </data>
 </root>

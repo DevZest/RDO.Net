@@ -41,41 +41,49 @@ namespace DevZest.Data.Windows.Primitives
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Horizontal);
                 x.AddGridColumns("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Vertical, 0);
                 x.AddGridColumns("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Horizontal, 0);
                 x.AddGridColumns("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Vertical, 0);
                 x.AddGridColumns("Auto; min: 10");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridColumns("*");
                 x.Layout(Orientation.Horizontal);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridColumns("*");
                 x.Layout(Orientation.Vertical, 0);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridColumns("*");
                 x.Layout(Orientation.Horizontal, 0);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridColumns("Auto; min: 10");
                 x.Layout(Orientation.Vertical, 0);
+                x.VerifyGridUnitType();
                 });
         }
 
@@ -85,41 +93,49 @@ namespace DevZest.Data.Windows.Primitives
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Vertical);
                 x.AddGridRows("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Vertical, 0);
                 x.AddGridRows("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Horizontal, 0);
                 x.AddGridRows("*");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.Layout(Orientation.Horizontal, 0);
                 x.AddGridRows("Auto; min: 10");
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridRows("*");
                 x.Layout(Orientation.Vertical);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridRows("*");
                 x.Layout(Orientation.Vertical, 0);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridRows("*");
                 x.Layout(Orientation.Horizontal, 0);
+                x.VerifyGridUnitType();
                 });
 
             ExpectInvalidOperationException(x => {
                 x.AddGridRows("Auto");
                 x.Layout(Orientation.Horizontal, 0);
+                x.VerifyGridUnitType();
                 });
         }
 

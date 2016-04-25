@@ -52,6 +52,22 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.
+        /// </summary>
+        public static string GridColumn_InvalidAutoWidth(object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridColumn_InvalidAutoWidth", "ordinal"), ordinal);
+        }
+
+        /// <summary>
+        /// Star width GridColumns[{ordinal}] is invalid for horizontal or multidimensional layout.
+        /// </summary>
+        public static string GridColumn_InvalidStarWidth(object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridColumn_InvalidStarWidth", "ordinal"), ordinal);
+        }
+
+        /// <summary>
         /// The input string "{input}" is invalid.
         /// </summary>
         public static string GridLengthParser_InvalidInput(object input)
@@ -73,6 +89,22 @@ namespace DevZest.Data.Windows
         public static string GridRange_VerifyNotEmpty
         {
             get { return GetString("GridRange_VerifyNotEmpty"); }
+        }
+
+        /// <summary>
+        /// Auto height GridRows[{ordinal}] is invalid for multidimensional layout.
+        /// </summary>
+        public static string GridRow_InvalidAutoHeight(object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridRow_InvalidAutoHeight", "ordinal"), ordinal);
+        }
+
+        /// <summary>
+        /// Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.
+        /// </summary>
+        public static string GridRow_InvalidStarHeight(object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("GridRow_InvalidStarHeight", "ordinal"), ordinal);
         }
 
         /// <summary>
@@ -169,38 +201,6 @@ namespace DevZest.Data.Windows
         public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
         {
             get { return GetString("TemplateBuilder_InvalidFlattenHierarchyChildModel"); }
-        }
-
-        /// <summary>
-        /// Auto height GridRows[{index}] is invalid for multi-row block.
-        /// </summary>
-        public static string Template_InvalidAutoHeightGridRow(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidAutoHeightGridRow", "index"), index);
-        }
-
-        /// <summary>
-        /// Auto width GridColumns[{index}] is invalid for multi-row block.
-        /// </summary>
-        public static string Template_InvalidAutoWidthGridColumn(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidAutoWidthGridColumn", "index"), index);
-        }
-
-        /// <summary>
-        /// Star height GridRows[{index}] is invalid for repeating.
-        /// </summary>
-        public static string Template_InvalidStarHeightGridRow(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStarHeightGridRow", "index"), index);
-        }
-
-        /// <summary>
-        /// Star width GridColumns[{index}] is invalid for repeating.
-        /// </summary>
-        public static string Template_InvalidStarWidthGridColumn(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStarWidthGridColumn", "index"), index);
         }
 
         private static string GetString(string name, params string[] formatterNames)

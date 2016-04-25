@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -86,5 +87,40 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return VariantAutoLengthIndex >= 0; }
         }
+
+        internal void VerifyUnitType()
+        {
+            if (Length.IsAbsolute || !Template.Orientation.HasValue)
+                return;
+
+            if (Length.IsStar)
+                VerifyStarLength();
+            else
+            {
+                Debug.Assert(Length.IsAuto);
+                VerifyAutoLength();
+            }
+        }
+
+        private void VerifyStarLength()
+        {
+            Debug.Assert(Length.IsStar && Template.Orientation.HasValue);
+
+            var layoutOrientation = Template.Orientation.Value;
+            if (Orientation == layoutOrientation || Template.BlockDimensions != 1)
+                throw new InvalidOperationException(InvalidStarLengthMessage);
+        }
+
+        internal abstract string InvalidStarLengthMessage { get; }
+
+        private void VerifyAutoLength()
+        {
+            Debug.Assert(Length.IsAuto);
+
+            if (Template.IsMultidimensional(Orientation))
+                throw new InvalidOperationException(InvalidAutoLengthMessage);
+        }
+
+        internal abstract string InvalidAutoLengthMessage { get; }
     }
 }

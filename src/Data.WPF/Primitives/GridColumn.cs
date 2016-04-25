@@ -66,5 +66,15 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return Orientation.Horizontal; }
         }
+
+        internal override string InvalidStarLengthMessage
+        {
+            get { return Strings.GridColumn_InvalidStarWidth(Ordinal); }
+        }
+
+        internal override string InvalidAutoLengthMessage
+        {
+            get { return Strings.GridColumn_InvalidAutoWidth(Ordinal); }
+        }
     }
 }
