@@ -126,7 +126,6 @@ namespace DevZest.Data.Windows.Primitives
             VerifyGridUnitType();
             VerifyRowRange();
             VerifyFrozenMargins();
-            VerifyStretches();
         }
 
         internal void VerifyGridUnitType()
@@ -157,19 +156,13 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             if (FrozenLeft > MaxFrozenLeft)
-                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenLeft)));
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenLeft)));
             if (FrozenRight > MaxFrozenRight)
-                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenRight)));
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenRight)));
             if (FrozenTop > MaxFrozenTop)
-                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenTop)));
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenTop)));
             if (FrozenBottom > MaxFrozenBottom)
-                throw new InvalidOperationException(Strings.Template_FrozenIntersectsWithRowRange(nameof(FrozenBottom)));
-        }
-
-        private void VerifyStretches()
-        {
-            if (!Orientation.HasValue)
-                return;
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenBottom)));
 
             var orientation = Orientation.GetValueOrDefault();
             if (orientation == System.Windows.Controls.Orientation.Horizontal)

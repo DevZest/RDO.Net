@@ -130,6 +130,14 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        public TemplateBuilder Stretch(int tracks)
+        {
+            if (tracks < 0)
+                throw new ArgumentOutOfRangeException(nameof(tracks));
+            Template.Stretches = tracks;
+            return this;
+        }
+
         public TemplateBuilder EOF(EofVisibility value)
         {
             Template.EofVisibility = value;
@@ -185,12 +193,6 @@ namespace DevZest.Data.Windows
         public TemplateBuilder RowItemGroup(Func<RowPresenter, int> rowItemsSelector)
         {
             Template.RowItemGroupSelector = rowItemsSelector;
-            return this;
-        }
-
-        public TemplateBuilder Stretch(int value)
-        {
-            Template.Stretches = value;
             return this;
         }
     }

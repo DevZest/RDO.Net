@@ -206,9 +206,9 @@ namespace DevZest.Data.Windows
         /// <summary>
         /// The {frozen} value is invalid. The frozen area cannot intersects with RowRange.
         /// </summary>
-        public static string Template_FrozenIntersectsWithRowRange(object frozen)
+        public static string Template_InvalidFrozenMargin(object frozen)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Template_FrozenIntersectsWithRowRange", "frozen"), frozen);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidFrozenMargin", "frozen"), frozen);
         }
 
         /// <summary>
