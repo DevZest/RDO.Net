@@ -150,5 +150,31 @@ namespace DevZest.Data.Windows.Primitives
                 return ElementManager.Elements[elementIndex];
             }
         }
+
+        internal override void VerifyFrozenMargins(string templateItemsName)
+        {
+            base.VerifyFrozenMargins(templateItemsName);
+            if (LayoutOrientation == Orientation.Horizontal)
+                VerifyHorizontalStretches();
+            else
+                VerifyVerticalStretches();
+        }
+
+        private Orientation LayoutOrientation
+        {
+            get { return Template.Orientation.Value; }
+        }
+
+        private void VerifyHorizontalStretches()
+        {
+            if (GridRange.ContainsHorizontal(Template.GridColumns.Count - Template.Stretches))
+                throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
+        }
+
+        private void VerifyVerticalStretches()
+        {
+            if (GridRange.ContainsVertical(Template.GridRows.Count - Template.Stretches))
+                throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
+        }
     }
 }

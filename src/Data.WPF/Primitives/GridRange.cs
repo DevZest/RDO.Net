@@ -143,5 +143,21 @@ namespace DevZest.Data.Windows.Primitives
                 Right == null ? string.Empty : Right.Ordinal.ToString(CultureInfo.InvariantCulture),
                 Bottom == null ? string.Empty : Bottom.Ordinal.ToString(CultureInfo.InvariantCulture));
         }
+
+        internal bool ContainsHorizontal(int gridTrackOrdinal)
+        {
+            return Contains(Left, Right, gridTrackOrdinal);
+        }
+
+        internal bool ContainsVertical(int gridTrackOrdinal)
+        {
+            return Contains(Top, Bottom, gridTrackOrdinal);
+        }
+
+        private static bool Contains<T>(T headTrack, T tailTrack, int gridTrackOrdinal)
+            where T : GridTrack
+        {
+            return gridTrackOrdinal > headTrack.Ordinal && gridTrackOrdinal < tailTrack.Ordinal;
+        }
     }
 }

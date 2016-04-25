@@ -172,6 +172,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The Stretches value is invalid. It cuts across ScalarItems[{ordinal}].
+        /// </summary>
+        public static string ScalarItem_InvalidStretches(object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_InvalidStretches", "ordinal"), ordinal);
+        }
+
+        /// <summary>
         /// Multidimensional ScalarItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
         /// </summary>
         public static string ScalarItem_OneDimensionalTemplate(object index)
@@ -201,6 +209,14 @@ namespace DevZest.Data.Windows
         public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
         {
             get { return GetString("TemplateBuilder_InvalidFlattenHierarchyChildModel"); }
+        }
+
+        /// <summary>
+        /// The {frozen} value is invalid. It cuts across {templateItems}[{ordinal}].
+        /// </summary>
+        public static string TemplateItem_InvalidFrozenMargin(object frozen, object templateItems, object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("TemplateItem_InvalidFrozenMargin", "frozen", "templateItems", "ordinal"), frozen, templateItems, ordinal);
         }
 
         /// <summary>

@@ -263,5 +263,17 @@ namespace DevZest.Data.Windows.Primitives
                 return new Size(width, height);
             }
         }
+
+        internal virtual void VerifyFrozenMargins(string templateItemsName)
+        {
+            if (GridRange.ContainsHorizontal(Template.FrozenLeft))
+                throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenLeft), templateItemsName, Ordinal));
+            if (GridRange.ContainsVertical(Template.FrozenTop))
+                throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenTop), templateItemsName, Ordinal));
+            if (GridRange.ContainsHorizontal(Template.GridColumns.Count - Template.FrozenRight))
+                throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenRight), templateItemsName, Ordinal));
+            if (GridRange.ContainsVertical(Template.GridRows.Count - Template.FrozenBottom))
+                throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenBottom), templateItemsName, Ordinal));
+        }
     }
 }
