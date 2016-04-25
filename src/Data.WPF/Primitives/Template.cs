@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -173,6 +174,14 @@ namespace DevZest.Data.Windows.Primitives
                     throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenBottom)));
                 if (Stretches > FrozenBottom)
                     throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenBottom)));
+            }
+
+            ScalarItems.ForEach(x => x.VerifyFrozenMargins(nameof(ScalarItems)));
+            BlockItems.ForEach(x => x.VerifyFrozenMargins(nameof(BlockItems)));
+            for (int i = 0; i < RowItemGroups.Count; i++)
+            {
+                var rowItems = RowItemGroups[i];
+                rowItems.ForEach(x => x.VerifyFrozenMargins(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(RowItemGroups), i)));
             }
         }
 

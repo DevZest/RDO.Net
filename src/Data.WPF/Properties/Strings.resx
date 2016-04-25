@@ -196,7 +196,7 @@
     <value>The {frozen} value is invalid. It cuts across {templateItems}[{ordinal}].</value>
   </data>
   <data name="Template_InvalidFrozenMargin" xml:space="preserve">
-    <value>The {frozen} value is invalid. The frozen area cannot intersects with RowRange.</value>
+    <value>The {frozen} value is invalid. RowRange is always scrollable and cannot be frozen.</value>
   </data>
   <data name="Template_InvalidStretches" xml:space="preserve">
     <value>The Stretches value must be less or equal to {frozen}.</value>
