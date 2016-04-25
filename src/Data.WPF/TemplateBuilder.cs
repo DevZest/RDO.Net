@@ -84,7 +84,7 @@ namespace DevZest.Data.Windows
             if (blockDimensions < 0)
                 throw new ArgumentOutOfRangeException(nameof(blockDimensions));
 
-            Template.Block(orientation, blockDimensions);
+            Template.Layout(orientation, blockDimensions);
             return this;
         }
 
@@ -165,9 +165,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Pin(int value)
+        public TemplateBuilder Stretch(int value)
         {
-            Template.PinnedTail = value;
+            Template.Stretches = value;
             return this;
         }
     }

@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public int BlockDimensions { get; private set; }
 
-        internal void Block(Orientation orientation, int blockDimensions = 1)
+        internal void Layout(Orientation orientation, int blockDimensions = 1)
         {
             Debug.Assert(blockDimensions >= 0);
             Orientation = orientation;
@@ -49,10 +49,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyGridLengths()
         {
-            if (InternalGridColumns.Count > 0)
-                VerifyGridColumnWidth(0, InternalGridColumns.Count - 1);
-            if (InternalGridRows.Count > 0)
-                VerifyGridRowHeight(0, InternalGridRows.Count - 1);
+            if (GridColumns.Count > 0)
+                VerifyGridColumnWidth(0, GridColumns.Count - 1);
+            if (GridRows.Count > 0)
+                VerifyGridRowHeight(0, GridRows.Count - 1);
         }
 
         internal GridTrackCollection<GridColumn> InternalGridColumns { get; private set; }
@@ -178,56 +178,50 @@ namespace DevZest.Data.Windows.Primitives
                 AddGridRow(height);
         }
 
-        private void VerifyGridRowHeight(int startIndex, int endIndex)
-        {
-            for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridRowHeight(InternalGridRows[i]);
-        }
-
-        private void VerifyGridRowHeight(GridRow gridRow)
-        {
-            var height = gridRow.Height;
-
-            if (height.IsAbsolute)
-                return;
-
-            if (height.IsStar)
-            {
-                if (IsRepeatable(System.Windows.Controls.Orientation.Vertical))
-                    throw new InvalidOperationException(Strings.Template_InvalidStarHeightGridRow(gridRow.Ordinal));
-            }
-            else
-            {
-                Debug.Assert(height.IsAuto);
-                if (IsMultidimensional(System.Windows.Controls.Orientation.Vertical))
-                    throw new InvalidOperationException(Strings.Template_InvalidAutoHeightGridRow(gridRow.Ordinal));
-            }
-        }
-
         private void VerifyGridColumnWidth(int startIndex, int endIndex)
         {
             for (int i = startIndex; i <= endIndex; i++)
-                VerifyGridColumnWidth(InternalGridColumns[i]);
+                VerifyGridTrackLength(GridColumns[i]);
         }
 
-        private void VerifyGridColumnWidth(GridColumn gridColumn)
+        private void VerifyGridRowHeight(int startIndex, int endIndex)
         {
-            var width = gridColumn.Width;
+            for (int i = startIndex; i <= endIndex; i++)
+                VerifyGridTrackLength(GridRows[i]);
+        }
 
-            if (width.IsAbsolute)
+        private void VerifyGridTrackLength(GridTrack gridTrack)
+        {
+            var length = gridTrack.Length;
+
+            if (length.IsAbsolute)
                 return;
 
-            if (width.IsStar)
+            if (length.IsStar)
             {
-                if (IsRepeatable(System.Windows.Controls.Orientation.Horizontal))
-                    throw new InvalidOperationException(Strings.Template_InvalidStarWidthGridColumn(gridColumn.Ordinal));
+                if (IsRepeatable(gridTrack.Orientation))
+                    throw new InvalidOperationException(GetInvalidStarLengthGridTrackMessage(gridTrack));
             }
             else
             {
-                Debug.Assert(width.IsAuto);
-                if (IsMultidimensional(System.Windows.Controls.Orientation.Horizontal))
-                    throw new InvalidOperationException(Strings.Template_InvalidAutoWidthGridColumn(gridColumn.Ordinal));
+                Debug.Assert(length.IsAuto);
+                if (IsMultidimensional(gridTrack.Orientation))
+                    throw new InvalidOperationException(GetInvalidAutoLengthGridTrackMessage(gridTrack));
             }
+        }
+
+        private static string GetInvalidStarLengthGridTrackMessage(GridTrack gridTrack)
+        {
+            return gridTrack.Orientation == System.Windows.Controls.Orientation.Horizontal
+                ? Strings.Template_InvalidStarWidthGridColumn(gridTrack.Ordinal)
+                : Strings.Template_InvalidStarHeightGridRow(gridTrack.Ordinal);
+        }
+
+        private static string GetInvalidAutoLengthGridTrackMessage(GridTrack gridTrack)
+        {
+            return gridTrack.Orientation == System.Windows.Controls.Orientation.Horizontal
+                ? Strings.Template_InvalidAutoWidthGridColumn(gridTrack.Ordinal)
+                : Strings.Template_InvalidAutoHeightGridRow(gridTrack.Ordinal);
         }
 
         private bool IsRepeatable(Orientation orientation)
@@ -535,6 +529,6 @@ namespace DevZest.Data.Windows.Primitives
             return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
         }
 
-        public int PinnedTail { get; internal set; }
+        public int Stretches { get; internal set; }
     }
 }
