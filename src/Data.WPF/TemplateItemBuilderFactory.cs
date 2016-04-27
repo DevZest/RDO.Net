@@ -10,9 +10,6 @@ namespace DevZest.Data.Windows
         {
             TemplateBuilder = templateBuilder;
             GridRange = gridRange;
-            AllowAutoWidth = AllowAutoHeight = true;
-            AutoSizeMeasureOrder = AutoSizeMeasureOrder.Before;
-            AutoSizeMeasureIndex = 0;
         }
 
         internal readonly TemplateBuilder TemplateBuilder;
@@ -23,19 +20,19 @@ namespace DevZest.Data.Windows
 
         internal int AutoSizeMeasureIndex { get; private set; }
 
-        internal bool AllowAutoWidth { get; private set; }
+        internal bool AutoWidthDisabled { get; private set; }
 
-        internal bool AllowAutoHeight { get; private set; }
+        internal bool AutoHeightDisabled { get; private set; }
 
-        public TemplateItemBuilderFactory DisallowAutoWidth()
+        public TemplateItemBuilderFactory DisableAutoWidth()
         {
-            AllowAutoWidth = false;
+            AutoWidthDisabled = true;
             return this;
         }
 
-        public TemplateItemBuilderFactory DisallowAutoHeight()
+        public TemplateItemBuilderFactory DisablewAutoHeight()
         {
-            AllowAutoHeight = false;
+            AutoHeightDisabled = true;
             return this;
         }
 
