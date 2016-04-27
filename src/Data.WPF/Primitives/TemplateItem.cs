@@ -231,9 +231,14 @@ namespace DevZest.Data.Windows.Primitives
                     return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
-                    _autoWidthGridColumns = GridRange.FilterColumns(x => x.IsAutoLength(SizeToContentX));
+                    _autoWidthGridColumns = GridRange.FilterColumns(IsAutoWidthCondition);
                 return _autoWidthGridColumns;
             }
+        }
+
+        internal virtual Func<GridColumn, bool> IsAutoWidthCondition
+        {
+            get { return x => x.IsAutoLength(SizeToContentX); }
         }
 
         private IConcatList<GridRow> _autoHeightGridRows;
@@ -250,9 +255,14 @@ namespace DevZest.Data.Windows.Primitives
                     return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)
-                    _autoHeightGridRows = GridRange.FilterRows(x => x.IsAutoLength(SizeToContentY));
+                    _autoHeightGridRows = GridRange.FilterRows(IsAutoHeightCondition);
                 return _autoHeightGridRows;
             }
+        }
+
+        internal virtual Func<GridRow, bool> IsAutoHeightCondition
+        {
+            get { return x => x.IsAutoLength(SizeToContentY); }
         }
 
         internal bool IsAutoSize
@@ -273,9 +283,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal virtual void VerifyFrozenMargins(string templateItemsName)
         {
-            if (GridRange.ContainsHorizontal(Template.FrozenLeft))
+            if (GridRange.ContainsHorizontal(Template.FrozenLeft - 1))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenLeft), templateItemsName, Ordinal));
-            if (GridRange.ContainsVertical(Template.FrozenTop))
+            if (GridRange.ContainsVertical(Template.FrozenTop - 1))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenTop), templateItemsName, Ordinal));
             if (GridRange.ContainsHorizontal(Template.GridColumns.Count - Template.FrozenRight))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenRight), templateItemsName, Ordinal));

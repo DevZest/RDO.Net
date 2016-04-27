@@ -176,5 +176,25 @@ namespace DevZest.Data.Windows.Primitives
             if (GridRange.ContainsVertical(Template.GridRows.Count - Template.Stretches))
                 throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
         }
+
+        internal override Func<GridColumn, bool> IsAutoWidthCondition
+        {
+            get
+            {
+                if (Template.Orientation.HasValue && LayoutOrientation == Orientation.Horizontal)
+                    return x => base.IsAutoWidthCondition(x) && !Template.RowRange.Contains(x);
+                return base.IsAutoWidthCondition;
+            }
+        }
+
+        internal override Func<GridRow, bool> IsAutoHeightCondition
+        {
+            get
+            {
+                if (Template.Orientation.HasValue && LayoutOrientation == Orientation.Vertical)
+                    return x => base.IsAutoHeightCondition(x) && !Template.RowRange.Contains(x);
+                return base.IsAutoHeightCondition;
+            }
+        }
     }
 }
