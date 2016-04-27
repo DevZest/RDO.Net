@@ -42,6 +42,9 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(constructor != null);
             _constructor = constructor;
+            AllowAutoWidth = AllowAutoHeight = true;
+            AutoSizeMeasureOrder = AutoSizeMeasureOrder.Before;
+            AutoSizeMeasureIndex = 0;
         }
 
         public Template Template { get; private set; }
@@ -198,7 +201,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void VerifyRowRange(GridRange rowRange);
 
-        public int AutoSizeMeasureOrder { get; internal set; }
+        public bool AllowAutoWidth { get; internal set; }
+
+        public bool AllowAutoHeight { get; internal set; }
+
+        public AutoSizeMeasureOrder AutoSizeMeasureOrder { get; internal set; }
+
+        public int AutoSizeMeasureIndex { get; internal set; }
 
         private bool SizeToContentX
         {
@@ -220,7 +229,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                if (AutoSizeMeasureOrder < 0)
+                if (!AllowAutoWidth)
                     return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
@@ -239,7 +248,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                if (AutoSizeMeasureOrder < 0)
+                if (!AllowAutoHeight)
                     return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)

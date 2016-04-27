@@ -145,17 +145,24 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure()
         {
-            foreach (var scalarItem in ScalarItems.AutoSizeItems)
+            PrepareMeasure(ScalarItems.AutoSizeItemsBefore);
+
+            IsPreparingMeasure = true;
+            PrepareMeasureBlocks();
+            IsPreparingMeasure = false;
+
+            PrepareMeasure(ScalarItems.AutoSizeItemsAfter);
+        }
+
+        private void PrepareMeasure(IReadOnlyCollection<ScalarItem> scalarItems)
+        {
+            foreach (var scalarItem in scalarItems)
             {
                 Debug.Assert(scalarItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional ScalarItem.");
                 var element = scalarItem[0];
                 element.Measure(scalarItem.AvailableAutoSize);
                 UpdateAutoSize(null, scalarItem, element.DesiredSize);
             }
-
-            IsPreparingMeasure = true;
-            PrepareMeasureBlocks();
-            IsPreparingMeasure = false;
         }
 
         protected abstract void PrepareMeasureBlocks();
@@ -192,15 +199,22 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsPreparingMeasure);
 
-            foreach (var blockItem in BlockItems.AutoSizeItems)
+            PrepareMeasure(blockView, BlockItems.AutoSizeItemsBefore);
+
+            for (int i = 0; i < blockView.Count; i++)
+                blockView[i].View.Measure(Size.Empty);
+
+            PrepareMeasure(blockView, BlockItems.AutoSizeItemsAfter);
+        }
+
+        private void PrepareMeasure(BlockView blockView, IReadOnlyList<BlockItem> blockItems)
+        {
+            foreach (var blockItem in blockItems)
             {
                 var element = blockView[blockItem];
                 element.Measure(blockItem.AvailableAutoSize);
                 UpdateAutoSize(blockView, blockItem, element.DesiredSize);
             }
-
-            for (int i = 0; i < blockView.Count; i++)
-                blockView[i].View.Measure(Size.Empty);
         }
 
         private void FinalizeMeasure(BlockView blockView)

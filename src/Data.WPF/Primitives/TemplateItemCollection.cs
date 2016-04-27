@@ -1,78 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class TemplateItemCollection<T> : ReadOnlyCollection<T>, IConcatList<TemplateItemCollection<T>>
+    internal sealed class TemplateItemCollection<T> : TemplateItemCollectionBase<T>
         where T : TemplateItem
     {
-        internal TemplateItemCollection()
-            : base(new List<T>())
+        private IReadOnlyList<T> _autoSizeItemsBefore;
+
+        private IReadOnlyList<T> _autoSizeItemsAfter;
+
+        internal IReadOnlyList<T> AutoSizeItemsBefore
         {
+            get { return _autoSizeItemsBefore ?? (_autoSizeItemsBefore = CalcAutoSizeItems(AutoSizeMeasureOrder.Before)); }
         }
 
-        internal GridRange Range { get; private set; }
-
-        internal void Add(GridRange gridRange, T item)
+        internal IReadOnlyList<T> AutoSizeItemsAfter
         {
-            Debug.Assert(item != null);
-            Items.Add(item);
-            Range = Range.Union(gridRange);
+            get { return _autoSizeItemsAfter ?? (_autoSizeItemsAfter = CalcAutoSizeItems(AutoSizeMeasureOrder.After)); }
         }
 
-        private IReadOnlyList<T> _autoSizeItems;
-        internal void InvalidateAutoWidthItems()
+        internal override void InvalidateAutoHeightItems()
         {
-            _autoSizeItems = null;
+            _autoSizeItemsBefore = _autoSizeItemsAfter = null;
+            base.InvalidateAutoHeightItems();
+        }
+
+        internal override void InvalidateAutoWidthItems()
+        {
+            _autoSizeItemsBefore = _autoSizeItemsAfter = null;
+            base.InvalidateAutoWidthItems();
+        }
+
+        private IReadOnlyList<T> CalcAutoSizeItems(AutoSizeMeasureOrder order)
+        {
             ReadOnlyCollection<T> collection = this;
-            collection.ForEach(x => x.InvalidateAutoWidthGridColumns());
+            return collection.Where(x => x.AutoSizeMeasureOrder == order && x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureIndex).ToArray();
         }
-
-        internal void InvalidateAutoHeightItems()
-        {
-            _autoSizeItems = null;
-            ReadOnlyCollection<T> collection = this;
-            collection.ForEach(x => x.InvalidateAutoHeightGridRows());
-        }
-
-        internal IReadOnlyList<T> AutoSizeItems
-        {
-            get
-            {
-                ReadOnlyCollection<T> collection = this;
-                return _autoSizeItems ?? (_autoSizeItems = collection.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureOrder).ToArray());
-            }
-        }
-
-        #region IConcatList<TemplateCollection<T>>
-
-        IEnumerator<TemplateItemCollection<T>> IEnumerable<TemplateItemCollection<T>>.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        bool IConcatList<TemplateItemCollection<T>>.IsReadOnly
-        {
-            get { return true; }
-        }
-
-        int IReadOnlyCollection<TemplateItemCollection<T>>.Count
-        {
-            get { return 1; }
-        }
-
-        TemplateItemCollection<T> IReadOnlyList<TemplateItemCollection<T>>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-        #endregion
     }
 }

@@ -25,6 +25,9 @@ namespace DevZest.Data.Windows.Primitives
             public TemplateBuilder End()
             {
                 Item.AutoSizeMeasureOrder = _builderFactory.AutoSizeMeasureOrder;
+                Item.AutoSizeMeasureIndex = _builderFactory.AutoSizeMeasureIndex;
+                Item.AllowAutoWidth = _builderFactory.AllowAutoWidth;
+                Item.AllowAutoHeight = _builderFactory.AllowAutoHeight;
                 AddItem(_builderFactory.Template, _builderFactory.GridRange, Item);
                 return _builderFactory.TemplateBuilder;
             }

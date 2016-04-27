@@ -10,17 +10,51 @@ namespace DevZest.Data.Windows
         {
             TemplateBuilder = templateBuilder;
             GridRange = gridRange;
+            AllowAutoWidth = AllowAutoHeight = true;
+            AutoSizeMeasureOrder = AutoSizeMeasureOrder.Before;
+            AutoSizeMeasureIndex = 0;
         }
 
         internal readonly TemplateBuilder TemplateBuilder;
 
         internal readonly GridRange GridRange;
 
-        internal int AutoSizeMeasureOrder { get; private set; }
+        internal AutoSizeMeasureOrder AutoSizeMeasureOrder { get; private set; }
 
-        public TemplateItemBuilderFactory MeasureAutoSize(int order)
+        internal int AutoSizeMeasureIndex { get; private set; }
+
+        internal bool AllowAutoWidth { get; private set; }
+
+        internal bool AllowAutoHeight { get; private set; }
+
+        public TemplateItemBuilderFactory DisallowAutoWidth()
+        {
+            AllowAutoWidth = false;
+            return this;
+        }
+
+        public TemplateItemBuilderFactory DisallowAutoHeight()
+        {
+            AllowAutoHeight = false;
+            return this;
+        }
+
+        public TemplateItemBuilderFactory AutoSize(AutoSizeMeasureOrder order)
         {
             AutoSizeMeasureOrder = order;
+            return this;
+        }
+
+        public TemplateItemBuilderFactory AutoSize(int index)
+        {
+            AutoSizeMeasureIndex = index;
+            return this;
+        }
+
+        public TemplateItemBuilderFactory AutoSize(AutoSizeMeasureOrder order, int index)
+        {
+            AutoSizeMeasureOrder = order;
+            AutoSizeMeasureIndex = index;
             return this;
         }
 

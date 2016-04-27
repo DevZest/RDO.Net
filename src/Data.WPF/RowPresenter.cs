@@ -505,7 +505,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal TemplateItemCollection<RowItem> RowItems
+        internal RowItemCollection RowItems
         {
             get { return Template.InternalRowItemGroups[_rowItemsId]; }
         }

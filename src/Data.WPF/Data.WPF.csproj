@@ -44,6 +44,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="AutoSizeMeasureOrder.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BindingContext.cs" />
@@ -62,8 +63,10 @@
     <Compile Include="Primitives\LayoutManagerXY.cs" />
     <Compile Include="Primitives\LayoutManagerXY.Y.cs" />
     <Compile Include="Primitives\LayoutManagerZ.cs" />
+    <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
+    <Compile Include="Primitives\TemplateItemCollectionBase.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />

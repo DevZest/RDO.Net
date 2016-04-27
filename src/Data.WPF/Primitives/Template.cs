@@ -80,8 +80,8 @@ namespace DevZest.Data.Windows.Primitives
             internal set { _rowItemGroupSelector = value; }
         }
 
-        private IConcatList<TemplateItemCollection<RowItem>> _rowItemGroups = new TemplateItemCollection<RowItem>();
-        internal IReadOnlyList<TemplateItemCollection<RowItem>> InternalRowItemGroups
+        private IConcatList<RowItemCollection> _rowItemGroups = new RowItemCollection();
+        internal IReadOnlyList<RowItemCollection> InternalRowItemGroups
         {
             get { return _rowItemGroups; }
         }
@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void NextRowItemGroup()
         {
-            _rowItemGroups = _rowItemGroups.Concat(new TemplateItemCollection<RowItem>());
+            _rowItemGroups = _rowItemGroups.Concat(new RowItemCollection());
         }
 
         private IConcatList<SubviewItem> _subviewItems = ConcatList<SubviewItem>.Empty;
@@ -255,7 +255,7 @@ namespace DevZest.Data.Windows.Primitives
                 BlockItemsSplit = InternalBlockItems.Count;
         }
 
-        private TemplateItemCollection<RowItem> CurrentRowItems
+        private RowItemCollection CurrentRowItems
         {
             get { return InternalRowItemGroups[InternalRowItemGroups.Count - 1]; }
         }
