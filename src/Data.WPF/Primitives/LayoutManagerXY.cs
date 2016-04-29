@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,23 +17,29 @@ namespace DevZest.Data.Windows.Primitives
                 return new Y(template, dataSet);
         }
 
-        private struct GridTrackPoint
+        private struct LogicalOffset
         {
-            private double _value;
+            public readonly GridTrack GridTrack;
+            public readonly int BlockOrdinal;
+            public readonly double Fraction;
 
-            public GridTrackPoint(int index, double proportion)
+            public LogicalOffset(GridTrack gridTrack, double fraction)
+                : this(gridTrack, -1, fraction)
             {
-                _value = index + proportion;
             }
 
-            public int Index
+            public LogicalOffset(GridTrack gridTrack, int blockOrdinal, double fraction)
             {
-                get { return (int)_value; }
+                Debug.Assert(gridTrack != null);
+                Debug.Assert(fraction >= 0 && fraction <= 1);
+                GridTrack = gridTrack;
+                BlockOrdinal = blockOrdinal;
+                Fraction = fraction;
             }
 
-            public double Proportion
+            private LayoutManagerXY LayoutManager
             {
-                get { return _value - Index; }
+                get { return GridTrack.Template.LayoutManager as LayoutManagerXY; }
             }
         }
 
