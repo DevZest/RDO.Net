@@ -52,6 +52,7 @@
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
+    <Compile Include="Primitives\GridSpan.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
     <Compile Include="Primitives\IElementCollection.cs" />
     <Compile Include="Primitives\BindingBase.cs" />

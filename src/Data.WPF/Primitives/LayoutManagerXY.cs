@@ -160,14 +160,14 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private static IConcatList<T> CalcVariantAutoLengthTracks<T>(GridTrackCollection<T> gridTracks, T startTrack, T endTrack)
+        private static IConcatList<T> CalcVariantAutoLengthTracks<T>(IReadOnlyList<T> gridTracks, T startTrack, T endTrack)
             where T : GridTrack, IConcatList<T>
         {
             var result = ConcatList<T>.Empty;
             if (startTrack == null)
                 return result;
 
-            for (int i = startTrack.Ordinal; i <= startTrack.Ordinal; i++)
+            for (int i = startTrack.Ordinal; i <= endTrack.Ordinal; i++)
             {
                 var gridTrack = gridTracks[i];
                 if (gridTrack.Length.IsAuto)
