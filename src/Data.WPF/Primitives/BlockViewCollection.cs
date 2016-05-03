@@ -137,29 +137,6 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int RowRangeStartTrack
-        {
-            get
-            {
-                Debug.Assert(Orientation.HasValue);
-                return Orientation == System.Windows.Controls.Orientation.Vertical ? RowRange.Top.Ordinal : RowRange.Left.Ordinal;
-            }
-        }
-
-        private int RowRangeEndTrack
-        {
-            get
-            {
-                Debug.Assert(Orientation.HasValue);
-                return Orientation == System.Windows.Controls.Orientation.Vertical ? RowRange.Bottom.Ordinal : RowRange.Right.Ordinal;
-            }
-        }
-
-        private int RowRangeTracks
-        {
-            get { return RowRangeEndTrack - RowRangeStartTrack + 1; }
-        }
-
         private int MaxBlockCount
         {
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
