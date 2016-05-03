@@ -159,15 +159,5 @@ namespace DevZest.Data.Windows.Primitives
         {
             return gridTrackOrdinal >= headTrack.Ordinal && gridTrackOrdinal <= tailTrack.Ordinal;
         }
-
-        internal GridSpan<GridColumn> ColumnSpan
-        {
-            get { return new GridSpan<GridColumn>(Left, Right); }
-        }
-
-        internal GridSpan<GridRow> RowSpan
-        {
-            get { return new GridSpan<GridRow>(Top, Bottom); }
-        }
     }
 }

@@ -160,25 +160,6 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private static IConcatList<T> CalcVariantAutoLengthTracks<T>(IReadOnlyList<T> gridTracks, T startTrack, T endTrack)
-            where T : GridTrack, IConcatList<T>
-        {
-            var result = ConcatList<T>.Empty;
-            if (startTrack == null)
-                return result;
-
-            for (int i = startTrack.Ordinal; i <= endTrack.Ordinal; i++)
-            {
-                var gridTrack = gridTracks[i];
-                if (gridTrack.Length.IsAuto)
-                {
-                    result = result.Concat(gridTrack);
-                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
-                }
-            }
-            return result;
-        }
-
         internal abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)

@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows.Primitives
                 : base(template, dataSet)
             {
                 var rowRange = template.RowRange;
-                _variantAutoWidthColumns = CalcVariantAutoLengthTracks(template.InternalGridColumns, rowRange.Left, rowRange.Right);
+                _variantAutoWidthColumns = template.InternalGridColumns.InitVariantAutoLengthTracks(rowRange.Left, rowRange.Right);
             }
 
             private readonly IConcatList<GridColumn> _variantAutoWidthColumns;
@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows.Primitives
 
             protected override Point Offset(Point point, int blockDimension)
             {
-                point.Offset(Template.RowRange.MeasuredHeight * blockDimension, 0);
+                point.Offset(0, Template.RowRange.MeasuredHeight * blockDimension);
                 return point;
             }
 
