@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -10,8 +11,7 @@ namespace DevZest.Data.Windows.Primitives
             public X(Template template, DataSet dataSet)
                 : base(template, dataSet)
             {
-                var rowRange = template.RowRange;
-                _variantAutoWidthColumns = template.InternalGridColumns.InitVariantAutoLengthTracks(rowRange.Left, rowRange.Right);
+                _variantAutoWidthColumns = template.InitVariantAutoWidthGridColumns();
             }
 
             private readonly IConcatList<GridColumn> _variantAutoWidthColumns;
@@ -20,20 +20,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _variantAutoWidthColumns; }
             }
 
-            protected override Point Offset(Point point, int blockDimension)
+            protected override Vector BlockDimensionVector
             {
-                point.Offset(0, Template.RowRange.MeasuredHeight * blockDimension);
-                return point;
-            }
-
-            protected override Size GetMeasuredSize(ScalarItem scalarItem)
-            {
-                var gridRange = scalarItem.GridRange;
-                var width = gridRange.MeasuredWidth;
-                var height = gridRange.MeasuredHeight;
-                if (scalarItem.BlockDimensions > 1)
-                    height += Template.RowRange.MeasuredHeight * (BlockDimensions - 1);
-                return new Size(width, height);
+                get { return new Vector(Template.RowRange.MeasuredWidth, 0); }
             }
         }
     }

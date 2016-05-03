@@ -162,6 +162,24 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
 
+        protected abstract Vector BlockDimensionVector { get; }
+
+        protected sealed override Point Offset(Point point, int blockDimension)
+        {
+            return point + BlockDimensionVector * blockDimension;
+        }
+
+        protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
+        {
+            var size = scalarItem.GridRange.MeasuredSize;
+            if (!scalarItem.IsMultidimensional && BlockDimensions > 1)
+            {
+                var delta = BlockDimensionVector * (BlockDimensions - 1);
+                size = new Size(size.Width + delta.X, size.Height + delta.Y);
+            }
+            return size;
+        }
+
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
             return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);

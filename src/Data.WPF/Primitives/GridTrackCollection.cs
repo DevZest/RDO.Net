@@ -92,23 +92,5 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < Count; i++)
                 this[i].StartOffset = this[i - 1].EndOffset;
         }
-
-        internal IConcatList<T> InitVariantAutoLengthTracks(T startTrack, T endTrack)
-        {
-            var result = ConcatList<T>.Empty;
-            if (startTrack == null)
-                return result;
-
-            for (int i = startTrack.Ordinal; i <= endTrack.Ordinal; i++)
-            {
-                var gridTrack = this[i];
-                if (gridTrack.Length.IsAuto)
-                {
-                    result = result.Concat(gridTrack);
-                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
-                }
-            }
-            return result;
-        }
     }
 }

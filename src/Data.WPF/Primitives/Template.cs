@@ -552,5 +552,36 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public int Stretches { get; internal set; }
+
+        internal IConcatList<GridColumn> InitVariantAutoWidthGridColumns()
+        {
+            Debug.Assert(Orientation == System.Windows.Controls.Orientation.Horizontal);
+            return InitVariantAutoLengthTracks(GridColumns, RowRange.Left, RowRange.Right);
+        }
+
+        internal IConcatList<GridRow> InitVariantAutoHeightGridRows()
+        {
+            Debug.Assert(Orientation == System.Windows.Controls.Orientation.Vertical);
+            return InitVariantAutoLengthTracks(GridRows, RowRange.Top, RowRange.Bottom);
+        }
+
+        private static IConcatList<T> InitVariantAutoLengthTracks<T>(IReadOnlyList<T> gridTracks, T startTrack, T endTrack)
+            where T : GridTrack, IConcatList<T>
+        {
+            var result = ConcatList<T>.Empty;
+            if (startTrack == null)
+                return result;
+
+            for (int i = startTrack.Ordinal; i <= endTrack.Ordinal; i++)
+            {
+                var gridTrack = gridTracks[i];
+                if (gridTrack.Length.IsAuto)
+                {
+                    result = result.Concat(gridTrack);
+                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
+                }
+            }
+            return result;
+        }
     }
 }
