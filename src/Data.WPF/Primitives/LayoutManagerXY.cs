@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
         private struct LogicalOffset
         {
             public readonly GridTrack GridTrack;
-            public readonly int BlockOrdinal;
+            public readonly int BlockStack;
             public readonly double Fraction;
 
             public LogicalOffset(GridTrack gridTrack, double fraction)
@@ -28,12 +28,12 @@ namespace DevZest.Data.Windows.Primitives
             {
             }
 
-            public LogicalOffset(GridTrack gridTrack, int blockOrdinal, double fraction)
+            public LogicalOffset(GridTrack gridTrack, int blockStack, double fraction)
             {
                 Debug.Assert(gridTrack != null);
                 Debug.Assert(fraction >= 0 && fraction <= 1);
                 GridTrack = gridTrack;
-                BlockOrdinal = blockOrdinal;
+                BlockStack = blockStack;
                 Fraction = fraction;
             }
 
