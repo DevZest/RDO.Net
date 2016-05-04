@@ -183,13 +183,14 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract IGridTrackCollection MainAxisGridTracks { get; }
         protected abstract IGridTrackCollection CrossAxisGridTracks { get; }
+        internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
         private RelativeOffset _mainScrollOffset;
         private double _crossScrollOffset;
         private double _avgVariantAutoLength;
 
-        private Vector ToVector(double length, double crossLength)
+        private Vector ToVector(double mainLength, double crossLength)
         {
-            return MainAxisGridTracks.ToVector(length, crossLength);
+            return MainAxisGridTracks.ToVector(mainLength, crossLength);
         }
 
         private double TranslateRelativeOffset(RelativeOffset relativeOffset)
@@ -237,8 +238,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return MainAxisGridTracks.MaxFrozenTail; }
         }
-
-        internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
         private Vector BlockDimensionVector
         {
@@ -310,17 +309,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollInfo(bool invalidateMeasure = false)
         {
-            RefreshScrollOffset();
-            RefreshViewportSize();
             RefreshExtentSize();
+            RefreshViewportSize();  // Sequence matters here: ViewportSize relies on ExtentSize
+            RefreshScrollOffset();
 
             if (invalidateMeasure && ElementCollection.Parent != null)
                 ElementCollection.Parent.InvalidateMeasure();
-        }
-
-        private void RefreshScrollOffset()
-        {
-            SetScrollOffset(ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset));
         }
 
         private void RefreshExtentSize()
@@ -333,6 +327,11 @@ namespace DevZest.Data.Windows.Primitives
             var width = Template.SizeToContentX ? ExtentWidth : Template.AvailableWidth;
             var height = Template.SizeToContentY ? ExtentHeight : Template.AvailableHeight;
             ViewportSize = new Size(width, height);
+        }
+
+        private void RefreshScrollOffset()
+        {
+            SetScrollOffset(ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset));
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
