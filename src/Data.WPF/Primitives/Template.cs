@@ -477,44 +477,28 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxFrozenLeft
         {
-            get
-            {
-                var rowRange = RowRange;
-                return rowRange.IsEmpty ? 0 : rowRange.Left.Ordinal;
-            }
+            get { return InternalGridColumns.MaxFrozenHead; }
         }
 
         public int FrozenTop { get; internal set; }
 
         private int MaxFrozenTop
         {
-            get
-            {
-                var rowRange = RowRange;
-                return rowRange.IsEmpty ? 0 : rowRange.Top.Ordinal;
-            }
+            get { return InternalGridRows.MaxFrozenHead; }
         }
 
         public int FrozenRight { get; internal set; }
 
         private int MaxFrozenRight
         {
-            get
-            {
-                var rowRange = RowRange;
-                return rowRange.IsEmpty ? GridColumns.Count : GridColumns.Count - rowRange.Right.Ordinal;
-            }
+            get { return InternalGridColumns.MaxFrozenTail; }
         }
 
         public int FrozenBottom { get; internal set; }
 
         private int MaxFrozenBottom
         {
-            get
-            {
-                var rowRange = RowRange;
-                return rowRange.IsEmpty ? GridRows.Count : GridRows.Count - rowRange.Bottom.Ordinal;
-            }
+            get { return InternalGridRows.MaxFrozenTail; }
         }
 
         public int Stretches { get; internal set; }

@@ -35,5 +35,15 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return new Vector(0, Template.RowRange.MeasuredHeight); }
         }
+
+        protected override int FrozenHead
+        {
+            get { return Template.FrozenTop; }
+        }
+
+        protected override int FrozenTail
+        {
+            get { return Template.FrozenBottom; }
+        }
     }
 }

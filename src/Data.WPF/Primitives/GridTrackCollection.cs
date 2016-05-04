@@ -154,9 +154,14 @@ namespace DevZest.Data.Windows.Primitives
                 gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
         }
 
+        private GridSpan<T> BlockSpan
+        {
+            get { return GetGridSpan(Template.RowRange); }
+        }
+
         private IConcatList<T> InitVariantAutoLengthTracks()
         {
-            var blockSpan = GetGridSpan(Template.RowRange);
+            var blockSpan = BlockSpan;
             var result = Filter(blockSpan, x => x.Length.IsAuto);
             for (int i = 0; i < result.Count; i++)
                 result[i].VariantAutoLengthIndex = i;
@@ -169,5 +174,27 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public abstract Vector BlockDimensionVector { get; }
+
+        protected abstract int FrozenHead { get; }
+
+        protected abstract int FrozenTail { get; }
+
+        public int MaxFrozenHead
+        {
+            get
+            {
+                var blockSpan = BlockSpan;
+                return blockSpan.IsEmpty ? 0 : blockSpan.StartTrack.Ordinal;
+            }
+        }
+
+        public int MaxFrozenTail
+        {
+            get
+            {
+                var blockSpan = BlockSpan;
+                return blockSpan.IsEmpty ? Count : Count - blockSpan.EndTrack.Ordinal;
+            }
+        }
     }
 }
