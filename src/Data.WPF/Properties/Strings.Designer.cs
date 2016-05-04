@@ -220,7 +220,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The {frozen} value is invalid. The frozen area cannot intersects with RowRange.
+        /// The {frozen} value is invalid. RowRange is always scrollable and cannot be frozen.
         /// </summary>
         public static string Template_InvalidFrozenMargin(object frozen)
         {
