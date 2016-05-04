@@ -382,24 +382,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void DistributeStarWidths()
         {
-            DistributeStarLengths(AvailableWidth, InternalGridColumns, StarWidthGridColumns);
+            InternalGridColumns.DistributeStarLengths();
         }
 
         internal void DistributeStarHeights()
         {
-            DistributeStarLengths(AvailableHeight, InternalGridRows, StarHeightGridRows);
-        }
-
-        private static void DistributeStarLengths<T>(double totalLength, GridTrackCollection<T> gridTracks, IReadOnlyList<T> starGridTracks)
-            where T : GridTrack, IConcatList<T>
-        {
-            if (starGridTracks.Count == 0)
-                return;
-
-            totalLength = Math.Max(0d, totalLength - gridTracks.TotalAbsoluteLength - gridTracks.TotalAutoLength);
-            var totalStarFactor = gridTracks.TotalStarFactor;
-            foreach (var gridTrack in starGridTracks)
-                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+            InternalGridRows.DistributeStarLengths();
         }
 
         internal Size AvailableSize
@@ -426,7 +414,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldSizeToContentX == newSizeToContentX)
                     return;
 
-                _starWidthGridColumns = null;
+                InternalGridColumns.InvalidateStarLengthTracks();
                 InternalScalarItems.InvalidateAutoWidthItems();
                 InternalBlockItems.InvalidateAutoWidthItems();
                 foreach (var rowItems in InternalRowItemGroups)
@@ -448,7 +436,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (oldSizeToContentY == newSizeToContentY)
                     return;
 
-                _starHeightGridRows = null;
+                InternalGridRows.InvalidateStarLengthTracks();
                 InternalScalarItems.InvalidateAutoHeightItems();
                 InternalBlockItems.InvalidateAutoHeightItems();
                 foreach (var rowItems in InternalRowItemGroups)
@@ -464,28 +452,6 @@ namespace DevZest.Data.Windows.Primitives
         internal bool SizeToContentY
         {
             get { return double.IsPositiveInfinity(_availableHeight); }
-        }
-
-        private IConcatList<GridColumn> _starWidthGridColumns;
-        private IConcatList<GridColumn> StarWidthGridColumns
-        {
-            get
-            {
-                if (_starWidthGridColumns == null)
-                    _starWidthGridColumns = InternalGridColumns.Filter(x => x.IsStarLength(SizeToContentX));
-                return _starWidthGridColumns;
-            }
-        }
-
-        private IConcatList<GridRow> _starHeightGridRows;
-        private IConcatList<GridRow> StarHeightGridRows
-        {
-            get
-            {
-                if (_starHeightGridRows == null)
-                    _starHeightGridRows = InternalGridRows.Filter(x => x.IsStarLength(SizeToContentY));
-                return _starHeightGridRows;
-            }
         }
 
         internal int CoerceBlockDimensions()

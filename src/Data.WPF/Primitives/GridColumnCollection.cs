@@ -14,5 +14,15 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return Orientation.Horizontal; }
         }
+
+        protected override bool SizeToContent
+        {
+            get { return Template.SizeToContentX; }
+        }
+
+        protected override double AvailableLength
+        {
+            get { return Template.AvailableWidth; }
+        }
     }
 }

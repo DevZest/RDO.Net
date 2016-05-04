@@ -109,5 +109,36 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < Count; i++)
                 yield return this[i];
         }
+
+        protected abstract bool SizeToContent { get; }
+
+        protected abstract double AvailableLength { get; }
+
+        private IConcatList<T> _starLengthTracks;
+        private IConcatList<T> StarLengthTracks
+        {
+            get
+            {
+                if (_starLengthTracks == null)
+                    _starLengthTracks = Filter(x => x.IsStarLength(SizeToContent));
+                return _starLengthTracks;
+            }
+        }
+
+        public void InvalidateStarLengthTracks()
+        {
+            _starLengthTracks = null;
+        }
+
+        public void DistributeStarLengths()
+        {
+            if (Count == 0)
+                return;
+
+            var totalLength = Math.Max(0d, AvailableLength - TotalAbsoluteLength - TotalAutoLength);
+            var totalStarFactor = TotalStarFactor;
+            foreach (var gridTrack in StarLengthTracks)
+                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+        }
     }
 }
