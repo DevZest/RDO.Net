@@ -119,5 +119,20 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract string InvalidAutoLengthMessage { get; }
+
+        internal bool IsHead
+        {
+            get { return Ordinal < Owner.BlockStart.Ordinal; }
+        }
+
+        internal bool IsRepeat
+        {
+            get { return Ordinal >= Owner.BlockStart.Ordinal && Ordinal <= Owner.BlockEnd.Ordinal; }
+        }
+
+        internal bool IsTail
+        {
+            get { return Ordinal > Owner.BlockEnd.Ordinal; }
+        }
     }
 }

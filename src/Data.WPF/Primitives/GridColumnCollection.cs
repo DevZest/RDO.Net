@@ -36,12 +36,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return new Vector(Template.RowRange.MeasuredWidth, 0); }
         }
 
-        protected override int FrozenHead
+        public override int FrozenHead
         {
             get { return Template.FrozenLeft; }
         }
 
-        protected override int FrozenTail
+        public override int FrozenTail
         {
             get { return Template.FrozenRight; }
         }

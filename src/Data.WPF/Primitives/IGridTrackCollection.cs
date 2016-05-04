@@ -13,6 +13,8 @@ namespace DevZest.Data.Windows.Primitives
         void RefreshOffset();
         IReadOnlyList<GridTrack> InitVariantAutoLengthTracks();
         Vector BlockDimensionVector { get; }
+        int FrozenHead { get; }
+        int FrozenTail { get; }
         GridTrack BlockStart { get; }
         GridTrack BlockEnd { get; }
     }

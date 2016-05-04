@@ -17,6 +17,27 @@ namespace DevZest.Data.Windows.Primitives
                 return new Y(template, dataSet);
         }
 
+        private struct LogicalOffset
+        {
+            public LogicalOffset(int gridOffset, double fractionOffset)
+            {
+                Debug.Assert(gridOffset >= 0);
+                Debug.Assert(fractionOffset >= 0 && fractionOffset < 1);
+                _value = gridOffset + fractionOffset;
+            }
+
+            private readonly double _value;
+            public int GridOffset
+            {
+                get { return (int)_value; }
+            }
+
+            public double FractionOffset
+            {
+                get { return _value - GridOffset; }
+            }
+        }
+
         #region IScrollHandler
 
         public ScrollViewer ScrollOwner { get; set; }

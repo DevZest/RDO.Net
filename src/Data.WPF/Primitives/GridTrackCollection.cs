@@ -175,11 +175,11 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract Vector BlockDimensionVector { get; }
 
-        protected abstract int FrozenHead { get; }
+        public abstract int FrozenHead { get; }
 
         protected abstract string FrozenHeadName { get; }
 
-        protected abstract int FrozenTail { get; }
+        public abstract int FrozenTail { get; }
 
         protected abstract string FrozenTailName { get; }
 
