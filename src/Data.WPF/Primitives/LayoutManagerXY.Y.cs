@@ -9,8 +9,18 @@ namespace DevZest.Data.Windows.Primitives
         private sealed class Y : LayoutManagerXY
         {
             public Y(Template template, DataSet dataSet)
-                : base(template.InternalGridRows, dataSet)
+                : base(template, dataSet)
             {
+            }
+
+            protected override IGridTrackCollection MainAxisGridTracks
+            {
+                get { return Template.InternalGridRows; }
+            }
+
+            protected override IGridTrackCollection CrossAxisGridTracks
+            {
+                get { return Template.InternalGridColumns; }
             }
         }
     }

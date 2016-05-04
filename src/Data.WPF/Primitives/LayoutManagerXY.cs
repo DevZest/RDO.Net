@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -107,32 +108,26 @@ namespace DevZest.Data.Windows.Primitives
 
         public double ExtentWidth { get; private set; }
 
-        private Size ExtentSize
+        private void SetExtentSize(Vector value)
         {
-            set
-            {
-                if (ExtentHeight.IsClose(value.Height) && ExtentWidth.IsClose(value.Width))
-                    return;
-                ExtentHeight = value.Height;
-                ExtentWidth = value.Width;
-                InvalidateScrollInfo();
-            }
+            if (ExtentWidth.IsClose(value.X) && ExtentHeight.IsClose(value.Y))
+                return;
+            ExtentWidth = value.X;
+            ExtentHeight = value.Y;
+            InvalidateScrollInfo();
         }
 
         public double HorizontalOffset { get; private set; }
 
         public double VerticalOffset { get; private set; }
 
-        private Vector ScrollOffset
+        private void SetScrollOffset(Vector value)
         {
-            set
-            {
-                if (HorizontalOffset.IsClose(value.X) && VerticalOffset.IsClose(value.Y))
-                    return;
-                HorizontalOffset = value.X;
-                VerticalOffset = value.Y;
-                InvalidateScrollInfo();
-            }
+            if (HorizontalOffset.IsClose(value.X) && VerticalOffset.IsClose(value.Y))
+                return;
+            HorizontalOffset = value.X;
+            VerticalOffset = value.Y;
+            InvalidateScrollInfo();
         }
 
         private double _deltaHorizontalOffset;
@@ -178,17 +173,24 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private LayoutManagerXY(IGridTrackCollection mainAxisGridTracks, DataSet dataSet)
-            : base(mainAxisGridTracks.Template, dataSet)
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
+            Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of the constructor.")]
+        private LayoutManagerXY(Template template, DataSet dataSet)
+            : base(template, dataSet)
         {
-            _mainAxisGridTracks = mainAxisGridTracks;
-            VariantAutoLengthTracks = mainAxisGridTracks.InitVariantAutoLengthTracks();
+            VariantAutoLengthTracks = MainAxisGridTracks.InitVariantAutoLengthTracks();
         }
 
-        private readonly IGridTrackCollection _mainAxisGridTracks;
+        protected abstract IGridTrackCollection MainAxisGridTracks { get; }
+        protected abstract IGridTrackCollection CrossAxisGridTracks { get; }
         private RelativeOffset _mainScrollOffset;
         private double _crossScrollOffset;
         private double _avgVariantAutoLength;
+
+        private Vector ToVector(double length, double crossLength)
+        {
+            return MainAxisGridTracks.ToVector(length, crossLength);
+        }
 
         private double TranslateRelativeOffset(RelativeOffset relativeOffset)
         {
@@ -204,26 +206,26 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(gridOffset >= 0 && gridOffset < MaxFrozenHead + TotalBlockGridTracks + MaxFrozenTail);
             if (gridOffset < MaxFrozenHead)
-                return GridOffset.New(_mainAxisGridTracks[gridOffset]);
+                return GridOffset.New(MainAxisGridTracks[gridOffset]);
 
             gridOffset -= MaxFrozenHead;
             var totalBlockGridTracks = TotalBlockGridTracks;
             if (gridOffset < totalBlockGridTracks)
-                return GridOffset.New(_mainAxisGridTracks[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
+                return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
 
             gridOffset -= totalBlockGridTracks;
             Debug.Assert(gridOffset < MaxFrozenTail);
-            return GridOffset.New(_mainAxisGridTracks[MaxFrozenHead + totalBlockGridTracks + gridOffset]);
+            return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + totalBlockGridTracks + gridOffset]);
         }
 
         private int MaxFrozenHead
         {
-            get { return _mainAxisGridTracks.MaxFrozenHead; }
+            get { return MainAxisGridTracks.MaxFrozenHead; }
         }
 
         private int BlockGridTracks
         {
-            get { return _mainAxisGridTracks.BlockEnd.Ordinal - _mainAxisGridTracks.BlockStart.Ordinal + 1; }
+            get { return MainAxisGridTracks.BlockEnd.Ordinal - MainAxisGridTracks.BlockStart.Ordinal + 1; }
         }
 
         private int TotalBlockGridTracks
@@ -233,14 +235,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxFrozenTail
         {
-            get { return _mainAxisGridTracks.MaxFrozenTail; }
+            get { return MainAxisGridTracks.MaxFrozenTail; }
         }
 
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
         private Vector BlockDimensionVector
         {
-            get { return _mainAxisGridTracks.BlockDimensionVector; }
+            get { return MainAxisGridTracks.BlockDimensionVector; }
         }
 
         protected sealed override Point Offset(Point point, int blockDimension)
@@ -294,8 +296,7 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override void PrepareMeasureBlocks()
         {
 
-            RefreshExtentSize();
-            RefreshViewportSize();
+            RefreshScrollInfo();
         }
 
         private void ClearMeasuredAutoLengths()
@@ -307,9 +308,19 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void RefreshScrollOfffset()
+        private void RefreshScrollInfo(bool invalidateMeasure = false)
         {
-            ScrollOffset = _mainAxisGridTracks.ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset);
+            RefreshScrollOffset();
+            RefreshViewportSize();
+            RefreshExtentSize();
+
+            if (invalidateMeasure && ElementCollection.Parent != null)
+                ElementCollection.Parent.InvalidateMeasure();
+        }
+
+        private void RefreshScrollOffset()
+        {
+            SetScrollOffset(ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset));
         }
 
         private void RefreshExtentSize()
