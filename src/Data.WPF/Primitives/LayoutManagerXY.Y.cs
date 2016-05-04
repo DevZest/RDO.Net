@@ -24,6 +24,11 @@ namespace DevZest.Data.Windows.Primitives
             {
                 get { return new Vector(0, Template.RowRange.MeasuredHeight); }
             }
+
+            protected override IReadOnlyList<GridTrack> MainAxisGridTracks
+            {
+                get { return Template.GridRows; }
+            }
         }
     }
 }

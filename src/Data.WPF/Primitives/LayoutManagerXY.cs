@@ -164,6 +164,8 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Vector BlockDimensionVector { get; }
 
+        protected abstract IReadOnlyList<GridTrack> MainAxisGridTracks { get; }
+
         protected sealed override Point Offset(Point point, int blockDimension)
         {
             return point + BlockDimensionVector * blockDimension;

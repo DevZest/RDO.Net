@@ -12,8 +12,8 @@ namespace DevZest.Data.Windows.Primitives
     {
         internal Template()
         {
-            InternalGridColumns = new GridTrackCollection<GridColumn>();
-            InternalGridRows = new GridTrackCollection<GridRow>();
+            InternalGridColumns = new GridColumnCollection(this);
+            InternalGridRows = new GridRowCollection(this);
             BlockDimensions = 1;
             HierarchicalModelOrdinal = -1;
         }
@@ -46,14 +46,14 @@ namespace DevZest.Data.Windows.Primitives
             BlockDimensions = blockDimensions;
         }
 
-        internal GridTrackCollection<GridColumn> InternalGridColumns { get; private set; }
+        internal GridColumnCollection InternalGridColumns { get; private set; }
 
         public ReadOnlyCollection<GridColumn> GridColumns
         {
             get { return InternalGridColumns; }
         }
 
-        internal GridTrackCollection<GridRow> InternalGridRows { get; private set; }
+        internal GridRowCollection InternalGridRows { get; private set; }
 
         public ReadOnlyCollection<GridRow> GridRows
         {
@@ -187,7 +187,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int AddGridColumn(string width)
         {
-            var gridColumn = new GridColumn(this, GridColumns.Count, GridLengthParser.Parse(width));
+            var gridColumn = new GridColumn(InternalGridColumns, GridColumns.Count, GridLengthParser.Parse(width));
             InternalGridColumns.Add(gridColumn);
             return gridColumn.Ordinal;
         }
@@ -202,7 +202,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int AddGridRow(string height)
         {
-            var gridRow = new GridRow(this, GridRows.Count, GridLengthParser.Parse(height));
+            var gridRow = new GridRow(InternalGridRows, GridRows.Count, GridLengthParser.Parse(height));
             InternalGridRows.Add(gridRow);
             return gridRow.Ordinal;
         }

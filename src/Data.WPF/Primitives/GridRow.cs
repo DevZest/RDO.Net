@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        internal GridRow(Template owner, int ordinal, GridLengthParser.Result result)
+        internal GridRow(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
             : base(owner, ordinal, result)
         {
         }
@@ -60,11 +60,6 @@ namespace DevZest.Data.Windows.Primitives
         public double MaxHeight
         {
             get { return MaxLength; }
-        }
-
-        public override Orientation Orientation
-        {
-            get { return Orientation.Vertical; }
         }
 
         internal override string InvalidStarLengthMessage

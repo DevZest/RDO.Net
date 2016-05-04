@@ -8,9 +8,9 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class GridTrack
     {
-        internal GridTrack(Template template, int ordinal, GridLengthParser.Result result)
+        internal GridTrack(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
         {
-            Template = template;
+            Owner = owner;
             Ordinal = ordinal;
             Length = result.Length;
             MinLength = result.MinLength;
@@ -18,22 +18,19 @@ namespace DevZest.Data.Windows.Primitives
             VariantAutoLengthIndex = -1;
         }
 
-        internal Template Template { get; private set; }
+        internal IGridTrackCollection Owner { get; private set; }
 
-        private IGridTrackOffsetManager OffsetManager
+        internal Template Template
         {
-            get
-            {
-                if (Orientation == Orientation.Vertical)
-                    return Template.InternalGridRows;
-                else
-                    return Template.InternalGridColumns;
-            }
+            get { return Owner.Template; }
         }
 
         internal int Ordinal { get; private set; }
 
-        public abstract Orientation Orientation { get; }
+        public Orientation Orientation
+        {
+            get { return Owner.Orientation; }
+        }
 
         public GridLength Length { get; private set; }
 
@@ -61,7 +58,7 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 _measuredLength = value;
-                OffsetManager.InvalidateOffset();
+                Owner.InvalidateOffset();
             }
         }
 
@@ -70,7 +67,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                OffsetManager.RefreshOffset();
+                Owner.RefreshOffset();
                 return _startOffset;
             }
             set { _startOffset = value; }

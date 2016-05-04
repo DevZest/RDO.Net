@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal class GridTrackCollection<T> : ReadOnlyCollection<T>, IGridTrackOffsetManager
+    internal abstract class GridTrackCollection<T> : ReadOnlyCollection<T>, IGridTrackCollection
         where T : GridTrack, IConcatList<T>
     {
-        internal GridTrackCollection()
+        internal GridTrackCollection(Template template)
             : base(new List<T>())
         {
+            Template = template;
         }
+
+        public Template Template { get; private set; }
+
+        public abstract Orientation Orientation { get; }
 
         internal void Add(T item)
         {
@@ -28,9 +34,14 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double TotalAbsoluteLength { get; private set; }
 
-        internal double TotalAutoLength { get; set; }
+        public double TotalAutoLength { get; set; }
 
         internal double TotalStarFactor { get; private set; }
+
+        GridTrack IReadOnlyList<GridTrack>.this[int index]
+        {
+            get { return this[index]; }
+        }
 
         internal IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
         {
@@ -78,12 +89,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool _isOffsetValid = true;
 
-        void IGridTrackOffsetManager.InvalidateOffset()
+        void IGridTrackCollection.InvalidateOffset()
         {
             _isOffsetValid = false;
         }
 
-        void IGridTrackOffsetManager.RefreshOffset()
+        void IGridTrackCollection.RefreshOffset()
         {
             if (_isOffsetValid)
                 return;
@@ -91,6 +102,12 @@ namespace DevZest.Data.Windows.Primitives
             _isOffsetValid = true;  // prevent re-entrance
             for (int i = 1; i < Count; i++)
                 this[i].StartOffset = this[i - 1].EndOffset;
+        }
+
+        IEnumerator<GridTrack> IEnumerable<GridTrack>.GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+                yield return this[i];
         }
     }
 }
