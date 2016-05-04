@@ -119,28 +119,18 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private double _horizontalOffset;
-        public double HorizontalOffset
-        {
-            get { return _horizontalOffset; }
-            private set
-            {
-                if (_horizontalOffset.IsClose(value))
-                    return;
-                _horizontalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
+        public double HorizontalOffset { get; private set; }
 
-        private double _verticalOffset;
-        public double VerticalOffset
+        public double VerticalOffset { get; private set; }
+
+        private Vector ScrollOffset
         {
-            get { return _verticalOffset; }
-            private set
+            set
             {
-                if (_verticalOffset.IsClose(value))
+                if (HorizontalOffset.IsClose(value.X) && VerticalOffset.IsClose(value.Y))
                     return;
-                _verticalOffset = value;
+                HorizontalOffset = value.X;
+                VerticalOffset = value.Y;
                 InvalidateScrollInfo();
             }
         }
@@ -198,7 +188,17 @@ namespace DevZest.Data.Windows.Primitives
         private readonly IGridTrackCollection _mainAxisGridTracks;
         private RelativeOffset _mainScrollOffset;
         private double _crossScrollOffset;
-        private double _totalVariantAutoLength;
+        private double _avgVariantAutoLength;
+
+        private double TranslateRelativeOffset(RelativeOffset relativeOffset)
+        {
+            throw new NotImplementedException();
+        }
+
+        private RelativeOffset TranslateRelativeOffset(double offset)
+        {
+            throw new NotImplementedException();
+        }
 
         private GridOffset TranslateGridOffset(int gridOffset)
         {
@@ -305,6 +305,11 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < BlockViews.Count; i++)
                     BlockViews[i].ClearMeasuredAutoLengths();
             }
+        }
+
+        private void RefreshScrollOfffset()
+        {
+            ScrollOffset = _mainAxisGridTracks.ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset);
         }
 
         private void RefreshExtentSize()
