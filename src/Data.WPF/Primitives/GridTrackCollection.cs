@@ -185,20 +185,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxFrozenHead
         {
-            get
-            {
-                var blockSpan = BlockSpan;
-                return blockSpan.IsEmpty ? 0 : blockSpan.StartTrack.Ordinal;
-            }
+            get { return BlockStart.Ordinal; }
         }
 
         private int MaxFrozenTail
         {
-            get
-            {
-                var blockSpan = BlockSpan;
-                return blockSpan.IsEmpty ? Count : Count - blockSpan.EndTrack.Ordinal;
-            }
+            get { return Count - 1 - BlockEnd.Ordinal; }
         }
 
         private int Stretches
@@ -214,6 +206,16 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenTailName));
             if (Stretches > FrozenTail)
                 throw new InvalidOperationException(Strings.Template_InvalidStretches(FrozenTailName));
+        }
+
+        public GridTrack BlockStart
+        {
+            get { return BlockSpan.StartTrack; }
+        }
+
+        public GridTrack BlockEnd
+        {
+            get { return BlockSpan.EndTrack; }
         }
     }
 }

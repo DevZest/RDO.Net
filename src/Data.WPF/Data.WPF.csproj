@@ -66,6 +66,7 @@
     <Compile Include="Primitives\LayoutManagerXY.cs" />
     <Compile Include="Primitives\LayoutManagerXY.Y.cs" />
     <Compile Include="Primitives\LayoutManagerZ.cs" />
+    <Compile Include="Primitives\LogicalOffset.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />

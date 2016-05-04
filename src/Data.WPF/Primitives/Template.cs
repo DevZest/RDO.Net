@@ -104,7 +104,12 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange? _rowRange;
         public GridRange RowRange
         {
-            get { return _rowRange.HasValue ? _rowRange.GetValueOrDefault() : CalcRowRange(); }
+            get
+            {
+                if (!_rowRange.HasValue)
+                    _rowRange = CalcRowRange();
+                return _rowRange.GetValueOrDefault();
+            }
             internal set { _rowRange = value; }
         }
 
@@ -136,6 +141,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyRowRange()
         {
+            if (RowRange.IsEmpty)
+                throw new InvalidOperationException(Strings.Template_EmptyRowRange);
+
             for (int i = 0; i < RowItemGroups.Count; i++)
             {
                 var rowItems = RowItemGroups[i];

@@ -220,6 +220,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The RowRange cannot be empty.
+        /// </summary>
+        public static string Template_EmptyRowRange
+        {
+            get { return GetString("Template_EmptyRowRange"); }
+        }
+
+        /// <summary>
         /// The {frozen} value is invalid. RowRange is always scrollable and cannot be frozen.
         /// </summary>
         public static string Template_InvalidFrozenMargin(object frozen)

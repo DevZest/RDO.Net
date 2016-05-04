@@ -195,6 +195,9 @@
   <data name="TemplateItem_InvalidFrozenMargin" xml:space="preserve">
     <value>The {frozen} value is invalid. It cuts across {templateItems}[{ordinal}].</value>
   </data>
+  <data name="Template_EmptyRowRange" xml:space="preserve">
+    <value>The RowRange cannot be empty.</value>
+  </data>
   <data name="Template_InvalidFrozenMargin" xml:space="preserve">
     <value>The {frozen} value is invalid. RowRange is always scrollable and cannot be frozen.</value>
   </data>
