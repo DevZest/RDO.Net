@@ -19,6 +19,8 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract Orientation Orientation { get; }
 
+        protected abstract GridSpan<T> GetGridSpan(GridRange gridRange);
+
         internal void Add(T item)
         {
             Items.Add(item);
@@ -139,6 +141,30 @@ namespace DevZest.Data.Windows.Primitives
             var totalStarFactor = TotalStarFactor;
             foreach (var gridTrack in StarLengthTracks)
                 gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+        }
+
+        private IConcatList<T> InitVariantAutoLengthTracks()
+        {
+            var result = ConcatList<T>.Empty;
+            var blockSpan = GetGridSpan(Template.RowRange);
+            if (blockSpan.IsEmpty)
+                return result;
+
+            for (int i = blockSpan.StartTrack.Ordinal; i <= blockSpan.EndTrack.Ordinal; i++)
+            {
+                var gridTrack = this[i];
+                if (gridTrack.Length.IsAuto)
+                {
+                    result = result.Concat(gridTrack);
+                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
+                }
+            }
+            return result;
+        }
+
+        IReadOnlyList<GridTrack> IGridTrackCollection.InitVariantAutoLengthTracks()
+        {
+            return InitVariantAutoLengthTracks();
         }
     }
 }

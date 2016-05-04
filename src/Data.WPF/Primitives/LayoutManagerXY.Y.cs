@@ -9,25 +9,13 @@ namespace DevZest.Data.Windows.Primitives
         private sealed class Y : LayoutManagerXY
         {
             public Y(Template template, DataSet dataSet)
-                : base(template, dataSet)
+                : base(template.InternalGridRows, dataSet)
             {
-                _variantAutoHeightRows = template.InitVariantAutoHeightGridRows();
-            }
-
-            private readonly IConcatList<GridRow> _variantAutoHeightRows;
-            internal override IReadOnlyList<GridTrack> VariantAutoLengthTracks
-            {
-                get { return _variantAutoHeightRows; }
             }
 
             protected override Vector BlockDimensionVector
             {
                 get { return new Vector(0, Template.RowRange.MeasuredHeight); }
-            }
-
-            protected override IReadOnlyList<GridTrack> MainAxisGridTracks
-            {
-                get { return Template.GridRows; }
             }
         }
     }

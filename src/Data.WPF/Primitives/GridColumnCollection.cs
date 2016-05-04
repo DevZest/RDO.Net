@@ -15,6 +15,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return Orientation.Horizontal; }
         }
 
+        protected override GridSpan<GridColumn> GetGridSpan(GridRange gridRange)
+        {
+            return gridRange.ColumnSpan;
+        }
+
         protected override bool SizeToContent
         {
             get { return Template.SizeToContentX; }

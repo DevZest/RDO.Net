@@ -13,5 +13,6 @@ namespace DevZest.Data.Windows.Primitives
         double TotalAutoLength { get; set; }
         void InvalidateOffset();
         void RefreshOffset();
+        IReadOnlyList<GridTrack> InitVariantAutoLengthTracks();
     }
 }

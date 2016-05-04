@@ -155,16 +155,18 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private LayoutManagerXY(Template template, DataSet dataSet)
-            : base(template, dataSet)
+        private LayoutManagerXY(IGridTrackCollection mainAxisGridTracks, DataSet dataSet)
+            : base(mainAxisGridTracks.Template, dataSet)
         {
+            _mainAxisGridTracks = mainAxisGridTracks;
+            VariantAutoLengthTracks = mainAxisGridTracks.InitVariantAutoLengthTracks();
         }
 
-        internal abstract IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; }
+        private readonly IGridTrackCollection _mainAxisGridTracks;
+
+        internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
         protected abstract Vector BlockDimensionVector { get; }
-
-        protected abstract IReadOnlyList<GridTrack> MainAxisGridTracks { get; }
 
         protected sealed override Point Offset(Point point, int blockDimension)
         {
