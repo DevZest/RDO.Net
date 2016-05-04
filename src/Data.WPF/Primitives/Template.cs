@@ -157,24 +157,9 @@ namespace DevZest.Data.Windows.Primitives
 
             var orientation = Orientation.GetValueOrDefault();
             if (orientation == System.Windows.Controls.Orientation.Horizontal)
-            {
-                if (FrozenLeft > MaxFrozenLeft)
-                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenLeft)));
-                if (FrozenRight > MaxFrozenRight)
-                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenRight)));
-                if (Stretches > FrozenRight)
-                    throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenRight)));
-            }
+                InternalGridColumns.VerifyFrozenMargins();
             else
-            {
-                Debug.Assert(orientation == System.Windows.Controls.Orientation.Vertical);
-                if (FrozenTop > MaxFrozenTop)
-                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenTop)));
-                if (FrozenBottom > MaxFrozenBottom)
-                    throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(nameof(FrozenBottom)));
-                if (Stretches > FrozenBottom)
-                    throw new InvalidOperationException(Strings.Template_InvalidStretches(nameof(FrozenBottom)));
-            }
+                InternalGridRows.VerifyFrozenMargins();
 
             ScalarItems.ForEach(x => x.VerifyFrozenMargins(nameof(ScalarItems)));
             BlockItems.ForEach(x => x.VerifyFrozenMargins(nameof(BlockItems)));
@@ -475,31 +460,11 @@ namespace DevZest.Data.Windows.Primitives
 
         public int FrozenLeft { get; internal set; }
 
-        private int MaxFrozenLeft
-        {
-            get { return InternalGridColumns.MaxFrozenHead; }
-        }
-
         public int FrozenTop { get; internal set; }
-
-        private int MaxFrozenTop
-        {
-            get { return InternalGridRows.MaxFrozenHead; }
-        }
 
         public int FrozenRight { get; internal set; }
 
-        private int MaxFrozenRight
-        {
-            get { return InternalGridColumns.MaxFrozenTail; }
-        }
-
         public int FrozenBottom { get; internal set; }
-
-        private int MaxFrozenBottom
-        {
-            get { return InternalGridRows.MaxFrozenTail; }
-        }
 
         public int Stretches { get; internal set; }
     }

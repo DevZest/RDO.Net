@@ -177,9 +177,13 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract int FrozenHead { get; }
 
+        protected abstract string FrozenHeadName { get; }
+
         protected abstract int FrozenTail { get; }
 
-        public int MaxFrozenHead
+        protected abstract string FrozenTailName { get; }
+
+        private int MaxFrozenHead
         {
             get
             {
@@ -188,13 +192,28 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public int MaxFrozenTail
+        private int MaxFrozenTail
         {
             get
             {
                 var blockSpan = BlockSpan;
                 return blockSpan.IsEmpty ? Count : Count - blockSpan.EndTrack.Ordinal;
             }
+        }
+
+        private int Stretches
+        {
+            get { return Template.Stretches; }
+        }
+
+        public void VerifyFrozenMargins()
+        {
+            if (FrozenHead > MaxFrozenHead)
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenHeadName));
+            if (FrozenTail > MaxFrozenTail)
+                throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenTailName));
+            if (Stretches > FrozenTail)
+                throw new InvalidOperationException(Strings.Template_InvalidStretches(FrozenTailName));
         }
     }
 }

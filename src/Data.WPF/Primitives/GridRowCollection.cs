@@ -45,5 +45,15 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return Template.FrozenBottom; }
         }
+
+        protected override string FrozenHeadName
+        {
+            get { return nameof(Template.FrozenTop); }
+        }
+
+        protected override string FrozenTailName
+        {
+            get { return nameof(Template.FrozenBottom); }
+        }
     }
 }
