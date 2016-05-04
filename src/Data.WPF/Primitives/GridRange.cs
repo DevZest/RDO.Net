@@ -117,22 +117,22 @@ namespace DevZest.Data.Windows.Primitives
 
         internal double MeasuredWidth
         {
-            get { return IsEmpty ? 0 : Template.InternalGridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal); }
+            get { return IsEmpty ? 0 : Template.InternalGridColumns.GetMeasuredLength(ColumnSpan); }
         }
 
         internal double GetMeasuredWidth(Func<GridColumn, bool> predict)
         {
-            return IsEmpty ? 0 : Template.InternalGridColumns.GetMeasuredLength(Left.Ordinal, Right.Ordinal, predict);
+            return IsEmpty ? 0 : Template.InternalGridColumns.GetMeasuredLength(ColumnSpan, predict);
         }
 
         internal double MeasuredHeight
         {
-            get { return IsEmpty? 0 : Template.InternalGridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal); }
+            get { return IsEmpty? 0 : Template.InternalGridRows.GetMeasuredLength(RowSpan); }
         }
 
         internal double GetMeasuredHeight(Func<GridRow, bool> predict)
         {
-            return IsEmpty ? 0 : Template.InternalGridRows.GetMeasuredLength(Top.Ordinal, Bottom.Ordinal, predict);
+            return IsEmpty ? 0 : Template.InternalGridRows.GetMeasuredLength(RowSpan, predict);
         }
 
         public override string ToString()

@@ -81,17 +81,27 @@ namespace DevZest.Data.Windows.Primitives
             Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
         }
 
-        internal double GetMeasuredLength(int startIndex, int endIndex)
+        internal double GetMeasuredLength(GridSpan<T> gridSpan)
         {
-            Debug.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex < Count);
-            return this[endIndex].EndOffset - this[startIndex].StartOffset;
+            if (gridSpan.IsEmpty)
+                return 0;
+
+            var startOrdinal = gridSpan.StartTrack.Ordinal;
+            var endOrdinal = gridSpan.EndTrack.Ordinal;
+            Debug.Assert(startOrdinal >= 0 && startOrdinal <= endOrdinal && endOrdinal < Count);
+            return this[endOrdinal].EndOffset - this[startOrdinal].StartOffset;
         }
 
-        internal double GetMeasuredLength(int startIndex, int endIndex, Func<T, bool> predict)
+        internal double GetMeasuredLength(GridSpan<T> gridSpan, Func<T, bool> predict)
         {
-            Debug.Assert(startIndex >= 0 && startIndex <= endIndex && endIndex < Count);
+            if (gridSpan.IsEmpty)
+                return 0;
+
+            var startOrdinal = gridSpan.StartTrack.Ordinal;
+            var endOrdinal = gridSpan.EndTrack.Ordinal;
+            Debug.Assert(startOrdinal >= 0 && startOrdinal <= endOrdinal && endOrdinal < Count);
             double result = 0d;
-            for (int i = startIndex; i <= endIndex; i++)
+            for (int i = startOrdinal; i <= endOrdinal; i++)
             {
                 var track = this[i];
                 if (predict == null || predict(track))
@@ -173,7 +183,12 @@ namespace DevZest.Data.Windows.Primitives
             return InitVariantAutoLengthTracks();
         }
 
-        public abstract Vector BlockDimensionVector { get; }
+        protected abstract double BlockDimensionLength { get; }
+
+        public Vector BlockDimensionVector
+        {
+            get { return ToVector(0, BlockDimensionLength); }
+        }
 
         public abstract int FrozenHead { get; }
 
@@ -217,5 +232,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return BlockSpan.EndTrack; }
         }
+
+        public abstract Vector ToVector(double length, double crossLength);
     }
 }

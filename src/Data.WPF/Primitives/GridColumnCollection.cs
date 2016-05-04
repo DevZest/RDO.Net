@@ -31,9 +31,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.AvailableWidth; }
         }
 
-        public override Vector BlockDimensionVector
+        protected override double BlockDimensionLength
         {
-            get { return new Vector(Template.RowRange.MeasuredWidth, 0); }
+            get { return Template.RowRange.MeasuredHeight; }
         }
 
         public override int FrozenHead
@@ -54,6 +54,11 @@ namespace DevZest.Data.Windows.Primitives
         protected override string FrozenTailName
         {
             get { return nameof(Template.FrozenRight); }
+        }
+
+        public override Vector ToVector(double length, double crossLength)
+        {
+            return new Vector(length, crossLength);
         }
     }
 }
