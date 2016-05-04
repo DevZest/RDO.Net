@@ -96,13 +96,13 @@ namespace DevZest.Data.Windows.Primitives
         internal IConcatList<GridColumn> FilterColumns(Func<GridColumn, bool> predict, Action<GridColumn> action = null)
         {
             Debug.Assert(!IsEmpty);
-            return Template.InternalGridColumns.Filter(Left.Ordinal, Right.Ordinal, predict, action);
+            return Template.InternalGridColumns.Filter(this, predict, action);
         }
 
         internal IConcatList<GridRow> FilterRows(Func<GridRow, bool> predict, Action<GridRow> action = null)
         {
             Debug.Assert(!IsEmpty);
-            return Template.InternalGridRows.Filter(Top.Ordinal, Bottom.Ordinal, predict, action);
+            return Template.InternalGridRows.Filter(this, predict, action);
         }
 
         internal Point MeasuredPoint

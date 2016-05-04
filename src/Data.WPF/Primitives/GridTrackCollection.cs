@@ -45,14 +45,24 @@ namespace DevZest.Data.Windows.Primitives
             get { return this[index]; }
         }
 
-        internal IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
+        private IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
         {
-            return Filter(0, Count - 1, predict, action);
+            return Filter(GridSpan<T>.From(this), predict, action);
         }
 
-        internal IConcatList<T> Filter(int startIndex, int endIndex, Func<T, bool> predict, Action<T> action = null)
+        internal IConcatList<T> Filter(GridRange gridRange, Func<T, bool> predict, Action<T> action = null)
+        {
+            return Filter(GetGridSpan(gridRange), predict, action);
+        }
+
+        private IConcatList<T> Filter(GridSpan<T> gridSpan, Func<T, bool> predict, Action<T> action = null)
         {
             var result = ConcatList<T>.Empty;
+            if (gridSpan.IsEmpty)
+                return result;
+
+            var startIndex = gridSpan.StartTrack.Ordinal;
+            var endIndex = gridSpan.EndTrack.Ordinal;
             for (int i = startIndex; i <= endIndex; i++)
             {
                 var track = this[i];
@@ -145,20 +155,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private IConcatList<T> InitVariantAutoLengthTracks()
         {
-            var result = ConcatList<T>.Empty;
             var blockSpan = GetGridSpan(Template.RowRange);
-            if (blockSpan.IsEmpty)
-                return result;
-
-            for (int i = blockSpan.StartTrack.Ordinal; i <= blockSpan.EndTrack.Ordinal; i++)
-            {
-                var gridTrack = this[i];
-                if (gridTrack.Length.IsAuto)
-                {
-                    result = result.Concat(gridTrack);
-                    gridTrack.VariantAutoLengthIndex = result.Count - 1;
-                }
-            }
+            var result = Filter(blockSpan, x => x.Length.IsAuto);
+            for (int i = 0; i < result.Count; i++)
+                result[i].VariantAutoLengthIndex = i;
             return result;
         }
 
