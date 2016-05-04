@@ -17,9 +17,9 @@ namespace DevZest.Data.Windows.Primitives
                 return new Y(template, dataSet);
         }
 
-        private struct LogicalOffset
+        private struct RelativeOffset
         {
-            public LogicalOffset(int gridOffset, double fractionOffset)
+            public RelativeOffset(int gridOffset, double fractionOffset)
             {
                 Debug.Assert(gridOffset >= 0);
                 Debug.Assert(fractionOffset >= 0 && fractionOffset < 1);
@@ -35,6 +35,44 @@ namespace DevZest.Data.Windows.Primitives
             public double FractionOffset
             {
                 get { return _value - GridOffset; }
+            }
+        }
+
+        private struct GridOffset
+        {
+            public static GridOffset Eof
+            {
+                get { return new GridOffset(); }
+            }
+
+            public static GridOffset New(GridTrack gridTrack)
+            {
+                Debug.Assert(!gridTrack.IsRepeat);
+                return new GridOffset(gridTrack, -1);
+            }
+
+            public static GridOffset New(GridTrack gridTrack, int blockOffset)
+            {
+                Debug.Assert(gridTrack.IsRepeat);
+                return new GridOffset(gridTrack, blockOffset);
+            }
+
+            private GridOffset(GridTrack gridTrack, int blockOffset)
+            {
+                GridTrack = gridTrack;
+                _blockOffset = blockOffset;
+            }
+
+            public readonly GridTrack GridTrack;
+            private readonly int _blockOffset;
+            public int BlockOffset
+            {
+                get { return GridTrack == null || !GridTrack.IsRepeat ? -1 : _blockOffset; }
+            }
+
+            public bool IsEof
+            {
+                get { return GridTrack == null; }
             }
         }
 
@@ -158,6 +196,45 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private readonly IGridTrackCollection _mainAxisGridTracks;
+        private RelativeOffset _mainScrollOffset;
+        private double _crossScrollOffset;
+        private double _totalVariantAutoLength;
+
+        private GridOffset TranslateGridOffset(int gridOffset)
+        {
+            Debug.Assert(gridOffset >= 0 && gridOffset < MaxFrozenHead + TotalBlockGridTracks + MaxFrozenTail);
+            if (gridOffset < MaxFrozenHead)
+                return GridOffset.New(_mainAxisGridTracks[gridOffset]);
+
+            gridOffset -= MaxFrozenHead;
+            var totalBlockGridTracks = TotalBlockGridTracks;
+            if (gridOffset < totalBlockGridTracks)
+                return GridOffset.New(_mainAxisGridTracks[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
+
+            gridOffset -= totalBlockGridTracks;
+            Debug.Assert(gridOffset < MaxFrozenTail);
+            return GridOffset.New(_mainAxisGridTracks[MaxFrozenHead + totalBlockGridTracks + gridOffset]);
+        }
+
+        private int MaxFrozenHead
+        {
+            get { return _mainAxisGridTracks.MaxFrozenHead; }
+        }
+
+        private int BlockGridTracks
+        {
+            get { return _mainAxisGridTracks.BlockEnd.Ordinal - _mainAxisGridTracks.BlockStart.Ordinal + 1; }
+        }
+
+        private int TotalBlockGridTracks
+        {
+            get { return BlockViews.MaxBlockCount * BlockGridTracks; }
+        }
+
+        private int MaxFrozenTail
+        {
+            get { return _mainAxisGridTracks.MaxFrozenTail; }
+        }
 
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 

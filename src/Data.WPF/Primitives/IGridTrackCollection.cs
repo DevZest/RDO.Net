@@ -17,5 +17,7 @@ namespace DevZest.Data.Windows.Primitives
         int FrozenTail { get; }
         GridTrack BlockStart { get; }
         GridTrack BlockEnd { get; }
+        int MaxFrozenHead { get; }
+        int MaxFrozenTail { get; }
     }
 }

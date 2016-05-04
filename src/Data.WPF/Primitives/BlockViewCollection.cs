@@ -137,7 +137,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int MaxBlockCount
+        public int MaxBlockCount
         {
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
         }

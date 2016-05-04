@@ -183,12 +183,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract string FrozenTailName { get; }
 
-        private int MaxFrozenHead
+        public int MaxFrozenHead
         {
             get { return BlockStart.Ordinal; }
         }
 
-        private int MaxFrozenTail
+        public int MaxFrozenTail
         {
             get { return Count - 1 - BlockEnd.Ordinal; }
         }
