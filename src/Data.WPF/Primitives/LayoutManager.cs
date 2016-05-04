@@ -119,10 +119,7 @@ namespace DevZest.Data.Windows.Primitives
             var delta = value - gridTrack.MeasuredLength;
             Debug.Assert(delta > 0);
             gridTrack.MeasuredLength = value;
-            if (gridTrack.Orientation == Orientation.Horizontal)
-                Template.InternalGridColumns.TotalAutoLength += delta;
-            else
-                Template.InternalGridRows.TotalAutoLength += delta;
+            gridTrack.Owner.TotalAutoLength += delta;
             return true;
         }
 
