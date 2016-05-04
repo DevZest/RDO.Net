@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -28,6 +29,11 @@ namespace DevZest.Data.Windows.Primitives
         protected override double AvailableLength
         {
             get { return Template.AvailableWidth; }
+        }
+
+        public override Vector BlockDimensionVector
+        {
+            get { return new Vector(Template.RowRange.MeasuredWidth, 0); }
         }
     }
 }

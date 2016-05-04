@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -166,5 +167,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             return InitVariantAutoLengthTracks();
         }
+
+        public abstract Vector BlockDimensionVector { get; }
     }
 }

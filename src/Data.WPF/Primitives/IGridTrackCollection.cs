@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -14,5 +12,6 @@ namespace DevZest.Data.Windows.Primitives
         void InvalidateOffset();
         void RefreshOffset();
         IReadOnlyList<GridTrack> InitVariantAutoLengthTracks();
+        Vector BlockDimensionVector { get; }
     }
 }

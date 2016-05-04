@@ -12,11 +12,6 @@ namespace DevZest.Data.Windows.Primitives
                 : base(template.InternalGridRows, dataSet)
             {
             }
-
-            protected override Vector BlockDimensionVector
-            {
-                get { return new Vector(0, Template.RowRange.MeasuredHeight); }
-            }
         }
     }
 }

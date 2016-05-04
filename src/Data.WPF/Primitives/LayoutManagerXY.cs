@@ -166,7 +166,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
-        protected abstract Vector BlockDimensionVector { get; }
+        private Vector BlockDimensionVector
+        {
+            get { return _mainAxisGridTracks.BlockDimensionVector; }
+        }
 
         protected sealed override Point Offset(Point point, int blockDimension)
         {
