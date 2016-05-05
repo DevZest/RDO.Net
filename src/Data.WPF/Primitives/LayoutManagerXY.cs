@@ -205,7 +205,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private GridOffset TranslateGridOffset(int gridOffset)
         {
-            Debug.Assert(gridOffset >= 0 && gridOffset < MaxFrozenHead + TotalBlockGridTracks + MaxFrozenTail);
+            Debug.Assert(gridOffset >= 0 && gridOffset <= MaxGridOffset);
             if (gridOffset < MaxFrozenHead)
                 return GridOffset.New(MainAxisGridTracks[gridOffset]);
 
@@ -216,7 +216,7 @@ namespace DevZest.Data.Windows.Primitives
 
             gridOffset -= totalBlockGridTracks;
             Debug.Assert(gridOffset < MaxFrozenTail);
-            return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + totalBlockGridTracks + gridOffset]);
+            return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + BlockGridTracks + gridOffset]);
         }
 
         private int MaxFrozenHead
@@ -237,6 +237,11 @@ namespace DevZest.Data.Windows.Primitives
         private int MaxFrozenTail
         {
             get { return MainAxisGridTracks.MaxFrozenTail; }
+        }
+
+        private int MaxGridOffset
+        {
+            get { return MaxFrozenHead + TotalBlockGridTracks + MaxFrozenTail; }
         }
 
         private Vector BlockDimensionVector
