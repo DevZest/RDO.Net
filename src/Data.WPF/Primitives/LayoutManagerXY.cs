@@ -292,14 +292,85 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(blockOrdinal >= 0);
 
-            var blockStartOffset = MainAxisGridTracks[MaxFrozenHead].StartOffset;
-            var avgBlockLength = AvgBlockLength;
-            if (BlockViews.Count == 0 || blockOrdinal < BlockViews.First.Ordinal || blockOrdinal > BlockViews.Last.Ordinal)
+            var relativeOffsetSpan = GetRelativeOffsetSpan(gridTrack, blockOrdinal);
+            var startOffset = MainAxisGridTracks[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
+            return new OffsetSpan(startOffset + relativeOffsetSpan.StartOffset, startOffset + relativeOffsetSpan.EndOffset);
+        }
+
+        private OffsetSpan GetRelativeOffsetSpan(GridTrack gridTrack, int blockOrdinal)
+        {
+            var startTrack = MainAxisGridTracks.BlockStart;
+
+            var startOffset = gridTrack.StartOffset - startTrack.StartOffset;
+            var endOffset = gridTrack.EndOffset - startTrack.StartOffset;
+
+            var variantAutoLengthTrack = LastVariantAutoLengthTrack(gridTrack);
+            if (variantAutoLengthTrack != null)
             {
-                var prevBlockEndOffset = blockOrdinal == 0 ? blockStartOffset : blockStartOffset + (blockOrdinal - 1) * avgBlockLength;
-                //gridTrack.IsVariantAutoLength
+                var variantOffsetSpan = GetVariantOffsetSpan(variantAutoLengthTrack, blockOrdinal);
+                startOffset += variantOffsetSpan.StartOffset;
+                endOffset += variantOffsetSpan.EndOffset;
             }
-            throw new NotImplementedException();
+            return new OffsetSpan(startOffset, endOffset);
+        }
+
+        private OffsetSpan GetVariantOffsetSpan(GridTrack gridTrack, int blockOrdinal)
+        {
+            Debug.Assert(gridTrack.IsVariantAutoLength);
+
+            double startOffset, endOffset;
+
+            var blockView = BlockViews.GetBlockView(blockOrdinal);
+            if (blockView != null)
+            {
+                startOffset = blockView.GetMeasuredAutoLengthStartOffset(gridTrack);
+                endOffset = blockView.GetMeasuredAutoLengthEndOffset(gridTrack);
+            }
+            else
+            {
+                endOffset = 0;
+                for (int i = 0; i <= gridTrack.VariantAutoLengthIndex; i++)
+                    endOffset += VariantAutoLengthTracks[i].AvgVariantAutoLength;
+                startOffset = endOffset - gridTrack.AvgVariantAutoLength;
+            }
+
+            return new OffsetSpan(startOffset, endOffset);
+        }
+
+        private GridTrack LastVariantAutoLengthTrack(GridTrack gridTrack)
+        {
+            GridTrack result = null;
+            foreach (var track in VariantAutoLengthTracks)
+            {
+                if (track.Ordinal > gridTrack.Ordinal)
+                    break;
+
+                result = track;
+            }
+            return result;
+        }
+
+        private double GetBlocksLength(int count)
+        {
+            Debug.Assert(count >= 0 && count <= MaxBlockCount);
+            if (count == 0)
+                return 0;
+
+            var unrealized = BlockViews.Count == 0 ? 0 : BlockViews.First.Ordinal;
+            if (count <= unrealized)
+                return count * AvgBlockLength;
+
+            var realized = BlockViews.Count == 0 ? 0 : BlockViews.Last.Ordinal - BlockViews.First.Ordinal + 1;
+            if (count <= unrealized + realized)
+                return unrealized * AvgBlockLength + GetRealizedBlocksLength(count - unrealized);
+
+            return GetRealizedBlocksLength(realized) + (count - realized) * AvgBlockLength;
+        }
+
+        private double GetRealizedBlocksLength(int count)
+        {
+            Debug.Assert(count >= 0 && count <= BlockViews.Count);
+            return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndMeasuredAutoLengthOffset;
         }
 
         private GridOffset TranslateGridOffset(int gridOffset)
@@ -405,7 +476,7 @@ namespace DevZest.Data.Windows.Primitives
                 double totalVariantAutoLength = 0;
                 for (int i = 0; i < BlockViews.Count; i++)
                     totalVariantAutoLength += BlockViews[i].GetMeasuredAutoLength(gridTrack);
-                gridTrack.SetTotalVariantAutoLength(totalVariantAutoLength);
+                gridTrack.SetAvgVariantAutoLength(BlockViews.Count == 0 ? 0 : totalVariantAutoLength / BlockViews.Count);
             }
         }
 

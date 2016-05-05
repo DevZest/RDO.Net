@@ -239,5 +239,15 @@ namespace DevZest.Data.Windows.Primitives
             ElementCollection.RemoveRange(BlockViewStartIndex, Count);
             Count = 0;
         }
+
+        private bool IsRealized(int blockOrdinal)
+        {
+            return First != null && blockOrdinal >= First.Ordinal && blockOrdinal <= Last.Ordinal;
+        }
+
+        public BlockView GetBlockView(int blockOrdinal)
+        {
+            return IsRealized(blockOrdinal) ? this[blockOrdinal - First.Ordinal] : null;
+        }
     }
 }

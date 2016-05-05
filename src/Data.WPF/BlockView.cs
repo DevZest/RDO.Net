@@ -275,6 +275,18 @@ namespace DevZest.Data.Windows
             }
         }
 
+        internal double GetMeasuredAutoLengthStartOffset(GridTrack gridTrack)
+        {
+            return GetMeasuredAutoLengthEndOffset(gridTrack) - GetMeasuredAutoLength(gridTrack);
+        }
+
+        internal double GetMeasuredAutoLengthEndOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
+            int index = gridTrack.VariantAutoLengthIndex;
+            return CumulativeMeasuredAutoLengths[index];
+        }
+
         internal double GetMeasuredAutoLength(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);

@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows.Primitives
             Owner.InvalidateOffset();
         }
 
-        internal double TotalVariantAutoLength
+        internal double AvgVariantAutoLength
         {
             get
             {
@@ -79,7 +79,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal void SetTotalVariantAutoLength(double value)
+        internal void SetAvgVariantAutoLength(double value)
         {
             Debug.Assert(IsVariantAutoLength);
             _measuredLength = value;
