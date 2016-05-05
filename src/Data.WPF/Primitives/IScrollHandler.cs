@@ -11,12 +11,8 @@ namespace DevZest.Data.Windows.Primitives
         double ViewportHeight { get; }
         double ExtentHeight { get; }
         double ExtentWidth { get; }
-        double HorizontalOffset { get; }
-        double VerticalOffset { get; }
-        double DeltaHorizontalOffset { get; set; }
-        double DeltaVerticalOffset { get; set; }
-        void SetHorizontalOffset(double offset);
-        void SetVerticalOffset(double offset);
+        double ScrollOffsetX { get; set; }
+        double ScrollOffsetY { get; set; }
         Rect MakeVisible(Visual visual, Rect rectangle);
     }
 }

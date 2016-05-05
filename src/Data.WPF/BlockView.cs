@@ -31,10 +31,10 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
+            ClearMeasuredAutoLengths();
             ClearElements();
             Ordinal = -1;
             ElementManager = null;
-            ClearMeasuredAutoLengths();
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -266,7 +266,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal void ClearMeasuredAutoLengths()
+        private void ClearMeasuredAutoLengths()
         {
             if (_cumulativeMeasuredAutoLengths != null)
             {

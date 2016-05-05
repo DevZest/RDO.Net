@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange);
 
-        internal Size Measure(Size availableSize)
+        internal virtual Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
             BlockDimensions = Template.CoerceBlockDimensions();

@@ -139,53 +139,21 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateScrollInfo();
         }
 
-        public double HorizontalOffset { get; private set; }
+        private double _oldScrollOffsetX;
+        public double ScrollOffsetX { get; set; }
 
-        public double VerticalOffset { get; private set; }
+        private double _oldScrollOffsetY;
+        public double ScrollOffsetY { get; set; }
 
-        private void SetScrollOffset(Vector value)
+        private void RefreshScrollOffset(Vector value)
         {
-            if (HorizontalOffset.IsClose(value.X) && VerticalOffset.IsClose(value.Y))
+            _oldScrollOffsetX = ScrollOffsetX;
+            _oldScrollOffsetY = ScrollOffsetY;
+            if (ScrollOffsetX.IsClose(value.X) && ScrollOffsetY.IsClose(value.Y))
                 return;
-            HorizontalOffset = value.X;
-            VerticalOffset = value.Y;
+            ScrollOffsetX = value.X;
+            ScrollOffsetY = value.Y;
             InvalidateScrollInfo();
-        }
-
-        private double _deltaHorizontalOffset;
-        public double DeltaHorizontalOffset
-        {
-            get { return _deltaHorizontalOffset; }
-            set
-            {
-                if (_deltaHorizontalOffset.IsClose(value))
-                    return;
-                _deltaHorizontalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        private double _deltaVerticalOffset;
-        public double DeltaVerticalOffset
-        {
-            get { return _deltaVerticalOffset; }
-            set
-            {
-                if (_deltaVerticalOffset.IsClose(value))
-                    return;
-                _deltaVerticalOffset = value;
-                InvalidateScrollInfo();
-            }
-        }
-
-        public void SetHorizontalOffset(double offset)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetVerticalOffset(double offset)
-        {
-            throw new NotImplementedException();
         }
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
@@ -480,19 +448,30 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        protected override void OnSetState(DataPresenterState dataPresenterState)
+        {
+            base.OnSetState(dataPresenterState);
+            if (dataPresenterState == DataPresenterState.Rows)
+            {
+                BlockViews.VirtualizeAll();
+                InvalidateVariantAutoLengths();
+            }
+        }
+
+        internal override Size Measure(Size availableSize)
+        {
+            return base.Measure(availableSize);
+        }
+
+        private void UpdateMainScrollOffset()
+        {
+
+        }
+
         protected sealed override void PrepareMeasureBlocks()
         {
 
             RefreshScrollInfo();
-        }
-
-        private void ClearMeasuredAutoLengths()
-        {
-            if (VariantAutoLengthTracks.Count > 0)
-            {
-                for (int i = 0; i < BlockViews.Count; i++)
-                    BlockViews[i].ClearMeasuredAutoLengths();
-            }
         }
 
         private void RefreshScrollInfo(bool invalidateMeasure = false)
@@ -519,7 +498,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            SetScrollOffset(ToVector(TranslateRelativeOffset(MainScrollOffset), CrossScrollOffset));
+            RefreshScrollOffset(ToVector(TranslateRelativeOffset(MainScrollOffset), CrossScrollOffset));
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
