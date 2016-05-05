@@ -469,15 +469,15 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollInfo(bool invalidateMeasure = false)
         {
-            RefreshExtentSize();
-            RefreshViewport();  // Sequence matters here: ViewportSize relies on ExtentSize
+            RefreshExtent();
+            RefreshViewport();  // Sequence matters here: RefreshViewport relies on RefreshExtent
             RefreshOffset();
 
             if (invalidateMeasure && ElementCollection.Parent != null)
                 ElementCollection.Parent.InvalidateMeasure();
         }
 
-        private void RefreshExtentSize()
+        private void RefreshExtent()
         {
             throw new NotImplementedException();
         }
