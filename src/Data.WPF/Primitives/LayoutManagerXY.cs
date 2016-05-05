@@ -8,16 +8,8 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract partial class LayoutManagerXY : LayoutManager, IScrollHandler
+    internal abstract class LayoutManagerXY : LayoutManager, IScrollHandler
     {
-        public static new LayoutManagerXY Create(Template template, DataSet dataSet)
-        {
-            if (template.Orientation.Value == Orientation.Horizontal)
-                return new X(template, dataSet);
-            else
-                return new Y(template, dataSet);
-        }
-
         private struct OffsetSpan
         {
             public readonly double StartOffset;
@@ -109,50 +101,58 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollOwner.InvalidateScrollInfo();
         }
 
-        public double ViewportWidth { get; private set; }
+        public abstract double ViewportX { get; }
 
-        public double ViewportHeight { get; private set; }
+        public abstract double ViewportY { get; }
 
-        protected Size ViewportSize
+        protected double ViewportMain { get; private set; }
+
+        protected double ViewportCross { get; private set; }
+
+        private void RefreshViewport(double valueMain, double valueCross)
         {
-            get { return new Size(ViewportWidth, ViewportHeight); }
-            private set
-            {
-                if (ViewportWidth.IsClose(value.Width) && ViewportHeight.IsClose(value.Height))
-                    return;
-                ViewportWidth = value.Width;
-                ViewportHeight = value.Height;
-                InvalidateScrollInfo();
-            }
-        }
-
-        public double ExtentHeight { get; private set; }
-
-        public double ExtentWidth { get; private set; }
-
-        private void SetExtentSize(Vector value)
-        {
-            if (ExtentWidth.IsClose(value.X) && ExtentHeight.IsClose(value.Y))
+            if (ViewportMain.IsClose(valueMain) && ViewportCross.IsClose(valueCross))
                 return;
-            ExtentWidth = value.X;
-            ExtentHeight = value.Y;
+            ViewportMain = valueMain;
+            ViewportCross = valueCross;
             InvalidateScrollInfo();
         }
 
-        private double _oldScrollOffsetX;
-        public double ScrollOffsetX { get; set; }
+        public abstract double ExtentY { get; }
 
-        private double _oldScrollOffsetY;
-        public double ScrollOffsetY { get; set; }
+        public abstract double ExtentX { get; }
 
-        private void RefreshScrollOffset(Vector value)
+        protected double ExtentMain { get; private set; }
+
+        protected double ExtentCross { get; private set; }
+
+        private void RefreshExtent(double valueMain, double valueCross)
         {
-            _oldScrollOffsetX = ScrollOffsetX;
-            _oldScrollOffsetY = ScrollOffsetY;
-            if (ScrollOffsetX.IsClose(value.X) && ScrollOffsetY.IsClose(value.Y))
+            if (ExtentMain.IsClose(valueMain) && ExtentCross.IsClose(valueCross))
                 return;
-            ScrollOffsetX = value.X;
-            ScrollOffsetY = value.Y;
+            ExtentMain = valueMain;
+            ExtentCross = valueCross;
+            InvalidateScrollInfo();
+        }
+
+        public abstract double OffsetX { get; set; }
+
+        public abstract double OffsetY { get; set; }
+
+        private double _oldOffsetMain;
+        protected double OffsetMain { get; set; }
+
+        private double _oldOffsetCross;
+        protected double OffsetCross { get; set; }
+
+        private void RefreshOffset(double valueMain, double valueCross)
+        {
+            _oldOffsetMain = OffsetMain;
+            _oldOffsetCross = OffsetCross;
+            if (OffsetMain.IsClose(valueMain) && OffsetCross.IsClose(valueCross))
+                return;
+            OffsetMain = valueMain;
+            OffsetCross = valueCross;
             InvalidateScrollInfo();
         }
 
@@ -165,17 +165,15 @@ namespace DevZest.Data.Windows.Primitives
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of its constructor.")]
-        private LayoutManagerXY(Template template, DataSet dataSet)
+        protected LayoutManagerXY(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
-            VariantAutoLengthTracks = MainAxisGridTracks.InitVariantAutoLengthTracks();
+            VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();
         }
 
-        protected abstract IGridTrackCollection MainAxisGridTracks { get; }
-        protected abstract IGridTrackCollection CrossAxisGridTracks { get; }
+        protected abstract IGridTrackCollection GridTracksMain { get; }
+        protected abstract IGridTrackCollection GridTracksCross { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
-        private RelativeOffset MainScrollOffset;
-        private double CrossScrollOffset;
 
         private double TotalVariantAutoLength
         {
@@ -193,17 +191,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double FixBlockLength
         {
-            get { return MainAxisGridTracks.BlockEnd.EndOffset - MainAxisGridTracks.BlockStart.StartOffset; }
+            get { return GridTracksMain.BlockEnd.EndOffset - GridTracksMain.BlockStart.StartOffset; }
         }
 
         private double AvgBlockLength
         {
             get { return FixBlockLength + AvgVariantAutoLength; }
-        }
-
-        private Vector ToVector(double mainLength, double crossLength)
-        {
-            return MainAxisGridTracks.ToVector(mainLength, crossLength);
         }
 
         private double TranslateRelativeOffset(RelativeOffset relativeOffset)
@@ -261,13 +254,13 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(blockOrdinal >= 0);
 
             var relativeOffsetSpan = GetRelativeOffsetSpan(gridTrack, blockOrdinal);
-            var startOffset = MainAxisGridTracks[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
+            var startOffset = GridTracksMain[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
             return new OffsetSpan(startOffset + relativeOffsetSpan.StartOffset, startOffset + relativeOffsetSpan.EndOffset);
         }
 
         private OffsetSpan GetRelativeOffsetSpan(GridTrack gridTrack, int blockOrdinal)
         {
-            var startTrack = MainAxisGridTracks.BlockStart;
+            var startTrack = GridTracksMain.BlockStart;
 
             var startOffset = gridTrack.StartOffset - startTrack.StartOffset;
             var endOffset = gridTrack.EndOffset - startTrack.StartOffset;
@@ -345,16 +338,16 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(gridOffset >= 0 && gridOffset <= MaxGridOffset);
             if (gridOffset < MaxFrozenHead)
-                return GridOffset.New(MainAxisGridTracks[gridOffset]);
+                return GridOffset.New(GridTracksMain[gridOffset]);
 
             gridOffset -= MaxFrozenHead;
             var totalBlockGridTracks = TotalBlockGridTracks;
             if (gridOffset < totalBlockGridTracks)
-                return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
+                return GridOffset.New(GridTracksMain[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
 
             gridOffset -= totalBlockGridTracks;
             Debug.Assert(gridOffset < MaxFrozenTail);
-            return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + BlockGridTracks + gridOffset]);
+            return GridOffset.New(GridTracksMain[MaxFrozenHead + BlockGridTracks + gridOffset]);
         }
 
         private int MaxBlockCount
@@ -364,12 +357,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxFrozenHead
         {
-            get { return MainAxisGridTracks.MaxFrozenHead; }
+            get { return GridTracksMain.MaxFrozenHead; }
         }
 
         private int BlockGridTracks
         {
-            get { return MainAxisGridTracks.BlockEnd.Ordinal - MainAxisGridTracks.BlockStart.Ordinal + 1; }
+            get { return GridTracksMain.BlockEnd.Ordinal - GridTracksMain.BlockStart.Ordinal + 1; }
         }
 
         private int TotalBlockGridTracks
@@ -379,7 +372,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxFrozenTail
         {
-            get { return MainAxisGridTracks.MaxFrozenTail; }
+            get { return GridTracksMain.MaxFrozenTail; }
         }
 
         private int MaxGridOffset
@@ -389,7 +382,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private Vector BlockDimensionVector
         {
-            get { return MainAxisGridTracks.BlockDimensionVector; }
+            get { return GridTracksMain.BlockDimensionVector; }
         }
 
         protected sealed override Point Offset(Point point, int blockDimension)
@@ -477,8 +470,8 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshScrollInfo(bool invalidateMeasure = false)
         {
             RefreshExtentSize();
-            RefreshViewportSize();  // Sequence matters here: ViewportSize relies on ExtentSize
-            RefreshScrollOffset();
+            RefreshViewport();  // Sequence matters here: ViewportSize relies on ExtentSize
+            RefreshOffset();
 
             if (invalidateMeasure && ElementCollection.Parent != null)
                 ElementCollection.Parent.InvalidateMeasure();
@@ -489,16 +482,16 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        private void RefreshViewportSize()
+        private void RefreshViewport()
         {
-            var width = Template.SizeToContentX ? ExtentWidth : Template.AvailableWidth;
-            var height = Template.SizeToContentY ? ExtentHeight : Template.AvailableHeight;
-            ViewportSize = new Size(width, height);
+            var valueMain = GridTracksMain.SizeToContent ? ExtentMain : GridTracksMain.AvailableLength;
+            var valueCross = GridTracksCross.SizeToContent ? ExtentCross : GridTracksCross.AvailableLength;
+            RefreshViewport(valueMain, valueCross);
         }
 
-        private void RefreshScrollOffset()
+        private void RefreshOffset()
         {
-            RefreshScrollOffset(ToVector(TranslateRelativeOffset(MainScrollOffset), CrossScrollOffset));
+            throw new NotImplementedException();
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
@@ -518,7 +511,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override Size MeasuredSize
         {
-            get { return ViewportSize; }
+            get { return new Size(ViewportX, ViewportY); }
         }
 
         internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)

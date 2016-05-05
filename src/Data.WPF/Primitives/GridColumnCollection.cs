@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -21,12 +20,12 @@ namespace DevZest.Data.Windows.Primitives
             return gridRange.ColumnSpan;
         }
 
-        protected override bool SizeToContent
+        public override bool SizeToContent
         {
             get { return Template.SizeToContentX; }
         }
 
-        protected override double AvailableLength
+        public override double AvailableLength
         {
             get { return Template.AvailableWidth; }
         }

@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract GridSpan<T> GetGridSpan(GridRange gridRange);
 
-        internal void Add(T item)
+        public void Add(T item)
         {
             Items.Add(item);
 
@@ -35,23 +35,18 @@ namespace DevZest.Data.Windows.Primitives
                 TotalStarFactor += item.Length.Value;
         }
 
-        internal double TotalAbsoluteLength { get; private set; }
+        public double TotalAbsoluteLength { get; private set; }
 
         public double TotalAutoLength { get; set; }
 
-        internal double TotalStarFactor { get; private set; }
-
-        GridTrack IReadOnlyList<GridTrack>.this[int index]
-        {
-            get { return this[index]; }
-        }
+        public double TotalStarFactor { get; private set; }
 
         private IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
         {
             return Filter(GridSpan<T>.From(this), predict, action);
         }
 
-        internal IConcatList<T> Filter(GridRange gridRange, Func<T, bool> predict, Action<T> action = null)
+        public IConcatList<T> Filter(GridRange gridRange, Func<T, bool> predict, Action<T> action = null)
         {
             return Filter(GetGridSpan(gridRange), predict, action);
         }
@@ -131,15 +126,15 @@ namespace DevZest.Data.Windows.Primitives
                 this[i].StartOffset = this[i - 1].EndOffset;
         }
 
-        IEnumerator<GridTrack> IEnumerable<GridTrack>.GetEnumerator()
+        GridTrack IReadOnlyList<GridTrack>.this[int index]
         {
-            for (int i = 0; i < Count; i++)
-                yield return this[i];
+            get { return this[index]; }
         }
 
-        protected abstract bool SizeToContent { get; }
-
-        protected abstract double AvailableLength { get; }
+        IEnumerator<GridTrack> IEnumerable<GridTrack>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         private IConcatList<T> _starLengthTracks;
         private IConcatList<T> StarLengthTracks
@@ -217,7 +212,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.Stretches; }
         }
 
-        public void VerifyFrozenMargins()
+        internal void VerifyFrozenMargins()
         {
             if (FrozenHead > MaxFrozenHead)
                 throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenHeadName));
@@ -237,6 +232,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return BlockSpan.EndTrack; }
         }
 
-        public abstract Vector ToVector(double length, double crossLength);
+        public abstract bool SizeToContent { get; }
+
+        public abstract double AvailableLength { get; }
+
+        public abstract Vector ToVector(double valueMain, double valueCross);
     }
 }

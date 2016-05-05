@@ -62,9 +62,9 @@
     <Compile Include="Primitives\IGridTrackCollection.cs" />
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
-    <Compile Include="Primitives\LayoutManagerXY.X.cs" />
+    <Compile Include="Primitives\LayoutManagerX.cs" />
     <Compile Include="Primitives\LayoutManagerXY.cs" />
-    <Compile Include="Primitives\LayoutManagerXY.Y.cs" />
+    <Compile Include="Primitives\LayoutManagerY.cs" />
     <Compile Include="Primitives\LayoutManagerZ.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />

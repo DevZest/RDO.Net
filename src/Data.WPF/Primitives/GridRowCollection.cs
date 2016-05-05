@@ -21,12 +21,12 @@ namespace DevZest.Data.Windows.Primitives
             return gridRange.RowSpan;
         }
 
-        protected override bool SizeToContent
+        public override bool SizeToContent
         {
             get { return Template.SizeToContentY; }
         }
 
-        protected override double AvailableLength
+        public override double AvailableLength
         {
             get { return Template.AvailableHeight; }
         }

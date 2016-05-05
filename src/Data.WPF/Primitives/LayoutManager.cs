@@ -20,8 +20,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (!template.Orientation.HasValue)
                 return new LayoutManagerZ(template, dataSet);
+            else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
+                return new LayoutManagerX(template, dataSet);
             else
-                return LayoutManagerXY.Create(template, dataSet);
+                return new LayoutManagerY(template, dataSet);
         }
 
         protected LayoutManager(Template template, DataSet dataSet)
