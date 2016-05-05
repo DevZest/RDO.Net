@@ -25,6 +25,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.Template; }
         }
 
+        private LayoutManagerXY LayoutManagerXY
+        {
+            get { return Template.LayoutManager as LayoutManagerXY; }
+        }
+
         internal int Ordinal { get; private set; }
 
         public Orientation Orientation
@@ -51,15 +56,33 @@ namespace DevZest.Data.Windows.Primitives
         private double _measuredLength;
         internal double MeasuredLength
         {
-            get { return _measuredLength; }
-            set
-            {
-                if (_measuredLength == value)
-                    return;
+            get { return IsVariantAutoLength ? 0 : _measuredLength; }
+        }
 
-                _measuredLength = value;
-                Owner.InvalidateOffset();
+        internal void SetMeasuredLength(double value)
+        {
+            Debug.Assert(!IsVariantAutoLength);
+            if (_measuredLength == value)
+                return;
+
+            _measuredLength = value;
+            Owner.InvalidateOffset();
+        }
+
+        internal double TotalVariantAutoLength
+        {
+            get
+            {
+                Debug.Assert(IsVariantAutoLength);
+                LayoutManagerXY.RefreshVariantAutoLengths();
+                return _measuredLength;
             }
+        }
+
+        internal void SetTotalVariantAutoLength(double value)
+        {
+            Debug.Assert(IsVariantAutoLength);
+            _measuredLength = value;
         }
 
         private double _startOffset;

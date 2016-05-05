@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (item.Length.IsAbsolute)
             {
-                item.MeasuredLength = item.Length.Value;
+                item.SetMeasuredLength(item.Length.Value);
                 TotalAbsoluteLength += item.MeasuredLength;
             }
             else if (item.Length.IsStar)
@@ -75,10 +75,14 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal void InitMeasuredAutoLengths(bool sizeToContent)
+        internal void InitMeasuredAutoLengths()
         {
             TotalAutoLength = 0;
-            Filter(x => x.IsAutoLength(sizeToContent)).ForEach(x => x.MeasuredLength = 0);
+            foreach (var gridTrack in this)
+            {
+                if (gridTrack.IsAutoLength(SizeToContent) && !gridTrack.IsVariantAutoLength)
+                    gridTrack.SetMeasuredLength(0);
+            }
         }
 
         internal double GetMeasuredLength(GridSpan<T> gridSpan)
@@ -161,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
             var totalLength = Math.Max(0d, AvailableLength - TotalAbsoluteLength - TotalAutoLength);
             var totalStarFactor = TotalStarFactor;
             foreach (var gridTrack in StarLengthTracks)
-                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
+                gridTrack.SetMeasuredLength(totalLength * (gridTrack.Length.Value / totalStarFactor));
         }
 
         private GridSpan<T> BlockSpan

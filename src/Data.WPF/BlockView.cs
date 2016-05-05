@@ -293,7 +293,7 @@ namespace DevZest.Data.Windows
             var index = gridTrack.VariantAutoLengthIndex;
             for (int i = index; i < CumulativeMeasuredAutoLengths.Length; i++)
                 CumulativeMeasuredAutoLengths[i] += delta;
-            LayoutManagerXY.InvalidateVariantAutoLengthOffset();
+            LayoutManagerXY.InvalidateVariantAutoLengths();
         }
 
         internal double TotalMeasuredAutoLength
@@ -306,7 +306,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                LayoutManagerXY.InvalidateVariantAutoLengthOffset();
+                LayoutManagerXY.RefreshVariantAutoLengths();
                 return _startMeasuredAutoLengthOffset;
             }
             set { _startMeasuredAutoLengthOffset = value; }

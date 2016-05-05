@@ -18,8 +18,30 @@ namespace DevZest.Data.Windows.Primitives
                 return new Y(template, dataSet);
         }
 
+        private struct OffsetSpan
+        {
+            public readonly double StartOffset;
+            public readonly double EndOffset;
+
+            public OffsetSpan(double startOffset, double endOffset)
+            {
+                StartOffset = startOffset;
+                EndOffset = endOffset;
+            }
+
+            public double Length
+            {
+                get { return EndOffset - StartOffset; }
+            }
+        }
+
         private struct RelativeOffset
         {
+            public RelativeOffset(double value)
+            {
+                _value = value;
+            }
+
             public RelativeOffset(int gridOffset, double fractionOffset)
             {
                 Debug.Assert(gridOffset >= 0);
@@ -58,17 +80,17 @@ namespace DevZest.Data.Windows.Primitives
                 return new GridOffset(gridTrack, blockOffset);
             }
 
-            private GridOffset(GridTrack gridTrack, int blockOffset)
+            private GridOffset(GridTrack gridTrack, int blockOrdinal)
             {
                 GridTrack = gridTrack;
-                _blockOffset = blockOffset;
+                _blockOrdinal = blockOrdinal;
             }
 
             public readonly GridTrack GridTrack;
-            private readonly int _blockOffset;
-            public int BlockOffset
+            private readonly int _blockOrdinal;
+            public int BlockOrdinal
             {
-                get { return GridTrack == null || !GridTrack.IsRepeat ? -1 : _blockOffset; }
+                get { return GridTrack == null || !GridTrack.IsRepeat ? -1 : _blockOrdinal; }
             }
 
             public bool IsEof
@@ -174,7 +196,7 @@ namespace DevZest.Data.Windows.Primitives
         #endregion
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of the constructor.")]
+            Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of its constructor.")]
         private LayoutManagerXY(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
@@ -184,9 +206,32 @@ namespace DevZest.Data.Windows.Primitives
         protected abstract IGridTrackCollection MainAxisGridTracks { get; }
         protected abstract IGridTrackCollection CrossAxisGridTracks { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
-        private RelativeOffset _mainScrollOffset;
-        private double _crossScrollOffset;
-        private double _avgVariantAutoLength;
+        private RelativeOffset MainScrollOffset;
+        private double CrossScrollOffset;
+
+        private double TotalVariantAutoLength
+        {
+            get
+            {
+                Debug.Assert(BlockViews.Count > 0);
+                return BlockViews.Last.EndMeasuredAutoLengthOffset - BlockViews.First.StartMeasuredAutoLengthOffset;
+            }
+        }
+
+        private double AvgVariantAutoLength
+        {
+            get { return BlockViews.Count == 0 ? 0 : TotalVariantAutoLength / BlockViews.Count; }
+        }
+
+        private double FixBlockLength
+        {
+            get { return MainAxisGridTracks.BlockEnd.EndOffset - MainAxisGridTracks.BlockStart.StartOffset; }
+        }
+
+        private double AvgBlockLength
+        {
+            get { return FixBlockLength + AvgVariantAutoLength; }
+        }
 
         private Vector ToVector(double mainLength, double crossLength)
         {
@@ -195,11 +240,65 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TranslateRelativeOffset(RelativeOffset relativeOffset)
         {
-            throw new NotImplementedException();
+            var offsetSpan = GetOffsetSpan(relativeOffset.GridOffset);
+            return offsetSpan.StartOffset + offsetSpan.Length * relativeOffset.FractionOffset;
         }
 
         private RelativeOffset TranslateRelativeOffset(double offset)
         {
+            // Binary search
+            var min = 0;
+            var max = MaxGridOffset - 1;
+            while (min <= max)
+            {
+                int mid = (min + max) / 2;
+                var offsetSpan = GetOffsetSpan(mid);
+                if (offset < offsetSpan.StartOffset)
+                    max = mid - 1;
+                else if (offset >= offsetSpan.EndOffset)
+                    min = mid + 1;
+                else
+                    return new RelativeOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
+            }
+
+            return new RelativeOffset(MaxGridOffset);
+        }
+
+        private OffsetSpan GetOffsetSpan(int gridOffset)
+        {
+            Debug.Assert(gridOffset >= 0 && gridOffset < MaxGridOffset);
+            return GetOffsetSpan(TranslateGridOffset(gridOffset));
+        }
+
+        private OffsetSpan GetOffsetSpan(GridOffset gridOffset)
+        {
+            Debug.Assert(!gridOffset.IsEof);
+
+            var gridTrack = gridOffset.GridTrack;
+            if (gridTrack.IsHead)
+                return new OffsetSpan(gridTrack.StartOffset, gridTrack.EndOffset);
+
+            if (gridTrack.IsRepeat)
+                return GetOffsetSpan(gridTrack, gridOffset.BlockOrdinal);
+
+            Debug.Assert(gridTrack.IsTail);
+            var delta = MaxBlockCount * AvgBlockLength;
+            if (MaxBlockCount > 0)
+                delta -= FixBlockLength;    // minus duplicated FixBlockLength
+            return new OffsetSpan(gridTrack.StartOffset + delta, gridTrack.EndOffset + delta);
+        }
+
+        private OffsetSpan GetOffsetSpan(GridTrack gridTrack, int blockOrdinal)
+        {
+            Debug.Assert(blockOrdinal >= 0);
+
+            var blockStartOffset = MainAxisGridTracks[MaxFrozenHead].StartOffset;
+            var avgBlockLength = AvgBlockLength;
+            if (BlockViews.Count == 0 || blockOrdinal < BlockViews.First.Ordinal || blockOrdinal > BlockViews.Last.Ordinal)
+            {
+                var prevBlockEndOffset = blockOrdinal == 0 ? blockStartOffset : blockStartOffset + (blockOrdinal - 1) * avgBlockLength;
+                //gridTrack.IsVariantAutoLength
+            }
             throw new NotImplementedException();
         }
 
@@ -219,6 +318,11 @@ namespace DevZest.Data.Windows.Primitives
             return GridOffset.New(MainAxisGridTracks[MaxFrozenHead + BlockGridTracks + gridOffset]);
         }
 
+        private int MaxBlockCount
+        {
+            get { return BlockViews.MaxBlockCount; }
+        }
+
         private int MaxFrozenHead
         {
             get { return MainAxisGridTracks.MaxFrozenHead; }
@@ -231,7 +335,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int TotalBlockGridTracks
         {
-            get { return BlockViews.MaxBlockCount * BlockGridTracks; }
+            get { return MaxBlockCount * BlockGridTracks; }
         }
 
         private int MaxFrozenTail
@@ -281,20 +385,28 @@ namespace DevZest.Data.Windows.Primitives
                 return base.SetMeasuredAutoLength(blockView, gridTrack, value);
         }
 
-        private bool _isVariantAutoLengthOffsetValid = true;
-        internal void InvalidateVariantAutoLengthOffset()
+        private bool _isVariantAutoLengthsValid = true;
+        internal void InvalidateVariantAutoLengths()
         {
-            _isVariantAutoLengthOffsetValid = false;
+            _isVariantAutoLengthsValid = false;
         }
 
-        internal void RefreshVariantAutoLengthOffset()
+        internal void RefreshVariantAutoLengths()
         {
-            if (_isVariantAutoLengthOffsetValid)
+            if (_isVariantAutoLengthsValid)
                 return;
 
-            _isVariantAutoLengthOffsetValid = true; // Avoid re-entrance
+            _isVariantAutoLengthsValid = true; // Avoid re-entrance
             for (int i = 1; i < BlockViews.Count; i++)
                 BlockViews[i].StartMeasuredAutoLengthOffset = BlockViews[i - 1].EndMeasuredAutoLengthOffset;
+
+            foreach (var gridTrack in VariantAutoLengthTracks)
+            {
+                double totalVariantAutoLength = 0;
+                for (int i = 0; i < BlockViews.Count; i++)
+                    totalVariantAutoLength += BlockViews[i].GetMeasuredAutoLength(gridTrack);
+                gridTrack.SetTotalVariantAutoLength(totalVariantAutoLength);
+            }
         }
 
         protected sealed override void PrepareMeasureBlocks()
@@ -336,7 +448,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            SetScrollOffset(ToVector(TranslateRelativeOffset(_mainScrollOffset), _crossScrollOffset));
+            SetScrollOffset(ToVector(TranslateRelativeOffset(MainScrollOffset), CrossScrollOffset));
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)

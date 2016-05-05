@@ -363,8 +363,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitMeasuredAutoLengths()
         {
-            InternalGridColumns.InitMeasuredAutoLengths(SizeToContentX);
-            InternalGridRows.InitMeasuredAutoLengths(SizeToContentY);
+            InternalGridColumns.InitMeasuredAutoLengths();
+            InternalGridRows.InitMeasuredAutoLengths();
         }
 
         private void DistributeStarLengths()
