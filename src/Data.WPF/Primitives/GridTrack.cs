@@ -25,9 +25,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.Template; }
         }
 
-        private LayoutManagerXY LayoutManagerXY
+        private LayoutXYManager LayoutXYManager
         {
-            get { return Template.LayoutManager as LayoutManagerXY; }
+            get { return Template.LayoutManager as LayoutXYManager; }
         }
 
         internal int Ordinal { get; private set; }
@@ -74,7 +74,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(IsVariantAutoLength);
-                LayoutManagerXY.RefreshVariantAutoLengths();
+                LayoutXYManager.RefreshVariantAutoLengths();
                 return _measuredLength;
             }
         }

@@ -1,52 +1,52 @@
 ﻿namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class LayoutManagerX : LayoutManagerXY
+    internal sealed class LayoutYManager : LayoutXYManager
     {
-        public LayoutManagerX(Template template, DataSet dataSet)
+        public LayoutYManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
         }
 
         protected override IGridTrackCollection GridTracksMain
         {
-            get { return Template.InternalGridColumns; }
+            get { return Template.InternalGridRows; }
         }
 
         protected override IGridTrackCollection GridTracksCross
         {
-            get { return Template.InternalGridRows; }
+            get { return Template.InternalGridColumns; }
         }
 
         public override double ViewportX
         {
-            get { return ViewportMain; }
+            get { return ViewportCross; }
         }
 
         public override double ViewportY
         {
-            get { return ViewportCross; }
+            get { return ViewportMain; }
         }
 
         public override double ExtentX
         {
-            get { return ExtentMain; }
+            get { return ExtentCross; }
         }
 
         public override double ExtentY
         {
-            get { return ExtentCross; }
+            get { return ExtentMain; }
         }
 
         public override double OffsetX
         {
-            get { return OffsetMain; }
-            set { OffsetMain = value; }
+            get { return OffsetCross; }
+            set { OffsetCross = value; }
         }
 
         public override double OffsetY
         {
-            get { return OffsetCross; }
-            set { OffsetCross = value; }
+            get { return OffsetMain; }
+            set { OffsetMain = value; }
         }
     }
 }

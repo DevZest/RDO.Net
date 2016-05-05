@@ -4,9 +4,9 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class LayoutManagerZ : LayoutManager
+    internal sealed class LayoutZManager : LayoutManager
     {
-        internal LayoutManagerZ(Template template, DataSet dataSet)
+        internal LayoutZManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
         }

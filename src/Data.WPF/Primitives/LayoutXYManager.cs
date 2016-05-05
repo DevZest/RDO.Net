@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class LayoutManagerXY : LayoutManager, IScrollHandler
+    internal abstract class LayoutXYManager : LayoutManager, IScrollHandler
     {
         private struct OffsetSpan
         {
@@ -165,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of its constructor.")]
-        protected LayoutManagerXY(Template template, DataSet dataSet)
+        protected LayoutXYManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
             VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();

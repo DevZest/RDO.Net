@@ -6,10 +6,10 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
-    public class LayoutManagerZTests : LayoutManagerTestsBase
+    public class LayoutZManagerTests : LayoutManagerTestsBase
     {
         [TestMethod]
-        public void LayoutManagerZ_Measure()
+        public void LayoutZManager_Measure()
         {
             var dataSet = MockProductCategories(3, false);
             var layoutManager = CreateLayoutManager(dataSet, (builder, _) =>
@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows.Primitives
                     [1, 2].RowElement(100, 20)
                     [2, 2].RowElement(200, 20);
             });
-            Assert.IsInstanceOfType(layoutManager, typeof(LayoutManagerZ));
+            Assert.IsInstanceOfType(layoutManager, typeof(LayoutZManager));
 
             var measuredSize = layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Assert.AreEqual(new Size(330, 65), measuredSize);

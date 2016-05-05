@@ -19,11 +19,11 @@ namespace DevZest.Data.Windows.Primitives
         internal static LayoutManager Create(Template template, DataSet dataSet)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutManagerZ(template, dataSet);
+                return new LayoutZManager(template, dataSet);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutManagerX(template, dataSet);
+                return new LayoutXManager(template, dataSet);
             else
-                return new LayoutManagerY(template, dataSet);
+                return new LayoutYManager(template, dataSet);
         }
 
         protected LayoutManager(Template template, DataSet dataSet)

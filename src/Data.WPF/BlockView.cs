@@ -44,9 +44,9 @@ namespace DevZest.Data.Windows
             get { return ElementManager as LayoutManager; }
         }
 
-        private LayoutManagerXY LayoutManagerXY
+        private LayoutXYManager LayoutXYManager
         {
-            get { return LayoutManager as LayoutManagerXY; }
+            get { return LayoutManager as LayoutXYManager; }
         }
 
         private BlockViewCollection BlockViews
@@ -261,8 +261,8 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                Debug.Assert(LayoutManagerXY.VariantAutoLengthTracks.Count > 0);
-                return _cumulativeMeasuredAutoLengths ?? (_cumulativeMeasuredAutoLengths = new double[LayoutManagerXY.VariantAutoLengthTracks.Count]);
+                Debug.Assert(LayoutXYManager.VariantAutoLengthTracks.Count > 0);
+                return _cumulativeMeasuredAutoLengths ?? (_cumulativeMeasuredAutoLengths = new double[LayoutXYManager.VariantAutoLengthTracks.Count]);
             }
         }
 
@@ -305,7 +305,7 @@ namespace DevZest.Data.Windows
             var index = gridTrack.VariantAutoLengthIndex;
             for (int i = index; i < CumulativeMeasuredAutoLengths.Length; i++)
                 CumulativeMeasuredAutoLengths[i] += delta;
-            LayoutManagerXY.InvalidateVariantAutoLengths();
+            LayoutXYManager.InvalidateVariantAutoLengths();
         }
 
         internal double TotalMeasuredAutoLength
@@ -318,7 +318,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                LayoutManagerXY.RefreshVariantAutoLengths();
+                LayoutXYManager.RefreshVariantAutoLengths();
                 return _startMeasuredAutoLengthOffset;
             }
             set { _startMeasuredAutoLengthOffset = value; }
