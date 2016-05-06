@@ -327,7 +327,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private Span GetGridSpan(GridTrack gridTrack, int blockOrdinal)
         {
-            Debug.Assert(blockOrdinal >= 0);
+            Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
 
             var relativeSpan = GetRelativeSpan(gridTrack, blockOrdinal);
             var startOffset = GridTracksMain[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
@@ -336,6 +336,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private Span GetRelativeSpan(GridTrack gridTrack, int blockOrdinal)
         {
+            Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
             var startTrack = GridTracksMain.BlockStart;
 
             var startOffset = gridTrack.StartOffset - startTrack.StartOffset;
@@ -376,14 +377,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private GridTrack LastVariantAutoLengthTrack(GridTrack gridTrack)
         {
-            Debug.Assert(gridTrack.Orientation == Template.Orientation);
-            Debug.Assert(gridTrack.Ordinal >= GridTracksMain.BlockStart.Ordinal && gridTrack.Ordinal <= GridTracksMain.BlockEnd.Ordinal);
+            Debug.Assert(gridTrack.IsRepeat);
 
-            // optimization: avoid loop for special cases
-            if (gridTrack.IsVariantAutoLength)
-                return gridTrack;
-            if (gridTrack == GridTracksMain.BlockStart)
+            // optimization: shortcuts for common cases
+            if (VariantAutoLengthTracks.Count == 0)
                 return null;
+            if (gridTrack == GridTracksMain.BlockStart)
+                return gridTrack.IsVariantAutoLength ? gridTrack : null;
             if (gridTrack == GridTracksMain.BlockEnd)
                 return Extensions.Last(VariantAutoLengthTracks);
 
