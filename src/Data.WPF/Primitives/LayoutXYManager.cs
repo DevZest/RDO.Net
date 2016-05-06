@@ -27,14 +27,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private struct RelativeOffset
+        private struct LogicalOffset
         {
-            public RelativeOffset(double value)
+            public LogicalOffset(double value)
             {
                 _value = value;
             }
 
-            public RelativeOffset(int gridOffset, double fractionOffset)
+            public LogicalOffset(int gridOffset, double fractionOffset)
             {
                 Debug.Assert(gridOffset >= 0);
                 Debug.Assert(fractionOffset >= 0 && fractionOffset < 1);
@@ -212,19 +212,21 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet)
         {
             VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();
-            ScrollStart = ScrollOrigin;
+            LogicalScrollStart = LogicalScrollOrigin;
         }
 
         protected abstract IGridTrackCollection GridTracksMain { get; }
         protected abstract IGridTrackCollection GridTracksCross { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
-        private RelativeOffset ScrollOrigin
+        private double ScrollOrigin;
+        private LogicalOffset LogicalScrollOrigin
         {
-            get { return new RelativeOffset(FrozenHead); }
+            get { return new LogicalOffset(FrozenHead); }
         }
 
-        private RelativeOffset ScrollStart;
+        private double ScrollStart;
+        private LogicalOffset LogicalScrollStart;
 
         private Vector ToVector(double valueMain, double valueCross)
         {
@@ -267,19 +269,19 @@ namespace DevZest.Data.Windows.Primitives
             get { return FixBlockLength + AvgVariantAutoLength; }
         }
 
-        private double TranslateRelativeOffset(RelativeOffset relativeOffset)
+        private double TranslateLogicalOffset(LogicalOffset logicalOffset)
         {
-            var gridOffset = relativeOffset.GridOffset;
+            var gridOffset = logicalOffset.GridOffset;
             if (gridOffset >= MaxGridOffset)
                 return GetSpan(MaxGridOffset - 1).EndOffset;
             else
             {
                 var span = GetSpan(gridOffset);
-                return span.StartOffset + span.Length * relativeOffset.FractionOffset;
+                return span.StartOffset + span.Length * logicalOffset.FractionOffset;
             }
         }
 
-        private RelativeOffset TranslateRelativeOffset(double offset)
+        private LogicalOffset TranslateLogicalOffset(double offset)
         {
             // Binary search
             var min = 0;
@@ -293,10 +295,10 @@ namespace DevZest.Data.Windows.Primitives
                 else if (offset >= offsetSpan.EndOffset)
                     min = mid + 1;
                 else
-                    return new RelativeOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
+                    return new LogicalOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
             }
 
-            return new RelativeOffset(MaxGridOffset);
+            return new LogicalOffset(MaxGridOffset);
         }
 
         private Span GetSpan(int gridOffset)
@@ -568,7 +570,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            var valueMain = TranslateRelativeOffset(ScrollStart) - TranslateRelativeOffset(ScrollOrigin);
+            ScrollOrigin = TranslateLogicalOffset(LogicalScrollOrigin);
+            ScrollStart = TranslateLogicalOffset(LogicalScrollStart);
+            Debug.Assert(ScrollStart >= ScrollOrigin);
+            var valueMain = ScrollStart - ScrollOrigin;
             var valueCross = CoerceScrollOffsetCross();
             RefreshScollOffset(valueMain, valueCross);
         }
