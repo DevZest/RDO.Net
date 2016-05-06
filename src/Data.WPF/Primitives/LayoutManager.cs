@@ -129,8 +129,6 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Size GetMeasuredSize(BlockView blockView, GridRange gridRange);
 
-        protected abstract Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange);
-
         internal virtual Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
@@ -177,46 +175,50 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            FinalizeMeasureBlocks();
+            for (int i = 0; i < BlockViews.Count; i++)
+            {
+                var blockView = BlockViews[i];
+                blockView.Measure(GetMeasuredSize(blockView, Template.BlockRange));
+            }
+
             return MeasuredSize;
         }
 
-        protected abstract void FinalizeMeasureBlocks();
-
         protected abstract Size MeasuredSize { get; }
 
-        internal Size Measure(BlockView blockView, Size constraintSize)
+        internal Size MeasureBlock(BlockView blockView, Size constraintSize)
         {
             if (IsPreparingMeasure)
-                PrepareMeasure(blockView);
+                PrepareMeasureBlock(blockView);
             else
-                FinalizeMeasure(blockView);
+                FinalizeMeasureBlock(blockView);
             return constraintSize;
         }
 
-        private void PrepareMeasure(BlockView blockView)
+        private void PrepareMeasureBlock(BlockView blockView)
         {
             Debug.Assert(IsPreparingMeasure);
 
-            PrepareMeasure(blockView, BlockItems.AutoSizeItemsBefore);
+            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItemsBefore);
 
             for (int i = 0; i < blockView.Count; i++)
                 blockView[i].View.Measure(Size.Empty);
 
-            PrepareMeasure(blockView, BlockItems.AutoSizeItemsAfter);
+            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItemsAfter);
         }
 
-        private void PrepareMeasure(BlockView blockView, IReadOnlyList<BlockItem> blockItems)
+        private void PrepareMeasureBlockItems(BlockView blockView, IReadOnlyList<BlockItem> blockItems)
         {
             foreach (var blockItem in blockItems)
             {
+                Debug.Assert(blockItem.IsAutoSize);
                 var element = blockView[blockItem];
                 element.Measure(blockItem.AvailableAutoSize);
                 UpdateAutoSize(blockView, blockItem, element.DesiredSize);
             }
         }
 
-        private void FinalizeMeasure(BlockView blockView)
+        private void FinalizeMeasureBlock(BlockView blockView)
         {
             Debug.Assert(!IsPreparingMeasure);
 
@@ -234,16 +236,16 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal Size Measure(RowPresenter row, Size constraintSize)
+        internal Size MeasureRow(RowPresenter row, Size constraintSize)
         {
             if (IsPreparingMeasure)
-                PrepareMeasure(row);
+                PrepareMeasureRow(row);
             else
-                FinalizeMeasure(row);
+                FinalizeMeasureRow(row);
             return constraintSize;
         }
 
-        private void PrepareMeasure(RowPresenter row)
+        private void PrepareMeasureRow(RowPresenter row)
         {
             var rowItems = row.RowItems;
             if (rowItems.AutoSizeItems.Count == 0)
@@ -259,7 +261,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void FinalizeMeasure(RowPresenter row)
+        private void FinalizeMeasureRow(RowPresenter row)
         {
             var rowItems = row.RowItems;
             if (rowItems.Count == 0)
@@ -274,14 +276,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract Point Offset(Point point, int blockDimension);
-
-        internal Rect GetArrangeRect(ScalarItem scalarItem, int blockDimension)
+        internal Rect GetScalarItemRect(ScalarItem scalarItem, int blockDimension)
         {
+            var point = GetScalarItemLocation(scalarItem, blockDimension);
             var size = GetMeasuredSize(scalarItem);
-            var point = Offset(scalarItem.GridRange.MeasuredPoint, blockDimension);
             return new Rect(point, size);
         }
+
+        protected abstract Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension);
 
         internal Size Arrange(Size finalSize)
         {
@@ -290,7 +292,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    element.Arrange(GetArrangeRect(scalarItem, i));
+                    element.Arrange(GetScalarItemRect(scalarItem, i));
                 }
             }
 
@@ -298,35 +300,41 @@ namespace DevZest.Data.Windows.Primitives
             return finalSize;
         }
 
-        internal Rect GetArrangeRect(BlockView blockView)
+        internal Rect GetBlockViewRect(BlockView blockView)
         {
+            var offset = GetBlockViewLocation(blockView);
             var size = GetMeasuredSize(blockView, Template.BlockRange);
-            var offset = GetOffset(blockView, Template.Range(), Template.BlockRange);
             return new Rect(offset, size);
         }
+
+        protected abstract Point GetBlockViewLocation(BlockView blockView);
 
         private void ArrangeBlocks()
         {
             for (int i = 0; i < BlockViews.Count; i++)
             {
                 var blockView = BlockViews[i];
-                blockView.Arrange(GetArrangeRect(blockView));
+                blockView.Arrange(GetBlockViewRect(blockView));
             }
         }
 
-        internal virtual Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
+        internal Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
         {
+            var location = GetBlockItemLocation(blockView, blockItem);
             var size = GetMeasuredSize(blockView, blockItem.GridRange);
-            var offset = GetOffset(blockView, Template.BlockRange, blockItem.GridRange);
-            return new Rect(offset, size);
+            return new Rect(location, size);
         }
+
+        protected abstract Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem);
 
         internal Rect GetArrangeRect(BlockView blockView, int blockDimension)
         {
+            var location = GetRowViewLocation(blockView, blockDimension);
             var size = GetMeasuredSize(blockView, Template.RowRange);
-            var offset = Offset(GetOffset(blockView, Template.BlockRange, Template.RowRange), blockDimension);
-            return new Rect(offset, size);
+            return new Rect(location, size);
         }
+
+        protected abstract Point GetRowViewLocation(BlockView blockView, int blockDimension);
 
         internal void Arrange(BlockView blockView)
         {
@@ -346,10 +354,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetArrangeRect(BlockView blockView, RowItem rowItem)
         {
+            var location = GetRowItemLocation(blockView, rowItem);
             var size = GetMeasuredSize(blockView, rowItem.GridRange);
-            var offset = GetOffset(blockView, Template.RowRange, rowItem.GridRange);
-            return new Rect(offset, size);
+            return new Rect(location, size);
         }
+
+        protected abstract Point GetRowItemLocation(BlockView blockView, RowItem rowItem);
 
         internal void Arrange(RowPresenter row)
         {

@@ -45,25 +45,31 @@ namespace DevZest.Data.Windows.Primitives
             return gridRange.MeasuredSize;
         }
 
-        protected override Point Offset(Point point, int blockDimension)
+        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             Debug.Assert(blockDimension == 0);
-            return point;
+            return scalarItem.GridRange.MeasuredLocation;
         }
 
-        protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
+        protected override Point GetBlockViewLocation(BlockView blockView)
         {
-            Debug.Assert(baseGridRange.Contains(gridRange));
-
-            var basePoint = baseGridRange.MeasuredPoint;
-            var point = gridRange.MeasuredPoint;
-            return new Point(point.X - basePoint.X, point.Y - basePoint.Y);
+            return Template.Range().GetLocation(Template.BlockRange);
         }
 
-        protected override void FinalizeMeasureBlocks()
+        protected override Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem)
         {
-            if (BlockViews.Count == 1)
-                BlockViews[0].Measure(Template.BlockRange.MeasuredSize);
+            return Template.BlockRange.GetLocation(blockItem.GridRange);
+        }
+
+        protected override Point GetRowViewLocation(BlockView blockView, int blockDimension)
+        {
+            Debug.Assert(blockDimension == 0);
+            return Template.BlockRange.GetLocation(Template.RowRange);
+        }
+
+        protected override Point GetRowItemLocation(BlockView blockView, RowItem rowItem)
+        {
+            return Template.RowRange.GetLocation(rowItem.GridRange);
         }
 
         protected override Size MeasuredSize

@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows.Primitives
         internal static void VerifyBlockViewRect(LayoutManager layoutManager, int blockViewIndex, Rect expectedRect)
         {
             var blockView = layoutManager.BlockViews[blockViewIndex];
-            var rect = layoutManager.GetArrangeRect(blockView);
+            var rect = layoutManager.GetBlockViewRect(blockView);
             Assert.AreEqual(expectedRect, rect);
         }
 

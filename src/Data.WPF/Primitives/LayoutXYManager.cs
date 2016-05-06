@@ -469,20 +469,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.BlockDimensionVector; }
         }
 
-        protected sealed override Point Offset(Point point, int blockDimension)
+        private Point OffsetByBlockDimension(Point point, int blockDimension)
         {
             return point + BlockDimensionVector * blockDimension;
-        }
-
-        protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
-        {
-            var size = scalarItem.GridRange.MeasuredSize;
-            if (!scalarItem.IsMultidimensional && BlockDimensions > 1)
-            {
-                var delta = BlockDimensionVector * (BlockDimensions - 1);
-                size = new Size(size.Width + delta.X, size.Height + delta.Y);
-            }
-            return size;
         }
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
@@ -537,10 +526,11 @@ namespace DevZest.Data.Windows.Primitives
 
         internal override Size Measure(Size availableSize)
         {
+            ValidateScrollStart();
             return base.Measure(availableSize);
         }
 
-        private void UpdateMainScrollOffset()
+        private void ValidateScrollStart()
         {
 
         }
@@ -591,13 +581,6 @@ namespace DevZest.Data.Windows.Primitives
             if (result > ExtentCross - ViewportCross)
                 result = ExtentCross - ViewportCross;
             return result;
-        }
-
-        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
-        {
-            var valueMain = GridTracksMain.GetMeasuredLength(gridRange) + GetVariantMeasuredAutoLength(blockView, gridRange);
-            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
-            return ToSize(valueMain, valueCross);
         }
 
         private double GetVariantMeasuredAutoLength(BlockView blockView, GridRange gridRange)
@@ -661,12 +644,45 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
+        protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
+        {
+            var size = scalarItem.GridRange.MeasuredSize;
+            if (!scalarItem.IsMultidimensional && BlockDimensions > 1)
+            {
+                var delta = BlockDimensionVector * (BlockDimensions - 1);
+                size = new Size(size.Width + delta.X, size.Height + delta.Y);
+            }
+            return size;
+        }
+
+        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        {
+            var valueMain = GridTracksMain.GetMeasuredLength(gridRange) + GetVariantMeasuredAutoLength(blockView, gridRange);
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            return ToSize(valueMain, valueCross);
+        }
+
+        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             throw new NotImplementedException();
         }
 
-        protected override void FinalizeMeasureBlocks()
+        protected override Point GetBlockViewLocation(BlockView blockView)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Point GetRowViewLocation(BlockView blockView, int blockDimension)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Point GetRowItemLocation(BlockView blockView, RowItem rowItem)
         {
             throw new NotImplementedException();
         }
@@ -674,11 +690,6 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override Size MeasuredSize
         {
             get { return new Size(ViewportX, ViewportY); }
-        }
-
-        internal override Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
-        {
-            throw new NotImplementedException();
         }
     }
 }

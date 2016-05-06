@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
-            return layoutManager != null ? layoutManager.Measure(BlockView, availableSize) : base.MeasureOverride(availableSize);
+            return layoutManager != null ? layoutManager.MeasureBlock(BlockView, availableSize) : base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size arrangeBounds)
