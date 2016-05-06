@@ -22,6 +22,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract GridSpan<T> GetGridSpan(GridRange gridRange);
 
+        GridSpan IGridTrackCollection.GetGridSpan(GridRange gridRange)
+        {
+            var result = GetGridSpan(gridRange);
+            return new GridSpan(result.StartTrack, result.EndTrack);
+        }
+
         public void Add(T item)
         {
             Items.Add(item);

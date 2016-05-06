@@ -2,6 +2,23 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
+    internal struct GridSpan
+    {
+        public readonly GridTrack StartTrack;
+        public readonly GridTrack EndTrack;
+
+        internal GridSpan(GridTrack startTrack, GridTrack endTrack)
+        {
+            StartTrack = startTrack;
+            EndTrack = endTrack;
+        }
+
+        public bool IsEmpty
+        {
+            get { return StartTrack == null; }
+        }
+    }
+
     internal struct GridSpan<T>
         where T : GridTrack, IConcatList<T>
     {

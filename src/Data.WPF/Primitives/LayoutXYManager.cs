@@ -221,6 +221,23 @@ namespace DevZest.Data.Windows.Primitives
 
         private RelativeOffset ScrollStart;
 
+        private Vector ToVector(double valueMain, double valueCross)
+        {
+            return GridTracksMain.ToVector(valueMain, valueCross);
+        }
+
+        private Size ToSize(double valueMain, double valueCross)
+        {
+            var vector = ToVector(valueMain, valueCross);
+            return new Size(vector.X, vector.Y);
+        }
+
+        private Point ToPoint(double valueMain, double valueCross)
+        {
+            var vector = ToVector(valueMain, valueCross);
+            return new Point(vector.X, vector.Y);
+        }
+
         private double TotalVariantAutoLength
         {
             get
@@ -578,7 +595,70 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
-            throw new NotImplementedException();
+            var valueMain = GridTracksMain.GetMeasuredLength(gridRange) + GetVariantMeasuredAutoLength(blockView, gridRange);
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            return ToSize(valueMain, valueCross);
+        }
+
+        private double GetVariantMeasuredAutoLength(BlockView blockView, GridRange gridRange)
+        {
+            Debug.Assert(!gridRange.IsEmpty);
+            if (VariantAutoLengthTracks.Count == 0)
+                return 0;
+
+            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
+            var min = GetMinVariantAutoLengthTrack(gridSpan);
+            var max = GetMaxVariantAutoLengthTrack(gridSpan);
+
+            return min == null ? 0 : blockView.GetMeasuredAutoLengthEndOffset(max) - blockView.GetMeasuredAutoLengthStartOffset(min);
+        }
+
+        private GridTrack GetMinVariantAutoLengthTrack(GridSpan gridSpan)
+        {
+            Debug.Assert(!gridSpan.IsEmpty);
+            GridTrack result = gridSpan.StartTrack.IsVariantAutoLength ? gridSpan.StartTrack : null;
+            if (result != null)
+                return result;
+
+            for (int i = 0; i < VariantAutoLengthTracks.Count; i++)
+            {
+                var variantAutoLengthTrack = VariantAutoLengthTracks[i];
+                var ordinal = variantAutoLengthTrack.Ordinal;
+                if (ordinal < gridSpan.StartTrack.Ordinal)
+                    continue;
+                else if (ordinal > gridSpan.EndTrack.Ordinal)
+                    break;
+                else
+                {
+                    result = variantAutoLengthTrack;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        private GridTrack GetMaxVariantAutoLengthTrack(GridSpan gridSpan)
+        {
+            Debug.Assert(!gridSpan.IsEmpty);
+            GridTrack result = gridSpan.EndTrack.IsVariantAutoLength ? gridSpan.EndTrack : null;
+            if (result != null)
+                return result;
+
+            for (int i = VariantAutoLengthTracks.Count - 1; i >= 0; i--)
+            {
+                var variantAutoLengthTrack = VariantAutoLengthTracks[i];
+                var ordinal = variantAutoLengthTrack.Ordinal;
+                if (ordinal > gridSpan.EndTrack.Ordinal)
+                    continue;
+                else if (ordinal < gridSpan.StartTrack.Ordinal)
+                    break;
+                else
+                {
+                    result = variantAutoLengthTrack;
+                    break;
+                }
+            }
+            return result;
         }
 
         protected override Point GetOffset(BlockView blockView, GridRange baseGridRange, GridRange gridRange)
