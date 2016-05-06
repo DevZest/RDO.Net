@@ -580,19 +580,27 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
         {
-            var size = scalarItem.GridRange.MeasuredSize;
+            var gridRange = scalarItem.GridRange;
+            var mainGridSpan = GridTracksMain.GetGridSpan(gridRange);
+            var startGridOffset = GetStartGridOffset(mainGridSpan.StartTrack);
+            var endGridOffset = GetEndGridOffset(mainGridSpan.EndTrack);
+            var valueMain = startGridOffset == endGridOffset ? GetSpan(startGridOffset).Length
+                : GetSpan(endGridOffset).EndOffset - GetSpan(startGridOffset).StartOffset;
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+
+            var result = ToSize(valueMain, valueCross);
             if (!scalarItem.IsMultidimensional && BlockDimensions > 1)
             {
                 var delta = BlockDimensionVector * (BlockDimensions - 1);
-                size = new Size(size.Width + delta.X, size.Height + delta.Y);
+                result = new Size(result.Width + delta.X, result.Height + delta.Y);
             }
-            return size;
+            return result;
         }
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
-            Debug.Assert(!gridRange.IsEmpty);
-            
+            Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
+
             var valueMain = GetMeasuredLength(blockView, gridRange);
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
             return ToSize(valueMain, valueCross);
@@ -600,7 +608,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetMeasuredLength(BlockView blockView, GridRange gridRange)
         {
-            Debug.Assert(!gridRange.IsEmpty);
+            Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
 
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
             Span startTrackSpan, endTrackSpan;
@@ -616,7 +624,37 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
-            throw new NotImplementedException();
+            var gridRange = scalarItem.GridRange;
+            var valueMain = GetSpan(GetStartGridOffset(GridTracksMain.GetGridSpan(gridRange).StartTrack)).StartOffset;
+            var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
+            var result = ToPoint(valueMain, valueCross);
+            if (blockDimension > 0)
+                result += (blockDimension - 1) * BlockDimensionVector;
+            return result;
+        }
+
+        private int GetStartGridOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Orientation == Template.Orientation);
+
+            var result = gridTrack.Ordinal;
+            if (result >= MaxFrozenHead + BlockGridTracks)
+                result += MaxBlockCount * BlockGridTracks;
+            return result;
+        }
+
+        private int GetEndGridOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Orientation == Template.Orientation);
+
+            var result = gridTrack.Ordinal;
+
+            if (result >= MaxFrozenHead + BlockGridTracks)
+                result += MaxBlockCount * BlockGridTracks;
+            else if (result >= MaxFrozenHead && MaxBlockCount > 1)
+                result += (MaxBlockCount - 1) * BlockGridTracks;
+
+            return result;
         }
 
         protected override Point GetBlockViewLocation(BlockView blockView)
