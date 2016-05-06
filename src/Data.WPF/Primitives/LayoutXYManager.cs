@@ -101,6 +101,18 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollOwner.InvalidateScrollInfo();
         }
 
+        private void InvalidateMeasure()
+        {
+            if (ElementCollection.Parent != null)
+                ElementCollection.Parent.InvalidateMeasure();
+        }
+
+        private void InvalidateArrange()
+        {
+            if (ElementCollection.Parent != null)
+                ElementCollection.Parent.InvalidateArrange();
+        }
+
         public abstract double ViewportX { get; }
 
         public abstract double ViewportY { get; }
@@ -140,19 +152,45 @@ namespace DevZest.Data.Windows.Primitives
         public abstract double ScrollOffsetY { get; set; }
 
         private double _oldScrollOffsetMain;
-        protected double ScrollOffsetMain { get; set; }
+        private double _scrollOffsetMain;
+        protected double ScrollOffsetMain
+        {
+            get { return _scrollOffsetMain; }
+            set { SetScrollOffsetMain(value, true); }
+        }
 
-        private double _oldScrollOffsetCross;
-        protected double ScrollOffsetCross { get; set; }
+        private void SetScrollOffsetMain(double value, bool invalidateMeasure)
+        {
+            if (_scrollOffsetMain.IsClose(value))
+                return;
+            _scrollOffsetMain = value;
+            if (invalidateMeasure)
+                InvalidateMeasure();
+        }
+
+        private double _scrollOffsetCross;
+        protected double ScrollOffsetCross
+        {
+            get { return _scrollOffsetCross; }
+            set { SetScrollOffsetCross(value, true); }
+        }
+
+        private void SetScrollOffsetCross(double value, bool invalidateArrange)
+        {
+            if (_scrollOffsetMain.IsClose(value))
+                return;
+            _scrollOffsetMain = value;
+            if (invalidateArrange)
+                InvalidateArrange();
+        }
 
         private void RefreshScollOffset(double valueMain, double valueCross)
         {
             _oldScrollOffsetMain = ScrollOffsetMain;
-            _oldScrollOffsetCross = ScrollOffsetCross;
             if (ScrollOffsetMain.IsClose(valueMain) && ScrollOffsetCross.IsClose(valueCross))
                 return;
-            ScrollOffsetMain = valueMain;
-            ScrollOffsetCross = valueCross;
+            SetScrollOffsetMain(valueMain, false);
+            SetScrollOffsetCross(valueCross, false);
             InvalidateScrollInfo();
         }
 
