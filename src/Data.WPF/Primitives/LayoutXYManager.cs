@@ -178,7 +178,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private RelativeOffset ScrollOrigin
         {
-            get { throw new NotImplementedException(); }
+            get { return new RelativeOffset(FrozenHead); }
         }
 
         private RelativeOffset ScrollStart;
@@ -367,6 +367,11 @@ namespace DevZest.Data.Windows.Primitives
         private int MaxBlockCount
         {
             get { return BlockViews.MaxBlockCount; }
+        }
+
+        private int FrozenHead
+        {
+            get { return GridTracksMain.FrozenHead; }
         }
 
         private int MaxFrozenHead
