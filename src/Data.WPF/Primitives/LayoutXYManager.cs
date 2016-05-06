@@ -534,14 +534,11 @@ namespace DevZest.Data.Windows.Primitives
             RefreshScrollInfo();
         }
 
-        private void RefreshScrollInfo(bool invalidateMeasure = false)
+        private void RefreshScrollInfo()
         {
             RefreshViewport();
             RefreshExtent();  // Exec order matters: RefreshExtent relies on RefreshViewport
             RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
-
-            if (invalidateMeasure && ElementCollection.Parent != null)
-                ElementCollection.Parent.InvalidateMeasure();
         }
 
         private void RefreshExtent()
