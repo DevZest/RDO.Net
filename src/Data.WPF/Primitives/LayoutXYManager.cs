@@ -66,6 +66,11 @@ namespace DevZest.Data.Windows.Primitives
                 return new GridOffset(gridTrack, -1);
             }
 
+            public static GridOffset New(GridTrack gridTrack, BlockView block)
+            {
+                return New(gridTrack, block.Ordinal);
+            }
+
             public static GridOffset New(GridTrack gridTrack, int blockOrdinal)
             {
                 Debug.Assert(gridTrack.IsRepeat);
@@ -601,25 +606,11 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
 
-            var valueMain = GetMeasuredLength(blockView, gridRange);
+            var mainGridSpan = GridTracksMain.GetGridSpan(gridRange);
+            var valueMain = mainGridSpan.StartTrack == mainGridSpan.EndTrack ? GetSpan(GridOffset.New(mainGridSpan.StartTrack, blockView)).Length
+                : GetSpan(GridOffset.New(mainGridSpan.EndTrack, blockView)).EndOffset - GetSpan(GridOffset.New(mainGridSpan.StartTrack, blockView)).StartOffset;
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
             return ToSize(valueMain, valueCross);
-        }
-
-        private double GetMeasuredLength(BlockView blockView, GridRange gridRange)
-        {
-            Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
-
-            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
-            Span startTrackSpan, endTrackSpan;
-            if (gridSpan.StartTrack == gridSpan.EndTrack)
-                startTrackSpan = endTrackSpan = GetRelativeSpan(gridSpan.StartTrack, blockView.Ordinal);
-            else
-            {
-                startTrackSpan = GetRelativeSpan(gridSpan.StartTrack, blockView.Ordinal);
-                endTrackSpan = GetRelativeSpan(gridSpan.EndTrack, blockView.Ordinal);
-            }
-            return endTrackSpan.EndOffset - startTrackSpan.StartOffset;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
