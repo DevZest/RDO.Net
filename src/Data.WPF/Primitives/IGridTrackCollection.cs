@@ -22,5 +22,6 @@ namespace DevZest.Data.Windows.Primitives
         int MaxFrozenTail { get; }
         bool SizeToContent { get; }
         double AvailableLength { get; }
+        double GetMeasuredLength(GridRange gridRange);
     }
 }

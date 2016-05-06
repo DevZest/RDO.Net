@@ -37,16 +37,16 @@
             get { return ExtentMain; }
         }
 
-        public override double OffsetX
+        public override double ScrollOffsetX
         {
-            get { return OffsetCross; }
-            set { OffsetCross = value; }
+            get { return ScrollOffsetCross; }
+            set { ScrollOffsetCross = value; }
         }
 
-        public override double OffsetY
+        public override double ScrollOffsetY
         {
-            get { return OffsetMain; }
-            set { OffsetMain = value; }
+            get { return ScrollOffsetMain; }
+            set { ScrollOffsetMain = value; }
         }
     }
 }

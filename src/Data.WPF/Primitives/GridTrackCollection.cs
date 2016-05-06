@@ -80,6 +80,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        public double GetMeasuredLength(GridRange gridRange)
+        {
+            return GetMeasuredLength(GetGridSpan(gridRange));
+        }
+
         internal double GetMeasuredLength(GridSpan<T> gridSpan)
         {
             if (gridSpan.IsEmpty)

@@ -11,8 +11,8 @@ namespace DevZest.Data.Windows.Primitives
         double ViewportY { get; }
         double ExtentX { get; }
         double ExtentY { get; }
-        double OffsetX { get; set; }
-        double OffsetY { get; set; }
+        double ScrollOffsetX { get; set; }
+        double ScrollOffsetY { get; set; }
         Rect MakeVisible(Visual visual, Rect rectangle);
     }
 }
