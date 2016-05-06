@@ -55,9 +55,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return nameof(Template.FrozenRight); }
         }
 
-        public override Vector ToVector(double length, double crossLength)
+        public override Vector ToVector(double valueMain, double valueCross)
         {
-            return new Vector(length, crossLength);
+            return new Vector(valueMain, valueCross);
         }
     }
 }
