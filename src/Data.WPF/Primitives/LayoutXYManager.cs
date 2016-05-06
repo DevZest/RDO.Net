@@ -334,6 +334,12 @@ namespace DevZest.Data.Windows.Primitives
             return new Span(startOffset + relativeSpan.StartOffset, startOffset + relativeSpan.EndOffset);
         }
 
+        private Span GetRelativeSpan(BlockView block, GridTrack gridTrack)
+        {
+            Debug.Assert(block != null && gridTrack.IsRepeat);
+            return GetRelativeSpan(gridTrack, block.Ordinal);
+        }
+
         private Span GetRelativeSpan(GridTrack gridTrack, int blockOrdinal)
         {
             Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
@@ -635,8 +641,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var startTrack = gridSpan.StartTrack;
             var endTrack = gridSpan.EndTrack;
-            return startTrack == endTrack ? GetSpan(GridOffset.New(startTrack, block)).Length
-                : GetSpan(GridOffset.New(endTrack, block)).EndOffset - GetSpan(GridOffset.New(startTrack, block)).StartOffset;
+            return startTrack == endTrack ? GetRelativeSpan(block, startTrack).Length
+                : GetRelativeSpan(block, endTrack).EndOffset - GetRelativeSpan(block, startTrack).StartOffset;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
@@ -647,6 +653,7 @@ namespace DevZest.Data.Windows.Primitives
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
                 result += (blockDimension - 1) * BlockDimensionVector;
+            result.Offset(-ScrollOffsetX, -ScrollOffsetY);
             return result;
         }
 
