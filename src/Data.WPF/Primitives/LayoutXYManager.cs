@@ -379,6 +379,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(gridTrack.Orientation == Template.Orientation);
             Debug.Assert(gridTrack.Ordinal >= GridTracksMain.BlockStart.Ordinal && gridTrack.Ordinal <= GridTracksMain.BlockEnd.Ordinal);
 
+            // optimization: avoid loop for special cases
             if (gridTrack.IsVariantAutoLength)
                 return gridTrack;
             if (gridTrack == GridTracksMain.BlockStart)
@@ -387,8 +388,9 @@ namespace DevZest.Data.Windows.Primitives
                 return Extensions.Last(VariantAutoLengthTracks);
 
             GridTrack result = null;
-            foreach (var variantAuotLengthTrack in VariantAutoLengthTracks)
+            for (int i = 0; i < VariantAutoLengthTracks.Count; i++)
             {
+                var variantAuotLengthTrack = VariantAutoLengthTracks[i];
                 if (variantAuotLengthTrack.Ordinal > gridTrack.Ordinal)
                     break;
 
