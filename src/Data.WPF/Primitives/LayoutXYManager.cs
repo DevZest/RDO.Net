@@ -266,10 +266,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridOffset = relativeOffset.GridOffset;
             if (gridOffset >= MaxGridOffset)
-                return GetGridSpan(MaxGridOffset - 1).EndOffset;
+                return GetSpan(MaxGridOffset - 1).EndOffset;
             else
             {
-                var span = GetGridSpan(gridOffset);
+                var span = GetSpan(gridOffset);
                 return span.StartOffset + span.Length * relativeOffset.FractionOffset;
             }
         }
@@ -282,7 +282,7 @@ namespace DevZest.Data.Windows.Primitives
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                var offsetSpan = GetGridSpan(mid);
+                var offsetSpan = GetSpan(mid);
                 if (offset < offsetSpan.StartOffset)
                     max = mid - 1;
                 else if (offset >= offsetSpan.EndOffset)
@@ -294,13 +294,13 @@ namespace DevZest.Data.Windows.Primitives
             return new RelativeOffset(MaxGridOffset);
         }
 
-        private Span GetGridSpan(int gridOffset)
+        private Span GetSpan(int gridOffset)
         {
             Debug.Assert(gridOffset >= 0 && gridOffset < MaxGridOffset);
-            return GetGridSpan(TranslateGridOffset(gridOffset));
+            return GetSpan(TranslateGridOffset(gridOffset));
         }
 
-        private Span GetGridSpan(GridOffset gridOffset)
+        private Span GetSpan(GridOffset gridOffset)
         {
             Debug.Assert(!gridOffset.IsEof);
 
@@ -322,12 +322,12 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(blockOrdinal >= 0);
 
-            var relativeOffsetSpan = GetRelativeOffsetSpan(gridTrack, blockOrdinal);
+            var relativeSpan = GetRelativeSpan(gridTrack, blockOrdinal);
             var startOffset = GridTracksMain[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
-            return new Span(startOffset + relativeOffsetSpan.StartOffset, startOffset + relativeOffsetSpan.EndOffset);
+            return new Span(startOffset + relativeSpan.StartOffset, startOffset + relativeSpan.EndOffset);
         }
 
-        private Span GetRelativeOffsetSpan(GridTrack gridTrack, int blockOrdinal)
+        private Span GetRelativeSpan(GridTrack gridTrack, int blockOrdinal)
         {
             var startTrack = GridTracksMain.BlockStart;
 
@@ -337,14 +337,14 @@ namespace DevZest.Data.Windows.Primitives
             var variantAutoLengthTrack = LastVariantAutoLengthTrack(gridTrack);
             if (variantAutoLengthTrack != null)
             {
-                var variantOffsetSpan = GetVariantOffsetSpan(variantAutoLengthTrack, blockOrdinal);
-                startOffset += variantOffsetSpan.StartOffset;
-                endOffset += variantOffsetSpan.EndOffset;
+                var variantLengthSpan = GetVariantLengthSpan(variantAutoLengthTrack, blockOrdinal);
+                startOffset += variantLengthSpan.StartOffset;
+                endOffset += variantLengthSpan.EndOffset;
             }
             return new Span(startOffset, endOffset);
         }
 
-        private Span GetVariantOffsetSpan(GridTrack gridTrack, int blockOrdinal)
+        private Span GetVariantLengthSpan(GridTrack gridTrack, int blockOrdinal)
         {
             Debug.Assert(gridTrack.IsVariantAutoLength);
 
@@ -370,12 +370,12 @@ namespace DevZest.Data.Windows.Primitives
         private GridTrack LastVariantAutoLengthTrack(GridTrack gridTrack)
         {
             GridTrack result = null;
-            foreach (var track in VariantAutoLengthTracks)
+            foreach (var variantAuotLengthTrack in VariantAutoLengthTracks)
             {
-                if (track.Ordinal > gridTrack.Ordinal)
+                if (variantAuotLengthTrack.Ordinal > gridTrack.Ordinal)
                     break;
 
-                result = track;
+                result = variantAuotLengthTrack;
             }
             return result;
         }
@@ -456,7 +456,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MaxOffsetMain
         {
-            get { return GetGridSpan(MaxGridOffset - 1).EndOffset; }
+            get { return GetSpan(MaxGridOffset - 1).EndOffset; }
         }
 
         private double MaxOffsetCross
