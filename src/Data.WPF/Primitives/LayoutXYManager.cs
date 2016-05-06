@@ -469,11 +469,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.BlockDimensionVector; }
         }
 
-        private Point OffsetByBlockDimension(Point point, int blockDimension)
-        {
-            return point + BlockDimensionVector * blockDimension;
-        }
-
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
             return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
@@ -583,67 +578,6 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private double GetVariantMeasuredAutoLength(BlockView blockView, GridRange gridRange)
-        {
-            Debug.Assert(!gridRange.IsEmpty);
-            if (VariantAutoLengthTracks.Count == 0)
-                return 0;
-
-            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
-            var min = GetMinVariantAutoLengthTrack(gridSpan);
-            var max = GetMaxVariantAutoLengthTrack(gridSpan);
-
-            return min == null ? 0 : blockView.GetMeasuredAutoLengthEndOffset(max) - blockView.GetMeasuredAutoLengthStartOffset(min);
-        }
-
-        private GridTrack GetMinVariantAutoLengthTrack(GridSpan gridSpan)
-        {
-            Debug.Assert(!gridSpan.IsEmpty);
-            GridTrack result = gridSpan.StartTrack.IsVariantAutoLength ? gridSpan.StartTrack : null;
-            if (result != null)
-                return result;
-
-            for (int i = 0; i < VariantAutoLengthTracks.Count; i++)
-            {
-                var variantAutoLengthTrack = VariantAutoLengthTracks[i];
-                var ordinal = variantAutoLengthTrack.Ordinal;
-                if (ordinal < gridSpan.StartTrack.Ordinal)
-                    continue;
-                else if (ordinal > gridSpan.EndTrack.Ordinal)
-                    break;
-                else
-                {
-                    result = variantAutoLengthTrack;
-                    break;
-                }
-            }
-            return result;
-        }
-
-        private GridTrack GetMaxVariantAutoLengthTrack(GridSpan gridSpan)
-        {
-            Debug.Assert(!gridSpan.IsEmpty);
-            GridTrack result = gridSpan.EndTrack.IsVariantAutoLength ? gridSpan.EndTrack : null;
-            if (result != null)
-                return result;
-
-            for (int i = VariantAutoLengthTracks.Count - 1; i >= 0; i--)
-            {
-                var variantAutoLengthTrack = VariantAutoLengthTracks[i];
-                var ordinal = variantAutoLengthTrack.Ordinal;
-                if (ordinal > gridSpan.EndTrack.Ordinal)
-                    continue;
-                else if (ordinal < gridSpan.StartTrack.Ordinal)
-                    break;
-                else
-                {
-                    result = variantAutoLengthTrack;
-                    break;
-                }
-            }
-            return result;
-        }
-
         protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
         {
             var size = scalarItem.GridRange.MeasuredSize;
@@ -657,9 +591,27 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
-            var valueMain = GridTracksMain.GetMeasuredLength(gridRange) + GetVariantMeasuredAutoLength(blockView, gridRange);
+            Debug.Assert(!gridRange.IsEmpty);
+            
+            var valueMain = GetMeasuredLength(blockView, gridRange);
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
             return ToSize(valueMain, valueCross);
+        }
+
+        private double GetMeasuredLength(BlockView blockView, GridRange gridRange)
+        {
+            Debug.Assert(!gridRange.IsEmpty);
+
+            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
+            Span startTrackSpan, endTrackSpan;
+            if (gridSpan.StartTrack == gridSpan.EndTrack)
+                startTrackSpan = endTrackSpan = GetRelativeSpan(gridSpan.StartTrack, blockView.Ordinal);
+            else
+            {
+                startTrackSpan = GetRelativeSpan(gridSpan.StartTrack, blockView.Ordinal);
+                endTrackSpan = GetRelativeSpan(gridSpan.EndTrack, blockView.Ordinal);
+            }
+            return endTrackSpan.EndOffset - startTrackSpan.StartOffset;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
