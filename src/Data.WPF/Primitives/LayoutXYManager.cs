@@ -543,10 +543,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshExtent()
         {
-            double valueMain = MaxOffsetMain;
+            var valueMain = MaxOffsetMain;
             if (valueMain < ViewportMain)
                 valueMain = ViewportMain;
-            double valueCross = MaxOffsetCross;
+            var valueCross = MaxOffsetCross;
             if (valueCross < ViewportCross)
                 valueCross = ViewportCross;
             RefreshExtent(valueMain, valueCross);
