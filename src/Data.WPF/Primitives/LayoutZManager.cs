@@ -39,6 +39,11 @@ namespace DevZest.Data.Windows.Primitives
             return scalarItem.GridRange.MeasuredSize;
         }
 
+        protected override Size GetMeasuredSize(BlockView block)
+        {
+            return Template.BlockRange.MeasuredSize;
+        }
+
         protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
         {
             Debug.Assert(Template.BlockRange.Contains(gridRange));

@@ -177,12 +177,14 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int i = 0; i < BlockViews.Count; i++)
             {
-                var blockView = BlockViews[i];
-                blockView.Measure(GetMeasuredSize(blockView, Template.BlockRange));
+                var block = BlockViews[i];
+                block.Measure(GetMeasuredSize(block));
             }
 
             return MeasuredSize;
         }
+
+        protected abstract Size GetMeasuredSize(BlockView block);
 
         protected abstract Size MeasuredSize { get; }
 

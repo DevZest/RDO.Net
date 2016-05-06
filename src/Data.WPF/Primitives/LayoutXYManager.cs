@@ -628,6 +628,17 @@ namespace DevZest.Data.Windows.Primitives
             return startGridOffset == endGridOffset ? GetSpan(startGridOffset).Length : GetSpan(endGridOffset).EndOffset - GetSpan(startGridOffset).StartOffset;
         }
 
+        protected override Size GetMeasuredSize(BlockView block)
+        {
+            var result = GetMeasuredSize(block, Template.BlockRange);
+            if (BlockDimensions > 1)
+            {
+                var vector = BlockDimensionVector * (BlockDimensions - 1);
+                result = new Size(result.Width + vector.X, result.Height + vector.Y);
+            }
+            return result;
+        }
+
         protected override Size GetMeasuredSize(BlockView block, GridRange gridRange)
         {
             Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
@@ -652,7 +663,7 @@ namespace DevZest.Data.Windows.Primitives
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
-                result += (blockDimension - 1) * BlockDimensionVector;
+                result += blockDimension * BlockDimensionVector;
             result.Offset(-ScrollOffsetX, -ScrollOffsetY);
             return result;
         }
@@ -681,24 +692,61 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected override Point GetBlockViewLocation(BlockView blockView)
+        protected override Point GetBlockViewLocation(BlockView block)
         {
-            throw new NotImplementedException();
+            var gridOffset = GetGridOffset(block, GridTracksMain.BlockStart);
+            var valueMain = GetSpan(gridOffset).StartOffset;
+            var valueCross = GridTracksCross.BlockStart.StartOffset;
+            var result = ToPoint(valueMain, valueCross);
+            result.Offset(-ScrollOffsetX, -ScrollOffsetY);
+            return result;
         }
 
-        protected override Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem)
+        private int GetGridOffset(BlockView block, GridTrack gridTrack)
         {
-            throw new NotImplementedException();
+            Debug.Assert(gridTrack.IsRepeat);
+            return GetGridOffset(gridTrack, block.Ordinal);
         }
 
-        protected override Point GetRowViewLocation(BlockView blockView, int blockDimension)
+        private int GetGridOffset(GridTrack gridTrack, int blockOrdinal)
         {
-            throw new NotImplementedException();
+            Debug.Assert(gridTrack.IsRepeat);
+
+            var result = gridTrack.Ordinal;
+            if (blockOrdinal > 0)
+                result += blockOrdinal * BlockGridTracks;
+            return result;
         }
 
-        protected override Point GetRowItemLocation(BlockView blockView, RowItem rowItem)
+        private Point GetRelativeLocation(BlockView block, GridRange gridRange)
         {
-            throw new NotImplementedException();
+            Debug.Assert(Template.BlockRange.Contains(gridRange));
+
+            var startTrackMain = GridTracksMain.GetGridSpan(gridRange).StartTrack;
+            var valueMain = GetRelativeSpan(block, startTrackMain).StartOffset;
+            var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset - GridTracksCross.BlockStart.StartOffset;
+            return ToPoint(valueMain, valueCross);
+        }
+
+        protected override Point GetBlockItemLocation(BlockView block, BlockItem blockItem)
+        {
+            return GetRelativeLocation(block, blockItem.GridRange);
+        }
+
+        protected override Point GetRowViewLocation(BlockView block, int blockDimension)
+        {
+            var result = GetRelativeLocation(block, Template.RowRange);
+            if (blockDimension > 0)
+                result += blockDimension * BlockDimensionVector;
+            return result;
+        }
+
+        protected override Point GetRowItemLocation(BlockView block, RowItem rowItem)
+        {
+            var rowLocation = GetRelativeLocation(block, Template.RowRange);
+            var result = GetRelativeLocation(block, rowItem.GridRange);
+            result.Offset(-rowLocation.X, -rowLocation.Y);
+            return result;
         }
 
         protected sealed override Size MeasuredSize
