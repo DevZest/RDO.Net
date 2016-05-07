@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows.Primitives
             return scalarItem.GridRange.MeasuredLocation;
         }
 
-        protected override Point GetBlockViewLocation(BlockView blockView)
+        protected override Point GetBlockLocation(BlockView blockView)
         {
             return Template.Range().GetLocation(Template.BlockRange);
         }
@@ -66,7 +66,7 @@ namespace DevZest.Data.Windows.Primitives
             return Template.BlockRange.GetLocation(blockItem.GridRange);
         }
 
-        protected override Point GetRowViewLocation(BlockView blockView, int blockDimension)
+        protected override Point GetRowLocation(BlockView blockView, int blockDimension)
         {
             Debug.Assert(blockDimension == 0);
             return Template.BlockRange.GetLocation(Template.RowRange);

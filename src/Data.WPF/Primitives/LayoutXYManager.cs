@@ -692,7 +692,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected override Point GetBlockViewLocation(BlockView block)
+        protected override Point GetBlockLocation(BlockView block)
         {
             var gridOffset = GetGridOffset(block, GridTracksMain.BlockStart);
             var valueMain = GetSpan(gridOffset).StartOffset;
@@ -733,7 +733,7 @@ namespace DevZest.Data.Windows.Primitives
             return GetRelativeLocation(block, blockItem.GridRange);
         }
 
-        protected override Point GetRowViewLocation(BlockView block, int blockDimension)
+        protected override Point GetRowLocation(BlockView block, int blockDimension)
         {
             var result = GetRelativeLocation(block, Template.RowRange);
             if (blockDimension > 0)

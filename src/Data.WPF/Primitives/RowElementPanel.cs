@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
             if (layoutManager == null)
                 return base.ArrangeOverride(finalSize);
 
-            layoutManager.Arrange(RowPresenter);
+            layoutManager.ArrangeRow(RowPresenter);
             return finalSize;
         }
     }

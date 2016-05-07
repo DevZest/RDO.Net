@@ -31,14 +31,14 @@ namespace DevZest.Data.Windows.Primitives
         internal static void VerifyBlockViewRect(LayoutManager layoutManager, int blockViewIndex, Rect expectedRect)
         {
             var blockView = layoutManager.BlockViews[blockViewIndex];
-            var rect = layoutManager.GetBlockViewRect(blockView);
+            var rect = layoutManager.GetBlockRect(blockView);
             Assert.AreEqual(expectedRect, rect);
         }
 
         internal static void VerifyRowRect(LayoutManager layoutManager, int blockViewIndex, int blockDimension, Rect expectedRect)
         {
             var blockView = layoutManager.BlockViews[blockViewIndex];
-            var rect = layoutManager.GetArrangeRect(blockView, blockDimension);
+            var rect = layoutManager.GetRowRect(blockView, blockDimension);
             Assert.AreEqual(expectedRect, rect);
         }
 
@@ -46,7 +46,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var blockView = layoutManager.BlockViews[row];
             var rowItems = row.RowItems;
-            var rect = layoutManager.GetArrangeRect(blockView, rowItems[rowItemIndex]);
+            var rect = layoutManager.GetRowItemRect(blockView, rowItems[rowItemIndex]);
             Assert.AreEqual(expectedRect, rect);
         }
     }

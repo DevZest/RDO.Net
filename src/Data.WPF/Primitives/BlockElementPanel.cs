@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
             if (layoutManager == null)
                 return base.ArrangeOverride(arrangeBounds);
 
-            layoutManager.Arrange(BlockView);
+            layoutManager.ArrangeBlock(BlockView);
             return arrangeBounds;
         }
     }

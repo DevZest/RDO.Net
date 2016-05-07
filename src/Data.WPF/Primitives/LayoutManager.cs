@@ -294,7 +294,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    element.Arrange(GetScalarItemRect(scalarItem, i));
+                    ArrangeScalarItem(element, GetScalarItemRect(scalarItem, i));
                 }
             }
 
@@ -302,59 +302,69 @@ namespace DevZest.Data.Windows.Primitives
             return finalSize;
         }
 
-        internal Rect GetBlockViewRect(BlockView blockView)
+        protected virtual void ArrangeScalarItem(UIElement element, Rect rect)
         {
-            var offset = GetBlockViewLocation(blockView);
+            element.Arrange(rect);
+        }
+
+        internal Rect GetBlockRect(BlockView blockView)
+        {
+            var offset = GetBlockLocation(blockView);
             var size = GetMeasuredSize(blockView, Template.BlockRange);
             return new Rect(offset, size);
         }
 
-        protected abstract Point GetBlockViewLocation(BlockView blockView);
+        protected abstract Point GetBlockLocation(BlockView block);
 
         private void ArrangeBlocks()
         {
             for (int i = 0; i < BlockViews.Count; i++)
             {
-                var blockView = BlockViews[i];
-                blockView.Arrange(GetBlockViewRect(blockView));
+                var block = BlockViews[i];
+                ArrangeBlock(block, GetBlockRect(block));
             }
         }
 
-        internal Rect GetArrangeRect(BlockView blockView, BlockItem blockItem)
+        protected virtual void ArrangeBlock(BlockView blockView, Rect rect)
+        {
+            blockView.Arrange(rect);
+        }
+
+        internal Rect GetBlockItemRect(BlockView blockView, BlockItem blockItem)
         {
             var location = GetBlockItemLocation(blockView, blockItem);
             var size = GetMeasuredSize(blockView, blockItem.GridRange);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem);
+        protected abstract Point GetBlockItemLocation(BlockView block, BlockItem blockItem);
 
-        internal Rect GetArrangeRect(BlockView blockView, int blockDimension)
+        internal Rect GetRowRect(BlockView block, int blockDimension)
         {
-            var location = GetRowViewLocation(blockView, blockDimension);
-            var size = GetMeasuredSize(blockView, Template.RowRange);
+            var location = GetRowLocation(block, blockDimension);
+            var size = GetMeasuredSize(block, Template.RowRange);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetRowViewLocation(BlockView blockView, int blockDimension);
+        protected abstract Point GetRowLocation(BlockView block, int blockDimension);
 
-        internal void Arrange(BlockView blockView)
+        internal void ArrangeBlock(BlockView block)
         {
             foreach (var blockItem in BlockItems)
             {
-                var element = blockView[blockItem];
-                element.Arrange(GetArrangeRect(blockView, blockItem));
+                var element = block[blockItem];
+                element.Arrange(GetBlockItemRect(block, blockItem));
             }
 
-            if (blockView.Count > 0)
+            if (block.Count > 0)
             {
-                var size = GetMeasuredSize(blockView, Template.RowRange);
-                for (int i = 0; i < blockView.Count; i++)
-                    blockView[i].View.Arrange(GetArrangeRect(blockView, i));
+                var size = GetMeasuredSize(block, Template.RowRange);
+                for (int i = 0; i < block.Count; i++)
+                    block[i].View.Arrange(GetRowRect(block, i));
             }
         }
 
-        internal Rect GetArrangeRect(BlockView blockView, RowItem rowItem)
+        internal Rect GetRowItemRect(BlockView blockView, RowItem rowItem)
         {
             var location = GetRowItemLocation(blockView, rowItem);
             var size = GetMeasuredSize(blockView, rowItem.GridRange);
@@ -363,18 +373,18 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Point GetRowItemLocation(BlockView blockView, RowItem rowItem);
 
-        internal void Arrange(RowPresenter row)
+        internal void ArrangeRow(RowPresenter row)
         {
             var rowItems = row.RowItems;
             if (rowItems.Count == 0)
                 return;
 
-            var blockView = BlockViews[row];
-            Debug.Assert(blockView != null);
+            var block = BlockViews[row];
+            Debug.Assert(block != null);
             foreach (var rowItem in rowItems)
             {
                 var element = row.Elements[rowItem.Ordinal];
-                element.Arrange(GetArrangeRect(blockView, rowItem));
+                element.Arrange(GetRowItemRect(block, rowItem));
             }
         }
     }
