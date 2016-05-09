@@ -42,6 +42,11 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             private readonly double _value;
+            public double Value
+            {
+                get { return _value; }
+            }
+
             public int GridOffset
             {
                 get { return (int)_value; }
@@ -156,7 +161,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract double ScrollOffsetY { get; set; }
 
-        private double _oldScrollOffsetMain;
+        private double _originalScrollOffsetMain;
         private double _scrollOffsetMain;
         protected double ScrollOffsetMain
         {
@@ -191,12 +196,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScollOffset(double valueMain, double valueCross)
         {
-            _oldScrollOffsetMain = ScrollOffsetMain;
-            if (ScrollOffsetMain.IsClose(valueMain) && ScrollOffsetCross.IsClose(valueCross))
-                return;
+            bool invalidateScrollInfo = !ScrollOffsetMain.IsClose(valueMain) || !ScrollOffsetCross.IsClose(valueCross);
+            _originalScrollOffsetMain = valueMain;
             SetScrollOffsetMain(valueMain, false);
             SetScrollOffsetCross(valueCross, false);
-            InvalidateScrollInfo();
+            if (invalidateScrollInfo)
+                InvalidateScrollInfo();
         }
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
@@ -212,21 +217,41 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet)
         {
             VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();
-            LogicalScrollStart = LogicalScrollOrigin;
+            ScrollStart = ScrollOrigin;
         }
 
         protected abstract IGridTrackCollection GridTracksMain { get; }
         protected abstract IGridTrackCollection GridTracksCross { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
-        private double ScrollOrigin;
-        private LogicalOffset LogicalScrollOrigin
+        private bool AreBlocksDirty;
+        private void InvalidateBlocks()
+        {
+            if (AreBlocksDirty)
+                return;
+
+            AreBlocksDirty = true;
+            for (int i = 0; i < BlockViews.Count; i++)
+                BlockViews[i].ClearElements();
+            InvalidateMeasure();
+        }
+
+        private LogicalOffset ScrollOrigin
         {
             get { return new LogicalOffset(FrozenHead); }
         }
 
-        private double ScrollStart;
-        private LogicalOffset LogicalScrollStart;
+        private LogicalOffset ScrollStart;
+
+        private double ScrollDelta
+        {
+            get { return _scrollOffsetMain - _originalScrollOffsetMain; }
+        }
+
+        private void ClearScrollDelta()
+        {
+            _originalScrollOffsetMain = ScrollOffsetMain;
+        }
 
         private Vector ToVector(double valueMain, double valueCross)
         {
@@ -538,25 +563,32 @@ namespace DevZest.Data.Windows.Primitives
         {
             base.OnSetState(dataPresenterState);
             if (dataPresenterState == DataPresenterState.Rows)
-            {
-                BlockViews.VirtualizeAll();
-                InvalidateVariantAutoLengths();
-            }
+                InvalidateBlocks();
         }
 
         internal override Size Measure(Size availableSize)
         {
-            ValidateScrollStart();
+            InitScroll();
             return base.Measure(availableSize);
         }
 
-        private void ValidateScrollStart()
+        private void InitScroll()
         {
-
+            if (Math.Abs(ScrollDelta) > ViewportMain + AvgBlockLength)
+            {
+                ScrollStart = TranslateLogicalOffset(TranslateLogicalOffset(ScrollStart) + ScrollDelta);
+                ClearScrollDelta();
+            }
         }
 
         protected sealed override void PrepareMeasureBlocks()
         {
+            if (AreBlocksDirty)
+            {
+                BlockViews.VirtualizeAll();
+                AreBlocksDirty = false;
+            }
+
 
             RefreshScrollInfo();
         }
@@ -588,10 +620,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            ScrollOrigin = TranslateLogicalOffset(LogicalScrollOrigin);
-            ScrollStart = TranslateLogicalOffset(LogicalScrollStart);
-            Debug.Assert(ScrollStart >= ScrollOrigin);
-            var valueMain = ScrollStart - ScrollOrigin;
+            var scrollOrigin = TranslateLogicalOffset(ScrollOrigin);
+            var scrollStart = TranslateLogicalOffset(ScrollStart);
+            Debug.Assert(scrollStart >= scrollOrigin);
+            var valueMain = scrollStart - scrollOrigin;
             var valueCross = CoerceScrollOffsetCross();
             RefreshScollOffset(valueMain, valueCross);
         }

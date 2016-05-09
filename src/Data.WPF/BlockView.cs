@@ -189,7 +189,7 @@ namespace DevZest.Data.Windows
             element.SetBlockPresenter(this);
         }
 
-        private void ClearElements()
+        internal void ClearElements()
         {
             if (ElementCollection == null)
                 return;
