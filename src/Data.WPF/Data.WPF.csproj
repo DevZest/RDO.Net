@@ -114,7 +114,7 @@
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IList.Sort.cs" />
-    <Compile Include="Utilities\IReadOnlyList.Last.cs" />
+    <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
     <Compile Include="ValidationMessageView.cs" />
     <Compile Include="ValidationSummaryView.cs" />
   </ItemGroup>

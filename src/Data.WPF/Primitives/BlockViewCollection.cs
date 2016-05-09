@@ -39,10 +39,10 @@ namespace DevZest.Data.Windows.Primitives
 
         List<BlockView> _cachedBlockViews;
 
-        private BlockView Realize(int index)
+        private BlockView Realize(int blockOrdinal)
         {
             var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
-            blockView.Initialize(_elementManager, index);
+            blockView.Initialize(_elementManager, blockOrdinal);
             return blockView;
         }
 
@@ -176,11 +176,11 @@ namespace DevZest.Data.Windows.Primitives
             Template.InitializeBlockView(blockView);
         }
 
-        internal void RealizeFirst(int index)
+        internal void RealizeFirst(int blockOrdinal)
         {
-            Debug.Assert(Count == 0 && index >= 0 && index < MaxBlockCount);
+            Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
 
-            var blockView = Realize(index);
+            var blockView = Realize(blockOrdinal);
             Insert(BlockViewStartIndex, blockView);
             Count = 1;
         }
