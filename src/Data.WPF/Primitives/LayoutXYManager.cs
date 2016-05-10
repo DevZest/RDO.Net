@@ -305,13 +305,23 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TranslateLogicalOffset(LogicalOffset logicalOffset)
         {
-            var gridOffset = logicalOffset.GridOffset;
+            return TranslateGridOffset(logicalOffset.GridOffset, logicalOffset.FractionOffset);
+        }
+
+        private double TranslateGridOffset(GridOffset gridOffset, double fraction)
+        {
+            var span = GetSpan(gridOffset);
+            return span.StartOffset + span.Length * fraction;
+        }
+
+        private double TranslateGridOffset(int gridOffset, double fraction)
+        {
             if (gridOffset >= MaxGridOffset)
                 return GetSpan(MaxGridOffset - 1).EndOffset;
             else
             {
                 var span = GetSpan(gridOffset);
-                return span.StartOffset + span.Length * logicalOffset.FractionOffset;
+                return span.StartOffset + span.Length * fraction;
             }
         }
 
@@ -629,14 +639,36 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void MeasureBackward(double availableLength)
+        private void MeasureBackward(double scrollDelta)
         {
-            Debug.Assert(availableLength > 0);
+            Debug.Assert(scrollDelta > 0);
 
             var gridOffset = TranslateGridOffset(ScrollStart.GridOffset);
 
-            if (gridOffset.IsEof)
-                throw new NotImplementedException();
+            //if (gridOffset.IsEof)
+                //scrollDelta = MaxFrozenTail > 0 ? MeasureBackwardTail(GridTracksMain.LastOf(1), 1, scrollDelta);
+            throw new NotImplementedException();
+        }
+
+        private double MeasureBackwardTail(GridTrack gridTrack, double fraction, double scrollDelta)
+        {
+            Debug.Assert(gridTrack.IsTail);
+            throw new NotImplementedException();
+        }
+
+        private double MeasureBackwardRepeat(GridOffset gridOffset, double fraction, double scrollDelta)
+        {
+            var gridTrack = gridOffset.GridTrack;
+            var blockOrdinal = gridOffset.BlockOrdinal;
+            Debug.Assert(gridTrack.IsRepeat);
+            //if (BlockViews.Count == 0)
+
+            throw new NotImplementedException();
+        }
+
+        private double MeasureBackwardHead(GridTrack gridTrack, double fraction, double scrollDelta)
+        {
+            Debug.Assert(gridTrack.IsHead);
             throw new NotImplementedException();
         }
 
@@ -668,12 +700,6 @@ namespace DevZest.Data.Windows.Primitives
             return measuredLength + MeasureForwardRepeat(GridOffset.New(GridTracksMain.BlockStart, 0), 0, availableLength);
         }
 
-        private double MeasureForwardTail(GridTrack gridTrack, double fraction)
-        {
-            Debug.Assert(gridTrack.IsTail);
-            return GridTracksMain.LastOf(1).EndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
-        }
-
         private double MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
         {
             Debug.Assert(BlockViews.Count == 0);
@@ -695,6 +721,12 @@ namespace DevZest.Data.Windows.Primitives
             availableLength -= measuredLength;
 
             return result + MeasureForwardRepeat(availableLength);
+        }
+
+        private double MeasureForwardTail(GridTrack gridTrack, double fraction)
+        {
+            Debug.Assert(gridTrack.IsTail);
+            return GridTracksMain.LastOf(1).EndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
         }
 
         private double MeasureForwardRepeat(double availableLength)

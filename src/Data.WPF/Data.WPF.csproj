@@ -44,7 +44,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutoSizeMeasureOrder.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BindingContext.cs" />

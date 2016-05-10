@@ -142,13 +142,11 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure()
         {
-            PrepareMeasure(ScalarItems.AutoSizeItemsBefore);
+            PrepareMeasure(ScalarItems.AutoSizeItems);
 
             IsPreparingMeasure = true;
             PrepareMeasureBlocks();
             IsPreparingMeasure = false;
-
-            PrepareMeasure(ScalarItems.AutoSizeItemsAfter);
         }
 
         private void PrepareMeasure(IReadOnlyCollection<ScalarItem> scalarItems)
@@ -201,12 +199,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsPreparingMeasure);
 
-            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItemsBefore);
+            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItems);
 
             for (int i = 0; i < blockView.Count; i++)
                 blockView[i].View.Measure(Size.Empty);
-
-            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItemsAfter);
         }
 
         private void PrepareMeasureBlockItems(BlockView blockView, IReadOnlyList<BlockItem> blockItems)

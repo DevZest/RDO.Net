@@ -203,8 +203,6 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool AutoHeightDisabled { get; internal set; }
 
-        public AutoSizeMeasureOrder AutoSizeMeasureOrder { get; internal set; }
-
         public int AutoSizeMeasureIndex { get; internal set; }
 
         private bool SizeToContentX

@@ -16,8 +16,6 @@ namespace DevZest.Data.Windows
 
         internal readonly GridRange GridRange;
 
-        internal AutoSizeMeasureOrder AutoSizeMeasureOrder { get; private set; }
-
         internal int AutoSizeMeasureIndex { get; private set; }
 
         internal bool AutoWidthDisabled { get; private set; }
@@ -36,21 +34,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateItemBuilderFactory AutoSize(AutoSizeMeasureOrder order)
-        {
-            AutoSizeMeasureOrder = order;
-            return this;
-        }
-
         public TemplateItemBuilderFactory AutoSize(int index)
         {
-            AutoSizeMeasureIndex = index;
-            return this;
-        }
-
-        public TemplateItemBuilderFactory AutoSize(AutoSizeMeasureOrder order, int index)
-        {
-            AutoSizeMeasureOrder = order;
             AutoSizeMeasureIndex = index;
             return this;
         }

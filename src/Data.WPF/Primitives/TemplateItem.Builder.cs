@@ -24,7 +24,6 @@ namespace DevZest.Data.Windows.Primitives
             private TemplateItemBuilderFactory _builderFactory;
             public TemplateBuilder End()
             {
-                Item.AutoSizeMeasureOrder = _builderFactory.AutoSizeMeasureOrder;
                 Item.AutoSizeMeasureIndex = _builderFactory.AutoSizeMeasureIndex;
                 Item.AutoWidthDisabled = _builderFactory.AutoWidthDisabled;
                 Item.AutoHeightDisabled = _builderFactory.AutoHeightDisabled;
