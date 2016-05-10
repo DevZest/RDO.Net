@@ -212,7 +212,7 @@ namespace DevZest.Data.Windows.Primitives
         #endregion
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Derived classes are limited to X or Y, and the overrides do not rely on completion of its constructor.")]
+            Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
         protected LayoutXYManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
@@ -232,8 +232,9 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int i = 0; i < BlockViews.Count; i++)
                 BlockViews[i].ClearElements();
-            InvalidateMeasure();
             _isBlocksDirty = true;
+
+            InvalidateMeasure();
         }
 
         private void InitBlocks()
@@ -255,7 +256,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxBlockCount == 0)
                 return -1;
 
-            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
+            var gridOffset = GetGridOffset(_scrollStart.GridOffset);
             if (gridOffset.IsEof)
                 return MaxBlockCount - 1;
 
@@ -276,12 +277,13 @@ namespace DevZest.Data.Windows.Primitives
         private LogicalOffset _scrollStart;
         private double ScrollStart
         {
-            get { return TranslateLogicalOffset(_scrollStart); }
+            get { return GetOffset(_scrollStart); }
         }
 
         private void ScrollBackward(double scrollLength)
         {
-            _scrollStart = TranslateLogicalOffset(TranslateLogicalOffset(_scrollStart) - scrollLength);
+            _scrollStart = GetLogicalOffset(GetOffset(_scrollStart) - scrollLength);
+            Debug.Assert(_scrollStart.Value >= ScrollOrigin.Value);
         }
 
         private double ScrollDelta
@@ -335,18 +337,18 @@ namespace DevZest.Data.Windows.Primitives
             get { return FixBlockLength + AvgVariantAutoLength; }
         }
 
-        private double TranslateLogicalOffset(LogicalOffset logicalOffset)
+        private double GetOffset(LogicalOffset logicalOffset)
         {
-            return TranslateGridOffset(logicalOffset.GridOffset, logicalOffset.FractionOffset);
+            return GetOffset(logicalOffset.GridOffset, logicalOffset.FractionOffset);
         }
 
-        private double TranslateGridOffset(GridOffset gridOffset, double fraction)
+        private double GetOffset(GridOffset gridOffset, double fraction)
         {
             var span = GetSpan(gridOffset);
             return span.StartOffset + span.Length * fraction;
         }
 
-        private double TranslateGridOffset(int gridOffset, double fraction)
+        private double GetOffset(int gridOffset, double fraction)
         {
             if (gridOffset >= MaxGridOffset)
                 return GetSpan(MaxGridOffset - 1).EndOffset;
@@ -357,7 +359,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private LogicalOffset TranslateLogicalOffset(double offset)
+        private LogicalOffset GetLogicalOffset(double offset)
         {
             // Binary search
             var min = 0;
@@ -380,7 +382,7 @@ namespace DevZest.Data.Windows.Primitives
         private Span GetSpan(int gridOffset)
         {
             Debug.Assert(gridOffset >= 0 && gridOffset < MaxGridOffset);
-            return GetSpan(TranslateGridOffset(gridOffset));
+            return GetSpan(GetGridOffset(gridOffset));
         }
 
         private Span GetSpan(GridOffset gridOffset)
@@ -392,7 +394,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new Span(gridTrack.StartOffset, gridTrack.EndOffset);
 
             if (gridTrack.IsRepeat)
-                return GetGridSpan(gridTrack, gridOffset.BlockOrdinal);
+                return GetSpan(gridTrack, gridOffset.BlockOrdinal);
 
             Debug.Assert(gridTrack.IsTail);
             var delta = MaxBlockCount * AvgBlockLength;
@@ -401,7 +403,7 @@ namespace DevZest.Data.Windows.Primitives
             return new Span(gridTrack.StartOffset + delta, gridTrack.EndOffset + delta);
         }
 
-        private Span GetGridSpan(GridTrack gridTrack, int blockOrdinal)
+        private Span GetSpan(GridTrack gridTrack, int blockOrdinal)
         {
             Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
 
@@ -504,7 +506,7 @@ namespace DevZest.Data.Windows.Primitives
             return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndMeasuredAutoLengthOffset;
         }
 
-        private GridOffset TranslateGridOffset(int gridOffset)
+        private GridOffset GetGridOffset(int gridOffset)
         {
             Debug.Assert(gridOffset >= 0 && gridOffset <= MaxGridOffset);
 
@@ -666,7 +668,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(scrollDelta > 0);
 
-            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
+            var gridOffset = GetGridOffset(_scrollStart.GridOffset);
             var gridTrack = gridOffset.GridTrack;
 
             if (gridOffset.IsEof)
@@ -719,7 +721,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(scrollDelta > 0);
 
             var block = BlockViews[0];
-            var scrollLength = Math.Min(scrollDelta, ScrollStart - GetSpan(GridOffset.New(GridTracksMain.BlockStart, block)).StartOffset);
+            var scrollLength = Math.Min(scrollDelta, ScrollStart - GetStartOffset(block));
             if (scrollLength > 0)
             {
                 ScrollBackward(scrollLength);
@@ -760,7 +762,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureForward(double availableLength)
         {
-            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
+            var gridOffset = GetGridOffset(_scrollStart.GridOffset);
             Debug.Assert(!gridOffset.IsEof);
             var gridTrack = gridOffset.GridTrack;
             var fraction = _scrollStart.FractionOffset;
@@ -861,8 +863,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            var scrollOrigin = TranslateLogicalOffset(ScrollOrigin);
-            var scrollStart = TranslateLogicalOffset(_scrollStart);
+            var scrollOrigin = GetOffset(ScrollOrigin);
+            var scrollStart = GetOffset(_scrollStart);
             Debug.Assert(scrollStart >= scrollOrigin);
             var valueMain = scrollStart - scrollOrigin;
             var valueCross = CoerceScrollOffsetCross();
@@ -972,28 +974,16 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetBlockLocation(BlockView block)
         {
-            var gridOffset = GetGridOffset(block, GridTracksMain.BlockStart);
-            var valueMain = GetSpan(gridOffset).StartOffset;
+            var valueMain = GetStartOffset(block);
             var valueCross = GridTracksCross.BlockStart.StartOffset;
             var result = ToPoint(valueMain, valueCross);
             result.Offset(-ScrollOffsetX, -ScrollOffsetY);
             return result;
         }
 
-        private int GetGridOffset(BlockView block, GridTrack gridTrack)
+        private double GetStartOffset(BlockView block)
         {
-            Debug.Assert(gridTrack.IsRepeat);
-            return GetGridOffset(gridTrack, block.Ordinal);
-        }
-
-        private int GetGridOffset(GridTrack gridTrack, int blockOrdinal)
-        {
-            Debug.Assert(gridTrack.IsRepeat);
-
-            var result = gridTrack.Ordinal;
-            if (blockOrdinal > 0)
-                result += blockOrdinal * BlockGridTracks;
-            return result;
+            return GetSpan(GridOffset.New(GridTracksMain.BlockStart, block)).StartOffset;
         }
 
         private Point GetRelativeLocation(BlockView block, GridRange gridRange)
