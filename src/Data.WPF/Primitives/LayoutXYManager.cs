@@ -689,21 +689,19 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(scrollDelta > 0);
 
             var gridOffset = GetGridOffset(_scrollStart.GridOffset);
-            var gridTrack = gridOffset.GridTrack;
-
             if (gridOffset.IsEof)
-                scrollDelta = MeasureBackwardEof(scrollDelta);
-            else if (gridTrack.IsTail)
-                scrollDelta = MeasureBackwardTail(scrollDelta);
+                return MeasureBackwardEof(scrollDelta);
+
+            var gridTrack = gridOffset.GridTrack;
+            if (gridTrack.IsTail)
+                return MeasureBackwardTail(scrollDelta);
             else if (gridTrack.IsRepeat)
-                scrollDelta = MeasureBackwardRepeat(scrollDelta);
+                return MeasureBackwardRepeat(scrollDelta);
             else
             {
                 Debug.Assert(gridTrack.IsHead);
-                scrollDelta = MeasureBackwardHead(scrollDelta);
+                return MeasureBackwardHead(scrollDelta);
             }
-
-            return scrollDelta;
         }
 
         private double MeasureBackwardEof(double scrollDelta)
