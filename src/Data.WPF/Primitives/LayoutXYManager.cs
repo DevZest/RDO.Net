@@ -217,32 +217,55 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet)
         {
             VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();
-            ScrollStart = ScrollOrigin;
+            _scrollStart = ScrollOrigin;
         }
 
         protected abstract IGridTrackCollection GridTracksMain { get; }
         protected abstract IGridTrackCollection GridTracksCross { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
-        private bool _areBlocksDirty;
+        private bool _isBlocksDirty;
         private void InvalidateBlocks()
         {
-            if (_areBlocksDirty)
+            if (_isBlocksDirty)
                 return;
 
-            _areBlocksDirty = true;
             for (int i = 0; i < BlockViews.Count; i++)
                 BlockViews[i].ClearElements();
             InvalidateMeasure();
+            _isBlocksDirty = true;
         }
 
-        private void CleanBlocks()
+        private void InitBlocks()
         {
-            if (_areBlocksDirty)
+            BlockViews.VirtualizeAll();
+
+            var initialBlockOrdinal = GetInitialBlockOrdinal();
+            if (initialBlockOrdinal >= 0)
             {
-                BlockViews.VirtualizeAll();
-                _areBlocksDirty = true;
+                BlockViews.RealizeFirst(initialBlockOrdinal);
+                BlockViews[0].Measure(Size.Empty);
             }
+
+            _isBlocksDirty = false;
+        }
+
+        private int GetInitialBlockOrdinal()
+        {
+            if (MaxBlockCount == 0)
+                return -1;
+
+            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
+            if (gridOffset.IsEof)
+                return MaxBlockCount - 1;
+
+            var gridTrack = gridOffset.GridTrack;
+            if (gridTrack.IsHead)
+                return 0;
+            else if (gridTrack.IsRepeat)
+                return gridOffset.BlockOrdinal;
+            else
+                return MaxBlockCount - 1;
         }
 
         private LogicalOffset ScrollOrigin
@@ -250,7 +273,16 @@ namespace DevZest.Data.Windows.Primitives
             get { return new LogicalOffset(FrozenHead); }
         }
 
-        private LogicalOffset ScrollStart;
+        private LogicalOffset _scrollStart;
+        private double ScrollStart
+        {
+            get { return TranslateLogicalOffset(_scrollStart); }
+        }
+
+        private void ScrollBackward(double scrollLength)
+        {
+            _scrollStart = TranslateLogicalOffset(TranslateLogicalOffset(_scrollStart) - scrollLength);
+        }
 
         private double ScrollDelta
         {
@@ -605,16 +637,15 @@ namespace DevZest.Data.Windows.Primitives
             if (ScrollDelta < 0 && Math.Abs(ScrollDelta) < ViewportMain)
                 return;
 
-            ScrollStart = TranslateLogicalOffset(TranslateLogicalOffset(ScrollStart) + ScrollDelta);
+            ScrollBackward(-ScrollDelta);
             ClearScrollDelta();
-            InvalidateBlocks();
         }
 
         protected sealed override void PrepareMeasureBlocks()
         {
-            CleanBlocks();
+            InitBlocks();
 
-            if (ScrollDelta < 0 || ScrollStart.GridOffset >= MaxGridOffset)
+            if (ScrollDelta < 0 || _scrollStart.GridOffset >= MaxGridOffset)
                 MeasureBackward(-ScrollDelta);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
@@ -626,67 +657,117 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain[FrozenHead].StartOffset; }
         }
 
-        private double FrozenTailLength
+        private double FrozenTailStart
         {
-            get
-            {
-                if (FrozenTail == 0)
-                    return 0;
-                else if (FrozenTail == 1)
-                    return GridTracksMain.LastOf(1).MeasuredLength;
-                else
-                    return GridTracksMain.LastOf(1).EndOffset - GridTracksMain.LastOf(FrozenTail).StartOffset;
-            }
+            get { return FrozenTail == 0 ? MaxOffsetMain : GetSpan(MaxGridOffset - FrozenTail).StartOffset; }
         }
 
-        private void MeasureBackward(double scrollDelta)
+        private double MeasureBackward(double scrollDelta)
         {
             Debug.Assert(scrollDelta > 0);
 
-            var gridOffset = TranslateGridOffset(ScrollStart.GridOffset);
-
-            //if (gridOffset.IsEof)
-                //scrollDelta = MaxFrozenTail > 0 ? MeasureBackwardTail(GridTracksMain.LastOf(1), 1, scrollDelta);
-            throw new NotImplementedException();
-        }
-
-        private double MeasureBackwardTail(GridTrack gridTrack, double fraction, double scrollDelta)
-        {
-            Debug.Assert(gridTrack.IsTail);
-            throw new NotImplementedException();
-        }
-
-        private double MeasureBackwardRepeat(GridOffset gridOffset, double fraction, double scrollDelta)
-        {
+            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
             var gridTrack = gridOffset.GridTrack;
-            var blockOrdinal = gridOffset.BlockOrdinal;
-            Debug.Assert(gridTrack.IsRepeat);
-            //if (BlockViews.Count == 0)
 
-            throw new NotImplementedException();
+            if (gridOffset.IsEof)
+                scrollDelta = MeasureBackwardEof(scrollDelta);
+            else if (gridTrack.IsTail)
+                scrollDelta = MeasureBackwardTail(scrollDelta);
+            else if (gridTrack.IsRepeat)
+                scrollDelta = MeasureBackwardRepeat(scrollDelta);
+            else
+            {
+                Debug.Assert(gridTrack.IsHead);
+                scrollDelta = MeasureBackwardHead(scrollDelta);
+            }
+
+            return scrollDelta;
         }
 
-        private double MeasureBackwardHead(GridTrack gridTrack, double fraction, double scrollDelta)
+        private double MeasureBackwardEof(double scrollDelta)
         {
-            Debug.Assert(gridTrack.IsHead);
-            throw new NotImplementedException();
+            if (MaxFrozenTail > 0)
+                return MeasureBackwardTail(scrollDelta);
+            else if (MaxBlockCount > 0)
+                return MeasureBackwardRepeat(scrollDelta);
+            else if (MaxFrozenHead > 0)
+                return MeasureBackwardHead(scrollDelta);
+            return scrollDelta;
+        }
+
+        private double MeasureBackwardTail(double scrollDelta)
+        {
+            var scrollLength = Math.Min(scrollDelta, ScrollStart - FrozenTailStart);
+            Debug.Assert(scrollLength >= 0);
+            if (scrollLength > 0)
+            {
+                ScrollBackward(scrollLength);
+                scrollDelta -= scrollLength;
+            }
+            if (scrollDelta == 0)
+                return scrollDelta;
+
+            if (MaxBlockCount > 0)
+                return MeasureBackwardRepeat(scrollDelta);
+            else if (MaxFrozenHead > 0)
+                return MeasureBackwardHead(scrollDelta);
+            return scrollDelta;
+        }
+
+        private double MeasureBackwardRepeat(double scrollDelta)
+        {
+            Debug.Assert(scrollDelta > 0);
+
+            var block = BlockViews[0];
+            var scrollLength = Math.Min(scrollDelta, ScrollStart - GetSpan(GridOffset.New(GridTracksMain.BlockStart, block)).StartOffset);
+            if (scrollLength > 0)
+            {
+                ScrollBackward(scrollLength);
+                scrollDelta -= scrollLength;
+            }
+            scrollDelta = RealizeBackward(scrollDelta - scrollLength);
+            return scrollDelta > 0 && FrozenHead > 0 ? MeasureBackwardHead(scrollDelta) : scrollDelta;
+        }
+
+        private double RealizeBackward(double scrollDelta)
+        {
+            Debug.Assert(BlockViews.Count > 0);
+
+            while (scrollDelta > 0)
+            {
+                for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal >= 0; blockOrdinal--)
+                {
+                    BlockViews.RealizePrev();
+                    var block = BlockViews.First;
+                    block.Measure(Size.Empty);
+                    var scrollLength = Math.Min(scrollDelta, GetLength(block));
+                    ScrollBackward(scrollLength);
+                    scrollDelta -= scrollLength;
+                }
+            }
+            return scrollDelta;
+        }
+
+        private double MeasureBackwardHead(double scrollDelta)
+        {
+            var scrollLength = Math.Min(scrollDelta, ScrollStart - FrozenHeadLength);
+            if (scrollLength <= 0)
+                return scrollDelta;
+
+            ScrollBackward(scrollLength);
+            return scrollDelta - scrollLength;
         }
 
         private void MeasureForward(double availableLength)
         {
-            var gridOffset = TranslateGridOffset(ScrollStart.GridOffset);
+            var gridOffset = TranslateGridOffset(_scrollStart.GridOffset);
             Debug.Assert(!gridOffset.IsEof);
             var gridTrack = gridOffset.GridTrack;
-            var fraction = ScrollStart.FractionOffset;
+            var fraction = _scrollStart.FractionOffset;
             if (gridTrack.IsHead)
                 MeasureForwardHead(gridTrack, fraction, availableLength);
-            else if (gridTrack.IsTail)
-                MeasureForwardTail(gridTrack, fraction);
-            else
-            {
-                Debug.Assert(gridTrack.IsRepeat);
+            else if (gridTrack.IsRepeat)
                 MeasureForwardRepeat(gridOffset, fraction, availableLength);
-            }
         }
 
         private double MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
@@ -702,7 +783,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
         {
-            Debug.Assert(BlockViews.Count == 0);
+            Debug.Assert(BlockViews.Count == 1);
             double result = 0;
             if (MaxFrozenTail > 0)
             {
@@ -711,16 +792,19 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             var gridTrack = gridOffset.GridTrack;
-            var blockOrdinal = gridOffset.BlockOrdinal;
-            Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
-            BlockViews.RealizeFirst(blockOrdinal);
+            Debug.Assert(gridTrack.IsRepeat);
             var block = BlockViews[0];
-            block.Measure(Size.Empty);
-            var measuredLength = GetLength(block) - (GetRelativeSpan(block, gridTrack).StartOffset + GetMeasuredLength(block, gridTrack) * fraction);
+            Debug.Assert(block.Ordinal == gridOffset.BlockOrdinal);
+            var measuredLength = GetLength(block) - GetRelativeOffset(block, gridTrack, fraction);
             result += measuredLength;
             availableLength -= measuredLength;
 
-            return result + MeasureForwardRepeat(availableLength);
+            return result + RealizeForward(availableLength);
+        }
+
+        private double GetRelativeOffset(BlockView block, GridTrack gridTrack, double fraction)
+        {
+            return GetRelativeSpan(block, gridTrack).StartOffset + GetMeasuredLength(block, gridTrack) * fraction;
         }
 
         private double MeasureForwardTail(GridTrack gridTrack, double fraction)
@@ -729,7 +813,7 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksMain.LastOf(1).EndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
         }
 
-        private double MeasureForwardRepeat(double availableLength)
+        private double RealizeForward(double availableLength)
         {
             Debug.Assert(BlockViews.Last != null);
 
@@ -778,7 +862,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshScrollOffset()
         {
             var scrollOrigin = TranslateLogicalOffset(ScrollOrigin);
-            var scrollStart = TranslateLogicalOffset(ScrollStart);
+            var scrollStart = TranslateLogicalOffset(_scrollStart);
             Debug.Assert(scrollStart >= scrollOrigin);
             var valueMain = scrollStart - scrollOrigin;
             var valueCross = CoerceScrollOffsetCross();
