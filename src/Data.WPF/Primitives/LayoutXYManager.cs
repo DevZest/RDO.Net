@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public static GridOffset New(GridTrack gridTrack, int blockOrdinal)
             {
-                Debug.Assert(gridTrack.IsRepeat);
+                Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
                 return new GridOffset(gridTrack, blockOrdinal);
             }
 
@@ -98,6 +98,26 @@ namespace DevZest.Data.Windows.Primitives
             public bool IsEof
             {
                 get { return GridTrack == null; }
+            }
+
+            public static bool operator ==(GridOffset x, GridOffset y)
+            {
+                return x.GridTrack == y.GridTrack && x.BlockOrdinal == y.BlockOrdinal;
+            }
+
+            public static bool operator !=(GridOffset x, GridOffset y)
+            {
+                return !(x == y);
+            }
+
+            public override int GetHashCode()
+            {
+                return IsEof ? 0 : GridTrack.GetHashCode() ^ BlockOrdinal;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is GridOffset ? (GridOffset)obj == this : false;
             }
         }
 
@@ -508,7 +528,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private GridOffset GetGridOffset(int gridOffset)
         {
-            Debug.Assert(gridOffset >= 0 && gridOffset <= MaxGridOffset);
+            Debug.Assert(gridOffset >= 0);
 
             if (gridOffset >= MaxGridOffset)
                 return GridOffset.Eof;
@@ -884,7 +904,7 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
-            var valueMain = GetLength(GridTracksMain.GetGridSpan(gridRange));
+            var valueMain = GetLength(gridRange);
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
 
             var result = ToSize(valueMain, valueCross);
@@ -896,10 +916,10 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private double GetLength(GridSpan gridSpan)
+        private double GetLength(GridRange gridRange)
         {
-            var startGridOffset = GetStartGridOffset(gridSpan.StartTrack);
-            var endGridOffset = GetEndGridOffset(gridSpan.EndTrack);
+            var startGridOffset = GetStartGridOffset(gridRange);
+            var endGridOffset = GetEndGridOffset(gridRange);
             return startGridOffset == endGridOffset ? GetSpan(startGridOffset).Length : GetSpan(endGridOffset).EndOffset - GetSpan(startGridOffset).StartOffset;
         }
 
@@ -918,18 +938,19 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
 
-            var valueMain = GetLength(block, GridTracksMain.GetGridSpan(gridRange));
+            var valueMain = GetLength(block, gridRange);
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
             return ToSize(valueMain, valueCross);
         }
 
         private double GetLength(BlockView block)
         {
-            return GetLength(block, GridTracksMain.GetGridSpan(Template.BlockRange));
+            return GetLength(block, Template.BlockRange);
         }
 
-        private double GetLength(BlockView block, GridSpan gridSpan)
+        private double GetLength(BlockView block, GridRange gridRange)
         {
+            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
             var startTrack = gridSpan.StartTrack;
             var endTrack = gridSpan.EndTrack;
             return startTrack == endTrack ? GetRelativeSpan(block, startTrack).Length
@@ -939,7 +960,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             var gridRange = scalarItem.GridRange;
-            var valueMain = GetSpan(GetStartGridOffset(GridTracksMain.GetGridSpan(gridRange).StartTrack)).StartOffset;
+            var valueMain = GetSpan(GetStartGridOffset(gridRange)).StartOffset;
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
@@ -948,28 +969,28 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private int GetStartGridOffset(GridTrack gridTrack)
+        private GridOffset GetStartGridOffset(GridRange gridRange)
         {
-            Debug.Assert(gridTrack.Orientation == Template.Orientation);
+            var gridTrack = GridTracksMain.GetGridSpan(gridRange).StartTrack;
+            if (!gridTrack.IsRepeat)
+                return GridOffset.New(gridTrack);
 
-            var result = gridTrack.Ordinal;
-            if (result >= MaxFrozenHead + BlockGridTracks)
-                result += MaxBlockCount * BlockGridTracks;
-            return result;
+            if (MaxBlockCount > 0)
+                return GridOffset.New(gridTrack, 0);
+            else
+                return MaxFrozenTail > 0 ? GridOffset.New(GridTracksMain.LastOf(MaxFrozenTail)) : GridOffset.Eof;
         }
 
-        private int GetEndGridOffset(GridTrack gridTrack)
+        private GridOffset GetEndGridOffset(GridRange gridRange)
         {
-            Debug.Assert(gridTrack.Orientation == Template.Orientation);
+            var gridTrack = GridTracksMain.GetGridSpan(gridRange).EndTrack;
+            if (!gridTrack.IsRepeat)
+                return GridOffset.New(gridTrack);
 
-            var result = gridTrack.Ordinal;
-
-            if (result >= MaxFrozenHead + BlockGridTracks)
-                result += MaxBlockCount * BlockGridTracks;
-            else if (result >= MaxFrozenHead && MaxBlockCount > 1)
-                result += (MaxBlockCount - 1) * BlockGridTracks;
-
-            return result;
+            if (MaxBlockCount > 0)
+                return GridOffset.New(gridTrack, MaxBlockCount - 1);
+            else
+                return MaxFrozenTail > 0 ? GridOffset.New(GridTracksMain.LastOf(MaxFrozenTail)) : GridOffset.Eof;
         }
 
         protected override Point GetBlockLocation(BlockView block)
