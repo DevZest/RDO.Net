@@ -671,6 +671,7 @@ namespace DevZest.Data.Windows.Primitives
                 MeasureBackward(-ScrollDelta);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
+            FillGap();
             RefreshScrollInfo();
         }
 
@@ -682,6 +683,33 @@ namespace DevZest.Data.Windows.Primitives
         private double FrozenTailStart
         {
             get { return FrozenTail == 0 ? MaxOffsetMain : GetSpan(MaxGridOffset - FrozenTail).StartOffset; }
+        }
+
+        private double TailLength
+        {
+            get { return MaxFrozenTail == 0 ? 0 : GridTracksMain.LastOf(1).EndOffset - GridTracksMain.LastOf(MaxFrozenTail).StartOffset; }
+        }
+
+        private double Gap
+        {
+            get
+            {
+                var availableLength = GridTracksMain.AvailableLength;
+                if (double.IsPositiveInfinity(availableLength))
+                    return availableLength;
+
+                var scrollable = availableLength - (FrozenHeadLength + TailLength);
+                var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHead].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
+                return scrollable - (blockEndOffset - ScrollStart);
+            }
+        }
+
+        private void FillGap()
+        {
+            var gap = Gap;
+            gap -= RealizeForward(gap);
+            if (gap > 0)
+                MeasureBackward(gap);
         }
 
         private double MeasureBackward(double scrollDelta)
@@ -958,7 +986,8 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             var gridRange = scalarItem.GridRange;
-            var valueMain = GetSpan(GetStartGridOffset(gridRange)).StartOffset;
+            var startGridOffset = GetStartGridOffset(gridRange);
+            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : GetSpan(startGridOffset).StartOffset;
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
@@ -1003,6 +1032,11 @@ namespace DevZest.Data.Windows.Primitives
         private double GetStartOffset(BlockView block)
         {
             return GetSpan(GridOffset.New(GridTracksMain.BlockStart, block)).StartOffset;
+        }
+
+        private double GetEndOffset(BlockView block)
+        {
+            return GetSpan(GridOffset.New(GridTracksMain.BlockEnd, block)).EndOffset;
         }
 
         private Point GetRelativeLocation(BlockView block, GridRange gridRange)
