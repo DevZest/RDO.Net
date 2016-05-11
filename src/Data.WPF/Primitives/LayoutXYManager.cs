@@ -999,7 +999,7 @@ namespace DevZest.Data.Windows.Primitives
             var startOffset = span.StartTrack.StartOffset;
             var endOffset = span.EndTrack.EndOffset;
             var scrollStart = ScrollStartCross;
-            return scrollStart > startOffset && scrollStart < endOffset ? ScrollOffsetCross : 0;
+            return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - startOffset : 0;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
