@@ -961,7 +961,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Size GetMeasuredSize(BlockView block)
         {
-            var result = GetMeasuredSize(block, Template.BlockRange);
+            var result = GetMeasuredSize(block, Template.BlockRange, true);
             if (BlockDimensions > 1)
             {
                 var vector = BlockDimensionVector * (BlockDimensions - 1);
@@ -970,12 +970,14 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected override Size GetMeasuredSize(BlockView block, GridRange gridRange)
+        protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
         {
             Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
 
             var valueMain = GetLength(block, gridRange);
-            var valueCross = GridTracksCross.GetMeasuredLength(gridRange) - GetCrossClip(gridRange);
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            if (clipScrollCross)
+                valueCross -= GetScrollCrossClip(gridRange);
             return ToSize(valueMain, valueCross);
         }
 
@@ -993,13 +995,15 @@ namespace DevZest.Data.Windows.Primitives
                 : GetRelativeSpan(block, endTrack).EndOffset - GetRelativeSpan(block, startTrack).StartOffset;
         }
 
-        private double GetCrossClip(GridRange gridRange)
+        private double GetScrollCrossClip(GridRange gridRange)
         {
             var span = GridTracksCross.GetGridSpan(gridRange);
             var startOffset = span.StartTrack.StartOffset;
+            if (ScrollOriginCross <= startOffset)
+                return 0;
             var endOffset = span.EndTrack.EndOffset;
             var scrollStart = ScrollStartCross;
-            return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - startOffset : 0;
+            return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - Math.Max(startOffset, ScrollOriginCross) : 0;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)

@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
             return Template.BlockRange.MeasuredSize;
         }
 
-        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange)
+        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange, bool clipScrollCross)
         {
             Debug.Assert(Template.BlockRange.Contains(gridRange));
             return gridRange.MeasuredSize;
