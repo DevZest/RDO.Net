@@ -69,5 +69,25 @@ namespace DevZest.Data.Windows.Primitives
                 get { return IsEof ? null : GridTrack.LayoutXYManager; }
             }
         }
+
+        private GridOffset GetGridOffset(int gridOffset)
+        {
+            Debug.Assert(gridOffset >= 0);
+
+            if (gridOffset >= MaxGridOffset)
+                return GridOffset.Eof;
+
+            if (gridOffset < MaxFrozenHead)
+                return new GridOffset(GridTracksMain[gridOffset]);
+
+            gridOffset -= MaxFrozenHead;
+            var totalBlockGridTracks = TotalBlockGridTracks;
+            if (gridOffset < totalBlockGridTracks)
+                return new GridOffset(GridTracksMain[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
+
+            gridOffset -= totalBlockGridTracks;
+            Debug.Assert(gridOffset < MaxFrozenTail);
+            return new GridOffset(GridTracksMain[MaxFrozenHead + BlockGridTracks + gridOffset]);
+        }
     }
 }

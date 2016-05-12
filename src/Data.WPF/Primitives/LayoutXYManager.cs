@@ -315,26 +315,6 @@ namespace DevZest.Data.Windows.Primitives
             return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndMeasuredAutoLengthOffset;
         }
 
-        private GridOffset GetGridOffset(int gridOffset)
-        {
-            Debug.Assert(gridOffset >= 0);
-
-            if (gridOffset >= MaxGridOffset)
-                return GridOffset.Eof;
-
-            if (gridOffset < MaxFrozenHead)
-                return new GridOffset(GridTracksMain[gridOffset]);
-
-            gridOffset -= MaxFrozenHead;
-            var totalBlockGridTracks = TotalBlockGridTracks;
-            if (gridOffset < totalBlockGridTracks)
-                return new GridOffset(GridTracksMain[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
-
-            gridOffset -= totalBlockGridTracks;
-            Debug.Assert(gridOffset < MaxFrozenTail);
-            return new GridOffset(GridTracksMain[MaxFrozenHead + BlockGridTracks + gridOffset]);
-        }
-
         private int MaxBlockCount
         {
             get { return BlockViews.MaxBlockCount; }
