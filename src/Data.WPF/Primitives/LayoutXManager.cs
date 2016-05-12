@@ -7,12 +7,12 @@
         {
         }
 
-        protected override IGridTrackCollection GridTracksMain
+        internal override IGridTrackCollection GridTracksMain
         {
             get { return Template.InternalGridColumns; }
         }
 
-        protected override IGridTrackCollection GridTracksCross
+        internal override IGridTrackCollection GridTracksCross
         {
             get { return Template.InternalGridRows; }
         }

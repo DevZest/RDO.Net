@@ -34,5 +34,37 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _value - GridOffset; }
             }
         }
+
+        private double GetOffset(LogicalOffset logicalOffset)
+        {
+            var gridOffset = logicalOffset.GridOffset;
+            if (gridOffset >= MaxGridOffset)
+                return GetGridOffset(MaxGridOffset - 1).Span.EndOffset;
+            else
+            {
+                var span = GetGridOffset(gridOffset).Span;
+                return span.StartOffset + span.Length * logicalOffset.FractionOffset;
+            }
+        }
+
+        private LogicalOffset GetLogicalOffset(double offset)
+        {
+            // Binary search
+            var min = 0;
+            var max = MaxGridOffset - 1;
+            while (min <= max)
+            {
+                int mid = (min + max) / 2;
+                var offsetSpan = GetGridOffset(mid).Span;
+                if (offset < offsetSpan.StartOffset)
+                    max = mid - 1;
+                else if (offset >= offsetSpan.EndOffset)
+                    min = mid + 1;
+                else
+                    return new LogicalOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
+            }
+
+            return new LogicalOffset(MaxGridOffset);
+        }
     }
 }

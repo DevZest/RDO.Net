@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -19,8 +17,8 @@ namespace DevZest.Data.Windows.Primitives
             _scrollStartMain = ScrollOriginMain;
         }
 
-        protected abstract IGridTrackCollection GridTracksMain { get; }
-        protected abstract IGridTrackCollection GridTracksCross { get; }
+        internal abstract IGridTrackCollection GridTracksMain { get; }
+        internal abstract IGridTrackCollection GridTracksCross { get; }
         internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
 
         private bool _isBlocksDirty;
@@ -122,199 +120,6 @@ namespace DevZest.Data.Windows.Primitives
             return new Point(vector.X, vector.Y);
         }
 
-        private double TotalVariantAutoLength
-        {
-            get
-            {
-                Debug.Assert(BlockViews.Count > 0);
-                return BlockViews.Last.EndMeasuredAutoLengthOffset - BlockViews.First.StartMeasuredAutoLengthOffset;
-            }
-        }
-
-        private double AvgVariantAutoLength
-        {
-            get { return BlockViews.Count == 0 ? 0 : TotalVariantAutoLength / BlockViews.Count; }
-        }
-
-        private double FixBlockLength
-        {
-            get { return GridTracksMain.BlockEnd.EndOffset - GridTracksMain.BlockStart.StartOffset; }
-        }
-
-        private double AvgBlockLength
-        {
-            get { return FixBlockLength + AvgVariantAutoLength; }
-        }
-
-        private double GetOffset(LogicalOffset logicalOffset)
-        {
-            return GetOffset(logicalOffset.GridOffset, logicalOffset.FractionOffset);
-        }
-
-        private double GetOffset(GridOffset gridOffset, double fraction)
-        {
-            var span = GetSpan(gridOffset);
-            return span.StartOffset + span.Length * fraction;
-        }
-
-        private double GetOffset(int gridOffset, double fraction)
-        {
-            if (gridOffset >= MaxGridOffset)
-                return GetSpan(MaxGridOffset - 1).EndOffset;
-            else
-            {
-                var span = GetSpan(gridOffset);
-                return span.StartOffset + span.Length * fraction;
-            }
-        }
-
-        private LogicalOffset GetLogicalOffset(double offset)
-        {
-            // Binary search
-            var min = 0;
-            var max = MaxGridOffset - 1;
-            while (min <= max)
-            {
-                int mid = (min + max) / 2;
-                var offsetSpan = GetSpan(mid);
-                if (offset < offsetSpan.StartOffset)
-                    max = mid - 1;
-                else if (offset >= offsetSpan.EndOffset)
-                    min = mid + 1;
-                else
-                    return new LogicalOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
-            }
-
-            return new LogicalOffset(MaxGridOffset);
-        }
-
-        private Span GetSpan(int gridOffset)
-        {
-            Debug.Assert(gridOffset >= 0 && gridOffset < MaxGridOffset);
-            return GetSpan(GetGridOffset(gridOffset));
-        }
-
-        private Span GetSpan(GridOffset gridOffset)
-        {
-            Debug.Assert(!gridOffset.IsEof);
-
-            var gridTrack = gridOffset.GridTrack;
-            if (gridTrack.IsHead)
-                return new Span(gridTrack.StartOffset, gridTrack.EndOffset);
-
-            if (gridTrack.IsRepeat)
-                return GetSpan(gridTrack, gridOffset.BlockOrdinal);
-
-            Debug.Assert(gridTrack.IsTail);
-            var delta = MaxBlockCount * AvgBlockLength;
-            if (MaxBlockCount > 0)
-                delta -= FixBlockLength;    // minus duplicated FixBlockLength
-            return new Span(gridTrack.StartOffset + delta, gridTrack.EndOffset + delta);
-        }
-
-        private Span GetSpan(GridTrack gridTrack, int blockOrdinal)
-        {
-            Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
-
-            var relativeSpan = GetRelativeSpan(gridTrack, blockOrdinal);
-            var startOffset = GridTracksMain[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
-            return new Span(startOffset + relativeSpan.StartOffset, startOffset + relativeSpan.EndOffset);
-        }
-
-        private Span GetRelativeSpan(BlockView block, GridTrack gridTrack)
-        {
-            Debug.Assert(block != null && gridTrack.IsRepeat);
-            return GetRelativeSpan(gridTrack, block.Ordinal);
-        }
-
-        private Span GetRelativeSpan(GridTrack gridTrack, int blockOrdinal)
-        {
-            Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
-            var startTrack = GridTracksMain.BlockStart;
-
-            var startOffset = gridTrack.StartOffset - startTrack.StartOffset;
-            var endOffset = gridTrack.EndOffset - startTrack.StartOffset;
-
-            var variantAutoLengthTrack = LastVariantAutoLengthTrack(gridTrack);
-            if (variantAutoLengthTrack != null)
-            {
-                var variantLengthSpan = GetVariantLengthSpan(variantAutoLengthTrack, blockOrdinal);
-                startOffset += variantLengthSpan.StartOffset;
-                endOffset += variantLengthSpan.EndOffset;
-            }
-            return new Span(startOffset, endOffset);
-        }
-
-        private Span GetVariantLengthSpan(GridTrack gridTrack, int blockOrdinal)
-        {
-            Debug.Assert(gridTrack.IsVariantAutoLength);
-
-            double startOffset, endOffset;
-
-            var blockView = BlockViews.GetBlockView(blockOrdinal);
-            if (blockView != null)
-            {
-                startOffset = blockView.GetMeasuredAutoLengthStartOffset(gridTrack);
-                endOffset = blockView.GetMeasuredAutoLengthEndOffset(gridTrack);
-            }
-            else
-            {
-                endOffset = 0;
-                for (int i = 0; i <= gridTrack.VariantAutoLengthIndex; i++)
-                    endOffset += VariantAutoLengthTracks[i].AvgVariantAutoLength;
-                startOffset = endOffset - gridTrack.AvgVariantAutoLength;
-            }
-
-            return new Span(startOffset, endOffset);
-        }
-
-        private GridTrack LastVariantAutoLengthTrack(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack.IsRepeat);
-
-            // optimization: shortcuts for common cases
-            if (VariantAutoLengthTracks.Count == 0)
-                return null;
-            if (gridTrack == GridTracksMain.BlockStart)
-                return gridTrack.IsVariantAutoLength ? gridTrack : null;
-            if (gridTrack == GridTracksMain.BlockEnd)
-                return VariantAutoLengthTracks.LastOf(1);
-
-            GridTrack result = null;
-            for (int i = 0; i < VariantAutoLengthTracks.Count; i++)
-            {
-                var variantAuotLengthTrack = VariantAutoLengthTracks[i];
-                if (variantAuotLengthTrack.Ordinal > gridTrack.Ordinal)
-                    break;
-
-                result = variantAuotLengthTrack;
-            }
-            return result;
-        }
-
-        private double GetBlocksLength(int count)
-        {
-            Debug.Assert(count >= 0 && count <= MaxBlockCount);
-            if (count == 0)
-                return 0;
-
-            var unrealized = BlockViews.Count == 0 ? 0 : BlockViews.First.Ordinal;
-            if (count <= unrealized)
-                return count * AvgBlockLength;
-
-            var realized = BlockViews.Count == 0 ? 0 : BlockViews.Last.Ordinal - BlockViews.First.Ordinal + 1;
-            if (count <= unrealized + realized)
-                return unrealized * AvgBlockLength + GetRealizedBlocksLength(count - unrealized);
-
-            return GetRealizedBlocksLength(realized) + (count - realized) * AvgBlockLength;
-        }
-
-        private double GetRealizedBlocksLength(int count)
-        {
-            Debug.Assert(count >= 0 && count <= BlockViews.Count);
-            return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndMeasuredAutoLengthOffset;
-        }
-
         private int MaxBlockCount
         {
             get { return BlockViews.MaxBlockCount; }
@@ -357,7 +162,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MaxOffsetMain
         {
-            get { return GetSpan(MaxGridOffset - 1).EndOffset; }
+            get { return GetGridOffset(MaxGridOffset - 1).Span.EndOffset; }
         }
 
         private double MaxOffsetCross
@@ -451,7 +256,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double FrozenTailStart
         {
-            get { return FrozenTail == 0 ? MaxOffsetMain : GetSpan(MaxGridOffset - FrozenTail).StartOffset; }
+            get { return FrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
         }
 
         private double TailLength
@@ -621,7 +426,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetRelativeOffset(BlockView block, GridTrack gridTrack, double fraction)
         {
-            return GetRelativeSpan(block, gridTrack).StartOffset + GetMeasuredLength(block, gridTrack) * fraction;
+            return gridTrack.GetRelativeSpan(block).StartOffset + GetMeasuredLength(block, gridTrack) * fraction;
         }
 
         private double MeasureForwardTail(GridTrack gridTrack, double fraction)
@@ -715,7 +520,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var startGridOffset = GetStartGridOffset(gridRange);
             var endGridOffset = GetEndGridOffset(gridRange);
-            return startGridOffset == endGridOffset ? GetSpan(startGridOffset).Length : GetSpan(endGridOffset).EndOffset - GetSpan(startGridOffset).StartOffset;
+            return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.EndOffset - startGridOffset.Span.StartOffset;
         }
 
         protected override Size GetMeasuredSize(BlockView block)
@@ -750,8 +555,8 @@ namespace DevZest.Data.Windows.Primitives
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
             var startTrack = gridSpan.StartTrack;
             var endTrack = gridSpan.EndTrack;
-            return startTrack == endTrack ? GetRelativeSpan(block, startTrack).Length
-                : GetRelativeSpan(block, endTrack).EndOffset - GetRelativeSpan(block, startTrack).StartOffset;
+            return startTrack == endTrack ? startTrack.GetRelativeSpan(block).Length
+                : endTrack.GetRelativeSpan(block).EndOffset - startTrack.GetRelativeSpan(block).StartOffset;
         }
 
         private double GetScrollCrossClip(GridRange gridRange)
@@ -769,7 +574,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridRange = scalarItem.GridRange;
             var startGridOffset = GetStartGridOffset(gridRange);
-            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : GetSpan(startGridOffset).StartOffset;
+            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
@@ -813,12 +618,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartOffset(BlockView block)
         {
-            return GetSpan(new GridOffset(GridTracksMain.BlockStart, block)).StartOffset;
+            return new GridOffset(GridTracksMain.BlockStart, block).Span.StartOffset;
         }
 
         private double GetEndOffset(BlockView block)
         {
-            return GetSpan(new GridOffset(GridTracksMain.BlockEnd, block)).EndOffset;
+            return new GridOffset(GridTracksMain.BlockEnd, block).Span.EndOffset;
         }
 
         private Point GetRelativeLocation(BlockView block, GridRange gridRange)
@@ -826,7 +631,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(Template.BlockRange.Contains(gridRange));
 
             var startTrackMain = GridTracksMain.GetGridSpan(gridRange).StartTrack;
-            var valueMain = GetRelativeSpan(block, startTrackMain).StartOffset;
+            var valueMain = startTrackMain.GetRelativeSpan(block).StartOffset;
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset - GridTracksCross.BlockStart.StartOffset;
             return ToPoint(valueMain, valueCross);
         }

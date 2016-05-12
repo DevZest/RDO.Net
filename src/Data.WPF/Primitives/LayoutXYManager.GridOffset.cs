@@ -64,9 +64,13 @@ namespace DevZest.Data.Windows.Primitives
                 return obj is GridOffset ? (GridOffset)obj == this : false;
             }
 
-            private LayoutXYManager LayoutXYManager
+            public Span Span
             {
-                get { return IsEof ? null : GridTrack.LayoutXYManager; }
+                get
+                {
+                    Debug.Assert(!IsEof);
+                    return GridTrack.IsRepeat ? GridTrack.GetSpan(BlockOrdinal) : GridTrack.GetSpan();
+                }
             }
         }
 
