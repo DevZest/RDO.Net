@@ -67,6 +67,7 @@
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
+    <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollectionBase.cs" />
     <Compile Include="RowPresenterState.cs" />
