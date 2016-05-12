@@ -30,6 +30,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as LayoutManager; }
         }
 
+        internal LayoutXYManager LayoutXYManager
+        {
+            get { return RowManager as LayoutXYManager; }
+        }
+
         public DataPresenter DataPresenter
         {
             get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }

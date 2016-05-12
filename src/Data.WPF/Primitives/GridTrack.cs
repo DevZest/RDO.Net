@@ -25,9 +25,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.Template; }
         }
 
-        private LayoutXYManager LayoutXYManager
+        internal LayoutXYManager LayoutXYManager
         {
-            get { return Template.LayoutManager as LayoutXYManager; }
+            get { return Template.LayoutXYManager; }
         }
 
         internal int Ordinal { get; private set; }

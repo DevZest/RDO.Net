@@ -63,6 +63,7 @@
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutXManager.cs" />
     <Compile Include="Primitives\LayoutXYManager.cs" />
+    <Compile Include="Primitives\LayoutXYManager.GridOffset.cs" />
     <Compile Include="Primitives\LayoutXYManager.IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
