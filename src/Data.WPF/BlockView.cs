@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
-            ClearDeltaVariantLengths();
+            ClearVariantLengths();
             ClearElements();
             Ordinal = -1;
             ElementManager = null;
@@ -256,77 +256,77 @@ namespace DevZest.Data.Windows
             blockItem.UpdateTarget(element);
         }
 
-        private double[] _cumulativeDeltaVariantLengths;
-        private double[] CumulativeDeltaVariantLengths
+        private double[] _cumulativeVariantLengths;
+        private double[] CumulativeVariantLengths
         {
             get
             {
-                Debug.Assert(LayoutXYManager.VariantAutoLengthTracks.Count > 0);
-                return _cumulativeDeltaVariantLengths ?? (_cumulativeDeltaVariantLengths = new double[LayoutXYManager.VariantAutoLengthTracks.Count]);
+                Debug.Assert(LayoutXYManager.VariantLengthTracks.Count > 0);
+                return _cumulativeVariantLengths ?? (_cumulativeVariantLengths = new double[LayoutXYManager.VariantLengthTracks.Count]);
             }
         }
 
-        private void ClearDeltaVariantLengths()
+        private void ClearVariantLengths()
         {
-            if (_cumulativeDeltaVariantLengths != null)
+            if (_cumulativeVariantLengths != null)
             {
-                for (int i = 0; i < _cumulativeDeltaVariantLengths.Length; i++)
-                    _cumulativeDeltaVariantLengths[i] = 0;
+                for (int i = 0; i < _cumulativeVariantLengths.Length; i++)
+                    _cumulativeVariantLengths[i] = 0;
             }
         }
 
-        internal double GetMeasuredAutoLengthStartOffset(GridTrack gridTrack)
+        internal double GetVariantLengthStart(GridTrack gridTrack)
         {
-            return GetMeasuredAutoLengthEndOffset(gridTrack) - GetMeasuredAutoLength(gridTrack);
+            return GetVariantLengthEnd(gridTrack) - GetVariantLength(gridTrack);
         }
 
-        internal double GetMeasuredAutoLengthEndOffset(GridTrack gridTrack)
+        internal double GetVariantLengthEnd(GridTrack gridTrack)
         {
-            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            int index = gridTrack.VariantAutoLengthIndex;
-            return CumulativeDeltaVariantLengths[index];
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantLength);
+            return CumulativeVariantLengths[gridTrack.VariantLengthIndex];
         }
 
-        internal double GetMeasuredAutoLength(GridTrack gridTrack)
+        internal double GetVariantLength(GridTrack gridTrack)
         {
-            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            int index = gridTrack.VariantAutoLengthIndex;
-            return index == 0 ? CumulativeDeltaVariantLengths[0] : CumulativeDeltaVariantLengths[index] - CumulativeDeltaVariantLengths[index - 1];
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantLength);
+            int index = gridTrack.VariantLengthIndex;
+            return index == 0 ? CumulativeVariantLengths[0] : CumulativeVariantLengths[index] - CumulativeVariantLengths[index - 1];
         }
 
-        internal void SetMeasuredAutoLength(GridTrack gridTrack, double value)
+        internal void SetVariantLength(GridTrack gridTrack, double value)
         {
-            Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
-            var oldValue = GetMeasuredAutoLength(gridTrack);
+            Debug.Assert(gridTrack != null && gridTrack.IsVariantLength);
+            var oldValue = GetVariantLength(gridTrack);
             var delta = value - oldValue;
             if (delta == 0)
                 return;
 
-            var index = gridTrack.VariantAutoLengthIndex;
-            for (int i = index; i < CumulativeDeltaVariantLengths.Length; i++)
-                CumulativeDeltaVariantLengths[i] += delta;
-            LayoutXYManager.InvalidateVariantAutoLengths();
+            var index = gridTrack.VariantLengthIndex;
+            for (int i = index; i < CumulativeVariantLengths.Length; i++)
+                CumulativeVariantLengths[i] += delta;
+            LayoutXYManager.InvalidateVariantLengths();
         }
 
-        internal double TotalDeltaVariantLength
+        private double TotalVariantLength
         {
-            get { return _cumulativeDeltaVariantLengths == null ? 0 : _cumulativeDeltaVariantLengths[_cumulativeDeltaVariantLengths.Length - 1]; }
+            get { return _cumulativeVariantLengths == null || _cumulativeVariantLengths.Length == 0
+                    ? 0 : _cumulativeVariantLengths[_cumulativeVariantLengths.Length - 1]; }
         }
 
-        private double _startMeasuredAutoLengthOffset;
-        internal double StartMeasuredAutoLengthOffset
+        private double _startVariantLengthOffset;
+        internal double StartVariantLengthOffset
         {
             get
             {
-                LayoutXYManager.RefreshVariantAutoLengths();
-                return _startMeasuredAutoLengthOffset;
+                LayoutXYManager.RefreshVariantLengths();
+                return _startVariantLengthOffset;
             }
-            set { _startMeasuredAutoLengthOffset = value; }
+            set { _startVariantLengthOffset = value; }
         }
 
-        internal double EndMeasuredAutoLengthOffset
+        internal double EndVariantLengthOffset
         {
-            get { return StartMeasuredAutoLengthOffset + TotalDeltaVariantLength; }
+            get { return StartVariantLengthOffset + TotalVariantLength; }
         }
 
         internal UIElement this[BlockItem blockItem]

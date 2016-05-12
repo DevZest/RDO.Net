@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows.Primitives
         double TotalAutoLength { get; set; }
         void InvalidateOffset();
         void RefreshOffset();
-        IReadOnlyList<GridTrack> InitVariantAutoLengthTracks();
+        IReadOnlyList<GridTrack> InitVariantLengthTracks();
         Vector BlockDimensionVector { get; }
         Vector ToVector(double valueMain, double valueCross);
         int FrozenHead { get; }

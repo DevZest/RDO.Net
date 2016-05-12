@@ -15,8 +15,10 @@ namespace DevZest.Data.Windows.Primitives
             Length = result.Length;
             MinLength = result.MinLength;
             MaxLength = result.MaxLength;
-            VariantAutoLengthIndex = -1;
+            VariantLengthIndex = -1;
         }
+
+        public bool IsVariant { get; set; }
 
         internal IGridTrackCollection Owner { get; private set; }
 
@@ -43,51 +45,44 @@ namespace DevZest.Data.Windows.Primitives
 
         public double MaxLength { get; private set; }
 
-        private bool SizeToContent
-        {
-            get { return Owner.SizeToContent; }
-        }
-
         internal bool IsAutoLength
         {
-            get { return Length.IsAuto || (Length.IsStar && SizeToContent); }
+            get { return Length.IsAuto || (Length.IsStar && Owner.SizeToContent); }
         }
 
         internal bool IsStarLength
         {
-            get { return Length.IsStar && !SizeToContent; }
+            get { return Length.IsStar && !Owner.SizeToContent; }
         }
 
         private double _measuredLength;
         internal double MeasuredLength
         {
-            get { return IsVariantAutoLength ? 0 : _measuredLength; }
-        }
-
-        internal void SetMeasuredLength(double value)
-        {
-            Debug.Assert(!IsVariantAutoLength);
-            if (_measuredLength == value)
-                return;
-
-            _measuredLength = value;
-            Owner.InvalidateOffset();
-        }
-
-        internal double AvgVariantAutoLength
-        {
-            get
+            get { return _measuredLength; }
+            set
             {
-                Debug.Assert(IsVariantAutoLength);
-                LayoutXYManager.RefreshVariantAutoLengths();
-                return _measuredLength;
+                if (_measuredLength == value)
+                    return;
+
+                _measuredLength = value;
+                Owner.InvalidateOffset();
             }
         }
 
-        internal void SetAvgVariantAutoLength(double value)
+        private double _avgVariantLength;
+        internal double AvgVariantLength
         {
-            Debug.Assert(IsVariantAutoLength);
-            _measuredLength = value;
+            get
+            {
+                Debug.Assert(IsVariantLength);
+                LayoutXYManager.RefreshVariantLengths();
+                return _avgVariantLength;
+            }
+            set
+            {
+                Debug.Assert(IsVariantLength);
+                _avgVariantLength = value;
+            }
         }
 
         private double _startOffset;
@@ -106,11 +101,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return StartOffset + MeasuredLength; }
         }
 
-        internal int VariantAutoLengthIndex { get; set; }
+        internal int VariantLengthIndex { get; set; }
 
-        internal bool IsVariantAutoLength
+        internal bool IsVariantLength
         {
-            get { return VariantAutoLengthIndex >= 0; }
+            get { return VariantLengthIndex >= 0; }
         }
 
         internal void VerifyUnitType()
@@ -163,9 +158,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Ordinal > Owner.BlockEnd.Ordinal; }
         }
 
-        private IReadOnlyList<GridTrack> VariantAutoLengthTracks
+        private IReadOnlyList<GridTrack> VariantLengthTracks
         {
-            get { return LayoutXYManager.VariantAutoLengthTracks; }
+            get { return LayoutXYManager.VariantLengthTracks; }
         }
 
         private BlockViewCollection BlockViews
@@ -183,20 +178,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.MaxFrozenHead; }
         }
 
-        private double TotalDeltaVariantLength
-        {
-            get
-            {
-                Debug.Assert(BlockViews.Count > 0);
-                return BlockViews.Last.EndMeasuredAutoLengthOffset - BlockViews.First.StartMeasuredAutoLengthOffset;
-            }
-        }
-
-        private double AvgDeltaVariantLength
-        {
-            get { return BlockViews.Count == 0 ? 0 : TotalDeltaVariantLength / BlockViews.Count; }
-        }
-
         private double FixBlockLength
         {
             get { return Owner.BlockEnd.EndOffset - Owner.BlockStart.StartOffset; }
@@ -204,7 +185,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double AvgBlockLength
         {
-            get { return FixBlockLength + AvgDeltaVariantLength; }
+            get { return FixBlockLength + BlockViews.AvgVariantLength; }
         }
 
         internal Span GetSpan()
@@ -244,7 +225,7 @@ namespace DevZest.Data.Windows.Primitives
         private double GetRealizedBlocksLength(int count)
         {
             Debug.Assert(count >= 0 && count <= BlockViews.Count);
-            return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndMeasuredAutoLengthOffset;
+            return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndVariantLengthOffset;
         }
 
         internal Span GetRelativeSpan(BlockView block)
@@ -262,7 +243,7 @@ namespace DevZest.Data.Windows.Primitives
             var startOffset = StartOffset - startTrack.StartOffset;
             var endOffset = EndOffset - startTrack.StartOffset;
 
-            var variantAutoLengthTrack = LastVariantAutoLengthTrack;
+            var variantAutoLengthTrack = LastVariantLengthTrack;
             if (variantAutoLengthTrack != null)
             {
                 var variantLengthSpan = variantAutoLengthTrack.GetVariantLengthSpan(blockOrdinal);
@@ -274,49 +255,49 @@ namespace DevZest.Data.Windows.Primitives
 
         private Span GetVariantLengthSpan(int blockOrdinal)
         {
-            Debug.Assert(IsVariantAutoLength);
+            Debug.Assert(IsVariantLength);
 
             double startOffset, endOffset;
 
             var blockView = BlockViews.GetBlockView(blockOrdinal);
             if (blockView != null)
             {
-                startOffset = blockView.GetMeasuredAutoLengthStartOffset(this);
-                endOffset = blockView.GetMeasuredAutoLengthEndOffset(this);
+                startOffset = blockView.GetVariantLengthStart(this);
+                endOffset = blockView.GetVariantLengthEnd(this);
             }
             else
             {
                 endOffset = 0;
-                for (int i = 0; i <= VariantAutoLengthIndex; i++)
-                    endOffset += VariantAutoLengthTracks[i].AvgVariantAutoLength;
-                startOffset = endOffset - AvgVariantAutoLength;
+                for (int i = 0; i <= VariantLengthIndex; i++)
+                    endOffset += VariantLengthTracks[i].AvgVariantLength;
+                startOffset = endOffset - AvgVariantLength;
             }
 
             return new Span(startOffset, endOffset);
         }
 
-        private GridTrack LastVariantAutoLengthTrack
+        private GridTrack LastVariantLengthTrack
         {
             get
             {
                 Debug.Assert(IsRepeat);
 
                 // optimization: shortcuts for common cases
-                if (VariantAutoLengthTracks.Count == 0)
+                if (VariantLengthTracks.Count == 0)
                     return null;
                 if (this == Owner.BlockStart)
-                    return IsVariantAutoLength ? this : null;
+                    return IsVariantLength ? this : null;
                 if (this == Owner.BlockEnd)
-                    return VariantAutoLengthTracks.LastOf(1);
+                    return VariantLengthTracks.LastOf(1);
 
                 GridTrack result = null;
-                for (int i = 0; i < VariantAutoLengthTracks.Count; i++)
+                for (int i = 0; i < VariantLengthTracks.Count; i++)
                 {
-                    var variantAutoLengthTrack = VariantAutoLengthTracks[i];
-                    if (variantAutoLengthTrack.Ordinal > Ordinal)
+                    var variantLengthTrack = VariantLengthTracks[i];
+                    if (variantLengthTrack.Ordinal > Ordinal)
                         break;
 
-                    result = variantAutoLengthTrack;
+                    result = variantLengthTrack;
                 }
                 return result;
             }

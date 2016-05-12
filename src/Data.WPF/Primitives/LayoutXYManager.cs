@@ -13,13 +13,37 @@ namespace DevZest.Data.Windows.Primitives
         protected LayoutXYManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
-            VariantAutoLengthTracks = GridTracksMain.InitVariantAutoLengthTracks();
+            VariantLengthTracks = GridTracksMain.InitVariantLengthTracks();
             _scrollStartMain = ScrollOriginMain;
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
-        internal IReadOnlyList<GridTrack> VariantAutoLengthTracks { get; private set; }
+        internal IReadOnlyList<GridTrack> VariantLengthTracks { get; private set; }
+
+        private bool _isVariantLengthsValid = true;
+        internal void InvalidateVariantLengths()
+        {
+            _isVariantLengthsValid = false;
+        }
+
+        internal void RefreshVariantLengths()
+        {
+            if (_isVariantLengthsValid)
+                return;
+
+            _isVariantLengthsValid = true; // Avoid re-entrance
+            for (int i = 1; i < BlockViews.Count; i++)
+                BlockViews[i].StartVariantLengthOffset = BlockViews[i - 1].EndVariantLengthOffset;
+
+            foreach (var gridTrack in VariantLengthTracks)
+            {
+                double totalVariantLength = 0;
+                for (int i = 0; i < BlockViews.Count; i++)
+                    totalVariantLength += BlockViews[i].GetVariantLength(gridTrack);
+                gridTrack.AvgVariantLength = BlockViews.Count == 0 ? 0 : totalVariantLength / BlockViews.Count;
+            }
+        }
 
         private bool _isBlocksDirty;
         private void InvalidateBlocks()
@@ -177,42 +201,18 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.IsVariantAutoLength ? blockView.GetMeasuredAutoLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
+            return blockView != null && gridTrack.IsVariantLength ? blockView.GetVariantLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
         }
 
         protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
-            if (blockView != null && gridTrack.IsVariantAutoLength)
+            if (blockView != null && gridTrack.IsVariantLength)
             {
-                blockView.SetMeasuredAutoLength(gridTrack, value);
+                blockView.SetVariantLength(gridTrack, value);
                 return false;
             }
             else
                 return base.SetMeasuredAutoLength(blockView, gridTrack, value);
-        }
-
-        private bool _isVariantAutoLengthsValid = true;
-        internal void InvalidateVariantAutoLengths()
-        {
-            _isVariantAutoLengthsValid = false;
-        }
-
-        internal void RefreshVariantAutoLengths()
-        {
-            if (_isVariantAutoLengthsValid)
-                return;
-
-            _isVariantAutoLengthsValid = true; // Avoid re-entrance
-            for (int i = 1; i < BlockViews.Count; i++)
-                BlockViews[i].StartMeasuredAutoLengthOffset = BlockViews[i - 1].EndMeasuredAutoLengthOffset;
-
-            foreach (var gridTrack in VariantAutoLengthTracks)
-            {
-                double totalVariantAutoLength = 0;
-                for (int i = 0; i < BlockViews.Count; i++)
-                    totalVariantAutoLength += BlockViews[i].GetMeasuredAutoLength(gridTrack);
-                gridTrack.SetAvgVariantAutoLength(BlockViews.Count == 0 ? 0 : totalVariantAutoLength / BlockViews.Count);
-            }
         }
 
         protected override void OnSetState(DataPresenterState dataPresenterState)

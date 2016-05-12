@@ -249,5 +249,19 @@ namespace DevZest.Data.Windows.Primitives
         {
             return IsRealized(blockOrdinal) ? this[blockOrdinal - First.Ordinal] : null;
         }
+
+        public double AvgVariantLength
+        {
+            get { return Count == 0 ? 0 : TotalVariantLength / Count; }
+        }
+
+        private double TotalVariantLength
+        {
+            get
+            {
+                Debug.Assert(Count > 0);
+                return Last.EndVariantLengthOffset - First.StartVariantLengthOffset;
+            }
+        }
     }
 }

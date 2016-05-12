@@ -362,14 +362,14 @@ namespace DevZest.Data.Windows.Primitives
         internal void InitMeasure(Size availableSize)
         {
             AvailableSize = availableSize;
-            InitMeasuredAutoLengths();
+            InitMeasuredLengths();
             DistributeStarLengths();
         }
 
-        private void InitMeasuredAutoLengths()
+        private void InitMeasuredLengths()
         {
-            InternalGridColumns.InitMeasuredAutoLengths();
-            InternalGridRows.InitMeasuredAutoLengths();
+            InternalGridColumns.InitMeasuredLengths();
+            InternalGridRows.InitMeasuredLengths();
         }
 
         private void DistributeStarLengths()

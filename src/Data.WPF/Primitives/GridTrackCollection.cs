@@ -33,10 +33,7 @@ namespace DevZest.Data.Windows.Primitives
             Items.Add(item);
 
             if (item.Length.IsAbsolute)
-            {
-                item.SetMeasuredLength(item.Length.Value);
-                TotalAbsoluteLength += item.MeasuredLength;
-            }
+                TotalAbsoluteLength += item.Length.Value;
             else if (item.Length.IsStar)
                 TotalStarFactor += item.Length.Value;
         }
@@ -76,13 +73,15 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal void InitMeasuredAutoLengths()
+        internal void InitMeasuredLengths()
         {
             TotalAutoLength = 0;
             foreach (var gridTrack in this)
             {
-                if (gridTrack.IsAutoLength && !gridTrack.IsVariantAutoLength)
-                    gridTrack.SetMeasuredLength(0);
+                if (gridTrack.IsAutoLength || gridTrack.IsVariantLength || gridTrack.IsStarLength)
+                    gridTrack.MeasuredLength = 0;
+                else
+                    gridTrack.MeasuredLength = gridTrack.Length.Value;
             }
         }
 
@@ -171,7 +170,7 @@ namespace DevZest.Data.Windows.Primitives
             var totalLength = Math.Max(0d, AvailableLength - TotalAbsoluteLength - TotalAutoLength);
             var totalStarFactor = TotalStarFactor;
             foreach (var gridTrack in StarLengthTracks)
-                gridTrack.SetMeasuredLength(totalLength * (gridTrack.Length.Value / totalStarFactor));
+                gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
         }
 
         private GridSpan<T> BlockSpan
@@ -179,18 +178,18 @@ namespace DevZest.Data.Windows.Primitives
             get { return GetGridSpan(Template.RowRange); }
         }
 
-        private IConcatList<T> InitVariantAutoLengthTracks()
+        private IConcatList<T> InitVariantLengthTracks()
         {
             var blockSpan = BlockSpan;
-            var result = Filter(blockSpan, x => x.Length.IsAuto);
+            var result = Filter(blockSpan, x => x.Length.IsAuto || (x.Length.IsAbsolute && x.IsVariant));
             for (int i = 0; i < result.Count; i++)
-                result[i].VariantAutoLengthIndex = i;
+                result[i].VariantLengthIndex = i;
             return result;
         }
 
-        IReadOnlyList<GridTrack> IGridTrackCollection.InitVariantAutoLengthTracks()
+        IReadOnlyList<GridTrack> IGridTrackCollection.InitVariantLengthTracks()
         {
-            return InitVariantAutoLengthTracks();
+            return InitVariantLengthTracks();
         }
 
         protected abstract double BlockDimensionLength { get; }

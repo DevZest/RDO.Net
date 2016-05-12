@@ -120,7 +120,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var delta = value - gridTrack.MeasuredLength;
             Debug.Assert(delta > 0);
-            gridTrack.SetMeasuredLength(value);
+            gridTrack.MeasuredLength = value;
             gridTrack.Owner.TotalAutoLength += delta;
             return true;
         }
