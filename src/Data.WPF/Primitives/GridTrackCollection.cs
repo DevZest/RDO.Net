@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows.Primitives
             TotalAutoLength = 0;
             foreach (var gridTrack in this)
             {
-                if (gridTrack.IsAutoLength(SizeToContent) && !gridTrack.IsVariantAutoLength)
+                if (gridTrack.IsAutoLength && !gridTrack.IsVariantAutoLength)
                     gridTrack.SetMeasuredLength(0);
             }
         }
@@ -153,7 +153,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 if (_starLengthTracks == null)
-                    _starLengthTracks = Filter(x => x.IsStarLength(SizeToContent));
+                    _starLengthTracks = Filter(x => x.IsStarLength);
                 return _starLengthTracks;
             }
         }

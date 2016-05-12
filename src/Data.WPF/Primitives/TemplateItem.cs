@@ -236,7 +236,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal virtual Func<GridColumn, bool> IsAutoWidthCondition
         {
-            get { return x => x.IsAutoLength(SizeToContentX); }
+            get { return x => x.IsAutoLength; }
         }
 
         private IConcatList<GridRow> _autoHeightGridRows;
@@ -260,7 +260,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal virtual Func<GridRow, bool> IsAutoHeightCondition
         {
-            get { return x => x.IsAutoLength(SizeToContentY); }
+            get { return x => x.IsAutoLength; }
         }
 
         internal bool IsAutoSize

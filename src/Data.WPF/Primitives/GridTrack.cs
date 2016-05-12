@@ -43,14 +43,19 @@ namespace DevZest.Data.Windows.Primitives
 
         public double MaxLength { get; private set; }
 
-        internal bool IsAutoLength(bool sizeToContent)
+        private bool sizeToContent
         {
-            return Length.IsAuto || (Length.IsStar && sizeToContent);
+            get { return Owner.SizeToContent; }
         }
 
-        internal bool IsStarLength(bool sizeToContent)
+        internal bool IsAutoLength
         {
-            return Length.IsStar && !sizeToContent;
+            get { return Length.IsAuto || (Length.IsStar && sizeToContent); }
+        }
+
+        internal bool IsStarLength
+        {
+            get { return Length.IsStar && !sizeToContent; }
         }
 
         private double _measuredLength;
@@ -178,7 +183,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.MaxFrozenHead; }
         }
 
-        private double TotalVariantAutoLength
+        private double TotalDeltaVariantLength
         {
             get
             {
@@ -187,9 +192,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private double AvgVariantAutoLength2
+        private double AvgDeltaVariantLength
         {
-            get { return BlockViews.Count == 0 ? 0 : TotalVariantAutoLength / BlockViews.Count; }
+            get { return BlockViews.Count == 0 ? 0 : TotalDeltaVariantLength / BlockViews.Count; }
         }
 
         private double FixBlockLength
@@ -199,7 +204,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double AvgBlockLength
         {
-            get { return FixBlockLength + AvgVariantAutoLength2; }
+            get { return FixBlockLength + AvgDeltaVariantLength; }
         }
 
         internal Span GetSpan()
@@ -211,9 +216,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new Span(StartOffset, EndOffset);
 
             Debug.Assert(IsTail);
-            var delta = MaxBlockCount * AvgBlockLength;
-            if (MaxBlockCount > 0)
-                delta -= FixBlockLength;    // minus duplicated FixBlockLength
+            var delta = GetBlocksLength(MaxBlockCount) - Owner.GetMeasuredLength(Template.BlockRange);
             return new Span(StartOffset + delta, EndOffset + delta);
         }
 
@@ -233,15 +236,9 @@ namespace DevZest.Data.Windows.Primitives
             if (count == 0)
                 return 0;
 
-            var unrealized = BlockViews.Count == 0 ? 0 : BlockViews.First.Ordinal;
-            if (count <= unrealized)
-                return count * AvgBlockLength;
-
-            var realized = BlockViews.Count == 0 ? 0 : BlockViews.Last.Ordinal - BlockViews.First.Ordinal + 1;
-            if (count <= unrealized + realized)
-                return unrealized * AvgBlockLength + GetRealizedBlocksLength(count - unrealized);
-
-            return GetRealizedBlocksLength(realized) + (count - realized) * AvgBlockLength;
+            var realized = BlockViews.Count;
+            var unrealized = Math.Max(0, count - realized);
+            return GetRealizedBlocksLength(realized) + unrealized * AvgBlockLength;
         }
 
         private double GetRealizedBlocksLength(int count)
@@ -252,6 +249,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetRelativeSpan(BlockView block)
         {
+            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(block != null && IsRepeat);
             return GetRelativeSpan(block.Ordinal);
         }

@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows
 
         internal void Cleanup()
         {
-            ClearMeasuredAutoLengths();
+            ClearDeltaVariantLengths();
             ClearElements();
             Ordinal = -1;
             ElementManager = null;
@@ -256,22 +256,22 @@ namespace DevZest.Data.Windows
             blockItem.UpdateTarget(element);
         }
 
-        private double[] _cumulativeMeasuredAutoLengths;
-        private double[] CumulativeMeasuredAutoLengths
+        private double[] _cumulativeDeltaVariantLengths;
+        private double[] CumulativeDeltaVariantLengths
         {
             get
             {
                 Debug.Assert(LayoutXYManager.VariantAutoLengthTracks.Count > 0);
-                return _cumulativeMeasuredAutoLengths ?? (_cumulativeMeasuredAutoLengths = new double[LayoutXYManager.VariantAutoLengthTracks.Count]);
+                return _cumulativeDeltaVariantLengths ?? (_cumulativeDeltaVariantLengths = new double[LayoutXYManager.VariantAutoLengthTracks.Count]);
             }
         }
 
-        private void ClearMeasuredAutoLengths()
+        private void ClearDeltaVariantLengths()
         {
-            if (_cumulativeMeasuredAutoLengths != null)
+            if (_cumulativeDeltaVariantLengths != null)
             {
-                for (int i = 0; i < _cumulativeMeasuredAutoLengths.Length; i++)
-                    _cumulativeMeasuredAutoLengths[i] = 0;
+                for (int i = 0; i < _cumulativeDeltaVariantLengths.Length; i++)
+                    _cumulativeDeltaVariantLengths[i] = 0;
             }
         }
 
@@ -284,14 +284,14 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
             int index = gridTrack.VariantAutoLengthIndex;
-            return CumulativeMeasuredAutoLengths[index];
+            return CumulativeDeltaVariantLengths[index];
         }
 
         internal double GetMeasuredAutoLength(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack != null && gridTrack.IsVariantAutoLength);
             int index = gridTrack.VariantAutoLengthIndex;
-            return index == 0 ? CumulativeMeasuredAutoLengths[0] : CumulativeMeasuredAutoLengths[index] - CumulativeMeasuredAutoLengths[index - 1];
+            return index == 0 ? CumulativeDeltaVariantLengths[0] : CumulativeDeltaVariantLengths[index] - CumulativeDeltaVariantLengths[index - 1];
         }
 
         internal void SetMeasuredAutoLength(GridTrack gridTrack, double value)
@@ -303,14 +303,14 @@ namespace DevZest.Data.Windows
                 return;
 
             var index = gridTrack.VariantAutoLengthIndex;
-            for (int i = index; i < CumulativeMeasuredAutoLengths.Length; i++)
-                CumulativeMeasuredAutoLengths[i] += delta;
+            for (int i = index; i < CumulativeDeltaVariantLengths.Length; i++)
+                CumulativeDeltaVariantLengths[i] += delta;
             LayoutXYManager.InvalidateVariantAutoLengths();
         }
 
-        internal double TotalMeasuredAutoLength
+        internal double TotalDeltaVariantLength
         {
-            get { return _cumulativeMeasuredAutoLengths == null ? 0 : _cumulativeMeasuredAutoLengths[_cumulativeMeasuredAutoLengths.Length - 1]; }
+            get { return _cumulativeDeltaVariantLengths == null ? 0 : _cumulativeDeltaVariantLengths[_cumulativeDeltaVariantLengths.Length - 1]; }
         }
 
         private double _startMeasuredAutoLengthOffset;
@@ -326,7 +326,7 @@ namespace DevZest.Data.Windows
 
         internal double EndMeasuredAutoLengthOffset
         {
-            get { return StartMeasuredAutoLengthOffset + TotalMeasuredAutoLength; }
+            get { return StartMeasuredAutoLengthOffset + TotalDeltaVariantLength; }
         }
 
         internal UIElement this[BlockItem blockItem]

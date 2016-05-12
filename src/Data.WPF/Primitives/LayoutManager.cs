@@ -50,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
             var gridRange = templateItem.GridRange;
             if (templateItem.AutoWidthGridColumns.Count > 0)
             {
-                double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength(Template.SizeToContentX));
+                double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
                 if (totalAutoWidth > 0)
                 {
                     var changed = DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (templateItem.AutoHeightGridRows.Count > 0)
             {
-                double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength(Template.SizeToContentY));
+                double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
                 if (totalAutoHeight > 0)
                 {
                     var changed = DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
