@@ -43,19 +43,19 @@ namespace DevZest.Data.Windows.Primitives
 
         public double MaxLength { get; private set; }
 
-        private bool sizeToContent
+        private bool SizeToContent
         {
             get { return Owner.SizeToContent; }
         }
 
         internal bool IsAutoLength
         {
-            get { return Length.IsAuto || (Length.IsStar && sizeToContent); }
+            get { return Length.IsAuto || (Length.IsStar && SizeToContent); }
         }
 
         internal bool IsStarLength
         {
-            get { return Length.IsStar && !sizeToContent; }
+            get { return Length.IsStar && !SizeToContent; }
         }
 
         private double _measuredLength;
