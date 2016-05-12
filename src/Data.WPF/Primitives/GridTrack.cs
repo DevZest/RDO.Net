@@ -204,6 +204,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetSpan()
         {
+            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(!IsRepeat);
 
             if (IsHead)
@@ -218,6 +219,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetSpan(int blockOrdinal)
         {
+            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(IsRepeat && blockOrdinal >= 0);
 
             var relativeSpan = GetRelativeSpan(blockOrdinal);
@@ -256,7 +258,6 @@ namespace DevZest.Data.Windows.Primitives
 
         private Span GetRelativeSpan(int blockOrdinal)
         {
-            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(IsRepeat && blockOrdinal >= 0);
             var startTrack = Owner.BlockStart;
 
@@ -300,7 +301,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                Debug.Assert(Owner == LayoutXYManager.GridTracksMain && IsRepeat);
+                Debug.Assert(IsRepeat);
 
                 // optimization: shortcuts for common cases
                 if (VariantAutoLengthTracks.Count == 0)
