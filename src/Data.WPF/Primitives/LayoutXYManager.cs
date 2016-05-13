@@ -13,13 +13,15 @@ namespace DevZest.Data.Windows.Primitives
         protected LayoutXYManager(Template template, DataSet dataSet)
             : base(template, dataSet)
         {
-            VariantLengthTracks = GridTracksMain.InitVariantLengthTracks();
             _scrollStartMain = ScrollOriginMain;
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
-        internal IReadOnlyList<GridTrack> VariantLengthTracks { get; private set; }
+        internal GridSpan VariantLengthTracks
+        {
+            get { return GridTracksMain.GetGridSpan(Template.RowRange); }
+        }
 
         private bool _isVariantLengthsValid = true;
         internal void InvalidateVariantLengths()
@@ -36,11 +38,13 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < BlockViews.Count; i++)
                 BlockViews[i].StartVariantLengthOffset = BlockViews[i - 1].EndVariantLengthOffset;
 
-            foreach (var gridTrack in VariantLengthTracks)
+            var variantLengthTracks = VariantLengthTracks;
+            for (int i = 0; i < variantLengthTracks.Count; i++)
             {
+                var gridTrack = variantLengthTracks[i];
                 double totalVariantLength = 0;
-                for (int i = 0; i < BlockViews.Count; i++)
-                    totalVariantLength += BlockViews[i].GetVariantLength(gridTrack);
+                for (int j = 0; j < BlockViews.Count; j++)
+                    totalVariantLength += BlockViews[j].GetVariantLength(gridTrack);
                 gridTrack.AvgVariantLength = BlockViews.Count == 0 ? 0 : totalVariantLength / BlockViews.Count;
             }
         }

@@ -17,6 +17,20 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return StartTrack == null; }
         }
+
+        public int Count
+        {
+            get { return IsEmpty ? 0 : EndTrack.Ordinal - StartTrack.Ordinal + 1; }
+        }
+
+        public GridTrack this[int index]
+        {
+            get
+            {
+                Debug.Assert(index >= 0 && index < Count);
+                return StartTrack.Owner[StartTrack.Ordinal + index];
+            }
+        }
     }
 
     internal struct GridSpan<T>

@@ -178,20 +178,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return GetGridSpan(Template.RowRange); }
         }
 
-        private IConcatList<T> InitVariantLengthTracks()
-        {
-            var blockSpan = BlockSpan;
-            var result = Filter(blockSpan, x => x.Length.IsAuto || (x.Length.IsAbsolute && x.IsVariant));
-            for (int i = 0; i < result.Count; i++)
-                result[i].VariantLengthIndex = i;
-            return result;
-        }
-
-        IReadOnlyList<GridTrack> IGridTrackCollection.InitVariantLengthTracks()
-        {
-            return InitVariantLengthTracks();
-        }
-
         protected abstract double BlockDimensionLength { get; }
 
         public Vector BlockDimensionVector
