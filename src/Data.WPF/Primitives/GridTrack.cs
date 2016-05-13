@@ -50,10 +50,10 @@ namespace DevZest.Data.Windows.Primitives
         private double _measuredLength;
         internal double MeasuredLength
         {
-            get { return IsVariantLength ? 0 : _measuredLength; }
+            get { return WithinBlock ? 0 : _measuredLength; }
             set
             {
-                Debug.Assert(!IsVariantLength);
+                Debug.Assert(!WithinBlock);
                 if (_measuredLength == value)
                     return;
 
@@ -62,18 +62,36 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal double AvgVariantLength
+        internal double AvgLength
         {
             get
             {
-                Debug.Assert(IsVariantLength);
-                LayoutXYManager.RefreshVariantLengths();
+                Debug.Assert(WithinBlock);
+                LayoutXYManager.RefreshBlockLengths();
                 return _measuredLength;
             }
             set
             {
-                Debug.Assert(IsVariantLength);
+                Debug.Assert(WithinBlock);
                 _measuredLength = value;
+            }
+        }
+
+        private double AvgLengthStartOffset
+        {
+            get
+            {
+                LayoutXYManager.RefreshBlockLengths();
+                return LayoutXYManager.GetAvgLengthStartOffset(this);
+            }
+        }
+
+        private double AvgLengthEndOffset
+        {
+            get
+            {
+                LayoutXYManager.RefreshBlockLengths();
+                return LayoutXYManager.GetAvgLengthEndOffset(this);
             }
         }
 
@@ -148,7 +166,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.LayoutXYManager; }
         }
 
-        internal int VariantLengthIndex
+        internal int WithinBlockIndex
         {
             get
             {
@@ -159,14 +177,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal bool IsVariantLength
+        internal bool WithinBlock
         {
-            get { return VariantLengthIndex >= 0; }
-        }
-
-        private GridSpan VariantLengthTracks
-        {
-            get { return LayoutXYManager.VariantLengthTracks; }
+            get { return WithinBlockIndex >= 0; }
         }
 
         private BlockViewCollection BlockViews
@@ -184,14 +197,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.MaxFrozenHead; }
         }
 
-        private double FixBlockLength
-        {
-            get { return Owner.BlockEnd.EndOffset - Owner.BlockStart.StartOffset; }
-        }
-
         private double AvgBlockLength
         {
-            get { return FixBlockLength + BlockViews.AvgVariantLength; }
+            get { return BlockViews.AvgLength; }
         }
 
         internal Span GetSpan()
@@ -231,51 +239,21 @@ namespace DevZest.Data.Windows.Primitives
         private double GetRealizedBlocksLength(int count)
         {
             Debug.Assert(count >= 0 && count <= BlockViews.Count);
-            return count == 0 ? 0 : count * FixBlockLength + BlockViews[count - 1].EndVariantLengthOffset;
+            return count == 0 ? 0 : BlockViews[count - 1].EndOffset;
         }
 
         internal Span GetRelativeSpan(BlockView block)
         {
-            Debug.Assert(IsVariantLength && block != null);
-            return GetRelativeSpan(block.Ordinal);
+            Debug.Assert(WithinBlock && block != null);
+            return new Span(block.GetRelativeStartOffset(this), block.GetRelativeEndOffset(this));
         }
 
         private Span GetRelativeSpan(int blockOrdinal)
         {
-            Debug.Assert(IsVariantLength && blockOrdinal >= 0);
-            var startTrack = Owner.BlockStart;
+            Debug.Assert(WithinBlock && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
 
-            var startOffset = StartOffset - startTrack.StartOffset;
-            var endOffset = EndOffset - startTrack.StartOffset;
-
-            var variantLengthSpan = GetVariantLengthSpan(blockOrdinal);
-            startOffset += variantLengthSpan.StartOffset;
-            endOffset += variantLengthSpan.EndOffset;
-
-            return new Span(startOffset, endOffset);
-        }
-
-        private Span GetVariantLengthSpan(int blockOrdinal)
-        {
-            Debug.Assert(IsVariantLength);
-
-            double startOffset, endOffset;
-
-            var blockView = BlockViews.GetBlockView(blockOrdinal);
-            if (blockView != null)
-            {
-                startOffset = blockView.GetVariantLengthStart(this);
-                endOffset = blockView.GetVariantLengthEnd(this);
-            }
-            else
-            {
-                endOffset = 0;
-                for (int i = 0; i <= VariantLengthIndex; i++)
-                    endOffset += VariantLengthTracks[i].AvgVariantLength;
-                startOffset = endOffset - AvgVariantLength;
-            }
-
-            return new Span(startOffset, endOffset);
+            var block = BlockViews.GetBlockView(blockOrdinal);
+            return block != null ? GetRelativeSpan(block) : new Span(AvgLengthStartOffset, AvgLengthEndOffset);
         }
     }
 }

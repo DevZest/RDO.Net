@@ -18,35 +18,65 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
-        internal GridSpan VariantLengthTracks
+        internal GridSpan BlockGridSpanMain
         {
             get { return GridTracksMain.GetGridSpan(Template.RowRange); }
         }
 
-        private bool _isVariantLengthsValid = true;
-        internal void InvalidateVariantLengths()
+        private bool _isBlockLengthsValid = true;
+        internal void InvalidateBlockLengths()
         {
-            _isVariantLengthsValid = false;
+            _isBlockLengthsValid = false;
         }
 
-        internal void RefreshVariantLengths()
+        private double[] _avgLengthOffsets;
+
+        private void RefreshAvgLengthOffsets()
         {
-            if (_isVariantLengthsValid)
+            if (_avgLengthOffsets == null)
+                _avgLengthOffsets = new double[BlockGridSpanMain.Count - 1];
+
+            var gridSpan = BlockGridSpanMain;
+            for (int i = 1; i < _avgLengthOffsets.Length; i++)
+            {
+                var prevTrack = gridSpan[i - 1];
+                _avgLengthOffsets[i] = GetAvgLengthEndOffset(prevTrack);
+            }
+        }
+
+        internal double GetAvgLengthStartOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.WithinBlock);
+            var withinBlockIndex = gridTrack.WithinBlockIndex;
+            return withinBlockIndex == 0 ? 0 : _avgLengthOffsets[withinBlockIndex - 1];
+        }
+
+        internal double GetAvgLengthEndOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.WithinBlock);
+            return GetAvgLengthStartOffset(gridTrack) + gridTrack.AvgLength;
+        }
+
+        internal void RefreshBlockLengths()
+        {
+            if (_isBlockLengthsValid)
                 return;
 
-            _isVariantLengthsValid = true; // Avoid re-entrance
+            _isBlockLengthsValid = true; // Avoid re-entrance
             for (int i = 1; i < BlockViews.Count; i++)
-                BlockViews[i].StartVariantLengthOffset = BlockViews[i - 1].EndVariantLengthOffset;
+                BlockViews[i].StartOffset = BlockViews[i - 1].EndOffset;
 
-            var variantLengthTracks = VariantLengthTracks;
-            for (int i = 0; i < variantLengthTracks.Count; i++)
+            var gridSpan = BlockGridSpanMain;
+            for (int i = 0; i < gridSpan.Count; i++)
             {
-                var gridTrack = variantLengthTracks[i];
-                double totalVariantLength = 0;
+                var gridTrack = gridSpan[i];
+                double totalLength = 0;
                 for (int j = 0; j < BlockViews.Count; j++)
-                    totalVariantLength += BlockViews[j].GetVariantLength(gridTrack);
-                gridTrack.AvgVariantLength = BlockViews.Count == 0 ? 0 : totalVariantLength / BlockViews.Count;
+                    totalLength += BlockViews[j].GetMeasuredLength(gridTrack);
+                gridTrack.AvgLength = BlockViews.Count == 0 ? 0 : totalLength / BlockViews.Count;
             }
+
+            RefreshAvgLengthOffsets();
         }
 
         private bool _isBlocksDirty;
@@ -205,14 +235,14 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.IsVariantLength ? blockView.GetVariantLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
+            return blockView != null && gridTrack.WithinBlock ? blockView.GetMeasuredLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
         }
 
         protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
-            if (blockView != null && gridTrack.IsVariantLength)
+            if (blockView != null && gridTrack.WithinBlock)
             {
-                blockView.SetVariantLength(gridTrack, value);
+                blockView.SetMeasuredLength(gridTrack, value);
                 return false;
             }
             else

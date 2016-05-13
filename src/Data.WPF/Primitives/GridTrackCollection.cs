@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
             TotalAutoLength = 0;
             foreach (var gridTrack in this)
             {
-                if (gridTrack.IsAutoLength || gridTrack.IsVariantLength || gridTrack.IsStarLength)
+                if (gridTrack.IsAutoLength || gridTrack.WithinBlock || gridTrack.IsStarLength)
                     gridTrack.MeasuredLength = 0;
                 else
                     gridTrack.MeasuredLength = gridTrack.Length.Value;
