@@ -126,10 +126,15 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RowMappings_Remove(int hierarchicalLevel, int ordinal)
         {
-            _rowMappings[hierarchicalLevel][ordinal].Dispose();
+            DisposeRow(_rowMappings[hierarchicalLevel][ordinal]);
             _rowMappings[hierarchicalLevel].RemoveAt(ordinal);
             if (!IsHierarchical)
                 OnSetState(DataPresenterState.Rows);
+        }
+
+        protected virtual void DisposeRow(RowPresenter row)
+        {
+            row.Dispose();
         }
 
         private List<RowPresenter> _hierarchicalRows;

@@ -23,6 +23,13 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.GetGridSpan(Template.RowRange); }
         }
 
+        protected override void DisposeRow(RowPresenter row)
+        {
+            for (int i = 0; i < BlockGridSpanMain.Count; i++)
+                BlockGridSpanMain[i].ClearAvailableLength(row);
+            base.DisposeRow(row);
+        }
+
         private bool _isBlockLengthsValid = true;
         internal void InvalidateBlockLengths()
         {
