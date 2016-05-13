@@ -29,34 +29,6 @@ namespace DevZest.Data.Windows.Primitives
             _isBlockLengthsValid = false;
         }
 
-        private double[] _avgLengthOffsets;
-
-        private void RefreshAvgLengthOffsets()
-        {
-            if (_avgLengthOffsets == null)
-                _avgLengthOffsets = new double[BlockGridSpanMain.Count - 1];
-
-            var gridSpan = BlockGridSpanMain;
-            for (int i = 1; i < _avgLengthOffsets.Length; i++)
-            {
-                var prevTrack = gridSpan[i - 1];
-                _avgLengthOffsets[i] = GetAvgLengthEndOffset(prevTrack);
-            }
-        }
-
-        internal double GetAvgLengthStartOffset(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack.WithinBlock);
-            var withinBlockIndex = gridTrack.WithinBlockIndex;
-            return withinBlockIndex == 0 ? 0 : _avgLengthOffsets[withinBlockIndex - 1];
-        }
-
-        internal double GetAvgLengthEndOffset(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack.WithinBlock);
-            return GetAvgLengthStartOffset(gridTrack) + gridTrack.AvgLength;
-        }
-
         internal void RefreshBlockLengths()
         {
             if (_isBlockLengthsValid)
@@ -77,6 +49,13 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             RefreshAvgLengthOffsets();
+        }
+
+        private void RefreshAvgLengthOffsets()
+        {
+            var gridSpan = BlockGridSpanMain;
+            for (int i = 1; i < gridSpan.Count; i++)
+                gridSpan[i].AvgLengthStartOffset = gridSpan[i - 1].AvgLengthEndOffset;
         }
 
         private bool _isBlocksDirty;

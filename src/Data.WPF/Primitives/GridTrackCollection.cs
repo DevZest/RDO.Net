@@ -133,7 +133,15 @@ namespace DevZest.Data.Windows.Primitives
 
             _isOffsetValid = true;  // prevent re-entrance
             for (int i = 1; i < Count; i++)
-                this[i].StartOffset = this[i - 1].EndOffset;
+            {
+                var current = this[i];
+                if (current.WithinBlock)
+                    continue;
+                var prev = this[i - 1].LastWithoutBlock;
+                if (prev == null)
+                    continue;
+                current.StartOffset = prev.EndOffset;
+            }
         }
 
         GridTrack IReadOnlyList<GridTrack>.this[int index]

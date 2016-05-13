@@ -47,17 +47,21 @@ namespace DevZest.Data.Windows.Primitives
             get { return Length.IsStar && !Owner.SizeToContent; }
         }
 
-        private double _measuredLength;
+        /// <remarks>
+        /// This field is shared by <see cref="MeasuredLength"/> and <see cref="AvgLength" />, distinguished by <see cref="WithinBlock"/>.
+        /// </remarks>
+        private double _measuredValue;
+
         internal double MeasuredLength
         {
-            get { return WithinBlock ? 0 : _measuredLength; }
+            get { return WithinBlock ? 0 : _measuredValue; }
             set
             {
                 Debug.Assert(!WithinBlock);
-                if (_measuredLength == value)
+                if (_measuredValue == value)
                     return;
 
-                _measuredLength = value;
+                _measuredValue = value;
                 Owner.InvalidateOffset();
             }
         }
@@ -68,47 +72,69 @@ namespace DevZest.Data.Windows.Primitives
             {
                 Debug.Assert(WithinBlock);
                 LayoutXYManager.RefreshBlockLengths();
-                return _measuredLength;
+                return _measuredValue;
             }
             set
             {
                 Debug.Assert(WithinBlock);
-                _measuredLength = value;
+                _measuredValue = value;
             }
         }
 
-        private double AvgLengthStartOffset
-        {
-            get
-            {
-                LayoutXYManager.RefreshBlockLengths();
-                return LayoutXYManager.GetAvgLengthStartOffset(this);
-            }
-        }
-
-        private double AvgLengthEndOffset
-        {
-            get
-            {
-                LayoutXYManager.RefreshBlockLengths();
-                return LayoutXYManager.GetAvgLengthEndOffset(this);
-            }
-        }
-
-        private double _startOffset;
+        /// <remarks>
+        /// This field is shared by <see cref="StartOffset"/> and <see cref="AvgLengthStartOffset" />, distinguished by <see cref="WithinBlock"/>.
+        /// </remarks>
+        private double _startOffsetValue;
         internal double StartOffset
         {
             get
             {
                 Owner.RefreshOffset();
-                return _startOffset;
+                var lastWithoutBlock = LastWithoutBlock;
+                return lastWithoutBlock == null ? 0 : lastWithoutBlock._startOffsetValue;
             }
-            set { _startOffset = value; }
+            set
+            {
+                Debug.Assert(!WithinBlock);
+                _startOffsetValue = value;
+            }
+        }
+
+        internal GridTrack LastWithoutBlock
+        {
+            get
+            {
+                var withinBlockIndex = WithinBlockIndex;
+                if (withinBlockIndex < 0)
+                    return this;
+                var ordinal = Ordinal - (withinBlockIndex + 1);
+                return ordinal == -1 ? null : Owner[ordinal];
+            }
         }
 
         internal double EndOffset
         {
             get { return StartOffset + MeasuredLength; }
+        }
+
+        internal double AvgLengthStartOffset
+        {
+            get
+            {
+                Debug.Assert(WithinBlock);
+                LayoutXYManager.RefreshBlockLengths();
+                return _startOffsetValue;
+            }
+            set
+            {
+                Debug.Assert(WithinBlock);
+                _startOffsetValue = value;
+            }
+        }
+
+        internal double AvgLengthEndOffset
+        {
+            get { return AvgLengthStartOffset + AvgLength; }
         }
 
         internal void VerifyUnitType()
