@@ -48,7 +48,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         /// <remarks>
-        /// This field is shared by <see cref="MeasuredLength"/> and <see cref="AvgLength" />, distinguished by <see cref="WithinBlock"/>.
+        /// This field is shared by <see cref="MeasuredLength"/> and <see cref="BlockLength" />, distinguished by <see cref="WithinBlock"/>.
         /// </remarks>
         private double _measuredValue;
 
@@ -66,7 +66,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal double AvgLength
+        internal double BlockLength
         {
             get
             {
@@ -82,7 +82,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         /// <remarks>
-        /// This field is shared by <see cref="StartOffset"/> and <see cref="AvgLengthStartOffset" />, distinguished by <see cref="WithinBlock"/>.
+        /// This field is shared by <see cref="StartOffset"/> and <see cref="BlockStartOffset" />, distinguished by <see cref="WithinBlock"/>.
         /// </remarks>
         private double _startOffsetValue;
         internal double StartOffset
@@ -117,7 +117,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return StartOffset + MeasuredLength; }
         }
 
-        internal double AvgLengthStartOffset
+        internal double BlockStartOffset
         {
             get
             {
@@ -132,9 +132,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal double AvgLengthEndOffset
+        internal double BlockEndOffset
         {
-            get { return AvgLengthStartOffset + AvgLength; }
+            get { return BlockStartOffset + BlockLength; }
         }
 
         internal void VerifyUnitType()
@@ -223,11 +223,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Owner.MaxFrozenHead; }
         }
 
-        private double AvgBlockLength
-        {
-            get { return BlockViews.AvgLength; }
-        }
-
         internal Span GetSpan()
         {
             Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
@@ -259,7 +254,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var realized = BlockViews.Count;
             var unrealized = Math.Max(0, count - realized);
-            return GetRealizedBlocksLength(realized) + unrealized * AvgBlockLength;
+            return GetRealizedBlocksLength(realized) + unrealized * BlockViews.AvgLength;
         }
 
         private double GetRealizedBlocksLength(int count)
@@ -279,7 +274,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(WithinBlock && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
 
             var block = BlockViews.GetBlockView(blockOrdinal);
-            return block != null ? GetRelativeSpan(block) : new Span(AvgLengthStartOffset, AvgLengthEndOffset);
+            return block != null ? GetRelativeSpan(block) : new Span(BlockStartOffset, BlockEndOffset);
         }
     }
 }

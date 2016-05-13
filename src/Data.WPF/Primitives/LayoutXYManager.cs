@@ -45,17 +45,11 @@ namespace DevZest.Data.Windows.Primitives
                 double totalLength = 0;
                 for (int j = 0; j < BlockViews.Count; j++)
                     totalLength += BlockViews[j].GetMeasuredLength(gridTrack);
-                gridTrack.AvgLength = BlockViews.Count == 0 ? 0 : totalLength / BlockViews.Count;
+                gridTrack.BlockLength = BlockViews.Count == 0 ? 0 : totalLength / BlockViews.Count;
             }
 
-            RefreshAvgLengthOffsets();
-        }
-
-        private void RefreshAvgLengthOffsets()
-        {
-            var gridSpan = BlockGridSpanMain;
             for (int i = 1; i < gridSpan.Count; i++)
-                gridSpan[i].AvgLengthStartOffset = gridSpan[i - 1].AvgLengthEndOffset;
+                gridSpan[i].BlockStartOffset = gridSpan[i - 1].BlockEndOffset;
         }
 
         private bool _isBlocksDirty;
