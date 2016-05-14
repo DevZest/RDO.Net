@@ -34,10 +34,10 @@ namespace DevZest.Data.Windows.Primitives
                 .Layout(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => blockView.InitializeElements(null))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))
-                [1, 0].BeginScalarItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).End()
-                [0, 1].BeginBlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).End()
-                [1, 1].BeginRowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).End()
-                [1, 2].BeginScalarItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).End();
+                .ScalarItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).At(1, 0)
+                .BlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).At(0, 1)
+                .RowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).At(1, 1)
+                .ScalarItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).At(1, 2);
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)

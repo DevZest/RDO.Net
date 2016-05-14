@@ -18,12 +18,12 @@ namespace DevZest.Data.Windows.Primitives
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
+            var builder = new ScalarItem.Builder<TextBlock>(null);
             builder.Initialize(x => x.Text = INITIALIZED)
                 .Bind((src, x) => x.Text = source)
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var item = builder.Item;
+            var item = builder.TemplateItem;
             var element = (TextBlock)item.Generate();
             Assert.IsTrue(element.GetTemplateItem() == item);
 
@@ -43,12 +43,12 @@ namespace DevZest.Data.Windows.Primitives
         {
             string source = SOURCE;
 
-            var builder = new ScalarItem.Builder<TextBlock>(default(TemplateItemBuilderFactory));
+            var builder = new ScalarItem.Builder<TextBlock>(null);
             builder.Initialize(x => x.Text = INITIALIZED)
                 .BindToSource((x, src) => source = x.Text, BindingTrigger.Initialized, BindingTrigger.PropertyChanged(TextBlock.TextProperty))
                 .Cleanup(x => x.Text = CLEANUP);
 
-            var item = builder.Item;
+            var item = builder.TemplateItem;
             var element = (TextBlock)item.Generate();
             Assert.IsTrue(element.GetTemplateItem() == item);
 

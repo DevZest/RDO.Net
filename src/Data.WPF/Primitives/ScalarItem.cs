@@ -53,10 +53,10 @@ namespace DevZest.Data.Windows.Primitives
         public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(TemplateItemBuilderFactory builderFactory, bool isMultidimensional = false)
-                : base(builderFactory, ScalarItem.Create<T>())
+            internal Builder(TemplateBuilder templateBuilder, bool isMultidimensional = false)
+                : base(templateBuilder, ScalarItem.Create<T>())
             {
-                Item.IsMultidimensional = isMultidimensional;
+                TemplateItem.IsMultidimensional = isMultidimensional;
             }
 
             internal override Builder<T> This
@@ -71,19 +71,19 @@ namespace DevZest.Data.Windows.Primitives
 
             public Builder<T> Bind(Action<DataPresenter, T> updateTarget)
             {
-                Item.AddBinding(Binding.Bind(Item, updateTarget));
+                TemplateItem.AddBinding(Binding.Bind(TemplateItem, updateTarget));
                 return This;
             }
 
             public Builder<T> BindToSource(Action<T, DataPresenter> updateSource, params BindingTrigger[] triggers)
             {
-                Item.AddBinding(Binding.BindToSource(Item, updateSource, triggers));
+                TemplateItem.AddBinding(Binding.BindToSource(TemplateItem, updateSource, triggers));
                 return This;
             }
 
             public Builder<T> BindTwoWay(Action<DataPresenter, T> updateTarget, Action<T, DataPresenter> updateSource, params BindingTrigger[] triggers)
             {
-                Item.AddBinding(Binding.BindTwoWay(Item, updateTarget, updateSource, triggers));
+                TemplateItem.AddBinding(Binding.BindTwoWay(TemplateItem, updateTarget, updateSource, triggers));
                 return This;
             }
         }

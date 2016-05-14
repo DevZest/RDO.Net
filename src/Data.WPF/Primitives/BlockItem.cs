@@ -54,8 +54,8 @@ namespace DevZest.Data.Windows.Primitives
         public sealed class Builder<T> : TemplateItem.Builder<T, BlockItem, Builder<T>>
             where T : UIElement, new()
         {
-            internal Builder(TemplateItemBuilderFactory rangeConfig)
-                : base(rangeConfig, BlockItem.Create<T>())
+            internal Builder(TemplateBuilder templateBuilder)
+                : base(templateBuilder, BlockItem.Create<T>())
             {
             }
 
@@ -71,19 +71,19 @@ namespace DevZest.Data.Windows.Primitives
 
             public Builder<T> Bind(Action<IBlockPresenter, T> updateTarget)
             {
-                Item.AddBinding(Binding.Bind(Item, updateTarget));
+                TemplateItem.AddBinding(Binding.Bind(TemplateItem, updateTarget));
                 return This;
             }
 
             public Builder<T> BindToSource(Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
             {
-                Item.AddBinding(Binding.BindToSource(Item, updateSource, triggers));
+                TemplateItem.AddBinding(Binding.BindToSource(TemplateItem, updateSource, triggers));
                 return This;
             }
 
             public Builder<T> BindTwoWay(Action<IBlockPresenter, T> updateTarget, Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
             {
-                Item.AddBinding(Binding.BindTwoWay(Item, updateTarget, updateSource, triggers));
+                TemplateItem.AddBinding(Binding.BindTwoWay(TemplateItem, updateTarget, updateSource, triggers));
                 return This;
             }
         }

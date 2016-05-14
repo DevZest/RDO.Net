@@ -1,25 +1,24 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 
 namespace DevZest.Data.Windows.Factories
 {
     public static class DataViewFactory
     {
-        public static TemplateBuilder DataView<T>(this TemplateItemBuilderFactory builderFactory, _DataSet<T> child,
+        public static SubviewItem.Builder<DataView> DataView<T>(this TemplateBuilder templateBuilder, _DataSet<T> child,
             Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return builderFactory.BeginSubviewItem<T, DataView>(child, builder)
-                .Initialize(initializer)
-                .End();
+            return templateBuilder.SubviewItem<T, DataView>(child, builder)
+                .Initialize(initializer);
         }
 
-        public static TemplateBuilder DataView<T>(this TemplateItemBuilderFactory builderFactory, T childModel,
+        public static SubviewItem.Builder<DataView> DataView<T>(this TemplateBuilder templateBuilder, T childModel,
             Action<TemplateBuilder, T> builder, Action<DataView> initializer = null)
             where T : Model, new()
         {
-            return builderFactory.BeginSubviewItem<T, DataView>(childModel, builder)
-                .Initialize(initializer)
-                .End();
+            return templateBuilder.SubviewItem<T, DataView>(childModel, builder)
+                .Initialize(initializer);
         }
     }
 }

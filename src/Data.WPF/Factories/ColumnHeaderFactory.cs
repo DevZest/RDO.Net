@@ -1,14 +1,14 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 
 namespace DevZest.Data.Windows.Factories
 {
     public static class ColumnHeaderFactory
     {
-        public static TemplateBuilder ColumnHeader(this TemplateItemBuilderFactory builderFactory, Column column, Action<ColumnHeader> initializer = null)
+        public static ScalarItem.Builder<ColumnHeader> ColumnHeader(this TemplateBuilder templateBuilder, Column column, Action<ColumnHeader> initializer = null)
         {
-            return builderFactory.BeginScalarItem<ColumnHeader>()
-                .Initialize(initializer)
-                .End();
+            return templateBuilder.ScalarItem<ColumnHeader>()
+                .Initialize(initializer);
         }
     }
 }

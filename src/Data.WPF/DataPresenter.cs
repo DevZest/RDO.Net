@@ -65,8 +65,9 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                templateBuilder[i, 0].ColumnHeader(column)
-                    [i, 1].TextBlock(column);
+                templateBuilder
+                    .ColumnHeader(column).At(i, 0)
+                    .TextBlock(column);
             }
         }
 

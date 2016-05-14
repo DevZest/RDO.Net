@@ -9,6 +9,74 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract partial class TemplateItem
     {
+        public abstract class Builder<TElement, TItem, TBuilder> : IDisposable
+            where TElement : UIElement, new()
+            where TItem : TemplateItem
+            where TBuilder : Builder<TElement, TItem, TBuilder>
+        {
+            internal Builder(TemplateBuilder templateBuilder, TItem item)
+            {
+                _templateBuilder = templateBuilder;
+                _templateItem = item;
+            }
+
+            public void Dispose()
+            {
+                _templateItem = null;
+            }
+
+            private TemplateBuilder _templateBuilder;
+            private Template Template
+            {
+                get { return _templateBuilder.Template; }
+            }
+
+            public TemplateBuilder At(int column, int row)
+            {
+                return At(column, row, column, row);
+            }
+
+            public TemplateBuilder At(int left, int top, int right, int bottom)
+            {
+                AddItem(Template, Template.Range(left, top, right, bottom), TemplateItem);
+                return _templateBuilder;
+            }
+
+            internal abstract void AddItem(Template template, GridRange gridRange, TItem item);
+
+            internal abstract TBuilder This { get; }
+
+            private TItem _templateItem;
+            internal TItem TemplateItem
+            {
+                get
+                {
+                    if (_templateItem == null)
+                        throw new ObjectDisposedException(GetType().FullName);
+
+                    return _templateItem;
+                }
+            }
+
+            public TBuilder Initialize(Action<TElement> initializer)
+            {
+                TemplateItem.InitInitializer(initializer);
+                return This;
+            }
+
+            public TBuilder Cleanup(Action<TElement> cleanupAction)
+            {
+                TemplateItem.InitCleanupAction(cleanupAction);
+                return This;
+            }
+
+            public TBuilder Behaviors(params IBehavior<TElement>[] behaviors)
+            {
+                TemplateItem.InitBehaviors(behaviors);
+                return This;
+            }
+        }
+
         private sealed class Behavior
         {
             internal static Behavior Create<T>(IBehavior<T> behavior)

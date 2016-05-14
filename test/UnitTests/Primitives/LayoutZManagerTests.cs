@@ -16,12 +16,12 @@ namespace DevZest.Data.Windows.Primitives
             {
                 builder.AddGridColumns("20", "Auto", "*")
                     .AddGridRows("25", "*", "Auto")
-                    [1, 0].RowElement(100, 20)
-                    [2, 0].RowElement(200, 20)
-                    [1, 1].RowElement(110, 20)
-                    [2, 1].RowElement(200, 20)
-                    [1, 2].RowElement(100, 20)
-                    [2, 2].RowElement(200, 20);
+                    .RowElement(100, 20).At(1, 0)
+                    .RowElement(200, 20).At(2, 0)
+                    .RowElement(110, 20).At(1, 1)
+                    .RowElement(200, 20).At(2, 1)
+                    .RowElement(100, 20).At(1, 2)
+                    .RowElement(200, 20).At(2, 2);
             });
             Assert.IsInstanceOfType(layoutManager, typeof(LayoutZManager));
 

@@ -3,6 +3,7 @@ using DevZest.Data.Primitives;
 using System;
 using System.Diagnostics;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -67,12 +68,6 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder RowRange(int column, int row)
-        {
-            Template.RowRange = Template.Range(column, row);
-            return this;
-        }
-
         public TemplateBuilder RowRange(int left, int top, int right, int bottom)
         {
             Template.RowRange = Template.Range(left, top, right, bottom);
@@ -86,16 +81,6 @@ namespace DevZest.Data.Windows
 
             Template.Layout(orientation, blockDimensions);
             return this;
-        }
-
-        public TemplateItemBuilderFactory this[int column, int row]
-        {
-            get { return new TemplateItemBuilderFactory(this, Template.Range(column, row)); }
-        }
-
-        public TemplateItemBuilderFactory this[int left, int top, int right, int bottom]
-        {
-            get { return new TemplateItemBuilderFactory(this, Template.Range(left, top, right, bottom)); }
         }
 
         public TemplateBuilder FreezeLeft(int tracks)
@@ -194,6 +179,62 @@ namespace DevZest.Data.Windows
         {
             Template.RowItemGroupSelector = rowItemsSelector;
             return this;
+        }
+
+        public ScalarItem.Builder<T> ScalarItem<T>(bool isMultidimensional = false)
+            where T : UIElement, new()
+        {
+            return new ScalarItem.Builder<T>(this, isMultidimensional);
+        }
+
+        public BlockItem.Builder<T> BlockItem<T>()
+            where T : UIElement, new()
+        {
+            return new BlockItem.Builder<T>(this);
+        }
+
+        public RowItem.Builder<T> RowItem<T>()
+            where T : UIElement, new()
+        {
+            return new RowItem.Builder<T>(this);
+        }
+
+        public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> buildTemplateAction)
+            where TModel : Model, new()
+            where TView : DataView, new()
+        {
+            if (childModel == null)
+                throw new ArgumentNullException(nameof(childModel));
+            if (buildTemplateAction == null)
+                throw new ArgumentNullException(nameof(buildTemplateAction));
+
+            return new SubviewItem.Builder<TView>(this, rowPresenter =>
+            {
+                if (rowPresenter.IsEof)
+                    return null;
+                return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
+            });
+        }
+
+        public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> buildTemplateAction)
+            where TModel : Model, new()
+            where TView : DataView, new()
+        {
+            if (child == null)
+                throw new ArgumentNullException(nameof(child));
+            if (buildTemplateAction == null)
+                throw new ArgumentNullException(nameof(buildTemplateAction));
+
+            return new SubviewItem.Builder<TView>(this, rowPresenter =>
+            {
+                var dataRow = rowPresenter.DataRow;
+                if (dataRow == null)
+                    return null;
+                var childDataSet = child[dataRow];
+                if (childDataSet == null)
+                    return null;
+                return DataPresenter.Create(childDataSet, buildTemplateAction);
+            });
         }
     }
 }

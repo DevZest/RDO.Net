@@ -1,19 +1,19 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Factories
 {
     public static class TextBlockFactory
     {
-        public static TemplateBuilder TextBlock(this TemplateItemBuilderFactory builderFactory, Column column, Action<TextBlock> initializer = null)
+        public static RowItem.Builder<TextBlock> TextBlock(this TemplateBuilder templateBuilder, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return builderFactory.BeginRowItem<TextBlock>()
+            return templateBuilder.RowItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind((row, x) => x.Text = row[column].GetText())
-                .End();
+                .Bind((row, x) => x.Text = row[column].GetText());
         }
 
         private static string GetText(this object value)
@@ -21,26 +21,24 @@ namespace DevZest.Data.Windows.Factories
             return value == null ? string.Empty : value.ToString();
         }
 
-        public static TemplateBuilder TextBlockLabel(this TemplateItemBuilderFactory builderFactory, Column column, Action<TextBlock> initializer = null)
+        public static RowItem.Builder<TextBlock> TextBlockLabel(this TemplateBuilder templateBuilder, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return builderFactory.BeginRowItem<TextBlock>()
+            return templateBuilder.RowItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind((src, x) => x.Text = column.DisplayName + ":")
-                .End();
+                .Bind((src, x) => x.Text = column.DisplayName + ":");
         }
 
-        public static TemplateBuilder TextBlockName(this TemplateItemBuilderFactory builderFactory, Column column, Action<TextBlock> initializer = null)
+        public static RowItem.Builder<TextBlock> TextBlockName(this TemplateBuilder templateBuilder, Column column, Action<TextBlock> initializer = null)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
 
-            return builderFactory.BeginRowItem<TextBlock>()
+            return templateBuilder.RowItem<TextBlock>()
                 .Initialize(initializer)
-                .Bind((src, x) => x.Text = column.DisplayName)
-                .End();
+                .Bind((src, x) => x.Text = column.DisplayName);
         }
     }
 }

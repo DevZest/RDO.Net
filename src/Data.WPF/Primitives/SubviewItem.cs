@@ -12,8 +12,8 @@ namespace DevZest.Data.Windows.Primitives
         public sealed new class Builder<T> : TemplateItem.Builder<T, SubviewItem, Builder<T>>
             where T : DataView, new()
         {
-            internal Builder(TemplateItemBuilderFactory rangeConfig, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
-                : base(rangeConfig, SubviewItem.Create<T>(dataPresenterConstructor))
+            internal Builder(TemplateBuilder templateBuilder, Func<RowPresenter, DataPresenter> dataPresenterConstructor)
+                : base(templateBuilder, SubviewItem.Create<T>(dataPresenterConstructor))
             {
             }
 
