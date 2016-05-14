@@ -14,8 +14,8 @@ namespace DevZest.Data.Windows.Primitives
             var dataSet = MockProductCategories(3, false);
             var layoutManager = CreateLayoutManager(dataSet, (builder, _) =>
             {
-                builder.AddGridColumns("20", "Auto", "*")
-                    .AddGridRows("25", "*", "Auto")
+                builder.GridColumns("20", "Auto", "*")
+                    .GridRows("25", "*", "Auto")
                     .RowElement(100, 20).At(1, 0)
                     .RowElement(200, 20).At(2, 0)
                     .RowElement(110, 20).At(1, 1)

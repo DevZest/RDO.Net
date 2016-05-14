@@ -26,19 +26,7 @@ namespace DevZest.Data.Windows
 
         private Model _model;
 
-        public TemplateBuilder AddGridColumn(string width)
-        {
-            Template.AddGridColumn(width);
-            return this;
-        }
-
-        public TemplateBuilder AddGridColumn(string width, out int index)
-        {
-            index = Template.AddGridColumn(width);
-            return this;
-        }
-
-        public TemplateBuilder AddGridColumns(params string[] widths)
+        public TemplateBuilder GridColumns(params string[] widths)
         {
             if (widths == null)
                 throw new ArgumentNullException(nameof(widths));
@@ -47,19 +35,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder AddGridRow(string height)
-        {
-            Template.AddGridRow(height);
-            return this;
-        }
-
-        public TemplateBuilder AddGridRow(string height, out int index)
-        {
-            index = Template.AddGridRow(height);
-            return this;
-        }
-
-        public TemplateBuilder AddGridRows(params string[] heights)
+        public TemplateBuilder GridRows(params string[] heights)
         {
             if (heights == null)
                 throw new ArgumentNullException(nameof(heights));

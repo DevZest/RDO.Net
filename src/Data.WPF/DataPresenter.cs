@@ -58,8 +58,8 @@ namespace DevZest.Data.Windows
             if (columns.Count == 0)
                 return;
 
-            templateBuilder.AddGridColumns(columns.Select(x => "Auto").ToArray())
-                .AddGridRows("Auto", "Auto")
+            templateBuilder.GridColumns(columns.Select(x => "Auto").ToArray())
+                .GridRows("Auto", "Auto")
                 .RowRange(0, 1, columns.Count - 1, 1);
 
             for (int i = 0; i < columns.Count; i++)

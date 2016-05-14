@@ -27,8 +27,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private static void BuildTemplate(TemplateBuilder builder, ProductCategory _, int fixedTop, int fixedBottom)
         {
-            builder.AddGridColumns("100", "100")
-                .AddGridRows("100", "100", "100")
+            builder.GridColumns("100", "100")
+                .GridRows("100", "100", "100")
                 .FreezeTop(fixedTop)
                 .FreezeBottom(fixedBottom)
                 .Layout(Orientation.Vertical, 0)
