@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -149,7 +148,7 @@ namespace DevZest.Data.Windows.Primitives
             IsPreparingMeasure = false;
         }
 
-        private void PrepareMeasure(IReadOnlyCollection<ScalarItem> scalarItems)
+        private void PrepareMeasure(IEnumerable<ScalarItem> scalarItems)
         {
             foreach (var scalarItem in scalarItems)
             {
@@ -205,7 +204,7 @@ namespace DevZest.Data.Windows.Primitives
                 blockView[i].View.Measure(Size.Empty);
         }
 
-        private void PrepareMeasureBlockItems(BlockView blockView, IReadOnlyList<BlockItem> blockItems)
+        private void PrepareMeasureBlockItems(BlockView blockView, IEnumerable<BlockItem> blockItems)
         {
             foreach (var blockItem in blockItems)
             {
