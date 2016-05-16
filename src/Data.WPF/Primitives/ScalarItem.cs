@@ -10,11 +10,6 @@ namespace DevZest.Data.Windows.Primitives
     {
         #region IConcatList<ScalarItem>
 
-        bool IConcatList<ScalarItem>.IsReadOnly
-        {
-            get { return true; }
-        }
-
         int IReadOnlyCollection<ScalarItem>.Count
         {
             get { return 1; }

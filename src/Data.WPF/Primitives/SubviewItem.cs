@@ -66,11 +66,6 @@ namespace DevZest.Data.Windows.Primitives
             dataView.Cleanup();
         }
 
-        bool IConcatList<SubviewItem>.IsReadOnly
-        {
-            get { return true; }
-        }
-
         void IConcatList<SubviewItem>.Sort(Comparison<SubviewItem> comparision)
         {
         }

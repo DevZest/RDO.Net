@@ -10,11 +10,6 @@ namespace DevZest.Data.Windows.Primitives
     {
         #region IConcatList<GridRow>
 
-        bool IConcatList<GridRow>.IsReadOnly
-        {
-            get { return true; }
-        }
-
         void IConcatList<GridRow>.Sort(Comparison<GridRow> comparision)
         {
         }

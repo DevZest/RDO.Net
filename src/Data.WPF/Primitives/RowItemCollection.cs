@@ -12,11 +12,6 @@ namespace DevZest.Data.Windows.Primitives
             yield return this;
         }
 
-        bool IConcatList<RowItemCollection>.IsReadOnly
-        {
-            get { return true; }
-        }
-
         void IConcatList<RowItemCollection>.Sort(Comparison<RowItemCollection> comparision)
         {
         }

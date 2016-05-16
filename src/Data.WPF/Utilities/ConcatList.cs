@@ -5,9 +5,8 @@ using System.Diagnostics;
 
 namespace DevZest
 {
-    internal interface IConcatList<T> : IReadOnlyList<T>
+    internal interface IConcatList<out T> : IReadOnlyList<T>
     {
-        bool IsReadOnly { get; }
         void Sort(Comparison<T> comparision);
     }
 
