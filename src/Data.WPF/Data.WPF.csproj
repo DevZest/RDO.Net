@@ -109,14 +109,12 @@
     </Compile>
     <Compile Include="Primitives\ScalarItem.cs" />
     <Compile Include="Factories\TextBlockFactory.cs" />
-    <Compile Include="Utilities\DependencyObject.GetParent.cs" />
     <Compile Include="Primitives\TemplateItem.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
-    <Compile Include="Utilities\IList.Sort.cs" />
-    <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
     <Compile Include="Factories\ValidationMessageView.cs" />
     <Compile Include="Factories\ValidationSummaryView.cs" />
+    <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">

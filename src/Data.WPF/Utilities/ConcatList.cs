@@ -8,6 +8,7 @@ namespace DevZest
     internal interface IConcatList<T> : IReadOnlyList<T>
     {
         bool IsReadOnly { get; }
+        void Sort(Comparison<T> comparision);
     }
 
     internal static class ConcatListExtensions
@@ -25,12 +26,6 @@ namespace DevZest
                 get { return false; }
             }
 
-            public IConcatList<T> Concat(T item)
-            {
-                Add(item);
-                return this;
-            }
-
             public IConcatList<T> Concat(IReadOnlyList<T> items)
             {
                 AddRange(items);
@@ -45,7 +40,8 @@ namespace DevZest
             if (left.Count == 0)
                 return right;
 
-            return left.IsReadOnly ? new ConcatList<T>(left, right) : left.Concat(right);
+            var result = left as ConcatList<T>;
+            return result == null ? new ConcatList<T>(left, right) : result.Concat(right);
         }
     }
 
@@ -68,6 +64,10 @@ namespace DevZest
             public bool IsReadOnly
             {
                 get { return true; }
+            }
+
+            public void Sort(Comparison<T> comparison)
+            {
             }
 
             public IEnumerator<T> GetEnumerator()

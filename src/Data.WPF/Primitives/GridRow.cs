@@ -15,6 +15,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return true; }
         }
 
+        void IConcatList<GridRow>.Sort(Comparison<GridRow> comparision)
+        {
+        }
+
         int IReadOnlyCollection<GridRow>.Count
         {
             get { return 1; }

@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class TemplateItemCollectionBase<T> : ReadOnlyCollection<T>
-        where T : TemplateItem
+    internal abstract class TemplateItemCollection<T> : ReadOnlyCollection<T>
+        where T : TemplateItem, IConcatList<T>
     {
-        internal TemplateItemCollectionBase()
+        internal TemplateItemCollection()
             : base(new List<T>())
         {
         }
@@ -31,6 +32,25 @@ namespace DevZest.Data.Windows.Primitives
         {
             ReadOnlyCollection<T> collection = this;
             collection.ForEach(x => x.InvalidateAutoHeightGridRows());
+        }
+
+        private static int CompareByAutoSizeOrder(T x, T y)
+        {
+            Debug.Assert(x != null && y != null);
+            return x.AutoSizeOrder.CompareTo(y.AutoSizeOrder);
+        }
+
+        protected IConcatList<T> FilterAutoSizeItems(Func<T, bool> predict)
+        {
+            var result = ConcatList<T>.Empty;
+            foreach (var templateItem in this)
+            {
+                if (predict(templateItem))
+                    result = result.Concat(templateItem);
+            }
+
+            result.Sort(CompareByAutoSizeOrder);
+            return result;
         }
     }
 }

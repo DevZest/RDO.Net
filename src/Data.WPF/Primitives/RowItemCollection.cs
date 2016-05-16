@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class RowItemCollection : TemplateItemCollectionBase<RowItem>, IConcatList<RowItemCollection>
+    internal sealed class RowItemCollection : TemplateItemCollection<RowItem>, IConcatList<RowItemCollection>
     {
         #region IConcatList<RowItemCollection>
 
@@ -17,6 +15,10 @@ namespace DevZest.Data.Windows.Primitives
         bool IConcatList<RowItemCollection>.IsReadOnly
         {
             get { return true; }
+        }
+
+        void IConcatList<RowItemCollection>.Sort(Comparison<RowItemCollection> comparision)
+        {
         }
 
         int IReadOnlyCollection<RowItemCollection>.Count
@@ -39,7 +41,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal IReadOnlyList<RowItem> AutoSizeItems
         {
-            get { return _autoSizeItems ?? (_autoSizeItems = CalcAutoSizeItems()); }
+            get { return _autoSizeItems ?? (_autoSizeItems = FilterAutoSizeItems(x => x.IsAutoSize)); }
         }
 
         internal override void InvalidateAutoHeightItems()
@@ -52,12 +54,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             _autoSizeItems = null;
             base.InvalidateAutoWidthItems();
-        }
-
-        private IReadOnlyList<RowItem> CalcAutoSizeItems()
-        {
-            ReadOnlyCollection<RowItem> collection = this;
-            return collection.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeOrder).ToArray();
         }
     }
 }

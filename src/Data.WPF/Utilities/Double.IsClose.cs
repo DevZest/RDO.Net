@@ -27,10 +27,5 @@ namespace DevZest
             double num2 = value1 - value2;
             return ((-num < num2) && (num > num2));
         }
-
-        public static bool IsClose(this Size value1, Size value2)
-        {
-            return value1.Width.IsClose(value2.Width) && value1.Height.IsClose(value2.Height);
-        }
     }
 }

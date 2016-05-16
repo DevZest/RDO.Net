@@ -1,11 +1,51 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class ScalarItem : TemplateItem
+    public sealed class ScalarItem : TemplateItem, IConcatList<ScalarItem>
     {
+        #region IConcatList<ScalarItem>
+
+        bool IConcatList<ScalarItem>.IsReadOnly
+        {
+            get { return true; }
+        }
+
+        int IReadOnlyCollection<ScalarItem>.Count
+        {
+            get { return 1; }
+        }
+
+        ScalarItem IReadOnlyList<ScalarItem>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        void IConcatList<ScalarItem>.Sort(Comparison<ScalarItem> comparision)
+        {
+        }
+
+        IEnumerator<ScalarItem> IEnumerable<ScalarItem>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        #endregion
+
         private sealed class Binding : BindingBase
         {
             internal static Binding Bind<T>(TemplateItem templateItem, Action<DataPresenter, T> updateTarget)

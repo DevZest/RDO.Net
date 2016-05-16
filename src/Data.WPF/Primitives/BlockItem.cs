@@ -1,12 +1,52 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class BlockItem : TemplateItem
+    public sealed class BlockItem : TemplateItem, IConcatList<BlockItem>
     {
+        #region IConcatList<BlockItem>
+
+        bool IConcatList<BlockItem>.IsReadOnly
+        {
+            get { return true; }
+        }
+
+        int IReadOnlyCollection<BlockItem>.Count
+        {
+            get { return 1; }
+        }
+
+        BlockItem IReadOnlyList<BlockItem>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        void IConcatList<BlockItem>.Sort(Comparison<BlockItem> comparision)
+        {
+        }
+
+        IEnumerator<BlockItem> IEnumerable<BlockItem>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        #endregion
+
         private sealed class Binding : BindingBase
         {
             internal static Binding Bind<T>(TemplateItem templateItem, Action<IBlockPresenter, T> updateTarget)

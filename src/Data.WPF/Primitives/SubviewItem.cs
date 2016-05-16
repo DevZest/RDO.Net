@@ -71,6 +71,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return true; }
         }
 
+        void IConcatList<SubviewItem>.Sort(Comparison<SubviewItem> comparision)
+        {
+        }
+
         int IReadOnlyCollection<SubviewItem>.Count
         {
             get { return 1; }
