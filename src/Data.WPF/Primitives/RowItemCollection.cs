@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows.Primitives
         private IReadOnlyList<RowItem> CalcAutoSizeItems()
         {
             ReadOnlyCollection<RowItem> collection = this;
-            return collection.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureIndex).ToArray();
+            return collection.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeOrder).ToArray();
         }
     }
 }

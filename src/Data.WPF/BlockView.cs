@@ -102,7 +102,7 @@ namespace DevZest.Data.Windows
             return GetEnumerator();
         }
 
-        private TemplateItemCollection<BlockItem> BlockItems
+        private RecapItemCollection<BlockItem> BlockItems
         {
             get { return ElementManager.Template.InternalBlockItems; }
         }

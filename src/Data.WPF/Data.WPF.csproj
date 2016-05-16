@@ -44,6 +44,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BindingContext.cs" />
@@ -71,8 +72,8 @@
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\Span.cs" />
+    <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
-    <Compile Include="Primitives\TemplateItemCollectionBase.cs" />
     <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />

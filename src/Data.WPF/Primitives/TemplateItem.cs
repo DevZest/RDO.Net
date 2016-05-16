@@ -75,6 +75,25 @@ namespace DevZest.Data.Windows.Primitives
                 TemplateItem.InitBehaviors(behaviors);
                 return This;
             }
+
+            public TBuilder AutoSize(int autoSizeOrder)
+            {
+                TemplateItem.AutoSizeOrder = autoSizeOrder;
+                return This;
+            }
+
+            public TBuilder AutoSize(AutoSizeWaiver autoSizeWaiver)
+            {
+                TemplateItem.AutoSizeWaiver = autoSizeWaiver;
+                return This;
+            }
+
+            public TBuilder AutoSize(int autoSizeOrder, AutoSizeWaiver autoSizeWaiver)
+            {
+                TemplateItem.AutoSizeOrder = autoSizeOrder;
+                TemplateItem.AutoSizeWaiver = autoSizeWaiver;
+                return This;
+            }
         }
 
         private sealed class Behavior
@@ -110,7 +129,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(constructor != null);
             _constructor = constructor;
-            AutoWidthDisabled = AutoHeightDisabled = false;
         }
 
         public Template Template { get; private set; }
@@ -267,12 +285,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void VerifyRowRange(GridRange rowRange);
 
-        public bool AutoWidthDisabled { get; internal set; }
-
-        public bool AutoHeightDisabled { get; internal set; }
-
-        public int AutoSizeMeasureIndex { get; internal set; }
-
         private bool SizeToContentX
         {
             get { return Template.SizeToContentX; }
@@ -283,28 +295,37 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.SizeToContentY; }
         }
 
+        public int AutoSizeOrder { get; internal set; }
+
+        public AutoSizeWaiver AutoSizeWaiver { get; private set; }
+
+        internal virtual AutoSizeWaiver CoercedAutoSizeWaiver
+        {
+            get { return AutoSizeWaiver; }
+        }
+
         private IConcatList<GridColumn> _autoWidthGridColumns;
         internal void InvalidateAutoWidthGridColumns()
         {
             _autoWidthGridColumns = null;
         }
 
+        private bool IsAutoWidthWaived
+        {
+            get { return (CoercedAutoSizeWaiver & AutoSizeWaiver.Width) == AutoSizeWaiver.Width; }
+        }
+
         internal IConcatList<GridColumn> AutoWidthGridColumns
         {
             get
             {
-                if (AutoWidthDisabled)
+                if (IsAutoWidthWaived)
                     return ConcatList<GridColumn>.Empty;
 
                 if (_autoWidthGridColumns == null)
-                    _autoWidthGridColumns = GridRange.FilterColumns(IsAutoWidthCondition);
+                    _autoWidthGridColumns = GridRange.FilterColumns(x => x.IsAutoLength);
                 return _autoWidthGridColumns;
             }
-        }
-
-        internal virtual Func<GridColumn, bool> IsAutoWidthCondition
-        {
-            get { return x => x.IsAutoLength; }
         }
 
         private IConcatList<GridRow> _autoHeightGridRows;
@@ -313,22 +334,22 @@ namespace DevZest.Data.Windows.Primitives
             _autoHeightGridRows = null;
         }
 
+        private bool IsAutoHeigthWaived
+        {
+            get { return (CoercedAutoSizeWaiver & AutoSizeWaiver.Height) == AutoSizeWaiver.Height; }
+        }
+
         internal IConcatList<GridRow> AutoHeightGridRows
         {
             get
             {
-                if (AutoHeightDisabled)
+                if (IsAutoHeigthWaived)
                     return ConcatList<GridRow>.Empty;
 
                 if (_autoHeightGridRows == null)
-                    _autoHeightGridRows = GridRange.FilterRows(IsAutoHeightCondition);
+                    _autoHeightGridRows = GridRange.FilterRows(x => x.IsAutoLength);
                 return _autoHeightGridRows;
             }
-        }
-
-        internal virtual Func<GridRow, bool> IsAutoHeightCondition
-        {
-            get { return x => x.IsAutoLength; }
         }
 
         internal bool IsAutoSize
@@ -341,8 +362,8 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(IsAutoSize);
-                var width = AutoWidthGridColumns.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredWidth;
-                var height = AutoHeightGridRows.Count > 0 ? double.PositiveInfinity : GridRange.MeasuredHeight;
+                var width = AutoWidthGridColumns.Count > 0 || IsAutoWidthWaived ? double.PositiveInfinity : GridRange.MeasuredWidth;
+                var height = AutoHeightGridRows.Count > 0 || IsAutoHeigthWaived ? double.PositiveInfinity : GridRange.MeasuredHeight;
                 return new Size(width, height);
             }
         }

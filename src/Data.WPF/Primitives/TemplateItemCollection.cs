@@ -1,35 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class TemplateItemCollection<T> : TemplateItemCollectionBase<T>
+    internal abstract class TemplateItemCollectionBase<T> : ReadOnlyCollection<T>
         where T : TemplateItem
     {
-        private IReadOnlyList<T> _autoSizeItems;
-
-        internal IReadOnlyList<T> AutoSizeItems
+        internal TemplateItemCollectionBase()
+            : base(new List<T>())
         {
-            get { return _autoSizeItems ?? (_autoSizeItems = CalcAutoSizeItems()); }
         }
 
-        internal override void InvalidateAutoHeightItems()
+        internal GridRange Range { get; private set; }
+
+        internal void Add(GridRange gridRange, T item)
         {
-            _autoSizeItems = null;
-            base.InvalidateAutoHeightItems();
+            Debug.Assert(item != null);
+            Items.Add(item);
+            Range = Range.Union(gridRange);
         }
 
-        internal override void InvalidateAutoWidthItems()
-        {
-            _autoSizeItems = null;
-            base.InvalidateAutoWidthItems();
-        }
-
-        private IReadOnlyList<T> CalcAutoSizeItems()
+        internal virtual void InvalidateAutoWidthItems()
         {
             ReadOnlyCollection<T> collection = this;
-            return collection.Where(x => x.IsAutoSize).OrderBy(x => x.AutoSizeMeasureIndex).ToArray();
+            collection.ForEach(x => x.InvalidateAutoWidthGridColumns());
+        }
+
+        internal virtual void InvalidateAutoHeightItems()
+        {
+            ReadOnlyCollection<T> collection = this;
+            collection.ForEach(x => x.InvalidateAutoHeightGridRows());
         }
     }
 }

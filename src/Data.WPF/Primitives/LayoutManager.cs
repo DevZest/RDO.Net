@@ -32,12 +32,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal DataPresenter DataPresenter { get; private set; }
 
-        private TemplateItemCollection<ScalarItem> ScalarItems
+        private RecapItemCollection<ScalarItem> ScalarItems
         {
             get { return Template.InternalScalarItems; }
         }
 
-        private TemplateItemCollection<BlockItem> BlockItems
+        private RecapItemCollection<BlockItem> BlockItems
         {
             get { return Template.InternalBlockItems; }
         }
@@ -141,10 +141,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void PrepareMeasure()
         {
-            PrepareMeasure(ScalarItems.AutoSizeItems);
-
             IsPreparingMeasure = true;
+            PrepareMeasure(ScalarItems.PreAutoSizeItems);
             PrepareMeasureBlocks();
+            PrepareMeasure(ScalarItems.PostAutoSizeItems);
             IsPreparingMeasure = false;
         }
 
@@ -198,10 +198,12 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsPreparingMeasure);
 
-            PrepareMeasureBlockItems(blockView, BlockItems.AutoSizeItems);
+            PrepareMeasureBlockItems(blockView, BlockItems.PreAutoSizeItems);
 
             for (int i = 0; i < blockView.Count; i++)
                 blockView[i].View.Measure(Size.Empty);
+
+            PrepareMeasureBlockItems(blockView, BlockItems.PostAutoSizeItems);
         }
 
         private void PrepareMeasureBlockItems(BlockView blockView, IEnumerable<BlockItem> blockItems)

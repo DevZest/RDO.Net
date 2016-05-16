@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -54,6 +55,12 @@ namespace DevZest.Data.Windows.Primitives
         public bool IsEmpty
         {
             get { return StartTrack == null; }
+        }
+
+        public bool IntersectsWith(GridSpan<T> gridSpan)
+        {
+            Debug.Assert(!IsEmpty && !gridSpan.IsEmpty);
+            return gridSpan.StartTrack.Ordinal <= EndTrack.Ordinal && gridSpan.EndTrack.Ordinal >= StartTrack.Ordinal;
         }
     }
 }

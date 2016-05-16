@@ -65,14 +65,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return InternalGridRows; }
         }
 
-        internal readonly TemplateItemCollection<ScalarItem> InternalScalarItems = new TemplateItemCollection<ScalarItem>();
+        internal readonly RecapItemCollection<ScalarItem> InternalScalarItems = new RecapItemCollection<ScalarItem>();
 
         public IReadOnlyList<ScalarItem> ScalarItems
         {
             get { return InternalScalarItems; }
         }
 
-        internal readonly TemplateItemCollection<BlockItem> InternalBlockItems = new TemplateItemCollection<BlockItem>();
+        internal readonly RecapItemCollection<BlockItem> InternalBlockItems = new RecapItemCollection<BlockItem>();
         public IReadOnlyList<BlockItem> BlockItems
         {
             get { return InternalBlockItems; }

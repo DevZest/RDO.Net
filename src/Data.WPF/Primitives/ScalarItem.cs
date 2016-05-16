@@ -177,23 +177,26 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
         }
 
-        internal override Func<GridColumn, bool> IsAutoWidthCondition
+        internal override AutoSizeWaiver CoercedAutoSizeWaiver
         {
             get
             {
-                if (Template.Orientation.HasValue && LayoutOrientation == Orientation.Horizontal)
-                    return x => base.IsAutoWidthCondition(x) && !Template.RowRange.Contains(x);
-                return base.IsAutoWidthCondition;
-            }
-        }
+                var result = base.CoercedAutoSizeWaiver;
+                if (!Template.Orientation.HasValue)
+                    return result;
 
-        internal override Func<GridRow, bool> IsAutoHeightCondition
-        {
-            get
-            {
-                if (Template.Orientation.HasValue && LayoutOrientation == Orientation.Vertical)
-                    return x => base.IsAutoHeightCondition(x) && !Template.RowRange.Contains(x);
-                return base.IsAutoHeightCondition;
+                if (LayoutOrientation == Orientation.Horizontal)
+                {
+                    if (Template.RowRange.ColumnSpan.IntersectsWith(GridRange.ColumnSpan))
+                        result |= AutoSizeWaiver.Width;
+                }
+                else
+                {
+                    if (Template.RowRange.RowSpan.IntersectsWith(GridRange.RowSpan))
+                        result |= AutoSizeWaiver.Height;
+                }
+
+                return result;
             }
         }
     }
