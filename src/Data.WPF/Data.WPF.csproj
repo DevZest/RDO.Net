@@ -83,11 +83,10 @@
     <Compile Include="Factories\DataViewFactory.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="Primitives\RowItem.cs" />
-    <Compile Include="RowHeader.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="Primitives\SubviewItem.cs" />
-    <Compile Include="ColumnHeader.cs" />
+    <Compile Include="Factories\ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
@@ -102,7 +101,6 @@
     <Compile Include="Primitives\GridColumn.cs" />
     <Compile Include="Primitives\GridTrack.cs" />
     <Compile Include="Primitives\GridRow.cs" />
-    <Compile Include="RowSelector.cs" />
     <Compile Include="Primitives\DataElementPanel.cs" />
     <Compile Include="Primitives\Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,8 +115,8 @@
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IList.Sort.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
-    <Compile Include="ValidationMessageView.cs" />
-    <Compile Include="ValidationSummaryView.cs" />
+    <Compile Include="Factories\ValidationMessageView.cs" />
+    <Compile Include="Factories\ValidationSummaryView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
