@@ -172,7 +172,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public void DistributeStarLengths()
         {
-            if (Count == 0)
+            if (StarLengthTracks.Count == 0)
                 return;
 
             var totalLength = Math.Max(0d, AvailableLength - TotalAbsoluteLength - TotalAutoLength);

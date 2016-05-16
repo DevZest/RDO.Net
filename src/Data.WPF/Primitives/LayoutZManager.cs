@@ -11,6 +11,11 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
+        protected override bool IsVariantLength(BlockView block, GridTrack gridTrack)
+        {
+            return false;
+        }
+
         private void RefreshBlock()
         {
             if (CurrentRow != null && Blocks.Count == 0)

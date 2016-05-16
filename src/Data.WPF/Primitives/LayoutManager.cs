@@ -52,9 +52,8 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
                 if (totalAutoWidth > 0)
                 {
-                    var changed = DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
-                    if (changed)
-                        Template.DistributeStarWidths();
+                    DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
+                    Template.DistributeStarWidths();
                 }
             }
 
@@ -63,14 +62,13 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
                 if (totalAutoHeight > 0)
                 {
-                    var changed = DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
-                    if (changed)
-                        Template.DistributeStarHeights();
+                    DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
+                    Template.DistributeStarHeights();
                 }
             }
         }
 
-        private bool DistributeAutoLength<T>(BlockView blockView, IReadOnlyList<T> autoLengthTracks, double totalMeasuredLength)
+        private void DistributeAutoLength<T>(BlockView blockView, IReadOnlyList<T> autoLengthTracks, double totalMeasuredLength)
             where T : GridTrack
         {
             Debug.Assert(autoLengthTracks.Count > 0);
@@ -80,13 +78,13 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var track = autoLengthTracks[0];
                 if (totalMeasuredLength > GetMeasuredLength(blockView, track))
-                    return SetMeasuredAutoLength(blockView, track, totalMeasuredLength);
+                    SetMeasuredAutoLength(blockView, track, totalMeasuredLength);
             }
-
-            return DistributeOrderedAutoLength(blockView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
+            else
+                DistributeOrderedAutoLength(blockView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
         }
 
-        private bool DistributeOrderedAutoLength<T>(BlockView blockView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
+        private void DistributeOrderedAutoLength<T>(BlockView blockView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
             where T : GridTrack
         {
             Debug.Assert(orderedAutoLengthTracks.Count > 0);
@@ -94,7 +92,6 @@ namespace DevZest.Data.Windows.Primitives
 
             var count = orderedAutoLengthTracks.Count;
             double avgLength = totalMeasuredLength / count;
-            var result = false;
             for (int i = 0; i < count; i++)
             {
                 var track = orderedAutoLengthTracks[i];
@@ -105,23 +102,28 @@ namespace DevZest.Data.Windows.Primitives
                     avgLength = totalMeasuredLength / (count - i + 1);
                 }
                 else
-                    result = SetMeasuredAutoLength(blockView, track, avgLength);
+                    SetMeasuredAutoLength(blockView, track, avgLength);
             }
-            return result;
         }
 
-        protected virtual double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        protected abstract bool IsVariantLength(BlockView block, GridTrack gridTrack);
+
+        protected double GetMeasuredLength(BlockView block, GridTrack gridTrack)
         {
-            return gridTrack.MeasuredLength;
+            return IsVariantLength(block, gridTrack) ? block.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
         }
 
-        protected virtual bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
+        private void SetMeasuredAutoLength(BlockView block, GridTrack gridTrack, double value)
         {
-            var delta = value - gridTrack.MeasuredLength;
-            Debug.Assert(delta > 0);
-            gridTrack.MeasuredLength = value;
-            gridTrack.Owner.TotalAutoLength += delta;
-            return true;
+            if (IsVariantLength(block, gridTrack))
+                block.SetMeasuredLength(gridTrack, value);
+            else
+            {
+                var delta = value - gridTrack.MeasuredLength;
+                Debug.Assert(delta > 0);
+                gridTrack.MeasuredLength = value;
+                gridTrack.Owner.TotalAutoLength += delta;
+            }
         }
 
         protected abstract Size GetMeasuredSize(ScalarItem scalarItem);

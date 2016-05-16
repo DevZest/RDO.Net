@@ -212,20 +212,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.BlockDimensionVector; }
         }
 
-        protected sealed override double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        protected override bool IsVariantLength(BlockView blockView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.WithinBlock ? blockView.GetMeasuredLength(gridTrack) : base.GetMeasuredLength(blockView, gridTrack);
-        }
-
-        protected override bool SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
-        {
-            if (blockView != null && gridTrack.WithinBlock)
-            {
-                blockView.SetMeasuredLength(gridTrack, value);
-                return false;
-            }
-            else
-                return base.SetMeasuredAutoLength(blockView, gridTrack, value);
+            return blockView != null && gridTrack.WithinBlock;
         }
 
         protected override void OnSetState(DataPresenterState dataPresenterState)
