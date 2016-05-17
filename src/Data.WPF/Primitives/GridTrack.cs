@@ -48,16 +48,16 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         /// <remarks>
-        /// This field is shared by <see cref="MeasuredLength"/> and <see cref="BlockLength" />, distinguished by <see cref="WithinBlock"/>.
+        /// This field is shared by <see cref="MeasuredLength"/> and <see cref="VariantByBlockAvgLength" />, distinguished by <see cref="VariantByBlock"/>.
         /// </remarks>
         private double _measuredValue;
 
         internal double MeasuredLength
         {
-            get { return WithinBlock ? 0 : _measuredValue; }
+            get { return VariantByBlock ? 0 : _measuredValue; }
             set
             {
-                Debug.Assert(!WithinBlock);
+                Debug.Assert(!VariantByBlock);
                 if (_measuredValue == value)
                     return;
 
@@ -66,23 +66,23 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal double BlockLength
+        internal double VariantByBlockAvgLength
         {
             get
             {
-                Debug.Assert(WithinBlock);
+                Debug.Assert(VariantByBlock);
                 LayoutXYManager.RefreshBlockLengths();
                 return _measuredValue;
             }
             set
             {
-                Debug.Assert(WithinBlock);
+                Debug.Assert(VariantByBlock);
                 _measuredValue = value;
             }
         }
 
         /// <remarks>
-        /// This field is shared by <see cref="StartOffset"/> and <see cref="BlockStartOffset" />, distinguished by <see cref="WithinBlock"/>.
+        /// This field is shared by <see cref="StartOffset"/> and <see cref="VariantByBlockStartOffset" />, distinguished by <see cref="VariantByBlock"/>.
         /// </remarks>
         private double _startOffsetValue;
         internal double StartOffset
@@ -90,24 +90,24 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Owner.RefreshOffset();
-                var lastWithoutBlock = LastWithoutBlock;
-                return lastWithoutBlock == null ? 0 : lastWithoutBlock._startOffsetValue;
+                var variantByBlockExcluded = VariantByBlockExcluded;
+                return variantByBlockExcluded == null ? 0 : variantByBlockExcluded._startOffsetValue;
             }
             set
             {
-                Debug.Assert(!WithinBlock);
+                Debug.Assert(!VariantByBlock);
                 _startOffsetValue = value;
             }
         }
 
-        internal GridTrack LastWithoutBlock
+        internal GridTrack VariantByBlockExcluded
         {
             get
             {
-                var withinBlockIndex = WithinBlockIndex;
-                if (withinBlockIndex < 0)
+                var variantByBlockIndex = VariantByBlockIndex;
+                if (variantByBlockIndex < 0)
                     return this;
-                var ordinal = Ordinal - (withinBlockIndex + 1);
+                var ordinal = Ordinal - (variantByBlockIndex + 1);
                 return ordinal == -1 ? null : Owner[ordinal];
             }
         }
@@ -117,24 +117,24 @@ namespace DevZest.Data.Windows.Primitives
             get { return StartOffset + MeasuredLength; }
         }
 
-        internal double BlockStartOffset
+        internal double VariantByBlockStartOffset
         {
             get
             {
-                Debug.Assert(WithinBlock);
+                Debug.Assert(VariantByBlock);
                 LayoutXYManager.RefreshBlockLengths();
                 return _startOffsetValue;
             }
             set
             {
-                Debug.Assert(WithinBlock);
+                Debug.Assert(VariantByBlock);
                 _startOffsetValue = value;
             }
         }
 
-        internal double BlockEndOffset
+        internal double VariantByBlockEndOffset
         {
-            get { return BlockStartOffset + BlockLength; }
+            get { return VariantByBlockStartOffset + VariantByBlockAvgLength; }
         }
 
         internal void VerifyUnitType()
@@ -192,20 +192,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.LayoutXYManager; }
         }
 
-        internal int WithinBlockIndex
+        internal int VariantByBlockIndex
         {
-            get
-            {
-                if (LayoutXYManager == null || Owner != LayoutXYManager.GridTracksMain)
-                    return -1;
-
-                return IsRepeat ? Ordinal - Owner.BlockStart.Ordinal : -1;
-            }
+            get { return Owner.VariantByBlock && IsRepeat ? Ordinal - Owner.BlockStart.Ordinal : -1; }
         }
 
-        internal bool WithinBlock
+        internal bool VariantByBlock
         {
-            get { return WithinBlockIndex >= 0; }
+            get { return VariantByBlockIndex >= 0; }
         }
 
         private BlockViewCollection BlockViews
@@ -252,6 +246,9 @@ namespace DevZest.Data.Windows.Primitives
             if (count == 0)
                 return 0;
 
+            if (!Owner.VariantByBlock)
+                return Owner.GetGridSpan(Template.RowRange).MeasuredLength * count;
+
             var realized = BlockViews.Count;
             var unrealized = Math.Max(0, count - realized);
             return GetRealizedBlocksLength(realized) + unrealized * BlockViews.AvgLength;
@@ -265,22 +262,32 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetRelativeSpan(BlockView block)
         {
-            Debug.Assert(WithinBlock && block != null);
-            return new Span(block.GetRelativeStartOffset(this), block.GetRelativeEndOffset(this));
+            Debug.Assert(block != null);
+            return VariantByBlock ? block.GetReleativeSpan(this) : GetRelativeSpan();
         }
 
         private Span GetRelativeSpan(int blockOrdinal)
         {
-            Debug.Assert(WithinBlock && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
+            Debug.Assert(blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
+
+            if (!VariantByBlock)
+                return GetRelativeSpan();
 
             var block = BlockViews.GetBlockView(blockOrdinal);
-            return block != null ? GetRelativeSpan(block) : new Span(BlockStartOffset, BlockEndOffset);
+            return block != null ? GetRelativeSpan(block) : new Span(VariantByBlockStartOffset, VariantByBlockEndOffset);
+        }
+
+        private Span GetRelativeSpan()
+        {
+            Debug.Assert(IsRepeat && !VariantByBlock);
+            var originOffset = Owner.GetGridSpan(Template.RowRange).StartTrack.StartOffset;
+            return new Span(StartOffset - originOffset, EndOffset - originOffset);
         }
 
         private Dictionary<RowPresenter, double> _availableLengths;
         internal double GetAvailableLength(RowPresenter rowPresenter)
         {
-            Debug.Assert(WithinBlock && rowPresenter != null);
+            Debug.Assert(VariantByBlock && rowPresenter != null);
             if (_availableLengths == null)
                 return DefaultAvailableLength;
             double result;
@@ -291,7 +298,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                Debug.Assert(WithinBlock);
+                Debug.Assert(VariantByBlock);
                 if (Length.IsAuto)
                     return double.PositiveInfinity;
                 Debug.Assert(Length.IsAbsolute);
@@ -301,7 +308,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void SetAvailableLength(RowPresenter row, double value)
         {
-            Debug.Assert(WithinBlock && row != null);
+            Debug.Assert(VariantByBlock && row != null);
             if (_availableLengths == null)
                 _availableLengths = new Dictionary<RowPresenter, double>();
             _availableLengths[row] = value;
@@ -309,7 +316,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void ClearAvailableLength(RowPresenter row)
         {
-            Debug.Assert(WithinBlock && row != null);
+            Debug.Assert(VariantByBlock && row != null);
             if (_availableLengths == null)
                 return;
             _availableLengths.Remove(row);

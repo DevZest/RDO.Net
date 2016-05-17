@@ -252,7 +252,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public double AvgLength
         {
-            get { return Count == 0 ? 0 : TotalLength / Count; }
+            get { return Count == 0 ? 1 : TotalLength / Count; }
         }
 
         private double TotalLength

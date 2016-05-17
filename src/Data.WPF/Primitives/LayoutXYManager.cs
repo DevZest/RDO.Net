@@ -17,15 +17,21 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
-        internal GridSpan BlockGridSpanMain
+        //internal GridSpan BlockGridSpanMain
+        //{
+        //    get { return GridTracksMain.GetGridSpan(Template.RowRange); }
+        //}
+
+        internal GridSpan VariantByBlockGridSpan
         {
-            get { return GridTracksMain.GetGridSpan(Template.RowRange); }
+            get { return GridTracksMain.VariantByBlock ? GridTracksMain.GetGridSpan(Template.RowRange) : new GridSpan(); }
         }
 
         protected override void DisposeRow(RowPresenter row)
         {
-            for (int i = 0; i < BlockGridSpanMain.Count; i++)
-                BlockGridSpanMain[i].ClearAvailableLength(row);
+            var gridSpan = VariantByBlockGridSpan;
+            for (int i = 0; i < gridSpan.Count; i++)
+                gridSpan[i].ClearAvailableLength(row);
             base.DisposeRow(row);
         }
 
@@ -44,18 +50,21 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < BlockViews.Count; i++)
                 BlockViews[i].StartOffset = BlockViews[i - 1].EndOffset;
 
-            var gridSpan = BlockGridSpanMain;
+            var gridSpan = VariantByBlockGridSpan;
+            if (gridSpan.IsEmpty)
+                return;
+
             for (int i = 0; i < gridSpan.Count; i++)
             {
                 var gridTrack = gridSpan[i];
                 double totalLength = 0;
                 for (int j = 0; j < BlockViews.Count; j++)
                     totalLength += BlockViews[j].GetMeasuredLength(gridTrack);
-                gridTrack.BlockLength = BlockViews.Count == 0 ? 1 : totalLength / BlockViews.Count;
+                gridTrack.VariantByBlockAvgLength = BlockViews.Count == 0 ? 1 : totalLength / BlockViews.Count;
             }
 
             for (int i = 1; i < gridSpan.Count; i++)
-                gridSpan[i].BlockStartOffset = gridSpan[i - 1].BlockEndOffset;
+                gridSpan[i].VariantByBlockStartOffset = gridSpan[i - 1].VariantByBlockEndOffset;
         }
 
         private bool _isBlocksDirty;
@@ -210,11 +219,6 @@ namespace DevZest.Data.Windows.Primitives
         private Vector BlockDimensionVector
         {
             get { return GridTracksMain.BlockDimensionVector; }
-        }
-
-        protected override bool IsVariantLength(BlockView blockView, GridTrack gridTrack)
-        {
-            return blockView != null && gridTrack.WithinBlock;
         }
 
         protected override void OnSetState(DataPresenterState dataPresenterState)

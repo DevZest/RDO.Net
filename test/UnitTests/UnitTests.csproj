@@ -77,7 +77,7 @@
     <Compile Include="Factories\PlaceHolderFactory.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
-    <Compile Include="Primitives\LayoutYManagerTests.cs" />
+    <Compile Include="Primitives\LayoutXYManagerTests.cs" />
     <Compile Include="Primitives\LayoutZManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTestsBase.cs" />

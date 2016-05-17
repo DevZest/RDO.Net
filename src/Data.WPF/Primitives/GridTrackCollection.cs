@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
             TotalAutoLength = 0;
             foreach (var gridTrack in this)
             {
-                if (gridTrack.WithinBlock)
+                if (gridTrack.VariantByBlock)
                     continue;
 
                 if (gridTrack.IsAutoLength || gridTrack.IsStarLength)
@@ -138,9 +138,9 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < Count; i++)
             {
                 var current = this[i];
-                if (current.WithinBlock)
+                if (current.VariantByBlock)
                     continue;
-                var prev = this[i - 1].LastWithoutBlock;
+                var prev = this[i - 1].VariantByBlockExcluded;
                 if (prev == null)
                     continue;
                 current.StartOffset = prev.EndOffset;
@@ -244,5 +244,37 @@ namespace DevZest.Data.Windows.Primitives
         public abstract double AvailableLength { get; }
 
         public abstract Vector ToVector(double valueMain, double valueCross);
+
+        private LayoutXYManager LayoutXYManager
+        {
+            get { return Template.LayoutXYManager; }
+        }
+
+        private bool? _variantByBlock;
+        public bool VariantByBlock
+        {
+            get
+            {
+                if (!_variantByBlock.HasValue)
+                    _variantByBlock = CalcVariantByBlock();
+                return _variantByBlock.GetValueOrDefault();
+            }
+        }
+
+        private bool CalcVariantByBlock()
+        {
+            var layoutXYManager = LayoutXYManager;
+            if (layoutXYManager == null || layoutXYManager.GridTracksMain != this)
+                return false;
+
+            var gridSpan = GetGridSpan(Template.RowRange);
+            for (int i = 0; i < gridSpan.Count; i++)
+            {
+                if (gridSpan[i].IsAutoLength)
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

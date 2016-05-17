@@ -106,7 +106,10 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract bool IsVariantLength(BlockView block, GridTrack gridTrack);
+        private bool IsVariantLength(BlockView block, GridTrack gridTrack)
+        {
+            return block != null && gridTrack.VariantByBlock;
+        }
 
         protected double GetMeasuredLength(BlockView block, GridTrack gridTrack)
         {
@@ -196,16 +199,16 @@ namespace DevZest.Data.Windows.Primitives
             return constraintSize;
         }
 
-        private void PrepareMeasureBlock(BlockView blockView)
+        private void PrepareMeasureBlock(BlockView block)
         {
             Debug.Assert(IsPreparingMeasure);
 
-            PrepareMeasureBlockItems(blockView, BlockItems.PreAutoSizeItems);
+            PrepareMeasureBlockItems(block, BlockItems.PreAutoSizeItems);
 
-            for (int i = 0; i < blockView.Count; i++)
-                blockView[i].View.Measure(Size.Empty);
+            for (int i = 0; i < block.Count; i++)
+                block[i].View.Measure(Size.Empty);
 
-            PrepareMeasureBlockItems(blockView, BlockItems.PostAutoSizeItems);
+            PrepareMeasureBlockItems(block, BlockItems.PostAutoSizeItems);
         }
 
         private void PrepareMeasureBlockItems(BlockView blockView, IEnumerable<BlockItem> blockItems)

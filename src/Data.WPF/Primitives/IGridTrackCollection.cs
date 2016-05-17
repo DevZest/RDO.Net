@@ -23,5 +23,6 @@ namespace DevZest.Data.Windows.Primitives
         double AvailableLength { get; }
         double GetMeasuredLength(GridRange gridRange);
         GridSpan GetGridSpan(GridRange gridRange);
+        bool VariantByBlock { get; }
     }
 }

@@ -32,6 +32,11 @@ namespace DevZest.Data.Windows.Primitives
                 return StartTrack.Owner[StartTrack.Ordinal + index];
             }
         }
+
+        public double MeasuredLength
+        {
+            get { return IsEmpty ? 0 : EndTrack.EndOffset - StartTrack.StartOffset; }
+        }
     }
 
     internal struct GridSpan<T>
@@ -61,6 +66,20 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(!IsEmpty && !gridSpan.IsEmpty);
             return gridSpan.StartTrack.Ordinal <= EndTrack.Ordinal && gridSpan.EndTrack.Ordinal >= StartTrack.Ordinal;
+        }
+
+        public int Count
+        {
+            get { return IsEmpty ? 0 : EndTrack.Ordinal - StartTrack.Ordinal + 1; }
+        }
+
+        public GridTrack this[int index]
+        {
+            get
+            {
+                Debug.Assert(index >= 0 && index < Count);
+                return StartTrack.Owner[StartTrack.Ordinal + index];
+            }
         }
     }
 }
