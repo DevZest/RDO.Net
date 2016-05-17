@@ -17,10 +17,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
-        //internal GridSpan BlockGridSpanMain
-        //{
-        //    get { return GridTracksMain.GetGridSpan(Template.RowRange); }
-        //}
 
         internal GridSpan VariantByBlockGridSpan
         {
@@ -236,7 +232,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitScroll()
         {
-            if (DeltaScrollOffset == 0 || Math.Abs(DeltaScrollOffset) < ViewportMain)
+            if (Math.Abs(DeltaScrollOffset) <= ViewportMain)
                 return;
 
             ScrollBackward(-DeltaScrollOffset);
@@ -447,7 +443,7 @@ namespace DevZest.Data.Windows.Primitives
 
             double result = 0;
 
-            for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount; blockOrdinal++)
+            for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount && availableLength > 0; blockOrdinal++)
             {
                 BlockViews.RealizeNext();
                 var block = BlockViews.Last;
@@ -455,9 +451,6 @@ namespace DevZest.Data.Windows.Primitives
                 var measuredLength = GetLength(block);
                 result += measuredLength;
                 availableLength -= measuredLength;
-
-                if (availableLength <= 0)
-                    break;
             }
             return result;
         }
