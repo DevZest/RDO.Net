@@ -1,10 +1,17 @@
-﻿namespace DevZest.Data.Windows.Helpers
+﻿using System.Windows;
+
+namespace DevZest.Data.Windows.Helpers
 {
     internal class AutoInitBlockView : BlockView
     {
         public AutoInitBlockView()
         {
-            //this.CreateVisualTree();
+            InitializeElements(null);
+        }
+
+        protected override Size MeasureOverride(Size constraint)
+        {
+            return LayoutManager.MeasureBlock(this, constraint);
         }
     }
 }

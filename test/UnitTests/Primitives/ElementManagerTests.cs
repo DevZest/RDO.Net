@@ -32,18 +32,12 @@ namespace DevZest.Data.Windows.Primitives
             builder.GridColumns("100", "100")
                 .GridRows("100", "100", "100")
                 .Layout(Orientation.Vertical, 0)
-                .BlockView((BlockView blockView) => InitializeBlockViewElements(blockView))
+                .BlockView<AutoInitBlockView>()
                 .RowView<AutoInitRowView>()
                 .ScalarItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).At(1, 0)
                 .BlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).At(0, 1)
                 .RowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).At(1, 1)
                 .ScalarItem<TextBlock>(true).Bind((s, e) => e.Text = _.Name.DisplayName).At(1, 2);
-        }
-
-        private static void InitializeBlockViewElements(BlockView blockView)
-        {
-            if (blockView.Elements == null)
-                blockView.InitializeElements(null);
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)

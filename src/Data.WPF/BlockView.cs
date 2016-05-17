@@ -23,7 +23,6 @@ namespace DevZest.Data.Windows
 
         internal void Initialize(ElementManager elementManager, int ordinal)
         {
-            Debug.Assert(ElementManager == null);
             ElementManager = elementManager;
             Ordinal = ordinal;
             if (ElementCollection != null)
@@ -47,7 +46,6 @@ namespace DevZest.Data.Windows
             ClearMeasuredLengths();
             ClearElements();
             Ordinal = -1;
-            ElementManager = null;
         }
 
         internal ElementManager ElementManager { get; private set; }

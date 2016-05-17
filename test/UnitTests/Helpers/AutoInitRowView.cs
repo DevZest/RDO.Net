@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Windows.Helpers
+﻿using System.Windows;
+
+namespace DevZest.Data.Windows.Helpers
 {
     internal sealed class AutoInitRowView : RowView
     {
@@ -6,6 +8,11 @@
         {
             base.Initialize(rowPresenter);
             rowPresenter.InitElementPanel(null);
+        }
+
+        protected override Size MeasureOverride(Size constraint)
+        {
+            return RowPresenter.LayoutManager.MeasureRow(RowPresenter, constraint);
         }
     }
 }
