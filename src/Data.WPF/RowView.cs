@@ -26,13 +26,13 @@ namespace DevZest.Data.Windows
             private set { SetValue(RowPresenterPropertyKey, value); }
         }
 
-        internal void Initialize(RowPresenter rowPresenter)
+        internal virtual void Initialize(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
         }
 
-        internal void Cleanup()
+        internal virtual void Cleanup()
         {
             Debug.Assert(RowPresenter != null);
             RowPresenter.Cleanup();

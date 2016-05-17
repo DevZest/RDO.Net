@@ -12,6 +12,23 @@ namespace DevZest.Data.Windows.Primitives
     public class ElementManagerTests : RowManagerTestsBase
     {
         #region Helpers
+
+        private sealed class AutoInitRowView : RowView
+        {
+            internal override void Initialize(RowPresenter rowPresenter)
+            {
+                base.Initialize(rowPresenter);
+                rowPresenter.Initialize(null);
+            }
+
+            internal override void Cleanup()
+            {
+                var rowPresenter = RowPresenter;
+                base.Cleanup();
+                rowPresenter.ElementCollection = null;
+            }
+        }
+
         private sealed class ConcreteElementManager : ElementManager
         {
             public ConcreteElementManager(Template template, DataSet dataSet)
@@ -31,7 +48,7 @@ namespace DevZest.Data.Windows.Primitives
                 .GridRows("100", "100", "100")
                 .Layout(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => InitializeBlockViewElements(blockView))
-                .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))
+                .RowView<AutoInitRowView>()
                 .ScalarItem<TextBlock>().Bind((s, e) => e.Text = _.Name.DisplayName).At(1, 0)
                 .BlockItem<TextBlock>().Bind((s, e) => e.Text = s.Ordinal.ToString()).At(0, 1)
                 .RowItem<TextBlock>().Bind((s, e) => e.Text = s.GetValue(_.Name)).At(1, 1)

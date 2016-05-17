@@ -464,7 +464,7 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        internal IElementCollection ElementCollection { get; private set; }
+        internal IElementCollection ElementCollection { get; set; }
         internal IReadOnlyList<UIElement> Elements
         {
             get { return ElementCollection; }
@@ -536,7 +536,6 @@ namespace DevZest.Data.Windows
             Debug.Assert(ElementCollection != null);
 
             ClearElements();
-            ElementCollection = null;
             _rowItemsId = -1;
         }
 
