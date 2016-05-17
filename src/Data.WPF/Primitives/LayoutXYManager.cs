@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
                 double totalLength = 0;
                 for (int j = 0; j < BlockViews.Count; j++)
                     totalLength += BlockViews[j].GetMeasuredLength(gridTrack);
-                gridTrack.BlockLength = BlockViews.Count == 0 ? 0 : totalLength / BlockViews.Count;
+                gridTrack.BlockLength = BlockViews.Count == 0 ? 1 : totalLength / BlockViews.Count;
             }
 
             for (int i = 1; i < gridSpan.Count; i++)
@@ -116,7 +116,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void ScrollBackward(double scrollLength)
         {
-            _scrollStartMain = GetLogicalOffset(GetOffset(_scrollStartMain) - scrollLength);
+            _scrollStartMain = GetLogicalOffset(ScrollStartMain - scrollLength);
             Debug.Assert(_scrollStartMain.Value >= ScrollOriginMain.Value);
         }
 
@@ -232,7 +232,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitScroll()
         {
-            if (DeltaScrollOffset < 0 && Math.Abs(DeltaScrollOffset) < ViewportMain)
+            if (DeltaScrollOffset == 0 || Math.Abs(DeltaScrollOffset) < ViewportMain)
                 return;
 
             ScrollBackward(-DeltaScrollOffset);
@@ -290,7 +290,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureBackward(double scrollDelta)
         {
-            Debug.Assert(scrollDelta > 0);
+            Debug.Assert(scrollDelta >= 0);
 
             var gridOffset = GetGridOffset(_scrollStartMain.GridOffset);
             if (gridOffset.IsEof)
@@ -357,17 +357,17 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(BlockViews.Count > 0);
 
-            while (scrollDelta > 0)
+            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0; blockOrdinal--)
             {
-                for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal >= 0; blockOrdinal--)
-                {
-                    BlockViews.RealizePrev();
-                    var block = BlockViews.First;
-                    block.Measure(Size.Empty);
-                    var scrollLength = Math.Min(scrollDelta, GetLength(block));
-                    ScrollBackward(scrollLength);
-                    scrollDelta -= scrollLength;
-                }
+                BlockViews.RealizePrev();
+                var block = BlockViews.First;
+                block.Measure(Size.Empty);
+                var scrollLength = Math.Min(scrollDelta, GetLength(block));
+                ScrollBackward(scrollLength);
+                scrollDelta -= scrollLength;
+
+                if (scrollDelta <= 0)
+                    break;
             }
             return scrollDelta;
         }
@@ -443,17 +443,17 @@ namespace DevZest.Data.Windows.Primitives
 
             double result = 0;
 
-            while (availableLength > 0)
+            for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount; blockOrdinal++)
             {
-                for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount; blockOrdinal++)
-                {
-                    BlockViews.RealizeNext();
-                    var block = BlockViews.Last;
-                    block.Measure(Size.Empty);
-                    var measuredLength = GetLength(block);
-                    result += measuredLength;
-                    availableLength -= measuredLength;
-                }
+                BlockViews.RealizeNext();
+                var block = BlockViews.Last;
+                block.Measure(Size.Empty);
+                var measuredLength = GetLength(block);
+                result += measuredLength;
+                availableLength -= measuredLength;
+
+                if (availableLength <= 0)
+                    break;
             }
             return result;
         }

@@ -309,7 +309,11 @@ namespace DevZest.Data.Windows
 
         private double MeasuredLength
         {
-            get { return _cumulativeMeasuredLengths[_cumulativeMeasuredLengths.Length - 1]; }
+            get
+            {
+                var cumulativeMeasuredLengths = CumulativeMeasuredLengths;
+                return cumulativeMeasuredLengths[cumulativeMeasuredLengths.Length - 1];
+            }
         }
 
         private double _startOffset;
