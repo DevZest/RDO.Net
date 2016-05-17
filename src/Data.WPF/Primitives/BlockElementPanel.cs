@@ -40,11 +40,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (blockView == null)
                     return Array<UIElement>.Empty;
 
-                var result = blockView.ElementCollection;
-                if (result == null)
-                    return Array<UIElement>.Empty;
-
-                return result;
+                return blockView.Elements ?? Array<UIElement>.Empty;
             }
         }
 
