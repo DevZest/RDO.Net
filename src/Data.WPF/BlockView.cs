@@ -8,6 +8,7 @@ using System.Collections;
 
 namespace DevZest.Data.Windows
 {
+    [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
     public class BlockView : Control, IBlockPresenter
     {
         static BlockView()
@@ -27,6 +28,18 @@ namespace DevZest.Data.Windows
             Ordinal = ordinal;
             if (ElementCollection != null)
                 InitializeElements();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            if (Template == null)
+                return;
+
+            var panel = Template.FindName("PART_Panel", this) as BlockElementPanel;
+            if (panel != null)
+                SetElementsPanel(panel);
         }
 
         internal void Cleanup()
@@ -119,7 +132,7 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal void SetElementsPanel(BlockElementPanel elementsPanel)
+        private void SetElementsPanel(BlockElementPanel elementsPanel)
         {
             Debug.Assert(elementsPanel != null);
 
@@ -130,17 +143,13 @@ namespace DevZest.Data.Windows
 
         internal void InitializeElements(FrameworkElement elementsPanel)
         {
-            // Prevent re-entrance. This only happens in unit testing because BlockView implements both view and presenter all together.
-            if (ElementCollection != null && ElementCollection.Parent == null && elementsPanel == null)
-                return;
-
-            Debug.Assert(ElementCollection == null);
+            if (ElementCollection != null)
+                ClearElements();
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
             if (ElementManager != null)
                 InitializeElements();
-
         }
 
         private void InitializeElements()
@@ -205,8 +214,6 @@ namespace DevZest.Data.Windows
 
             for (int i = BlockItemsSplit - 1; i >= 0 ; i--)
                 RemoveLastElement(blockItems[i]);
-
-            ElementCollection = null;
         }
 
         private void RemoveLastElement(BlockItem blockItem)

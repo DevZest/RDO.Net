@@ -40,11 +40,11 @@ namespace DevZest.Data.Windows.Primitives
                 if (blockView == null)
                     return Array<UIElement>.Empty;
 
-                if (blockView.ElementCollection == null || blockView.ElementCollection.Parent != this)
-                    blockView.SetElementsPanel(this);
+                var result = blockView.ElementCollection;
+                if (result == null)
+                    return Array<UIElement>.Empty;
 
-                Debug.Assert(blockView.ElementCollection.Parent == this);
-                return blockView.ElementCollection;
+                return result;
             }
         }
 
