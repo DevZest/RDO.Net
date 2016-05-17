@@ -20,17 +20,15 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet, int pinnedTop = 0, int pinnedBottom = 0)
+        private static ElementManager MockElementManager(DataSet<ProductCategory> dataSet)
         {
-            return CreateElementManager(dataSet, (builder, model) => BuildTemplate(builder, model, pinnedTop, pinnedBottom));
+            return CreateElementManager(dataSet, (builder, model) => BuildTemplate(builder, model));
         }
 
-        private static void BuildTemplate(TemplateBuilder builder, ProductCategory _, int fixedTop, int fixedBottom)
+        private static void BuildTemplate(TemplateBuilder builder, ProductCategory _)
         {
             builder.GridColumns("100", "100")
                 .GridRows("100", "100", "100")
-                .FreezeTop(fixedTop)
-                .FreezeBottom(fixedBottom)
                 .Layout(Orientation.Vertical, 0)
                 .BlockView((BlockView blockView) => InitializeBlockViewElements(blockView))
                 .RowView((RowView rowView) => rowView.RowPresenter.Initialize(null))
