@@ -43,11 +43,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (rowPresenter == null)
                     return Array<UIElement>.Empty;
 
-                if (rowPresenter.ElementCollection == null || rowPresenter.ElementCollection.Parent != this)
-                    rowPresenter.SetElementsPanel(this);
-
-                Debug.Assert(rowPresenter.ElementCollection.Parent == this);
-                return rowPresenter.ElementCollection;
+                return rowPresenter.Elements ?? Array<UIElement>.Empty;
             }
         }
 

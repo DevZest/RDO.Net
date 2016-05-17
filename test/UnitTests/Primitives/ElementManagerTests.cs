@@ -1,4 +1,5 @@
-﻿using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Data.Windows.Helpers;
+using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -12,22 +13,6 @@ namespace DevZest.Data.Windows.Primitives
     public class ElementManagerTests : RowManagerTestsBase
     {
         #region Helpers
-
-        private sealed class AutoInitRowView : RowView
-        {
-            internal override void Initialize(RowPresenter rowPresenter)
-            {
-                base.Initialize(rowPresenter);
-                rowPresenter.Initialize(null);
-            }
-
-            internal override void Cleanup()
-            {
-                var rowPresenter = RowPresenter;
-                base.Cleanup();
-                rowPresenter.ElementCollection = null;
-            }
-        }
 
         private sealed class ConcreteElementManager : ElementManager
         {

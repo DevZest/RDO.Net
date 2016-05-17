@@ -75,6 +75,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Factories\PlaceHolderFactory.cs" />
+    <Compile Include="Helpers\AutoInitBlockView.cs" />
+    <Compile Include="Helpers\AutoInitRowView.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
     <Compile Include="Primitives\LayoutXYManagerTests.cs" />

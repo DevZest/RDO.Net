@@ -1,13 +1,11 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
+    [TemplatePart(Name = "PART_Panel", Type = typeof(RowElementPanel))]
     public class RowView : Control
     {
         private static readonly DependencyPropertyKey RowPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RowPresenter),
@@ -30,13 +28,32 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
+            SetElementPanel();
         }
 
-        internal virtual void Cleanup()
+        internal void Cleanup()
         {
             Debug.Assert(RowPresenter != null);
             RowPresenter.Cleanup();
             RowPresenter = null;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            if (RowPresenter != null)
+                SetElementPanel();
+        }
+
+        private void SetElementPanel()
+        {
+            Debug.Assert(RowPresenter != null);
+            RowPresenter.SetElementPanel(ElementPanel);
+        }
+
+        private RowElementPanel ElementPanel
+        {
+            get { return Template == null ? null : Template.FindName("PART_Panel", this) as RowElementPanel; }
         }
 
         //protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)

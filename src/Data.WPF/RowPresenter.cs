@@ -470,13 +470,13 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal void SetElementsPanel(RowElementPanel elementsPanel)
+        internal void SetElementPanel(RowElementPanel elementPanel)
         {
-            Debug.Assert(elementsPanel != null);
-
             if (ElementCollection != null)
                 Cleanup();
-            Initialize(elementsPanel);
+
+            if (elementPanel != null)
+                InitElementPanel(elementPanel);
         }
 
         private int _rowItemsId;
@@ -510,11 +510,11 @@ namespace DevZest.Data.Windows
             get { return Template.InternalRowItemGroups[_rowItemsId]; }
         }
 
-        internal void Initialize(FrameworkElement elementsPanel)
+        internal void InitElementPanel(RowElementPanel elementPanel)
         {
             Debug.Assert(ElementCollection == null);
 
-            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
+            ElementCollection = ElementCollectionFactory.Create(elementPanel);
             SelectRowItemGroup();
         }
 
@@ -536,6 +536,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(ElementCollection != null);
 
             ClearElements();
+            ElementCollection = null;
             _rowItemsId = -1;
         }
 
