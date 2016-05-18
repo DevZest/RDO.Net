@@ -60,6 +60,20 @@ namespace DevZest.Data.Windows.Primitives
                 Assert.AreEqual(20, layoutManager.ScrollOffsetX);
                 Assert.AreEqual(30, layoutManager.ScrollOffsetY);
             }
+
+            {
+                layoutManager.ScrollOffsetY = 10;
+                var measuredSize = layoutManager.Measure(new Size(50, 30));
+                Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
+                Assert.AreEqual(1, layoutManager.BlockViews.Last.Ordinal);
+                Assert.AreEqual(new Size(50, 30), measuredSize);
+                Assert.AreEqual(100, layoutManager.ExtentX);
+                Assert.AreEqual(180, layoutManager.ExtentY);
+                Assert.AreEqual(50, layoutManager.ViewportX);
+                Assert.AreEqual(30, layoutManager.ViewportY);
+                Assert.AreEqual(20, layoutManager.ScrollOffsetX);
+                Assert.AreEqual(10, layoutManager.ScrollOffsetY);
+            }
         }
     }
 }

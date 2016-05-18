@@ -348,7 +348,7 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollBackward(scrollLength);
                 scrollDelta -= scrollLength;
             }
-            scrollDelta = RealizeBackward(scrollDelta - scrollLength);
+            scrollDelta = RealizeBackward(scrollDelta);
             return scrollDelta > 0 && FrozenHead > 0 ? MeasureBackwardHead(scrollDelta) : scrollDelta;
         }
 
