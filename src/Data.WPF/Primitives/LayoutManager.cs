@@ -323,13 +323,9 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < BlockViews.Count; i++)
             {
                 var block = BlockViews[i];
-                ArrangeBlock(block, GetBlockRect(block));
+                var rect = GetBlockRect(block);
+                block.Arrange(rect);
             }
-        }
-
-        protected virtual void ArrangeBlock(BlockView blockView, Rect rect)
-        {
-            blockView.Arrange(rect);
         }
 
         internal Rect GetBlockItemRect(BlockView blockView, BlockItem blockItem)

@@ -299,6 +299,8 @@ namespace DevZest.Data.Windows
                     totalLength += gridTrack.Length.Value;
                 _cumulativeMeasuredLengths[i] = totalLength;
             }
+
+            _startOffset = 0;
         }
 
         internal Span GetReleativeSpan(GridTrack gridTrack)
