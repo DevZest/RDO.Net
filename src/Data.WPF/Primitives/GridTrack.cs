@@ -249,9 +249,15 @@ namespace DevZest.Data.Windows.Primitives
             if (!Owner.VariantByBlock)
                 return Owner.GetGridSpan(Template.RowRange).MeasuredLength * count;
 
-            var realized = BlockViews.Count;
-            var unrealized = Math.Max(0, count - realized);
-            return GetRealizedBlocksLength(realized) + unrealized * BlockViews.AvgLength;
+            var unrealized = BlockViews.Count == 0 ? 0 : BlockViews.First.Ordinal;
+            if (count <= unrealized)
+                return count * BlockViews.AvgLength;
+
+            var realized = BlockViews.Count == 0 ? 0 : BlockViews.Last.Ordinal - BlockViews.First.Ordinal + 1;
+            if (count <= unrealized + realized)
+                return unrealized * BlockViews.AvgLength + GetRealizedBlocksLength(count - unrealized);
+
+            return GetRealizedBlocksLength(realized) + (count - realized) * BlockViews.AvgLength;
         }
 
         private double GetRealizedBlocksLength(int count)

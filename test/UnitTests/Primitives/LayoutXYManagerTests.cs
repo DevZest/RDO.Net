@@ -77,8 +77,41 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutXYManager_with_head_and_tail()
+        public void LayoutXYManager_RowItem()
         {
+            var dataSet = MockProductCategories(9, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("Auto")
+                    .Layout(Orientation.Vertical)
+                    .RowItem().Bind((r, e) => { e.DesiredHeight = 10 * (r.Ordinal + 1); }).At(0, 0);
+            });
+
+            {
+                var measuredSize = layoutManager.Measure(new Size(100, 100));
+                Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
+                Assert.AreEqual(3, layoutManager.BlockViews.Last.Ordinal);
+
+                var rowItem = layoutManager.Template.RowItemGroups[0][0];
+                BlockView block;
+                
+                block = layoutManager.BlockViews[0];
+                Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetBlockRect(block));
+                Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRowItemRect(block, rowItem));
+
+                block = layoutManager.BlockViews[1];
+                Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetBlockRect(block));
+                Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRowItemRect(block, rowItem));
+
+                block = layoutManager.BlockViews[2];
+                Assert.AreEqual(new Rect(0, 30, 100, 30), layoutManager.GetBlockRect(block));
+                Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRowItemRect(block, rowItem));
+
+                block = layoutManager.BlockViews[3];
+                Assert.AreEqual(new Rect(0, 60, 100, 40), layoutManager.GetBlockRect(block));
+                Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRowItemRect(block, rowItem));
+            }
 
         }
     }
