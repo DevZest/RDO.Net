@@ -37,6 +37,7 @@ namespace SmoothScroll
                             var r = row.GetValue(_.BackgroundR).Value;
                             var g = row.GetValue(_.BackgroundG).Value;
                             var b = row.GetValue(_.BackgroundB).Value;
+                            textBlock.Foreground = Brushes.Black;
                             textBlock.Background = new SolidColorBrush(Color.FromArgb(255, r, g, b));
                             textBlock.Padding = new Thickness(10);
                             textBlock.TextWrapping = TextWrapping.Wrap;
