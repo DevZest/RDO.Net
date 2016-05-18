@@ -86,7 +86,6 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews.RealizeFirst(initialBlockOrdinal);
                 BlockViews[0].Measure(Size.Empty);
             }
-
             _isBlocksDirty = false;
         }
 
@@ -137,12 +136,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double DeltaScrollOffset
         {
-            get { return _scrollOffsetMain - _originalScrollOffsetMain; }
+            get { return _scrollOffsetMain - _oldScrollOffsetMain; }
         }
 
         private void ClearDeltaScrollOffset()
         {
-            _originalScrollOffsetMain = _scrollOffsetMain;
+            _oldScrollOffsetMain = _scrollOffsetMain;
         }
 
         private Vector ToVector(double valueMain, double valueCross)
@@ -232,7 +231,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitScroll()
         {
-            if (Math.Abs(DeltaScrollOffset) <= ViewportMain)
+            if (DeltaScrollOffset == 0 || (DeltaScrollOffset < 0 && Math.Abs(DeltaScrollOffset) <= ViewportMain))
                 return;
 
             ScrollBackward(-DeltaScrollOffset);

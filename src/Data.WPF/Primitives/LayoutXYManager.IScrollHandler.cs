@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract double ScrollOffsetY { get; set; }
 
-        private double _originalScrollOffsetMain;
+        private double _oldScrollOffsetMain;
         private double _scrollOffsetMain;
         protected double ScrollOffsetMain
         {
@@ -91,9 +91,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void SetScrollOffsetCross(double value, bool invalidateArrange)
         {
-            if (_scrollOffsetMain.IsClose(value))
+            if (_scrollOffsetCross.IsClose(value))
                 return;
-            _scrollOffsetMain = value;
+            _scrollOffsetCross = value;
             if (invalidateArrange)
                 InvalidateArrange();
         }
@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshScollOffset(double valueMain, double valueCross)
         {
             bool invalidateScrollInfo = !ScrollOffsetMain.IsClose(valueMain) || !ScrollOffsetCross.IsClose(valueCross);
-            _originalScrollOffsetMain = valueMain;
+            _oldScrollOffsetMain = valueMain;
             SetScrollOffsetMain(valueMain, false);
             SetScrollOffsetCross(valueCross, false);
             if (invalidateScrollInfo)
