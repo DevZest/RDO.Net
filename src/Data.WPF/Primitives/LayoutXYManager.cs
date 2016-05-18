@@ -118,9 +118,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return GetOffset(_scrollStartMain); }
         }
 
-        private void ScrollBackward(double scrollLength)
+        private void AdjustScrollStartMain(double delta)
         {
-            _scrollStartMain = GetLogicalOffset(ScrollStartMain - scrollLength);
+            _scrollStartMain = GetLogicalOffset(ScrollStartMain + delta);
             Debug.Assert(_scrollStartMain.Value >= ScrollOriginMain.Value);
         }
 
@@ -234,7 +234,7 @@ namespace DevZest.Data.Windows.Primitives
             if (DeltaScrollOffset == 0 || (DeltaScrollOffset < 0 && Math.Abs(DeltaScrollOffset) <= ViewportMain))
                 return;
 
-            ScrollBackward(-DeltaScrollOffset);
+            AdjustScrollStartMain(DeltaScrollOffset);
             ClearDeltaScrollOffset();
         }
 
@@ -324,7 +324,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(scrollLength >= 0);
             if (scrollLength > 0)
             {
-                ScrollBackward(scrollLength);
+                AdjustScrollStartMain(-scrollLength);
                 scrollDelta -= scrollLength;
             }
             if (scrollDelta == 0)
@@ -345,7 +345,7 @@ namespace DevZest.Data.Windows.Primitives
             var scrollLength = Math.Min(scrollDelta, ScrollStartMain - GetStartOffset(block));
             if (scrollLength > 0)
             {
-                ScrollBackward(scrollLength);
+                AdjustScrollStartMain(-scrollLength);
                 scrollDelta -= scrollLength;
             }
             scrollDelta = RealizeBackward(scrollDelta);
@@ -356,17 +356,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(BlockViews.Count > 0);
 
-            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0; blockOrdinal--)
+            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && scrollDelta > 0; blockOrdinal--)
             {
                 BlockViews.RealizePrev();
                 var block = BlockViews.First;
                 block.Measure(Size.Empty);
                 var scrollLength = Math.Min(scrollDelta, GetLength(block));
-                ScrollBackward(scrollLength);
+                AdjustScrollStartMain(-scrollLength);
                 scrollDelta -= scrollLength;
-
-                if (scrollDelta <= 0)
-                    break;
             }
             return scrollDelta;
         }
@@ -377,7 +374,7 @@ namespace DevZest.Data.Windows.Primitives
             if (scrollLength <= 0)
                 return scrollDelta;
 
-            ScrollBackward(scrollLength);
+            AdjustScrollStartMain(-scrollLength);
             return scrollDelta - scrollLength;
         }
 

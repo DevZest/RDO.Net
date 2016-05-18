@@ -75,5 +75,11 @@ namespace DevZest.Data.Windows.Primitives
                 Assert.AreEqual(0, layoutManager.ScrollOffsetY);
             }
         }
+
+        [TestMethod]
+        public void LayoutXYManager_with_head_and_tail()
+        {
+
+        }
     }
 }
