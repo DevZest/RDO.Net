@@ -272,7 +272,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double FrozenTailLength
         {
-            get { return MaxFrozenTail == 0 ? 0 : GridTracksMain.LastOf(1).EndOffset - GridTracksMain.LastOf(MaxFrozenTail).StartOffset; }
+            get { return FrozenTail == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
+        }
+
+        private double TailLength
+        {
+            get { return MaxFrozenTail == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
         }
 
         private double Gap
@@ -283,7 +288,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (double.IsPositiveInfinity(availableLength))
                     return availableLength;
 
-                var scrollable = availableLength - (FrozenHeadLength + FrozenTailLength);
+                var scrollable = availableLength - (FrozenHeadLength + TailLength);
                 var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHead].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
                 return scrollable - (blockEndOffset - ScrollStartMain);
             }
@@ -417,7 +422,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(BlockViews.Count == 1);
             if (FrozenTail > 0)
-                availableLength -= MeasureForwardTail(GridTracksMain.LastOf(FrozenTail), 0);
+                availableLength -= FrozenTailLength;
 
             var gridTrack = gridOffset.GridTrack;
             Debug.Assert(gridTrack.IsRepeat);
@@ -430,12 +435,6 @@ namespace DevZest.Data.Windows.Primitives
         private double GetRelativeOffset(BlockView block, GridTrack gridTrack, double fraction)
         {
             return gridTrack.GetRelativeSpan(block).StartOffset + GetMeasuredLength(block, gridTrack) * fraction;
-        }
-
-        private double MeasureForwardTail(GridTrack gridTrack, double fraction)
-        {
-            Debug.Assert(gridTrack.IsTail);
-            return GridTracksMain.LastOf(1).EndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
         }
 
         private double RealizeForward(double availableLength)
