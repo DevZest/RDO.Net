@@ -51,6 +51,7 @@
     <Compile Include="EofVisibility.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
+    <Compile Include="Primitives\Clip.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridColumnCollection.cs" />
     <Compile Include="Primitives\GridRowCollection.cs" />

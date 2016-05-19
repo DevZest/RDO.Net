@@ -161,6 +161,13 @@ namespace DevZest.Data.Windows.Primitives
             return new Point(vector.X, vector.Y);
         }
 
+        private Thickness ToThickness(Clip clipMain, Clip clipCross)
+        {
+            var vectorHead = ToVector(clipMain.Head, clipCross.Head);
+            var vectorTail = ToVector(clipMain.Tail, clipCross.Tail);
+            return new Thickness(vectorHead.X, vectorHead.Y, vectorTail.X, vectorTail.Y);
+        }
+
         private int MaxBlockCount
         {
             get { return BlockViews.MaxBlockCount; }
@@ -597,6 +604,13 @@ namespace DevZest.Data.Windows.Primitives
             return ToPoint(valueMain, valueCross);
         }
 
+        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        {
+            var clipMain = GetScalarItemClipMain(scalarItem);
+            var clipCross = GetScalarItemClipCross(scalarItem, blockDimension);
+            return ToThickness(clipMain, clipCross);
+        }
+
         private double GetScalarItemLocationMain(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
@@ -618,9 +632,9 @@ namespace DevZest.Data.Windows.Primitives
             return valueMain;
         }
 
-        internal override Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension)
+        private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
-            return null;
+            return new Clip();
         }
 
         private double GetScalarItemLocationCross(ScalarItem scalarItem, int blockDimension)
@@ -629,6 +643,11 @@ namespace DevZest.Data.Windows.Primitives
             if (blockDimension > 0)
                 result += blockDimension * BlockDimensionLength;
             return result;
+        }
+
+        private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
+        {
+            return new Clip();
         }
 
         private bool IsFrozenHead(GridRange gridRange)

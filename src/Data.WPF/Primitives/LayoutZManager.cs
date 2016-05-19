@@ -39,11 +39,6 @@ namespace DevZest.Data.Windows.Primitives
             return scalarItem.GridRange.MeasuredSize;
         }
 
-        internal override Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension)
-        {
-            return null;
-        }
-
         protected override Size GetMeasuredSize(BlockView block)
         {
             return Template.BlockRange.MeasuredSize;
@@ -61,7 +56,12 @@ namespace DevZest.Data.Windows.Primitives
             return scalarItem.GridRange.MeasuredLocation;
         }
 
-        protected override Point GetBlockLocation(BlockView blockView)
+        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        {
+            return new Thickness();
+        }
+
+        protected override Point GetBlockLocation(BlockView block)
         {
             return Template.Range().GetLocation(Template.BlockRange);
         }

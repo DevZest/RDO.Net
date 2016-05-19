@@ -288,13 +288,7 @@ namespace DevZest.Data.Windows.Primitives
             return new Rect(point, size);
         }
 
-        internal abstract Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension);
-
-        private Geometry GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
-        {
-            var rect = GetScalarItemClipRect(scalarItem, blockDimension);
-            return rect.HasValue ? new RectangleGeometry(rect.Value) : null;
-        }
+        internal abstract Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension);
 
         protected abstract Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension);
 
@@ -305,13 +299,26 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    element.Clip = GetScalarItemClip(scalarItem, i);
-                    element.Arrange(GetScalarItemRect(scalarItem, i));
+                    var rect = GetScalarItemRect(scalarItem, i);
+                    var clip = GetScalarItemClip(scalarItem, i);
+                    Arrange(element, rect, clip);
                 }
             }
 
             ArrangeBlocks();
             return finalSize;
+        }
+
+        private void Arrange(UIElement element, Rect rect, Thickness clip)
+        {
+            element.Arrange(rect);
+            if (clip.Left == 0 && clip.Top == 0 && clip.Right == 0 && clip.Top == 0)
+                element.Clip = null;
+            else if (double.IsPositiveInfinity(clip.Left) || double.IsPositiveInfinity(clip.Top)
+                || double.IsPositiveInfinity(clip.Right) || double.IsPositiveInfinity(clip.Bottom))
+                element.Clip = Geometry.Empty;
+            else
+                element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, rect.Width - clip.Left - clip.Right, rect.Height - clip.Top - clip.Bottom));
         }
 
         internal Rect GetBlockRect(BlockView blockView)
