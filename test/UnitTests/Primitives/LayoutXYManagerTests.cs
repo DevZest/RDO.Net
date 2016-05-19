@@ -9,15 +9,15 @@ namespace DevZest.Data.Windows.Primitives
     public class LayoutXYManagerTests : LayoutManagerTestsBase
     {
         [TestMethod]
-        public void LayoutXYManager_fixed_rows_only()
+        public void LayoutXYManager_ScrollInfo()
         {
             var dataSet = MockProductCategories(9, false);
             var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
             {
                 builder.GridColumns("100")
                     .GridRows("20")
-                    .RowRange(0, 0, 0, 0)
-                    .Layout(Orientation.Vertical);
+                    .Layout(Orientation.Vertical)
+                    .RowItem().At(0, 0);
             });
 
             {
