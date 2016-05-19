@@ -390,7 +390,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureForward(double availableLength)
         {
-            availableLength -= FrozenHeadLength;
+            availableLength -= Math.Max(FrozenHeadLength, HeadEnd - ScrollOffsetMain);
             if (availableLength <= 0)
                 return;
 
@@ -418,9 +418,9 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(BlockViews.Count == 1);
             double result = 0;
-            if (MaxFrozenTail > 0)
+            if (FrozenTail > 0)
             {
-                result = MeasureForwardTail(GridTracksMain.LastOf(MaxFrozenTail), 0);
+                result = MeasureForwardTail(GridTracksMain.LastOf(FrozenTail), 0);
                 availableLength -= result;
             }
 
@@ -641,7 +641,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool IsFrozenHead(GridRange gridRange)
         {
-            return GridTracksMain.GetGridSpan(gridRange).EndTrack.Ordinal <= FrozenHead;
+            return GridTracksMain.GetGridSpan(gridRange).EndTrack.Ordinal < FrozenHead;
         }
 
         private bool IsFrozenTail(GridRange gridRange)
