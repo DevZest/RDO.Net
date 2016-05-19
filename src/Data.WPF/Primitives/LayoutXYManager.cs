@@ -404,35 +404,27 @@ namespace DevZest.Data.Windows.Primitives
                 MeasureForwardRepeat(gridOffset, fraction, availableLength);
         }
 
-        private double MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
+        private void MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
         {
             Debug.Assert(gridTrack.IsHead);
             var measuredLength = HeadEnd - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
             Debug.Assert(measuredLength > 0);
-            if (MaxBlockCount == 0)
-                return measuredLength;
-            return measuredLength + MeasureForwardRepeat(new GridOffset(GridTracksMain.BlockStart, 0), 0, availableLength - measuredLength);
+            if (MaxBlockCount > 0)
+                MeasureForwardRepeat(new GridOffset(GridTracksMain.BlockStart, 0), 0, availableLength - measuredLength);
         }
 
-        private double MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
+        private void MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
         {
             Debug.Assert(BlockViews.Count == 1);
-            double result = 0;
             if (FrozenTail > 0)
-            {
-                result = MeasureForwardTail(GridTracksMain.LastOf(FrozenTail), 0);
-                availableLength -= result;
-            }
+                availableLength -= MeasureForwardTail(GridTracksMain.LastOf(FrozenTail), 0);
 
             var gridTrack = gridOffset.GridTrack;
             Debug.Assert(gridTrack.IsRepeat);
             var block = BlockViews[0];
             Debug.Assert(block.Ordinal == gridOffset.BlockOrdinal);
-            var measuredLength = GetLength(block) - GetRelativeOffset(block, gridTrack, fraction);
-            result += measuredLength;
-            availableLength -= measuredLength;
-
-            return result + RealizeForward(availableLength);
+            availableLength -= GetLength(block) - GetRelativeOffset(block, gridTrack, fraction);
+            RealizeForward(availableLength);
         }
 
         private double GetRelativeOffset(BlockView block, GridTrack gridTrack, double fraction)
