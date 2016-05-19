@@ -385,6 +385,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureForward(double availableLength)
         {
+            availableLength -= FrozenHeadLength;
+            if (availableLength <= 0)
+                return;
+
             var gridOffset = GetGridOffset(_scrollStartMain.GridOffset);
             Debug.Assert(!gridOffset.IsEof);
             var gridTrack = gridOffset.GridTrack;
@@ -475,9 +479,28 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshViewport()
         {
-            var valueMain = GridTracksMain.SizeToContent ? MaxOffsetMain : GridTracksMain.AvailableLength;
-            var valueCross = GridTracksCross.SizeToContent ? MaxOffsetCross : GridTracksCross.AvailableLength;
+            var valueMain = CoerceViewportMain();
+            var valueCross = CoerceViewportCross();
             RefreshViewport(valueMain, valueCross);
+        }
+
+        private double CoerceViewportMain()
+        {
+            if (GridTracksMain.SizeToContent)
+                return MaxOffsetMain;
+
+            var result = GridTracksMain.AvailableLength;
+            var frozenLength = FrozenHeadLength + FrozenTailLength;
+            return Math.Max(frozenLength, result);
+        }
+
+        private double CoerceViewportCross()
+        {
+            if (GridTracksCross.SizeToContent)
+                return MaxOffsetCross;
+
+            var result = GridTracksCross.AvailableLength;
+            return result;
         }
 
         private void RefreshScrollOffset()
@@ -577,14 +600,42 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             var gridRange = scalarItem.GridRange;
-            var startGridOffset = GetStartGridOffset(gridRange);
-            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
-            var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset;
+            var valueMain = GetScalarItemLocationMain(gridRange);
+            var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset - ScrollOffsetCross;
             var result = ToPoint(valueMain, valueCross);
             if (blockDimension > 0)
                 result += blockDimension * BlockDimensionVector;
-            result.Offset(-ScrollOffsetX, -ScrollOffsetY);
             return result;
+        }
+
+        private double GetScalarItemLocationMain(GridRange gridRange)
+        {
+            var startGridOffset = GetStartGridOffset(gridRange);
+            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
+
+            if (IsFrozenHead(gridRange))
+                return valueMain;
+
+            valueMain -= ScrollOffsetMain;
+
+            if (IsFrozenTail(gridRange))
+            {
+                double maxValueMain = ViewportMain - (MaxOffsetMain - startGridOffset.Span.StartOffset);
+                if (valueMain > maxValueMain)
+                    valueMain = maxValueMain;
+            }
+
+            return valueMain;
+        }
+
+        private bool IsFrozenHead(GridRange gridRange)
+        {
+            return GridTracksMain.GetGridSpan(gridRange).EndTrack.Ordinal <= FrozenHead;
+        }
+
+        private bool IsFrozenTail(GridRange gridRange)
+        {
+            return GridTracksMain.GetGridSpan(gridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
         }
 
         private GridOffset GetStartGridOffset(GridRange gridRange)

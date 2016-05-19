@@ -266,7 +266,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 builder.GridColumns("100")
                     .GridRows("20", "20", "20")
-                    .Layout(Orientation.Vertical, 2)
+                    .Layout(Orientation.Vertical)
                     .FrozenTop(1)
                     .FrozenBottom(1)
                     .ScalarItem().At(0, 0)
@@ -274,11 +274,30 @@ namespace DevZest.Data.Windows.Primitives
                     .ScalarItem().At(0, 2);
             });
 
-            var measuredSize = layoutManager.Measure(new Size(100, 100));
+            layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
             Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
 
-            throw new NotImplementedException();
+            var scalarItems = layoutManager.Template.ScalarItems;
+            var blockViews = layoutManager.BlockViews;
+
+            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetScalarItemRect(scalarItems[0], 0));
+            Assert.AreEqual(new Rect(0, 20, 100, 20), layoutManager.GetBlockRect(blockViews[0]));
+            Assert.AreEqual(new Rect(0, 40, 100, 20), layoutManager.GetBlockRect(blockViews[1]));
+            Assert.AreEqual(new Rect(0, 60, 100, 20), layoutManager.GetBlockRect(blockViews[2]));
+            Assert.AreEqual(new Rect(0, 80, 100, 20), layoutManager.GetScalarItemRect(scalarItems[1], 0));
+
+            layoutManager.ScrollOffsetY = 30;
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(1, layoutManager.BlockViews.First.Ordinal);
+            Assert.AreEqual(4, layoutManager.BlockViews.Last.Ordinal);
+
+            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetScalarItemRect(scalarItems[0], 0));
+            Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetBlockRect(blockViews[0]));
+            Assert.AreEqual(new Rect(0, 30, 100, 20), layoutManager.GetBlockRect(blockViews[1]));
+            Assert.AreEqual(new Rect(0, 50, 100, 20), layoutManager.GetBlockRect(blockViews[2]));
+            Assert.AreEqual(new Rect(0, 70, 100, 20), layoutManager.GetBlockRect(blockViews[3]));
+            Assert.AreEqual(new Rect(0, 80, 100, 20), layoutManager.GetScalarItemRect(scalarItems[1], 0));
         }
 
         [TestMethod]
