@@ -59,7 +59,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FreezeLeft(int tracks)
+        public TemplateBuilder FrozenLeft(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FreezeTop(int tracks)
+        public TemplateBuilder FrozenTop(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -75,7 +75,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FreezeRight(int tracks)
+        public TemplateBuilder FrozenRight(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -83,7 +83,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FreezeBottom(int tracks)
+        public TemplateBuilder FrozenBottom(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));

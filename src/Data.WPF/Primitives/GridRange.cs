@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows.Primitives
             if (IsEmpty || Template != gridColumn.Template)
                 return false;
 
-            return ContainsHorizontal(gridColumn.Ordinal);
+            return Contains(Left, Right, gridColumn);
         }
 
         public bool Contains(GridRow gridRow)
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
             if (IsEmpty || Template != gridRow.Template)
                 return false;
 
-            return ContainsVertical(gridRow.Ordinal);
+            return Contains(Top, Bottom, gridRow);
         }
 
         public bool IntersectsWith(GridRange gridRange)
@@ -144,20 +144,20 @@ namespace DevZest.Data.Windows.Primitives
                 Bottom == null ? string.Empty : Bottom.Ordinal.ToString(CultureInfo.InvariantCulture));
         }
 
-        internal bool ContainsHorizontal(int gridTrackOrdinal)
+        internal bool HorizontallyIntersectsWith(int gridOffset)
         {
-            return Contains(Left, Right, gridTrackOrdinal);
+            return gridOffset > Left.Ordinal && gridOffset < Right.Ordinal;
         }
 
-        internal bool ContainsVertical(int gridTrackOrdinal)
+        internal bool VerticallyIntersectsWith(int gridOffset)
         {
-            return Contains(Top, Bottom, gridTrackOrdinal);
+            return gridOffset > Top.Ordinal && gridOffset < Bottom.Ordinal;
         }
 
-        private static bool Contains<T>(T headTrack, T tailTrack, int gridTrackOrdinal)
+        private static bool Contains<T>(T headTrack, T tailTrack, T gridTrack)
             where T : GridTrack
         {
-            return gridTrackOrdinal >= headTrack.Ordinal && gridTrackOrdinal <= tailTrack.Ordinal;
+            return gridTrack.Ordinal >= headTrack.Ordinal && gridTrack.Ordinal <= tailTrack.Ordinal;
         }
 
         internal GridSpan<GridColumn> ColumnSpan

@@ -377,13 +377,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal virtual void VerifyFrozenMargins(string templateItemsName)
         {
-            if (GridRange.ContainsHorizontal(Template.FrozenLeft - 1))
+            if (GridRange.HorizontallyIntersectsWith(Template.FrozenLeft))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenLeft), templateItemsName, Ordinal));
-            if (GridRange.ContainsVertical(Template.FrozenTop - 1))
+            if (GridRange.VerticallyIntersectsWith(Template.FrozenTop))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenTop), templateItemsName, Ordinal));
-            if (GridRange.ContainsHorizontal(Template.GridColumns.Count - Template.FrozenRight))
+            if (GridRange.HorizontallyIntersectsWith(Template.GridColumns.Count - Template.FrozenRight))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenRight), templateItemsName, Ordinal));
-            if (GridRange.ContainsVertical(Template.GridRows.Count - Template.FrozenBottom))
+            if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.FrozenBottom))
                 throw new InvalidOperationException(Strings.TemplateItem_InvalidFrozenMargin(nameof(Template.FrozenBottom), templateItemsName, Ordinal));
         }
     }

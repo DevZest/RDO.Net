@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Windows.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -255,6 +256,41 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 20, 20, 100), layoutManager.GetScalarItemRect(scalarItems[2], 0));
             Assert.AreEqual(new Rect(20, 120, 100, 20), layoutManager.GetScalarItemRect(scalarItems[3], 0));
             Assert.AreEqual(new Rect(120, 120, 100, 20), layoutManager.GetScalarItemRect(scalarItems[3], 1));
+        }
+
+        [TestMethod]
+        public void LayoutXYManager_FrozenMain()
+        {
+            var dataSet = MockProductCategories(9, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("20", "20", "20")
+                    .Layout(Orientation.Vertical, 2)
+                    .FrozenTop(1)
+                    .FrozenBottom(1)
+                    .ScalarItem().At(0, 0)
+                    .RowItem().At(0, 1)
+                    .ScalarItem().At(0, 2);
+            });
+
+            var measuredSize = layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
+            Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
+
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void LayoutXYManager_FrozenCross()
+        {
+            //throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void LayoutXYManager_Stretches()
+        {
+
         }
     }
 }

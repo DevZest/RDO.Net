@@ -250,27 +250,22 @@ namespace DevZest.Data.Windows.Primitives
             RefreshScrollInfo();
         }
 
+        private double HeadEnd
+        {
+            get { return GridTracksMain[MaxFrozenHead].StartOffset; }
+        }
+
+        private double TailStart
+        {
+            get { return MaxFrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
+        }
+
         private double FrozenHeadLength
         {
             get { return GridTracksMain[FrozenHead].StartOffset; }
         }
 
-        private double MaxFrozenHeadLength
-        {
-            get { return GridTracksMain[MaxFrozenHead].StartOffset; }
-        }
-
-        private double FrozenTailStart
-        {
-            get { return FrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
-        }
-
-        private double MaxFrozenTailStart
-        {
-            get { return MaxFrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
-        }
-
-        private double TailLength
+        private double FrozenTailLength
         {
             get { return MaxFrozenTail == 0 ? 0 : GridTracksMain.LastOf(1).EndOffset - GridTracksMain.LastOf(MaxFrozenTail).StartOffset; }
         }
@@ -283,7 +278,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (double.IsPositiveInfinity(availableLength))
                     return availableLength;
 
-                var scrollable = availableLength - (FrozenHeadLength + TailLength);
+                var scrollable = availableLength - (FrozenHeadLength + FrozenTailLength);
                 var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHead].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
                 return scrollable - (blockEndOffset - ScrollStartMain);
             }
@@ -330,7 +325,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureBackwardTail(double scrollDelta)
         {
-            var measuredLength = Math.Min(scrollDelta, ScrollStartMain - MaxFrozenTailStart);
+            var measuredLength = Math.Min(scrollDelta, ScrollStartMain - TailStart);
             Debug.Assert(measuredLength >= 0);
             if (measuredLength > 0)
             {
@@ -380,7 +375,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureBackwardHead(double scrollDelta)
         {
-            var measuredLength = Math.Min(scrollDelta, MaxFrozenHeadLength);
+            var measuredLength = Math.Min(scrollDelta, HeadEnd);
             if (measuredLength == 0)
                 return scrollDelta;
 
@@ -403,7 +398,7 @@ namespace DevZest.Data.Windows.Primitives
         private double MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
         {
             Debug.Assert(gridTrack.IsHead);
-            var measuredLength = MaxFrozenHeadLength - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
+            var measuredLength = HeadEnd - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
             Debug.Assert(measuredLength > 0);
             if (MaxBlockCount == 0)
                 return measuredLength;

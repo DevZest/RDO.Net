@@ -202,13 +202,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void VerifyHorizontalStretches()
         {
-            if (GridRange.ContainsHorizontal(Template.GridColumns.Count - Template.Stretches))
+            if (GridRange.HorizontallyIntersectsWith(Template.GridColumns.Count - Template.Stretches))
                 throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
         }
 
         private void VerifyVerticalStretches()
         {
-            if (GridRange.ContainsVertical(Template.GridRows.Count - Template.Stretches))
+            if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.Stretches))
                 throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
         }
 
