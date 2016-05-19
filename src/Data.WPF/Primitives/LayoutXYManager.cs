@@ -211,9 +211,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksCross.GetMeasuredLength(Template.Range()); }
         }
 
+        private double BlockDimensionLength
+        {
+            get { return GridTracksCross.GetMeasuredLength(Template.RowRange); }
+        }
+
         private Vector BlockDimensionVector
         {
-            get { return GridTracksMain.BlockDimensionVector; }
+            get { return ToVector(0, BlockDimensionLength); }
         }
 
         protected override void OnSetState(DataPresenterState dataPresenterState)
@@ -528,19 +533,15 @@ namespace DevZest.Data.Windows.Primitives
             var gridRange = scalarItem.GridRange;
             var valueMain = GetLength(gridRange);
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
-
-            var result = ToSize(valueMain, valueCross);
             if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
             {
                 var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
                 var scalarItemSpan = GridTracksCross.GetGridSpan(gridRange);
                 if (rowSpan.Contains(scalarItemSpan))
-                {
-                    var delta = BlockDimensionVector * (BlockDimensions - 1);
-                    result = new Size(result.Width + delta.X, result.Height + delta.Y);
-                }
+                    valueCross += BlockDimensionLength * (BlockDimensions - 1);
             }
-            return result;
+
+            return ToSize(valueMain, valueCross);
         }
 
         private double GetLength(GridRange gridRange)
@@ -599,17 +600,14 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
-            var gridRange = scalarItem.GridRange;
-            var valueMain = GetScalarItemLocationMain(gridRange);
-            var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset - ScrollOffsetCross;
-            var result = ToPoint(valueMain, valueCross);
-            if (blockDimension > 0)
-                result += blockDimension * BlockDimensionVector;
-            return result;
+            var valueMain = GetScalarItemLocationMain(scalarItem);
+            var valueCross = GetScalarItemLocationCross(scalarItem, blockDimension);
+            return ToPoint(valueMain, valueCross);
         }
 
-        private double GetScalarItemLocationMain(GridRange gridRange)
+        private double GetScalarItemLocationMain(ScalarItem scalarItem)
         {
+            var gridRange = scalarItem.GridRange;
             var startGridOffset = GetStartGridOffset(gridRange);
             var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
 
@@ -626,6 +624,19 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             return valueMain;
+        }
+
+        internal override Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension)
+        {
+            return null;
+        }
+
+        private double GetScalarItemLocationCross(ScalarItem scalarItem, int blockDimension)
+        {
+            var result = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.StartOffset - ScrollOffsetCross;
+            if (blockDimension > 0)
+                result += blockDimension * BlockDimensionLength;
+            return result;
         }
 
         private bool IsFrozenHead(GridRange gridRange)

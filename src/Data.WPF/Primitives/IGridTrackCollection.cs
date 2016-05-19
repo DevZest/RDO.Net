@@ -11,7 +11,6 @@ namespace DevZest.Data.Windows.Primitives
         double TotalAutoLength { get; set; }
         void InvalidateOffset();
         void RefreshOffset();
-        Vector BlockDimensionVector { get; }
         Vector ToVector(double valueMain, double valueCross);
         int FrozenHead { get; }
         int FrozenTail { get; }

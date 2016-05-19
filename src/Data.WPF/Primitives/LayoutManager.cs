@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -287,6 +288,14 @@ namespace DevZest.Data.Windows.Primitives
             return new Rect(point, size);
         }
 
+        internal abstract Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension);
+
+        private Geometry GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        {
+            var rect = GetScalarItemClipRect(scalarItem, blockDimension);
+            return rect.HasValue ? new RectangleGeometry(rect.Value) : null;
+        }
+
         protected abstract Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension);
 
         internal Size Arrange(Size finalSize)
@@ -296,17 +305,13 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    ArrangeScalarItem(element, GetScalarItemRect(scalarItem, i));
+                    element.Clip = GetScalarItemClip(scalarItem, i);
+                    element.Arrange(GetScalarItemRect(scalarItem, i));
                 }
             }
 
             ArrangeBlocks();
             return finalSize;
-        }
-
-        protected virtual void ArrangeScalarItem(UIElement element, Rect rect)
-        {
-            element.Arrange(rect);
         }
 
         internal Rect GetBlockRect(BlockView blockView)

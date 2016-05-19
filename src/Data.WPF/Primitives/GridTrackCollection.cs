@@ -189,13 +189,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return GetGridSpan(Template.BlockRange); }
         }
 
-        protected abstract double BlockDimensionLength { get; }
-
-        public Vector BlockDimensionVector
-        {
-            get { return ToVector(0, BlockDimensionLength); }
-        }
-
         public abstract int FrozenHead { get; }
 
         protected abstract string FrozenHeadName { get; }

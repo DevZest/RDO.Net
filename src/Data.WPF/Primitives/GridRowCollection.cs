@@ -31,11 +31,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.AvailableHeight; }
         }
 
-        protected override double BlockDimensionLength
-        {
-            get { return Template.RowRange.MeasuredWidth; }
-        }
-
         public override int FrozenHead
         {
             get { return Template.FrozenTop; }

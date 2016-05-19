@@ -39,6 +39,11 @@ namespace DevZest.Data.Windows.Primitives
             return scalarItem.GridRange.MeasuredSize;
         }
 
+        internal override Rect? GetScalarItemClipRect(ScalarItem scalarItem, int blockDimension)
+        {
+            return null;
+        }
+
         protected override Size GetMeasuredSize(BlockView block)
         {
             return Template.BlockRange.MeasuredSize;
