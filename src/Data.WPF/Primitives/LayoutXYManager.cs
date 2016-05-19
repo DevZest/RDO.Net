@@ -302,95 +302,96 @@ namespace DevZest.Data.Windows.Primitives
                 MeasureBackward(gap);
         }
 
-        private double MeasureBackward(double scrollDelta)
+        private void MeasureBackward(double availableLength)
         {
-            Debug.Assert(scrollDelta >= 0);
+            Debug.Assert(availableLength >= 0);
 
             var gridOffset = GetGridOffset(_scrollStartMain.GridOffset);
             if (gridOffset.IsEof)
-                return MeasureBackwardEof(scrollDelta);
+            {
+                MeasureBackwardEof(availableLength);
+                return;
+            }
+                
 
             var gridTrack = gridOffset.GridTrack;
             if (gridTrack.IsTail)
-                return MeasureBackwardTail(scrollDelta);
+                MeasureBackwardTail(availableLength);
             else if (gridTrack.IsRepeat)
-                return MeasureBackwardRepeat(scrollDelta);
+                MeasureBackwardRepeat(availableLength);
             else
             {
                 Debug.Assert(gridTrack.IsHead);
-                return MeasureBackwardHead(scrollDelta);
+                MeasureBackwardHead(availableLength);
             }
         }
 
-        private double MeasureBackwardEof(double scrollDelta)
+        private void MeasureBackwardEof(double availableLength)
         {
             if (MaxFrozenTail > 0)
-                return MeasureBackwardTail(scrollDelta);
+                MeasureBackwardTail(availableLength);
             else if (MaxBlockCount > 0)
-                return MeasureBackwardRepeat(scrollDelta);
+                MeasureBackwardRepeat(availableLength);
             else if (MaxFrozenHead > 0)
-                return MeasureBackwardHead(scrollDelta);
-            return scrollDelta;
+                MeasureBackwardHead(availableLength);
         }
 
-        private double MeasureBackwardTail(double scrollDelta)
+        private void MeasureBackwardTail(double availableLength)
         {
-            var measuredLength = Math.Min(scrollDelta, ScrollStartMain - TailStart);
+            var measuredLength = Math.Min(availableLength, ScrollStartMain - TailStart);
             Debug.Assert(measuredLength >= 0);
             if (measuredLength > 0)
             {
                 AdjustScrollStartMain(-measuredLength);
-                scrollDelta -= measuredLength;
+                availableLength -= measuredLength;
             }
-            if (scrollDelta == 0)
-                return scrollDelta;
+            if (availableLength == 0)
+                return;
 
             if (MaxBlockCount > 0)
-                return MeasureBackwardRepeat(scrollDelta);
+                MeasureBackwardRepeat(availableLength);
             else if (MaxFrozenHead > 0)
-                return MeasureBackwardHead(scrollDelta);
-            return scrollDelta;
+                MeasureBackwardHead(availableLength);
         }
 
-        private double MeasureBackwardRepeat(double scrollDelta)
+        private void MeasureBackwardRepeat(double availableLength)
         {
-            Debug.Assert(scrollDelta > 0);
+            Debug.Assert(availableLength > 0);
 
             var block = BlockViews[0];
-            var scrollLength = Math.Min(scrollDelta, ScrollStartMain - GetStartOffset(block));
+            var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartOffset(block));
             if (scrollLength > 0)
             {
                 AdjustScrollStartMain(-scrollLength);
-                scrollDelta -= scrollLength;
+                availableLength -= scrollLength;
             }
-            scrollDelta = RealizeBackward(scrollDelta);
-            return scrollDelta > 0 && FrozenHead > 0 ? MeasureBackwardHead(scrollDelta) : scrollDelta;
+            availableLength -= RealizeBackward(availableLength);
+            if (availableLength > 0 && FrozenHead > 0)
+                MeasureBackwardHead(availableLength);
         }
 
-        private double RealizeBackward(double scrollDelta)
+        private double RealizeBackward(double availableLength)
         {
             Debug.Assert(BlockViews.Count > 0);
 
-            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && scrollDelta > 0; blockOrdinal--)
+            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && availableLength > 0; blockOrdinal--)
             {
                 BlockViews.RealizePrev();
                 var block = BlockViews.First;
                 block.Measure(Size.Empty);
-                var scrollLength = Math.Min(scrollDelta, GetLength(block));
+                var scrollLength = Math.Min(availableLength, GetLength(block));
                 AdjustScrollStartMain(-scrollLength);
-                scrollDelta -= scrollLength;
+                availableLength -= scrollLength;
             }
-            return scrollDelta;
+            return availableLength;
         }
 
-        private double MeasureBackwardHead(double scrollDelta)
+        private void MeasureBackwardHead(double availableLength)
         {
-            var measuredLength = Math.Min(scrollDelta, HeadEnd);
-            if (measuredLength == 0)
-                return scrollDelta;
-
-            AdjustScrollStartMain(-measuredLength);
-            return scrollDelta - measuredLength;
+            Debug.Assert(availableLength >= 0);
+            var measuredLength = Math.Min(availableLength, HeadEnd);
+            if (measuredLength > 0)
+               AdjustScrollStartMain(-measuredLength);
         }
 
         private void MeasureForward(double availableLength)
