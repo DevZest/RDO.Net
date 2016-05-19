@@ -255,9 +255,19 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain[FrozenHead].StartOffset; }
         }
 
+        private double MaxFrozenHeadLength
+        {
+            get { return GridTracksMain[MaxFrozenHead].StartOffset; }
+        }
+
         private double FrozenTailStart
         {
             get { return FrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
+        }
+
+        private double MaxFrozenTailStart
+        {
+            get { return MaxFrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
         }
 
         private double TailLength
@@ -320,12 +330,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureBackwardTail(double scrollDelta)
         {
-            var scrollLength = Math.Min(scrollDelta, ScrollStartMain - FrozenTailStart);
-            Debug.Assert(scrollLength >= 0);
-            if (scrollLength > 0)
+            var measuredLength = Math.Min(scrollDelta, ScrollStartMain - MaxFrozenTailStart);
+            Debug.Assert(measuredLength >= 0);
+            if (measuredLength > 0)
             {
-                AdjustScrollStartMain(-scrollLength);
-                scrollDelta -= scrollLength;
+                AdjustScrollStartMain(-measuredLength);
+                scrollDelta -= measuredLength;
             }
             if (scrollDelta == 0)
                 return scrollDelta;
@@ -370,12 +380,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MeasureBackwardHead(double scrollDelta)
         {
-            var scrollLength = Math.Min(scrollDelta, ScrollStartMain - FrozenHeadLength);
-            if (scrollLength <= 0)
+            var measuredLength = Math.Min(scrollDelta, MaxFrozenHeadLength);
+            if (measuredLength == 0)
                 return scrollDelta;
 
-            AdjustScrollStartMain(-scrollLength);
-            return scrollDelta - scrollLength;
+            AdjustScrollStartMain(-measuredLength);
+            return scrollDelta - measuredLength;
         }
 
         private void MeasureForward(double availableLength)
@@ -393,12 +403,11 @@ namespace DevZest.Data.Windows.Primitives
         private double MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
         {
             Debug.Assert(gridTrack.IsHead);
-            var measuredLength = FrozenHeadLength - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
+            var measuredLength = MaxFrozenHeadLength - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
+            Debug.Assert(measuredLength > 0);
             if (MaxBlockCount == 0)
                 return measuredLength;
-
-            availableLength -= measuredLength;
-            return measuredLength + MeasureForwardRepeat(new GridOffset(GridTracksMain.BlockStart, 0), 0, availableLength);
+            return measuredLength + MeasureForwardRepeat(new GridOffset(GridTracksMain.BlockStart, 0), 0, availableLength - measuredLength);
         }
 
         private double MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
@@ -503,10 +512,15 @@ namespace DevZest.Data.Windows.Primitives
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
 
             var result = ToSize(valueMain, valueCross);
-            if (!scalarItem.IsMultidimensional && BlockDimensions > 1)
+            if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
             {
-                var delta = BlockDimensionVector * (BlockDimensions - 1);
-                result = new Size(result.Width + delta.X, result.Height + delta.Y);
+                var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
+                var scalarItemSpan = GridTracksCross.GetGridSpan(gridRange);
+                if (rowSpan.Contains(scalarItemSpan))
+                {
+                    var delta = BlockDimensionVector * (BlockDimensions - 1);
+                    result = new Size(result.Width + delta.X, result.Height + delta.Y);
+                }
             }
             return result;
         }

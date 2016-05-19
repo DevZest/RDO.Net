@@ -228,5 +228,33 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetBlockItemRect(block, blockItem0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetBlockItemRect(block, blockItem1));
         }
+
+        [TestMethod]
+        public void LayoutXYManager_ScalarItem()
+        {
+            var dataSet = MockProductCategories(9, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("20", "100")
+                    .GridRows("20", "20", "20")
+                    .Layout(Orientation.Vertical, 2)
+                    .ScalarItem().At(0, 0)
+                    .ScalarItem().At(1, 0)
+                    .ScalarItem().At(0, 1)
+                    .RowItem().At(1, 1)
+                    .ScalarItem(true).At(1, 2);
+            });
+
+            var measuredSize = layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
+            Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
+
+            var scalarItems = layoutManager.Template.ScalarItems;
+            Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetScalarItemRect(scalarItems[0], 0));
+            Assert.AreEqual(new Rect(20, 0, 200, 20), layoutManager.GetScalarItemRect(scalarItems[1], 0));
+            Assert.AreEqual(new Rect(0, 20, 20, 100), layoutManager.GetScalarItemRect(scalarItems[2], 0));
+            Assert.AreEqual(new Rect(20, 120, 100, 20), layoutManager.GetScalarItemRect(scalarItems[3], 0));
+            Assert.AreEqual(new Rect(120, 120, 100, 20), layoutManager.GetScalarItemRect(scalarItems[3], 1));
+        }
     }
 }

@@ -37,6 +37,13 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return IsEmpty ? 0 : EndTrack.EndOffset - StartTrack.StartOffset; }
         }
+
+        public bool Contains(GridSpan gridSpan)
+        {
+            Debug.Assert(StartTrack.Owner == gridSpan.StartTrack.Owner);
+
+            return gridSpan.StartTrack.Ordinal >= StartTrack.Ordinal && gridSpan.EndTrack.Ordinal <= EndTrack.Ordinal;
+        }
     }
 
     internal struct GridSpan<T>
