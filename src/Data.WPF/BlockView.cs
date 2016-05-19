@@ -38,7 +38,7 @@ namespace DevZest.Data.Windows
 
             var panel = Template.FindName("PART_Panel", this) as BlockElementPanel;
             if (panel != null)
-                SetElementsPanel(panel);
+                InitializeElements(panel);
         }
 
         internal void Cleanup()
@@ -128,15 +128,6 @@ namespace DevZest.Data.Windows
         internal IReadOnlyList<UIElement> Elements
         {
             get { return ElementCollection; }
-        }
-
-        private void SetElementsPanel(BlockElementPanel elementsPanel)
-        {
-            Debug.Assert(elementsPanel != null);
-
-            if (ElementCollection != null)
-                ClearElements();
-            InitializeElements(elementsPanel);
         }
 
         internal void InitializeElements(FrameworkElement elementsPanel)

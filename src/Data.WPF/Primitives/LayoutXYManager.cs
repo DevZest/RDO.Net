@@ -628,6 +628,12 @@ namespace DevZest.Data.Windows.Primitives
             var startTrackMain = GridTracksMain.GetGridSpan(gridRange).StartTrack;
             var valueMain = startTrackMain.GetRelativeSpan(block).StartOffset;
             var valueCross = GridTracksCross.GetGridSpan(gridRange).StartTrack.StartOffset - GridTracksCross.BlockStart.StartOffset;
+            if (BlockDimensions > 1)
+            {
+                var rowGridSpan = GridTracksCross.GetGridSpan(Template.RowRange);
+                if (valueCross >= rowGridSpan.EndTrack.EndOffset)
+                    valueCross += rowGridSpan.MeasuredLength * (BlockDimensions - 1);
+            }
             return ToPoint(valueMain, valueCross);
         }
 

@@ -186,7 +186,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private GridSpan<T> BlockSpan
         {
-            get { return GetGridSpan(Template.RowRange); }
+            get { return GetGridSpan(Template.BlockRange); }
         }
 
         protected abstract double BlockDimensionLength { get; }
