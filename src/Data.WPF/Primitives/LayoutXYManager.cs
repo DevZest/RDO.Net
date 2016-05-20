@@ -584,13 +584,6 @@ namespace DevZest.Data.Windows.Primitives
             return ToPoint(valueMain, valueCross);
         }
 
-        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
-        {
-            var clipMain = GetScalarItemClipMain(scalarItem);
-            var clipCross = GetScalarItemClipCross(scalarItem, blockDimension);
-            return ToThickness(clipMain, clipCross);
-        }
-
         private double GetScalarItemStartMain(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
@@ -612,6 +605,21 @@ namespace DevZest.Data.Windows.Primitives
             return valueMain;
         }
 
+        private double GetScalarItemStartCross(ScalarItem scalarItem, int blockDimension)
+        {
+            var result = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.StartOffset - ScrollOffsetCross;
+            if (blockDimension > 0)
+                result += blockDimension * BlockDimensionLength;
+            return result;
+        }
+
+        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        {
+            var clipMain = GetScalarItemClipMain(scalarItem);
+            var clipCross = GetScalarItemClipCross(scalarItem, blockDimension);
+            return ToThickness(clipMain, clipCross);
+        }
+
         private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
             if (IsFrozenHead(scalarItem) || IsFrozenTail(scalarItem))
@@ -622,14 +630,6 @@ namespace DevZest.Data.Windows.Primitives
             double? minStart = FrozenHead == 0 ? new double?() : FrozenHeadLength;
             double? maxEnd = FrozenTail == 0 ? new double?() : ViewportMain - FrozenTailLength;
             return new Clip(start, end, minStart, maxEnd);
-        }
-
-        private double GetScalarItemStartCross(ScalarItem scalarItem, int blockDimension)
-        {
-            var result = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.StartOffset - ScrollOffsetCross;
-            if (blockDimension > 0)
-                result += blockDimension * BlockDimensionLength;
-            return result;
         }
 
         private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
@@ -735,10 +735,25 @@ namespace DevZest.Data.Windows.Primitives
             return valueCross;
         }
 
-
         internal override Thickness GetBlockClip(BlockView block)
         {
-            return new Thickness();
+            var clipMain = GetBlockClipMain(block);
+            var clipCross = GetBlockClipCross(block);
+            return ToThickness(clipMain, clipCross);
+        }
+
+        private Clip GetBlockClipMain(BlockView block)
+        {
+            var start = GetBlockStartMain(block);
+            var end = start + GetBlockLengthMain(block);
+            double? minStart = FrozenHead == 0 ? new double?() : FrozenHeadLength;
+            double? maxEnd = FrozenTail == 0 ? new double?() : ViewportMain - FrozenTailLength;
+            return new Clip(start, end, minStart, maxEnd);
+        }
+
+        private Clip GetBlockClipCross(BlockView block)
+        {
+            return new Clip();
         }
 
         private double GetStartOffset(BlockView block)
