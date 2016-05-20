@@ -532,10 +532,14 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private bool IsFrozenMain(TemplateItem templateItem)
+        private bool IsFrozenHead(ScalarItem scalarItem)
         {
-            var gridSpan = GridTracksMain.GetGridSpan(templateItem.GridRange);
-            return gridSpan.EndTrack.Ordinal < FrozenHead || gridSpan.StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
+            return GridTracksMain.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHead;
+        }
+
+        private bool IsFrozenTail(ScalarItem scalarItem)
+        {
+            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
         }
 
         private bool IsFrozenCross(TemplateItem templateItem)
@@ -593,12 +597,12 @@ namespace DevZest.Data.Windows.Primitives
             var startGridOffset = GetStartGridOffset(gridRange);
             var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
 
-            if (IsFrozenHead(gridRange))
+            if (IsFrozenHead(scalarItem))
                 return valueMain;
 
             valueMain -= ScrollOffsetMain;
 
-            if (IsFrozenTail(gridRange))
+            if (IsFrozenTail(scalarItem))
             {
                 double maxValueMain = ViewportMain - (MaxOffsetMain - startGridOffset.Span.StartOffset);
                 if (valueMain > maxValueMain)
@@ -610,7 +614,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
-            if (IsFrozenMain(scalarItem))
+            if (IsFrozenHead(scalarItem) || IsFrozenTail(scalarItem))
                 return new Clip();
 
             var start = GetScalarItemStartMain(scalarItem);
@@ -678,16 +682,6 @@ namespace DevZest.Data.Windows.Primitives
             var endOffset = span.EndTrack.EndOffset;
             var scrollStart = ScrollStartCross;
             return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - Math.Max(startOffset, ScrollOriginCross) : 0;
-        }
-
-        private bool IsFrozenHead(GridRange gridRange)
-        {
-            return GridTracksMain.GetGridSpan(gridRange).EndTrack.Ordinal < FrozenHead;
-        }
-
-        private bool IsFrozenTail(GridRange gridRange)
-        {
-            return GridTracksMain.GetGridSpan(gridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
         }
 
         private GridOffset GetStartGridOffset(GridRange gridRange)
