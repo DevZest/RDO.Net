@@ -565,7 +565,8 @@ namespace DevZest.Data.Windows.Primitives
                 return MaxOffsetCross;
 
             var result = GridTracksCross.AvailableLength;
-            return result;
+            var frozenLength = FrozenHeadLengthCross + FrozenTailLengthCross;
+            return Math.Max(frozenLength, result);
         }
 
         private void RefreshScrollOffset()
