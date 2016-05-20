@@ -527,10 +527,24 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected sealed override Size GetMeasuredSize(ScalarItem scalarItem)
+        protected sealed override Size GetScalarItemSize(ScalarItem scalarItem)
+        {
+            var valueMain = GetScalarItemLengthMain(scalarItem);
+            var valueCross = GetScalarItemLengthCross(scalarItem);
+            return ToSize(valueMain, valueCross);
+        }
+
+        private double GetScalarItemLengthMain(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
-            var valueMain = GetLength(gridRange);
+            var startGridOffset = GetStartGridOffset(gridRange);
+            var endGridOffset = GetEndGridOffset(gridRange);
+            return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.EndOffset - startGridOffset.Span.StartOffset;
+        }
+
+        private double GetScalarItemLengthCross(ScalarItem scalarItem)
+        {
+            var gridRange = scalarItem.GridRange;
             var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
             if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
             {
@@ -539,62 +553,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (rowSpan.Contains(scalarItemSpan))
                     valueCross += BlockDimensionLength * (BlockDimensions - 1);
             }
-
-            return ToSize(valueMain, valueCross);
-        }
-
-        private double GetLength(GridRange gridRange)
-        {
-            var startGridOffset = GetStartGridOffset(gridRange);
-            var endGridOffset = GetEndGridOffset(gridRange);
-            return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.EndOffset - startGridOffset.Span.StartOffset;
-        }
-
-        protected override Size GetMeasuredSize(BlockView block)
-        {
-            var result = GetMeasuredSize(block, Template.BlockRange, true);
-            if (BlockDimensions > 1)
-            {
-                var vector = BlockDimensionVector * (BlockDimensions - 1);
-                result = new Size(result.Width + vector.X, result.Height + vector.Y);
-            }
-            return result;
-        }
-
-        protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
-        {
-            Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
-
-            var valueMain = GetLength(block, gridRange);
-            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
-            if (clipScrollCross)
-                valueCross -= GetScrollCrossClip(gridRange);
-            return ToSize(valueMain, valueCross);
-        }
-
-        private double GetLength(BlockView block)
-        {
-            return GetLength(block, Template.BlockRange);
-        }
-
-        private double GetLength(BlockView block, GridRange gridRange)
-        {
-            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
-            var startTrack = gridSpan.StartTrack;
-            var endTrack = gridSpan.EndTrack;
-            return startTrack == endTrack ? startTrack.GetRelativeSpan(block).Length
-                : endTrack.GetRelativeSpan(block).EndOffset - startTrack.GetRelativeSpan(block).StartOffset;
-        }
-
-        private double GetScrollCrossClip(GridRange gridRange)
-        {
-            var span = GridTracksCross.GetGridSpan(gridRange);
-            var startOffset = span.StartTrack.StartOffset;
-            if (ScrollOriginCross <= startOffset)
-                return 0;
-            var endOffset = span.EndTrack.EndOffset;
-            var scrollStart = ScrollStartCross;
-            return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - Math.Max(startOffset, ScrollOriginCross) : 0;
+            return valueCross;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
@@ -648,6 +607,53 @@ namespace DevZest.Data.Windows.Primitives
         private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
         {
             return new Clip();
+        }
+
+        protected override Size GetMeasuredSize(BlockView block)
+        {
+            var result = GetMeasuredSize(block, Template.BlockRange, true);
+            if (BlockDimensions > 1)
+            {
+                var vector = BlockDimensionVector * (BlockDimensions - 1);
+                result = new Size(result.Width + vector.X, result.Height + vector.Y);
+            }
+            return result;
+        }
+
+        protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
+        {
+            Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
+
+            var valueMain = GetLength(block, gridRange);
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            if (clipScrollCross)
+                valueCross -= GetScrollCrossClip(gridRange);
+            return ToSize(valueMain, valueCross);
+        }
+
+        private double GetLength(BlockView block)
+        {
+            return GetLength(block, Template.BlockRange);
+        }
+
+        private double GetLength(BlockView block, GridRange gridRange)
+        {
+            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
+            var startTrack = gridSpan.StartTrack;
+            var endTrack = gridSpan.EndTrack;
+            return startTrack == endTrack ? startTrack.GetRelativeSpan(block).Length
+                : endTrack.GetRelativeSpan(block).EndOffset - startTrack.GetRelativeSpan(block).StartOffset;
+        }
+
+        private double GetScrollCrossClip(GridRange gridRange)
+        {
+            var span = GridTracksCross.GetGridSpan(gridRange);
+            var startOffset = span.StartTrack.StartOffset;
+            if (ScrollOriginCross <= startOffset)
+                return 0;
+            var endOffset = span.EndTrack.EndOffset;
+            var scrollStart = ScrollStartCross;
+            return scrollStart > startOffset && scrollStart < endOffset ? scrollStart - Math.Max(startOffset, ScrollOriginCross) : 0;
         }
 
         private bool IsFrozenHead(GridRange gridRange)

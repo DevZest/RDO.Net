@@ -130,9 +130,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract Size GetMeasuredSize(ScalarItem scalarItem);
+        protected abstract Size GetScalarItemSize(ScalarItem scalarItem);
 
-        protected abstract Size GetMeasuredSize(BlockView blockView, GridRange gridRange, bool clipScrollCross);
+        protected abstract Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross);
 
         internal virtual Size Measure(Size availableSize)
         {
@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    element.Measure(GetMeasuredSize(scalarItem));
+                    element.Measure(GetScalarItemSize(scalarItem));
                 }
             }
 
@@ -284,7 +284,7 @@ namespace DevZest.Data.Windows.Primitives
         internal Rect GetScalarItemRect(ScalarItem scalarItem, int blockDimension)
         {
             var point = GetScalarItemLocation(scalarItem, blockDimension);
-            var size = GetMeasuredSize(scalarItem);
+            var size = GetScalarItemSize(scalarItem);
             return new Rect(point, size);
         }
 

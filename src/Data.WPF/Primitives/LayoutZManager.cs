@@ -34,11 +34,6 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Size GetMeasuredSize(ScalarItem scalarItem)
-        {
-            return scalarItem.GridRange.MeasuredSize;
-        }
-
         protected override Size GetMeasuredSize(BlockView block)
         {
             return Template.BlockRange.MeasuredSize;
@@ -48,6 +43,11 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(Template.BlockRange.Contains(gridRange));
             return gridRange.MeasuredSize;
+        }
+
+        protected override Size GetScalarItemSize(ScalarItem scalarItem)
+        {
+            return scalarItem.GridRange.MeasuredSize;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
