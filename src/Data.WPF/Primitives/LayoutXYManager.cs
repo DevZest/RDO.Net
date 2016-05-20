@@ -109,7 +109,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private LogicalOffset ScrollOriginMain
         {
-            get { return new LogicalOffset(FrozenHead); }
+            get { return new LogicalOffset(FrozenHeadMain); }
         }
 
         private LogicalOffset _scrollStartMain;
@@ -173,49 +173,65 @@ namespace DevZest.Data.Windows.Primitives
             get { return BlockViews.MaxBlockCount; }
         }
 
-        private int FrozenHead
+        private int FrozenHeadMain
         {
             get { return GridTracksMain.FrozenHead; }
         }
 
-        private int MaxFrozenHead
+        private int FrozenHeadCross
+        {
+            get { return GridTracksCross.FrozenHead; }
+        }
+
+        private int MaxFrozenHeadMain
         {
             get { return GridTracksMain.MaxFrozenHead; }
         }
 
-        private int BlockGridTracks
+        private int BlockGridTracksMain
         {
             get { return GridTracksMain.BlockEnd.Ordinal - GridTracksMain.BlockStart.Ordinal + 1; }
         }
 
-        private int TotalBlockGridTracks
+        private int TotalBlockGridTracksMain
         {
-            get { return MaxBlockCount * BlockGridTracks; }
+            get { return MaxBlockCount * BlockGridTracksMain; }
         }
 
-        private int FrozenTail
+        private int FrozenTailMain
         {
             get { return GridTracksMain.FrozenTail; }
         }
 
-        private int MaxFrozenTail
+        private int FrozenTailCross
+        {
+            get { return GridTracksCross.FrozenTail; }
+        }
+
+        private int MaxFrozenTailMain
         {
             get { return GridTracksMain.MaxFrozenTail; }
         }
 
-        private int MaxGridOffset
+        private int MaxGridOffsetMain
         {
-            get { return MaxFrozenHead + TotalBlockGridTracks + MaxFrozenTail; }
+            get { return MaxFrozenHeadMain + TotalBlockGridTracksMain + MaxFrozenTailMain; }
         }
 
         private double MaxOffsetMain
         {
-            get { return GetGridOffset(MaxGridOffset - 1).Span.EndOffset; }
+            get { return GetGridOffset(MaxGridOffsetMain - 1).Span.EndOffset; }
         }
 
         private double MaxOffsetCross
         {
-            get { return GridTracksCross.GetMeasuredLength(Template.Range()); }
+            get
+            {
+                var result = GridTracksCross.GetMeasuredLength(Template.Range());
+                if (BlockDimensions > 1)
+                    result += BlockDimensionLength * (BlockDimensions - 1);
+                return result;
+            }
         }
 
         private double BlockDimensionLength
@@ -254,7 +270,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             InitBlocks();
 
-            if (DeltaScrollOffset < 0 || _scrollStartMain.GridOffset >= MaxGridOffset)
+            if (DeltaScrollOffset < 0 || _scrollStartMain.GridOffset >= MaxGridOffsetMain)
                 MeasureBackward(-DeltaScrollOffset);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
@@ -264,32 +280,66 @@ namespace DevZest.Data.Windows.Primitives
 
         private double HeadEnd
         {
-            get { return GridTracksMain[MaxFrozenHead].StartOffset; }
+            get { return GridTracksMain[MaxFrozenHeadMain].StartOffset; }
         }
 
         private double TailStart
         {
-            get { return MaxFrozenTail == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
+            get { return MaxFrozenTailMain == 0 ? MaxOffsetMain : GetGridOffset(MaxGridOffsetMain - MaxFrozenTailMain).Span.StartOffset; }
         }
 
-        private double FrozenHeadLength
+        private double FrozenHeadLengthMain
         {
-            get { return GridTracksMain[FrozenHead].StartOffset; }
+            get { return GridTracksMain[FrozenHeadMain].StartOffset; }
         }
 
-        private double FrozenTailStart
+        private double FrozenHeadLengthCross
         {
-            get { return GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
+            get { return GridTracksCross[FrozenHeadCross].StartOffset; }
         }
 
-        private double FrozenTailLength
+        private double FrozenTailLengthMain
         {
-            get { return FrozenTail == 0 ? 0 : MaxOffsetMain - FrozenTailStart; }
+            get
+            {
+                if (FrozenTailMain == 0)
+                    return 0;
+
+                var totalTracks = GridTracksMain.Count;
+                var endOffset = GridTracksMain[totalTracks - 1].EndOffset;
+                var startOffset = GridTracksMain[totalTracks - FrozenTailMain].StartOffset;
+                return endOffset - startOffset;
+            }
+        }
+
+        private double FrozenTailLengthCross
+        {
+            get { return GetTailLengthCross(FrozenTailCross); }
+            //{
+            //    if (FrozenTailCross == 0)
+            //        return 0;
+
+            //    var totalTracks = GridTracksCross.Count;
+            //    var endOffset = GridTracksCross[totalTracks - 1].EndOffset;
+            //    var startOffset = GridTracksCross[totalTracks - FrozenTailCross].StartOffset;
+            //    return endOffset - startOffset;
+            //}
+        }
+
+        private double GetTailLengthCross(int tracksCount)
+        {
+            if (tracksCount == 0)
+                return 0;
+
+            var totalTracks = GridTracksCross.Count;
+            var endOffset = GridTracksCross[totalTracks - 1].EndOffset;
+            var startOffset = GridTracksCross[totalTracks - tracksCount].StartOffset;
+            return endOffset - startOffset;
         }
 
         private double TailLength
         {
-            get { return MaxFrozenTail == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffset - MaxFrozenTail).Span.StartOffset; }
+            get { return MaxFrozenTailMain == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffsetMain - MaxFrozenTailMain).Span.StartOffset; }
         }
 
         private double Gap
@@ -300,8 +350,8 @@ namespace DevZest.Data.Windows.Primitives
                 if (double.IsPositiveInfinity(availableLength))
                     return availableLength;
 
-                var scrollable = availableLength - (FrozenHeadLength + TailLength);
-                var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHead].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
+                var scrollable = availableLength - (FrozenHeadLengthMain + TailLength);
+                var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
                 return scrollable - (blockEndOffset - ScrollStartMain);
             }
         }
@@ -340,11 +390,11 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureBackwardEof(double availableLength)
         {
-            if (MaxFrozenTail > 0)
+            if (MaxFrozenTailMain > 0)
                 MeasureBackwardTail(availableLength);
             else if (MaxBlockCount > 0)
                 MeasureBackwardRepeat(availableLength);
-            else if (MaxFrozenHead > 0)
+            else if (MaxFrozenHeadMain > 0)
                 MeasureBackwardHead(availableLength);
         }
 
@@ -362,7 +412,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (MaxBlockCount > 0)
                 MeasureBackwardRepeat(availableLength);
-            else if (MaxFrozenHead > 0)
+            else if (MaxFrozenHeadMain > 0)
                 MeasureBackwardHead(availableLength);
         }
 
@@ -378,12 +428,15 @@ namespace DevZest.Data.Windows.Primitives
                 availableLength -= scrollLength;
             }
             availableLength -= RealizeBackward(availableLength);
-            if (availableLength > 0 && FrozenHead > 0)
+            if (availableLength > 0 && FrozenHeadMain > 0)
                 MeasureBackwardHead(availableLength);
         }
 
         private double RealizeBackward(double availableLength)
         {
+            if (BlockViews.Count == 0)
+                return availableLength;
+
             Debug.Assert(BlockViews.Count > 0);
 
             for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && availableLength > 0; blockOrdinal--)
@@ -391,9 +444,9 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews.RealizePrev();
                 var block = BlockViews.First;
                 block.Measure(Size.Empty);
-                var scrollLength = Math.Min(availableLength, GetBlockLengthMain(block));
-                AdjustScrollStartMain(-scrollLength);
-                availableLength -= scrollLength;
+                var measuredLength = Math.Min(availableLength, GetBlockLengthMain(block));
+                AdjustScrollStartMain(-measuredLength);
+                availableLength -= measuredLength;
             }
             return availableLength;
         }
@@ -401,14 +454,14 @@ namespace DevZest.Data.Windows.Primitives
         private void MeasureBackwardHead(double availableLength)
         {
             Debug.Assert(availableLength >= 0);
-            var measuredLength = Math.Min(availableLength, HeadEnd);
+            var measuredLength = Math.Min(availableLength, ScrollOffsetMain);
             if (measuredLength > 0)
                AdjustScrollStartMain(-measuredLength);
         }
 
         private void MeasureForward(double availableLength)
         {
-            availableLength -= Math.Max(FrozenHeadLength, HeadEnd - ScrollOffsetMain);
+            availableLength -= Math.Max(FrozenHeadLengthMain, HeadEnd - ScrollOffsetMain);
             if (availableLength <= 0)
                 return;
 
@@ -434,8 +487,8 @@ namespace DevZest.Data.Windows.Primitives
         private void MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
         {
             Debug.Assert(BlockViews.Count == 1);
-            if (FrozenTail > 0)
-                availableLength -= FrozenTailLength;
+            if (FrozenTailMain > 0)
+                availableLength -= FrozenTailLengthMain;
 
             var gridTrack = gridOffset.GridTrack;
             Debug.Assert(gridTrack.IsRepeat);
@@ -452,6 +505,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private double RealizeForward(double availableLength)
         {
+            if (BlockViews.Count == 0)
+                return 0;
+
             Debug.Assert(BlockViews.Last != null);
 
             double result = 0;
@@ -499,7 +555,7 @@ namespace DevZest.Data.Windows.Primitives
                 return MaxOffsetMain;
 
             var result = GridTracksMain.AvailableLength;
-            var frozenLength = FrozenHeadLength + FrozenTailLength;
+            var frozenLength = FrozenHeadLengthMain + FrozenTailLengthMain;
             return Math.Max(frozenLength, result);
         }
 
@@ -532,14 +588,24 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private bool IsFrozenHead(ScalarItem scalarItem)
+        private bool IsFrozenHeadMain(ScalarItem scalarItem)
         {
-            return GridTracksMain.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHead;
+            return GridTracksMain.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHeadMain;
         }
 
-        private bool IsFrozenTail(ScalarItem scalarItem)
+        private bool IsFrozenHeadCross(ScalarItem scalarItem)
         {
-            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
+            return GridTracksCross.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHeadCross;
+        }
+
+        private bool IsFrozenTailMain(ScalarItem scalarItem)
+        {
+            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTailMain;
+        }
+
+        private bool IsFrozenTailCross(ScalarItem scalarItem)
+        {
+            return GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksCross.Count - FrozenTailCross;
         }
 
         private bool IsFrozenCross(TemplateItem templateItem)
@@ -590,12 +656,12 @@ namespace DevZest.Data.Windows.Primitives
             var startGridOffset = GetStartGridOffset(gridRange);
             var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.StartOffset;
 
-            if (IsFrozenHead(scalarItem))
+            if (IsFrozenHeadMain(scalarItem))
                 return valueMain;
 
             valueMain -= ScrollOffsetMain;
 
-            if (IsFrozenTail(scalarItem))
+            if (IsFrozenTailMain(scalarItem))
             {
                 double maxValueMain = ViewportMain - (MaxOffsetMain - startGridOffset.Span.StartOffset);
                 if (valueMain > maxValueMain)
@@ -607,10 +673,24 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetScalarItemStartCross(ScalarItem scalarItem, int blockDimension)
         {
-            var result = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.StartOffset - ScrollOffsetCross;
+            var startTrack = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack;
+            var valueCross = startTrack.StartOffset;
+
+            if (IsFrozenHeadCross(scalarItem))
+                return valueCross;
+
+            valueCross -= ScrollOffsetCross;
             if (blockDimension > 0)
-                result += blockDimension * BlockDimensionLength;
-            return result;
+                valueCross += blockDimension * BlockDimensionLength;
+
+            if (IsFrozenTailCross(scalarItem))
+            {
+                double maxValueCross = ViewportCross - GetTailLengthCross(GridTracksCross.Count - startTrack.Ordinal);
+                if (valueCross > maxValueCross)
+                    valueCross = maxValueCross;
+            }
+
+            return valueCross;
         }
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
@@ -622,19 +702,26 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
-            if (IsFrozenHead(scalarItem) || IsFrozenTail(scalarItem))
+            if (IsFrozenHeadMain(scalarItem) || IsFrozenTailMain(scalarItem))
                 return new Clip();
 
             var start = GetScalarItemStartMain(scalarItem);
             var end = start + GetScalarItemLengthMain(scalarItem);
-            double? minStart = FrozenHead == 0 ? new double?() : FrozenHeadLength;
-            double? maxEnd = FrozenTail == 0 ? new double?() : ViewportMain - FrozenTailLength;
+            double? minStart = FrozenHeadMain == 0 ? new double?() : FrozenHeadLengthMain;
+            double? maxEnd = FrozenTailMain == 0 ? new double?() : ViewportMain - FrozenTailLengthMain;
             return new Clip(start, end, minStart, maxEnd);
         }
 
         private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
         {
-            return new Clip();
+            if (IsFrozenHeadCross(scalarItem) || IsFrozenTailCross(scalarItem))
+                return new Clip();
+
+            var start = GetScalarItemStartCross(scalarItem, blockDimension);
+            var end = start + GetScalarItemLengthCross(scalarItem);
+            double? minStart = FrozenHeadCross == 0 ? new double?() : FrozenHeadLengthCross;
+            double? maxEnd = FrozenTailCross == 0 ? new double?() : ViewportCross - FrozenTailLengthCross;
+            return new Clip(start, end, minStart, maxEnd);
         }
 
         protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
@@ -683,7 +770,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxBlockCount > 0)
                 return new GridOffset(gridTrack, 0);
             else
-                return MaxFrozenTail > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTail)) : GridOffset.Eof;
+                return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof;
         }
 
         private GridOffset GetEndGridOffset(GridRange gridRange)
@@ -695,7 +782,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxBlockCount > 0)
                 return new GridOffset(gridTrack, MaxBlockCount - 1);
             else
-                return MaxFrozenTail > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTail)) : GridOffset.Eof;
+                return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof;
         }
 
         protected override Point GetBlockLocation(BlockView block)
@@ -746,8 +833,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var start = GetBlockStartMain(block);
             var end = start + GetBlockLengthMain(block);
-            double? minStart = FrozenHead == 0 ? new double?() : FrozenHeadLength;
-            double? maxEnd = FrozenTail == 0 ? new double?() : ViewportMain - FrozenTailLength;
+            double? minStart = FrozenHeadMain == 0 ? new double?() : FrozenHeadLengthMain;
+            double? maxEnd = FrozenTailMain == 0 ? new double?() : ViewportMain - FrozenTailLengthMain;
             return new Clip(start, end, minStart, maxEnd);
         }
 

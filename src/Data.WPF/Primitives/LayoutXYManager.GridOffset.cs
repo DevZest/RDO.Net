@@ -78,20 +78,20 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(gridOffset >= 0);
 
-            if (gridOffset >= MaxGridOffset)
+            if (gridOffset >= MaxGridOffsetMain)
                 return GridOffset.Eof;
 
-            if (gridOffset < MaxFrozenHead)
+            if (gridOffset < MaxFrozenHeadMain)
                 return new GridOffset(GridTracksMain[gridOffset]);
 
-            gridOffset -= MaxFrozenHead;
-            var totalBlockGridTracks = TotalBlockGridTracks;
+            gridOffset -= MaxFrozenHeadMain;
+            var totalBlockGridTracks = TotalBlockGridTracksMain;
             if (gridOffset < totalBlockGridTracks)
-                return new GridOffset(GridTracksMain[MaxFrozenHead + gridOffset % BlockGridTracks], gridOffset / BlockGridTracks);
+                return new GridOffset(GridTracksMain[MaxFrozenHeadMain + gridOffset % BlockGridTracksMain], gridOffset / BlockGridTracksMain);
 
             gridOffset -= totalBlockGridTracks;
-            Debug.Assert(gridOffset < MaxFrozenTail);
-            return new GridOffset(GridTracksMain[MaxFrozenHead + BlockGridTracks + gridOffset]);
+            Debug.Assert(gridOffset < MaxFrozenTailMain);
+            return new GridOffset(GridTracksMain[MaxFrozenHeadMain + BlockGridTracksMain + gridOffset]);
         }
     }
 }

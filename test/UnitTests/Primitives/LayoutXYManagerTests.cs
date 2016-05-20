@@ -298,6 +298,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[3], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[3], 0));
 
+            //==============================
             layoutManager.ScrollOffsetY = 5;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
@@ -320,6 +321,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[3], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[3], 0));
 
+            //==============================
             layoutManager.ScrollOffsetY = 15;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
@@ -344,6 +346,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[3], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[3], 0));
 
+            //==============================
             layoutManager.ScrollOffsetY = 45;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(1, layoutManager.BlockViews.First.Ordinal);
@@ -365,9 +368,46 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutXYManager_FrozenCross()
+        public void LayoutXYManager_FrozenCross_ScalarItem()
         {
-            //throw new NotImplementedException();
+            var dataSet = MockProductCategories(0, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("10", "50", "50", "10")
+                    .GridRows("10", "20")
+                    .Layout(Orientation.Vertical)
+                    .FrozenLeft(1)
+                    .FrozenRight(1)
+                    .ScalarItem().At(1, 0)
+                    .ScalarItem().At(2, 0)
+                    .ScalarItem().At(3, 0)
+                    .RowItem().At(0, 1);
+            });
+
+            var scalarItems = layoutManager.Template.ScalarItems;
+
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(120, layoutManager.ExtentX);
+            Assert.AreEqual(100, layoutManager.ExtentY);
+            Assert.AreEqual(100, layoutManager.ViewportX);
+            Assert.AreEqual(100, layoutManager.ViewportY);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetX);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetY);
+            Assert.AreEqual(new Rect(10, 0, 50, 10), layoutManager.GetScalarItemRect(scalarItems[0], 0));
+            Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[0], 0));
+            Assert.AreEqual(new Rect(60, 0, 50, 10), layoutManager.GetScalarItemRect(scalarItems[1], 0));
+            Assert.AreEqual(new Thickness(0, 0, 20, 0), layoutManager.GetScalarItemClip(scalarItems[1], 0));
+            Assert.AreEqual(new Rect(90, 0, 10, 10), layoutManager.GetScalarItemRect(scalarItems[2], 0));
+            Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[2], 0));
+
+            layoutManager.ScrollOffsetX = 10;
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(new Rect(0, 0, 50, 10), layoutManager.GetScalarItemRect(scalarItems[0], 0));
+            Assert.AreEqual(new Thickness(10, 0, 0, 0), layoutManager.GetScalarItemClip(scalarItems[0], 0));
+            Assert.AreEqual(new Rect(50, 0, 50, 10), layoutManager.GetScalarItemRect(scalarItems[1], 0));
+            Assert.AreEqual(new Thickness(0, 0, 10, 0), layoutManager.GetScalarItemClip(scalarItems[1], 0));
+            Assert.AreEqual(new Rect(90, 0, 10, 10), layoutManager.GetScalarItemRect(scalarItems[2], 0));
+            Assert.AreEqual(new Thickness(), layoutManager.GetScalarItemClip(scalarItems[2], 0));
         }
 
         [TestMethod]

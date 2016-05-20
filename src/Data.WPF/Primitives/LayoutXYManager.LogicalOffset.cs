@@ -38,8 +38,8 @@ namespace DevZest.Data.Windows.Primitives
         private double GetOffset(LogicalOffset logicalOffset)
         {
             var gridOffset = logicalOffset.GridOffset;
-            if (gridOffset >= MaxGridOffset)
-                return GetGridOffset(MaxGridOffset - 1).Span.EndOffset;
+            if (gridOffset >= MaxGridOffsetMain)
+                return GetGridOffset(MaxGridOffsetMain - 1).Span.EndOffset;
             else
             {
                 var span = GetGridOffset(gridOffset).Span;
@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             // Binary search
             var min = 0;
-            var max = MaxGridOffset - 1;
+            var max = MaxGridOffsetMain - 1;
             while (min <= max)
             {
                 int mid = (min + max) / 2;
@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows.Primitives
                     return new LogicalOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
             }
 
-            return new LogicalOffset(MaxGridOffset);
+            return new LogicalOffset(MaxGridOffsetMain);
         }
     }
 }
