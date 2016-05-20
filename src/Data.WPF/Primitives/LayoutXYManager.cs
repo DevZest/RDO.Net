@@ -637,31 +637,21 @@ namespace DevZest.Data.Windows.Primitives
             return new Clip();
         }
 
-        protected override Size GetBlockSize(BlockView block)
-        {
-            var result = GetMeasuredSize(block, Template.BlockRange, true);
-            if (BlockDimensions > 1)
-            {
-                var vector = BlockDimensionVector * (BlockDimensions - 1);
-                result = new Size(result.Width + vector.X, result.Height + vector.Y);
-            }
-            return result;
-        }
-
         protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
         {
             Debug.Assert(!gridRange.IsEmpty && Template.BlockRange.Contains(gridRange));
 
             var valueMain = GetMeasuredLengthMain(block, gridRange);
-            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
-            if (clipScrollCross)
-                valueCross -= GetScrollCrossClip(gridRange);
+            var valueCross = GetMeasuredLengthCross(block, gridRange, clipScrollCross);
             return ToSize(valueMain, valueCross);
         }
 
-        private double GetBlockLengthMain(BlockView block)
+        private double GetMeasuredLengthCross(BlockView block, GridRange gridRange, bool clipScrollCross)
         {
-            return GetMeasuredLengthMain(block, Template.BlockRange);
+            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            if (clipScrollCross)
+                valueCross -= GetScrollCrossClip(gridRange);
+            return valueCross;
         }
 
         private double GetMeasuredLengthMain(BlockView block, GridRange gridRange)
@@ -724,6 +714,27 @@ namespace DevZest.Data.Windows.Primitives
         {
             return GridTracksCross.BlockStart.StartOffset - ScrollOffsetCross;
         }
+
+        protected override Size GetBlockSize(BlockView block)
+        {
+            var valueMain = GetBlockLengthMain(block);
+            var valueCross = GetBlockLengthCross(block);
+            return ToSize(valueMain, valueCross);
+        }
+
+        private double GetBlockLengthMain(BlockView block)
+        {
+            return GetMeasuredLengthMain(block, Template.BlockRange);
+        }
+
+        private double GetBlockLengthCross(BlockView block)
+        {
+            var valueCross = GetMeasuredLengthCross(block, Template.BlockRange, true);
+            if (BlockDimensions > 1)
+                valueCross += BlockDimensionLength * (BlockDimensions - 1);
+            return valueCross;
+        }
+
 
         internal override Thickness GetBlockClip(BlockView block)
         {
