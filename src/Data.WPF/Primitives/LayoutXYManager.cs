@@ -710,11 +710,19 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetBlockLocation(BlockView block)
         {
-            var valueMain = GetStartOffset(block);
-            var valueCross = GridTracksCross.BlockStart.StartOffset;
-            var result = ToPoint(valueMain, valueCross);
-            result.Offset(-ScrollOffsetX, -ScrollOffsetY);
-            return result;
+            var valueMain = GetBlockStartMain(block);
+            var valueCross = GetBlockStartCross(block);
+            return ToPoint(valueMain, valueCross);
+        }
+
+        private double GetBlockStartMain(BlockView block)
+        {
+            return GetStartOffset(block) - ScrollOffsetMain;
+        }
+
+        private double GetBlockStartCross(BlockView block)
+        {
+            return GridTracksCross.BlockStart.StartOffset - ScrollOffsetCross;
         }
 
         internal override Thickness GetBlockClip(BlockView block)
