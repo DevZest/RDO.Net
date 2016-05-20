@@ -181,13 +181,13 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < BlockViews.Count; i++)
             {
                 var block = BlockViews[i];
-                block.Measure(GetMeasuredSize(block));
+                block.Measure(GetBlockSize(block));
             }
 
             return MeasuredSize;
         }
 
-        protected abstract Size GetMeasuredSize(BlockView block);
+        protected abstract Size GetBlockSize(BlockView block);
 
         protected abstract Size MeasuredSize { get; }
 
@@ -324,11 +324,13 @@ namespace DevZest.Data.Windows.Primitives
         internal Rect GetBlockRect(BlockView blockView)
         {
             var offset = GetBlockLocation(blockView);
-            var size = GetMeasuredSize(blockView);
+            var size = GetBlockSize(blockView);
             return new Rect(offset, size);
         }
 
         protected abstract Point GetBlockLocation(BlockView block);
+
+        internal abstract Thickness GetBlockClip(BlockView block);
 
         private void ArrangeBlocks()
         {
@@ -336,7 +338,8 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var block = BlockViews[i];
                 var rect = GetBlockRect(block);
-                block.Arrange(rect);
+                var clip = GetBlockClip(block);
+                Arrange(block, rect, clip);
             }
         }
 

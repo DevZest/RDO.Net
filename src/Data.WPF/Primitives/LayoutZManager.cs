@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Size GetMeasuredSize(BlockView block)
+        protected override Size GetBlockSize(BlockView block)
         {
             return Template.BlockRange.MeasuredSize;
         }
@@ -64,6 +64,11 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetBlockLocation(BlockView block)
         {
             return Template.Range().GetLocation(Template.BlockRange);
+        }
+
+        internal override Thickness GetBlockClip(BlockView block)
+        {
+            return new Thickness();
         }
 
         protected override Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem)
