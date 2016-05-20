@@ -1,16 +1,40 @@
-﻿namespace DevZest.Data.Windows.Primitives
+﻿using System;
+
+namespace DevZest.Data.Windows.Primitives
 {
     internal struct Clip
     {
-        public static readonly Clip Empty = new Clip(0, 0);
-
         public readonly double Head;
         public readonly double Tail;
 
-        public Clip(double head, double tail)
+        public Clip(double start, double end, double? minStart, double? maxEnd)
         {
-            Head = head;
-            Tail = tail;
+            Head = GetClipHead(start, end, minStart);
+            Tail = GetClipTail(start, end, maxEnd);
+        }
+
+        private static double GetClipHead(double start, double end, double? minStart)
+        {
+            if (!minStart.HasValue)
+                return 0;
+
+            var minStartValue = minStart.GetValueOrDefault();
+            if (end <= minStartValue)
+                return double.PositiveInfinity;
+
+            return minStartValue > start ? minStartValue - start : 0;
+        }
+
+        private static double GetClipTail(double start, double end, double? maxEnd)
+        {
+            if (!maxEnd.HasValue)
+                return 0;
+
+            var maxEndValue = maxEnd.GetValueOrDefault();
+            if (start >= maxEndValue)
+                return double.PositiveInfinity;
+
+            return end > maxEndValue ? end - maxEndValue : 0;
         }
 
         public bool IsEmpty

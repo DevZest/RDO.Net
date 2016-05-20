@@ -277,9 +277,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain[FrozenHead].StartOffset; }
         }
 
+        private double FrozenTailStart
+        {
+            get { return GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
+        }
+
         private double FrozenTailLength
         {
-            get { return FrozenTail == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffset - FrozenTail).Span.StartOffset; }
+            get { return FrozenTail == 0 ? 0 : MaxOffsetMain - FrozenTailStart; }
         }
 
         private double TailLength
@@ -558,8 +563,8 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
-            var valueMain = GetScalarItemLocationMain(scalarItem);
-            var valueCross = GetScalarItemLocationCross(scalarItem, blockDimension);
+            var valueMain = GetScalarItemStartMain(scalarItem);
+            var valueCross = GetScalarItemStartCross(scalarItem, blockDimension);
             return ToPoint(valueMain, valueCross);
         }
 
@@ -570,7 +575,7 @@ namespace DevZest.Data.Windows.Primitives
             return ToThickness(clipMain, clipCross);
         }
 
-        private double GetScalarItemLocationMain(ScalarItem scalarItem)
+        private double GetScalarItemStartMain(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
             var startGridOffset = GetStartGridOffset(gridRange);
@@ -593,10 +598,29 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
-            return new Clip();
+            if (IsFrozenMain(scalarItem))
+                return new Clip();
+
+            var start = GetScalarItemStartMain(scalarItem);
+            var end = start + GetScalarItemLengthMain(scalarItem);
+            double? minStart = FrozenHead == 0 ? new double?() : FrozenHeadLength;
+            double? maxEnd = FrozenTail == 0 ? new double?() : ViewportMain - FrozenTailLength;
+            return new Clip(start, end, minStart, maxEnd);
         }
 
-        private double GetScalarItemLocationCross(ScalarItem scalarItem, int blockDimension)
+        private bool IsFrozenMain(TemplateItem templateItem)
+        {
+            var gridSpan = GridTracksMain.GetGridSpan(templateItem.GridRange);
+            return gridSpan.EndTrack.Ordinal < FrozenHead || gridSpan.StartTrack.Ordinal >= GridTracksMain.Count - FrozenTail;
+        }
+
+        private bool IsFrozenCross(TemplateItem templateItem)
+        {
+            var gridSpan = GridTracksCross.GetGridSpan(templateItem.GridRange);
+            return gridSpan.EndTrack.Ordinal < GridTracksCross.FrozenHead || gridSpan.StartTrack.Ordinal >= GridTracksCross.Count - GridTracksCross.FrozenTail;
+        }
+
+        private double GetScalarItemStartCross(ScalarItem scalarItem, int blockDimension)
         {
             var result = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.StartOffset - ScrollOffsetCross;
             if (blockDimension > 0)
