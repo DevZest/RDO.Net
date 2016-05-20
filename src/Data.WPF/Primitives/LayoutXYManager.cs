@@ -603,6 +603,11 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTailMain;
         }
 
+        private bool ShouldStretch(ScalarItem scalarItem)
+        {
+            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - Template.Stretches;
+        }
+
         private bool IsFrozenTailCross(ScalarItem scalarItem)
         {
             return GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksCross.Count - FrozenTailCross;
@@ -664,7 +669,9 @@ namespace DevZest.Data.Windows.Primitives
             if (IsFrozenTailMain(scalarItem))
             {
                 double maxValueMain = ViewportMain - (MaxOffsetMain - startGridOffset.Span.StartOffset);
-                if (valueMain > maxValueMain)
+                if (ShouldStretch(scalarItem))
+                    valueMain = maxValueMain;
+                else if (valueMain > maxValueMain)
                     valueMain = maxValueMain;
             }
 

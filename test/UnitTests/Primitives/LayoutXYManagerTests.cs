@@ -413,7 +413,22 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_Stretches()
         {
+            var dataSet = MockProductCategories(0, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("10", "20", "10")
+                    .Layout(Orientation.Vertical)
+                    .FrozenBottom(1)
+                    .Stretch(1)
+                    .RowItem().At(0, 1)
+                    .ScalarItem().At(0, 2);
+            });
 
+            var scalarItems = layoutManager.Template.ScalarItems;
+
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[0], 0));
         }
     }
 }
