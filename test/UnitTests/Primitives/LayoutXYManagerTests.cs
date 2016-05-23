@@ -430,5 +430,12 @@ namespace DevZest.Data.Windows.Primitives
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[0], 0));
         }
+
+        [TestMethod]
+        public void LayoutXYManager_FrozenCross_BlockView()
+        {
+
+        }
+
     }
 }

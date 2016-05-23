@@ -594,11 +594,6 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksMain.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHeadMain;
         }
 
-        private bool IsFrozenHeadCross(ScalarItem scalarItem)
-        {
-            return GridTracksCross.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHeadCross;
-        }
-
         private bool IsFrozenTailMain(ScalarItem scalarItem)
         {
             return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTailMain;
@@ -609,15 +604,24 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - Template.Stretches;
         }
 
-        private bool IsFrozenTailCross(ScalarItem scalarItem)
+        private bool IsFrozenHeadCross(TemplateItem templateItem)
         {
-            return GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksCross.Count - FrozenTailCross;
+            return IsFrozenHeadCross(templateItem.GridRange);
         }
 
-        private bool IsFrozenCross(TemplateItem templateItem)
+        private bool IsFrozenTailCross(TemplateItem templateItem)
         {
-            var gridSpan = GridTracksCross.GetGridSpan(templateItem.GridRange);
-            return gridSpan.EndTrack.Ordinal < GridTracksCross.FrozenHead || gridSpan.StartTrack.Ordinal >= GridTracksCross.Count - GridTracksCross.FrozenTail;
+            return IsFrozenTailCross(templateItem.GridRange);
+        }
+
+        private bool IsFrozenHeadCross(GridRange gridRange)
+        {
+            return GridTracksCross.GetGridSpan(gridRange).StartTrack.Ordinal < FrozenHeadCross;
+        }
+
+        private bool IsFrozenTailCross(GridRange gridRange)
+        {
+            return GridTracksCross.GetGridSpan(gridRange).EndTrack.Ordinal >= GridTracksCross.Count - FrozenTailCross;
         }
 
         protected sealed override Size GetScalarItemSize(ScalarItem scalarItem)
