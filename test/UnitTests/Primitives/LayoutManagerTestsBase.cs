@@ -38,9 +38,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal static void VerifyRowItemRect(LayoutManager layoutManager, RowPresenter row, int rowItemIndex, Rect expectedRect)
         {
-            var blockView = layoutManager.BlockViews[row];
             var rowItems = row.RowItems;
-            var rect = layoutManager.GetRowItemRect(blockView, rowItems[rowItemIndex]);
+            var rect = layoutManager.GetRowItemRect(row, rowItems[rowItemIndex]);
             Assert.AreEqual(expectedRect, rect);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -34,26 +33,15 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Size GetBlockSize(BlockView block)
+        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
-            return Template.BlockRange.MeasuredSize;
-        }
-
-        protected override Size GetMeasuredSize(BlockView blockView, GridRange gridRange, bool clipScrollCross)
-        {
-            Debug.Assert(Template.BlockRange.Contains(gridRange));
-            return gridRange.MeasuredSize;
+            Debug.Assert(blockDimension == 0);
+            return scalarItem.GridRange.MeasuredLocation;
         }
 
         protected override Size GetScalarItemSize(ScalarItem scalarItem)
         {
             return scalarItem.GridRange.MeasuredSize;
-        }
-
-        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
-        {
-            Debug.Assert(blockDimension == 0);
-            return scalarItem.GridRange.MeasuredLocation;
         }
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
@@ -66,6 +54,11 @@ namespace DevZest.Data.Windows.Primitives
             return Template.Range().GetLocation(Template.BlockRange);
         }
 
+        protected override Size GetBlockSize(BlockView block)
+        {
+            return Template.BlockRange.MeasuredSize;
+        }
+
         internal override Thickness GetBlockClip(BlockView block)
         {
             return new Thickness();
@@ -76,15 +69,45 @@ namespace DevZest.Data.Windows.Primitives
             return Template.BlockRange.GetLocation(blockItem.GridRange);
         }
 
+        protected override Size GetBlockItemSize(BlockView block, BlockItem blockItem)
+        {
+            return blockItem.GridRange.MeasuredSize;
+        }
+
+        internal override Thickness GetBlockItemClip(BlockView block, BlockItem blockItem)
+        {
+            return new Thickness();
+        }
+
         protected override Point GetRowLocation(BlockView blockView, int blockDimension)
         {
             Debug.Assert(blockDimension == 0);
             return Template.BlockRange.GetLocation(Template.RowRange);
         }
 
-        protected override Point GetRowItemLocation(BlockView blockView, RowItem rowItem)
+        protected override Size GetRowSize(BlockView block, int blockDimension)
+        {
+            return Template.RowRange.MeasuredSize;
+        }
+
+        internal override Thickness GetRowClip(int blockDimension)
+        {
+            return new Thickness();
+        }
+
+        protected override Point GetRowItemLocation(RowPresenter row, RowItem rowItem)
         {
             return Template.RowRange.GetLocation(rowItem.GridRange);
+        }
+
+        protected override Size GetRowItemSize(RowPresenter row, RowItem rowItem)
+        {
+            return rowItem.GridRange.MeasuredSize;
+        }
+
+        internal override Thickness GetRowItemClip(RowPresenter row, RowItem rowItem)
+        {
+            return new Thickness();
         }
 
         protected override Size MeasuredSize
