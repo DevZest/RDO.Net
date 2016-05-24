@@ -835,7 +835,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetBlockStartCross(BlockView block)
         {
-            return GridTracksCross.BlockStart.StartOffset - ScrollOffsetCross;
+            return GetStartOffsetCross(Template.BlockRange, 0);
         }
 
         protected override Size GetBlockSize(BlockView block)
