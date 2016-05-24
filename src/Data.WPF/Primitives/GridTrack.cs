@@ -187,6 +187,16 @@ namespace DevZest.Data.Windows.Primitives
             get { return Ordinal > Owner.BlockEnd.Ordinal; }
         }
 
+        internal bool IsFrozenHead
+        {
+            get { return Ordinal < Owner.FrozenHead; }
+        }
+
+        internal bool IsFrozenTail
+        {
+            get { return Ordinal >= Owner.Count - Owner.FrozenTail; }
+        }
+
         private LayoutXYManager LayoutXYManager
         {
             get { return Template.LayoutXYManager; }
