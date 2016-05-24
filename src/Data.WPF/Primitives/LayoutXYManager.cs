@@ -629,26 +629,6 @@ namespace DevZest.Data.Windows.Primitives
             return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.EndOffset - startGridOffset.Span.StartOffset;
         }
 
-        private double GetScalarItemLengthCross(ScalarItem scalarItem)
-        {
-            var gridRange = scalarItem.GridRange;
-            var startOffset = GetStartOffsetCross(gridRange, 0);
-            var endOffset = GetEndOffsetCross(gridRange, GetEndOffsetBlockDimension(scalarItem));
-            return endOffset - startOffset;
-        }
-
-        private int GetEndOffsetBlockDimension(ScalarItem scalarItem)
-        {
-            if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
-            {
-                var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
-                var scalarItemSpan = GridTracksCross.GetGridSpan(scalarItem.GridRange);
-                if (rowSpan.Contains(scalarItemSpan))
-                    return BlockDimensions - 1;
-            }
-            return 0;
-        }
-
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
         {
             var valueMain = GetScalarItemStartMain(scalarItem);
@@ -683,6 +663,27 @@ namespace DevZest.Data.Windows.Primitives
         {
             return GetStartOffsetCross(scalarItem.GridRange, blockDimension);
         }
+
+        private double GetScalarItemLengthCross(ScalarItem scalarItem)
+        {
+            var gridRange = scalarItem.GridRange;
+            var startOffset = GetStartOffsetCross(gridRange, 0);
+            var endOffset = GetEndOffsetCross(gridRange, ShouldStretchCross(scalarItem) ? BlockDimensions - 1 : 0);
+            return endOffset - startOffset;
+        }
+
+        private bool ShouldStretchCross(ScalarItem scalarItem)
+        {
+            if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
+            {
+                var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
+                var scalarItemSpan = GridTracksCross.GetGridSpan(scalarItem.GridRange);
+                if (rowSpan.Contains(scalarItemSpan))
+                    return true;
+            }
+            return false;
+        }
+
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
         {
