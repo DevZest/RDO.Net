@@ -632,15 +632,21 @@ namespace DevZest.Data.Windows.Primitives
         private double GetScalarItemLengthCross(ScalarItem scalarItem)
         {
             var gridRange = scalarItem.GridRange;
-            var valueCross = GridTracksCross.GetMeasuredLength(gridRange);
+            var startOffset = GetStartOffsetCross(gridRange, 0);
+            var endOffset = GetEndOffsetCross(gridRange, GetEndOffsetBlockDimension(scalarItem));
+            return endOffset - startOffset;
+        }
+
+        private int GetEndOffsetBlockDimension(ScalarItem scalarItem)
+        {
             if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
             {
                 var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
-                var scalarItemSpan = GridTracksCross.GetGridSpan(gridRange);
+                var scalarItemSpan = GridTracksCross.GetGridSpan(scalarItem.GridRange);
                 if (rowSpan.Contains(scalarItemSpan))
-                    valueCross += BlockDimensionLength * (BlockDimensions - 1);
+                    return BlockDimensions - 1;
             }
-            return valueCross;
+            return 0;
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
@@ -675,24 +681,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetScalarItemStartCross(ScalarItem scalarItem, int blockDimension)
         {
-            var startTrack = GridTracksCross.GetGridSpan(scalarItem.GridRange).StartTrack;
-            var valueCross = startTrack.StartOffset;
-
-            if (IsFrozenHeadCross(scalarItem))
-                return valueCross;
-
-            valueCross -= ScrollOffsetCross;
-            if (blockDimension > 0)
-                valueCross += blockDimension * BlockDimensionLength;
-
-            if (IsFrozenTailCross(scalarItem))
-            {
-                double maxValueCross = ViewportCross - GetTailLengthCross(GridTracksCross.Count - startTrack.Ordinal);
-                if (valueCross > maxValueCross)
-                    valueCross = maxValueCross;
-            }
-
-            return valueCross;
+            return GetStartOffsetCross(scalarItem.GridRange, blockDimension);
         }
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
