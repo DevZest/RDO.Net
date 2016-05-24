@@ -824,7 +824,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetBlockLocation(BlockView block)
         {
             var valueMain = GetBlockStartMain(block);
-            var valueCross = GetBlockStartCross(block);
+            var valueCross = GetBlockStartCross();
             return ToPoint(valueMain, valueCross);
         }
 
@@ -833,15 +833,20 @@ namespace DevZest.Data.Windows.Primitives
             return GetStartOffset(block) - ScrollOffsetMain;
         }
 
-        private double GetBlockStartCross(BlockView block)
+        private double GetBlockStartCross()
         {
             return GetStartOffsetCross(Template.BlockRange, 0);
+        }
+
+        private double GetBlockEndCross()
+        {
+            return GetEndOffsetCross(Template.BlockRange, BlockDimensions - 1);
         }
 
         protected override Size GetBlockSize(BlockView block)
         {
             var valueMain = GetBlockLengthMain(block);
-            var valueCross = GetBlockLengthCross(block);
+            var valueCross = GetBlockLengthCross();
             return ToSize(valueMain, valueCross);
         }
 
@@ -850,12 +855,9 @@ namespace DevZest.Data.Windows.Primitives
             return GetMeasuredLengthMain(block, Template.BlockRange);
         }
 
-        private double GetBlockLengthCross(BlockView block)
+        private double GetBlockLengthCross()
         {
-            var valueCross = GetMeasuredLengthCross(block, Template.BlockRange, true);
-            if (BlockDimensions > 1)
-                valueCross += BlockDimensionLength * (BlockDimensions - 1);
-            return valueCross;
+            return GetBlockEndCross() - GetBlockStartCross();
         }
 
         internal override Thickness GetBlockClip(BlockView block)
