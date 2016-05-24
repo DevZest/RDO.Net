@@ -37,9 +37,15 @@ namespace DevZest.Data.Windows.Primitives
             return end > maxEndValue ? end - maxEndValue : 0;
         }
 
-        public bool IsEmpty
+        private Clip(double head, double tail)
         {
-            get { return Head == 0 && Tail == 0; }
+            Head = head;
+            Tail = tail;
+        }
+
+        public Clip Merge(Clip clip)
+        {
+            return new Clip(Math.Max(this.Head, clip.Head), Math.Max(this.Tail, clip.Tail));
         }
     }
 }

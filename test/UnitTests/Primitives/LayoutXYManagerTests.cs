@@ -447,8 +447,11 @@ namespace DevZest.Data.Windows.Primitives
                     .BlockItem().At(3, 0);
             });
 
-            layoutManager.Measure(new Size(100, 100));
             var blocks = layoutManager.BlockViews;
+            var blockItems = layoutManager.Template.BlockItems;
+            var rowItem = layoutManager.Template.RowItemGroups[0][0];
+
+            layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, blocks.First.Ordinal);
             Assert.AreEqual(0, blocks.Last.Ordinal);
             Assert.AreEqual(240, layoutManager.ExtentX);
@@ -460,11 +463,27 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(new Rect(10, 0, 220, 20), layoutManager.GetBlockRect(blocks[0]));
             Assert.AreEqual(new Thickness(0, 0, 140, 0), layoutManager.GetBlockClip(blocks[0]));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetBlockItemRect(blocks[0], blockItems[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockItemClip(blocks[0], blockItems[0]));
+            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRowRect(blocks[0], 0));
+            Assert.AreEqual(new Thickness(), layoutManager.GetRowClip(0));
+            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRowRect(blocks[0], 1));
+            Assert.AreEqual(new Thickness(), layoutManager.GetRowClip(1));
+            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetBlockItemRect(blocks[0], blockItems[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockItemClip(blocks[0], blockItems[1]));
 
             layoutManager.ScrollOffsetX = 5;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(5, 0, 220, 20), layoutManager.GetBlockRect(blocks[0]));
             Assert.AreEqual(new Thickness(5, 0, 135, 0), layoutManager.GetBlockClip(blocks[0]));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetBlockItemRect(blocks[0], blockItems[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockItemClip(blocks[0], blockItems[0]));
+            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRowRect(blocks[0], 0));
+            Assert.AreEqual(new Thickness(), layoutManager.GetRowClip(0));
+            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRowRect(blocks[0], 1));
+            Assert.AreEqual(new Thickness(), layoutManager.GetRowClip(1));
+            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetBlockItemRect(blocks[0], blockItems[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockItemClip(blocks[0], blockItems[1]));
         }
 
         [TestMethod]
