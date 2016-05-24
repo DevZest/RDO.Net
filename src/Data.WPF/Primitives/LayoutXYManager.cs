@@ -589,14 +589,24 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private bool IsFrozenHeadMain(ScalarItem scalarItem)
+        private bool IsFrozenHeadMain(TemplateItem templateItem)
         {
-            return GridTracksMain.GetGridSpan(scalarItem.GridRange).EndTrack.Ordinal < FrozenHeadMain;
+            return IsFrozenHeadMain(templateItem.GridRange);
         }
 
-        private bool IsFrozenTailMain(ScalarItem scalarItem)
+        private bool IsFrozenTailMain(TemplateItem templateItem)
         {
-            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - FrozenTailMain;
+            return IsFrozenTailMain(templateItem.GridRange);
+        }
+
+        private bool IsFrozenHeadMain(GridRange gridRange)
+        {
+            return GridTracksMain.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
+        }
+
+        private bool IsFrozenTailMain(GridRange gridRange)
+        {
+            return GridTracksMain.GetGridSpan(gridRange).EndTrack.IsFrozenTail;
         }
 
         private bool ShouldStretch(ScalarItem scalarItem)
@@ -606,12 +616,22 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool IsFrozenHeadCross(TemplateItem templateItem)
         {
-            return GridTracksCross.GetGridSpan(templateItem.GridRange).StartTrack.IsFrozenHead;
+            return IsFrozenHeadCross(templateItem.GridRange);
+        }
+
+        private bool IsFrozenHeadCross(GridRange gridRange)
+        {
+            return GridTracksCross.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
         }
 
         private bool IsFrozenTailCross(TemplateItem templateItem)
         {
             return GridTracksCross.GetGridSpan(templateItem.GridRange).EndTrack.IsFrozenTail;
+        }
+
+        private bool IsFrozenTailCross(GridRange gridRange)
+        {
+            return GridTracksCross.GetGridSpan(gridRange).EndTrack.IsFrozenTail;
         }
 
         protected sealed override Size GetScalarItemSize(ScalarItem scalarItem)
@@ -684,17 +704,27 @@ namespace DevZest.Data.Windows.Primitives
             return false;
         }
 
-        private Clip GetClipMain(double startOffset, double endOffset)
+        private Clip GetClipMain(double startOffset, double endOffset, TemplateItem templateItem)
         {
-            double? minStart = FrozenHeadMain == 0 ? new double?() : FrozenHeadLengthMain;
-            double? maxEnd = FrozenTailMain == 0 ? new double?() : ViewportMain - FrozenTailLengthMain;
+            return GetClipMain(startOffset, endOffset, templateItem.GridRange);
+        }
+
+        private Clip GetClipMain(double startOffset, double endOffset, GridRange gridRange)
+        {
+            double? minStart = FrozenHeadMain == 0 || IsFrozenHeadMain(gridRange) ? new double?() : FrozenHeadLengthMain;
+            double? maxEnd = FrozenTailMain == 0 || IsFrozenTailMain(gridRange) ? new double?() : ViewportMain - FrozenTailLengthMain;
             return new Clip(startOffset, endOffset, minStart, maxEnd);
         }
 
-        private Clip GetClipCross(double startOffset, double endOffset)
+        private Clip GetClipCross(double startOffset, double endOffset, TemplateItem templateItem)
         {
-            double? minStart = FrozenHeadCross == 0 ? new double?() : FrozenHeadLengthCross;
-            double? maxEnd = FrozenTailCross == 0 ? new double?() : ViewportCross - FrozenTailLengthCross;
+            return GetClipCross(startOffset, endOffset, templateItem.GridRange);
+        }
+
+        private Clip GetClipCross(double startOffset, double endOffset, GridRange gridRange)
+        {
+            double? minStart = FrozenHeadCross == 0 || IsFrozenHeadCross(gridRange) ? new double?() : FrozenHeadLengthCross;
+            double? maxEnd = FrozenTailCross == 0 || IsFrozenTailCross(gridRange) ? new double?() : ViewportCross - FrozenTailLengthCross;
             return new Clip(startOffset, endOffset, minStart, maxEnd);
         }
 
@@ -707,22 +737,16 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetScalarItemClipMain(ScalarItem scalarItem)
         {
-            if (IsFrozenHeadMain(scalarItem) || IsFrozenTailMain(scalarItem))
-                return new Clip();
-
             var startOffset = GetScalarItemStartMain(scalarItem);
             var endOffset = startOffset + GetScalarItemLengthMain(scalarItem);
-            return GetClipMain(startOffset, endOffset);
+            return GetClipMain(startOffset, endOffset, scalarItem);
         }
 
         private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
         {
-            if (IsFrozenHeadCross(scalarItem) || IsFrozenTailCross(scalarItem))
-                return new Clip();
-
             var startOffset = GetScalarItemStartCross(scalarItem, blockDimension);
             var endOffset = startOffset + GetScalarItemLengthCross(scalarItem);
-            return GetClipCross(startOffset, endOffset);
+            return GetClipCross(startOffset, endOffset, scalarItem);
         }
 
         protected override Size GetMeasuredSize(BlockView block, GridRange gridRange, bool clipScrollCross)
@@ -880,14 +904,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             var startOffset = GetBlockStartMain(block);
             var endOffset = startOffset + GetBlockLengthMain(block);
-            return GetClipMain(startOffset, endOffset);
+            return GetClipMain(startOffset, endOffset, Template.BlockRange);
         }
 
         private Clip GetBlockClipCross()
         {
             var startOffset = GetBlockStartCross();
             var endOffset = GetBlockEndCross();
-            return GetClipCross(startOffset, endOffset);
+            return GetClipCross(startOffset, endOffset, Template.BlockRange);
         }
 
         private double GetStartOffset(BlockView block)
