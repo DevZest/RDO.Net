@@ -432,10 +432,75 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutXYManager_FrozenCross_BlockView()
+        public void LayoutXYManager_FrozenCross_Block_Clipped()
         {
+            var dataSet = MockProductCategories(2, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("10", "10", "100", "10", "10")
+                    .GridRows("20")
+                    .Layout(Orientation.Vertical, 2)
+                    .FrozenLeft(1)
+                    .FrozenRight(1)
+                    .BlockItem().At(1, 0)
+                    .RowItem().At(2, 0)
+                    .BlockItem().At(3, 0);
+            });
 
+            layoutManager.Measure(new Size(100, 100));
+            var blocks = layoutManager.BlockViews;
+            Assert.AreEqual(0, blocks.First.Ordinal);
+            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(240, layoutManager.ExtentX);
+            Assert.AreEqual(100, layoutManager.ExtentY);
+            Assert.AreEqual(100, layoutManager.ViewportX);
+            Assert.AreEqual(100, layoutManager.ViewportY);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetX);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetY);
+
+            Assert.AreEqual(new Rect(10, 0, 220, 20), layoutManager.GetBlockRect(blocks[0]));
+            Assert.AreEqual(new Thickness(0, 0, 140, 0), layoutManager.GetBlockClip(blocks[0]));
+
+            layoutManager.ScrollOffsetX = 5;
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(new Rect(5, 0, 220, 20), layoutManager.GetBlockRect(blocks[0]));
+            Assert.AreEqual(new Thickness(5, 0, 135, 0), layoutManager.GetBlockClip(blocks[0]));
         }
 
+        [TestMethod]
+        public void LayoutXYManager_FrozenCross_Block()
+        {
+            var dataSet = MockProductCategories(2, false);
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("10", "10", "100", "10", "10")
+                    .GridRows("20")
+                    .Layout(Orientation.Vertical, 2)
+                    .FrozenLeft(2)
+                    .FrozenRight(2)
+                    .BlockItem().At(1, 0)
+                    .RowItem().At(2, 0)
+                    .BlockItem().At(3, 0);
+            });
+
+            layoutManager.Measure(new Size(100, 100));
+            var blocks = layoutManager.BlockViews;
+            Assert.AreEqual(0, blocks.First.Ordinal);
+            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(240, layoutManager.ExtentX);
+            Assert.AreEqual(100, layoutManager.ExtentY);
+            Assert.AreEqual(100, layoutManager.ViewportX);
+            Assert.AreEqual(100, layoutManager.ViewportY);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetX);
+            Assert.AreEqual(0, layoutManager.ScrollOffsetY);
+
+            Assert.AreEqual(new Rect(10, 0, 80, 20), layoutManager.GetBlockRect(blocks[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockClip(blocks[0]));
+
+            layoutManager.ScrollOffsetX = 5;
+            layoutManager.Measure(new Size(100, 100));
+            Assert.AreEqual(new Rect(10, 0, 80, 20), layoutManager.GetBlockRect(blocks[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetBlockClip(blocks[0]));
+        }
     }
 }

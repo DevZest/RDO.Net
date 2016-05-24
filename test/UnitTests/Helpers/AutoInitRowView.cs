@@ -7,7 +7,8 @@ namespace DevZest.Data.Windows.Helpers
         internal override void Initialize(RowPresenter rowPresenter)
         {
             base.Initialize(rowPresenter);
-            rowPresenter.InitElementPanel(null);
+            if (rowPresenter.ElementCollection == null)
+                rowPresenter.InitElementPanel(null);
         }
 
         protected override Size MeasureOverride(Size constraint)
