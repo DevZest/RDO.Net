@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Windows.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -46,6 +48,29 @@ namespace DevZest.Data.Windows.Primitives
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 3, new Rect(110, 25, 170, 255));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 4, new Rect(0, 280, 110, 20));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 5, new Rect(110, 280, 170, 20));
+        }
+
+        [TestMethod]
+        public void LayoutZManager_GridLineFigures()
+        {
+            var pen = new Pen();
+            var dataSet = MockProductCategories(3, false);
+            var layoutManager = CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("20", "20")
+                    .GridRows("30", "30")
+                    .GridLineX(new GridPoint(0, 1), 2, pen)
+                    .GridLineY(new GridPoint(1, 0), 2, pen)
+                    .RowItem().At(0, 0, 1, 1);
+            });
+
+            layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            var gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(2, gridLineFigures.Length);
+            Assert.AreEqual(new Point(0, 30), gridLineFigures[0].StartPoint);
+            Assert.AreEqual(new Point(40, 30), gridLineFigures[0].EndPoint);
+            Assert.AreEqual(new Point(20, 0), gridLineFigures[1].StartPoint);
+            Assert.AreEqual(new Point(20, 60), gridLineFigures[1].EndPoint);
         }
     }
 }
