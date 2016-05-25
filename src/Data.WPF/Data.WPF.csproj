@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="GridLine.cs" />
+    <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BindingContext.cs" />
