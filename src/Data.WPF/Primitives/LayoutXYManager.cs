@@ -1053,8 +1053,34 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                throw new NotImplementedException();
+                foreach (var gridLine in Template.GridLines)
+                {
+                    var position = CoerceGridLinePosition(gridLine);
+                    if (!position.HasValue)
+                        continue;
+
+                    var positionValue = position.GetValueOrDefault();
+                    if ((positionValue & GridLinePosition.PreviousTrack) == GridLinePosition.PreviousTrack)
+                        yield return GetPrevTrackGridLineFigure(gridLine);
+                    else if ((positionValue & GridLinePosition.NextTrack) == GridLinePosition.NextTrack)
+                        yield return GetNextTrackGridLineFigure(gridLine);
+                }
             }
+        }
+
+        private GridLinePosition? CoerceGridLinePosition(GridLine gridLine)
+        {
+            throw new NotImplementedException();
+        }
+
+        private GridLineFigure GetPrevTrackGridLineFigure(GridLine gridLine)
+        {
+            throw new NotImplementedException();
+        }
+
+        private GridLineFigure GetNextTrackGridLineFigure(GridLine gridLine)
+        {
+            throw new NotImplementedException();
         }
     }
 }
