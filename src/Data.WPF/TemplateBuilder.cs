@@ -215,17 +215,17 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public TemplateBuilder GridLineX(int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineX(int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
-            return GridLine(Orientation.Horizontal, startGridOffset, endGridOffset, brush, thickness, position);
+            return GridLine(Orientation.Horizontal, startGridOffset, endGridOffset, pen, position);
         }
 
-        public TemplateBuilder GridLineY(int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineY(int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
-            return GridLine(Orientation.Vertical, startGridOffset, endGridOffset, brush, thickness, position);
+            return GridLine(Orientation.Vertical, startGridOffset, endGridOffset, pen, position);
         }
 
-        private TemplateBuilder GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        private TemplateBuilder GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
             IReadOnlyList<GridTrack> gridTracks;
             if (orientation == Orientation.Horizontal)
@@ -239,10 +239,10 @@ namespace DevZest.Data.Windows
             if (endGridOffset <= startGridOffset || endGridOffset > gridTracks.Count)
                 throw new ArgumentOutOfRangeException(nameof(endGridOffset));
 
-            if (brush == null)
-                throw new ArgumentNullException(nameof(brush));
+            if (pen == null)
+                throw new ArgumentNullException(nameof(pen));
 
-            var gridLine = new GridLine(orientation, startGridOffset, endGridOffset, brush, thickness, position);
+            var gridLine = new GridLine(orientation, startGridOffset, endGridOffset, pen, position);
             Template.AddGridLine(gridLine);
             return this;
         }

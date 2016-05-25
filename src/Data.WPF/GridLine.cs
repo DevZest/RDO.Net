@@ -5,13 +5,12 @@ namespace DevZest.Data.Windows
 {
     public sealed class GridLine
     {
-        internal GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Brush brush, double thickness, GridLinePosition position)
+        internal GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position)
         {
             Orientation = orientation;
             StartGridOffset = startGridOffset;
             EndGridOffset = endGridOffset;
-            Brush = brush;
-            Thickness = thickness;
+            Pen = pen;
             Position = position;
         }
 
@@ -21,9 +20,7 @@ namespace DevZest.Data.Windows
 
         public int EndGridOffset { get; private set; }
 
-        public Brush Brush { get; private set; }
-
-        public double Thickness { get; private set; }
+        public Pen Pen { get; private set; }
 
         public GridLinePosition Position { get; private set; }
     }
