@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -1046,6 +1047,14 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override Size MeasuredSize
         {
             get { return new Size(ViewportX, ViewportY); }
+        }
+
+        internal override IEnumerable<GridLineFigure> GridLineFigures
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

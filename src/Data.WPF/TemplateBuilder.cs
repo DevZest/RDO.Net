@@ -215,17 +215,17 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public TemplateBuilder GridLineX(int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
-            return GridLine(Orientation.Horizontal, startGridOffset, endGridOffset, pen, position);
+            return GridLine(Orientation.Horizontal, startGridPoint, length, pen, position);
         }
 
-        public TemplateBuilder GridLineY(int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
-            return GridLine(Orientation.Vertical, startGridOffset, endGridOffset, pen, position);
+            return GridLine(Orientation.Vertical, startGridPoint, length, pen, position);
         }
 
-        private TemplateBuilder GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
         {
             IReadOnlyList<GridTrack> gridTracks;
             if (orientation == Orientation.Horizontal)
@@ -233,16 +233,31 @@ namespace DevZest.Data.Windows
             else
                 gridTracks = Template.GridRows;
 
-            if (startGridOffset < 0 || startGridOffset > gridTracks.Count)
-                throw new ArgumentOutOfRangeException(nameof(startGridOffset));
+            if (startGridPoint.OffsetX > Template.GridColumns.Count || startGridPoint.OffsetY > Template.GridRows.Count)
+                throw new ArgumentOutOfRangeException(nameof(startGridPoint));
 
-            if (endGridOffset <= startGridOffset || endGridOffset > gridTracks.Count)
-                throw new ArgumentOutOfRangeException(nameof(endGridOffset));
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
 
             if (pen == null)
                 throw new ArgumentNullException(nameof(pen));
 
-            var gridLine = new GridLine(orientation, startGridOffset, endGridOffset, pen, position);
+            int endGridOffsetX = startGridPoint.OffsetX;
+            int endGridOffsetY = startGridPoint.OffsetY;
+            if (orientation == Orientation.Horizontal)
+            {
+                endGridOffsetX += length;
+                if (endGridOffsetX > Template.GridColumns.Count)
+                    throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            else
+            {
+                endGridOffsetY += length;
+                if (endGridOffsetY > Template.GridRows.Count)
+                    throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
+            var gridLine = new GridLine(startGridPoint, new GridPoint(endGridOffsetX, endGridOffsetY), pen, position);
             Template.AddGridLine(gridLine);
             return this;
         }

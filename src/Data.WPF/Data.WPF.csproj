@@ -56,6 +56,7 @@
     <Compile Include="Primitives\Clip.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridColumnCollection.cs" />
+    <Compile Include="Primitives\GridPoint.cs" />
     <Compile Include="Primitives\GridRowCollection.cs" />
     <Compile Include="Primitives\GridSpan.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Primitives\LayoutXYManager.LogicalOffset.cs" />
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
+    <Compile Include="Primitives\GridLineFigure.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\Span.cs" />

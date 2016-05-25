@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -113,6 +116,19 @@ namespace DevZest.Data.Windows.Primitives
         protected override Size MeasuredSize
         {
             get { return Template.Range().MeasuredSize; }
+        }
+
+        internal override IEnumerable<GridLineFigure> GridLineFigures
+        {
+            get
+            {
+                foreach (var gridLine in Template.GridLines)
+                {
+                    var startPoint = gridLine.StartGridPoint.ToPoint(Template);
+                    var endPoint = gridLine.EndGridPoint.ToPoint(Template);
+                    yield return new GridLineFigure(gridLine, startPoint, endPoint);
+                }
+            }
         }
     }
 }

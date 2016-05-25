@@ -413,5 +413,7 @@ namespace DevZest.Data.Windows.Primitives
                 Arrange(element, rect, clip);
             }
         }
+
+        internal abstract IEnumerable<GridLineFigure> GridLineFigures { get; }
     }
 }
