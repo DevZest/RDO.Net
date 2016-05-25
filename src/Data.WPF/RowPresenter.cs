@@ -574,5 +574,10 @@ namespace DevZest.Data.Windows
         {
             get { return Ordinal / ElementManager.BlockDimensions; }
         }
+
+        internal int BlockDimension
+        {
+            get { return Ordinal % ElementManager.BlockDimensions; }
+        }
     }
 }

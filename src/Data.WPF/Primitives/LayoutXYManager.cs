@@ -721,11 +721,17 @@ namespace DevZest.Data.Windows.Primitives
             return GetClipCross(startOffset, endOffset, templateItem.GridRange, containerClip);
         }
 
-        private Clip GetClipCross(double startOffset, double endOffset, GridRange gridRange, Clip containerClip)
+        private Clip GetClipCross(double startOffset, double endOffset, GridRange gridRange, Clip containerClip, int? blockDimension = null)
         {
             double? minStart = FrozenHeadCross == 0 || containerClip.Head > 0 || IsFrozenHeadCross(gridRange) ? new double?() : FrozenHeadLengthCross;
-            double? maxEnd = FrozenTailCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridRange) ? new double?() : ViewportCross - FrozenTailLengthCross;
+            double? maxEnd = FrozenTailCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridRange, blockDimension)
+                ? new double?() : ViewportCross - FrozenTailLengthCross;
             return new Clip(startOffset, endOffset, minStart, maxEnd);
+        }
+
+        private bool IsFrozenTailCross(GridRange gridRange, int? blockDimension)
+        {
+            return !blockDimension.HasValue ? IsFrozenTailCross(gridRange) : blockDimension.Value == BlockDimensions - 1 && IsFrozenTailCross(gridRange);
         }
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
@@ -982,12 +988,16 @@ namespace DevZest.Data.Windows.Primitives
         {
             var startOffset = GetRowStartCross(blockDimension);
             var endOffset = GetRowEndCross(blockDimension);
-            return GetClipCross(startOffset, endOffset, Template.RowRange, GetBlockClipCross());
+            return GetClipCross(startOffset, endOffset, Template.RowRange, GetBlockClipCross(), blockDimension);
         }
 
         private double GetRowStartCross(int blockDimension)
         {
-            return GetStartOffsetCross(Template.RowRange, blockDimension);
+            var rowRange = Template.RowRange;
+            var result = GetStartOffsetCross(rowRange, blockDimension);
+            if (blockDimension == BlockDimensions - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
+                result = Math.Min(ViewportCross - FrozenTailLengthCross, result);
+            return result;
         }
 
         private double GetRowEndCross(int blockDimension)
@@ -997,7 +1007,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetRowItemLocation(RowPresenter row, RowItem rowItem)
         {
-            var valueCross = GetRowItemStartCross(row, rowItem) - GetRowStartCross(row.BlockOrdinal);
+            var valueCross = GetRowItemStartCross(row, rowItem) - GetRowStartCross(row.BlockDimension);
             return ToPoint(0, valueCross);
         }
 
@@ -1017,19 +1027,19 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetRowItemStartCross(RowPresenter row, RowItem rowItem)
         {
-            return GetStartOffsetCross(rowItem.GridRange, row.BlockOrdinal);
+            return GetStartOffsetCross(rowItem.GridRange, row.BlockDimension);
         }
 
         private double GetRowItemEndCross(RowPresenter row, RowItem rowItem)
         {
-            return GetEndOffsetCross(rowItem.GridRange, row.BlockOrdinal);
+            return GetEndOffsetCross(rowItem.GridRange, row.BlockDimension);
         }
 
         private Clip GetRowItemClipCross(RowPresenter row, RowItem rowItem)
         {
             var startOffset = GetRowItemStartCross(row, rowItem);
             var endOffset = GetRowItemEndCross(row, rowItem);
-            var containerClip = GetBlockClipCross().Merge(GetRowClipCross(row.BlockOrdinal));
+            var containerClip = GetBlockClipCross().Merge(GetRowClipCross(row.BlockDimension));
             return GetClipCross(startOffset, endOffset, rowItem, containerClip);
         }
 
