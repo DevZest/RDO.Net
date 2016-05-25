@@ -13,7 +13,10 @@
                             <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
                                           VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                           CanContentScroll="True">
-                                <primitives:DataElementPanel />
+                                <Grid>
+                                    <primitives:DataElementPanel />
+                                    <primitives:GridLineLayer />
+                                </Grid>
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
