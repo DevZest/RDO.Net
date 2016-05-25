@@ -480,5 +480,17 @@ namespace DevZest.Data.Windows.Primitives
         public int FrozenBottom { get; internal set; }
 
         public int Stretches { get; internal set; }
+
+        private readonly List<GridLine> _gridLines = new List<GridLine>();
+        public IReadOnlyList<GridLine> GridLines
+        {
+            get { return _gridLines; }
+        }
+
+        internal void AddGridLine(GridLine gridLine)
+        {
+            Debug.Assert(gridLine != null);
+            _gridLines.Add(gridLine);
+        }
     }
 }

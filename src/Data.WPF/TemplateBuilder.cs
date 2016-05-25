@@ -4,6 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Windows
 {
@@ -211,6 +213,38 @@ namespace DevZest.Data.Windows
                     return null;
                 return DataPresenter.Create(childDataSet, buildTemplateAction);
             });
+        }
+
+        public TemplateBuilder GridLineX(int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        {
+            return GridLine(Orientation.Horizontal, startGridOffset, endGridOffset, brush, thickness, position);
+        }
+
+        public TemplateBuilder GridLineY(int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        {
+            return GridLine(Orientation.Vertical, startGridOffset, endGridOffset, brush, thickness, position);
+        }
+
+        private TemplateBuilder GridLine(Orientation orientation, int startGridOffset, int endGridOffset, Brush brush, double thickness = 1, GridLinePosition position = GridLinePosition.Both)
+        {
+            IReadOnlyList<GridTrack> gridTracks;
+            if (orientation == Orientation.Horizontal)
+                gridTracks = Template.GridColumns;
+            else
+                gridTracks = Template.GridRows;
+
+            if (startGridOffset < 0 || startGridOffset > gridTracks.Count)
+                throw new ArgumentOutOfRangeException(nameof(startGridOffset));
+
+            if (endGridOffset <= startGridOffset || endGridOffset > gridTracks.Count)
+                throw new ArgumentOutOfRangeException(nameof(endGridOffset));
+
+            if (brush == null)
+                throw new ArgumentNullException(nameof(brush));
+
+            var gridLine = new GridLine(orientation, startGridOffset, endGridOffset, brush, thickness, position);
+            Template.AddGridLine(gridLine);
+            return this;
         }
     }
 }
