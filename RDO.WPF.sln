@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "test\UnitTests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "test\SampleApp\SampleApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmoothScroll", "SmoothScroll\SmoothScroll.csproj", "{4E1C60AD-880E-419D-B87A-18FCE594412A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmoothScroll", "test\SmoothScroll\SmoothScroll.csproj", "{4E1C60AD-880E-419D-B87A-18FCE594412A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
