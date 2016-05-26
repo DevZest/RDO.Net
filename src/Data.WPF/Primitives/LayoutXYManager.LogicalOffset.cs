@@ -49,6 +49,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private LogicalOffset GetLogicalOffset(double offset)
         {
+            if (offset < 0)
+                offset = 0;
+
             // Binary search
             var min = 0;
             var max = MaxGridOffsetMain - 1;
