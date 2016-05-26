@@ -10,6 +10,38 @@ namespace DevZest.Data.Windows.Primitives
 {
     public sealed class DataElementPanel : FrameworkElement, IScrollInfo
     {
+        private class GridLineLayer : UIElement
+        {
+            public GridLineLayer(DataElementPanel dataElementPanel)
+            {
+                _dataElementPanel = dataElementPanel;
+            }
+
+            private DataElementPanel _dataElementPanel;
+
+            private LayoutManager LayoutManager
+            {
+                get { return _dataElementPanel.LayoutManager; }
+            }
+
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                base.OnRender(drawingContext);
+
+                var layoutManager = LayoutManager;
+                if (layoutManager == null)
+                    return;
+
+                foreach (var gridLineFigure in layoutManager.GridLineFigures)
+                {
+                    var pen = gridLineFigure.GridLine.Pen;
+                    var startPoint = gridLineFigure.StartPoint;
+                    var endPoint = gridLineFigure.EndPoint;
+                    drawingContext.DrawLine(pen, startPoint, endPoint);
+                }
+            }
+        }
+
         #region IScrollInfo
 
         private double ScrollLineHeight
@@ -154,6 +186,15 @@ namespace DevZest.Data.Windows.Primitives
             ClipToBoundsProperty.OverrideMetadata(typeof(DataElementPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
+        public DataElementPanel()
+        {
+            _gridLineLayer = new GridLineLayer(this);
+            AddLogicalChild(_gridLineLayer);
+            AddVisualChild(_gridLineLayer);
+        }
+
+        private GridLineLayer _gridLineLayer;
+
         private DataView DataView
         {
             get { return TemplatedParent as DataView; }
@@ -202,7 +243,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override int VisualChildrenCount
         {
-            get { return Elements.Count; }
+            get { return Elements.Count + 1; }
         }
 
         protected override Visual GetVisualChild(int index)
@@ -210,19 +251,24 @@ namespace DevZest.Data.Windows.Primitives
             if (index < 0 || index >= VisualChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            return Elements[index];
+            return index == VisualChildrenCount - 1 ? _gridLineLayer : Elements[index];
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
-            return layoutManager == null ? base.MeasureOverride(availableSize) : layoutManager.Measure(availableSize);
+            var result = layoutManager == null ? base.MeasureOverride(availableSize) : layoutManager.Measure(availableSize);
+            _gridLineLayer.InvalidateVisual();
+            _gridLineLayer.Measure(result);
+            return result;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             var layoutManager = LayoutManager;
-            return layoutManager == null ? base.ArrangeOverride(finalSize) : layoutManager.Arrange(finalSize);
+            var result = layoutManager == null ? base.ArrangeOverride(finalSize) : layoutManager.Arrange(finalSize);
+            _gridLineLayer.Arrange(new Rect(result));
+            return result;
         }
     }
 }
