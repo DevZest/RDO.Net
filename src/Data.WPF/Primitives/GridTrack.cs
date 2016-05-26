@@ -276,7 +276,7 @@ namespace DevZest.Data.Windows.Primitives
             return count == 0 ? 0 : BlockViews[count - 1].EndOffset;
         }
 
-        internal Span GetRelativeSpan(BlockView block)
+        private Span GetRelativeSpan(BlockView block)
         {
             Debug.Assert(block != null);
             return VariantByBlock ? block.GetReleativeSpan(this) : GetRelativeSpan();

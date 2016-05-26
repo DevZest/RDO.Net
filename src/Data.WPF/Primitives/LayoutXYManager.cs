@@ -496,13 +496,19 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(gridTrack.IsRepeat);
             var block = BlockViews[0];
             Debug.Assert(block.Ordinal == gridOffset.BlockOrdinal);
-            availableLength -= GetBlockLengthMain(block) - GetRelativeOffset(block, gridTrack, fraction);
+            availableLength -= GetBlockLengthMain(block) - GetRelativeOffsetMain(block, gridTrack, fraction);
             RealizeForward(availableLength);
         }
 
-        private double GetRelativeOffset(BlockView block, GridTrack gridTrack, double fraction)
+        private double GetRelativeOffsetMain(BlockView block, GridTrack gridTrack)
         {
-            return gridTrack.GetRelativeSpan(block).Start + GetMeasuredLength(block, gridTrack) * fraction;
+            Debug.Assert(GridTracksMain.GetGridSpan(Template.BlockRange).Contains(gridTrack));
+            return GetStartLocationMain(new GridOffset(gridTrack, block)) - GetBlockStartLocationMain(block);
+        }
+
+        private double GetRelativeOffsetMain(BlockView block, GridTrack gridTrack, double fraction)
+        {
+            return GetRelativeOffsetMain(block, gridTrack) + GetMeasuredLength(block, gridTrack) * fraction;
         }
 
         private double RealizeForward(double availableLength)
@@ -922,7 +928,6 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetBlockItemLocation(BlockView block, BlockItem blockItem)
         {
-            //var valueMain = GetRelativeStartMain(block, blockItem.GridRange);
             var valueMain = GetBlockItemStartLocationMain(block, blockItem);
             var valueCross = GetBlockItemStartLocationCross(block, blockItem) - GetBlockStartLocationCross();
             return ToPoint(valueMain, valueCross);
@@ -931,7 +936,7 @@ namespace DevZest.Data.Windows.Primitives
         private double GetBlockItemStartLocationMain(BlockView block, BlockItem blockItem)
         {
             var startTrack = GridTracksMain.GetGridSpan(blockItem.GridRange).StartTrack;
-            return GetStartLocationMain(new GridOffset(startTrack, block)) - GetBlockStartLocationMain(block);
+            return GetRelativeOffsetMain(block, startTrack);
         }
 
         protected override Size GetBlockItemSize(BlockView block, BlockItem blockItem)
