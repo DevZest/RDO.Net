@@ -77,9 +77,18 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (_scrollOffsetMain.IsClose(value))
                 return;
-            _scrollOffsetMain = value;
+            _scrollOffsetMain = CoerceScrollOffset(value, ExtentMain);
             if (invalidateMeasure)
                 InvalidateMeasure();
+        }
+
+        private static double CoerceScrollOffset(double value, double maxValue)
+        {
+            if (value < 0)
+                value = 0;
+            if (value > maxValue)
+                value = maxValue;
+            return value;
         }
 
         private double _scrollOffsetCross;
@@ -93,7 +102,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (_scrollOffsetCross.IsClose(value))
                 return;
-            _scrollOffsetCross = value;
+            _scrollOffsetCross = CoerceScrollOffset(value, ExtentCross - ViewportCross);
             if (invalidateArrange)
                 InvalidateArrange();
         }

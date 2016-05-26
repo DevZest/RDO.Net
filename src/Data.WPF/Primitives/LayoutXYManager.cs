@@ -410,7 +410,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureBackwardRepeat(double availableLength)
         {
-            Debug.Assert(availableLength > 0);
+            if (availableLength <= 0)
+                return;
 
             var block = BlockViews[0];
             var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartOffset(block));
@@ -567,18 +568,8 @@ namespace DevZest.Data.Windows.Primitives
             var scrollStartMain = GetOffset(_scrollStartMain);
             Debug.Assert(scrollStartMain >= scrollOriginMain);
             var valueMain = scrollStartMain - scrollOriginMain;
-            var valueCross = CoerceScrollOffsetCross();
+            var valueCross = ScrollOffsetCross;
             RefreshScollOffset(valueMain, valueCross);
-        }
-
-        private double CoerceScrollOffsetCross()
-        {
-            var result = ScrollOffsetCross;
-            if (result < 0)
-                result = 0;
-            if (result > ExtentCross - ViewportCross)
-                result = ExtentCross - ViewportCross;
-            return result;
         }
 
         private bool IsFrozenHeadMain(TemplateItem templateItem)
