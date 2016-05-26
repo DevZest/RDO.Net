@@ -9,11 +9,12 @@ namespace DevZest.Data.Windows.Primitives
     // ================================================
     // COORDINATES SYSTEM CONCEPT AND NAME CONVENTIONS:
     // ================================================
-    // Main(axis): the axis where blocks are arranged.
-    // Cross(axis): the axis cross to the main axis.
-    // Offset(coordinate): coordinate before scrolled/frozen.
-    // Location(coordinate): coordinate after scrolled/frozen.
-    // Coordinate + Axis combination are used, for example: OffsetMain, OffsetCross, LocationMain, LocationCross
+    // * Main(axis): the axis where blocks are arranged.
+    // * Cross(axis): the axis cross to the main axis.
+    // * Offset(coordinate): coordinate before scrolled/frozen.
+    // * Location(coordinate): coordinate after scrolled/frozen.
+    // - Coordinate + Axis combination are used, for example: OffsetMain, OffsetCross, LocationMain, LocationCross
+    // * GridOffset: the (GridTrack, Block) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.
     internal abstract partial class LayoutXYManager : LayoutManager, IScrollHandler
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",

@@ -4,6 +4,7 @@ namespace DevZest.Data.Windows.Primitives
 {
     partial class LayoutXYManager
     {
+        /// <summary>The (GridTrack, Block) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.</summary>
         private struct GridOffset
         {
             public static GridOffset Eof
