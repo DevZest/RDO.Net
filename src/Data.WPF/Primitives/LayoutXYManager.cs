@@ -741,6 +741,12 @@ namespace DevZest.Data.Windows.Primitives
         private double GetStartOffsetCross(GridRange gridRange, int blockDimension)
         {
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).StartTrack;
+            return GetStartOffsetCross(gridTrack, blockDimension);
+        }
+
+        private double GetStartOffsetCross(GridTrack gridTrack, int blockDimension)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksCross);
             var result = gridTrack.StartOffset;
 
             if (blockDimension == 0 && gridTrack.IsFrozenHead)
@@ -763,6 +769,11 @@ namespace DevZest.Data.Windows.Primitives
         private double GetEndOffsetCross(GridRange gridRange, int blockDimension)
         {
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).EndTrack;
+            return GetEndOffsetCross(gridTrack, blockDimension);
+        }
+
+        private double GetEndOffsetCross(GridTrack gridTrack, int blockDimension)
+        {
             var result = gridTrack.EndOffset;
 
             if (blockDimension == 0 && gridTrack.IsFrozenHead)
