@@ -650,25 +650,43 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetScalarItemStartLocationMain(ScalarItem scalarItem)
         {
-            var gridRange = scalarItem.GridRange;
-            var startGridOffset = GetStartGridOffset(gridRange);
-            var valueMain = startGridOffset.IsEof ? MaxOffsetMain : startGridOffset.Span.Start;
+            var startGridOffset = GetStartGridOffset(scalarItem.GridRange);
+            return GetStartLocationMain(startGridOffset);
+        }
 
-            if (IsFrozenHeadMain(scalarItem))
-                return valueMain;
+        private double GetStartLocationMain(GridOffset gridOffset)
+        {
+            var result = gridOffset.IsEof ? MaxOffsetMain : gridOffset.Span.Start;
+            var gridTrack = gridOffset.GridTrack;
 
-            valueMain -= ScrollOffsetMain;
+            if (gridTrack != null && gridTrack.IsFrozenHead)
+                return result;
 
-            if (IsFrozenTailMain(scalarItem))
+            result -= ScrollOffsetMain;
+
+            if (gridTrack != null && gridTrack.IsFrozenTail)
             {
-                double maxValueMain = ViewportMain - (MaxOffsetMain - startGridOffset.Span.Start);
-                if (ShouldStretch(scalarItem))
-                    valueMain = maxValueMain;
-                else if (valueMain > maxValueMain)
-                    valueMain = maxValueMain;
+                double maxValueMain = ViewportMain - (MaxOffsetMain - gridOffset.Span.Start);
+                if (gridTrack.Ordinal >= GridTracksMain.Count - Template.Stretches)
+                    result = maxValueMain;
+                else if (result > maxValueMain)
+                    result = maxValueMain;
             }
 
-            return valueMain;
+            return result;
+        }
+
+        private double GetEndLocationMain(GridOffset gridOffset)
+        {
+            Debug.Assert(gridOffset.IsEof || gridOffset.BlockOrdinal == -1);
+            return gridOffset.IsEof ? GetStartLocationMain(gridOffset) : GetStartLocationMain(gridOffset) + gridOffset.Span.Length;
+        }
+
+        private double GetStartLocationMainRepeat(GridOffset gridOffset)
+        {
+            Debug.Assert(gridOffset.IsRepeat);
+
+            throw new NotImplementedException();
         }
 
         private double GetScalarItemStartLocationCross(ScalarItem scalarItem, int blockDimension)

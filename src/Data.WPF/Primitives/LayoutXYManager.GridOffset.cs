@@ -37,12 +37,17 @@ namespace DevZest.Data.Windows.Primitives
             private readonly int _blockOrdinal;
             public int BlockOrdinal
             {
-                get { return GridTrack == null || !GridTrack.IsRepeat ? -1 : _blockOrdinal; }
+                get { return IsRepeat ? _blockOrdinal : -1; }
             }
 
             public bool IsEof
             {
                 get { return GridTrack == null; }
+            }
+
+            public bool IsRepeat
+            {
+                get { return GridTrack != null && GridTrack.IsRepeat; }
             }
 
             public static bool operator ==(GridOffset x, GridOffset y)
