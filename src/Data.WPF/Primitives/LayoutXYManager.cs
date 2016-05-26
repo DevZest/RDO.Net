@@ -862,12 +862,6 @@ namespace DevZest.Data.Windows.Primitives
             return GetStartLocationMain(new GridOffset(startTrack, block));
         }
 
-        private double GetBlockStartLocationMain()
-        {
-            var startTrack = GridTracksMain.GetGridSpan(Template.BlockRange).StartTrack;
-            return GetStartLocationMain(new GridOffset(startTrack, 0));
-        }
-
         private double GetBlockStartLocationCross()
         {
             return GetStartLocationCross(Template.BlockRange, 0);
@@ -1018,8 +1012,16 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetRowItemLocation(RowPresenter row, RowItem rowItem)
         {
+            var valueMain = GetRowItemStartLocationMain(row, rowItem);
             var valueCross = GetRowItemStartLocationCross(row, rowItem) - GetRowStartLocationCross(row.BlockDimension);
-            return ToPoint(0, valueCross);
+            return ToPoint(valueMain, valueCross);
+        }
+
+        private double GetRowItemStartLocationMain(RowPresenter row, RowItem rowItem)
+        {
+            var block = BlockViews[row];
+            var startGridTrack = GridTracksMain.GetGridSpan(rowItem.GridRange).StartTrack;
+            return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetBlockStartLocationMain(block);
         }
 
         protected override Size GetRowItemSize(RowPresenter row, RowItem rowItem)
