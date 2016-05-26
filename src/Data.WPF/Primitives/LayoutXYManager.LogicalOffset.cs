@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -49,6 +50,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private LogicalOffset GetLogicalOffset(double offset)
         {
+            const double Epsilon = 1e-8;
+
             if (offset < 0)
                 offset = 0;
 
@@ -59,12 +62,12 @@ namespace DevZest.Data.Windows.Primitives
             {
                 int mid = (min + max) / 2;
                 var offsetSpan = GetGridOffset(mid).Span;
-                if (offset < offsetSpan.StartOffset)
+                if (offset < offsetSpan.StartOffset - Epsilon)
                     max = mid - 1;
                 else if (offset >= offsetSpan.EndOffset)
                     min = mid + 1;
                 else
-                    return new LogicalOffset(mid, (offset - offsetSpan.StartOffset) / offsetSpan.Length);
+                    return new LogicalOffset(mid, Math.Max(0, offset - offsetSpan.StartOffset) / offsetSpan.Length);
             }
 
             return new LogicalOffset(MaxGridOffsetMain);

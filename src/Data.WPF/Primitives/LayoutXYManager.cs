@@ -316,15 +316,6 @@ namespace DevZest.Data.Windows.Primitives
         private double FrozenTailLengthCross
         {
             get { return GetTailLengthCross(FrozenTailCross); }
-            //{
-            //    if (FrozenTailCross == 0)
-            //        return 0;
-
-            //    var totalTracks = GridTracksCross.Count;
-            //    var endOffset = GridTracksCross[totalTracks - 1].EndOffset;
-            //    var startOffset = GridTracksCross[totalTracks - FrozenTailCross].StartOffset;
-            //    return endOffset - startOffset;
-            //}
         }
 
         private double GetTailLengthCross(int tracksCount)
