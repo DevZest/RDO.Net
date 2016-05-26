@@ -247,7 +247,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var relativeSpan = GetRelativeSpan(blockOrdinal);
             var startOffset = Owner[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
-            return new Span(startOffset + relativeSpan.StartOffset, startOffset + relativeSpan.EndOffset);
+            return new Span(startOffset + relativeSpan.Start, startOffset + relativeSpan.End);
         }
 
         private double GetBlocksLength(int count)

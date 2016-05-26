@@ -2,18 +2,18 @@
 {
     internal struct Span
     {
-        public readonly double StartOffset;
-        public readonly double EndOffset;
+        public readonly double Start;
+        public readonly double End;
 
-        public Span(double startOffset, double endOffset)
+        public Span(double start, double end)
         {
-            StartOffset = startOffset;
-            EndOffset = endOffset;
+            Start = start;
+            End = end;
         }
 
         public double Length
         {
-            get { return EndOffset - StartOffset; }
+            get { return End - Start; }
         }
     }
 }
