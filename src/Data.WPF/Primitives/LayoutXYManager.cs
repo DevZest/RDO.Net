@@ -581,16 +581,6 @@ namespace DevZest.Data.Windows.Primitives
             RefreshScollOffset(valueMain, valueCross);
         }
 
-        private bool IsFrozenHeadMain(TemplateItem templateItem)
-        {
-            return IsFrozenHeadMain(templateItem.GridRange);
-        }
-
-        private bool IsFrozenTailMain(TemplateItem templateItem)
-        {
-            return IsFrozenTailMain(templateItem.GridRange);
-        }
-
         private bool IsFrozenHeadMain(GridRange gridRange)
         {
             return GridTracksMain.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
