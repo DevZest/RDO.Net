@@ -1,4 +1,8 @@
-﻿namespace DevZest.Data.Windows.Primitives
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Controls;
+
+namespace DevZest.Data.Windows.Primitives
 {
     internal sealed class LayoutYManager : LayoutXYManager
     {
@@ -47,6 +51,13 @@
         {
             get { return ScrollOffsetMain; }
             set { ScrollOffsetMain = value; }
+        }
+
+        protected override IEnumerable<GridLineFigure> GetGridLineFigures(GridLine gridLine)
+        {
+            return gridLine.Orientation == Orientation.Horizontal
+                ? GetGridLineFiguresCross(gridLine.StartGridPoint.OffsetY, gridLine.Position, gridLine.StartGridPoint.OffsetX, gridLine.EndGridPoint.OffsetX)
+                : GetGridLineFiguresMain(gridLine.StartGridPoint.OffsetX, gridLine.Position, gridLine.StartGridPoint.OffsetY, gridLine.EndGridPoint.OffsetY);
         }
     }
 }

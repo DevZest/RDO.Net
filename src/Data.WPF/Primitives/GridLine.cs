@@ -20,5 +20,10 @@ namespace DevZest.Data.Windows.Primitives
         public Pen Pen { get; private set; }
 
         public GridLinePosition Position { get; private set; }
+
+        public Orientation Orientation
+        {
+            get { return StartGridPoint.OffsetY == EndGridPoint.OffsetY ? Orientation.Horizontal : Orientation.Vertical; }
+        }
     }
 }
