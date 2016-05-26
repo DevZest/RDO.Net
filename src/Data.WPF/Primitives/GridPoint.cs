@@ -7,24 +7,24 @@ namespace DevZest.Data.Windows.Primitives
 {
     public struct GridPoint
     {
-        public readonly int OffsetX;
-        public readonly int OffsetY;
+        public readonly int X;
+        public readonly int Y;
 
-        public GridPoint(int offsetX, int offsetY)
+        public GridPoint(int x, int y)
         {
-            if (offsetX < 0)
-                throw new ArgumentOutOfRangeException(nameof(offsetX));
-            if (offsetY < 0)
-                throw new ArgumentOutOfRangeException(nameof(offsetY));
+            if (x < 0)
+                throw new ArgumentOutOfRangeException(nameof(x));
+            if (y < 0)
+                throw new ArgumentOutOfRangeException(nameof(y));
 
-            OffsetX = offsetX;
-            OffsetY = offsetY;
+            X = x;
+            Y = y;
         }
 
         internal Point ToPoint(Template template)
         {
-            var offsetX = GetOffset(template.GridColumns, OffsetX);
-            var offsetY = GetOffset(template.GridRows, OffsetY);
+            var offsetX = GetOffset(template.GridColumns, X);
+            var offsetY = GetOffset(template.GridRows, Y);
             return new Point(offsetX, offsetY);
         }
 

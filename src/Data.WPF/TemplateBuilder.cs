@@ -233,7 +233,7 @@ namespace DevZest.Data.Windows
             else
                 gridTracks = Template.GridRows;
 
-            if (startGridPoint.OffsetX > Template.GridColumns.Count || startGridPoint.OffsetY > Template.GridRows.Count)
+            if (startGridPoint.X > Template.GridColumns.Count || startGridPoint.Y > Template.GridRows.Count)
                 throw new ArgumentOutOfRangeException(nameof(startGridPoint));
 
             if (length <= 0)
@@ -242,8 +242,8 @@ namespace DevZest.Data.Windows
             if (pen == null)
                 throw new ArgumentNullException(nameof(pen));
 
-            int endGridOffsetX = startGridPoint.OffsetX;
-            int endGridOffsetY = startGridPoint.OffsetY;
+            int endGridOffsetX = startGridPoint.X;
+            int endGridOffsetY = startGridPoint.Y;
             if (orientation == Orientation.Horizontal)
             {
                 endGridOffsetX += length;

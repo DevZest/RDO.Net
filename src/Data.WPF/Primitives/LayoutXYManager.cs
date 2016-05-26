@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -828,6 +829,12 @@ namespace DevZest.Data.Windows.Primitives
         private GridOffset GetStartGridOffset(GridRange gridRange)
         {
             var gridTrack = GridTracksMain.GetGridSpan(gridRange).StartTrack;
+            return GetStartGridOffset(gridTrack);
+        }
+
+        private GridOffset GetStartGridOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
             if (!gridTrack.IsRepeat)
                 return new GridOffset(gridTrack);
 
@@ -840,6 +847,12 @@ namespace DevZest.Data.Windows.Primitives
         private GridOffset GetEndGridOffset(GridRange gridRange)
         {
             var gridTrack = GridTracksMain.GetGridSpan(gridRange).EndTrack;
+            return GetEndGridOffset(gridTrack);
+        }
+
+        private GridOffset GetEndGridOffset(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
             if (!gridTrack.IsRepeat)
                 return new GridOffset(gridTrack);
 
@@ -1073,15 +1086,53 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract IEnumerable<GridLineFigure> GetGridLineFigures(GridLine gridLine);
-
-        protected IEnumerable<GridLineFigure> GetGridLineFiguresMain(int gridOffsetCross, GridLinePosition position, int startGridOffsetMain, int endGridOffsetMain)
+        private IEnumerable<GridLineFigure> GetGridLineFigures(GridLine gridLine)
         {
+            return gridLine.Orientation == Orientation.Horizontal
+                ? GetGridLineFiguresX(gridLine.StartGridPoint.X, gridLine.EndGridPoint.X, gridLine.Position, gridLine.StartGridPoint.Y)
+                : GetGridLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Position, gridLine.StartGridPoint.X);
+        }
+
+        protected abstract IEnumerable<GridLineFigure> GetGridLineFiguresX(int startGridOffsetX, int endGridOffsetX, GridLinePosition position, int gridOffsetY);
+
+        protected abstract IEnumerable<GridLineFigure> GetGridLineFiguresY(int startGridOffsetY, int endGridOffsetY, GridLinePosition position, int gridOffsetX);
+
+        private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridOffset, GridLinePosition position)
+        {
+            if ((position & GridLinePosition.PreviousTrack) != GridLinePosition.PreviousTrack)
+                return null;
+            return gridOffset == 0 ? gridTracks[gridOffset - 1] : null;
+        }
+
+        private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridOffset, GridLinePosition position)
+        {
+            if ((position & GridLinePosition.NextTrack) != GridLinePosition.NextTrack)
+                return null;
+            return gridOffset == gridTracks.Count ? gridTracks[gridOffset] : null;
+        }
+
+        protected IEnumerable<GridLineFigure> GetGridLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
+        {
+            var startLocationMain = GetStartLocationMain(GetStartGridOffset(GridTracksMain[startGridOffsetMain]));
+            var endLocationMain = GetEndLocationMain(GetEndGridOffset(GridTracksMain[endGridOffsetMain - 1]));
+            if (endLocationMain <= startLocationMain)
+                yield break;
+
+            var prevGridTrack = GetPrevGridTrack(GridTracksCross, gridOffsetCross, position);
+            var nextGridTrack = GetNextGridTrack(GridTracksCross, gridOffsetCross, position);
+
             throw new NotImplementedException();
         }
 
-        protected IEnumerable<GridLineFigure> GetGridLineFiguresCross(int gridOffsetMain, GridLinePosition position, int startGridOffsetMain, int endGridOffsetMain)
+        protected IEnumerable<GridLineFigure> GetGridLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
         {
+            var startLocationCross = GetStartLocationCross(GridTracksCross[startGridOffsetCross], 0);
+            var endLocationCross = GetEndLocationCross(GridTracksCross[endGridOffsetCross - 1], BlockDimensions - 1);
+            if (endLocationCross <= startLocationCross)
+                yield break;
+
+            var prevGridTrack = GetPrevGridTrack(GridTracksMain, gridOffsetMain, position);
+            var nextGridTrack = GetNextGridTrack(GridTracksMain, gridOffsetMain, position);
             throw new NotImplementedException();
         }
     }

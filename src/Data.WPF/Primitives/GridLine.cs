@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public Orientation Orientation
         {
-            get { return StartGridPoint.OffsetY == EndGridPoint.OffsetY ? Orientation.Horizontal : Orientation.Vertical; }
+            get { return StartGridPoint.Y == EndGridPoint.Y ? Orientation.Horizontal : Orientation.Vertical; }
         }
     }
 }

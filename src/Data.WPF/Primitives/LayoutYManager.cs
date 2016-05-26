@@ -53,11 +53,14 @@ namespace DevZest.Data.Windows.Primitives
             set { ScrollOffsetMain = value; }
         }
 
-        protected override IEnumerable<GridLineFigure> GetGridLineFigures(GridLine gridLine)
+        protected override IEnumerable<GridLineFigure> GetGridLineFiguresX(int startGridOffsetX, int endGridOffsetX, GridLinePosition position, int gridOffsetY)
         {
-            return gridLine.Orientation == Orientation.Horizontal
-                ? GetGridLineFiguresCross(gridLine.StartGridPoint.OffsetY, gridLine.Position, gridLine.StartGridPoint.OffsetX, gridLine.EndGridPoint.OffsetX)
-                : GetGridLineFiguresMain(gridLine.StartGridPoint.OffsetX, gridLine.Position, gridLine.StartGridPoint.OffsetY, gridLine.EndGridPoint.OffsetY);
+            return GetGridLineFiguresCross(startGridOffsetX, endGridOffsetX, position, gridOffsetY);
+        }
+
+        protected override IEnumerable<GridLineFigure> GetGridLineFiguresY(int startGridOffsetY, int endGridOffsetY, GridLinePosition position, int gridOffsetX)
+        {
+            return GetGridLineFiguresMain(startGridOffsetY, endGridOffsetY, position, gridOffsetX);
         }
     }
 }
