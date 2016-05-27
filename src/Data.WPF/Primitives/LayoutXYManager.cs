@@ -344,7 +344,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return MaxFrozenTailMain == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffsetMain - MaxFrozenTailMain).Span.Start; }
         }
 
-        private double Gap
+        private double GapToFill
         {
             get
             {
@@ -360,7 +360,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void FillGap()
         {
-            var gap = Gap;
+            var gap = GapToFill;
             gap -= RealizeForward(gap);
             if (gap > 0)
                 MeasureBackward(gap);
@@ -588,14 +588,18 @@ namespace DevZest.Data.Windows.Primitives
             RefreshScollOffset(valueMain, valueCross);
         }
 
-        private bool IsFrozenHeadMain(GridRange gridRange)
+        private bool IsFrozenHeadMain(GridSpan gridSpan)
         {
-            return GridTracksMain.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
+            var startTrack = gridSpan.StartTrack;
+            Debug.Assert(startTrack.Owner == GridTracksMain);
+            return startTrack.IsFrozenHead;
         }
 
-        private bool IsFrozenTailMain(GridRange gridRange)
+        private bool IsFrozenTailMain(GridSpan gridSpan)
         {
-            return GridTracksMain.GetGridSpan(gridRange).EndTrack.IsFrozenTail;
+            var endTrack = gridSpan.EndTrack;
+            Debug.Assert(endTrack.Owner == GridTracksMain);
+            return endTrack.IsFrozenTail;
         }
 
         private bool ShouldStretch(ScalarItem scalarItem)
@@ -718,8 +722,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetClipMain(double startLocation, double endLocation, GridRange gridRange)
         {
-            double? minStart = FrozenHeadMain == 0 || IsFrozenHeadMain(gridRange) ? new double?() : FrozenHeadLengthMain;
-            double? maxEnd = FrozenTailMain == 0 || IsFrozenTailMain(gridRange) ? new double?() : ViewportMain - FrozenTailLengthMain;
+            var gridSpan = GridTracksMain.GetGridSpan(gridRange);
+            return GetClipMain(startLocation, endLocation, gridSpan);
+        }
+
+        private Clip GetClipMain(double startLocation, double endLocation, GridSpan gridSpan)
+        {
+            double? minStart = FrozenHeadMain == 0 || IsFrozenHeadMain(gridSpan) ? new double?() : FrozenHeadLengthMain;
+            double? maxEnd = FrozenTailMain == 0 || IsFrozenTailMain(gridSpan) ? new double?() : ViewportMain - FrozenTailLengthMain;
             return new Clip(startLocation, endLocation, minStart, maxEnd);
         }
 
@@ -1113,15 +1123,52 @@ namespace DevZest.Data.Windows.Primitives
 
         protected IEnumerable<GridLineFigure> GetGridLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
         {
-            var startLocationMain = GetStartLocationMain(GetStartGridOffset(GridTracksMain[startGridOffsetMain]));
-            var endLocationMain = GetEndLocationMain(GetEndGridOffset(GridTracksMain[endGridOffsetMain - 1]));
+            var startTrackMain = GridTracksMain[startGridOffsetMain];
+            var endTrackMain = GridTracksMain[endGridOffsetMain - 1];
+            var startLocationMain = GetStartLocationMain(GetStartGridOffset(startTrackMain));
+            var endLocationMain = GetEndLocationMain(GetEndGridOffset(endTrackMain));
             if (endLocationMain <= startLocationMain)
                 yield break;
+
+            var clip = GetClipMain(startLocationMain, endLocationMain, new GridSpan(startTrackMain, endTrackMain));
+            if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
+                yield break;
+            var stretchedGap = GetStretchedGap(startTrackMain, endTrackMain);
 
             var prevGridTrack = GetPrevGridTrack(GridTracksCross, gridOffsetCross, position);
             var nextGridTrack = GetNextGridTrack(GridTracksCross, gridOffsetCross, position);
 
             throw new NotImplementedException();
+        }
+
+        private Span GetStretchedGap(GridTrack startTrackMain, GridTrack endTrackMain)
+        {
+            const double Epsilon = 1e-8;
+
+            Debug.Assert(startTrackMain.Owner == GridTracksMain);
+            Debug.Assert(endTrackMain.Owner == GridTracksMain);
+            Debug.Assert(startTrackMain.Ordinal <= endTrackMain.Ordinal);
+
+            var minStretchedGridOrdinal = GridTracksMain.Count - Template.Stretches;
+            if (startTrackMain.Ordinal >= minStretchedGridOrdinal || endTrackMain.Ordinal <= minStretchedGridOrdinal)
+                return new Span();
+
+            double startLocation = GetPrevTrackEndLocationMain(minStretchedGridOrdinal);
+            var endLocation = GetStartLocationMain(new GridOffset(GridTracksMain[minStretchedGridOrdinal]));
+            return startLocation + Epsilon < endLocation ? new Span(startLocation, endLocation) : new Span();
+        }
+
+        private double GetPrevTrackEndLocationMain(int gridTrackOrdinal)
+        {
+            var prevTrack = GridTracksMain[gridTrackOrdinal - 1];
+            if (!prevTrack.IsRepeat)
+                return GetEndLocationMain(new GridOffset(prevTrack));
+
+            if (BlockViews.Last != null)
+                return GetEndLocationMain(new GridOffset(prevTrack, BlockViews.Last));
+
+            prevTrack = MaxFrozenHeadMain == 0 ? null : GridTracksMain[MaxFrozenHeadMain - 1];
+            return prevTrack == null ? -ScrollOffsetMain : GetEndLocationMain(new GridOffset(prevTrack));
         }
 
         protected IEnumerable<GridLineFigure> GetGridLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
