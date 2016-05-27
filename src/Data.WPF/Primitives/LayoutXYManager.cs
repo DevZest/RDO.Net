@@ -1090,22 +1090,22 @@ namespace DevZest.Data.Windows.Primitives
             {
                 foreach (var gridLine in Template.GridLines)
                 {
-                    foreach (var gridLineFigure in GetGridLineFigures(gridLine))
-                        yield return gridLineFigure;
+                    foreach (var lineFigure in GetLineFigures(gridLine))
+                        yield return new GridLineFigure(gridLine, lineFigure);
                 }
             }
         }
 
-        private IEnumerable<GridLineFigure> GetGridLineFigures(GridLine gridLine)
+        private IEnumerable<LineFigure> GetLineFigures(GridLine gridLine)
         {
             return gridLine.Orientation == Orientation.Horizontal
-                ? GetGridLineFiguresX(gridLine.StartGridPoint.X, gridLine.EndGridPoint.X, gridLine.Position, gridLine.StartGridPoint.Y)
-                : GetGridLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Position, gridLine.StartGridPoint.X);
+                ? GetLineFiguresX(gridLine.StartGridPoint.X, gridLine.EndGridPoint.X, gridLine.Position, gridLine.StartGridPoint.Y)
+                : GetLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Position, gridLine.StartGridPoint.X);
         }
 
-        protected abstract IEnumerable<GridLineFigure> GetGridLineFiguresX(int startGridOffsetX, int endGridOffsetX, GridLinePosition position, int gridOffsetY);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresX(int startGridOffsetX, int endGridOffsetX, GridLinePosition position, int gridOffsetY);
 
-        protected abstract IEnumerable<GridLineFigure> GetGridLineFiguresY(int startGridOffsetY, int endGridOffsetY, GridLinePosition position, int gridOffsetX);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresY(int startGridOffsetY, int endGridOffsetY, GridLinePosition position, int gridOffsetX);
 
         private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridOffset, GridLinePosition position)
         {
@@ -1121,7 +1121,7 @@ namespace DevZest.Data.Windows.Primitives
             return gridOffset == gridTracks.Count ? gridTracks[gridOffset] : null;
         }
 
-        protected IEnumerable<GridLineFigure> GetGridLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
+        protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
         {
             var startTrackMain = GridTracksMain[startGridOffsetMain];
             var endTrackMain = GridTracksMain[endGridOffsetMain - 1];
@@ -1133,6 +1133,9 @@ namespace DevZest.Data.Windows.Primitives
             var clip = GetClipMain(startLocationMain, endLocationMain, new GridSpan(startTrackMain, endTrackMain));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
                 yield break;
+            startLocationMain -= clip.Head;
+            endLocationMain -= clip.Tail;
+
             var stretchedGap = GetStretchedGap(startTrackMain, endTrackMain);
 
             var prevGridTrack = GetPrevGridTrack(GridTracksCross, gridOffsetCross, position);
@@ -1171,7 +1174,7 @@ namespace DevZest.Data.Windows.Primitives
             return prevTrack == null ? -ScrollOffsetMain : GetEndLocationMain(new GridOffset(prevTrack));
         }
 
-        protected IEnumerable<GridLineFigure> GetGridLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
+        protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
         {
             var startLocationCross = GetStartLocationCross(GridTracksCross[startGridOffsetCross], 0);
             var endLocationCross = GetEndLocationCross(GridTracksCross[endGridOffsetCross - 1], BlockDimensions - 1);

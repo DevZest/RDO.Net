@@ -9,6 +9,11 @@ namespace DevZest.Data.Windows.Primitives
         public readonly Point StartPoint;
         public readonly Point EndPoint;
 
+        internal GridLineFigure(GridLine gridLine, LineFigure lineFigure)
+            : this(gridLine, lineFigure.StartPoint, lineFigure.EndPoint)
+        {
+        }
+
         internal GridLineFigure(GridLine gridLine, Point startPoint, Point endPoint)
         {
             Debug.Assert(gridLine != null);

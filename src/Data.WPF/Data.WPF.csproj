@@ -74,6 +74,7 @@
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\GridLineFigure.cs" />
+    <Compile Include="Primitives\LineFigure.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\Span.cs" />
