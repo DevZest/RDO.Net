@@ -718,9 +718,21 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetClipMain(double startLocation, double endLocation, GridSpan gridSpan)
         {
-            double? minStart = FrozenHeadMain == 0 || IsFrozenHeadMain(gridSpan) ? new double?() : FrozenHeadLengthMain;
-            double? maxEnd = FrozenTailMain == 0 || IsFrozenTailMain(gridSpan) ? new double?() : ViewportMain - FrozenTailLengthMain;
+            double? minStart = GetMinClipMain(gridSpan.StartTrack);
+            double? maxEnd = GetMaxClipMain(gridSpan.EndTrack);
             return new Clip(startLocation, endLocation, minStart, maxEnd);
+        }
+
+        private double? GetMinClipMain(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
+            return FrozenHeadMain == 0 || gridTrack.IsFrozenHead ? new double?() : FrozenHeadLengthMain;
+        }
+
+        private double? GetMaxClipMain(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
+            return FrozenTailMain == 0 || gridTrack.IsFrozenTail ? new double?() : ViewportMain - FrozenTailLengthMain;
         }
 
         private Clip GetClipCross(double startLocation, double endLocation, TemplateItem templateItem, Clip containerClip)
@@ -1256,9 +1268,8 @@ namespace DevZest.Data.Windows.Primitives
             if (spanCross.Length <= 0)
                 yield break;
 
-            throw new NotImplementedException();
-            //foreach (var locationMain in GetLineFigureLocationsMain(gridOffsetMain, position))
-            //    yield return new LineFigure(ToPoint(locationMain, spanCross.Start), ToPoint(locationMain, spanCross.End));
+            foreach (var locationMain in GetLineFigureLocationsMain(gridOffsetMain, position))
+                yield return new LineFigure(ToPoint(locationMain, spanCross.Start), ToPoint(locationMain, spanCross.End));
         }
 
         private Span GetLineFigureSpanCross(int startGridOffsetCross, int endGridOffsetCross)
@@ -1279,6 +1290,67 @@ namespace DevZest.Data.Windows.Primitives
                 return new Span();
 
             return new Span(startLocationCross, endLocationCross);
+        }
+
+        private IEnumerable<double> GetLineFigureLocationsMain(int gridOffsetMain, GridLinePosition position)
+        {
+            var prevGridTrack = GetPrevGridTrack(GridTracksMain, gridOffsetMain, position);
+            var nextGridTrack = GetNextGridTrack(GridTracksMain, gridOffsetMain, position);
+
+            var blockStart = GridTracksMain.BlockStart.Ordinal;
+            var blockEnd = GridTracksMain.BlockEnd.Ordinal + 1;
+            bool isHead = gridOffsetMain <= blockStart;
+            bool isRepeat = gridOffsetMain >= blockStart && gridOffsetMain <= blockEnd;
+            bool isTail = gridOffsetMain >= blockEnd;
+
+            GridTrack gridTrack;
+
+            if (isHead)
+            {
+                var value = GetLocationMain(prevGridTrack, nextGridTrack, null, true, out gridTrack);
+                if (!Clip.IsHeadClipped(value, GetMinClipMain(gridTrack)))
+                    yield return value;
+            }
+
+            if (isRepeat)
+            {
+                var first = 0;
+                if (isHead)
+                    first += 1;
+                var last = BlockViews.Count - 1;
+                if (isTail)
+                    last -= 1;
+                for (int i = first; i <= last; i++)
+                {
+                    var block = BlockViews[i];
+                    var value = GetLocationMain(prevGridTrack, nextGridTrack, block, true, out gridTrack);
+                    if (!Clip.IsClipped(value, GetMinClipMain(gridTrack), GetMaxClipMain(gridTrack)))
+                        yield return value;
+                }
+            }
+
+            if (isTail)
+            {
+                var value = GetLocationMain(prevGridTrack, nextGridTrack, null, false, out gridTrack);
+                if (!Clip.IsTailClipped(value, GetMaxClipMain(gridTrack)))
+                    yield return value;
+            }
+        }
+
+        private double GetLocationMain(GridTrack prevGridTrack, GridTrack nextGridTrack, BlockView block, bool preferPrevGridTrack, out GridTrack gridTrack)
+        {
+            if (nextGridTrack == null || (preferPrevGridTrack && prevGridTrack != null))
+            {
+                gridTrack = prevGridTrack;
+                var gridOffset = block == null ? new GridOffset(gridTrack) : new GridOffset(gridTrack, block);
+                return GetEndLocationMain(gridOffset);
+            }
+            else
+            {
+                gridTrack = nextGridTrack;
+                var gridOffset = block == null ? new GridOffset(gridTrack) : new GridOffset(gridTrack, block);
+                return GetStartLocationMain(gridOffset);
+            }
         }
     }
 }
