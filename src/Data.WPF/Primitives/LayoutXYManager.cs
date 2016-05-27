@@ -731,6 +731,11 @@ namespace DevZest.Data.Windows.Primitives
         private Clip GetClipCross(double startLocation, double endLocation, GridRange gridRange, Clip containerClip, int? blockDimension = null)
         {
             var gridSpan = GridTracksCross.GetGridSpan(gridRange);
+            return GetClipCross(startLocation, endLocation, gridSpan, containerClip, blockDimension);
+        }
+
+        private Clip GetClipCross(double startLocation, double endLocation, GridSpan gridSpan, Clip containerClip = new Clip(), int? blockDimension = null)
+        {
             double? minStart = GetMinClipCross(gridSpan.StartTrack, containerClip);
             double? maxEnd = GetMaxClipCross(gridSpan.EndTrack, blockDimension, containerClip);
             return new Clip(startLocation, endLocation, minStart, maxEnd);
@@ -1247,14 +1252,33 @@ namespace DevZest.Data.Windows.Primitives
 
         protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
         {
-            var startLocationCross = GetStartLocationCross(GridTracksCross[startGridOffsetCross], 0);
-            var endLocationCross = GetEndLocationCross(GridTracksCross[endGridOffsetCross - 1], BlockDimensions - 1);
-            if (endLocationCross <= startLocationCross)
+            var spanCross = GetLineFigureSpanCross(startGridOffsetCross, endGridOffsetCross);
+            if (spanCross.Length <= 0)
                 yield break;
 
-            var prevGridTrack = GetPrevGridTrack(GridTracksMain, gridOffsetMain, position);
-            var nextGridTrack = GetNextGridTrack(GridTracksMain, gridOffsetMain, position);
             throw new NotImplementedException();
+            //foreach (var locationMain in GetLineFigureLocationsMain(gridOffsetMain, position))
+            //    yield return new LineFigure(ToPoint(locationMain, spanCross.Start), ToPoint(locationMain, spanCross.End));
+        }
+
+        private Span GetLineFigureSpanCross(int startGridOffsetCross, int endGridOffsetCross)
+        {
+            var startTrackCross = GridTracksCross[startGridOffsetCross];
+            var endTrackCross = GridTracksCross[endGridOffsetCross - 1];
+            var startLocationCross = GetStartLocationCross(startTrackCross, 0);
+            var endLocationCross = GetEndLocationCross(endTrackCross, endTrackCross.IsHead ? 0 : BlockDimensions - 1);
+            if (endLocationCross <= startLocationCross)
+                return new Span();
+
+            var clip = GetClipCross(startLocationCross, endLocationCross, new GridSpan(startTrackCross, endTrackCross));
+            if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
+                return new Span();
+            startLocationCross -= clip.Head;
+            endLocationCross -= clip.Tail;
+            if (endLocationCross <= startLocationCross)
+                return new Span();
+
+            return new Span(startLocationCross, endLocationCross);
         }
     }
 }
