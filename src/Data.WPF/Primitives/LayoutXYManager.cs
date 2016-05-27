@@ -602,11 +602,6 @@ namespace DevZest.Data.Windows.Primitives
             return endTrack.IsFrozenTail;
         }
 
-        private bool ShouldStretch(ScalarItem scalarItem)
-        {
-            return GridTracksMain.GetGridSpan(scalarItem.GridRange).StartTrack.Ordinal >= GridTracksMain.Count - Template.Stretches;
-        }
-
         private bool IsFrozenHeadCross(TemplateItem templateItem)
         {
             return IsFrozenHeadCross(templateItem.GridRange);
@@ -645,6 +640,11 @@ namespace DevZest.Data.Windows.Primitives
             return GetStartLocationMain(startGridOffset);
         }
 
+        private int MinStretchGridOrdinal
+        {
+            get { return GridTracksMain.Count - Template.Stretches; }
+        }
+
         private double GetStartLocationMain(GridOffset gridOffset)
         {
             var result = gridOffset.IsEof ? MaxOffsetMain : gridOffset.Span.Start;
@@ -658,7 +658,7 @@ namespace DevZest.Data.Windows.Primitives
             if (gridTrack != null && gridTrack.IsFrozenTail)
             {
                 double maxValueMain = ViewportMain - (MaxOffsetMain - gridOffset.Span.Start);
-                if (gridTrack.Ordinal >= GridTracksMain.Count - Template.Stretches)
+                if (gridTrack.Ordinal >= MinStretchGridOrdinal)
                     result = maxValueMain;
                 else if (result > maxValueMain)
                     result = maxValueMain;
@@ -1170,25 +1170,24 @@ namespace DevZest.Data.Windows.Primitives
             if (endLocationMain <= startLocationMain)
                 return null;
 
-            var stretchedGap = GetStretchedGap(startTrackMain, endTrackMain);
-            return new Span(startLocationMain, endLocationMain).Split(stretchedGap);
+            return new Span(startLocationMain, endLocationMain).Split(StretchGap);
         }
 
-        private Span GetStretchedGap(GridTrack startTrackMain, GridTrack endTrackMain)
+        private Span? StretchGap
         {
-            const double Epsilon = 1e-8;
+            get
+            {
+                const double Epsilon = 1e-8;
 
-            Debug.Assert(startTrackMain.Owner == GridTracksMain);
-            Debug.Assert(endTrackMain.Owner == GridTracksMain);
-            Debug.Assert(startTrackMain.Ordinal <= endTrackMain.Ordinal);
+                if (Template.Stretches == 0)
+                    return null;
 
-            var minStretchedGridOrdinal = GridTracksMain.Count - Template.Stretches;
-            if (startTrackMain.Ordinal >= minStretchedGridOrdinal || endTrackMain.Ordinal <= minStretchedGridOrdinal)
-                return new Span();
+                var minStretchGridOrdinal = MinStretchGridOrdinal;
 
-            double startLocation = GetPrevTrackEndLocationMain(minStretchedGridOrdinal);
-            var endLocation = GetStartLocationMain(new GridOffset(GridTracksMain[minStretchedGridOrdinal]));
-            return startLocation + Epsilon < endLocation ? new Span(startLocation, endLocation) : new Span();
+                var startLocation = GetPrevTrackEndLocationMain(minStretchGridOrdinal);
+                var endLocation = GetStartLocationMain(new GridOffset(GridTracksMain[minStretchGridOrdinal]));
+                return startLocation + Epsilon < endLocation ? new Span(startLocation, endLocation) : default(Span?);
+            }
         }
 
         private double GetPrevTrackEndLocationMain(int gridTrackOrdinal)
@@ -1301,7 +1300,8 @@ namespace DevZest.Data.Windows.Primitives
             var blockEnd = GridTracksMain.BlockEnd.Ordinal + 1;
             bool isHead = gridOffsetMain <= blockStart;
             bool isRepeat = gridOffsetMain >= blockStart && gridOffsetMain <= blockEnd;
-            bool isTail = gridOffsetMain >= blockEnd;
+            bool isTail = gridOffsetMain >= blockEnd && !(isHead && BlockViews.Count == 0);
+            bool isStretch = gridOffsetMain == MinStretchGridOrdinal && StretchGap.HasValue;
 
             GridTrack gridTrack;
 
@@ -1318,7 +1318,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (isHead)
                     first += 1;
                 var last = BlockViews.Count - 1;
-                if (isTail)
+                if (isTail && !isStretch)
                     last -= 1;
                 for (int i = first; i <= last; i++)
                 {
