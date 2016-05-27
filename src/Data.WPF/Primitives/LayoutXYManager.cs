@@ -1125,18 +1125,18 @@ namespace DevZest.Data.Windows.Primitives
 
         protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
         {
-            var mainSpans = GetLineFiguresMainSpan(startGridOffsetMain, endGridOffsetMain);
-            if (mainSpans == null)
+            var spansMain = GetLineFigureSpansMain(startGridOffsetMain, endGridOffsetMain);
+            if (spansMain == null)
                 yield break;
 
             foreach (var locationCross in GetLineFigureLocationsCross(gridOffsetCross, position))
             {
-                foreach (var spanMain in mainSpans)
+                foreach (var spanMain in spansMain)
                     yield return new LineFigure(ToPoint(spanMain.Start, locationCross), ToPoint(spanMain.End, locationCross));
             }
         }
 
-        private Span[] GetLineFiguresMainSpan(int startGridOffsetMain, int endGridOffsetMain)
+        private Span[] GetLineFigureSpansMain(int startGridOffsetMain, int endGridOffsetMain)
         {
             var startTrackMain = GridTracksMain[startGridOffsetMain];
             var endTrackMain = GridTracksMain[endGridOffsetMain - 1];
