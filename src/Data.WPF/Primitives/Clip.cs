@@ -13,6 +13,21 @@ namespace DevZest.Data.Windows.Primitives
             Tail = GetClipTail(start, end, maxEnd);
         }
 
+        internal static bool IsClipped(double value, double? minStart, double? maxEnd)
+        {
+            return IsHeadClipped(value, minStart) || IsTailClipped(value, maxEnd);
+        }
+
+        internal static bool IsHeadClipped(double value, double? minStart)
+        {
+            return GetClipHead(value, value, minStart) > 0;
+        }
+
+        internal static bool IsTailClipped(double value, double? maxEnd)
+        {
+            return GetClipTail(value, value, maxEnd) > 0;
+        }
+
         private static double GetClipHead(double start, double end, double? minStart)
         {
             if (!minStart.HasValue)

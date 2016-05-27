@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Windows.Primitives
+﻿using System.Diagnostics;
+
+namespace DevZest.Data.Windows.Primitives
 {
     internal struct Span
     {
@@ -7,6 +9,7 @@
 
         public Span(double start, double end)
         {
+            Debug.Assert(end >= start);
             Start = start;
             End = end;
         }
@@ -14,6 +17,25 @@
         public double Length
         {
             get { return End - Start; }
+        }
+
+        public Span[] Split(Span? gap)
+        {
+            if (!gap.HasValue)
+                return new Span[] { this };
+
+            var gapValue = gap.GetValueOrDefault();
+            var start1 = Start;
+            var end1 = gapValue.Start;
+            var start2 = gapValue.End;
+            var end2 = End;
+
+            if (end1 <= start1 && end2 <= start2)
+                return null;
+            else if (end1 <= start1)
+                return new Span[] { new Span(start2, end2) };
+            else
+                return new Span[] { new Span(start1, end1), new Span(start2, end2) };
         }
     }
 }

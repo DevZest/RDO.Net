@@ -617,16 +617,6 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksCross.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
         }
 
-        private bool IsFrozenTailCross(TemplateItem templateItem)
-        {
-            return GridTracksCross.GetGridSpan(templateItem.GridRange).EndTrack.IsFrozenTail;
-        }
-
-        private bool IsFrozenTailCross(GridRange gridRange)
-        {
-            return GridTracksCross.GetGridSpan(gridRange).EndTrack.IsFrozenTail;
-        }
-
         protected sealed override Size GetScalarItemSize(ScalarItem scalarItem)
         {
             var valueMain = GetScalarItemLengthMain(scalarItem);
@@ -740,15 +730,27 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetClipCross(double startLocation, double endLocation, GridRange gridRange, Clip containerClip, int? blockDimension = null)
         {
-            double? minStart = FrozenHeadCross == 0 || containerClip.Head > 0 || IsFrozenHeadCross(gridRange) ? new double?() : FrozenHeadLengthCross;
-            double? maxEnd = FrozenTailCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridRange, blockDimension)
-                ? new double?() : ViewportCross - FrozenTailLengthCross;
+            var gridSpan = GridTracksCross.GetGridSpan(gridRange);
+            double? minStart = GetMinClipCross(gridSpan.StartTrack, containerClip);
+            double? maxEnd = GetMaxClipCross(gridSpan.EndTrack, blockDimension, containerClip);
             return new Clip(startLocation, endLocation, minStart, maxEnd);
         }
 
-        private bool IsFrozenTailCross(GridRange gridRange, int? blockDimension)
+        private double? GetMinClipCross(GridTrack gridTrack, Clip containerClip = new Clip())
         {
-            return !blockDimension.HasValue ? IsFrozenTailCross(gridRange) : blockDimension.Value == BlockDimensions - 1 && IsFrozenTailCross(gridRange);
+            return FrozenHeadCross == 0 || containerClip.Head > 0 || gridTrack.IsFrozenHead ? new double?() : FrozenHeadLengthCross;
+        }
+
+        private double? GetMaxClipCross(GridTrack gridTrack, int? blockDimension = null, Clip containerClip = new Clip())
+        {
+            return FrozenTailCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridTrack, blockDimension)
+                ? new double?() : ViewportCross - FrozenTailLengthCross;
+        }
+
+        private bool IsFrozenTailCross(GridTrack gridTrack, int? blockDimension)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksCross);
+            return !blockDimension.HasValue ? gridTrack.IsFrozenTail : blockDimension.Value == BlockDimensions - 1 && gridTrack.IsFrozenTail;
         }
 
         internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
@@ -1123,25 +1125,36 @@ namespace DevZest.Data.Windows.Primitives
 
         protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)
         {
+            var mainSpans = GetLineFiguresMainSpan(startGridOffsetMain, endGridOffsetMain);
+            if (mainSpans == null)
+                yield break;
+
+            foreach (var locationCross in GetLineFigureLocationsCross(gridOffsetCross, position))
+            {
+                foreach (var spanMain in mainSpans)
+                    yield return new LineFigure(ToPoint(spanMain.Start, locationCross), ToPoint(spanMain.End, locationCross));
+            }
+        }
+
+        private Span[] GetLineFiguresMainSpan(int startGridOffsetMain, int endGridOffsetMain)
+        {
             var startTrackMain = GridTracksMain[startGridOffsetMain];
             var endTrackMain = GridTracksMain[endGridOffsetMain - 1];
             var startLocationMain = GetStartLocationMain(GetStartGridOffset(startTrackMain));
             var endLocationMain = GetEndLocationMain(GetEndGridOffset(endTrackMain));
             if (endLocationMain <= startLocationMain)
-                yield break;
+                return null;
 
             var clip = GetClipMain(startLocationMain, endLocationMain, new GridSpan(startTrackMain, endTrackMain));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
-                yield break;
+                return null;
             startLocationMain -= clip.Head;
             endLocationMain -= clip.Tail;
+            if (endLocationMain <= startLocationMain)
+                return null;
 
             var stretchedGap = GetStretchedGap(startTrackMain, endTrackMain);
-
-            var prevGridTrack = GetPrevGridTrack(GridTracksCross, gridOffsetCross, position);
-            var nextGridTrack = GetNextGridTrack(GridTracksCross, gridOffsetCross, position);
-
-            throw new NotImplementedException();
+            return new Span(startLocationMain, endLocationMain).Split(stretchedGap);
         }
 
         private Span GetStretchedGap(GridTrack startTrackMain, GridTrack endTrackMain)
@@ -1172,6 +1185,64 @@ namespace DevZest.Data.Windows.Primitives
 
             prevTrack = MaxFrozenHeadMain == 0 ? null : GridTracksMain[MaxFrozenHeadMain - 1];
             return prevTrack == null ? -ScrollOffsetMain : GetEndLocationMain(new GridOffset(prevTrack));
+        }
+
+        private IEnumerable<double> GetLineFigureLocationsCross(int gridOffsetCross, GridLinePosition position)
+        {
+            var prevGridTrack = GetPrevGridTrack(GridTracksCross, gridOffsetCross, position);
+            var nextGridTrack = GetNextGridTrack(GridTracksCross, gridOffsetCross, position);
+
+            var blockStart = GridTracksCross.BlockStart.Ordinal;
+            var blockEnd = GridTracksCross.BlockEnd.Ordinal + 1;
+            bool isHead = gridOffsetCross <= blockStart;
+            bool isRepeat = gridOffsetCross >= blockStart && gridOffsetCross <= blockEnd;
+            bool isTail = gridOffsetCross >= blockEnd;
+
+            GridTrack gridTrack;
+
+            if (isHead)
+            {
+                var value = GetLocationCross(prevGridTrack, nextGridTrack, 0, true, out gridTrack);
+                if (!Clip.IsHeadClipped(value, GetMinClipCross(gridTrack)))
+                    yield return value;
+            }
+
+            if (isRepeat)
+            {
+                var first = 0;
+                if (isHead)
+                    first += 1;
+                var last = BlockDimensions - 1;
+                if (isTail)
+                    last -= 1;
+                for (int i = first; i <= last; i++)
+                {
+                    var value = GetLocationCross(prevGridTrack, nextGridTrack, i, true, out gridTrack);
+                    if (!Clip.IsClipped(value, GetMinClipCross(gridTrack), GetMaxClipCross(gridTrack, i)))
+                        yield return value;
+                }
+            }
+
+            if (isTail)
+            {
+                var value = GetLocationCross(prevGridTrack, nextGridTrack, BlockDimensions - 1, false, out gridTrack);
+                if (!Clip.IsTailClipped(value, GetMaxClipCross(gridTrack)))
+                    yield return value;
+            }
+        }
+
+        private double GetLocationCross(GridTrack prevGridTrack, GridTrack nextGridTrack, int blockDimension, bool preferPrevGridTrack, out GridTrack gridTrack)
+        {
+            if (nextGridTrack == null || (preferPrevGridTrack && prevGridTrack != null))
+            {
+                gridTrack = prevGridTrack;
+                return GetEndLocationCross(prevGridTrack, blockDimension);
+            }
+            else
+            {
+                gridTrack = nextGridTrack;
+                return GetStartLocationCross(nextGridTrack, blockDimension);
+            }
         }
 
         protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
