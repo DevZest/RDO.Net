@@ -704,6 +704,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("10", "20", "10")
                     .GridRows("10")
                     .Layout(Orientation.Vertical, 3)
+                    .FrozenLeft(1)
                     .RowItem().At(1, 0)
                     .GridLineY(new GridPoint(1, 0), 1, pen, GridLinePosition.PreviousTrack)
                     .GridLineY(new GridPoint(2, 0), 1, pen);
@@ -716,6 +717,26 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(30, gridLineFigures[1].StartPoint.X);
             Assert.AreEqual(50, gridLineFigures[2].StartPoint.X);
             Assert.AreEqual(70, gridLineFigures[3].StartPoint.X);
+
+            layoutManager.Measure(new Size(70, 100));
+            layoutManager.ScrollOffsetX = 10;
+            layoutManager.Measure(new Size(70, 100));
+            Assert.AreEqual(10, layoutManager.ScrollOffsetX);
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(4, gridLineFigures.Length);
+            Assert.AreEqual(10, gridLineFigures[0].StartPoint.X);
+            Assert.AreEqual(20, gridLineFigures[1].StartPoint.X);
+            Assert.AreEqual(40, gridLineFigures[2].StartPoint.X);
+            Assert.AreEqual(60, gridLineFigures[3].StartPoint.X);
+
+            layoutManager.Measure(new Size(40, 100));
+            layoutManager.ScrollOffsetX = 40;
+            layoutManager.Measure(new Size(40, 100));
+            Assert.AreEqual(40, layoutManager.ScrollOffsetX);
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(2, gridLineFigures.Length);
+            Assert.AreEqual(10, gridLineFigures[0].StartPoint.X);
+            Assert.AreEqual(30, gridLineFigures[1].StartPoint.X);
         }
 
         [TestMethod]
