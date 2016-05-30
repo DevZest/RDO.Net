@@ -97,7 +97,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var rowItem = layoutManager.Template.RowItemGroups[0][0];
             BlockView block;
-                
+
             block = layoutManager.BlockViews[0];
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetBlockRect(block));
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRowRect(block, 0));
@@ -773,6 +773,68 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Point(70, 0), gridLineFigures[0].EndPoint);
             Assert.AreEqual(new Point(10, 10), gridLineFigures[1].StartPoint);
             Assert.AreEqual(new Point(70, 10), gridLineFigures[1].EndPoint);
+        }
+
+        [TestMethod]
+        public void LayoutXYManager_GetLineFiguresCross_Locations()
+        {
+            var dataSet = MockProductCategories(9, false);
+            var pen = new Pen();
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("10", "10", "20", "10", "10")
+                    .Layout(Orientation.Vertical)
+                    .FrozenTop(1)
+                    .FrozenBottom(1)
+                    .Stretch(1)
+                    .RowItem().At(0, 2)
+                    .GridLineX(new GridPoint(0, 1), 1, pen)
+                    .GridLineX(new GridPoint(0, 2), 1, pen, GridLinePosition.PreviousTrack)
+                    .GridLineX(new GridPoint(0, 3), 1, pen)
+                    .GridLineX(new GridPoint(0, 4), 1, pen);
+            });
+
+            layoutManager.Measure(new Size(100, 100));
+            var gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(6, gridLineFigures.Length);
+            Assert.AreEqual(10, gridLineFigures[0].StartPoint.Y);
+            Assert.AreEqual(20, gridLineFigures[1].StartPoint.Y);
+            Assert.AreEqual(40, gridLineFigures[2].StartPoint.Y);
+            Assert.AreEqual(60, gridLineFigures[3].StartPoint.Y);
+            Assert.AreEqual(80, gridLineFigures[4].StartPoint.Y);
+            Assert.AreEqual(90, gridLineFigures[5].StartPoint.Y);
+
+            layoutManager.ScrollOffsetY = 15;
+            layoutManager.Measure(new Size(100, 100));
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(6, gridLineFigures.Length);
+            Assert.AreEqual(10, gridLineFigures[0].StartPoint.Y);
+            Assert.AreEqual(25, gridLineFigures[1].StartPoint.Y);
+            Assert.AreEqual(45, gridLineFigures[2].StartPoint.Y);
+            Assert.AreEqual(65, gridLineFigures[3].StartPoint.Y);
+            Assert.AreEqual(85, gridLineFigures[4].StartPoint.Y);
+            Assert.AreEqual(90, gridLineFigures[5].StartPoint.Y);
+
+            layoutManager.ScrollOffsetY = 0;
+            layoutManager.Measure(new Size(100, 300));  // Stretched
+            Assert.AreEqual(0, layoutManager.ScrollOffsetY);
+            Assert.AreEqual(9, layoutManager.BlockViews.Count);
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(13, gridLineFigures.Length);
+            Assert.AreEqual(10, gridLineFigures[0].StartPoint.Y);
+            Assert.AreEqual(20, gridLineFigures[1].StartPoint.Y);
+            Assert.AreEqual(40, gridLineFigures[2].StartPoint.Y);   // end of block1
+            Assert.AreEqual(60, gridLineFigures[3].StartPoint.Y);   // end of block2
+            Assert.AreEqual(80, gridLineFigures[4].StartPoint.Y);   // end of block3
+            Assert.AreEqual(100, gridLineFigures[5].StartPoint.Y);  // end of block4
+            Assert.AreEqual(120, gridLineFigures[6].StartPoint.Y);  // end of block5
+            Assert.AreEqual(140, gridLineFigures[7].StartPoint.Y);  // end of block6
+            Assert.AreEqual(160, gridLineFigures[8].StartPoint.Y);  // end of block7
+            Assert.AreEqual(180, gridLineFigures[9].StartPoint.Y);  // end of block8
+            Assert.AreEqual(200, gridLineFigures[10].StartPoint.Y); // end of block9
+            Assert.AreEqual(210, gridLineFigures[11].StartPoint.Y);
+            Assert.AreEqual(290, gridLineFigures[12].StartPoint.Y);
         }
     }
 }

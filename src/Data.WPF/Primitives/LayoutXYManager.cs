@@ -282,7 +282,7 @@ namespace DevZest.Data.Windows.Primitives
             InitBlocks();
 
             if (DeltaScrollOffset < 0 || _scrollStartMain.GridOffset >= MaxGridOffsetMain)
-                MeasureBackward(-DeltaScrollOffset);
+                MeasureBackward(-DeltaScrollOffset, true);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
             FillGap();
@@ -363,44 +363,43 @@ namespace DevZest.Data.Windows.Primitives
             var gap = GapToFill;
             gap -= RealizeForward(gap);
             if (gap > 0)
-                MeasureBackward(gap);
+                MeasureBackward(gap, false);
         }
 
-        private void MeasureBackward(double availableLength)
+        private void MeasureBackward(double availableLength, bool flagScrollBack)
         {
             Debug.Assert(availableLength >= 0);
 
             var gridOffset = GetGridOffset(_scrollStartMain.GridOffset);
             if (gridOffset.IsEof)
             {
-                MeasureBackwardEof(availableLength);
+                MeasureBackwardEof(availableLength, flagScrollBack);
                 return;
             }
-                
 
             var gridTrack = gridOffset.GridTrack;
             if (gridTrack.IsTail)
-                MeasureBackwardTail(availableLength);
+                MeasureBackwardTail(availableLength, flagScrollBack);
             else if (gridTrack.IsRepeat)
-                MeasureBackwardRepeat(availableLength);
+                MeasureBackwardRepeat(availableLength, flagScrollBack);
             else
             {
                 Debug.Assert(gridTrack.IsHead);
-                MeasureBackwardHead(availableLength);
+                MeasureBackwardHead(availableLength, flagScrollBack);
             }
         }
 
-        private void MeasureBackwardEof(double availableLength)
+        private void MeasureBackwardEof(double availableLength, bool flagScrollBack)
         {
             if (MaxFrozenTailMain > 0)
-                MeasureBackwardTail(availableLength);
+                MeasureBackwardTail(availableLength, flagScrollBack);
             else if (MaxBlockCount > 0)
-                MeasureBackwardRepeat(availableLength);
+                MeasureBackwardRepeat(availableLength, flagScrollBack);
             else if (MaxFrozenHeadMain > 0)
-                MeasureBackwardHead(availableLength);
+                MeasureBackwardHead(availableLength, flagScrollBack);
         }
 
-        private void MeasureBackwardTail(double availableLength)
+        private void MeasureBackwardTail(double availableLength, bool flagScrollBack)
         {
             var measuredLength = Math.Min(availableLength, ScrollStartMain - TailStartOffset);
             Debug.Assert(measuredLength >= 0);
@@ -413,12 +412,12 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             if (MaxBlockCount > 0)
-                MeasureBackwardRepeat(availableLength);
+                MeasureBackwardRepeat(availableLength, flagScrollBack);
             else if (MaxFrozenHeadMain > 0)
-                MeasureBackwardHead(availableLength);
+                MeasureBackwardHead(availableLength, flagScrollBack);
         }
 
-        private void MeasureBackwardRepeat(double availableLength)
+        private void MeasureBackwardRepeat(double availableLength, bool flagScrollBack)
         {
             if (availableLength <= 0)
                 return;
@@ -430,9 +429,9 @@ namespace DevZest.Data.Windows.Primitives
                 AdjustScrollStartMain(-scrollLength);
                 availableLength -= scrollLength;
             }
-            availableLength -= RealizeBackward(availableLength);
+            availableLength = RealizeBackward(availableLength);
             if (availableLength > 0 && FrozenHeadMain > 0)
-                MeasureBackwardHead(availableLength);
+                MeasureBackwardHead(availableLength, flagScrollBack);
         }
 
         private double RealizeBackward(double availableLength)
@@ -454,10 +453,10 @@ namespace DevZest.Data.Windows.Primitives
             return availableLength;
         }
 
-        private void MeasureBackwardHead(double availableLength)
+        private void MeasureBackwardHead(double availableLength, bool flagScrollBack)
         {
             Debug.Assert(availableLength >= 0);
-            var measuredLength = Math.Min(availableLength, ScrollOffsetMain);
+            var measuredLength = Math.Min(availableLength, flagScrollBack ? _oldScrollOffsetMain : ScrollOffsetMain);
             if (measuredLength > 0)
                AdjustScrollStartMain(-measuredLength);
         }
@@ -1335,12 +1334,12 @@ namespace DevZest.Data.Windows.Primitives
                 if (isHead)
                     first += 1;
                 var last = BlockViews.Count - 1;
-                if (isTail && !isStretch)
+                if (last == MaxBlockCount - 1 && isTail && !isStretch)
                     last -= 1;
                 for (int i = first; i <= last; i++)
                 {
                     var block = BlockViews[i];
-                    var value = GetLocationMain(prevGridTrack, nextGridTrack, block, true, out gridTrack);
+                    var value = GetLocationMain(prevGridTrack, nextGridTrack, block, (prevGridTrack != null && prevGridTrack.IsRepeat), out gridTrack);
                     if (!Clip.IsClipped(value, GetMinClipMain(gridTrack), GetMaxClipMain(gridTrack)))
                         yield return value;
                 }
@@ -1348,6 +1347,13 @@ namespace DevZest.Data.Windows.Primitives
 
             if (isTail)
             {
+                if (isStretch && !prevGridTrack.IsRepeat)
+                {
+                    var valuePrev = GetLocationMain(prevGridTrack, nextGridTrack, null, true, out gridTrack);
+                    if (!Clip.IsTailClipped(valuePrev, GetMaxClipMain(gridTrack)))
+                        yield return valuePrev;
+                }
+
                 var value = GetLocationMain(prevGridTrack, nextGridTrack, null, false, out gridTrack);
                 if (!Clip.IsTailClipped(value, GetMaxClipMain(gridTrack)))
                     yield return value;
