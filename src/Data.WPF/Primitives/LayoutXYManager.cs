@@ -1164,7 +1164,7 @@ namespace DevZest.Data.Windows.Primitives
             var clip = GetClipMain(startLocationMain, endLocationMain, new GridSpan(startTrackMain, endTrackMain));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
                 return null;
-            startLocationMain -= clip.Head;
+            startLocationMain += clip.Head;
             endLocationMain -= clip.Tail;
             if (endLocationMain <= startLocationMain)
                 return null;
@@ -1305,7 +1305,7 @@ namespace DevZest.Data.Windows.Primitives
             var clip = GetClipCross(startLocationCross, endLocationCross, new GridSpan(startTrackCross, endTrackCross));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
                 return new Span();
-            startLocationCross -= clip.Head;
+            startLocationCross += clip.Head;
             endLocationCross -= clip.Tail;
             if (endLocationCross <= startLocationCross)
                 return new Span();

@@ -740,22 +740,39 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutXYManager_GetLineFiguresCross_Spans()
+        public void LayoutXYManager_GetLineFiguresCross_Span()
         {
-            var dataSet = MockProductCategories(6, false);
+            var dataSet = MockProductCategories(3, false);
             var pen = new Pen();
-            //var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
-            //{
-            //    builder.GridColumns("10", "100", "10")
-            //        .GridRows("10", "10", "10")
-            //        .Layout(Orientation.Vertical, 2)
-            //        .FrozenTop(1).FrozenBottom(1).Stretch(1)
-            //        .RowItem().At(0, 2)
-            //        .GridLineY(new GridPoint(1, 0), 5, pen)
-            //        .GridLineY(new GridPoint(2, 1), 3, pen)
-            //        .GridLineY(new GridPoint(3, 1), 2, pen)
-            //        .GridLineY(new GridPoint(4, 2), 1, pen);
-            //});
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("10", "20", "10")
+                    .GridRows("10")
+                    .Layout(Orientation.Vertical, 3)
+                    .FrozenLeft(1)
+                    .RowItem().At(1, 0)
+                    .GridLineX(new GridPoint(0, 0), 3, pen)
+                    .GridLineX(new GridPoint(1, 1), 2, pen);
+            });
+
+            layoutManager.Measure(new Size(100, 100));
+            var gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(2, gridLineFigures.Length);
+            Assert.AreEqual(new Point(0, 0), gridLineFigures[0].StartPoint);
+            Assert.AreEqual(new Point(80, 0), gridLineFigures[0].EndPoint);
+            Assert.AreEqual(new Point(10, 10), gridLineFigures[1].StartPoint);
+            Assert.AreEqual(new Point(80, 10), gridLineFigures[1].EndPoint);
+
+            layoutManager.Measure(new Size(70, 100));
+            layoutManager.ScrollOffsetX = 10;
+            layoutManager.Measure(new Size(70, 100));
+            Assert.AreEqual(10, layoutManager.ScrollOffsetX);
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(2, gridLineFigures.Length);
+            Assert.AreEqual(new Point(0, 0), gridLineFigures[0].StartPoint);
+            Assert.AreEqual(new Point(70, 0), gridLineFigures[0].EndPoint);
+            Assert.AreEqual(new Point(10, 10), gridLineFigures[1].StartPoint);
+            Assert.AreEqual(new Point(70, 10), gridLineFigures[1].EndPoint);
         }
     }
 }
