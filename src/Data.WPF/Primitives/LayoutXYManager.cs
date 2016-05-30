@@ -669,7 +669,6 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetEndLocationMain(GridOffset gridOffset)
         {
-            Debug.Assert(gridOffset.IsEof || gridOffset.BlockOrdinal == -1);
             return gridOffset.IsEof ? GetStartLocationMain(gridOffset) : GetStartLocationMain(gridOffset) + gridOffset.Span.Length;
         }
 
@@ -1130,14 +1129,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             if ((position & GridLinePosition.PreviousTrack) != GridLinePosition.PreviousTrack)
                 return null;
-            return gridOffset == 0 ? gridTracks[gridOffset - 1] : null;
+            return gridOffset == 0 ? null : gridTracks[gridOffset - 1];
         }
 
         private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridOffset, GridLinePosition position)
         {
             if ((position & GridLinePosition.NextTrack) != GridLinePosition.NextTrack)
                 return null;
-            return gridOffset == gridTracks.Count ? gridTracks[gridOffset] : null;
+            return gridOffset == gridTracks.Count ? null : gridTracks[gridOffset];
         }
 
         protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridOffsetMain, int endGridOffsetMain, GridLinePosition position, int gridOffsetCross)

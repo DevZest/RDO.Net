@@ -1,8 +1,10 @@
 ﻿using DevZest.Data.Windows.Factories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -645,6 +647,51 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetRowItemClip(blocks[0][1], rowItems[3]));
             Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRowItemRect(blocks[0][1], rowItems[4]));
             Assert.AreEqual(new Thickness(), layoutManager.GetRowItemClip(blocks[0][1], rowItems[4]));
+        }
+
+        [TestMethod]
+        public void LayoutXYManager_GetLineFiguresMain()
+        {
+            var dataSet = MockProductCategories(6, false);
+            var pen = new Pen();
+            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("10", "10", "10", "10", "10")
+                    .GridRows("10", "10", "20", "10", "10")
+                    .Layout(Orientation.Vertical)
+                    .FrozenTop(1).FrozenBottom(1).Stretch(1)
+                    .RowItem().At(0, 2, 4, 2)
+                    .GridLineY(new GridPoint(1, 0), 5, pen)
+                    .GridLineY(new GridPoint(2, 1), 3, pen)
+                    .GridLineY(new GridPoint(3, 1), 2, pen)
+                    .GridLineY(new GridPoint(4, 2), 1, pen);
+            });
+
+            layoutManager.Measure(new Size(50, 100));
+            var gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(4, gridLineFigures.Length);
+            Assert.AreEqual(new Point(10, 0), gridLineFigures[0].StartPoint);
+            Assert.AreEqual(new Point(10, 100), gridLineFigures[0].EndPoint);
+            Assert.AreEqual(new Point(20, 10), gridLineFigures[1].StartPoint);
+            Assert.AreEqual(new Point(20, 90), gridLineFigures[1].EndPoint);
+            Assert.AreEqual(new Point(30, 10), gridLineFigures[2].StartPoint);
+            Assert.AreEqual(new Point(30, 90), gridLineFigures[2].EndPoint);
+            Assert.AreEqual(new Point(40, 20), gridLineFigures[3].StartPoint);
+            Assert.AreEqual(new Point(40, 90), gridLineFigures[3].EndPoint);
+
+            layoutManager.Measure(new Size(50, 200));   // Stretched
+            gridLineFigures = layoutManager.GridLineFigures.ToArray();
+            Assert.AreEqual(5, gridLineFigures.Length);
+            Assert.AreEqual(new Point(10, 0), gridLineFigures[0].StartPoint);
+            Assert.AreEqual(new Point(10, 150), gridLineFigures[0].EndPoint);
+            Assert.AreEqual(new Point(10, 190), gridLineFigures[1].StartPoint);
+            Assert.AreEqual(new Point(10, 200), gridLineFigures[1].EndPoint);
+            Assert.AreEqual(new Point(20, 10), gridLineFigures[2].StartPoint);
+            Assert.AreEqual(new Point(20, 150), gridLineFigures[2].EndPoint);
+            Assert.AreEqual(new Point(30, 10), gridLineFigures[3].StartPoint);
+            Assert.AreEqual(new Point(30, 140), gridLineFigures[3].EndPoint);
+            Assert.AreEqual(new Point(40, 20), gridLineFigures[4].StartPoint);
+            Assert.AreEqual(new Point(40, 140), gridLineFigures[4].EndPoint);
         }
     }
 }
