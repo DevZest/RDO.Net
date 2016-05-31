@@ -12,7 +12,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbQuery_auto_select_all()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, ProductDescription model) =>
                 {
@@ -41,7 +41,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID] DESC;
         [TestMethod]
         public void DbQuery_select_single_column()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -60,7 +60,7 @@ FROM [SalesLT].[ProductDescription] [ProductDescription];
         [TestMethod]
         public void DbQuery_select_multi_column()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -85,7 +85,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
         [ExpectedException(typeof(ArgumentException))]
         public void DbQuery_select_aggregate_function_throws_exception()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -99,7 +99,7 @@ ORDER BY [ProductDescription].[ProductDescriptionID];
         [TestMethod]
         public void DbQuery_auto_group_by()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery<Adhoc>((DbAggregateQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -133,7 +133,7 @@ ORDER BY COUNT([SalesOrderDetail].[SalesOrderID]) DESC, [SalesOrder].[SalesOrder
         [TestMethod]
         public void DbQuery_inner_join()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.CreateQuery((DbQueryBuilder builder, Adhoc adhoc) =>
                 {
@@ -176,7 +176,7 @@ ORDER BY [SalesOrderDetail].[SalesOrderID], [SalesOrderDetail].[SalesOrderDetail
         [TestMethod]
         public void DbQuery_derived_query_simplified()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.Products.Where(x => x.ProductID > _Int32.Const(500));
                 var query2 = db.CreateQuery((DbQueryBuilder builder, Product model) =>
@@ -214,7 +214,7 @@ WHERE ([Product].[ProductID] > 500);
         [TestMethod]
         public void DbQuery_CreateChild()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
@@ -244,7 +244,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         [TestMethod]
         public void DbQuery_CreateChild_aggregate()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
@@ -292,7 +292,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC, [SalesOrderDetail].[Sales
         [TestMethod]
         public void DbQuery_SequentialSelectStatement_union_query()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
                 unionQuery.MockSequentialKeyTempTable();
@@ -370,7 +370,7 @@ ORDER BY [sys_sequential_Product].[sys_row_id] ASC;
         [TestMethod]
         public void DbQuery_SequentialSelectStatement()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
@@ -414,7 +414,7 @@ ORDER BY [sys_sequential_SalesOrder].[sys_row_id] ASC;
         [TestMethod]
         public void DbQuery_SequentialSelectStatement_child_model()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == 71774 | x.SalesOrderID == 71776).OrderBy(x => x.SalesOrderID);
                 salesOrders.MockSequentialKeyTempTable();
@@ -451,7 +451,7 @@ ORDER BY [sys_sequential_SalesOrderDetail].[sys_row_id] ASC;
         public void DbQuery_SequentialKeyTempTable()
         {
             var sqlVersion = SqlVersion.Sql11;
-            using (var db = Db.Create(sqlVersion))
+            using (var db = Db.Open(sqlVersion))
             {
                 var salesOrders = db.SalesOrders.Where(x => x.SalesOrderID == _Int32.Const(71774) | x.SalesOrderID == _Int32.Const(71776)).OrderBy(x => x.SalesOrderID);
                 var commands = salesOrders.GetCreateSequentialKeyTempTableCommands();
@@ -480,7 +480,7 @@ ORDER BY [SalesOrder].[SalesOrderID];"
         public void DbQuery_SequentialKeyTempTable_aggregate_query()
         {
             var sqlVersion = SqlVersion.Sql11;
-            using (var db = Db.Create(sqlVersion))
+            using (var db = Db.Open(sqlVersion))
             {
                 var salesOrders = db.CreateQuery((DbAggregateQueryBuilder queryBuilder, SalesOrder model) =>
                 {
@@ -542,7 +542,7 @@ ORDER BY [SalesOrder].[SalesOrderNumber] DESC;"
         public void DbQuery_SequentialKeyTempTable_union_query()
         {
             var sqlVersion = SqlVersion.Sql11;
-            using (var db = Db.Create(sqlVersion))
+            using (var db = Db.Open(sqlVersion))
             {
                 var unionQuery = db.Products.Where(x => x.ProductID < _Int32.Const(720)).UnionAll(db.Products.Where(x => x.ProductID > _Int32.Const(800)));
                 var commands = unionQuery.GetCreateSequentialKeyTempTableCommands();

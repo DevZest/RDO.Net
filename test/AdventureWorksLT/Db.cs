@@ -9,19 +9,19 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Db : SqlSession
     {
-        public static Db Create(string connectionString)
+        public static Db Open(string connectionString)
         {
-            return Create(connectionString, null);
+            return Open(connectionString, null);
         }
 
-        public static Db Create(string connectionString, Action<Db> initializer)
+        public static Db Open(string connectionString, Action<Db> initializer)
         {
-            var result = InternalCreate(connectionString, initializer);
+            var result = InternalOpen(connectionString, initializer);
             result.OpenConnection();
             return result;
         }
 
-        private static Db InternalCreate(string connectionString, Action<Db> initializer)
+        private static Db InternalOpen(string connectionString, Action<Db> initializer)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException("connectionString");
@@ -31,19 +31,19 @@ namespace DevZest.Samples.AdventureWorksLT
             return result;
         }
 
-        public static Task<Db> CreateAsync(string connectionString)
+        public static Task<Db> OpenAsync(string connectionString)
         {
-            return CreateAsync(connectionString, null);
+            return OpenAsync(connectionString, null);
         }
 
-        public static async Task<Db> CreateAsync(string connectionString, Action<Db> initializer)
+        public static async Task<Db> OpenAsync(string connectionString, Action<Db> initializer)
         {
-            var result = InternalCreate(connectionString, initializer);
+            var result = InternalOpen(connectionString, initializer);
             await result.OpenConnectionAsync(CancellationToken.None);
             return result;
         }
 
-        public static Db Create(SqlVersion sqlVersion)
+        public static Db Open(SqlVersion sqlVersion)
         {
             var result = new Db(new SqlConnection());
             result.SqlVersion = sqlVersion;

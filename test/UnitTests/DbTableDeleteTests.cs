@@ -12,7 +12,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DbTable_Delete_without_from()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var command = db.ProductCategories.MockDelete(0, x => x.ModifiedDate.IsNull());
                 var expectedSql =
@@ -27,7 +27,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_from_temp_table()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var command = db.ProductCategories.MockDelete(0, tempTable);
@@ -46,7 +46,7 @@ FROM
         [TestMethod]
         public void DbTable_Delete_from_query()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.ProductCategories.Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.MockDelete(0, query);
@@ -66,7 +66,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_from_simple_query()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var query = db.MockTempTable<ProductCategory>().Where(x => x.ModifiedDate.IsNull());
                 var command = db.ProductCategories.MockDelete(0, query);
@@ -86,7 +86,7 @@ WHERE ([ProductCategory].[ModifiedDate] IS NULL);
         [TestMethod]
         public void DbTable_Delete_scalar()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var dataSet = DataSet<ProductCategory>.New();
                 var index = dataSet.AddRow().Ordinal;
@@ -111,7 +111,7 @@ FROM
         [TestMethod]
         public void DbTable_Delete_from_DataSet()
         {
-            using (var db = Db.Create(SqlVersion.Sql11))
+            using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var salesOrder = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
                 var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);

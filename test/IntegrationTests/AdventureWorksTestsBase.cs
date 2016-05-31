@@ -10,12 +10,12 @@ namespace DevZest.Data
     {
         protected Db OpenDb()
         {
-            return Db.Create(GetConnectionString());
+            return Db.Open(GetConnectionString());
         }
 
         protected Db OpenDb(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return Db.Create(GetConnectionString(), db =>
+            return Db.Open(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
             });
@@ -23,12 +23,12 @@ namespace DevZest.Data
 
         protected Task<Db> OpenDbAsync()
         {
-            return Db.CreateAsync(GetConnectionString());
+            return Db.OpenAsync(GetConnectionString());
         }
 
         protected Task<Db> OpenDbAsync(StringBuilder log, LogCategory logCategory = LogCategory.CommandText)
         {
-            return Db.CreateAsync(GetConnectionString(), db =>
+            return Db.OpenAsync(GetConnectionString(), db =>
             {
                 db.SetLog(s => log.Append(s), logCategory);
             });
