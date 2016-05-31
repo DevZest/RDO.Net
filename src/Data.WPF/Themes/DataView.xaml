@@ -13,7 +13,7 @@
                             <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
                                           VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                                           CanContentScroll="True">
-                                <primitives:DataElementPanel />
+                                <primitives:DataElementPanel RenderOptions.EdgeMode="Aliased" />
                             </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>

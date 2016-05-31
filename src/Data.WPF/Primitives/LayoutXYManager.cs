@@ -481,7 +481,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(gridTrack.IsHead);
             var measuredLength = HeadEndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
-            Debug.Assert(measuredLength > 0);
+            Debug.Assert(measuredLength >= 0);
             if (MaxBlockCount > 0)
                 MeasureForwardRepeat(new GridOffset(GridTracksMain.BlockStart, 0), 0, availableLength - measuredLength);
         }

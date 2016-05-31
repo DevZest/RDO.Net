@@ -45,6 +45,8 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
+    <Compile Include="Factories\ColumnHeaderFactory.cs" />
+    <Compile Include="Factories\RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
@@ -85,7 +87,7 @@
     <Compile Include="Primitives\BlockViewCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
-    <Compile Include="Factories\ColumnHeaderFactory.cs" />
+    <Compile Include="Factories\RowHeaderFactory.cs" />
     <Compile Include="Factories\DataViewFactory.cs" />
     <Compile Include="IBehavior.cs" />
     <Compile Include="Primitives\RowItem.cs" />
@@ -124,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20160322\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20160531\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
