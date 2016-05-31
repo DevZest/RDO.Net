@@ -1254,7 +1254,7 @@ namespace DevZest.Data.Windows.Primitives
                     last -= 1;
                 for (int i = first; i <= last; i++)
                 {
-                    var value = GetLocationCross(prevGridTrack, nextGridTrack, i, true, out gridTrack);
+                    var value = GetLocationCross(prevGridTrack, nextGridTrack, i, gridOrdinalCross <= FrozenHeadCross, out gridTrack);
                     if (!Clip.IsClipped(value, GetMinClipCross(gridTrack), GetMaxClipCross(gridTrack, i)))
                         yield return value;
                 }
