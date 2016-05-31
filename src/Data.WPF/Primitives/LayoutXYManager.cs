@@ -583,7 +583,7 @@ namespace DevZest.Data.Windows.Primitives
             var scrollStartMain = GetOffset(_scrollStartMain);
             Debug.Assert(scrollStartMain >= scrollOriginMain);
             var valueMain = scrollStartMain - scrollOriginMain;
-            var valueCross = ScrollOffsetCross;
+            var valueCross = Math.Min(ScrollOffsetCross, ExtentCross - ViewportCross);
             RefreshScollOffset(valueMain, valueCross);
         }
 
