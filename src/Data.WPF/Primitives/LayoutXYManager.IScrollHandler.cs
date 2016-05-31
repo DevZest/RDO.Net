@@ -98,13 +98,13 @@ namespace DevZest.Data.Windows.Primitives
             set { SetScrollOffsetCross(value, true); }
         }
 
-        private void SetScrollOffsetCross(double value, bool invalidateArrange)
+        private void SetScrollOffsetCross(double value, bool invalidateMeasure)
         {
             if (_scrollOffsetCross.IsClose(value))
                 return;
             _scrollOffsetCross = CoerceScrollOffset(value, ExtentCross - ViewportCross);
-            if (invalidateArrange)
-                InvalidateArrange();
+            if (invalidateMeasure)
+                InvalidateMeasure();
         }
 
         private void RefreshScollOffset(double valueMain, double valueCross)

@@ -215,14 +215,22 @@ namespace DevZest.Data.Windows
             });
         }
 
-        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)
         {
             return GridLine(Orientation.Horizontal, startGridPoint, length, pen, position);
         }
 
-        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)
         {
             return GridLine(Orientation.Vertical, startGridPoint, length, pen, position);
+        }
+
+        private static readonly Pen DefaultGridLinePen = GetDefaultGridLinePen();
+        private static Pen GetDefaultGridLinePen()
+        {
+            var result = new Pen(Brushes.LightGray, 1);
+            result.Freeze();
+            return result;
         }
 
         private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
@@ -240,7 +248,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             if (pen == null)
-                throw new ArgumentNullException(nameof(pen));
+                pen = DefaultGridLinePen;
 
             int endGridOffsetX = startGridPoint.X;
             int endGridOffsetY = startGridPoint.Y;
