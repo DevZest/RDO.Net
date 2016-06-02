@@ -361,7 +361,7 @@ namespace DevZest.Data.Windows.Primitives
         private void FillGap()
         {
             var gap = GapToFill;
-            gap -= RealizeForward(gap) + TailLengthMain;
+            gap -= RealizeForward(gap) + TailLengthMain - FrozenTailLengthMain;
             if (gap > 0)
                 MeasureBackward(gap, false);
         }
