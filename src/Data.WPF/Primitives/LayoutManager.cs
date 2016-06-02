@@ -308,7 +308,7 @@ namespace DevZest.Data.Windows.Primitives
         private void Arrange(UIElement element, Rect rect, Thickness clip)
         {
             element.Arrange(rect);
-            if (clip.Left == 0 && clip.Top == 0 && clip.Right == 0 && clip.Top == 0)
+            if (clip.Left == 0 && clip.Top == 0 && clip.Right == 0 && clip.Bottom == 0)
                 element.Clip = null;
             else if (double.IsPositiveInfinity(clip.Left) || double.IsPositiveInfinity(clip.Top)
                 || double.IsPositiveInfinity(clip.Right) || double.IsPositiveInfinity(clip.Bottom))

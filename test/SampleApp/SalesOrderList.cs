@@ -27,7 +27,7 @@ namespace SampleApp
             builder.GridColumns("20", "50", "70", "150", "150", "60", "150", "100", "100", "100")
                 .GridRows("20", "Auto", "20")
                 .Layout(Orientation.Vertical)
-                .FrozenLeft(2).FrozenRight(1).FrozenTop(1)
+                .FrozenLeft(2).FrozenRight(1).FrozenTop(1).FrozenBottom(1)
                 .GridLineX(new GridPoint(0, 1), 10)
                 .GridLineX(new GridPoint(0, 2), 10)
                 .GridLineY(new GridPoint(1, 0), 2)
