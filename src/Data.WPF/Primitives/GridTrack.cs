@@ -236,7 +236,9 @@ namespace DevZest.Data.Windows.Primitives
                 return new Span(StartOffset, EndOffset);
 
             Debug.Assert(IsTail);
-            var delta = GetBlocksLength(MaxBlockCount) - Owner.GetMeasuredLength(Template.BlockRange);
+            var delta = GetBlocksLength(MaxBlockCount);
+            if (!Owner.VariantByBlock && MaxBlockCount > 0)
+                delta -= Owner.GetMeasuredLength(Template.BlockRange);
             return new Span(StartOffset + delta, EndOffset + delta);
         }
 
