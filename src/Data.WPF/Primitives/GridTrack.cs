@@ -89,9 +89,9 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
+                Debug.Assert(!VariantByBlock);
                 Owner.RefreshOffset();
-                var variantByBlockExcluded = VariantByBlockExcluded;
-                return variantByBlockExcluded == null ? 0 : variantByBlockExcluded._startOffsetValue;
+                return _startOffsetValue;
             }
             set
             {
@@ -246,7 +246,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(IsRepeat && blockOrdinal >= 0);
 
             var relativeSpan = GetRelativeSpan(blockOrdinal);
-            var startOffset = Owner[MaxFrozenHead].StartOffset + GetBlocksLength(blockOrdinal);
+            var startOffset = (MaxFrozenHead == 0 ? 0 : Owner[MaxFrozenHead - 1].EndOffset) + GetBlocksLength(blockOrdinal);
             return new Span(startOffset + relativeSpan.Start, startOffset + relativeSpan.End);
         }
 

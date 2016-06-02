@@ -1,9 +1,10 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows.Primitives
+namespace DevZest.Data.Windows
 {
     public struct GridPoint
     {

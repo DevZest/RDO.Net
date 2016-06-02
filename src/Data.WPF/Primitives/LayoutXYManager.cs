@@ -291,7 +291,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double HeadEndOffset
         {
-            get { return GridTracksMain[MaxFrozenHeadMain].StartOffset; }
+            get { return MaxFrozenHeadMain == 0 ? 0 : GridTracksMain[MaxFrozenHeadMain - 1].EndOffset; }
         }
 
         private double TailStartOffset
@@ -301,7 +301,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double FrozenHeadLengthMain
         {
-            get { return GridTracksMain[FrozenHeadMain].StartOffset; }
+            get { return FrozenHeadMain == 0 ? 0 : GridTracksMain[FrozenHeadMain - 1].EndOffset; }
         }
 
         private double FrozenHeadLengthCross
