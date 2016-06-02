@@ -2,6 +2,7 @@
 using DevZest.Data.Windows;
 using DevZest.Data.Windows.Factories;
 using DevZest.Samples.AdventureWorksLT;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -55,7 +56,11 @@ namespace SampleApp
                 {
                     x.TextAlignment = TextAlignment.Right;
                     x.Text = "Total: ";
-                }).At(2, 2, 9, 2);
+                }).At(2, 2, 8, 2)
+                .ScalarItem<TextBlock>().Bind((src, t) =>
+                {
+                    t.Text = src.Rows.Sum(x => x.GetValue(_.TotalDue)).ToString();
+                }).At(9, 2);
         }
     }
 }
