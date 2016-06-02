@@ -250,7 +250,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
-            Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
+            Assert.AreEqual(3, layoutManager.BlockViews.Last.Ordinal);
 
             var scalarItems = layoutManager.Template.ScalarItems;
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetScalarItemRect(scalarItems[0], 0));
@@ -280,7 +280,7 @@ namespace DevZest.Data.Windows.Primitives
 
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
-            Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
+            Assert.AreEqual(3, layoutManager.BlockViews.Last.Ordinal);
 
             var scalarItems = layoutManager.Template.ScalarItems;
             var blockViews = layoutManager.BlockViews;
@@ -295,6 +295,8 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Thickness(), layoutManager.GetBlockClip(blockViews[1]));
             Assert.AreEqual(new Rect(0, 60, 100, 20), layoutManager.GetBlockRect(blockViews[2]));
             Assert.AreEqual(new Thickness(), layoutManager.GetBlockClip(blockViews[2]));
+            Assert.AreEqual(new Rect(0, 80, 100, 20), layoutManager.GetBlockRect(blockViews[3]));
+            Assert.AreEqual(new Thickness(0, 0, 0, 10), layoutManager.GetBlockClip(blockViews[3]));
             Assert.AreEqual(new Rect(0, 200, 100, 10), layoutManager.GetScalarItemRect(scalarItems[2], 0));
             Assert.AreEqual(new Thickness(0, 0, 0, double.PositiveInfinity), layoutManager.GetScalarItemClip(scalarItems[2], 0));
             Assert.AreEqual(new Rect(0, 90, 100, 10), layoutManager.GetScalarItemRect(scalarItems[3], 0));

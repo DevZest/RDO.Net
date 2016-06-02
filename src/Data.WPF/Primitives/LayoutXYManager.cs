@@ -339,7 +339,7 @@ namespace DevZest.Data.Windows.Primitives
             return endOffset - startOffset;
         }
 
-        private double TailLength
+        private double TailLengthMain
         {
             get { return MaxFrozenTailMain == 0 ? 0 : MaxOffsetMain - GetGridOffset(MaxGridOffsetMain - MaxFrozenTailMain).Span.Start; }
         }
@@ -352,7 +352,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (double.IsPositiveInfinity(availableLength))
                     return availableLength;
 
-                var scrollable = availableLength - (FrozenHeadLengthMain + TailLength);
+                var scrollable = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
                 var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
                 return scrollable - (blockEndOffset - ScrollStartMain);
             }
@@ -361,7 +361,7 @@ namespace DevZest.Data.Windows.Primitives
         private void FillGap()
         {
             var gap = GapToFill;
-            gap -= RealizeForward(gap);
+            gap -= RealizeForward(gap) + TailLengthMain;
             if (gap > 0)
                 MeasureBackward(gap, false);
         }
