@@ -2,6 +2,7 @@
 using DevZest.Data.Windows;
 using DevZest.Data.Windows.Factories;
 using DevZest.Samples.AdventureWorksLT;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -27,7 +28,7 @@ namespace SampleApp
             builder.GridColumns("20", "50", "70", "150", "150", "60", "150", "100", "100", "100")
                 .GridRows("20", "Auto", "20")
                 .Layout(Orientation.Vertical)
-                .FrozenLeft(2).FrozenRight(1).FrozenTop(1).FrozenBottom(1)
+                .FrozenLeft(2).FrozenRight(1).FrozenTop(1).FrozenBottom(1).Stretch(1)
                 .GridLineX(new GridPoint(0, 1), 10)
                 .GridLineX(new GridPoint(0, 2), 10)
                 .GridLineY(new GridPoint(1, 0), 2)
@@ -38,8 +39,8 @@ namespace SampleApp
                 .GridLineY(new GridPoint(6, 0), 2)
                 .GridLineY(new GridPoint(7, 0), 2)
                 .GridLineY(new GridPoint(8, 0), 2)
-                .GridLineY(new GridPoint(9, 0), 2, _frozenLine)
-                .GridLineY(new GridPoint(10, 0), 2)
+                .GridLineY(new GridPoint(9, 0), 3, _frozenLine)
+                .GridLineY(new GridPoint(10, 0), 3)
                 .RowHeader().At(0, 1)
                 .TextBlock(_.SalesOrderID).At(1, 1)
                 .TextBlock(_.SalesOrderNumber).At(2, 1)
@@ -49,7 +50,12 @@ namespace SampleApp
                 .TextBlock(_.PurchaseOrderNumber).At(6, 1)
                 .TextBlock(_.SubTotal).At(7, 1)
                 .TextBlock(_.TaxAmt).At(8, 1)
-                .TextBlock(_.TotalDue).At(9, 1);
+                .TextBlock(_.TotalDue).At(9, 1)
+                .ScalarItem<TextBlock>().Initialize(x =>
+                {
+                    x.TextAlignment = TextAlignment.Right;
+                    x.Text = "Total: ";
+                }).At(2, 2, 9, 2);
         }
     }
 }

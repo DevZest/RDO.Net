@@ -230,11 +230,8 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 var layoutManager = LayoutManager;
-                if (layoutManager == null)
+                if (layoutManager == null || layoutManager.ElementCollection == null)
                     return Array<UIElement>.Empty;
-
-                if (layoutManager.ElementCollection == null || layoutManager.ElementCollection.Parent != this)
-                    layoutManager.SetElementsPanel(this);
 
                 Debug.Assert(layoutManager.ElementCollection.Parent == this);
                 return layoutManager.ElementCollection;

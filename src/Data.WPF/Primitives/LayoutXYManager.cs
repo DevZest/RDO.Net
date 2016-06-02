@@ -132,7 +132,9 @@ namespace DevZest.Data.Windows.Primitives
         private void AdjustScrollStartMain(double delta)
         {
             _scrollStartMain = GetLogicalOffset(ScrollStartMain + delta);
-            Debug.Assert(_scrollStartMain.Value >= ScrollOriginMain.Value);
+            var scrollOriginMain = ScrollOriginMain;
+            if (_scrollStartMain.Value < scrollOriginMain.Value)
+                _scrollStartMain = scrollOriginMain;
         }
 
         private double ScrollOriginCross

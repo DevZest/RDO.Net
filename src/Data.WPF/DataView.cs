@@ -6,10 +6,11 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
+    [TemplatePart(Name = "PART_Panel", Type = typeof(DataElementPanel))]
     public class DataView : Control
     {
         private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
-            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null));
+            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnDataPresenterChanged));
 
         public static readonly DependencyProperty DataPresenterProperty = DataPresenterPropertyKey.DependencyProperty;
 
@@ -44,6 +45,30 @@ namespace DevZest.Data.Windows
         private LayoutManager LayoutManager
         {
             get { return DataPresenter == null ? null : DataPresenter.LayoutManager; }
+        }
+
+        private static void OnDataPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((DataView)d).SetElementsPanel();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            SetElementsPanel();
+        }
+
+        private void SetElementsPanel()
+        {
+            if (Template == null)
+                return;
+            var panel = Template.FindName("PART_Panel", this) as DataElementPanel;
+            if (panel == null)
+                return;
+
+            var layoutManager = LayoutManager;
+            if (layoutManager != null)
+                layoutManager.SetElementsPanel(panel);
         }
 
         public bool Scrollable
