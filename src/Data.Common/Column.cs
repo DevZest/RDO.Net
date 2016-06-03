@@ -218,7 +218,7 @@ namespace DevZest.Data
 
         internal abstract Default CreateDefault();
 
-        internal abstract Column GetParrallel(Model model);
+        public abstract Column ParrallelOf(Model model);
 
         /// <summary>Gets the <see cref="Identity"/> object if this column is identity column.</summary>
         /// <param name="isTempTable"><see langword="true"/> to return the <see cref="Identity"/> declared for temp table(s),

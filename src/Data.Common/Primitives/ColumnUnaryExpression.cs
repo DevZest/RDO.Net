@@ -59,7 +59,7 @@ namespace DevZest.Data.Primitives
         internal sealed override Column GetParallelColumn(Model model)
         {
             var expr = (ColumnUnaryExpression<T>)this.MemberwiseClone();
-            expr.Operand = (Column<T>)Operand.GetParrallel(model);
+            expr.Operand = (Column<T>)Operand.ParrallelOf(model);
             return expr.MakeColumn(Owner.GetType());
         }
     }

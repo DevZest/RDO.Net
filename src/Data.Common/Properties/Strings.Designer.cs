@@ -748,11 +748,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Mismatch with Model.SavedDataRow.
+        /// Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.
         /// </summary>
         public static string DataRow_MismatchWithSavedDataRow
         {
             get { return GetString("DataRow_MismatchWithSavedDataRow"); }
+        }
+
+        /// <summary>
+        /// The model is invalid. It must be the same type as ParentModel.
+        /// </summary>
+        public static string Column_InvalidParrallelModel
+        {
+            get { return GetString("Column_InvalidParrallelModel"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

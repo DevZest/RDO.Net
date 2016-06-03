@@ -494,9 +494,17 @@ namespace DevZest.Data
             return new Default<T>(this);
         }
 
-        internal sealed override Column GetParrallel(Model model)
+        public sealed override Column ParrallelOf(Model model)
         {
-            Debug.Assert(model.GetType() == this.ParentModel.GetType());
+            if (model == ParentModel)
+                return this;
+
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (model.GetType() != ParentModel.GetType())
+                throw new ArgumentException(Strings.Column_InvalidParrallelModel, nameof(model));
+
             return IsExpression ? _expression.GetParallelColumn(model) : model.Columns[Ordinal];
         }
 

@@ -120,11 +120,11 @@ namespace DevZest.Data.Primitives
         internal sealed override Column GetParallelColumn(Model model)
         {
             var expr = (CaseOnExpression<TWhen, TResult>)this.MemberwiseClone();
-            expr._on = (Column<TWhen>)_on.GetParrallel(model);
+            expr._on = (Column<TWhen>)_on.ParrallelOf(model);
             expr._when = GetPararrel(_when, model);
             expr._then = GetPararrel(_then, model);
             if (_else != null)
-                expr._else = (Column<TResult>)_else.GetParrallel(model);
+                expr._else = (Column<TResult>)_else.ParrallelOf(model);
 
             return expr.MakeColumn(Owner.GetType());
         }
@@ -134,7 +134,7 @@ namespace DevZest.Data.Primitives
         {
             var result = new List<T>();
             for (int i = 0; i < list.Count; i++)
-                result.Add((T)list[i].GetParrallel(model));
+                result.Add((T)list[i].ParrallelOf(model));
 
             return result;
         }

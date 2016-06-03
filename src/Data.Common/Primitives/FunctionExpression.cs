@@ -47,7 +47,7 @@ namespace DevZest.Data.Primitives
             var functionExpr = (FunctionExpression<T>)this.MemberwiseClone();
             var parameters = new Column[Parameters.Count];
             for (int i = 0; i < Parameters.Count; i++)
-                parameters[i] = Parameters[i].GetParrallel(model);
+                parameters[i] = Parameters[i].ParrallelOf(model);
             Parameters = new ReadOnlyCollection<Column>(parameters);
 
             return functionExpr.MakeColumn(Owner.GetType());
