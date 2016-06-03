@@ -3,14 +3,20 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal static class UIElementExtensions
+    public static class UIElementExtensions
     {
         private static readonly DependencyProperty TemplateItemProperty = DependencyProperty.RegisterAttached(nameof(TemplateItem),
             typeof(TemplateItem), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        internal static TemplateItem GetTemplateItem(this UIElement element)
+        public static TemplateItem GetTemplateItem(this UIElement element)
         {
             return (TemplateItem)element.GetValue(TemplateItemProperty);
+        }
+
+        public static DataPresenter GetDataPresenter(this UIElement element)
+        {
+            var templateItem = element.GetTemplateItem();
+            return templateItem == null ? null : templateItem.Template.DataPresenter;
         }
 
         internal static void SetTemplateItem(this UIElement element, TemplateItem value)
@@ -22,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
         private static readonly DependencyProperty BlockPresenterProperty = DependencyProperty.RegisterAttached(nameof(IBlockPresenter),
             typeof(IBlockPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        internal static IBlockPresenter GetBlockPresenter(this UIElement element)
+        public static IBlockPresenter GetBlockPresenter(this UIElement element)
         {
             return (IBlockPresenter)element.GetValue(BlockPresenterProperty);
         }
@@ -44,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
             typeof(RowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        internal static RowPresenter GetRowPresenter(this UIElement element)
+        public static RowPresenter GetRowPresenter(this UIElement element)
         {
             return (RowPresenter)element.GetValue(RowPresenterProperty);
         }
