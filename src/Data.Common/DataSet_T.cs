@@ -116,10 +116,10 @@ namespace DevZest.Data
                 _rows.Insert(index, dataRow);
                 for (int i = index + 1; i < _rows.Count; i++)
                     _rows[i].AdjustIndex(i);
-                _globalDataSet.InternalInsert(GetGlobalDataSetIndex(dataRow), dataRow);
+                _globalDataSet.InternalInsert(GetGlobalDataSetOrdinal(dataRow), dataRow);
             }
 
-            private int GetGlobalDataSetIndex(DataRow dataRow)
+            private int GetGlobalDataSetOrdinal(DataRow dataRow)
             {
                 if (_globalDataSet.Count == 0)
                     return 0;
@@ -132,23 +132,41 @@ namespace DevZest.Data
                         return this[dataRow.Index + 1].Ordinal - 1;  // before the next DataRow
                 }
 
-                return BinarySearchGlobalDataSetIndex(_globalDataSet[0], _globalDataSet[_globalDataSet.Count - 1], dataRow.ParentDataRow.Ordinal);
+                return BinarySearchGlobalDataSetOrdinal(dataRow);
             }
 
-            private int BinarySearchGlobalDataSetIndex(DataRow startRow, DataRow endRow, int parentOrdinal)
+            private int BinarySearchGlobalDataSetOrdinal(DataRow dataRow)
             {
-                if (parentOrdinal > endRow.ParentDataRow.Ordinal)
-                    return endRow.Ordinal + 1;  // after the end DataRow
+                var parentOrdinal = dataRow.ParentDataRow.Ordinal;
 
-                if (parentOrdinal < startRow.ParentDataRow.Ordinal)
-                    return startRow.Ordinal;  // before the start DataRow
+                var endOrdinal = _globalDataSet.Count - 1;
+                if (parentOrdinal > _globalDataSet[endOrdinal].ParentDataRow.Ordinal)
+                    return endOrdinal + 1;  // after the end
 
-                var midOrdinal = (startRow.Ordinal + endRow.Ordinal) >> 1;
-                var midRow = _globalDataSet[midOrdinal];
-                if (parentOrdinal < midRow.ParentDataRow.Ordinal)
-                    return BinarySearchGlobalDataSetIndex(startRow, midRow, parentOrdinal);
-                else
-                    return BinarySearchGlobalDataSetIndex(midRow, endRow, parentOrdinal);
+                var startOrdinal = 0;
+                if (parentOrdinal < _globalDataSet[startOrdinal].ParentDataRow.Ordinal)
+                    return startOrdinal;  // before the start
+
+                int resultOrdinal = endOrdinal;
+                bool flagBefore = true;
+                while (startOrdinal < endOrdinal)
+                {
+                    var mid = (startOrdinal + endOrdinal) / 2;
+                    if (parentOrdinal < _globalDataSet[mid].ParentDataRow.Ordinal)
+                    {
+                        resultOrdinal = endOrdinal;
+                        flagBefore = true;
+                        endOrdinal = mid - 1;
+                    }
+                    else
+                    {
+                        resultOrdinal = startOrdinal;
+                        flagBefore = false;
+                        startOrdinal = mid + 1;
+                    }
+                }
+
+                return flagBefore ? resultOrdinal - 1 : resultOrdinal + 1;
             }
         }
 
