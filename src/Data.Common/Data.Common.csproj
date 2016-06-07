@@ -73,6 +73,7 @@
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
+    <Compile Include="Primitives\ColumnListExtensions.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
     <Compile Include="ValidationEntry.cs" />

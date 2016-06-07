@@ -494,18 +494,26 @@ namespace DevZest.Data
             return new Default<T>(this);
         }
 
-        public sealed override Column ParrallelOf(Model model)
+        public new Column<T> GetCounterpart(Model model)
         {
             if (model == ParentModel)
                 return this;
 
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
+            VerifyCounterpartModel(model, nameof(model));
+            return IsExpression ? _expression.GetCounterpart(model) : (Column<T>)model.Columns[Ordinal];
+        }
 
-            if (model.GetType() != ParentModel.GetType())
-                throw new ArgumentException(Strings.Column_InvalidParrallelModel, nameof(model));
+        internal sealed override Column InternalGetCounterpart(Model model)
+        {
+            return this.GetCounterpart(model);
+        }
 
-            return IsExpression ? _expression.GetParallelColumn(model) : model.Columns[Ordinal];
+        private void VerifyCounterpartModel(Model model, string paramName)
+        {
+            Check.NotNull(model, paramName);
+
+            if (ParentModel.ClonedFrom != model.ClonedFrom)
+                throw new ArgumentException(Strings.Column_VerifyCounterpartModel, nameof(model));
         }
 
         /// <summary>Defines the default constant value for this column.</summary>
@@ -624,6 +632,13 @@ namespace DevZest.Data
             var listValues = _valueManager as ListValueManager;
             if (listValues != null)
                 UpdateValue(dataRow, _scalarValue);
+        }
+
+        internal sealed override void CopyValue(DataRow sourceDataRow, DataRow targetDataRow)
+        {
+            var counterpart = GetCounterpart(targetDataRow.Model);
+            if (!counterpart.IsReadOnly(targetDataRow))
+                counterpart[targetDataRow] = this[sourceDataRow];
         }
     }
 }

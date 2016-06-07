@@ -218,7 +218,12 @@ namespace DevZest.Data
 
         internal abstract Default CreateDefault();
 
-        public abstract Column ParrallelOf(Model model);
+        public Column GetCounterpart(Model model)
+        {
+            return InternalGetCounterpart(model);
+        }
+
+        internal abstract Column InternalGetCounterpart(Model model);
 
         /// <summary>Gets the <see cref="Identity"/> object if this column is identity column.</summary>
         /// <param name="isTempTable"><see langword="true"/> to return the <see cref="Identity"/> declared for temp table(s),
@@ -395,5 +400,7 @@ namespace DevZest.Data
         internal abstract void Save(DataRow dataRow);
 
         internal abstract void Load(DataRow dataRow);
+
+        internal abstract void CopyValue(DataRow sourceDataRow, DataRow targetDataRow);
     }
 }

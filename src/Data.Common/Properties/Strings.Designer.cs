@@ -756,11 +756,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The model is invalid. It must be the same type as ParentModel.
+        /// The model is invalid. There is no derivation relationship between this model and ParentModel.
         /// </summary>
-        public static string Column_InvalidParrallelModel
+        public static string Column_VerifyCounterpartModel
         {
-            get { return GetString("Column_InvalidParrallelModel"); }
+            get { return GetString("Column_VerifyCounterpartModel"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

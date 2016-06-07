@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Utilities;
-using System;
 
 namespace DevZest.Data.Primitives
 {
@@ -85,12 +84,12 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract TResult EvalCore(T x, T y);
 
-        internal sealed override Column GetParallelColumn(Model model)
+        internal sealed override Column<TResult> GetCounterpart(Model model)
         {
             var expr = (BinaryExpression<T, TResult>)this.MemberwiseClone();
-            expr.Left = (Column<T>)Left.ParrallelOf(model);
-            expr.Right = (Column<T>)Right.ParrallelOf(model);
-            return expr.MakeColumn(Owner.GetType());
+            expr.Left = Left.GetCounterpart(model);
+            expr.Right = Right.GetCounterpart(model);
+            return GetCounterpart(expr);
         }
     }
 }

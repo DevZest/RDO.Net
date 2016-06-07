@@ -69,30 +69,13 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal abstract Column GetParallelColumn(Model model);
+        internal abstract Column<T> GetCounterpart(Model model);
 
-        private static ConcurrentDictionary<Type, Func<Type, Column>> s_makeColumnInvokers =
-            new ConcurrentDictionary<Type, Func<Type, Column>>();
-
-        internal Column MakeColumn(Type columnType)
+        internal Column<T> GetCounterpart(ColumnExpression<T> expr)
         {
-            var invoker = s_makeColumnInvokers.GetOrAdd(columnType, BuildMakeColumnInvoker(columnType));
-            return invoker(columnType);
-        }
-
-        private static Column _MakeColumn<TColumn>(ColumnExpression<T> expr)
-            where TColumn : Column<T>, new()
-        {
-            return expr.MakeColumn<TColumn>();
-        }
-
-        private static Func<Type, Column> BuildMakeColumnInvoker(Type columnType)
-        {
-            var methodInfo = typeof(ColumnExpression<T>).GetStaticMethodInfo(nameof(_MakeColumn));
-            methodInfo = methodInfo.MakeGenericMethod(columnType);
-            var param = Expression.Parameter(typeof(Type), methodInfo.GetParameters()[0].Name);
-            var call = Expression.Call(methodInfo, param);
-            return Expression.Lambda<Func<Type, Column>>(call, param).Compile();
+            Column<T> result = (Column<T>)Activator.CreateInstance(Owner.GetType());
+            result.Expression = expr;
+            return result;
         }
     }
 }

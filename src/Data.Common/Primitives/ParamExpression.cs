@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
             return new DbParamExpression(Owner, SourceColumn, Value);
         }
 
-        internal sealed override Column GetParallelColumn(Model model)
+        internal sealed override Column<T> GetCounterpart(Model model)
         {
             return Owner;
         }

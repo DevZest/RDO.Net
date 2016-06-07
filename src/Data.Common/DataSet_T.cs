@@ -170,9 +170,28 @@ namespace DevZest.Data
             }
         }
 
+        public static DataSet<T> New(Action<T> initializer = null)
+        {
+            var model = new T();
+            if (initializer != null)
+                initializer(model);
+            return Create(model);
+        }
+
         internal static DataSet<T> Create(T model)
         {
             return new GlobalDataSet(model);
+        }
+
+        public new DataSet<T> DeriveNew()
+        {
+            var model = Model.Clone(_, false);
+            return Create(model);
+        }
+
+        internal sealed override DataSet InternalDeriveNew()
+        {
+            return this.DeriveNew();
         }
 
         /// <summary>
@@ -181,14 +200,6 @@ namespace DevZest.Data
         {
             Debug.Assert(model != null);
             this._ = model;
-        }
-
-        public static DataSet<T> New(Action<T> initializer = null)
-        {
-            var model = new T();
-            if (initializer != null)
-                initializer(model);
-            return new GlobalDataSet(model);
         }
 
         public readonly T _;

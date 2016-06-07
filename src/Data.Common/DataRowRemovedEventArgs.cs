@@ -30,7 +30,7 @@ namespace DevZest.Data
 
         public DataSet GlobalDataSet
         {
-            get { return DataSet.FromModel(Model); }
+            get { return DataSet.Get(Model); }
         }
     }
 }

@@ -117,26 +117,15 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal sealed override Column GetParallelColumn(Model model)
+        internal sealed override Column<TResult> GetCounterpart(Model model)
         {
             var expr = (CaseOnExpression<TWhen, TResult>)this.MemberwiseClone();
-            expr._on = (Column<TWhen>)_on.ParrallelOf(model);
-            expr._when = GetPararrel(_when, model);
-            expr._then = GetPararrel(_then, model);
+            expr._on = _on.GetCounterpart(model);
+            expr._when = _when.GetCounterpart(model);
+            expr._then = _then.GetCounterpart(model);
             if (_else != null)
-                expr._else = (Column<TResult>)_else.ParrallelOf(model);
-
-            return expr.MakeColumn(Owner.GetType());
-        }
-
-        private static List<T> GetPararrel<T>(List<T> list, Model model)
-            where T : Column
-        {
-            var result = new List<T>();
-            for (int i = 0; i < list.Count; i++)
-                result.Add((T)list[i].ParrallelOf(model));
-
-            return result;
+                expr._else = _else.GetCounterpart(model);
+            return GetCounterpart(expr);
         }
     }
 }

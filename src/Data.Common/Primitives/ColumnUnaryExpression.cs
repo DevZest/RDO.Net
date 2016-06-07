@@ -56,11 +56,11 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
 
-        internal sealed override Column GetParallelColumn(Model model)
+        internal sealed override Column<T> GetCounterpart(Model model)
         {
             var expr = (ColumnUnaryExpression<T>)this.MemberwiseClone();
-            expr.Operand = (Column<T>)Operand.ParrallelOf(model);
-            return expr.MakeColumn(Owner.GetType());
+            expr.Operand = Operand.GetCounterpart(model);
+            return GetCounterpart(expr);
         }
     }
 }

@@ -427,6 +427,12 @@ namespace DevZest.Data
             return result;
         }
 
+        private Model _sourceModel;
+        internal Model ClonedFrom
+        {
+            get { return _sourceModel == null ? this : _sourceModel.ClonedFrom; }
+        }
+
         internal Model Clone(bool setDataSource)
         {
             Model result = (Model)Activator.CreateInstance(this.GetType());
@@ -436,6 +442,8 @@ namespace DevZest.Data
 
         private void InitializeClone(Model sourceModel, bool setDataSource)
         {
+            Debug.Assert(sourceModel != null && sourceModel != this);
+            _sourceModel = sourceModel;
             InitializeColumnLists(sourceModel);
             if (setDataSource && sourceModel.DataSource != null)
                 SetDataSource(sourceModel.DataSource);

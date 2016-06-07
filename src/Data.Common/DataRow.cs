@@ -42,7 +42,7 @@ namespace DevZest.Data
             get
             {
                 var parentRow = ParentDataRow;
-                return parentRow == null ? DataSet.FromModel(Model) : parentRow[Model];
+                return parentRow == null ? DataSet.Get(Model) : parentRow[Model];
             }
         }
 

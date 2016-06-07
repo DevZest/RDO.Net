@@ -55,11 +55,11 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        internal sealed override Column GetParallelColumn(Model model)
+        internal sealed override Column<TTarget> GetCounterpart(Model model)
         {
             var expr = (CastExpression<TSource, TTarget>)this.MemberwiseClone();
-            expr.Operand = (Column<TSource>)Operand.ParrallelOf(model);
-            return expr.MakeColumn(Owner.GetType());
+            expr.Operand = Operand.GetCounterpart(model);
+            return GetCounterpart(expr);
         }
     }
 }

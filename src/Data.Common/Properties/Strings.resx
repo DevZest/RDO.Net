@@ -396,7 +396,7 @@
   <data name="DataRow_MismatchWithSavedDataRow" xml:space="preserve">
     <value>Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.</value>
   </data>
-  <data name="Column_InvalidParrallelModel" xml:space="preserve">
-    <value>The model is invalid. It must be the same type as ParentModel.</value>
+  <data name="Column_VerifyCounterpartModel" xml:space="preserve">
+    <value>The model is invalid. There is no derivation relationship between this model and ParentModel.</value>
   </data>
 </root>

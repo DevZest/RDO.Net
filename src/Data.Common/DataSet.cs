@@ -9,7 +9,7 @@ namespace DevZest.Data
 {
     public abstract class DataSet : DataSource, IList<DataRow>
     {
-        public static DataSet FromModel(Model model)
+        public static DataSet Get(Model model)
         {
             return model == null ? null : model.DataSet;
         }
@@ -18,6 +18,13 @@ namespace DevZest.Data
             : base(model)
         {
         }
+
+        public DataSet DeriveNew()
+        {
+            return InternalDeriveNew();
+        }
+
+        internal abstract DataSet InternalDeriveNew();
 
         /// <inheritdoc/>
         public sealed override DataSourceKind Kind
