@@ -532,7 +532,7 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        protected internal sealed override JsonValue Serialize(int rowOrdinal)
+        internal sealed override JsonValue Serialize(int rowOrdinal)
         {
             return SerializeValue(this[rowOrdinal]);
         }
@@ -543,7 +543,7 @@ namespace DevZest.Data
         protected internal abstract JsonValue SerializeValue(T value);
 
         /// <inheritdoc/>
-        protected internal sealed override void Deserialize(int ordinal, JsonValue value)
+        internal sealed override void Deserialize(int ordinal, JsonValue value)
         {
             this[ordinal] = DeserializeValue(value);
         }

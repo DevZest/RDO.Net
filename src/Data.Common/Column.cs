@@ -204,12 +204,12 @@ namespace DevZest.Data
         /// <summary>Serializes the value at given <see cref="DataRow"/> oridinal as JSON.</summary>
         /// <param name="rowOrdinal">The <see cref="DataRow"/> ordinal.</param>
         /// <returns>The serialized <see cref="JsonValue"/>.</returns>
-        protected internal abstract JsonValue Serialize(int rowOrdinal);
+        internal abstract JsonValue Serialize(int rowOrdinal);
 
         /// <summary>Deserializes the value at given <see cref="DataRow"/> ordinal from JSON.</summary>
         /// <param name="rowOrdinal">The <see cref="DataRow"/> ordinal.</param>
         /// <param name="value">The JSON value to be deserialized.</param>
-        protected internal abstract void Deserialize(int rowOrdinal, JsonValue value);
+        internal abstract void Deserialize(int rowOrdinal, JsonValue value);
 
         /// <summary>Creates column of parameter expression using value of given <see cref="DataRow"/>.</summary>
         /// <param name="dataRow">The <see cref="DataRow"/> object.</param>
