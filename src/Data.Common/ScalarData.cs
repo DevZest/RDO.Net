@@ -81,7 +81,7 @@ namespace DevZest.Data
             var dataSet = result._dataSet;
             if (dataSet != null)
                 dataSet.RemoveAt(0);
-            new JsonParser(json).Parse(result._dataSet, true);
+            new DataSetJsonParser(json).Parse(result._dataSet, true);
             return dataSet.Count == 1 ? result : null;
         }
     }

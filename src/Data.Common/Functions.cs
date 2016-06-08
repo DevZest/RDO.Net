@@ -242,7 +242,7 @@ namespace DevZest.Data
             Check.NotNull(value, nameof(value));
 
             var result = new CaseExpression<T>();
-            result.Then(condition, value);
+            result.When(condition, value);
             return result;
         }
 

@@ -9,11 +9,15 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TResult">The data type of the result.</typeparam>
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
+        private const string WHEN = nameof(When);
+        private const string THEN = "Then";
+        private const string ELSE = nameof(Else);
+
         internal CaseExpression()
         {
         }
 
-        private List<Column<bool?>> _when = new List<Column<bool?>>();
+        private List<_Boolean> _when = new List<_Boolean>();
 
         private List<Column<TResult>> _then = new List<Column<TResult>>();
 
@@ -50,9 +54,9 @@ namespace DevZest.Data.Primitives
 
         /// <summary>Builds the WHEN...THEN... expression.</summary>
         /// <param name="condition">Condition of the WHEN... expression.</param>
-        /// <param name="value">value of the THEN... expression.</param>
+        /// <param name="value">Value of the THEN... expression.</param>
         /// <returns>This <see cref="CaseExpression{TResult}"/> for fluent build.</returns>
-        public CaseExpression<TResult> Then(_Boolean condition, Column<TResult> value)
+        public CaseExpression<TResult> When(_Boolean condition, Column<TResult> value)
         {
             Check.NotNull(condition, nameof(condition));
             Check.NotNull(value, nameof(value));

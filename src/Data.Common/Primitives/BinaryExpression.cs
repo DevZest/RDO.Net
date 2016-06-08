@@ -1,4 +1,6 @@
-﻿using DevZest.Data.Utilities;
+﻿using System;
+using System.Text;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
 {
@@ -20,6 +22,36 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TResult">The data type of the column expression.</typeparam>
     public abstract class BinaryExpression<T, TResult> : ColumnExpression<TResult>
     {
+        private const string LEFT = nameof(Left);
+        private const string RIGHT = nameof(Right);
+
+        protected abstract class ConverterBase<TColumn> : ColumnConverter<TColumn>
+            where TColumn : Column<TResult>, new()
+        {
+            internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
+            {
+                WriteJsonContent(stringBuilder, (BinaryExpression<T, TResult>)obj);
+            }
+
+            private void WriteJsonContent(StringBuilder stringBuilder, BinaryExpression<T, TResult> expression)
+            {
+                JsonHelper.WriteObjectName(stringBuilder, LEFT);
+                expression.Left.WriteJson(stringBuilder);
+                stringBuilder.Append(',');
+                JsonHelper.WriteObjectName(stringBuilder, RIGHT);
+                expression.Right.WriteJson(stringBuilder);
+            }
+
+            internal sealed override Column ParseJson(Model model, ColumnJsonParser parser)
+            {
+                var left = parser.Parse<Column<T>>(model, LEFT);
+                var right = parser.Parse<Column<T>>(model, RIGHT);
+                return MakeColumn(left, right);
+            }
+
+            protected abstract TColumn MakeColumn(Column<T> left, Column<T> right);
+        }
+
         /// <summary>Initializes a new instance of <see cref="BinaryExpression{T, TResult}"/> class.</summary>
         /// <param name="left">The left column operand.</param>
         /// <param name="right">The right column operand.</param>

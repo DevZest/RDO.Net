@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Double"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Double : Column<Double?>, IColumn<DbReader, Double?>
     {
+        private sealed class Converter : ConverterBase<_Double>
+        {
+        }
+
         protected override bool AreEqual(double? x, double? y)
         {
             return x == y;

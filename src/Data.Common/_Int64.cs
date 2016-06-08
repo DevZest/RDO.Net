@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Int64"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Int64 : Column<Int64?>, IColumn<DbReader, Int64?>
     {
+        private sealed class Converter : ConverterBase<_Int64>
+        {
+        }
+
         protected override bool AreEqual(long? x, long? y)
         {
             return x == y;

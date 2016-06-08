@@ -58,6 +58,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
+    <Compile Include="ColumnConverterAttribute.cs" />
     <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnInitializerManager.cs" />
     <Compile Include="ColumnKey.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
+    <Compile Include="Column_T.ConverterBase.cs" />
     <Compile Include="DataRowRemovedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
@@ -72,8 +74,15 @@
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
+    <Compile Include="Primitives\ColumnConverterProviderAttribute.cs" />
+    <Compile Include="Primitives\ColumnConverter.cs" />
+    <Compile Include="Primitives\ColumnJsonParser.cs" />
+    <Compile Include="Primitives\DataSetJsonParser.cs" />
+    <Compile Include="Primitives\IColumnConverterProvider.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ColumnListExtensions.cs" />
+    <Compile Include="Utilities\Array.Empty.cs" />
+    <Compile Include="Utilities\JsonHelper.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
     <Compile Include="ValidationEntry.cs" />

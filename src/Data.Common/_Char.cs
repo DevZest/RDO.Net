@@ -1,15 +1,19 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
-using System.Globalization;
 
 namespace DevZest.Data
 {
     /// <summary>
     /// Represents a nullable <see cref="Char"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]    
     public sealed class _Char : Column<Char?>, IColumn<DbReader, Char?>
     {
+        private sealed class Converter : ConverterBase<_Char>
+        {
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<char?> CreateParam(char? value)
         {

@@ -9,8 +9,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a string column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _String : Column<String>, IColumn<DbReader, String>
     {
+        private sealed class Converter : ConverterBase<_String>
+        {
+        }
+
         protected override bool AreEqual(string x, string y)
         {
             return x == y;

@@ -6,8 +6,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents column of variable-length stream of binary data.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Binary : Column<Binary>, IColumn<DbReader, Binary>
     {
+        private sealed class Converter : ConverterBase<_Binary>
+        {
+        }
+
         protected override bool AreEqual(Binary x, Binary y)
         {
             return x.Equals(y);

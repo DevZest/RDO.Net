@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Int32"/> Column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Int32 : Column<Int32?>, IColumn<DbReader, Int32?>
     {
+        private sealed class Converter : ConverterBase<_Int32>
+        {
+        }
+
         protected override bool AreEqual(int? x, int? y)
         {
             return x == y;

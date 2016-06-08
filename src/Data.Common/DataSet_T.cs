@@ -208,7 +208,7 @@ namespace DevZest.Data
         {
             Check.NotEmpty(json, nameof(json));
 
-            return (DataSet<T>)(new JsonParser(json).Parse(() => New(initializer)));
+            return (DataSet<T>)(new DataSetJsonParser(json).Parse(() => New(initializer)));
         }
 
         public DataSet<TChild> Fill<TChild>(int dataRowOrdinal, Func<T, TChild> getChildModel, DbSet<TChild> sourceData, Action<TChild> initializer = null)

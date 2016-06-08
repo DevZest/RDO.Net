@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Decimal"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Decimal : Column<Decimal?>, IColumn<DbReader, Decimal?>
     {
+        private sealed class Converter : ConverterBase<_Decimal>
+        {
+        }
+
         protected override bool AreEqual(decimal? x, decimal? y)
         {
             return x == y;

@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace DevZest.Data
 {
@@ -10,7 +11,7 @@ namespace DevZest.Data
     /// Represents a column with strongly typed data.
     /// </summary>
     /// <typeparam name="T">The type of the data.</typeparam>
-    public abstract class Column<T> : Column, IColumn
+    public abstract partial class Column<T> : Column, IColumn
     {
         private interface IValueManager
         {
@@ -248,26 +249,9 @@ namespace DevZest.Data
             }
         }
 
-        private ColumnExpression<T> _expression;
         /// <summary>Gets the expression of this column.</summary>
         /// <value>The expression of this column.</value>
-        public ColumnExpression<T> Expression
-        {
-            get { return _expression; }
-            internal set
-            {
-                Check.NotNull(value, nameof(value));
-                if (value.Owner != null)
-                    throw new ArgumentException(Strings.Column_ExpressionAlreadyAttached, nameof(value));
-                if (_expression != null)
-                    throw new InvalidOperationException(Strings.Column_ExpressionOverwrite);
-                if (ParentModel != null)
-                    throw new InvalidOperationException(Strings.Column_ExpressionModelProperty);
-
-                value.Owner = this;
-                _expression = value;
-            }
-        }
+        public ColumnExpression<T> Expression { get; internal set; }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> object.</summary>
         /// <param name="dataRow">The provided <see cref="DataRow"/> object.</param>
@@ -283,7 +267,7 @@ namespace DevZest.Data
                 if (IsExpression)
                 {
                     Check.NotNull(dataRow, nameof(dataRow));
-                    return _expression[dataRow];
+                    return Expression[dataRow];
                 }
 
                 VerifyDataRow(dataRow, nameof(dataRow));
@@ -300,7 +284,7 @@ namespace DevZest.Data
         {
             if (!IsExpression)
                 throw new InvalidOperationException(Strings.Column_Eval_NullExpression);
-            return _expression.Eval();
+            return Expression.Eval();
         }
 
         private void SetValue(DataRow dataRow, T value)
@@ -419,7 +403,7 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public override bool IsExpression
         {
-            get { return _expression != null; }
+            get { return Expression != null; }
         }
 
         /// <inheritdoc/>
@@ -434,7 +418,7 @@ namespace DevZest.Data
         {
             get
             {
-                return _dbExpression ?? (_dbExpression = _expression == null ? new DbColumnExpression(this) : _expression.GetDbExpression());
+                return _dbExpression ?? (_dbExpression = Expression == null ? new DbColumnExpression(this) : Expression.GetDbExpression());
             }
         }
 
@@ -455,13 +439,13 @@ namespace DevZest.Data
         /// <inheritdoc/>
         public sealed override IModelSet ParentModelSet
         {
-            get { return _expression == null ? ParentModel : _expression.ParentModelSet; }
+            get { return Expression == null ? ParentModel : Expression.ParentModelSet; }
         }
 
         /// <inheritdoc/>
         public sealed override IModelSet AggregateModelSet
         {
-            get { return _expression == null ? ModelSet.Empty : _expression.AggregateModelSet; }
+            get { return Expression == null ? ModelSet.Empty : Expression.AggregateModelSet; }
         }
 
         /// <summary>Creates a column of constant expression.</summary>
@@ -500,7 +484,7 @@ namespace DevZest.Data
                 return this;
 
             VerifyCounterpartModel(model, nameof(model));
-            return IsExpression ? _expression.GetCounterpart(model) : (Column<T>)model.Columns[Ordinal];
+            return IsExpression ? Expression.GetCounterpart(model) : (Column<T>)model.Columns[Ordinal];
         }
 
         internal sealed override Column InternalGetCounterpart(Model model)
@@ -639,6 +623,12 @@ namespace DevZest.Data
             var counterpart = GetCounterpart(targetDataRow.Model);
             if (!counterpart.IsReadOnly(targetDataRow))
                 counterpart[targetDataRow] = this[sourceDataRow];
+        }
+
+        internal void WriteJson(StringBuilder stringBuilder)
+        {
+            var converter = ColumnConverter.Get(this);
+            converter.WriteJson(this, stringBuilder);
         }
     }
 }

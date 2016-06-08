@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Byte"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Byte : Column<Byte?>, IColumn<DbReader, Byte?>
     {
+        private sealed class Converter : ConverterBase<_Byte>
+        {
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<byte?> CreateParam(byte? value)
         {
@@ -342,8 +347,17 @@ namespace DevZest.Data
             return new BitwiseXorExpression(x, y).MakeColumn<_Byte>();
         }
 
+        [ColumnConverter(typeof(Converter))]
         private sealed class LessThanExpression : BinaryExpression<Byte?, bool?>
         {
+            private sealed class Converter : ConverterBase<_Boolean>
+            {
+                protected override _Boolean MakeColumn(Column<byte?> left, Column<byte?> right)
+                {
+                    return new LessThanExpression((_Byte)left, (_Byte)right).MakeColumn<_Boolean>();
+                }
+            }
+
             public LessThanExpression(_Byte x, _Byte y)
                 : base(x, y)
             {

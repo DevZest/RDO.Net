@@ -4,13 +4,15 @@ namespace DevZest.Data.Primitives
 {
     internal static class ColumnListExtensions
     {
-        internal static List<Column<T>> GetCounterpart<T>(this List<Column<T>> list, Model model)
+        internal static List<T> GetCounterpart<T>(this List<T> list, Model model)
+            where T : Column
         {
-            var result = new List<Column<T>>();
+            var result = new List<T>();
             for (int i = 0; i < list.Count; i++)
-                result.Add(list[i].GetCounterpart(model));
+                result.Add((T)list[i].GetCounterpart(model));
 
             return result;
         }
+
     }
 }

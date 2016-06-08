@@ -7,8 +7,13 @@ namespace DevZest.Data.SqlServer
     /// <summary>
     /// Represents a nullable <see cref="TimeSpan"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _TimeSpan : Column<TimeSpan?>, IColumn<SqlReader, TimeSpan?>
     {
+        private sealed class Converter : ConverterBase<_TimeSpan>
+        {
+        }
+
         protected override bool AreEqual(TimeSpan? x, TimeSpan? y)
         {
             return x == y;

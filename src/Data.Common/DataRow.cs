@@ -158,7 +158,7 @@ namespace DevZest.Data
 
                 if (count > 0)
                     stringBuilder.Append(',');
-                BuildJsonObjectName(stringBuilder, column.Name);
+                JsonHelper.WriteObjectName(stringBuilder, column.Name);
                 var dataSetColumn = column as IDataSetColumn;
                 if (dataSetColumn != null)
                     dataSetColumn.Serialize(Ordinal, stringBuilder);
@@ -171,20 +171,12 @@ namespace DevZest.Data
             {
                 if (count > 0)
                     stringBuilder.Append(',');
-                BuildJsonObjectName(stringBuilder, dataSet.Model.Name);
+                JsonHelper.WriteObjectName(stringBuilder, dataSet.Model.Name);
                 dataSet.BuildJsonString(stringBuilder);
                 count++;
             }
 
             stringBuilder.Append('}');
-        }
-
-        private static void BuildJsonObjectName(StringBuilder stringBuilder, string name)
-        {
-            stringBuilder.Append("\"");
-            stringBuilder.Append(name);
-            stringBuilder.Append("\"");
-            stringBuilder.Append(":");
         }
 
         public override string ToString()

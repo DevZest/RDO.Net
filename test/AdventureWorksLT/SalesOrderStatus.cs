@@ -76,8 +76,13 @@ namespace DevZest.Samples.AdventureWorksLT
         }
     }
 
+    [ColumnConverter(typeof(Converter))]
     public sealed class _SalesOrderStatus : ByteEnum<SalesOrderStatus>
     {
+        private sealed class Converter : ConverterBase<_SalesOrderStatus>
+        {
+        }
+
         protected override Column<SalesOrderStatus> CreateParam(SalesOrderStatus value)
         {
             return Param(value, this);

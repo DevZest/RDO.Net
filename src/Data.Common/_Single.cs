@@ -9,8 +9,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Single"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Single : Column<Single?>, IColumn<DbReader, Single?>
     {
+        private sealed class Converter : ConverterBase<_Single>
+        {
+        }
+
         protected override bool AreEqual(float? x, float? y)
         {
             return x == y;

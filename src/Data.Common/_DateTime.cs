@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="DateTime"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _DateTime : Column<DateTime?>, IColumn<DbReader, DateTime?>
     {
+        private sealed class Converter : ConverterBase<_DateTime>
+        {
+        }
+
         protected override bool AreEqual(DateTime? x, DateTime? y)
         {
             return x == y;

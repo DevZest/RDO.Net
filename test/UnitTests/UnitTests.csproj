@@ -84,6 +84,7 @@
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
     <Compile Include="IgnoreColumnAttributeTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
+    <Compile Include="Primitives\ColumnConverterTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="_CharTests.cs" />

@@ -7,8 +7,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Boolean"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Boolean : Column<bool?>, IColumn<DbReader, Boolean?>
     {
+        private sealed class Converter : ConverterBase<_Boolean>
+        {
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<bool?> CreateParam(bool? value)
         {

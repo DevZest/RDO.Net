@@ -265,7 +265,7 @@ END";
 
             {
                 var expr = (column1 == c1).Then(_Boolean.True)
-                    .Then(column1 == c0, _Boolean.False)
+                    .When(column1 == c0, _Boolean.False)
                     .Else(_Boolean.Null);
                 var expectedSql =
 @"CASE

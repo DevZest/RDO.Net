@@ -7,8 +7,13 @@ using DevZest.Data.Utilities;
 
 namespace DevZest.Data.SqlServer
 {
+    [ColumnConverter(typeof(Converter))]
     public sealed class _SqlXml : Column<SqlXml>, IColumn<SqlReader>
     {
+        private sealed class Converter : ConverterBase<_SqlXml>
+        {
+        }
+
         protected override bool AreEqual(SqlXml x, SqlXml y)
         {
             return x == y;

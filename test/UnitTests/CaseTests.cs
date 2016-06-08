@@ -50,7 +50,7 @@ namespace DevZest.Data
             _Boolean c1 = column1 == 1;
             _Boolean c0 = column1 == 0;
             var expr = Functions.Then(c1, _Boolean.True)
-                .Then(c0, _Boolean.False)
+                .When(c0, _Boolean.False)
                 .Else(_Boolean.Null);
             var dbExpr = (DbCaseExpression)expr.DbExpression;
             dbExpr.Verify(null, c1, _Boolean.True, c0, _Boolean.False, _Boolean.Null);

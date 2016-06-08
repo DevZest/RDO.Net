@@ -9,8 +9,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Int16"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Int16 : Column<Int16?>, IColumn<DbReader, Int16?>
     {
+        private sealed class Converter : ConverterBase<_Int16>
+        {
+        }
+
         protected override bool AreEqual(short? x, short? y)
         {
             return x == y;

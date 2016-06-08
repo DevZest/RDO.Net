@@ -8,8 +8,13 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a nullable <see cref="Guid"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _Guid : Column<Guid?>, IColumn<DbReader, Guid?>
     {
+        private sealed class Converter : ConverterBase<_Guid>
+        {
+        }
+
         protected override bool AreEqual(Guid? x, Guid? y)
         {
             return x == y;

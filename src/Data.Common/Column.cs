@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
+using System.Text;
 
 namespace DevZest.Data
 {
@@ -402,5 +403,29 @@ namespace DevZest.Data
         internal abstract void Load(DataRow dataRow);
 
         internal abstract void CopyValue(DataRow sourceDataRow, DataRow targetDataRow);
+
+        internal string TypeId
+        {
+            get { return ColumnConverter.GetTypeId(this); }
+        }
+
+        public string ToJson(bool isPretty)
+        {
+            var converter = ColumnConverter.Get(this);
+            var result = new StringBuilder();
+            converter.WriteJson(this, result);
+            if (isPretty)
+                return JsonFormatter.PrettyPrint(result.ToString());
+            else
+                return result.ToString();
+        }
+
+        public static Column FromJson(Model model, string jsonString)
+        {
+            Check.NotNull(model, nameof(model));
+            Check.NotEmpty(jsonString, nameof(jsonString));
+
+            return new ColumnJsonParser(jsonString).Parse(model);
+        }
     }
 }

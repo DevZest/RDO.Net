@@ -61,8 +61,12 @@ namespace DevZest.Data.Primitives
         public TColumn MakeColumn<TColumn>()
             where TColumn : Column<T>, new()
         {
+            if (Owner != null)
+                throw new InvalidOperationException(Strings.ColumnExpression_AlreadyAttached);
+
             var result = new TColumn();
             result.Expression = this;
+            Owner = result;
             return result;
         }
 

@@ -7,8 +7,13 @@ namespace DevZest.Data.SqlServer
     /// <summary>
     /// Represents a nullable <see cref="DateTimeOffset"/> column.
     /// </summary>
+    [ColumnConverter(typeof(Converter))]
     public sealed class _DateTimeOffset : Column<DateTimeOffset?>, IColumn<SqlReader, DateTimeOffset?>
     {
+        private sealed class Converter : ConverterBase<_DateTimeOffset>
+        {
+        }
+
         protected override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
         {
             return x == y;

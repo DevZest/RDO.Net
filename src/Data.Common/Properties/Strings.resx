@@ -150,14 +150,8 @@
   <data name="ColumnGroup_InconsistentParentModel" xml:space="preserve">
     <value>The type "{type}" is not implemented correctly. The parent models of column "{column1}" and "{column2}" are inconsistent.</value>
   </data>
-  <data name="Column_ExpressionAlreadyAttached" xml:space="preserve">
+  <data name="ColumnExpression_AlreadyAttached" xml:space="preserve">
     <value>The expression is already attached to a Column.</value>
-  </data>
-  <data name="Column_ExpressionModelProperty" xml:space="preserve">
-    <value>The expression cannot be set to a column owned by a model.</value>
-  </data>
-  <data name="Column_ExpressionOverwrite" xml:space="preserve">
-    <value>The column's Expression exists and cannot be overwrite.</value>
   </data>
   <data name="Column_VerifyDataRow" xml:space="preserve">
     <value>The Model of the given DataRow must be the same as this column's ParentModel.</value>
@@ -398,5 +392,17 @@
   </data>
   <data name="Column_VerifyCounterpartModel" xml:space="preserve">
     <value>The model is invalid. There is no derivation relationship between this model and ParentModel.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidTypeId" xml:space="preserve">
+    <value>The TypeId "{typeId}" is invalid.</value>
+  </data>
+  <data name="ColumnJsonParser_TypeIdExpected" xml:space="preserve">
+    <value>Object name "{currentObjectName}" is invalid. Object name "TypeId" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidObjectName" xml:space="preserve">
+    <value>Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidResultType" xml:space="preserve">
+    <value>Invalid Model["{name}"]: Type "{expectedType}" expected.</value>
   </data>
 </root>

@@ -102,25 +102,9 @@ namespace DevZest.Data
         /// <summary>
         /// The expression is already attached to a Column.
         /// </summary>
-        public static string Column_ExpressionAlreadyAttached
+        public static string ColumnExpression_AlreadyAttached
         {
-            get { return GetString("Column_ExpressionAlreadyAttached"); }
-        }
-
-        /// <summary>
-        /// The expression cannot be set to a column owned by a model.
-        /// </summary>
-        public static string Column_ExpressionModelProperty
-        {
-            get { return GetString("Column_ExpressionModelProperty"); }
-        }
-
-        /// <summary>
-        /// The column's Expression exists and cannot be overwrite.
-        /// </summary>
-        public static string Column_ExpressionOverwrite
-        {
-            get { return GetString("Column_ExpressionOverwrite"); }
+            get { return GetString("ColumnExpression_AlreadyAttached"); }
         }
 
         /// <summary>
@@ -761,6 +745,38 @@ namespace DevZest.Data
         public static string Column_VerifyCounterpartModel
         {
             get { return GetString("Column_VerifyCounterpartModel"); }
+        }
+
+        /// <summary>
+        /// The TypeId "{typeId}" is invalid.
+        /// </summary>
+        public static string ColumnJsonParser_InvalidTypeId(object typeId)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidTypeId", "typeId"), typeId);
+        }
+
+        /// <summary>
+        /// Object name "{currentObjectName}" is invalid. Object name "TypeId" expected.
+        /// </summary>
+        public static string ColumnJsonParser_TypeIdExpected(object currentObjectName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_TypeIdExpected", "currentObjectName"), currentObjectName);
+        }
+
+        /// <summary>
+        /// Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.
+        /// </summary>
+        public static string ColumnJsonParser_InvalidObjectName(object objName, object expected1, object expected2)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidObjectName", "objName", "expected1", "expected2"), objName, expected1, expected2);
+        }
+
+        /// <summary>
+        /// Invalid Model["{name}"]: Type "{expectedType}" expected.
+        /// </summary>
+        public static string ColumnJsonParser_InvalidResultType(object name, object expectedType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidResultType", "name", "expectedType"), name, expectedType);
         }
 
         private static string GetString(string name, params string[] formatterNames)
