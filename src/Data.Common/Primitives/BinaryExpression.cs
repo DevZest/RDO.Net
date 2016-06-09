@@ -28,24 +28,20 @@ namespace DevZest.Data.Primitives
         protected abstract class ConverterBase<TColumn> : ExpressionConverter<TColumn>
             where TColumn : Column<TResult>, new()
         {
-            internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
+            internal sealed override void WritePropertiesJson(StringBuilder stringBuilder, object obj)
             {
-                WriteJsonContent(stringBuilder, (BinaryExpression<T, TResult>)obj);
+                WriteProperties(stringBuilder, (BinaryExpression<T, TResult>)obj);
             }
 
-            private void WriteJsonContent(StringBuilder stringBuilder, BinaryExpression<T, TResult> expression)
+            private void WriteProperties(StringBuilder stringBuilder, BinaryExpression<T, TResult> expression)
             {
-                JsonHelper.WriteObjectName(stringBuilder, LEFT);
-                expression.Left.WriteJson(stringBuilder);
-                stringBuilder.Append(',');
-                JsonHelper.WriteObjectName(stringBuilder, RIGHT);
-                expression.Right.WriteJson(stringBuilder);
+                stringBuilder.WriteNameColumnPair(LEFT, expression.Left).WriteComma().WriteNameColumnPair(RIGHT, expression.Right);
             }
 
             internal sealed override Column ParseJson(Model model, ColumnJsonParser parser)
             {
-                var left = parser.Parse<Column<T>>(model, LEFT);
-                var right = parser.Parse<Column<T>>(model, RIGHT);
+                var left = parser.ParseNameColumnPair<Column<T>>(LEFT, model);
+                var right = parser.ParseNameColumnPair<Column<T>>(RIGHT, model);
                 return MakeColumn(left, right);
             }
 

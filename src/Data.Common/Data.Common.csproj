@@ -77,13 +77,15 @@
     <Compile Include="Primitives\ColumnConverterProviderAttribute.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\ColumnJsonParser.cs" />
+    <Compile Include="Primitives\ColumnJsonWriter.cs" />
     <Compile Include="Primitives\DataSetJsonParser.cs" />
+    <Compile Include="Primitives\DataSetJsonWriter.cs" />
     <Compile Include="Primitives\GenericExpressionConverterAttribute.cs" />
     <Compile Include="Primitives\IColumnConverterProvider.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ColumnListExtensions.cs" />
+    <Compile Include="Primitives\JsonWriter.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
-    <Compile Include="Utilities\JsonHelper.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
     <Compile Include="ValidationEntry.cs" />

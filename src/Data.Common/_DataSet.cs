@@ -24,11 +24,11 @@ namespace DevZest.Data
 
         void IDataSetColumn.Serialize(int rowOrdinal, StringBuilder stringBuilder)
         {
-            var value = this[rowOrdinal];
-            if (value == null)
-                JsonValue.Null.Write(stringBuilder);
+            var dataSet = this[rowOrdinal];
+            if (dataSet == null)
+                stringBuilder.WriteValue(JsonValue.Null);
             else
-                value.BuildJsonString(stringBuilder);
+                stringBuilder.WriteDataSet(dataSet);
         }
 
         DataSet IDataSetColumn.NewValue(int ordinal)

@@ -22,15 +22,13 @@ namespace DevZest.Data.Primitives
         protected abstract class GenericExpressionConverter<TColumn> : ExpressionConverter<TColumn>
             where TColumn : Column, new()
         {
-            internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
+            internal sealed override void WritePropertiesJson(StringBuilder stringBuilder, object obj)
             {
-                JsonHelper.WriteObjectName(stringBuilder, ColumnJsonParser.TYPE_ARG_ID);
-                stringBuilder.Append(ColumnConverter.GetTypeId<TColumn>());
-                stringBuilder.Append(',');
-                WriteJsonContent(stringBuilder, (ColumnExpression<T>)obj);
+                stringBuilder.WriteNameStringPair(ColumnJsonParser.TYPE_ARG_ID, ColumnConverter.GetTypeId<TColumn>()).WriteComma();
+                WritePropertiesCore(stringBuilder, (ColumnExpression<T>)obj);
             }
 
-            protected abstract void WriteJsonContent(StringBuilder stringBuilder, ColumnExpression<T> expression);
+            protected abstract void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression);
         }
 
         protected internal abstract T this[DataRow dataRow] { get; }

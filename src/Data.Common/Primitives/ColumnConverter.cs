@@ -132,17 +132,15 @@ namespace DevZest.Data.Primitives
 
         internal abstract Column MakeColumn();
 
-        internal void WriteJson(object obj, StringBuilder stringBuilder)
+        internal void WriteJson(StringBuilder stringBuilder, object obj)
         {
-            stringBuilder.Append('{');
-            JsonHelper.WriteObjectName(stringBuilder, ColumnJsonParser.TYPE_ID);
-            JsonValue.String(TypeId).Write(stringBuilder);
-            stringBuilder.Append(',');
-            WriteJsonContent(obj, stringBuilder);
-            stringBuilder.Append('}');
+            stringBuilder.WriteStartObject()
+                .WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma()
+                .Write(sb => WritePropertiesJson(sb, obj))
+                .WriteEndObject();
         }
 
-        internal abstract void WriteJsonContent(object obj, StringBuilder stringBuilder);
+        internal abstract void WritePropertiesJson(StringBuilder stringBuilder, object obj);
 
         internal abstract Column ParseJson(Model model, ColumnJsonParser parser);
     }

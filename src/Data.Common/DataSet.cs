@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -211,34 +212,12 @@ namespace DevZest.Data
         public string ToJsonString(bool isPretty)
         {
             var result = new StringBuilder();
-            BuildJsonString(result);
+            result.WriteDataSet(this);
 
             if (isPretty)
                 return JsonFormatter.PrettyPrint(result.ToString());
             else
                 return result.ToString();
-        }
-
-        internal static void BuildJsonString(DataSet dataSet, StringBuilder stringBuilder)
-        {
-            if (dataSet == null)
-                stringBuilder.Append(JsonValue.Null.Text);
-            else
-                dataSet.BuildJsonString(stringBuilder);
-        }
-
-        internal void BuildJsonString(StringBuilder stringBuilder)
-        {
-            stringBuilder.Append('[');
-            int count = 0;
-            foreach (var dataRow in this)
-            {
-                if (count > 0)
-                    stringBuilder.Append(',');
-                dataRow.BuildJsonString(stringBuilder);
-                count++;
-            }
-            stringBuilder.Append(']');
         }
 
         public bool AllowsKeyUpdate(bool value)

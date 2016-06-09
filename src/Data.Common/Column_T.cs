@@ -628,7 +628,7 @@ namespace DevZest.Data
         internal void WriteJson(StringBuilder stringBuilder)
         {
             var converter = ColumnConverter.Get(this);
-            converter.WriteJson(this, stringBuilder);
+            converter.WriteJson(stringBuilder, this);
         }
     }
 }

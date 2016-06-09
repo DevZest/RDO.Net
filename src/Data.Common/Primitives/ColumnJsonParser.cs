@@ -15,7 +15,14 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        internal Column Parse(Model model)
+        internal Column ParseTopLevelColumn(Model model)
+        {
+            var result = ParseColumn(model);
+            ExpectToken(TokenKind.Eof);
+            return result;
+        }
+
+        internal Column ParseColumn(Model model)
         {
             Column result;
 
@@ -58,10 +65,40 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal T Parse<T>(Model model, string objectName)
+        internal T ParseNameColumnPair<T>(string name, Model model)
             where T : Column
         {
-            throw new NotImplementedException();
+            ExpectObjectName(name);
+            return (T)ParseColumn(model);
+        }
+
+        internal IReadOnlyList<T> ParseNameColumnArrayPair<T>(string name, Model model)
+            where T : Column
+        {
+            var result = new List<T>();
+
+            ExpectObjectName(name);
+            ExpectToken(TokenKind.SquaredOpen);
+
+            while (PeekToken().Kind == TokenKind.CurlyOpen)
+            {
+                result.Add((T)ParseColumn(model));
+
+                while (PeekToken().Kind == TokenKind.Comma)
+                {
+                    ConsumeToken();
+                    result.Add((T)ParseColumn(model));
+                }
+            }
+
+            ExpectToken(TokenKind.SquaredClose);
+            return result;
+        }
+
+        internal T ParseNameValuePair<T>(string objectName, Column<T> deserializer)
+        {
+            ExpectObjectName(objectName);
+            return deserializer.DeserializeValue(ExpectToken(TokenKind.ColumnValues).JsonValue);
         }
     }
 }

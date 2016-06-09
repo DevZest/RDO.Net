@@ -22,6 +22,10 @@ namespace DevZest.Data
         }
 
         private DataSet[] _childDataSets;
+        internal IReadOnlyCollection<DataSet> ChildDataSets
+        {
+            get { return _childDataSets; }
+        }
 
         /// <summary>Gets the <see cref="Model"/> which associated with this <see cref="DataRow"/>.</summary>
         public Model Model { get; private set; }
@@ -143,40 +147,6 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.InvalidChildModel, nameof(childModel));
 
             return (DataSet<T>)this[childModel.Ordinal];
-        }
-
-        internal void BuildJsonString(StringBuilder stringBuilder)
-        {
-            stringBuilder.Append('{');
-
-            var columns = Model.Columns;
-            int count = 0;
-            foreach (var column in columns)
-            {
-                if (!column.ShouldSerialize)
-                    continue;
-
-                if (count > 0)
-                    stringBuilder.Append(',');
-                JsonHelper.WriteObjectName(stringBuilder, column.Name);
-                var dataSetColumn = column as IDataSetColumn;
-                if (dataSetColumn != null)
-                    dataSetColumn.Serialize(Ordinal, stringBuilder);
-                else
-                    column.Serialize(Ordinal).Write(stringBuilder);
-                count++;
-            }
-
-            foreach (var dataSet in _childDataSets)
-            {
-                if (count > 0)
-                    stringBuilder.Append(',');
-                JsonHelper.WriteObjectName(stringBuilder, dataSet.Model.Name);
-                dataSet.BuildJsonString(stringBuilder);
-                count++;
-            }
-
-            stringBuilder.Append('}');
         }
 
         public override string ToString()

@@ -14,7 +14,7 @@ namespace DevZest.Data.Primitives
         private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
             where TColumn : Column<TResult>, new()
         {
-            protected sealed override void WriteJsonContent(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
+            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
             {
                 throw new NotImplementedException();
             }

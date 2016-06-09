@@ -418,7 +418,7 @@ namespace DevZest.Data
         {
             var converter = ColumnConverter.Get(this);
             var result = new StringBuilder();
-            converter.WriteJson(this, result);
+            converter.WriteJson(result, this);
             if (isPretty)
                 return JsonFormatter.PrettyPrint(result.ToString());
             else
@@ -430,7 +430,7 @@ namespace DevZest.Data
             Check.NotNull(model, nameof(model));
             Check.NotEmpty(jsonString, nameof(jsonString));
 
-            return new ColumnJsonParser(jsonString).Parse(model);
+            return new ColumnJsonParser(jsonString).ParseTopLevelColumn(model);
         }
     }
 }

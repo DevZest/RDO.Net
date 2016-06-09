@@ -15,30 +15,24 @@ namespace DevZest.Data
                 get { return typeof(T); }
             }
 
-            internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
+            internal sealed override void WritePropertiesJson(StringBuilder stringBuilder, object obj)
             {
-                BuildJson((TColumn)obj, stringBuilder);
+                var column = (TColumn)obj;
+                if (column.IsExpression)
+                    stringBuilder.WritePair(ColumnJsonParser.EXPRESSION, sb => WriteExpression(sb, column.Expression));
+                else
+                    stringBuilder.WriteNameStringPair(ColumnJsonParser.NAME, column.Name);
             }
 
-            private void BuildJson(TColumn column, StringBuilder stringBuilder)
+            private void WriteExpression(StringBuilder stringBuilder, ColumnExpression<T> expression)
             {
-                if (column.IsExpression)
-                {
-                    JsonHelper.WriteObjectName(stringBuilder, ColumnJsonParser.EXPRESSION);
-                    var expression = column.Expression;
-                    var converter = ColumnConverter.Get(expression);
-                    converter.WriteJson(expression, stringBuilder);
-                }
-                else
-                {
-                    JsonHelper.WriteObjectName(stringBuilder, ColumnJsonParser.NAME);
-                    JsonValue.String(column.Name).Write(stringBuilder);
-                }
+                var converter = ColumnConverter.Get(expression);
+                converter.WriteJson(stringBuilder, expression);
             }
 
             internal sealed override Column ParseJson(Model model, ColumnJsonParser parser)
             {
-                return parser.Parse(model);
+                return parser.ParseColumn(model);
             }
         }
     }

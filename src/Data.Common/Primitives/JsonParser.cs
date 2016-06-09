@@ -103,14 +103,19 @@ namespace DevZest.Data.Primitives
 
         protected string ExpectString(string expectedObjectName, bool expectComma)
         {
-            var objectName = ExpectToken(TokenKind.String).Text;
-            if (objectName != expectedObjectName)
-                throw new FormatException(Strings.JsonParser_InvalidObjectName(objectName, expectedObjectName));
-            ExpectToken(TokenKind.Colon);
+            ExpectObjectName(expectedObjectName);
             var result = ExpectToken(TokenKind.String).Text;
             if (expectComma)
                 ExpectToken(TokenKind.Comma);
             return result;
+        }
+
+        protected void ExpectObjectName(string expectedObjectName)
+        {
+            var objectName = ExpectToken(TokenKind.String).Text;
+            if (objectName != expectedObjectName)
+                throw new FormatException(Strings.JsonParser_InvalidObjectName(objectName, expectedObjectName));
+            ExpectToken(TokenKind.Colon);
         }
 
         private Token NextToken()
