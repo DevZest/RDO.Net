@@ -26,16 +26,25 @@ namespace DevZest.Data.Primitives
     {
         private static readonly HashSet<Assembly> s_initializedAssemblies = new HashSet<Assembly>();
         private static readonly ConcurrentDictionary<Type, IColumnConverterProvider> s_providersByType = new ConcurrentDictionary<Type, IColumnConverterProvider>();
-        private static readonly ConcurrentDictionary<string, IColumnConverterProvider> s_providersByName = new ConcurrentDictionary<string, IColumnConverterProvider>();
+        private static readonly ConcurrentDictionary<string, IColumnConverterProvider> s_providersByTypeId = new ConcurrentDictionary<string, IColumnConverterProvider>();
 
         internal static bool EnsureInitialized(Column column)
         {
-            return EnsureInitialized(column.GetType());
+            var type = column.GetType();
+            return type.GetTypeInfo().IsGenericType ? true : EnsureInitialized(column.GetType());
         }
 
         internal static bool EnsureInitialized<T>(ColumnExpression<T> expression)
         {
-            return EnsureInitialized(expression.GetType());
+            return EnsureInitialized(GetTypeKey(expression));
+        }
+
+        private static Type GetTypeKey<T>(ColumnExpression<T> expression)
+        {
+            var result = expression.GetType();
+            if (result.GetTypeInfo().IsGenericType)
+                result = result.GetGenericTypeDefinition();
+            return result;
         }
 
         private static bool EnsureInitialized(Type type)
@@ -72,7 +81,7 @@ namespace DevZest.Data.Primitives
             IColumnConverterProvider provider = attribute;
             provider.Initialize(targetType);
             s_providersByType.AddOrUpdate(targetType, provider, (t, oldValue) => provider);
-            s_providersByName.AddOrUpdate(provider.TypeId, provider, (t, oldValue) => provider);
+            s_providersByTypeId.AddOrUpdate(provider.TypeId, provider, (t, oldValue) => provider);
             return true;
         }
 
@@ -83,14 +92,14 @@ namespace DevZest.Data.Primitives
 
         internal static ColumnConverter Get<T>(ColumnExpression<T> expression)
         {
-            return s_providersByType[expression.GetType()].Provide(expression.Owner);
+            return s_providersByType[GetTypeKey(expression)].Provide(expression.Owner);
         }
 
-        internal static ColumnConverter Get(string typeId, IReadOnlyList<string> typeArgs)
+        internal static ColumnConverter Get(string typeId, string typeArgId)
         {
             IColumnConverterProvider provider;
-            var success = s_providersByName.TryGetValue(typeId, out provider);
-            return success ? provider.Provide(typeId, typeArgs) : null;
+            var success = s_providersByTypeId.TryGetValue(typeId, out provider);
+            return success ? provider.Provide(typeArgId) : null;
         }
 
         internal static string GetTypeId(Column column)
@@ -100,9 +109,22 @@ namespace DevZest.Data.Primitives
             return success ? provider.TypeId : null;
         }
 
+        internal static string GetTypeId<T>()
+            where T : Column, new()
+        {
+            return s_providersByType[typeof(T)].TypeId;
+        }
+
+        internal static IColumnConverterProvider GetConverterProvider(string typeId)
+        {
+            return s_providersByTypeId[typeId];
+        }
+
         public string TypeId { get; internal set; }
 
         public abstract Type ColumnType { get; }
+
+        public abstract Type DataType { get; }
 
         internal abstract Column MakeColumn();
 

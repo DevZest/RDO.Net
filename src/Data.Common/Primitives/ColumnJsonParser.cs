@@ -6,7 +6,7 @@ namespace DevZest.Data.Primitives
     internal class ColumnJsonParser : JsonParser
     {
         internal const string TYPE_ID = "TypeId";
-        internal const string TYPE_ARGS = "TypeArgs";
+        internal const string TYPE_ARG_ID = "TypeArgId";
         internal const string NAME = "Name";
         internal const string EXPRESSION = "Expression";
 
@@ -28,7 +28,7 @@ namespace DevZest.Data.Primitives
                 var name = ExpectToken(TokenKind.String).Text;
                 result = model[name] as Column;
                 if (result == null || result.GetType() != converter.ColumnType)
-                    throw new FormatException(Strings.ColumnJsonParser_InvalidResultType(name, converter.ColumnType.FullName));
+                    throw new FormatException(Strings.ColumnJsonParser_InvalidColumnType(name, converter.ColumnType.FullName));
             }
             else if (objectName == EXPRESSION)
                 result = converter.ParseJson(model, this);
@@ -43,26 +43,16 @@ namespace DevZest.Data.Primitives
         {
             ExpectToken(TokenKind.CurlyOpen);
 
-            var objectName = ExpectToken(TokenKind.String).Text;
-            if (objectName != TYPE_ID)
-                throw new FormatException(Strings.ColumnJsonParser_TypeIdExpected(objectName));
-            ExpectToken(TokenKind.Colon);
+            var typeId = ExpectString(TYPE_ID, true);
 
-            var typeId = ExpectToken(TokenKind.String).Text;
-            IReadOnlyList<string> typeArgs;
+            string typeArgId;
             var currentToken = PeekToken();
-            if (currentToken.Kind == TokenKind.String && currentToken.Text == TYPE_ARGS)
-            {
-                ConsumeToken();
-                ExpectToken(TokenKind.Colon);
-                typeArgs = ExpectStringList();
-            }
+            if (currentToken.Kind == TokenKind.String && currentToken.Text == TYPE_ARG_ID)
+                typeArgId = ExpectString(TYPE_ARG_ID, true);
             else
-                typeArgs = Array<string>.Empty;
+                typeArgId = null;
 
-            ExpectToken(TokenKind.Comma);
-
-            var result = ColumnConverter.Get(typeId, typeArgs);
+            var result = ColumnConverter.Get(typeId, typeArgId);
             if (result == null)
                 throw new FormatException(Strings.ColumnJsonParser_InvalidTypeId(typeId));
             return result;

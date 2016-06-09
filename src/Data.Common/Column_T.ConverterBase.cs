@@ -10,6 +10,11 @@ namespace DevZest.Data
         protected abstract class ConverterBase<TColumn> : ColumnConverter<TColumn>
             where TColumn : Column<T>, new()
         {
+            public sealed override Type DataType
+            {
+                get { return typeof(T); }
+            }
+
             internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
             {
                 BuildJson((TColumn)obj, stringBuilder);

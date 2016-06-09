@@ -25,7 +25,7 @@ namespace DevZest.Data.Primitives
         private const string LEFT = nameof(Left);
         private const string RIGHT = nameof(Right);
 
-        protected abstract class ConverterBase<TColumn> : ColumnConverter<TColumn>
+        protected abstract class ConverterBase<TColumn> : ExpressionConverter<TColumn>
             where TColumn : Column<TResult>, new()
         {
             internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)

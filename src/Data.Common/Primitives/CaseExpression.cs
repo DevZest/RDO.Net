@@ -2,13 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE WHEN..ELSE... expression.</summary>
     /// <typeparam name="TResult">The data type of the result.</typeparam>
+    [GenericExpressionConverter(typeof(CaseExpression<>.Converter<>))]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
+        private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
+            where TColumn : Column<TResult>, new()
+        {
+            protected sealed override void WriteJsonContent(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
+            {
+                throw new NotImplementedException();
+            }
+
+            internal override Column ParseJson(Model model, ColumnJsonParser parser)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private const string WHEN = nameof(When);
         private const string THEN = "Then";
         private const string ELSE = nameof(Else);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -9,7 +8,11 @@ namespace DevZest.Data.Primitives
 
         string TypeId { get; }
 
-        ColumnConverter Provide(string typeId, IReadOnlyList<string> typeArgs);
+        Type ColumnType { get; }
+
+        Type DataType { get; }
+
+        ColumnConverter Provide(string typeArgId);
 
         ColumnConverter Provide(Column column);
     }

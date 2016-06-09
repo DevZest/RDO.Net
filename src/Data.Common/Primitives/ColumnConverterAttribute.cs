@@ -1,9 +1,8 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     public sealed class ColumnConverterAttribute : ColumnConverterProviderAttribute
     {
@@ -13,20 +12,22 @@ namespace DevZest.Data
             Converter = (ColumnConverter)Activator.CreateInstance(converterType);
         }
 
-        private static string GetDefaultTypeId(Type targetType)
-        {
-            var fullName = targetType.FullName;
-            var nspace = targetType.Namespace;
-            return string.IsNullOrEmpty(nspace) ? fullName : fullName.Substring(nspace.Length + 1);
-        }
-
         public ColumnConverter Converter { get; private set; }
 
         internal override void Initialize(Type targetType)
         {
-            if (string.IsNullOrEmpty(TypeId))
-                TypeId = GetDefaultTypeId(targetType);
+            base.Initialize(targetType);
             Converter.TypeId = TypeId;
+        }
+
+        public override Type ColumnType
+        {
+            get { return Converter.ColumnType; }
+        }
+
+        public override Type DataType
+        {
+            get { return Converter.DataType; }
         }
 
         internal override ColumnConverter Provide(Column column)
@@ -34,8 +35,9 @@ namespace DevZest.Data
             return Converter;
         }
 
-        internal override ColumnConverter Provide(string typeId, IReadOnlyList<string> typeArgs)
+        internal override ColumnConverter Provide(string typeArg)
         {
+            Debug.Assert(typeArg == null);
             return Converter;
         }
     }

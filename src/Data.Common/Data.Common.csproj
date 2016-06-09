@@ -58,7 +58,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
-    <Compile Include="ColumnConverterAttribute.cs" />
+    <Compile Include="Primitives\ColumnConverterAttribute.cs" />
     <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnInitializerManager.cs" />
     <Compile Include="ColumnKey.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\ColumnJsonParser.cs" />
     <Compile Include="Primitives\DataSetJsonParser.cs" />
+    <Compile Include="Primitives\GenericExpressionConverterAttribute.cs" />
     <Compile Include="Primitives\IColumnConverterProvider.cs" />
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ColumnListExtensions.cs" />

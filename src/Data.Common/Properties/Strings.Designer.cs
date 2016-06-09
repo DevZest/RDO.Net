@@ -748,19 +748,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The TypeId "{typeId}" is invalid.
+        /// The object name "{objectName}" is invalid, "{expectedObjectName}" expected.
         /// </summary>
-        public static string ColumnJsonParser_InvalidTypeId(object typeId)
+        public static string JsonParser_InvalidObjectName(object objectName, object expectedObjectName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidTypeId", "typeId"), typeId);
-        }
-
-        /// <summary>
-        /// Object name "{currentObjectName}" is invalid. Object name "TypeId" expected.
-        /// </summary>
-        public static string ColumnJsonParser_TypeIdExpected(object currentObjectName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_TypeIdExpected", "currentObjectName"), currentObjectName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidObjectName", "objectName", "expectedObjectName"), objectName, expectedObjectName);
         }
 
         /// <summary>
@@ -774,9 +766,33 @@ namespace DevZest.Data
         /// <summary>
         /// Invalid Model["{name}"]: Type "{expectedType}" expected.
         /// </summary>
-        public static string ColumnJsonParser_InvalidResultType(object name, object expectedType)
+        public static string ColumnJsonParser_InvalidColumnType(object name, object expectedType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidResultType", "name", "expectedType"), name, expectedType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidColumnType", "name", "expectedType"), name, expectedType);
+        }
+
+        /// <summary>
+        /// The TypeId "{typeId}" is invalid, null ColumnConverter resolved.
+        /// </summary>
+        public static string ColumnJsonParser_InvalidTypeId(object typeId)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnJsonParser_InvalidTypeId", "typeId"), typeId);
+        }
+
+        /// <summary>
+        /// The type is invalid. It must be a generic type definition with two generic parameters DataType and ColumnType.
+        /// </summary>
+        public static string GenericExpressionConverterAttribute_InvalidGenericExpressionType
+        {
+            get { return GetString("GenericExpressionConverterAttribute_InvalidGenericExpressionType"); }
+        }
+
+        /// <summary>
+        /// There is no ColumnConverterAttribute defined for type "{columnType}".
+        /// </summary>
+        public static string Column_NoColumnConverter(object columnType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Column_NoColumnConverter", "columnType"), columnType);
         }
 
         private static string GetString(string name, params string[] formatterNames)

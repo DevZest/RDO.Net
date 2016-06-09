@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevZest.Data.Utilities;
+using System;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -8,6 +10,29 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="T">Data type of the expression.</typeparam>
     public abstract class ColumnExpression<T>
     {
+        protected abstract class ExpressionConverter<TColumn> : ColumnConverter<TColumn>
+            where TColumn : Column, new()
+        {
+            public sealed override Type DataType
+            {
+                get { return typeof(T); }
+            }
+        }
+
+        protected abstract class GenericExpressionConverter<TColumn> : ExpressionConverter<TColumn>
+            where TColumn : Column, new()
+        {
+            internal sealed override void WriteJsonContent(object obj, StringBuilder stringBuilder)
+            {
+                JsonHelper.WriteObjectName(stringBuilder, ColumnJsonParser.TYPE_ARG_ID);
+                stringBuilder.Append(ColumnConverter.GetTypeId<TColumn>());
+                stringBuilder.Append(',');
+                WriteJsonContent(stringBuilder, (ColumnExpression<T>)obj);
+            }
+
+            protected abstract void WriteJsonContent(StringBuilder stringBuilder, ColumnExpression<T> expression);
+        }
+
         protected internal abstract T this[DataRow dataRow] { get; }
 
         protected internal abstract T Eval();

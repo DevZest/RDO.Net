@@ -101,27 +101,15 @@ namespace DevZest.Data.Primitives
             return currentToken;
         }
 
-        protected IReadOnlyList<string> ExpectStringList()
+        protected string ExpectString(string expectedObjectName, bool expectComma)
         {
-            var result = new List<string>();
-
-            ExpectToken(TokenKind.SquaredOpen);
-
-            while (!TryConsumeSquaredClose())
-            {
-                if (result.Count > 0)
-                    ExpectToken(TokenKind.Comma);
-                result.Add(ExpectToken(TokenKind.String).Text);
-            }
-
-            return result;
-        }
-
-        private bool TryConsumeSquaredClose()
-        {
-            var result = PeekToken().Kind == TokenKind.SquaredClose;
-            if (result)
-                ConsumeToken();
+            var objectName = ExpectToken(TokenKind.String).Text;
+            if (objectName != expectedObjectName)
+                throw new FormatException(Strings.JsonParser_InvalidObjectName(objectName, expectedObjectName));
+            ExpectToken(TokenKind.Colon);
+            var result = ExpectToken(TokenKind.String).Text;
+            if (expectComma)
+                ExpectToken(TokenKind.Comma);
             return result;
         }
 

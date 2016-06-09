@@ -14,6 +14,12 @@ namespace DevZest.Data
     /// </summary>
     public abstract class Column : ModelMember, IColumnSet
     {
+        protected Column()
+        {
+            if (!ColumnConverter.EnsureInitialized(this))
+                throw new InvalidOperationException(Strings.Column_NoColumnConverter(GetType().FullName));
+        }
+
         /// <summary>
         /// Gets the original owner type of this <see cref="Column"/>.
         /// </summary>

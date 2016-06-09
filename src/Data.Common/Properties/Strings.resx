@@ -393,16 +393,22 @@
   <data name="Column_VerifyCounterpartModel" xml:space="preserve">
     <value>The model is invalid. There is no derivation relationship between this model and ParentModel.</value>
   </data>
-  <data name="ColumnJsonParser_InvalidTypeId" xml:space="preserve">
-    <value>The TypeId "{typeId}" is invalid.</value>
-  </data>
-  <data name="ColumnJsonParser_TypeIdExpected" xml:space="preserve">
-    <value>Object name "{currentObjectName}" is invalid. Object name "TypeId" expected.</value>
+  <data name="JsonParser_InvalidObjectName" xml:space="preserve">
+    <value>The object name "{objectName}" is invalid, "{expectedObjectName}" expected.</value>
   </data>
   <data name="ColumnJsonParser_InvalidObjectName" xml:space="preserve">
     <value>Invalid object name "{objName}". "{expected1}" or "{expected2}" expected.</value>
   </data>
-  <data name="ColumnJsonParser_InvalidResultType" xml:space="preserve">
+  <data name="ColumnJsonParser_InvalidColumnType" xml:space="preserve">
     <value>Invalid Model["{name}"]: Type "{expectedType}" expected.</value>
+  </data>
+  <data name="ColumnJsonParser_InvalidTypeId" xml:space="preserve">
+    <value>The TypeId "{typeId}" is invalid, null ColumnConverter resolved.</value>
+  </data>
+  <data name="GenericExpressionConverterAttribute_InvalidGenericExpressionType" xml:space="preserve">
+    <value>The type is invalid. It must be a generic type definition with two generic parameters DataType and ColumnType.</value>
+  </data>
+  <data name="Column_NoColumnConverter" xml:space="preserve">
+    <value>There is no ColumnConverterAttribute defined for type "{columnType}".</value>
   </data>
 </root>
