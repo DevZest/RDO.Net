@@ -28,15 +28,18 @@ namespace DevZest.Data.Primitives
         private static readonly ConcurrentDictionary<Type, IColumnConverterProvider> s_providersByType = new ConcurrentDictionary<Type, IColumnConverterProvider>();
         private static readonly ConcurrentDictionary<string, IColumnConverterProvider> s_providersByTypeId = new ConcurrentDictionary<string, IColumnConverterProvider>();
 
-        internal static bool EnsureInitialized(Column column)
+        internal static void EnsureInitialized(Column column)
         {
             var type = column.GetType();
-            return type.GetTypeInfo().IsGenericType ? true : EnsureInitialized(column.GetType());
+            if (type.GetTypeInfo().IsGenericType)
+                return;
+
+            EnsureInitialized(column.GetType());
         }
 
-        internal static bool EnsureInitialized<T>(ColumnExpression<T> expression)
+        internal static void EnsureInitialized<T>(ColumnExpression<T> expression)
         {
-            return EnsureInitialized(GetTypeKey(expression));
+            EnsureInitialized(GetTypeKey(expression));
         }
 
         private static Type GetTypeKey<T>(ColumnExpression<T> expression)
@@ -47,14 +50,15 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        private static bool EnsureInitialized(Type type)
+        private static void EnsureInitialized(Type type)
         {
             if (s_providersByType.ContainsKey(type))
-                return true;
+                return;
 
             Initialize(type.GetTypeInfo().Assembly);
 
-            return s_providersByType.ContainsKey(type);
+            if (!s_providersByType.ContainsKey(type))
+                throw new InvalidOperationException(Strings.ColumnConverter_NotDefined(type.FullName));
         }
 
         private static void Initialize(Assembly assembly)

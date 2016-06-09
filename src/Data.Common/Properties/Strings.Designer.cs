@@ -790,9 +790,9 @@ namespace DevZest.Data
         /// <summary>
         /// There is no ColumnConverterAttribute defined for type "{columnType}".
         /// </summary>
-        public static string Column_NoColumnConverter(object columnType)
+        public static string ColumnConverter_NotDefined(object columnType)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Column_NoColumnConverter", "columnType"), columnType);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnConverter_NotDefined", "columnType"), columnType);
         }
 
         private static string GetString(string name, params string[] formatterNames)

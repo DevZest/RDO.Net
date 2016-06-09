@@ -408,7 +408,7 @@
   <data name="GenericExpressionConverterAttribute_InvalidGenericExpressionType" xml:space="preserve">
     <value>The type is invalid. It must be a generic type definition with two generic parameters DataType and ColumnType.</value>
   </data>
-  <data name="Column_NoColumnConverter" xml:space="preserve">
+  <data name="ColumnConverter_NotDefined" xml:space="preserve">
     <value>There is no ColumnConverterAttribute defined for type "{columnType}".</value>
   </data>
 </root>

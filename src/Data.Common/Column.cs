@@ -16,8 +16,7 @@ namespace DevZest.Data
     {
         protected Column()
         {
-            if (!ColumnConverter.EnsureInitialized(this))
-                throw new InvalidOperationException(Strings.Column_NoColumnConverter(GetType().FullName));
+            ColumnConverter.EnsureInitialized(this);
         }
 
         /// <summary>
