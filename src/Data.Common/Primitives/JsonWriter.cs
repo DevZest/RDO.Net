@@ -32,24 +32,9 @@ namespace DevZest.Data.Primitives
             return stringBuilder.Append(',');
         }
 
-        internal static StringBuilder Write(this StringBuilder stringBuilder, Action<StringBuilder> action)
-        {
-            action(stringBuilder);
-            return stringBuilder;
-        }
-
-        internal static StringBuilder WritePair(this StringBuilder stringBuilder, string name, Action<StringBuilder> action)
-        {
-            stringBuilder.WriteObjectName(name);
-            action(stringBuilder);
-            return stringBuilder;
-        }
-
         internal static StringBuilder WriteObjectName(this StringBuilder stringBuilder, string name)
         {
-            stringBuilder.Append("\"");
-            stringBuilder.Append(name);
-            stringBuilder.Append("\"");
+            JsonValue.FastString(name).Write(stringBuilder);
             stringBuilder.Append(":");
             return stringBuilder;
         }

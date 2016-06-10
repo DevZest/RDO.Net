@@ -136,7 +136,7 @@ namespace DevZest.Data.Primitives
         {
             stringBuilder.WriteStartObject()
                 .WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma()
-                .Write(sb => WritePropertiesJson(sb, obj))
+                .WriteColumnProperties(this, obj)
                 .WriteEndObject();
         }
 

@@ -19,15 +19,9 @@ namespace DevZest.Data
             {
                 var column = (TColumn)obj;
                 if (column.IsExpression)
-                    stringBuilder.WritePair(ColumnJsonParser.EXPRESSION, sb => WriteExpression(sb, column.Expression));
+                    stringBuilder.WriteObjectName(ColumnJsonParser.EXPRESSION).WriteExpression(column.Expression);
                 else
                     stringBuilder.WriteNameStringPair(ColumnJsonParser.NAME, column.Name);
-            }
-
-            private void WriteExpression(StringBuilder stringBuilder, ColumnExpression<T> expression)
-            {
-                var converter = ColumnConverter.Get(expression);
-                converter.WriteJson(stringBuilder, expression);
             }
 
             internal sealed override Column ParseJson(Model model, ColumnJsonParser parser)

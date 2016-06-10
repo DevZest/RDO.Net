@@ -10,5 +10,18 @@ namespace DevZest.Data.Primitives
             column.WriteJson(stringBuilder);
             return stringBuilder;
         }
+
+        internal static StringBuilder WriteColumnProperties(this StringBuilder stringBuilder, ColumnConverter converter, object obj)
+        {
+            converter.WritePropertiesJson(stringBuilder, obj);
+            return stringBuilder;
+        }
+
+        internal static StringBuilder WriteExpression<T>(this StringBuilder stringBuilder, ColumnExpression<T> expression)
+        {
+            var converter = ColumnConverter.Get(expression);
+            converter.WriteJson(stringBuilder, expression);
+            return stringBuilder;
+        }
     }
 }
