@@ -44,14 +44,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot call When after Else has been called.
-        /// </summary>
-        public static string Case_WhenAfterElse
-        {
-            get { return GetString("Case_WhenAfterElse"); }
-        }
-
-        /// <summary>
         /// Cannot evaluate a non DataSet column: Column={column}, DataSource.Kind={dataSourceKind}.
         /// </summary>
         public static string ColumnAggregateFunction_EvalOnNonDataSet(object column, object dataSourceKind)

@@ -129,9 +129,6 @@
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null, empty or contain only white space.</value>
   </data>
-  <data name="Case_WhenAfterElse" xml:space="preserve">
-    <value>Cannot call When after Else has been called.</value>
-  </data>
   <data name="ColumnAggregateFunction_EvalOnNonDataSet" xml:space="preserve">
     <value>Cannot evaluate a non DataSet column: Column={column}, DataSource.Kind={dataSourceKind}.</value>
   </data>

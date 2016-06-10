@@ -63,9 +63,6 @@ namespace DevZest.Data.Primitives
             Check.NotNull(when, nameof(when));
             Check.NotNull(then, nameof(then));
 
-            if (_else != null)
-                throw new InvalidOperationException(Strings.Case_WhenAfterElse);
-
             _when.Add(when);
             _then.Add(then);
             return this;
