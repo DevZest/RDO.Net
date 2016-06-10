@@ -251,8 +251,9 @@ namespace DevZest.Data.SqlServer
             _Int32 c0 = _Int32.Const(0);
 
             {
-                var expr = column1.When(c1, _Boolean.True)
-                    .When(c0, _Boolean.False)
+                var expr = Case.On(column1)
+                    .WhenThen(c1, _Boolean.True)
+                    .WhenThen(c0, _Boolean.False)
                     .Else(_Boolean.Null);
                 var expectedSql =
 @"CASE [TestModel].[Column1]

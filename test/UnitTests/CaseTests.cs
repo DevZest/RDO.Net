@@ -23,8 +23,9 @@ namespace DevZest.Data
             var column1 = dataSet._.Column1;
             _Int32 c1 = 1;
             _Int32 c0 = 0;
-            var expr = column1.When(c1, _Boolean.True)
-                .When(c0, _Boolean.False)
+            var expr = Case.On(column1)
+                .WhenThen(c1, _Boolean.True)
+                .WhenThen(c0, _Boolean.False)
                 .Else(_Boolean.Null);
             var dbExpr = (DbCaseExpression)expr.DbExpression;
             dbExpr.Verify(column1, c1, _Boolean.True, c0, _Boolean.False, _Boolean.Null);

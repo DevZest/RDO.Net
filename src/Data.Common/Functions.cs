@@ -221,18 +221,5 @@ namespace DevZest.Data
         }
 
         #endregion
-
-        #region When
-
-        public static CaseOnExpression<T, TResult> When<T, TResult>(this Column<T> on, Column<T> condition, Column<TResult> value)
-        {
-            Check.NotNull(on, nameof(on));
-            Check.NotNull(condition, nameof(condition));
-            Check.NotNull(value, nameof(value));
-            var result = new CaseOnExpression<T, TResult>(on);
-            return result.When(condition, value);
-        }
-
-        #endregion
     }
 }
