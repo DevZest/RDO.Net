@@ -234,18 +234,5 @@ namespace DevZest.Data
         }
 
         #endregion
-
-        #region Then
-        public static CaseExpression<T> Then<T>(this _Boolean condition, Column<T> value)
-        {
-            Check.NotNull(condition, nameof(condition));
-            Check.NotNull(value, nameof(value));
-
-            var result = new CaseExpression<T>();
-            result.When(condition, value);
-            return result;
-        }
-
-        #endregion
     }
 }

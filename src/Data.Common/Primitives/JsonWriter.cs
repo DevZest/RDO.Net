@@ -17,6 +17,18 @@ namespace DevZest.Data.Primitives
             return stringBuilder;
         }
 
+        internal static StringBuilder WriteStartArray(this StringBuilder stringBuilder)
+        {
+            stringBuilder.Append('[');
+            return stringBuilder;
+        }
+
+        internal static StringBuilder WriteEndArray(this StringBuilder stringBuilder)
+        {
+            stringBuilder.Append(']');
+            return stringBuilder;
+        }
+
         internal static StringBuilder WriteNameStringPair(this StringBuilder stringBuilder, string name, string value)
         {
             return stringBuilder.WriteNameValuePair(name, JsonValue.String(value));

@@ -55,6 +55,7 @@
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
     <Compile Include="ByteEnum.cs" />
+    <Compile Include="Case.cs" />
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />

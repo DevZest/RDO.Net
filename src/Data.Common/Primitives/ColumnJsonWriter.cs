@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -28,6 +29,24 @@ namespace DevZest.Data.Primitives
         {
             var converter = ColumnConverter.Get(expression);
             converter.WriteJson(stringBuilder, expression);
+            return stringBuilder;
+        }
+
+        internal static StringBuilder WriteNameColumnsPair<T>(this StringBuilder stringBuilder, string name, IReadOnlyList<T> columns)
+            where T : Column
+        {
+            return stringBuilder.WriteObjectName(name).WriteStartArray().WriteColumns(columns).WriteEndArray();
+        }
+
+        private static StringBuilder WriteColumns<T>(this StringBuilder stringBuilder, IReadOnlyList<T> columns)
+            where T : Column
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                stringBuilder.WriteColumn(columns[i]);
+                if (i < columns.Count - 1)
+                    stringBuilder.WriteComma();
+            }
             return stringBuilder;
         }
     }

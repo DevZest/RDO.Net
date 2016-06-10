@@ -11,12 +11,19 @@ namespace DevZest.Data.Primitives
     [GenericExpressionConverter(typeof(CaseExpression<>.Converter<>))]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
+        private const string WHEN = "When";
+        private const string THEN = "Then";
+        private const string ELSE = "Else";
+
         private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
             where TColumn : Column<TResult>, new()
         {
             protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
             {
-                throw new NotImplementedException();
+                var caseExpression = (CaseExpression<TResult>)expression;
+                stringBuilder.WriteNameColumnsPair(WHEN, caseExpression._when).WriteComma()
+                    .WriteNameColumnsPair(THEN, caseExpression._then).WriteComma()
+                    .WriteNameColumnPair(ELSE, caseExpression._else);
             }
 
             internal override Column ParseJson(Model model, ColumnJsonParser parser)
@@ -25,19 +32,44 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private const string WHEN = nameof(When);
-        private const string THEN = "Then";
-        private const string ELSE = nameof(Else);
-
         internal CaseExpression()
         {
         }
 
+        private CaseExpression(List<_Boolean> when, List<Column<TResult>> then, Column<TResult> elseExpr)
+        {
+            _when = when;
+            _then = then;
+            _else = elseExpr;
+        }
+
         private List<_Boolean> _when = new List<_Boolean>();
-
         private List<Column<TResult>> _then = new List<Column<TResult>>();
-
         private Column<TResult> _else;
+
+        /// <summary>Builds the WHEN...THEN... expression.</summary>
+        /// <typeparam name="TColumn">The column type of the result.</typeparam>
+        /// <param name="value">Value of the Else... expression.</param>
+        /// <returns>The result column expression.</returns>
+        public CaseExpression<TResult> WhenThen(_Boolean when, Column<TResult> then)
+        {
+            Check.NotNull(when, nameof(when));
+            Check.NotNull(then, nameof(then));
+            _when.Add(when);
+            _then.Add(then);
+            return this;
+        }
+
+        /// <summary>Builds the ELSE... expression.</summary>
+        /// <typeparam name="TColumn">The column type of the result.</typeparam>
+        /// <param name="value">Value of the Else... expression.</param>
+        /// <returns>The result column expression.</returns>
+        public TColumn Else<TColumn>(TColumn value)
+            where TColumn : Column<TResult>, new()
+        {
+            _else = value;
+            return this.MakeColumn<TColumn>();
+        }
 
         /// <inheritdoc/>
         protected internal sealed override TResult this[DataRow dataRow]
@@ -66,34 +98,6 @@ namespace DevZest.Data.Primitives
             }
 
             return _else.Eval();
-        }
-
-        /// <summary>Builds the WHEN...THEN... expression.</summary>
-        /// <param name="condition">Condition of the WHEN... expression.</param>
-        /// <param name="value">Value of the THEN... expression.</param>
-        /// <returns>This <see cref="CaseExpression{TResult}"/> for fluent build.</returns>
-        public CaseExpression<TResult> When(_Boolean condition, Column<TResult> value)
-        {
-            Check.NotNull(condition, nameof(condition));
-            Check.NotNull(value, nameof(value));
-
-            if (_else != null)
-                throw new InvalidOperationException(Strings.Case_WhenAfterElse);
-
-            _when.Add(condition);
-            _then.Add(value);
-            return this;
-        }
-
-        /// <summary>Builds the ELSE... expression.</summary>
-        /// <typeparam name="TColumn">The column type of the result.</typeparam>
-        /// <param name="value">Value of the Else... expression.</param>
-        /// <returns>The result column expression.</returns>
-        public TColumn Else<TColumn>(TColumn value)
-            where TColumn : Column<TResult>, new()
-        {
-            _else = value;
-            return this.MakeColumn<TColumn>();
         }
 
         /// <inheritdoc/>
