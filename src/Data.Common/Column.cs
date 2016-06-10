@@ -416,13 +416,10 @@ namespace DevZest.Data
 
         public string ToJson(bool isPretty)
         {
-            var converter = ColumnConverter.Get(this);
-            var result = new StringBuilder();
-            converter.WriteJson(result, this);
+            var result = new StringBuilder().WriteColumn(this).ToString();
             if (isPretty)
-                return JsonFormatter.PrettyPrint(result.ToString());
-            else
-                return result.ToString();
+                result = JsonFormatter.PrettyPrint(result);
+            return result;
         }
 
         public static Column FromJson(Model model, string jsonString)

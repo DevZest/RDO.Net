@@ -211,13 +211,10 @@ namespace DevZest.Data
 
         public string ToJsonString(bool isPretty)
         {
-            var result = new StringBuilder();
-            result.WriteDataSet(this);
-
+            var result = new StringBuilder().WriteDataSet(this).ToString();
             if (isPretty)
-                return JsonFormatter.PrettyPrint(result.ToString());
-            else
-                return result.ToString();
+                result = JsonFormatter.PrettyPrint(result);
+            return result;
         }
 
         public bool AllowsKeyUpdate(bool value)

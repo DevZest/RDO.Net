@@ -4,6 +4,13 @@ namespace DevZest.Data.Primitives
 {
     internal static class ColumnJsonWriter
     {
+        internal static StringBuilder WriteColumn(this StringBuilder stringBuilder, Column column)
+        {
+            var converter = ColumnConverter.Get(column);
+            converter.WriteJson(stringBuilder, column);
+            return stringBuilder;
+        }
+
         internal static StringBuilder WriteNameColumnPair<T>(this StringBuilder stringBuilder, string name, Column<T> column)
         {
             stringBuilder.WriteObjectName(name);
