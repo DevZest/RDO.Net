@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Primitives
+﻿using DevZest.Data.Utilities;
+
+namespace DevZest.Data.Primitives
 {
     public struct CaseOn<T>
     {
@@ -9,9 +11,10 @@
 
         private readonly Column<T> _on;
 
-        public CaseOnExpression<T, TResult> WhenThen<TResult>(Column<T> when, Column<TResult> then)
+        public CaseOnWhen<T> When(Column<T> when)
         {
-            return new CaseOnExpression<T, TResult>(_on).WhenThen(when, then);
+            Check.NotNull(when, nameof(when));
+            return new CaseOnWhen<T>(_on, when);
         }
     }
 }

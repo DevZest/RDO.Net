@@ -60,6 +60,7 @@
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
+    <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />
     <Compile Include="Primitives\ColumnConverterAttribute.cs" />
     <Compile Include="ColumnExtensions.cs" />

@@ -24,8 +24,8 @@ namespace DevZest.Data
             _Int32 c1 = 1;
             _Int32 c0 = 0;
             var expr = Case.On(column1)
-                .WhenThen(c1, _Boolean.True)
-                .WhenThen(c0, _Boolean.False)
+                .When(c1).Then(_Boolean.True)
+                .When(c0).Then(_Boolean.False)
                 .Else(_Boolean.Null);
             var dbExpr = (DbCaseExpression)expr.DbExpression;
             dbExpr.Verify(column1, c1, _Boolean.True, c0, _Boolean.False, _Boolean.Null);

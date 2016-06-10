@@ -252,8 +252,8 @@ namespace DevZest.Data.SqlServer
 
             {
                 var expr = Case.On(column1)
-                    .WhenThen(c1, _Boolean.True)
-                    .WhenThen(c0, _Boolean.False)
+                    .When(c1).Then(_Boolean.True)
+                    .When(c0).Then(_Boolean.False)
                     .Else(_Boolean.Null);
                 var expectedSql =
 @"CASE [TestModel].[Column1]

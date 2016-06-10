@@ -89,11 +89,13 @@ namespace DevZest.Data.Primitives
             return _else.Eval();
         }
 
-        /// <summary>Builds the WHEN...THEN... expression.</summary>
-        /// <param name="when">The WHEN... expression.</param>
-        /// <param name="then">The THEN... expression.</param>
-        /// <returns>This <see cref="CaseOnExpression{TWhen, TResult}"/> object for fluent build.</returns>
-        public CaseOnExpression<TWhen, TResult> WhenThen(Column<TWhen> when, Column<TResult> then)
+        public CaseOnWhen<TWhen, TResult> When(Column<TWhen> when)
+        {
+            Check.NotNull(when, nameof(when));
+            return new CaseOnWhen<TWhen, TResult>(this, when);
+        }
+
+        internal CaseOnExpression<TWhen, TResult> WhenThen(Column<TWhen> when, Column<TResult> then)
         {
             Check.NotNull(when, nameof(when));
             Check.NotNull(then, nameof(then));
