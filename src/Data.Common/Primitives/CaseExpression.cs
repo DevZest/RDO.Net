@@ -37,6 +37,8 @@ namespace DevZest.Data.Primitives
 
         internal CaseExpression()
         {
+            _when = new List<_Boolean>();
+            _then = new List<Column<TResult>>();
         }
 
         private CaseExpression(List<_Boolean> when, List<Column<TResult>> then, Column<TResult> elseExpr)
@@ -46,8 +48,8 @@ namespace DevZest.Data.Primitives
             _else = elseExpr;
         }
 
-        private List<_Boolean> _when = new List<_Boolean>();
-        private List<Column<TResult>> _then = new List<Column<TResult>>();
+        private List<_Boolean> _when;
+        private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
         /// <summary>Builds the WHEN...THEN... expression.</summary>
