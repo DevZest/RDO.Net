@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -10,17 +11,51 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TResult">Data type of result.</typeparam>
     public sealed class CaseOnExpression<TWhen, TResult> : ColumnExpression<TResult>
     {
+        private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
+            where TColumn : Column<TResult>, new()
+        {
+            private const string On = "On";
+            private const string WHEN = "When";
+            private const string THEN = "Then";
+            private const string ELSE = "Else";
+
+            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
+            {
+                var caseOnExpression = (CaseOnExpression<TWhen, TResult>)expression;
+                stringBuilder.WriteNameColumnPair(On, caseOnExpression._on).WriteComma()
+                    .WriteNameColumnsPair(WHEN, caseOnExpression._when).WriteComma()
+                    .WriteNameColumnsPair(THEN, caseOnExpression._then).WriteComma()
+                    .WriteNameColumnPair(ELSE, caseOnExpression._else);
+            }
+
+            internal override Column ParseJson(Model model, ColumnJsonParser parser)
+            {
+                var on = parser.ParseNameColumnPair<Column<TWhen>>(On, model);
+                var when = parser.ParseNameColumnsPair<Column<TWhen>>(WHEN, model);
+                var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
+                var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
+                return new CaseOnExpression<TWhen, TResult>(on, when, then, elseExpr).MakeColumn(elseExpr.GetType());
+            }
+        }
+
         internal CaseOnExpression(Column<TWhen> on)
         {
             _on = on;
+            _when = new List<Column<TWhen>>();
+            _then = new List<Column<TResult>>();
+        }
+
+        private CaseOnExpression(Column<TWhen> on, List<Column<TWhen>> when, List<Column<TResult>> then, Column<TResult> elseExpr)
+        {
+            _on = on;
+            _when = when;
+            _then = then;
+            _else = elseExpr;
         }
 
         private Column<TWhen> _on;
-
-        private List<Column<TWhen>> _when = new List<Column<TWhen>>();
-
-        private List<Column<TResult>> _then = new List<Column<TResult>>();
-
+        private List<Column<TWhen>> _when;
+        private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
         /// <inheritdoc/>

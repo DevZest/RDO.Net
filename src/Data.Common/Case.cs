@@ -5,9 +5,9 @@ namespace DevZest.Data
 {
     public static class Case
     {
-        public static CaseExpression<T> WhenThen<T>(_Boolean when, Column<T> then)
+        public static CaseWhen When(_Boolean when)
         {
-            return new CaseExpression<T>().WhenThen(when, then);
+            return new CaseWhen(when);
         }
 
         public static CaseOnExpressionBuilder<T> On<T>(Column<T> on)

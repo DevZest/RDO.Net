@@ -265,8 +265,8 @@ END";
             }
 
             {
-                var expr = Case.WhenThen(column1 == c1, _Boolean.True)
-                    .WhenThen(column1 == c0, _Boolean.False)
+                var expr = Case.When(column1 == c1).Then(_Boolean.True)
+                    .When(column1 == c0).Then(_Boolean.False)
                     .Else(_Boolean.Null);
                 var expectedSql =
 @"CASE

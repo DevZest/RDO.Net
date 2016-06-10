@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -11,13 +12,13 @@ namespace DevZest.Data.Primitives
     [GenericExpressionConverter(typeof(CaseExpression<>.Converter<>))]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
-        private const string WHEN = "When";
-        private const string THEN = "Then";
-        private const string ELSE = "Else";
-
         private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
             where TColumn : Column<TResult>, new()
         {
+            private const string WHEN = "When";
+            private const string THEN = "Then";
+            private const string ELSE = "Else";
+
             protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
             {
                 var caseExpression = (CaseExpression<TResult>)expression;
@@ -52,14 +53,16 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
-        /// <summary>Builds the WHEN...THEN... expression.</summary>
-        /// <typeparam name="TColumn">The column type of the result.</typeparam>
-        /// <param name="value">Value of the Else... expression.</param>
-        /// <returns>The result column expression.</returns>
-        public CaseExpression<TResult> WhenThen(_Boolean when, Column<TResult> then)
+        public CaseWhen<TResult> When(_Boolean when)
         {
             Check.NotNull(when, nameof(when));
-            Check.NotNull(then, nameof(then));
+            return new CaseWhen<TResult>(this, when);
+        }
+
+        internal CaseExpression<TResult> WhenThen2(_Boolean when, Column<TResult> then)
+        {
+            Debug.Assert(when != null);
+            Debug.Assert(then != null);
             _when.Add(when);
             _then.Add(then);
             return this;
