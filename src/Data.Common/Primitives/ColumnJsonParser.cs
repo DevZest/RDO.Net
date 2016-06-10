@@ -72,7 +72,7 @@ namespace DevZest.Data.Primitives
             return (T)ParseColumn(model);
         }
 
-        internal IReadOnlyList<T> ParseNameColumnArrayPair<T>(string name, Model model)
+        internal List<T> ParseNameColumnsPair<T>(string name, Model model)
             where T : Column
         {
             var result = new List<T>();

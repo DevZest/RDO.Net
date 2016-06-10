@@ -108,15 +108,21 @@ namespace DevZest.Data.Primitives
 
         internal static string GetTypeId(Column column)
         {
+            return GetTypeId(column.GetType());
+        }
+
+        internal static string GetTypeId(Type columnType)
+        {
+            Debug.Assert(columnType != null && typeof(Column).IsAssignableFrom(columnType));
             IColumnConverterProvider provider;
-            var success = s_providersByType.TryGetValue(column.GetType(), out provider);
+            var success = s_providersByType.TryGetValue(columnType, out provider);
             return success ? provider.TypeId : null;
         }
 
         internal static string GetTypeId<T>()
             where T : Column, new()
         {
-            return s_providersByType[typeof(T)].TypeId;
+            return GetTypeId(typeof(T));
         }
 
         internal static IColumnConverterProvider GetConverterProvider(string typeId)

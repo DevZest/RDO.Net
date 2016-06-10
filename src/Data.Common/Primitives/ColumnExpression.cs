@@ -1,5 +1,7 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 
 namespace DevZest.Data.Primitives
@@ -35,10 +37,20 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract T Eval();
 
+        private Column<T> _owner;
         /// <summary>
         /// Gets the <see cref="Column{T}" /> object which owns this expression.
         /// </summary>
-        public Column<T> Owner { get; internal set; }
+        public Column<T> Owner
+        {
+            get { return _owner; }
+            private set
+            {
+                Debug.Assert(_owner == null && value.Expression == null);
+                _owner = value;
+                value.Expression = this;
+            }
+        }
 
         private IModelSet _parentModelSet;
         /// <summary>
@@ -88,7 +100,21 @@ namespace DevZest.Data.Primitives
                 throw new InvalidOperationException(Strings.ColumnExpression_AlreadyAttached);
 
             var result = new TColumn();
-            result.Expression = this;
+            Owner = result;
+            return result;
+        }
+
+        protected Column MakeColumn(Type columnType)
+        {
+            Check.NotNull(columnType, nameof(columnType));
+            if (!typeof(Column<T>).IsAssignableFrom(columnType))
+                throw new ArgumentException(Strings.ColumnExpression_InvalidMakeColumnType(typeof(Column<T>).FullName), nameof(columnType));
+
+            if (Owner != null)
+                throw new InvalidOperationException(Strings.ColumnExpression_AlreadyAttached);
+
+            var typeId = ColumnConverter.GetTypeId(columnType);
+            var result = (Column<T>)ColumnConverter.Get(typeId, null).MakeColumn();
             Owner = result;
             return result;
         }

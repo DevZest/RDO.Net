@@ -795,6 +795,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnConverter_NotDefined", "columnType"), columnType);
         }
 
+        /// <summary>
+        /// The columnType must be assignable to "{assignableTo}".
+        /// </summary>
+        public static string ColumnExpression_InvalidMakeColumnType(object assignableTo)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnExpression_InvalidMakeColumnType", "assignableTo"), assignableTo);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

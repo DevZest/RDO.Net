@@ -28,7 +28,10 @@ namespace DevZest.Data.Primitives
 
             internal override Column ParseJson(Model model, ColumnJsonParser parser)
             {
-                throw new NotImplementedException();
+                var when = parser.ParseNameColumnsPair<_Boolean>(WHEN, model);
+                var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
+                var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
+                return new CaseExpression<TResult>(when, then, elseExpr).MakeColumn(elseExpr.GetType());
             }
         }
 
