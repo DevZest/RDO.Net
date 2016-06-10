@@ -59,7 +59,7 @@ namespace DevZest.Data.Primitives
             return new CaseWhen<TResult>(this, when);
         }
 
-        internal CaseExpression<TResult> WhenThen2(_Boolean when, Column<TResult> then)
+        internal CaseExpression<TResult> WhenThen(_Boolean when, Column<TResult> then)
         {
             Debug.Assert(when != null);
             Debug.Assert(then != null);

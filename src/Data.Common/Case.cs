@@ -10,10 +10,10 @@ namespace DevZest.Data
             return new CaseWhen(when);
         }
 
-        public static CaseOnExpressionBuilder<T> On<T>(Column<T> on)
+        public static CaseOn<T> On<T>(Column<T> on)
         {
             Check.NotNull(on, nameof(on));
-            return new CaseOnExpressionBuilder<T>(on);
+            return new CaseOn<T>(on);
         }
     }
 }
