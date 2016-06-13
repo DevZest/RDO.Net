@@ -397,6 +397,15 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Converter_Byte_FromDouble {
+            get {
+                return ResourceManager.GetString("Converter_Byte_FromDouble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
