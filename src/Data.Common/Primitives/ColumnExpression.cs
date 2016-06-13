@@ -15,18 +15,6 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="T">Data type of the expression.</typeparam>
     public abstract class ColumnExpression<T> : ColumnExpression
     {
-        protected abstract class AbstractConverter : ExpressionConverter
-        {
-            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
-            {
-                var typedExpression = (ColumnExpression<T>)expression;
-                stringBuilder.WriteExpressionTypeInfo(typedExpression);
-                WritePropertiesCore(stringBuilder, typedExpression);
-            }
-
-            protected abstract void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression);
-        }
-
         protected ColumnExpression()
         {
             //ExpressionConverter.EnsureInitialized(this);

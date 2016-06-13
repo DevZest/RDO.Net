@@ -10,7 +10,7 @@ namespace DevZest.Data.Primitives
         private sealed class Converter<TColumn> : ConverterBase<TColumn>
             where TColumn : Column<T>, new()
         {
-            protected override ValueExpression<T> MakeExpression(T value)
+            internal override ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value)
             {
                 return new ParamExpression<T>(value, null);
             }

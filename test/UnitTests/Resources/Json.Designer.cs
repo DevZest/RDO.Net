@@ -63,6 +63,18 @@ namespace DevZest.Data.Resources {
         /// <summary>
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Name&quot; : &quot;SalesOrderID&quot;
+        ///}.
+        /// </summary>
+        internal static string Converter_Column {
+            get {
+                return ResourceManager.GetString("Converter_Column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
         ///      &quot;ArgTypeIds&quot; : [
@@ -73,9 +85,52 @@ namespace DevZest.Data.Resources {
         ///   }
         ///}.
         /// </summary>
-        internal static string Converter_ValueExpression {
+        internal static string Converter_ConstantExpression {
             get {
-                return ResourceManager.GetString("Converter_ValueExpression", resourceCulture);
+                return ResourceManager.GetString("Converter_ConstantExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;,
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Value&quot; : 5,
+        ///      &quot;SourceColumn&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Name&quot; : &quot;SalesOrderID&quot;
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_ParamExpression_NotNullSourceColumn {
+            get {
+                return ResourceManager.GetString("Converter_ParamExpression_NotNullSourceColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;,
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Value&quot; : 5,
+        ///      &quot;SourceColumn&quot; : null
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_ParamExpression_NullSourceColumn {
+            get {
+                return ResourceManager.GetString("Converter_ParamExpression_NullSourceColumn", resourceCulture);
             }
         }
         

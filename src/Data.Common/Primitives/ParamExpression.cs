@@ -1,16 +1,32 @@
 ﻿using System;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    [ExpressionConverterGenerics(typeof(ParamExpression<>.Converter<>))]
+    [ExpressionConverterGenerics(typeof(ParamExpression<>.Converter<>), TypeId = "ParamExpression")]
     public sealed class ParamExpression<T> : ValueExpression<T>
     {
+        private const string SOURCE_COLUMN = nameof(SourceColumn);
+
         private sealed class Converter<TColumn> : ConverterBase<TColumn>
             where TColumn : Column<T>, new()
         {
-            protected override ValueExpression<T> MakeExpression(T value)
+            internal override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
-                return new ParamExpression<T>(value, null);
+                base.WriteJson(stringBuilder, expression);
+                stringBuilder.WriteComma().WriteObjectName(SOURCE_COLUMN);
+                var sourceColumn = ((ParamExpression<T>)expression).SourceColumn;
+                if (sourceColumn == null)
+                    stringBuilder.WriteValue(JsonValue.Null);
+                else
+                    stringBuilder.WriteColumn(sourceColumn);
+            }
+
+            internal override ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value)
+            {
+                parser.ExpectComma();
+                var sourceColumn = parser.ParseNameColumnPair<Column<T>>(SOURCE_COLUMN, model, true);
+                return new ParamExpression<T>(value, sourceColumn);
             }
         }
 

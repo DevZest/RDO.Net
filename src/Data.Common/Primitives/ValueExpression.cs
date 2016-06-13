@@ -8,12 +8,12 @@ namespace DevZest.Data.Primitives
     {
         private const string VALUE = nameof(Value);
 
-        protected abstract class ConverterBase<TColumn> : AbstractConverter
+        internal abstract class ConverterBase<TColumn> : ExpressionConverter
             where TColumn : Column<T>, new()
         {
             private static readonly TColumn s_column = new TColumn();
 
-            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression)
+            internal override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
                 var valueExpression = (ValueExpression<T>)expression;
                 stringBuilder.WriteNameValuePair(VALUE, s_column.SerializeValue(valueExpression.Value));
@@ -22,10 +22,10 @@ namespace DevZest.Data.Primitives
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var value = parser.ParseNameValuePair(VALUE, s_column);
-                return MakeExpression(value);
+                return ParseJson(model, parser, value);
             }
 
-            protected abstract ValueExpression<T> MakeExpression(T value);
+            internal abstract ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value);
         }
 
         protected ValueExpression(T value)

@@ -25,9 +25,9 @@ namespace DevZest.Data.Primitives
         private const string LEFT = nameof(Left);
         private const string RIGHT = nameof(Right);
 
-        protected abstract class ConverterBase : AbstractConverter
+        protected abstract class ConverterBase : ExpressionConverter
         {
-            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
+            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
                 var binaryExpression = (BinaryExpression<T, TResult>)expression;
                 stringBuilder.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);

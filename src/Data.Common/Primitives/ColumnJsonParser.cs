@@ -15,6 +15,11 @@ namespace DevZest.Data.Primitives
         {
         }
 
+        internal void ExpectComma()
+        {
+            ExpectToken(TokenKind.Comma);
+        }
+
         internal Column ParseTopLevelColumn(Model model)
         {
             var result = ParseColumn(model);
@@ -22,8 +27,14 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal Column ParseColumn(Model model)
+        internal Column ParseColumn(Model model, bool allowsNull = false)
         {
+            if (allowsNull && PeekToken().Kind == TokenKind.Null)
+            {
+                ConsumeToken();
+                return null;
+            }
+
             Column result;
 
             var converter = ExpectColumnConverter();
@@ -93,11 +104,11 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal T ParseNameColumnPair<T>(string name, Model model)
+        internal T ParseNameColumnPair<T>(string name, Model model, bool allowsNull = false)
             where T : Column
         {
             ExpectObjectName(name);
-            return (T)ParseColumn(model);
+            return (T)ParseColumn(model, allowsNull);
         }
 
         internal List<T> ParseNameColumnsPair<T>(string name, Model model)

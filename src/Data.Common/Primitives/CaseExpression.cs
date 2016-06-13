@@ -11,13 +11,13 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TResult">The data type of the result.</typeparam>
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
-        private sealed class Converter : AbstractConverter
+        private sealed class Converter : ExpressionConverter
         {
             private const string WHEN = "When";
             private const string THEN = "Then";
             private const string ELSE = "Else";
 
-            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
+            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
                 var caseExpression = (CaseExpression<TResult>)expression;
                 stringBuilder.WriteNameColumnsPair(WHEN, caseExpression._when).WriteComma()

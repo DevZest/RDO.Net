@@ -25,14 +25,14 @@ namespace DevZest.Data.Primitives
 
         internal static StringBuilder WriteNameColumnPair<T>(this StringBuilder stringBuilder, string name, Column<T> column)
         {
-            stringBuilder.WriteObjectName(name);
-            column.WriteJson(stringBuilder);
+            stringBuilder.WriteObjectName(name).WriteColumn(column);
             return stringBuilder;
         }
 
         internal static StringBuilder WriteExpression<T>(this StringBuilder stringBuilder, ColumnExpression<T> expression)
         {
             stringBuilder.WriteStartObject();
+            stringBuilder.WriteExpressionTypeInfo(expression);
             var converter = ExpressionConverter.Get(expression);
             converter.WriteJson(stringBuilder, expression);
             stringBuilder.WriteEndObject();
