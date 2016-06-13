@@ -392,17 +392,18 @@ namespace DevZest.Data
             return new BitwiseXorExpression(x, y).MakeColumn<_Byte>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_Byte.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Byte?, bool?>
         {
             private sealed class Converter : ConverterBase
             {
                 protected override BinaryExpression<Byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
                 {
-                    return new LessThanExpression((_Byte)left, (_Byte)right);
+                    return new LessThanExpression(left, right);
                 }
             }
 
-            public LessThanExpression(_Byte x, _Byte y)
+            public LessThanExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
             }
