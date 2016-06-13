@@ -481,5 +481,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_DateTime)Column.FromJson(null, json);
             Assert.AreEqual(new DateTime(2016, 6, 14), columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_DateTime_GreaterThan()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 15)) > _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
     }
 }
