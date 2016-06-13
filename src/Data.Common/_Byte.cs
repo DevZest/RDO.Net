@@ -88,7 +88,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class OnesComplementExpression : ColumnUnaryExpression<Byte?>
+        private sealed class OnesComplementExpression : UnaryExpression<Byte?>
         {
             public OnesComplementExpression(_Byte x)
                 : base(x)

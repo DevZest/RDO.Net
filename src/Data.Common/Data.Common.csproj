@@ -162,7 +162,7 @@
     <Compile Include="Primitives\CheckConstraint.cs" />
     <Compile Include="ColumnAttribute.cs" />
     <Compile Include="Primitives\ColumnExpression.cs" />
-    <Compile Include="Primitives\ColumnUnaryExpression.cs" />
+    <Compile Include="Primitives\UnaryExpression.cs" />
     <Compile Include="Primitives\ConstantExpression.cs" />
     <Compile Include="Primitives\DataSetChain.cs" />
     <Compile Include="Primitives\DbBinaryExpression.cs" />

@@ -1,15 +1,34 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
     /// <summary>Column expression with single operand.</summary>
     /// <typeparam name="T">Data type of the column.</typeparam>
-    public abstract class ColumnUnaryExpression<T> : ColumnExpression<T>
+    public abstract class UnaryExpression<T> : ColumnExpression<T>
     {
-        /// <summary>Initializes a new instance of <see cref="ColumnUnaryExpression{T}"/> object.</summary>
+        protected abstract class ConverterBase : ExpressionConverter
+        {
+            private const string OPERAND = nameof(Operand);
+
+            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            {
+                stringBuilder.WriteNameColumnPair(OPERAND, ((UnaryExpression<T>)expression).Operand);
+            }
+
+            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            {
+                var operand = parser.ParseNameColumnPair<Column<T>>(OPERAND, model);
+                return MakeExpression(operand);
+            }
+
+            protected abstract UnaryExpression<T> MakeExpression(Column<T> operand);
+        }
+
+        /// <summary>Initializes a new instance of <see cref="UnaryExpression{T}"/> object.</summary>
         /// <param name="operand">The operand.</param>
-        protected ColumnUnaryExpression(Column<T> operand)
+        protected UnaryExpression(Column<T> operand)
         {
             Check.NotNull(operand, nameof(operand));
             Operand = operand;
@@ -58,7 +77,7 @@ namespace DevZest.Data.Primitives
 
         internal sealed override Column<T> GetCounterpart(Model model)
         {
-            var expr = (ColumnUnaryExpression<T>)this.MemberwiseClone();
+            var expr = (UnaryExpression<T>)this.MemberwiseClone();
             expr.Operand = Operand.GetCounterpart(model);
             return GetCounterpart(expr);
         }

@@ -88,7 +88,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class NegateExpression : ColumnUnaryExpression<Int32?>
+        private sealed class NegateExpression : UnaryExpression<Int32?>
         {
             public NegateExpression(_Int32 x)
                 : base(x)
@@ -115,7 +115,7 @@ namespace DevZest.Data
             return new NegateExpression(x).MakeColumn<_Int32>();
         }
 
-        private sealed class OnesComplementExpression : ColumnUnaryExpression<Int32?>
+        private sealed class OnesComplementExpression : UnaryExpression<Int32?>
         {
             public OnesComplementExpression(_Int32 x)
                 : base(x)

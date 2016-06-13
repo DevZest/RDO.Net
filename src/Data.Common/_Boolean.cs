@@ -100,8 +100,17 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class NotExpression : ColumnUnaryExpression<bool?>
+        [ExpressionConverterNonGenerics(typeof(NotExpression.Converter), TypeId = "_Boolean.Not")]
+        private sealed class NotExpression : UnaryExpression<bool?>
         {
+            private sealed class Converter : ConverterBase
+            {
+                protected sealed override UnaryExpression<bool?> MakeExpression(Column<bool?> operand)
+                {
+                    return new NotExpression(operand);
+                }
+            }
+
             public NotExpression(Column<bool?> operand)
                 : base(operand)
             {

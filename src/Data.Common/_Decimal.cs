@@ -88,7 +88,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class NegateExpression : ColumnUnaryExpression<Decimal?>
+        private sealed class NegateExpression : UnaryExpression<Decimal?>
         {
             public NegateExpression(_Decimal x)
                 : base(x)

@@ -168,6 +168,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Boolean_Not" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Boolean.Not",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
