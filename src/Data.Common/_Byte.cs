@@ -692,9 +692,18 @@ namespace DevZest.Data
             return new FromInt64Cast(x).MakeColumn<_Byte>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDecimalCast.Converter), TypeId = "_Byte.FromDecimal")]
         private sealed class FromDecimalCast : CastExpression<Decimal?, Byte?>
         {
-            public FromDecimalCast(_Decimal x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<decimal?, byte?> MakeExpression(Column<decimal?> operand)
+                {
+                    return new FromDecimalCast(operand);
+                }
+            }
+
+            public FromDecimalCast(Column<decimal?> x)
                 : base(x)
             {
             }
