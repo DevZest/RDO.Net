@@ -485,6 +485,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Byte_FromInt32" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Byte",
+   "Expression" : {
+      "TypeId" : "_Byte.FromInt32",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_CaseExpression" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
