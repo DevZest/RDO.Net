@@ -226,9 +226,18 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_DateTime.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            public GreaterThanOrEqualExpression(_DateTime x, _DateTime y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
+                {
+                    return new GreaterThanOrEqualExpression(left, right);
+                }
+            }
+
+            public GreaterThanOrEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
             }
