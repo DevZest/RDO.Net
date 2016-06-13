@@ -87,9 +87,18 @@ namespace DevZest.Data
             return Param(x);
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_Char.FromString")]
         private sealed class FromStringCast : CastExpression<String, Char?>
         {
-            public FromStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, char?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<string> x)
                 : base(x)
             {
             }

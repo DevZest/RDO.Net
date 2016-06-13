@@ -972,6 +972,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Char_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Char",
+   "Expression" : {
+      "TypeId" : "_Char.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "a"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
