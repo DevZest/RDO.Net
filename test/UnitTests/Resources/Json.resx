@@ -281,6 +281,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Byte_BitwiseOr" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Byte",
+   "Expression" : {
+      "TypeId" : "_Byte.BitwiseOr",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 1
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 0
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_CaseExpression" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
