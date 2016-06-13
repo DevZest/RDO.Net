@@ -115,9 +115,18 @@ namespace DevZest.Data
             return new OnesComplementExpression(x).MakeColumn<_Byte>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_Byte.Add")]
         private sealed class AddExpression : BinaryExpression<Byte?>
         {
-            public AddExpression(_Byte x, _Byte y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<Byte?> x, Column<Byte?> y)
                 : base(x, y)
             {
             }
