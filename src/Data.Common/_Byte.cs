@@ -88,9 +88,18 @@ namespace DevZest.Data
             return Param(x);
         }
 
+        [ExpressionConverterNonGenerics(typeof(OnesComplementExpression.Converter), TypeId = "_Byte.OnesComplement")]
         private sealed class OnesComplementExpression : UnaryExpression<Byte?>
         {
-            public OnesComplementExpression(_Byte x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override UnaryExpression<byte?> MakeExpression(Column<byte?> operand)
+                {
+                    return new OnesComplementExpression(operand);
+                }
+            }
+
+            public OnesComplementExpression(Column<byte?> x)
                 : base(x)
             {
             }
