@@ -184,8 +184,17 @@ namespace DevZest.Data
             return new AndExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(OrExpression.Converter), TypeId = "_Boolean.Or")]
         private sealed class OrExpression : BinaryExpression<bool?>
         {
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<bool?, bool?> MakeExpression(Column<bool?> left, Column<bool?> right)
+                {
+                    return new OrExpression(left, right);
+                }
+            }
+
             public OrExpression(Column<bool?> left, Column<bool?> right)
                 : base(left, right)
             {

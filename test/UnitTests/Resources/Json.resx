@@ -188,6 +188,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Boolean_Or" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Boolean.Or",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : false
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
