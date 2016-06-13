@@ -585,6 +585,35 @@ namespace DevZest.Data.Resources {
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Byte.GreaterThanOrEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Byte&quot;,
+        ///               &quot;_Byte&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 3
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_Byte_GreaterThanOrEqual {
+            get {
+                return ResourceManager.GetString("Converter_Byte_GreaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;CaseExpression&quot;,
         ///      &quot;ArgTypeIds&quot; : [
         ///         &quot;_Boolean&quot;
