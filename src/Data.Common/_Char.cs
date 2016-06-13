@@ -239,9 +239,18 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_Char.Equal")]
         private sealed class EqualExpression : BinaryExpression<Char?, bool?>
         {
-            public EqualExpression(_Char x, _Char y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<char?, bool?> MakeExpression(Column<char?> left, Column<char?> right)
+                {
+                    return new EqualExpression(left, right);
+                }
+            }
+
+            public EqualExpression(Column<char?> x, Column<char?> y)
                 : base(x, y)
             {
             }
