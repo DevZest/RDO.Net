@@ -781,9 +781,18 @@ namespace DevZest.Data
             return new FromDoubleCast(x).MakeColumn<_Byte>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromSingleCast.Converter), TypeId = "_Byte.FromSingle")]
         private sealed class FromSingleCast : CastExpression<Single?, Byte?>
         {
-            public FromSingleCast(_Single x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<float?, byte?> MakeExpression(Column<float?> operand)
+                {
+                    return new FromSingleCast(operand);
+                }
+            }
+
+            public FromSingleCast(Column<Single?> x)
                 : base(x)
             {
             }
