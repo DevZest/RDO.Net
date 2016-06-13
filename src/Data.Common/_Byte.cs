@@ -162,9 +162,18 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_Byte>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SubstractExpression.Converter), TypeId = "_Byte.Substract")]
         private sealed class SubstractExpression : BinaryExpression<Byte?>
         {
-            public SubstractExpression(_Byte x, _Byte y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<byte?, byte?> MakeExpression(Column<byte?> left, Column<byte?> right)
+                {
+                    return new SubstractExpression(left, right);
+                }
+            }
+
+            public SubstractExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
             }
