@@ -32,6 +32,8 @@ namespace DevZest.Data.Primitives
                 parser.ExpectComma();
                 var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
                 parser.ExpectComma();
+                if (when.Count == 0 || when.Count != then.Count)
+                    throw new FormatException(Strings.Case_WhenThenNotMatch);
                 var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
                 return new CaseExpression<TResult>(when, then, elseExpr);
             }

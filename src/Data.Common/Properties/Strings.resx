@@ -414,4 +414,7 @@
   <data name="ExpressionConverter_NotDefined" xml:space="preserve">
     <value>There is no ExpressionConverterAttribute defined for type "{expressionType}".</value>
   </data>
+  <data name="Case_WhenThenNotMatch" xml:space="preserve">
+    <value>Cannot match When and Then columns. They cannot be empty and must have identical size.</value>
+  </data>
 </root>

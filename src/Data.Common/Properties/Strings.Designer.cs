@@ -803,6 +803,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ExpressionConverter_NotDefined", "expressionType"), expressionType);
         }
 
+        /// <summary>
+        /// Cannot match When and Then columns. They cannot be empty and must have identical size.
+        /// </summary>
+        public static string Case_WhenThenNotMatch
+        {
+            get { return GetString("Case_WhenThenNotMatch"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

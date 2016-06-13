@@ -7,9 +7,10 @@ using System.Text;
 namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE ON...WHEN...THEN...ELSE... expression.</summary>
-    /// <typeparam name="TWhen">Data type of ON... and WHEN... expression.</typeparam>
+    /// <typeparam name="TOn">Data type of ON... and WHEN... expression.</typeparam>
     /// <typeparam name="TResult">Data type of result.</typeparam>
-    public sealed class CaseOnExpression<TWhen, TResult> : ColumnExpression<TResult>
+    [ExpressionConverterGenerics(typeof(CaseOnExpression<,>.Converter), TypeId = "CaseOnExpression")]
+    public sealed class CaseOnExpression<TOn, TResult> : ColumnExpression<TResult>
     {
         private sealed class Converter : ExpressionConverter
         {
@@ -20,7 +21,7 @@ namespace DevZest.Data.Primitives
 
             internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
-                var caseOnExpression = (CaseOnExpression<TWhen, TResult>)expression;
+                var caseOnExpression = (CaseOnExpression<TOn, TResult>)expression;
                 stringBuilder.WriteNameColumnPair(On, caseOnExpression._on).WriteComma()
                     .WriteNameColumnsPair(WHEN, caseOnExpression._when).WriteComma()
                     .WriteNameColumnsPair(THEN, caseOnExpression._then).WriteComma()
@@ -29,22 +30,27 @@ namespace DevZest.Data.Primitives
 
             internal override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
-                var on = parser.ParseNameColumnPair<Column<TWhen>>(On, model);
-                var when = parser.ParseNameColumnsPair<Column<TWhen>>(WHEN, model);
+                var on = parser.ParseNameColumnPair<Column<TOn>>(On, model);
+                parser.ExpectComma();
+                var when = parser.ParseNameColumnsPair<Column<TOn>>(WHEN, model);
+                parser.ExpectComma();
                 var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
+                parser.ExpectComma();
+                if (when.Count == 0 || when.Count != then.Count)
+                    throw new FormatException(Strings.Case_WhenThenNotMatch);
                 var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
-                return new CaseOnExpression<TWhen, TResult>(on, when, then, elseExpr);
+                return new CaseOnExpression<TOn, TResult>(on, when, then, elseExpr);
             }
         }
 
-        internal CaseOnExpression(Column<TWhen> on)
+        internal CaseOnExpression(Column<TOn> on)
         {
             _on = on;
-            _when = new List<Column<TWhen>>();
+            _when = new List<Column<TOn>>();
             _then = new List<Column<TResult>>();
         }
 
-        private CaseOnExpression(Column<TWhen> on, List<Column<TWhen>> when, List<Column<TResult>> then, Column<TResult> elseExpr)
+        private CaseOnExpression(Column<TOn> on, List<Column<TOn>> when, List<Column<TResult>> then, Column<TResult> elseExpr)
         {
             _on = on;
             _when = when;
@@ -52,8 +58,8 @@ namespace DevZest.Data.Primitives
             _else = elseExpr;
         }
 
-        private Column<TWhen> _on;
-        private List<Column<TWhen>> _when;
+        private Column<TOn> _on;
+        private List<Column<TOn>> _when;
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
@@ -66,7 +72,7 @@ namespace DevZest.Data.Primitives
                 for (int i = 0; i < _when.Count; i++)
                 {
                     var whenValue = _when[i][dataRow];
-                    if (EqualityComparer<TWhen>.Default.Equals(onValue, whenValue))
+                    if (EqualityComparer<TOn>.Default.Equals(onValue, whenValue))
                         return _then[i][dataRow];
                 }
 
@@ -81,20 +87,20 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < _when.Count; i++)
             {
                 var whenValue = _when[i].Eval();
-                if (EqualityComparer<TWhen>.Default.Equals(onValue, whenValue))
+                if (EqualityComparer<TOn>.Default.Equals(onValue, whenValue))
                     return _then[i].Eval();
             }
 
             return _else.Eval();
         }
 
-        public CaseOnWhen<TWhen, TResult> When(Column<TWhen> when)
+        public CaseOnWhen<TOn, TResult> When(Column<TOn> when)
         {
             Check.NotNull(when, nameof(when));
-            return new CaseOnWhen<TWhen, TResult>(this, when);
+            return new CaseOnWhen<TOn, TResult>(this, when);
         }
 
-        internal CaseOnExpression<TWhen, TResult> WhenThen(Column<TWhen> when, Column<TResult> then)
+        internal CaseOnExpression<TOn, TResult> WhenThen(Column<TOn> when, Column<TResult> then)
         {
             Check.NotNull(when, nameof(when));
             Check.NotNull(then, nameof(then));
@@ -152,13 +158,18 @@ namespace DevZest.Data.Primitives
 
         internal sealed override Column<TResult> GetCounterpart(Model model)
         {
-            var expr = (CaseOnExpression<TWhen, TResult>)this.MemberwiseClone();
+            var expr = (CaseOnExpression<TOn, TResult>)this.MemberwiseClone();
             expr._on = _on.GetCounterpart(model);
             expr._when = _when.GetCounterpart(model);
             expr._then = _then.GetCounterpart(model);
             if (_else != null)
                 expr._else = _else.GetCounterpart(model);
             return GetCounterpart(expr);
+        }
+
+        internal override Type[] ArgColumnTypes
+        {
+            get { return new Type[] { _on.GetType(), _else.GetType() }; }
         }
     }
 }

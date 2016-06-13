@@ -203,6 +203,37 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;CaseOnExpression&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Boolean&quot;,
+        ///         &quot;_Boolean&quot;
+        ///      ],
+        ///      &quot;On&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Boolean&quot;,
+        ///               &quot;_Boolean&quot;
+        ///            ],
+        ///            &quot;Value&quot; : true
+        ///         }
+        ///      },
+        ///      &quot;When&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///        [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_CaseOnExpression {
+            get {
+                return ResourceManager.GetString("Converter_CaseOnExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Name&quot; : &quot;SalesOrderID&quot;
         ///}.
