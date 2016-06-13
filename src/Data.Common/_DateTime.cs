@@ -88,9 +88,9 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class DbStringCast : CastExpression<String, DateTime?>
+        private sealed class FromStringCast : CastExpression<String, DateTime?>
         {
-            public DbStringCast(_String x)
+            public FromStringCast(_String x)
                 : base(x)
             {
             }
@@ -109,7 +109,7 @@ namespace DevZest.Data
         public static explicit operator _DateTime(_String x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbStringCast(x).MakeColumn<_DateTime>();
+            return new FromStringCast(x).MakeColumn<_DateTime>();
         }
 
         private sealed class LessThanExpression : BinaryExpression<DateTime?, bool?>
