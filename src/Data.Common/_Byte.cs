@@ -432,9 +432,18 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_Byte.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<Byte?, bool?>
         {
-            public LessThanOrEqualExpression(_Byte x, _Byte y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
+                {
+                    return new LessThanOrEqualExpression(left, right);
+                }
+            }
+
+            public LessThanOrEqualExpression(Column<byte?> x, Column<byte?> y)
                 : base(x, y)
             {
             }
