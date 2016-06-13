@@ -343,6 +343,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Byte_Divide" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Byte",
+   "Expression" : {
+      "TypeId" : "_Byte.Divide",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 12
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_CaseExpression" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
