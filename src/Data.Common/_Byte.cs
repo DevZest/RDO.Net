@@ -524,8 +524,17 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_Byte.Equal")]
         private sealed class EqualExpression : BinaryExpression<Byte?, bool?>
         {
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
+                {
+                    return new EqualExpression(left, right);
+                }
+            }
+
             public EqualExpression(Column<Byte?> x, Column<Byte?> y)
                 : base(x, y)
             {
