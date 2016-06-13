@@ -1197,6 +1197,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_DateTime_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_DateTime",
+   "Expression" : {
+      "TypeId" : "_DateTime.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "2016/6/14"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
