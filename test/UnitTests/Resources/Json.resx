@@ -219,6 +219,54 @@
    }
 }</value>
   </data>
+  <data name="Converter_CaseExpression" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "CaseExpression",
+      "ArgTypeIds" : [
+         "_Boolean"
+      ],
+      "When" : [
+         {
+            "TypeId" : "_Boolean",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Boolean",
+                  "_Boolean"
+               ],
+               "Value" : true
+            }
+         }
+      ],
+      "Then" : [
+         {
+            "TypeId" : "_Boolean",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Boolean",
+                  "_Boolean"
+               ],
+               "Value" : false
+            }
+         }
+      ],
+      "Else" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

@@ -103,5 +103,17 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_CaseExpression()
+        {
+            var column = Case.When(_Boolean.Const(true)).Then(_Boolean.False)
+                .Else(_Boolean.True);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_CaseExpression, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(false, columnFromJson.Eval());
+        }
     }
 }

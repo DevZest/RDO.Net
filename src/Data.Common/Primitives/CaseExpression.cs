@@ -9,6 +9,7 @@ namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE WHEN..ELSE... expression.</summary>
     /// <typeparam name="TResult">The data type of the result.</typeparam>
+    [ExpressionConverterGenerics(typeof(CaseExpression<>.Converter), TypeId = "CaseExpression")]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
         private sealed class Converter : ExpressionConverter
@@ -28,7 +29,9 @@ namespace DevZest.Data.Primitives
             internal override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var when = parser.ParseNameColumnsPair<_Boolean>(WHEN, model);
+                parser.ExpectComma();
                 var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
+                parser.ExpectComma();
                 var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
                 return new CaseExpression<TResult>(when, then, elseExpr);
             }
@@ -150,6 +153,11 @@ namespace DevZest.Data.Primitives
                 expr._else = _else.GetCounterpart(model);
 
             return GetCounterpart(expr);
+        }
+
+        internal override Type[] ArgColumnTypes
+        {
+            get { return new Type[] { Owner.GetType() }; }
         }
     }
 }
