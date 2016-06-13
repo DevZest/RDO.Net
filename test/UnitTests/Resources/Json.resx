@@ -1054,6 +1054,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Char_LessThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Char.LessThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Char",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Char",
+               "_Char"
+            ],
+            "Value" : "a"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Char",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Char",
+               "_Char"
+            ],
+            "Value" : "b"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
