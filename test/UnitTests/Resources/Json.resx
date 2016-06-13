@@ -565,6 +565,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Byte_GreaterThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Byte.GreaterThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 3
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 2
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_CaseExpression" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",

@@ -282,5 +282,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Byte)Column.FromJson(null, json);
             Assert.AreEqual((byte)5, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_Byte_GreaterThan()
+        {
+            var column = _Byte.Const(3) > _Byte.Const(2);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
     }
 }
