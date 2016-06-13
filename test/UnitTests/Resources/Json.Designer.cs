@@ -1105,6 +1105,34 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTime.Equal&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTime&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTime&quot;,
+        ///               &quot;_DateTime&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-14T00:00:00.000&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTime&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTime_Equal {
+            get {
+                return ResourceManager.GetString("Converter_DateTime_Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,

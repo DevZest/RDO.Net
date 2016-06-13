@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Resources;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DevZest.Data.Primitives
 {
@@ -454,6 +455,17 @@ namespace DevZest.Data.Primitives
             var column = _Char.Const('a') != _Char.Const('b');
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Char_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void Converter_DateTime_Equal()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 14)) == _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_Equal, json);
 
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());

@@ -240,9 +240,18 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_DateTime.Equal")]
         private sealed class EqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            public EqualExpression(_DateTime x, _DateTime y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
+                {
+                    return new EqualExpression(left, right);
+                }
+            }
+
+            public EqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
             }
