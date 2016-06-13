@@ -4,6 +4,7 @@ using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 
 namespace DevZest.Data
 {
@@ -286,7 +287,7 @@ FROM
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var tempTable = db.MockTempTable<ProductCategory>();
                 var commands = tempTable.MockInsert(4, dataSet);
 
@@ -346,7 +347,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void DbTable_Insert_into_child_temp_table_optimized()
         {
-            var salesOrders = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
             using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();
@@ -405,7 +406,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_9[1]/text()[1]', 'INT') ASC;
         [TestMethod]
         public void DbTable_Insert_into_child_temp_table_do_not_optimize()
         {
-            var salesOrders = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var salesOrders = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
             using (var db = Db.Open(SqlVersion.Sql11))
             {
                 var tempSalesOrders = db.MockTempTable<SalesOrder>();

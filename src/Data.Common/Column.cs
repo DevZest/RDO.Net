@@ -424,7 +424,6 @@ namespace DevZest.Data
 
         public static Column FromJson(Model model, string jsonString)
         {
-            Check.NotNull(model, nameof(model));
             Check.NotEmpty(jsonString, nameof(jsonString));
 
             return new ColumnJsonParser(jsonString).ParseTopLevelColumn(model);

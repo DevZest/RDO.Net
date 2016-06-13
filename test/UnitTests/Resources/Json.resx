@@ -117,7 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MultiLevelProductCategoryJson" xml:space="preserve">
+  <data name="Converter_ValueExpression" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "ConstantExpression",
+      "ArgTypeIds" : [
+         "_Int32",
+         "_Int32"
+      ],
+      "Value" : 5
+   }
+}</value>
+  </data>
+  <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
       "ProductCategoryID" : 0,
@@ -218,7 +231,7 @@
    }
 ]</value>
   </data>
-  <data name="ProductCategoriesJson" xml:space="preserve">
+  <data name="ProductCategories" xml:space="preserve">
     <value>[
    {
       "ProductCategoryID" : 1,
@@ -517,7 +530,7 @@
    }
 ]</value>
   </data>
-  <data name="ProductCategoriesLevel1Json" xml:space="preserve">
+  <data name="ProductCategoriesLevel1" xml:space="preserve">
     <value>[
    {
       "ProductCategoryID" : 1,

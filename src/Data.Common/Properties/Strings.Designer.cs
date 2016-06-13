@@ -795,6 +795,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("ColumnExpression_InvalidMakeColumnType", "assignableTo"), assignableTo);
         }
 
+        /// <summary>
+        /// There is no ExpressionConverterAttribute defined for type "{expressionType}".
+        /// </summary>
+        public static string ExpressionConverter_NotDefined(object expressionType)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ExpressionConverter_NotDefined", "expressionType"), expressionType);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

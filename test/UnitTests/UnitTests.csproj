@@ -84,7 +84,8 @@
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
     <Compile Include="IgnoreColumnAttributeTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
-    <Compile Include="Primitives\ColumnConverterTests.cs" />
+    <Compile Include="Primitives\ColumnExpressionTestsBase.cs" />
+    <Compile Include="Primitives\ConstantExpressionTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="_CharTests.cs" />
@@ -101,10 +102,10 @@
     <Compile Include="Primitives\InterceptableTests.cs" />
     <Compile Include="SqlServer\SqlSessionTests.cs" />
     <Compile Include="SqlServer\StringExtensionsTests.cs" />
-    <Compile Include="StringRes.Designer.cs">
+    <Compile Include="Resources\Json.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>StringRes.resx</DependentUpon>
+      <DependentUpon>Json.resx</DependentUpon>
     </Compile>
     <Compile Include="SqlServer\ColumnExtensionsTests.cs" />
     <Compile Include="SqlServer\_TimeSpanTests.cs" />
@@ -142,9 +143,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="StringRes.resx">
+    <EmbeddedResource Include="Resources\Json.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>StringRes.Designer.cs</LastGenOutput>
+      <LastGenOutput>Json.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

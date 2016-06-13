@@ -2,6 +2,7 @@
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 
 namespace DevZest.Data.SqlServer
 {
@@ -13,7 +14,7 @@ namespace DevZest.Data.SqlServer
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildQuery(dataSet, null, (ColumnMappingsBuilder builder, ProductCategory source, Adhoc target) =>
                 {
                     builder.Select(source.Name, target.AddColumn(source.Name, initializer: x => x.DbColumnName = source.Name.DbColumnName));
@@ -52,7 +53,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_1[1]/text()[1]', 'INT') ASC;
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildImportQuery(dataSet);
                 var expectedSql =
 @"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
@@ -109,7 +110,7 @@ ORDER BY [SqlXmlModel].[Xml].value('col_5[1]/text()[1]', 'INT') ASC;
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
                 var query = db.BuildImportKeyQuery(dataSet);
                 var expectedSql =
 @"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>

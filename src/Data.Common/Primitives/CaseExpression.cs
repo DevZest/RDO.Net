@@ -9,11 +9,9 @@ namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE WHEN..ELSE... expression.</summary>
     /// <typeparam name="TResult">The data type of the result.</typeparam>
-    [GenericExpressionConverter(typeof(CaseExpression<>.Converter<>))]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
-        private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
-            where TColumn : Column<TResult>, new()
+        private sealed class Converter : AbstractConverter
         {
             private const string WHEN = "When";
             private const string THEN = "Then";
@@ -27,12 +25,12 @@ namespace DevZest.Data.Primitives
                     .WriteNameColumnPair(ELSE, caseExpression._else);
             }
 
-            internal override Column ParseJson(Model model, ColumnJsonParser parser)
+            internal override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var when = parser.ParseNameColumnsPair<_Boolean>(WHEN, model);
                 var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
                 var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
-                return new CaseExpression<TResult>(when, then, elseExpr).MakeColumn(elseExpr.GetType());
+                return new CaseExpression<TResult>(when, then, elseExpr);
             }
         }
 

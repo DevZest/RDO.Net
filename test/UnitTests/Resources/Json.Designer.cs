@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevZest.Data {
+namespace DevZest.Data.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DevZest.Data {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class StringRes {
+    internal class Json {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal StringRes() {
+        internal Json() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DevZest.Data {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.StringRes", typeof(StringRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.Resources.Json", typeof(Json).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,6 +61,25 @@ namespace DevZest.Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;,
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Value&quot; : 5
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_ValueExpression {
+            get {
+                return ResourceManager.GetString("Converter_ValueExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;ProductCategoryID&quot; : 0,
@@ -78,9 +97,9 @@ namespace DevZest.Data {
         ///         },
         ///         [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string MultiLevelProductCategoryJson {
+        internal static string MultiLevelProductCategory {
             get {
-                return ResourceManager.GetString("MultiLevelProductCategoryJson", resourceCulture);
+                return ResourceManager.GetString("MultiLevelProductCategory", resourceCulture);
             }
         }
         
@@ -102,9 +121,9 @@ namespace DevZest.Data {
         ///         },
         ///          [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string ProductCategoriesJson {
+        internal static string ProductCategories {
             get {
-                return ResourceManager.GetString("ProductCategoriesJson", resourceCulture);
+                return ResourceManager.GetString("ProductCategories", resourceCulture);
             }
         }
         
@@ -128,9 +147,9 @@ namespace DevZest.Data {
         ///   }
         ///].
         /// </summary>
-        internal static string ProductCategoriesLevel1Json {
+        internal static string ProductCategoriesLevel1 {
             get {
-                return ResourceManager.GetString("ProductCategoriesLevel1Json", resourceCulture);
+                return ResourceManager.GetString("ProductCategoriesLevel1", resourceCulture);
             }
         }
         

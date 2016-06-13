@@ -25,27 +25,22 @@ namespace DevZest.Data.Primitives
         private const string LEFT = nameof(Left);
         private const string RIGHT = nameof(Right);
 
-        protected abstract class ConverterBase<TColumn> : ExpressionConverter<TColumn>
-            where TColumn : Column<TResult>, new()
+        protected abstract class ConverterBase : AbstractConverter
         {
-            internal sealed override void WritePropertiesJson(StringBuilder stringBuilder, object obj)
+            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<TResult> expression)
             {
-                WriteProperties(stringBuilder, (BinaryExpression<T, TResult>)obj);
+                var binaryExpression = (BinaryExpression<T, TResult>)expression;
+                stringBuilder.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);
             }
 
-            private void WriteProperties(StringBuilder stringBuilder, BinaryExpression<T, TResult> expression)
-            {
-                stringBuilder.WriteNameColumnPair(LEFT, expression.Left).WriteComma().WriteNameColumnPair(RIGHT, expression.Right);
-            }
-
-            internal sealed override Column ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var left = parser.ParseNameColumnPair<Column<T>>(LEFT, model);
                 var right = parser.ParseNameColumnPair<Column<T>>(RIGHT, model);
-                return MakeColumn(left, right);
+                return MakeExpression(left, right);
             }
 
-            protected abstract TColumn MakeColumn(Column<T> left, Column<T> right);
+            protected abstract BinaryExpression<T, TResult> MakeExpression(Column<T> left, Column<T> right);
         }
 
         /// <summary>Initializes a new instance of <see cref="BinaryExpression{T, TResult}"/> class.</summary>

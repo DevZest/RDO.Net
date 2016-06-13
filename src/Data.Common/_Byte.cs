@@ -347,14 +347,13 @@ namespace DevZest.Data
             return new BitwiseXorExpression(x, y).MakeColumn<_Byte>();
         }
 
-        [ColumnConverter(typeof(Converter))]
         private sealed class LessThanExpression : BinaryExpression<Byte?, bool?>
         {
-            private sealed class Converter : ConverterBase<_Boolean>
+            private sealed class Converter : ConverterBase
             {
-                protected override _Boolean MakeColumn(Column<byte?> left, Column<byte?> right)
+                protected override BinaryExpression<Byte?, bool?> MakeExpression(Column<byte?> left, Column<byte?> right)
                 {
-                    return new LessThanExpression((_Byte)left, (_Byte)right).MakeColumn<_Boolean>();
+                    return new LessThanExpression((_Byte)left, (_Byte)right);
                 }
             }
 

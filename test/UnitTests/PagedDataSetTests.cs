@@ -1,4 +1,5 @@
-﻿using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Data.Resources;
+using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data
@@ -105,7 +106,7 @@ namespace DevZest.Data
    }
 ]";
             {
-                var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+                var dataSet = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
                 var pagedDataSet = new PagedDataSet<SalesOrder>()
                 {
                     Page = 1,

@@ -8,24 +8,24 @@ namespace DevZest.Data.Primitives
     {
         private const string VALUE = nameof(Value);
 
-        protected abstract class ConverterBase<TColumn> : GenericExpressionConverter<TColumn>
+        protected abstract class ConverterBase<TColumn> : AbstractConverter
             where TColumn : Column<T>, new()
         {
             private static readonly TColumn s_column = new TColumn();
 
-            protected override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression)
+            protected sealed override void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression)
             {
                 var valueExpression = (ValueExpression<T>)expression;
                 stringBuilder.WriteNameValuePair(VALUE, s_column.SerializeValue(valueExpression.Value));
             }
 
-            internal override Column ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var value = parser.ParseNameValuePair(VALUE, s_column);
-                return MakeColumn(value);
+                return MakeExpression(value);
             }
 
-            protected abstract TColumn MakeColumn(T value);
+            protected abstract ValueExpression<T> MakeExpression(T value);
         }
 
         protected ValueExpression(T value)
@@ -53,6 +53,11 @@ namespace DevZest.Data.Primitives
         protected sealed override IModelSet GetAggregateModelSet()
         {
             return ModelSet.Empty;
+        }
+
+        internal sealed override Type[] ArgColumnTypes
+        {
+            get { return new Type[] { Owner.GetType(), Owner.GetType() }; }
         }
     }
 }

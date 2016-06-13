@@ -6,7 +6,7 @@ namespace DevZest.Data.Primitives
     internal class ColumnJsonParser : JsonParser
     {
         internal const string TYPE_ID = "TypeId";
-        internal const string TYPE_ARG_ID = "TypeArgId";
+        internal const string ARG_TYPE_IDS = "ArgTypeIds";
         internal const string NAME = "Name";
         internal const string EXPRESSION = "Expression";
 
@@ -38,7 +38,10 @@ namespace DevZest.Data.Primitives
                     throw new FormatException(Strings.ColumnJsonParser_InvalidColumnType(name, converter.ColumnType.FullName));
             }
             else if (objectName == EXPRESSION)
-                result = converter.ParseJson(model, this);
+            {
+                var expression = ParseExpression(model);
+                result = converter.MakeColumn(expression);
+            }
             else
                 throw new FormatException(Strings.ColumnJsonParser_InvalidObjectName(objectName, NAME, EXPRESSION));
 
@@ -51,17 +54,42 @@ namespace DevZest.Data.Primitives
             ExpectToken(TokenKind.CurlyOpen);
 
             var typeId = ExpectString(TYPE_ID, true);
-
-            string typeArgId;
-            var currentToken = PeekToken();
-            if (currentToken.Kind == TokenKind.String && currentToken.Text == TYPE_ARG_ID)
-                typeArgId = ExpectString(TYPE_ARG_ID, true);
-            else
-                typeArgId = null;
-
-            var result = ColumnConverter.Get(typeId, typeArgId);
+            var result = ColumnConverter.Get(typeId);
             if (result == null)
                 throw new FormatException(Strings.ColumnJsonParser_InvalidTypeId(typeId));
+            return result;
+        }
+
+        internal ColumnExpression ParseExpression(Model model)
+        {
+            ExpectToken(TokenKind.CurlyOpen);
+
+            var typeId = ExpectString(TYPE_ID, true);
+            var argColumnTypeIds = ExpectArgTypeIds();
+            var converter = ExpressionConverter.Get(typeId, argColumnTypeIds);
+            var result = converter.ParseJson(model, this);
+            ExpectToken(TokenKind.CurlyClose);
+            return result;
+        }
+
+        private IReadOnlyList<string> ExpectArgTypeIds()
+        {
+            var result = new List<string>();
+
+            ExpectObjectName(ARG_TYPE_IDS);
+            ExpectToken(TokenKind.SquaredOpen);
+            if (PeekToken().Kind == TokenKind.String)
+            {
+                result.Add(ExpectToken(TokenKind.String).Text);
+
+                while (PeekToken().Kind == TokenKind.Comma)
+                {
+                    ConsumeToken();
+                    result.Add(ExpectToken(TokenKind.String).Text);
+                }
+            }
+            ExpectToken(TokenKind.SquaredClose);
+            ExpectToken(TokenKind.Comma);
             return result;
         }
 

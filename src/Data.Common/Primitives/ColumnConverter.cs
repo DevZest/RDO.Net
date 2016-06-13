@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,25 +7,11 @@ using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ColumnConverter<T> : ColumnConverter
-        where T : Column, new()
-    {
-        public sealed override Type ColumnType
-        {
-            get { return typeof(T); }
-        }
-
-        internal sealed override Column MakeColumn()
-        {
-            return new T();
-        }
-    }
-
     public abstract class ColumnConverter
     {
         private static readonly HashSet<Assembly> s_initializedAssemblies = new HashSet<Assembly>();
-        private static readonly ConcurrentDictionary<Type, IColumnConverterProvider> s_providersByType = new ConcurrentDictionary<Type, IColumnConverterProvider>();
-        private static readonly ConcurrentDictionary<string, IColumnConverterProvider> s_providersByTypeId = new ConcurrentDictionary<string, IColumnConverterProvider>();
+        private static readonly ConcurrentDictionary<Type, ColumnConverter> s_convertersByType = new ConcurrentDictionary<Type, ColumnConverter>();
+        private static readonly ConcurrentDictionary<string, ColumnConverter> s_convertersByTypeId = new ConcurrentDictionary<string, ColumnConverter>();
 
         internal static void EnsureInitialized(Column column)
         {
@@ -37,27 +22,14 @@ namespace DevZest.Data.Primitives
             EnsureInitialized(column.GetType());
         }
 
-        internal static void EnsureInitialized<T>(ColumnExpression<T> expression)
+        internal static void EnsureInitialized(Type type)
         {
-            EnsureInitialized(GetTypeKey(expression));
-        }
-
-        private static Type GetTypeKey<T>(ColumnExpression<T> expression)
-        {
-            var result = expression.GetType();
-            if (result.GetTypeInfo().IsGenericType)
-                result = result.GetGenericTypeDefinition();
-            return result;
-        }
-
-        private static void EnsureInitialized(Type type)
-        {
-            if (s_providersByType.ContainsKey(type))
+            if (s_convertersByType.ContainsKey(type))
                 return;
 
             Initialize(type.GetTypeInfo().Assembly);
 
-            if (!s_providersByType.ContainsKey(type))
+            if (!s_convertersByType.ContainsKey(type))
                 throw new InvalidOperationException(Strings.ColumnConverter_NotDefined(type.FullName));
         }
 
@@ -71,39 +43,36 @@ namespace DevZest.Data.Primitives
                 foreach (var type in assembly.GetTypes())
                     TryAddConverterProvider(type);
 
+                ExpressionConverter.Initialize(assembly);
+
                 s_initializedAssemblies.Add(assembly);
             }
         }
 
         private static bool TryAddConverterProvider(Type targetType)
         {
-            Debug.Assert(targetType != null && !s_providersByType.ContainsKey(targetType));
-            var attribute = targetType.GetTypeInfo().GetCustomAttribute<ColumnConverterProviderAttribute>();
+            Debug.Assert(targetType != null && !s_convertersByType.ContainsKey(targetType));
+            var attribute = targetType.GetTypeInfo().GetCustomAttribute<ColumnConverterAttribute>();
             if (attribute == null)
                 return false;
 
-            IColumnConverterProvider provider = attribute;
-            provider.Initialize(targetType);
-            s_providersByType.AddOrUpdate(targetType, provider, (t, oldValue) => provider);
-            s_providersByTypeId.AddOrUpdate(provider.TypeId, provider, (t, oldValue) => provider);
+            var converter = attribute.Converter;
+            converter.CoerceTypeId(targetType);
+            s_convertersByType.AddOrUpdate(targetType, converter, (t, oldValue) => converter);
+            s_convertersByTypeId.AddOrUpdate(converter.TypeId, converter, (t, oldValue) => converter);
             return true;
         }
 
         internal static ColumnConverter Get(Column column)
         {
-            return s_providersByType[column.GetType()].Provide(column);
+            return s_convertersByType[column.GetType()];
         }
 
-        internal static ColumnConverter Get<T>(ColumnExpression<T> expression)
+        internal static ColumnConverter Get(string typeId)
         {
-            return s_providersByType[GetTypeKey(expression)].Provide(expression.Owner);
-        }
-
-        internal static ColumnConverter Get(string typeId, string typeArgId)
-        {
-            IColumnConverterProvider provider;
-            var success = s_providersByTypeId.TryGetValue(typeId, out provider);
-            return success ? provider.Provide(typeArgId) : null;
+            ColumnConverter converter;
+            var success = s_convertersByTypeId.TryGetValue(typeId, out converter);
+            return success ? converter : null;
         }
 
         internal static string GetTypeId(Column column)
@@ -114,9 +83,9 @@ namespace DevZest.Data.Primitives
         internal static string GetTypeId(Type columnType)
         {
             Debug.Assert(columnType != null && typeof(Column).IsAssignableFrom(columnType));
-            IColumnConverterProvider provider;
-            var success = s_providersByType.TryGetValue(columnType, out provider);
-            return success ? provider.TypeId : null;
+            ColumnConverter converter;
+            var success = s_convertersByType.TryGetValue(columnType, out converter);
+            return success ? converter.TypeId : null;
         }
 
         internal static string GetTypeId<T>()
@@ -125,29 +94,30 @@ namespace DevZest.Data.Primitives
             return GetTypeId(typeof(T));
         }
 
-        internal static IColumnConverterProvider GetConverterProvider(string typeId)
-        {
-            return s_providersByTypeId[typeId];
-        }
-
         public string TypeId { get; internal set; }
+
+        private void CoerceTypeId(Type targetType)
+        {
+            if (string.IsNullOrEmpty(TypeId))
+                TypeId = targetType.GetDefaultTypeId();
+        }
 
         public abstract Type ColumnType { get; }
 
         public abstract Type DataType { get; }
 
-        internal abstract Column MakeColumn();
+        internal abstract Column MakeColumn(ColumnExpression expression);
 
-        internal void WriteJson(StringBuilder stringBuilder, object obj)
+        internal void WriteJson(StringBuilder stringBuilder, Column column)
         {
-            stringBuilder.WriteStartObject()
-                .WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma()
-                .WriteColumnProperties(this, obj)
-                .WriteEndObject();
+            stringBuilder.WriteStartObject().WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma();
+            if (column.IsExpression)
+                WriteExpressionJson(stringBuilder, column);
+            else
+                stringBuilder.WriteNameStringPair(ColumnJsonParser.NAME, column.Name);
+            stringBuilder.WriteEndObject();
         }
 
-        internal abstract void WritePropertiesJson(StringBuilder stringBuilder, object obj);
-
-        internal abstract Column ParseJson(Model model, ColumnJsonParser parser);
+        internal abstract void WriteExpressionJson(StringBuilder stringBuilder, Column column);
     }
 }

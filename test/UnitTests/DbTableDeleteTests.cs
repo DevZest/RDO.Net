@@ -3,6 +3,7 @@ using DevZest.Data.SqlServer;
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using DevZest.Data.Resources;
 
 namespace DevZest.Data
 {
@@ -113,7 +114,7 @@ FROM
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var salesOrder = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+                var salesOrder = DataSet<SalesOrder>.ParseJson(Json.Sales_Order_71774);
                 var salesOrderDetails = salesOrder.Children(x => x.SalesOrderDetails);
                 var command = db.SalesOrderDetails.MockDelete(0, salesOrderDetails);
                 var expectedSql =

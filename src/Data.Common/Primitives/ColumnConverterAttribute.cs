@@ -1,10 +1,9 @@
 ﻿using DevZest.Data.Utilities;
 using System;
-using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    public sealed class ColumnConverterAttribute : ColumnConverterProviderAttribute
+    public sealed class ColumnConverterAttribute : Attribute
     {
         public ColumnConverterAttribute(Type converterType)
         {
@@ -12,33 +11,22 @@ namespace DevZest.Data.Primitives
             Converter = (ColumnConverter)Activator.CreateInstance(converterType);
         }
 
-        public ColumnConverter Converter { get; private set; }
-
-        internal override void Initialize(Type targetType)
+        public string TypeId
         {
-            base.Initialize(targetType);
-            Converter.TypeId = TypeId;
+            get { return Converter.TypeId; }
+            set { Converter.TypeId = value; }
         }
 
-        public override Type ColumnType
+        public ColumnConverter Converter { get; private set; }
+
+        public Type ColumnType
         {
             get { return Converter.ColumnType; }
         }
 
-        public override Type DataType
+        public Type DataType
         {
             get { return Converter.DataType; }
-        }
-
-        internal override ColumnConverter Provide(Column column)
-        {
-            return Converter;
-        }
-
-        internal override ColumnConverter Provide(string typeArg)
-        {
-            Debug.Assert(typeArg == null);
-            return Converter;
         }
     }
 }

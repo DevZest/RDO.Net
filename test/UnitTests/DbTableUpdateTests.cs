@@ -3,6 +3,7 @@ using DevZest.Data.SqlServer;
 using DevZest.Data.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using DevZest.Data.Resources;
 
 namespace DevZest.Data
 {
@@ -135,7 +136,7 @@ FROM
         {
             using (var db = Db.Open(SqlVersion.Sql11))
             {
-                var dataSet = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesLevel1Json);
+                var dataSet = DataSet<ProductCategory>.ParseJson(Json.ProductCategoriesLevel1);
                 var expectedSql =
 @"DECLARE @p1 XML = N'<?xml version=""1.0"" encoding=""utf-8""?>
 <root>

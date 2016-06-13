@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 
 namespace DevZest.Data
 {
@@ -134,7 +135,7 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_serialize_deserialize_json()
         {
-            var result = DataSet<ProductCategory>.ParseJson(StringRes.ProductCategoriesJson);
+            var result = DataSet<ProductCategory>.ParseJson(Json.ProductCategories);
 
             var childModel = result._.SubCategories;
             Assert.AreEqual(4, result.Count);
@@ -143,7 +144,7 @@ namespace DevZest.Data
             Assert.AreEqual(8, result[2].Children(childModel).Count);
             Assert.AreEqual(12, result[3].Children(childModel).Count);
 
-            Assert.AreEqual(StringRes.ProductCategoriesJson.Trim(), result.ToString().Trim());
+            Assert.AreEqual(Json.ProductCategories.Trim(), result.ToString().Trim());
         }
 
         [TestMethod]
@@ -298,8 +299,8 @@ namespace DevZest.Data
         [TestMethod]
         public void DataSet_MultiLevelProductCategories()
         {
-            var productCategories = DataSet<ProductCategory>.ParseJson(StringRes.MultiLevelProductCategoryJson);
-            Assert.AreEqual(StringRes.MultiLevelProductCategoryJson, productCategories.ToJsonString(true));
+            var productCategories = DataSet<ProductCategory>.ParseJson(Json.MultiLevelProductCategory);
+            Assert.AreEqual(Json.MultiLevelProductCategory, productCategories.ToJsonString(true));
             Assert.AreEqual(2, productCategories.Count);
             Assert.AreEqual(3, productCategories.Children(x => x.SubCategories, 0).Count);
             Assert.AreEqual(2, productCategories.Children(x => x.SubCategories, 1).Count);

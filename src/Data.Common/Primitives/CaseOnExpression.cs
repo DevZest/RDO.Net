@@ -11,8 +11,7 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TResult">Data type of result.</typeparam>
     public sealed class CaseOnExpression<TWhen, TResult> : ColumnExpression<TResult>
     {
-        private sealed class Converter<TColumn> : GenericExpressionConverter<TColumn>
-            where TColumn : Column<TResult>, new()
+        private sealed class Converter : AbstractConverter
         {
             private const string On = "On";
             private const string WHEN = "When";
@@ -28,13 +27,13 @@ namespace DevZest.Data.Primitives
                     .WriteNameColumnPair(ELSE, caseOnExpression._else);
             }
 
-            internal override Column ParseJson(Model model, ColumnJsonParser parser)
+            internal override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var on = parser.ParseNameColumnPair<Column<TWhen>>(On, model);
                 var when = parser.ParseNameColumnsPair<Column<TWhen>>(WHEN, model);
                 var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
                 var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
-                return new CaseOnExpression<TWhen, TResult>(on, when, then, elseExpr).MakeColumn(elseExpr.GetType());
+                return new CaseOnExpression<TWhen, TResult>(on, when, then, elseExpr);
             }
         }
 

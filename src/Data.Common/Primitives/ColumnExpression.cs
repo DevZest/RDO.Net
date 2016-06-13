@@ -1,36 +1,35 @@
-﻿using DevZest.Data.Utilities;
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 
 namespace DevZest.Data.Primitives
 {
+    public abstract class ColumnExpression
+    {
+        internal abstract void SetOwner(Column column);
+    }
+
     /// <summary>
     /// Represents the expression of <see cref="Column{T}"/>.
     /// </summary>
     /// <typeparam name="T">Data type of the expression.</typeparam>
-    public abstract class ColumnExpression<T>
+    public abstract class ColumnExpression<T> : ColumnExpression
     {
-        protected abstract class ExpressionConverter<TColumn> : ColumnConverter<TColumn>
-            where TColumn : Column, new()
+        protected abstract class AbstractConverter : ExpressionConverter
         {
-            public sealed override Type DataType
+            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
             {
-                get { return typeof(T); }
-            }
-        }
-
-        protected abstract class GenericExpressionConverter<TColumn> : ExpressionConverter<TColumn>
-            where TColumn : Column, new()
-        {
-            internal sealed override void WritePropertiesJson(StringBuilder stringBuilder, object obj)
-            {
-                stringBuilder.WriteNameStringPair(ColumnJsonParser.TYPE_ARG_ID, ColumnConverter.GetTypeId<TColumn>()).WriteComma();
-                WritePropertiesCore(stringBuilder, (ColumnExpression<T>)obj);
+                var typedExpression = (ColumnExpression<T>)expression;
+                stringBuilder.WriteExpressionTypeInfo(typedExpression);
+                WritePropertiesCore(stringBuilder, typedExpression);
             }
 
             protected abstract void WritePropertiesCore(StringBuilder stringBuilder, ColumnExpression<T> expression);
+        }
+
+        protected ColumnExpression()
+        {
+            //ExpressionConverter.EnsureInitialized(this);
         }
 
         protected internal abstract T this[DataRow dataRow] { get; }
@@ -104,21 +103,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        protected Column MakeColumn(Type columnType)
-        {
-            Check.NotNull(columnType, nameof(columnType));
-            if (!typeof(Column<T>).IsAssignableFrom(columnType))
-                throw new ArgumentException(Strings.ColumnExpression_InvalidMakeColumnType(typeof(Column<T>).FullName), nameof(columnType));
-
-            if (Owner != null)
-                throw new InvalidOperationException(Strings.ColumnExpression_AlreadyAttached);
-
-            var typeId = ColumnConverter.GetTypeId(columnType);
-            var result = (Column<T>)ColumnConverter.Get(typeId, null).MakeColumn();
-            Owner = result;
-            return result;
-        }
-
         internal abstract Column<T> GetCounterpart(Model model);
 
         internal Column<T> GetCounterpart(ColumnExpression<T> expr)
@@ -126,6 +110,16 @@ namespace DevZest.Data.Primitives
             Column<T> result = (Column<T>)Activator.CreateInstance(Owner.GetType());
             result.Expression = expr;
             return result;
+        }
+
+        internal virtual Type[] ArgColumnTypes
+        {
+            get { return Array<Type>.Empty; }
+        }
+
+        internal sealed override void SetOwner(Column column)
+        {
+            Owner = (Column<T>)column;
         }
     }
 }
