@@ -127,8 +127,17 @@ namespace DevZest.Data
             return new NotExpression(x).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AndExpression.Converter), TypeId = "_Boolean.And")]
         private sealed class AndExpression : BinaryExpression<bool?>
         {
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<bool?, bool?> MakeExpression(Column<bool?> left, Column<bool?> right)
+                {
+                    return new AndExpression(left, right);
+                }
+            }
+
             public AndExpression(Column<bool?> left, Column<bool?> right)
                 : base(left, right)
             {

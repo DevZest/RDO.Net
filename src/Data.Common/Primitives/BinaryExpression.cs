@@ -36,6 +36,7 @@ namespace DevZest.Data.Primitives
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
             {
                 var left = parser.ParseNameColumnPair<Column<T>>(LEFT, model);
+                parser.ExpectComma();
                 var right = parser.ParseNameColumnPair<Column<T>>(RIGHT, model);
                 return MakeExpression(left, right);
             }
