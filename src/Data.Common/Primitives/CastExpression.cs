@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using DevZest.Data.Utilities;
 
 namespace DevZest.Data.Primitives
@@ -8,6 +9,24 @@ namespace DevZest.Data.Primitives
     /// <typeparam name="TTarget">Data type of target column.</typeparam>
     public abstract class CastExpression<TSource, TTarget> : ColumnExpression<TTarget>
     {
+        protected abstract class ConverterBase : ExpressionConverter
+        {
+            private const string OPERAND = nameof(Operand);
+
+            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            {
+                stringBuilder.WriteNameColumnPair(OPERAND, ((CastExpression<TSource, TTarget>)expression).Operand);
+            }
+
+            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            {
+                var operand = parser.ParseNameColumnPair<Column<TSource>>(OPERAND, model);
+                return MakeExpression(operand);
+            }
+
+            protected abstract CastExpression<TSource, TTarget> MakeExpression(Column<TSource> operand);
+        }
+
         /// <summary>Initialize a new instance of <see cref="CastExpression{TSource, TTarget}"/> object.</summary>
         /// <param name="operand">The operand to be casted.</param>
         protected CastExpression(Column<TSource> operand)

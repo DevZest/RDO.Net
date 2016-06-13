@@ -214,9 +214,18 @@ namespace DevZest.Data
             return new OrExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        private sealed class DbStringCast : CastExpression<String, Boolean?>
+        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Boolean.FromString")]
+        private sealed class FromStringExpression : CastExpression<String, Boolean?>
         {
-            public DbStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, bool?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringExpression(operand);
+                }
+            }
+
+            public FromStringExpression(Column<string> x)
                 : base(x)
             {
             }
@@ -235,7 +244,7 @@ namespace DevZest.Data
         public static explicit operator _Boolean(_String x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbStringCast(x).MakeColumn<_Boolean>();
+            return new FromStringExpression(x).MakeColumn<_Boolean>();
         }
 
     }

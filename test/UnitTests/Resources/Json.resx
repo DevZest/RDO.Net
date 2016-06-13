@@ -148,6 +148,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Boolean_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Boolean.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "true"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Column" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
