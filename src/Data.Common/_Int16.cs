@@ -720,9 +720,18 @@ namespace DevZest.Data
             return new FromInt64Cast(x).MakeColumn<_Int16>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDecimalCast.Converter), TypeId = "_Int16.FromDecimal")]
         private sealed class FromDecimalCast : CastExpression<Decimal?, Int16?>
         {
-            public FromDecimalCast(_Decimal x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<decimal?, short?> MakeExpression(Column<decimal?> operand)
+                {
+                    return new FromDecimalCast(operand);
+                }
+            }
+
+            public FromDecimalCast(Column<Decimal?> x)
                 : base(x)
             {
             }
