@@ -249,9 +249,18 @@ namespace DevZest.Data
             return new DivideExpression(x, y).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(ModuloExpression.Converter), TypeId = "_Double.Modulo")]
         private sealed class ModuloExpression : BinaryExpression<Double?>
         {
-            public ModuloExpression(_Double x, _Double y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<double?, double?> MakeExpression(Column<double?> left, Column<double?> right)
+                {
+                    return new ModuloExpression(left, right);
+                }
+            }
+
+            public ModuloExpression(Column<Double?> x, Column<Double?> y)
                 : base(x, y)
             {
             }
