@@ -318,9 +318,18 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_Decimal.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<Decimal?, bool?>
         {
-            public LessThanOrEqualExpression(_Decimal x, _Decimal y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
+                {
+                    return new LessThanOrEqualExpression(left, right);
+                }
+            }
+
+            public LessThanOrEqualExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
             }
