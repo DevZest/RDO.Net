@@ -800,9 +800,18 @@ namespace DevZest.Data
             return new FromDoubleCast(x).MakeColumn<_Int16>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromSingleCast.Converter), TypeId = "_Int16.FromSingle")]
         private sealed class FromSingleCast : CastExpression<Single?, Int16?>
         {
-            public FromSingleCast(_Single x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<float?, short?> MakeExpression(Column<float?> operand)
+                {
+                    return new FromSingleCast(operand);
+                }
+            }
+
+            public FromSingleCast(Column<Single?> x)
                 : base(x)
             {
             }
@@ -822,9 +831,18 @@ namespace DevZest.Data
             return new FromSingleCast(x).MakeColumn<_Int16>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_Int16.FromString")]
         private sealed class FromStringCast : CastExpression<String, Int16?>
         {
-            public FromStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, short?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<String> x)
                 : base(x)
             {
             }
