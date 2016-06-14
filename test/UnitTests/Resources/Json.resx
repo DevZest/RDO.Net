@@ -1749,6 +1749,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Decimal_Modulo" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Decimal",
+   "Expression" : {
+      "TypeId" : "_Decimal.Modulo",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 5
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
