@@ -2066,6 +2066,46 @@
    }
 }</value>
   </data>
+  <data name="Converter_Double_FromInt32" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "_Double.FromInt32",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Double_FromInt64" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "_Double.FromInt64",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int64",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int64",
+               "_Int64"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
