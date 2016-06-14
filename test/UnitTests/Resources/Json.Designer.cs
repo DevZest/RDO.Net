@@ -3454,11 +3454,54 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int32.FromByte&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Byte&quot;,
+        ///               &quot;_Byte&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
         /// </summary>
         internal static string Converter_Int32_FromByte {
             get {
                 return ResourceManager.GetString("Converter_Int32_FromByte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int32.FromDecimal&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Decimal&quot;,
+        ///               &quot;_Decimal&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int32_FromDecimal {
+            get {
+                return ResourceManager.GetString("Converter_Int32_FromDecimal", resourceCulture);
             }
         }
         
