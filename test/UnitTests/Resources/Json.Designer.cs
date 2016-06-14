@@ -3812,6 +3812,32 @@ namespace DevZest.Data.Resources {
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int32.Negate&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int32&quot;,
+        ///               &quot;_Int32&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 5
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int32_Negate {
+            get {
+                return ResourceManager.GetString("Converter_Int32_Negate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
         ///      &quot;ArgTypeIds&quot; : [
         ///         &quot;_Int32&quot;,

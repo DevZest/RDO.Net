@@ -3786,6 +3786,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_Negate" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "_Int32.Negate",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
