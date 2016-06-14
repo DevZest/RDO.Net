@@ -1605,6 +1605,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Decimal_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Decimal",
+   "Expression" : {
+      "TypeId" : "_Decimal.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "3"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
