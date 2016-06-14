@@ -162,9 +162,18 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_Decimal>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SubstractExpression.Converter), TypeId = "_Decimal.Substract")]
         private sealed class SubstractExpression : BinaryExpression<Decimal?>
         {
-            public SubstractExpression(_Decimal x, _Decimal y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
+                {
+                    return new SubstractExpression(left, right);
+                }
+            }
+
+            public SubstractExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
             }
