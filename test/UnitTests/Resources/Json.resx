@@ -2744,6 +2744,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int16_Divide" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int16",
+   "Expression" : {
+      "TypeId" : "_Int16.Divide",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 15
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
