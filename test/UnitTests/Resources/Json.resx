@@ -3500,6 +3500,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_FromDouble" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "_Int32.FromDouble",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
