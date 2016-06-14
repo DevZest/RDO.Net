@@ -142,9 +142,18 @@ namespace DevZest.Data
             return new OnesComplementExpression(x).MakeColumn<_Int16>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_Int16.Add")]
         private sealed class AddExpression : BinaryExpression<Int16?>
         {
-            public AddExpression(_Int16 x, _Int16 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<short?, short?> MakeExpression(Column<short?> left, Column<short?> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<Int16?> x, Column<Int16?> y)
                 : base(x, y)
             {
             }
