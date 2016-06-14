@@ -3520,6 +3520,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_FromInt16" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "_Int32.FromInt16",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
