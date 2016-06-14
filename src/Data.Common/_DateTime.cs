@@ -327,9 +327,18 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_DateTime.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            public NotEqualExpression(_DateTime x, _DateTime y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
+                {
+                    return new NotEqualExpression(left, right);
+                }
+            }
+
+            public NotEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
             }
