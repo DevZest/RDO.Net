@@ -987,5 +987,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_Guid_FromString()
+        {
+            var column = (_Guid)_String.Const("00000000-0000-0000-0000-000000000000");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Guid_FromString, json);
+
+            var columnFromJson = (_Guid)Column.FromJson(null, json);
+            Assert.AreEqual(new Guid(), columnFromJson.Eval());
+        }
     }
 }

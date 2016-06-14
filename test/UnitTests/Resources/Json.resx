@@ -2445,6 +2445,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Guid_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Guid",
+   "Expression" : {
+      "TypeId" : "_Guid.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "00000000-0000-0000-0000-000000000000"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

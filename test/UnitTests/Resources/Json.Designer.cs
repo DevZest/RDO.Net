@@ -2424,6 +2424,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Guid&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Guid.FromString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_String&quot;,
+        ///               &quot;_String&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;00000000-0000-0000-0000-000000000000&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Guid_FromString {
+            get {
+                return ResourceManager.GetString("Converter_Guid_FromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
