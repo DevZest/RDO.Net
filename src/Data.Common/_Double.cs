@@ -535,9 +535,18 @@ namespace DevZest.Data
             return new FromByteCast(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromInt16Cast.Converter), TypeId = "_Double.FromInt16")]
         private sealed class FromInt16Cast : CastExpression<Int16?, Double?>
         {
-            public FromInt16Cast(_Int16 x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<short?, double?> MakeExpression(Column<short?> operand)
+                {
+                    return new FromInt16Cast(operand);
+                }
+            }
+
+            public FromInt16Cast(Column<Int16?> x)
                 : base(x)
             {
             }
@@ -601,9 +610,18 @@ namespace DevZest.Data
             return new FromInt32Cast(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDecimalCast.Converter), TypeId = "_Double.FromDecimal")]
         private sealed class FromDecimalCast : CastExpression<Decimal?, Double?>
         {
-            public FromDecimalCast(_Decimal x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<decimal?, double?> MakeExpression(Column<decimal?> operand)
+                {
+                    return new FromDecimalCast(operand);
+                }
+            }
+
+            public FromDecimalCast(Column<Decimal?> x)
                 : base(x)
             {
             }
