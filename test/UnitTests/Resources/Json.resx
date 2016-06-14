@@ -1955,6 +1955,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Double_Equal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Double.Equal",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 1
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
