@@ -504,9 +504,18 @@ namespace DevZest.Data
             return new FromBooleanCast(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromByteCast.Converter), TypeId = "_Double.FromByte")]
         private sealed class FromByteCast : CastExpression<byte?, Double?>
         {
-            public FromByteCast(_Byte x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<byte?, double?> MakeExpression(Column<byte?> operand)
+                {
+                    return new FromByteCast(operand);
+                }
+            }
+
+            public FromByteCast(Column<Byte?> x)
                 : base(x)
             {
             }
