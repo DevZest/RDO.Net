@@ -3867,6 +3867,32 @@ namespace DevZest.Data.Resources {
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int32.OnesComplement&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int32&quot;,
+        ///               &quot;_Int32&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 0
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int32_OnesComplement {
+            get {
+                return ResourceManager.GetString("Converter_Int32_OnesComplement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
         ///      &quot;ArgTypeIds&quot; : [
         ///         &quot;_Int32&quot;,
