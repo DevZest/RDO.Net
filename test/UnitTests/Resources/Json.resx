@@ -1310,6 +1310,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_DateTime_LessThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTime.LessThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTime",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTime",
+               "_DateTime"
+            ],
+            "Value" : "2016-06-14T00:00:00.000"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTime",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTime",
+               "_DateTime"
+            ],
+            "Value" : "2016-06-14T00:00:00.000"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

@@ -162,9 +162,18 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_DateTime.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
-            public LessThanOrEqualExpression(_DateTime x, _DateTime y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
+                {
+                    return new LessThanOrEqualExpression(left, right);
+                }
+            }
+
+            public LessThanOrEqualExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
             }
