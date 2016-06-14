@@ -1317,5 +1317,269 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Int16)Column.FromJson(null, json);
             Assert.AreEqual((Int16)2, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_Int32_Add()
+        {
+            var column = _Int32.Const(1) + _Int32.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int32_Add, json);
+
+            var columnFromJson = (_Int32)Column.FromJson(null, json);
+            Assert.AreEqual((Int32)2, columnFromJson.Eval());
+        }
+
+        //[TestMethod]
+        //public void Converter_Int32_BitwiseAnd()
+        //{
+        //    var column = _Int32.Const(1) & _Int32.Const(0);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_BitwiseAnd, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)0, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_BitwiseOr()
+        //{
+        //    var column = _Int32.Const(1) | _Int32.Const(0);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_BitwiseOr, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_BitwiseXor()
+        //{
+        //    var column = _Int32.Const(1) ^ _Int32.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_BitwiseXor, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)0, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Divide()
+        //{
+        //    var column = _Int32.Const(15) / _Int32.Const(5);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Divide, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)3, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Equal()
+        //{
+        //    var column = _Int32.Const(1) == _Int32.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Equal, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromBoolan()
+        //{
+        //    var column = (_Int32)_Boolean.True;
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromBoolean, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromByte()
+        //{
+        //    var column = (_Int32)_Byte.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromByte, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromDecimal()
+        //{
+        //    var column = (_Int32)_Decimal.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromDecimal, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromDouble()
+        //{
+        //    var column = (_Int32)_Double.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromDouble, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromInt32()
+        //{
+        //    var column = (_Int32)_Int32.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromInt32, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromInt64()
+        //{
+        //    var column = (_Int32)_Int64.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromInt64, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromSingle()
+        //{
+        //    var column = (_Int32)_Single.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromSingle, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_FromString()
+        //{
+        //    var column = (_Int32)_String.Const("1");
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_FromString, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_GreaterThan()
+        //{
+        //    var column = _Int32.Const(4) > _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_GreaterThan, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_GreaterThanOrEqual()
+        //{
+        //    var column = _Int32.Const(3) >= _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_GreaterThanOrEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_LessThan()
+        //{
+        //    var column = _Int32.Const(3) < _Int32.Const(4);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_LessThan, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_LessThanOrEqual()
+        //{
+        //    var column = _Int32.Const(3) <= _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_LessThanOrEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Modulo()
+        //{
+        //    var column = _Int32.Const(5) % _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Modulo, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)2, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Multiply()
+        //{
+        //    var column = _Int32.Const(5) * _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Multiply, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)15, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Negate()
+        //{
+        //    var column = -_Int32.Const(5);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Negate, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)(-5), columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_NotEqual()
+        //{
+        //    var column = _Int32.Const(1) != _Int32.Const(2);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_NotEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_OnesComplement()
+        //{
+        //    var column = ~_Int32.Const(0);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_OnesComplement, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)(-1), columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Int32_Substract()
+        //{
+        //    var column = _Int32.Const(5) - _Int32.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Int32_Substract, json);
+
+        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
+        //    Assert.AreEqual((Int32)2, columnFromJson.Eval());
+        //}
     }
 }
