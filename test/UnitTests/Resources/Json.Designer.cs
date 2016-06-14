@@ -1789,6 +1789,34 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Decimal.NotEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Decimal&quot;,
+        ///               &quot;_Decimal&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 2
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_Decimal_NotEqual {
+            get {
+                return ResourceManager.GetString("Converter_Decimal_NotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,

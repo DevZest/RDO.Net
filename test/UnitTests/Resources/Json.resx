@@ -1831,6 +1831,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Decimal_NotEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Decimal.NotEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 2
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
