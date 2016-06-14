@@ -3378,6 +3378,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_Divide" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "_Int32.Divide",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 15
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
