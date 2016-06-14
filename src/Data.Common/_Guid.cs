@@ -121,9 +121,18 @@ namespace DevZest.Data
             return new FromStringCast(x).MakeColumn<_Guid>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_Guid.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Guid?, bool?>
         {
-            public LessThanExpression(_Guid x, _Guid y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<Guid?, bool?> MakeExpression(Column<Guid?> left, Column<Guid?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<Guid?> x, Column<Guid?> y)
                 : base(x, y)
             {
             }
