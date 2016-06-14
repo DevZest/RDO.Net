@@ -3440,6 +3440,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_FromBoolean" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "_Int32.FromBoolean",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
