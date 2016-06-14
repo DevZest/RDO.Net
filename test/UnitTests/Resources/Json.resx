@@ -3693,6 +3693,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_LessThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Int32.LessThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 3
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
