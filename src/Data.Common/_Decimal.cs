@@ -340,9 +340,18 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_Decimal.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<Decimal?, bool?>
         {
-            public GreaterThanExpression(_Decimal x, _Decimal y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<decimal?, bool?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
+                {
+                    return new GreaterThanExpression(left, right);
+                }
+            }
+
+            public GreaterThanExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
             }
