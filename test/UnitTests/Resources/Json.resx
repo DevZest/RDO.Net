@@ -2682,6 +2682,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int16_BitwiseOr" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int16",
+   "Expression" : {
+      "TypeId" : "_Int16.BitwiseOr",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 1
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 0
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
