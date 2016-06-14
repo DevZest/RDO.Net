@@ -1340,16 +1340,16 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Int32)0, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Int32_BitwiseOr()
-        //{
-        //    var column = _Int32.Const(1) | _Int32.Const(0);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Int32_BitwiseOr, json);
+        [TestMethod]
+        public void Converter_Int32_BitwiseOr()
+        {
+            var column = _Int32.Const(1) | _Int32.Const(0);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int32_BitwiseOr, json);
 
-        //    var columnFromJson = (_Int32)Column.FromJson(null, json);
-        //    Assert.AreEqual((Int32)1, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Int32)Column.FromJson(null, json);
+            Assert.AreEqual((Int32)1, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Int32_BitwiseXor()
