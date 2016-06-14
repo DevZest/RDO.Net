@@ -2301,6 +2301,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Double_Multiply" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "_Double.Multiply",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 5
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

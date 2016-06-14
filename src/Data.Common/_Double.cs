@@ -182,9 +182,18 @@ namespace DevZest.Data
             return new SubstractExpression(x, y).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(MultiplyExpression.Converter), TypeId = "_Double.Multiply")]
         private sealed class MultiplyExpression : BinaryExpression<Double?>
         {
-            public MultiplyExpression(_Double x, _Double y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<double?, double?> MakeExpression(Column<double?> left, Column<double?> right)
+                {
+                    return new MultiplyExpression(left, right);
+                }
+            }
+
+            public MultiplyExpression(Column<Double?> x, Column<Double?> y)
                 : base(x, y)
             {
             }
