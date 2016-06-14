@@ -2450,6 +2450,34 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Guid.GreaterThan&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Guid&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Guid&quot;,
+        ///               &quot;_Guid&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;00000000-0000-0000-0000-000000000000&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Guid&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_Guid_GreaterThan {
+            get {
+                return ResourceManager.GetString("Converter_Guid_GreaterThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
