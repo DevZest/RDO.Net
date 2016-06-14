@@ -115,9 +115,18 @@ namespace DevZest.Data
             return new NegateExpression(x).MakeColumn<_Decimal>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_Decimal.Add")]
         private sealed class AddExpression : BinaryExpression<Decimal?>
         {
-            public AddExpression(_Decimal x, _Decimal y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<decimal?, decimal?> MakeExpression(Column<decimal?> left, Column<decimal?> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<Decimal?> x, Column<Decimal?> y)
                 : base(x, y)
             {
             }
