@@ -121,9 +121,18 @@ namespace DevZest.Data
             return new FromStringCast(x).MakeColumn<_DateTime>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_DateTime.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<DateTime?, bool?>
         {
-            public LessThanExpression(_DateTime x, _DateTime y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTime?, bool?> MakeExpression(Column<DateTime?> left, Column<DateTime?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<DateTime?> x, Column<DateTime?> y)
                 : base(x, y)
             {
             }
