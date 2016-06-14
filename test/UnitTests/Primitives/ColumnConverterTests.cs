@@ -635,5 +635,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Decimal)Column.FromJson(null, json);
             Assert.AreEqual((Decimal)3, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_Decimal_FromSingle()
+        {
+            var column = (_Decimal)_Single.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Decimal_FromSingle, json);
+
+            var columnFromJson = (_Decimal)Column.FromJson(null, json);
+            Assert.AreEqual((Decimal)3, columnFromJson.Eval());
+        }
     }
 }
