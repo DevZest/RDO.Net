@@ -2764,6 +2764,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int16&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int16.FromBoolean&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Boolean&quot;,
+        ///               &quot;_Boolean&quot;
+        ///            ],
+        ///            &quot;Value&quot; : true
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int16_FromBoolean {
+            get {
+                return ResourceManager.GetString("Converter_Int16_FromBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,
