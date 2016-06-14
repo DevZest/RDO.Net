@@ -88,9 +88,18 @@ namespace DevZest.Data
             return Param(x);
         }
 
+        [ExpressionConverterNonGenerics(typeof(NegateExpression.Converter), TypeId = "_Double.Negate")]
         private sealed class NegateExpression : UnaryExpression<Double?>
         {
-            public NegateExpression(_Double x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override UnaryExpression<double?> MakeExpression(Column<double?> operand)
+                {
+                    return new NegateExpression(operand);
+                }
+            }
+
+            public NegateExpression(Column<Double?> x)
                 : base(x)
             {
             }
