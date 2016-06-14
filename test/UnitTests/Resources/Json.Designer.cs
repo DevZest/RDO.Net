@@ -1763,6 +1763,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Decimal.Negate&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Decimal&quot;,
+        ///               &quot;_Decimal&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 5
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Decimal_Negate {
+            get {
+                return ResourceManager.GetString("Converter_Decimal_Negate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;ParamExpression&quot;,

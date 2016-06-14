@@ -1811,6 +1811,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Decimal_Negate" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Decimal",
+   "Expression" : {
+      "TypeId" : "_Decimal.Negate",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

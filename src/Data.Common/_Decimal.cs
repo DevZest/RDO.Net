@@ -88,9 +88,18 @@ namespace DevZest.Data
             return Param(x);
         }
 
+        [ExpressionConverterNonGenerics(typeof(NegateExpression.Converter), TypeId = "_Decimal.Negate")]
         private sealed class NegateExpression : UnaryExpression<Decimal?>
         {
-            public NegateExpression(_Decimal x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override UnaryExpression<decimal?> MakeExpression(Column<decimal?> operand)
+                {
+                    return new NegateExpression(operand);
+                }
+            }
+
+            public NegateExpression(Column<Decimal?> x)
                 : base(x)
             {
             }
