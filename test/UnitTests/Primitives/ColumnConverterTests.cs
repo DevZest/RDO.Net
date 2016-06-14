@@ -1108,5 +1108,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Int16)Column.FromJson(null, json);
             Assert.AreEqual((Int16)3, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_Int16_Equal()
+        {
+            var column = _Int16.Const(1) == _Int16.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int16_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
     }
 }
