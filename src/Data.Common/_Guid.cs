@@ -88,9 +88,9 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        private sealed class DbStringCast : CastExpression<String, Guid?>
+        private sealed class FromStringCast : CastExpression<String, Guid?>
         {
-            public DbStringCast(_String x)
+            public FromStringCast(_String x)
                 : base(x)
             {
             }
@@ -109,7 +109,7 @@ namespace DevZest.Data
         public static explicit operator _Guid(_String x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbStringCast(x).MakeColumn<_Guid>();
+            return new FromStringCast(x).MakeColumn<_Guid>();
         }
 
         private sealed class LessThanExpression : BinaryExpression<Guid?, bool?>
