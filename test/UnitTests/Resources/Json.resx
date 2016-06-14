@@ -2208,6 +2208,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Double_LessThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Double.LessThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 3
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 4
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
