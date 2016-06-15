@@ -445,9 +445,9 @@ namespace DevZest.Data
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        private sealed class DbBooleanCast : CastExpression<bool?, Single?>
+        private sealed class FromBooleanCast : CastExpression<bool?, Single?>
         {
-            public DbBooleanCast(_Boolean x)
+            public FromBooleanCast(_Boolean x)
                 : base(x)
             {
             }
@@ -466,12 +466,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Boolean x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbBooleanCast(x).MakeColumn<_Single>();
+            return new FromBooleanCast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbByteCast : CastExpression<byte?, Single?>
+        private sealed class FromByteCast : CastExpression<byte?, Single?>
         {
-            public DbByteCast(_Byte x)
+            public FromByteCast(_Byte x)
                 : base(x)
             {
             }
@@ -488,12 +488,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Byte x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbByteCast(x).MakeColumn<_Single>();
+            return new FromByteCast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbInt16Cast : CastExpression<Int16?, Single?>
+        private sealed class FromInt16Cast : CastExpression<Int16?, Single?>
         {
-            public DbInt16Cast(_Int16 x)
+            public FromInt16Cast(_Int16 x)
                 : base(x)
             {
             }
@@ -510,12 +510,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Int16 x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbInt16Cast(x).MakeColumn<_Single>();
+            return new FromInt16Cast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbInt64Cast : CastExpression<Int64?, Single?>
+        private sealed class FromInt64Cast : CastExpression<Int64?, Single?>
         {
-            public DbInt64Cast(_Int64 x)
+            public FromInt64Cast(_Int64 x)
                 : base(x)
             {
             }
@@ -532,12 +532,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Int64 x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbInt64Cast(x).MakeColumn<_Single>();
+            return new FromInt64Cast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbInt32Cast : CastExpression<Int32?, Single?>
+        private sealed class FromInt32Cast : CastExpression<Int32?, Single?>
         {
-            public DbInt32Cast(_Int32 x)
+            public FromInt32Cast(_Int32 x)
                 : base(x)
             {
             }
@@ -554,12 +554,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Int32 x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbInt32Cast(x).MakeColumn<_Single>();
+            return new FromInt32Cast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbDecimalCast : CastExpression<Decimal?, Single?>
+        private sealed class FromDecimalCast : CastExpression<Decimal?, Single?>
         {
-            public DbDecimalCast(_Decimal x)
+            public FromDecimalCast(_Decimal x)
                 : base(x)
             {
             }
@@ -576,12 +576,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Decimal x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbDecimalCast(x).MakeColumn<_Single>();
+            return new FromDecimalCast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbDoubleCast : CastExpression<Double?, Single?>
+        private sealed class FromDoubleCast : CastExpression<Double?, Single?>
         {
-            public DbDoubleCast(_Double x)
+            public FromDoubleCast(_Double x)
                 : base(x)
             {
             }
@@ -598,12 +598,12 @@ namespace DevZest.Data
         public static explicit operator _Single(_Double x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbDoubleCast(x).MakeColumn<_Single>();
+            return new FromDoubleCast(x).MakeColumn<_Single>();
         }
 
-        private sealed class DbStringCast : CastExpression<String, Single?>
+        private sealed class FromStringCast : CastExpression<String, Single?>
         {
-            public DbStringCast(_String x)
+            public FromStringCast(_String x)
                 : base(x)
             {
             }
@@ -622,7 +622,7 @@ namespace DevZest.Data
         public static explicit operator _Single(_String x)
         {
             Check.NotNull(x, nameof(x));
-            return new DbStringCast(x).MakeColumn<_Single>();
+            return new FromStringCast(x).MakeColumn<_Single>();
         }
 
         /// <exclude />

@@ -1845,5 +1845,225 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_Int64)Column.FromJson(null, json);
             Assert.AreEqual((Int64)2, columnFromJson.Eval());
         }
+
+        //[TestMethod]
+        //public void Converter_Single_Add()
+        //{
+        //    var column = _Single.Const(1) + _Single.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Add, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)2, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Divide()
+        //{
+        //    var column = _Single.Const(6) / _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Divide, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)2, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Equal()
+        //{
+        //    var column = _Single.Const(1) == _Single.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Equal, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromBoolean()
+        //{
+        //    var column = (_Single)_Boolean.True;
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromBoolean, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromByte()
+        //{
+        //    var column = (_Single)_Byte.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromByte, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromDecimal()
+        //{
+        //    var column = (_Single)_Decimal.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromDecimal, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromInt16()
+        //{
+        //    var column = (_Single)_Int16.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromInt16, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromInt32()
+        //{
+        //    var column = (_Single)_Int32.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromInt32, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromInt64()
+        //{
+        //    var column = (_Single)_Int64.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromInt64, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromSingle()
+        //{
+        //    var column = (_Single)_Single.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromSingle, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_FromString()
+        //{
+        //    var column = (_Single)_String.Const("1");
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_FromString, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_GreaterThan()
+        //{
+        //    var column = _Single.Const(4) > _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_GreaterThan, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_GreaterThanOrEqual()
+        //{
+        //    var column = _Single.Const(3) >= _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_GreaterThanOrEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_LessThan()
+        //{
+        //    var column = _Single.Const(3) < _Single.Const(4);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_LessThan, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_LessThanOrEqual()
+        //{
+        //    var column = _Single.Const(3) <= _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_LessThanOrEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Modulo()
+        //{
+        //    var column = _Single.Const(5) % _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Modulo, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)2, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Multiply()
+        //{
+        //    var column = _Single.Const(5) * _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Multiply, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)15, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Negate()
+        //{
+        //    var column = -_Single.Const(5);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Negate, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)(-5), columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_NotEqual()
+        //{
+        //    var column = _Single.Const(2) != _Single.Const(1);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_NotEqual, json);
+
+        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
+        //    Assert.AreEqual(true, columnFromJson.Eval());
+        //}
+
+        //[TestMethod]
+        //public void Converter_Single_Substract()
+        //{
+        //    var column = _Single.Const(5) - _Single.Const(3);
+        //    var json = column.ToJson(true);
+        //    Assert.AreEqual(Json.Converter_Single_Substract, json);
+
+        //    var columnFromJson = (_Single)Column.FromJson(null, json);
+        //    Assert.AreEqual((Single)2, columnFromJson.Eval());
+        //}
     }
 }
