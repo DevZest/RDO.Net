@@ -5176,6 +5176,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromChar" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromChar",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Char",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Char",
+               "_Char"
+            ],
+            "Value" : "a"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
