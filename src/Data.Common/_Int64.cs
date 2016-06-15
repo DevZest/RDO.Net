@@ -420,9 +420,18 @@ namespace DevZest.Data
             return new BitwiseXorExpression(x, y).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_Int64.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Int64?, bool?>
         {
-            public LessThanExpression(_Int64 x, _Int64 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<long?, bool?> MakeExpression(Column<long?> left, Column<long?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<Int64?> x, Column<Int64?> y)
                 : base(x, y)
             {
             }
