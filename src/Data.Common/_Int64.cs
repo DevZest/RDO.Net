@@ -613,9 +613,18 @@ namespace DevZest.Data
             return new NotEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromBooleanCast.Converter), TypeId = "_Int64.FromBoolean")]
         private sealed class FromBooleanCast : CastExpression<bool?, Int64?>
         {
-            public FromBooleanCast(_Boolean x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<bool?, long?> MakeExpression(Column<bool?> operand)
+                {
+                    return new FromBooleanCast(operand);
+                }
+            }
+
+            public FromBooleanCast(Column<bool?> x)
                 : base(x)
             {
             }

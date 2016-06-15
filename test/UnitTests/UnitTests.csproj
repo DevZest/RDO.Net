@@ -144,7 +144,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Json.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Json.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

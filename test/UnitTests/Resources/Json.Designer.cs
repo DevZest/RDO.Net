@@ -4093,6 +4093,15 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Converter_Int64_FromBoolean {
+            get {
+                return ResourceManager.GetString("Converter_Int64_FromBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
