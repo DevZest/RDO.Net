@@ -4714,6 +4714,32 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Single.FromBoolean&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Boolean&quot;,
+        ///               &quot;_Boolean&quot;
+        ///            ],
+        ///            &quot;Value&quot; : true
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Single_FromBoolean {
+            get {
+                return ResourceManager.GetString("Converter_Single_FromBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;ProductCategoryID&quot; : 0,

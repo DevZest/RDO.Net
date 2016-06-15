@@ -4646,6 +4646,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_FromBoolean" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.FromBoolean",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
