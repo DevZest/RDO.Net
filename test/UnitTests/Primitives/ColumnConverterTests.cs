@@ -1967,16 +1967,16 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Single)1, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Single_GreaterThan()
-        //{
-        //    var column = _Single.Const(4) > _Single.Const(3);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Single_GreaterThan, json);
+        [TestMethod]
+        public void Converter_Single_GreaterThan()
+        {
+            var column = _Single.Const(4) > _Single.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Single_GreaterThan, json);
 
-        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
-        //    Assert.AreEqual(true, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Single_GreaterThanOrEqual()
