@@ -5256,6 +5256,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromGuid" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromGuid",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Guid",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Guid",
+               "_Guid"
+            ],
+            "Value" : "00000000-0000-0000-0000-000000000000"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {

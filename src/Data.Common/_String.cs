@@ -607,9 +607,18 @@ namespace DevZest.Data
             return new FromDateTimeCast(x).MakeColumn<_String>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromGuidCast.Converter), TypeId = "_String.FromGuid")]
         private sealed class FromGuidCast : CastExpression<Guid?, String>
         {
-            public FromGuidCast(_Guid x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<Guid?, string> MakeExpression(Column<Guid?> operand)
+                {
+                    return new FromGuidCast(operand);
+                }
+            }
+
+            public FromGuidCast(Column<Guid?> x)
                 : base(x)
             {
             }
