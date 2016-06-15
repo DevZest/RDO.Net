@@ -1681,27 +1681,27 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Int64_FromDouble()
-        //{
-        //    var column = (_Int64)_Double.Const(1);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Int64_FromDouble, json);
+        [TestMethod]
+        public void Converter_Int64_FromDouble()
+        {
+            var column = (_Int64)_Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int64_FromDouble, json);
 
-        //    var columnFromJson = (_Int64)Column.FromJson(null, json);
-        //    Assert.AreEqual((Int64)1, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            Assert.AreEqual((Int64)1, columnFromJson.Eval());
+        }
 
-        //[TestMethod]
-        //public void Converter_Int64_FromInt16()
-        //{
-        //    var column = (_Int64)_Int16.Const(1);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Int64_FromInt16, json);
+        [TestMethod]
+        public void Converter_Int64_FromInt16()
+        {
+            var column = (_Int64)_Int16.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int64_FromInt16, json);
 
-        //    var columnFromJson = (_Int64)Column.FromJson(null, json);
-        //    Assert.AreEqual((Int64)1, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            Assert.AreEqual((Int64)1, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Int64_FromInt64()
