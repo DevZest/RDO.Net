@@ -5156,6 +5156,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromByte" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromByte",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {

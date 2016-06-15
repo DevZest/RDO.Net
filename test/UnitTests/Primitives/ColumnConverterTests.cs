@@ -2098,5 +2098,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_String)Column.FromJson(null, json);
             Assert.AreEqual("True", columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_String_FromByte()
+        {
+            var column = (_String)_Byte.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromByte, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
     }
 }
