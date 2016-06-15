@@ -505,8 +505,17 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_Single.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<Single?, bool?>
         {
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<float?, bool?> MakeExpression(Column<float?> left, Column<float?> right)
+                {
+                    return new NotEqualExpression(left, right);
+                }
+            }
+
             public NotEqualExpression(Column<Single?> x, Column<Single?> y)
                 : base(x, y)
             {

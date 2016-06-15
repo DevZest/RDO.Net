@@ -5012,6 +5012,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_NotEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Single.NotEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 2
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
