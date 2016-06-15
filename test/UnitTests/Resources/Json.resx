@@ -5216,6 +5216,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromDecimal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromDecimal",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
