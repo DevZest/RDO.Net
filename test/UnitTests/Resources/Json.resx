@@ -4666,6 +4666,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_FromByte" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.FromByte",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
