@@ -2000,16 +2000,16 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Single_LessThanOrEqual()
-        //{
-        //    var column = _Single.Const(3) <= _Single.Const(3);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Single_LessThanOrEqual, json);
+        [TestMethod]
+        public void Converter_Single_LessThanOrEqual()
+        {
+            var column = _Single.Const(3) <= _Single.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Single_LessThanOrEqual, json);
 
-        //    var columnFromJson = (_Boolean)Column.FromJson(null, json);
-        //    Assert.AreEqual(true, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Single_Modulo()
