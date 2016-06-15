@@ -5178,6 +5178,35 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_String.Add&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_String&quot;,
+        ///               &quot;_String&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;a&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///         [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_String_Add {
+            get {
+                return ResourceManager.GetString("Converter_String_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;ProductCategoryID&quot; : 0,

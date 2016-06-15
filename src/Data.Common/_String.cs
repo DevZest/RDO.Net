@@ -89,9 +89,18 @@ namespace DevZest.Data
             return Param(x);
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_String.Add")]
         private sealed class AddExpression : BinaryExpression<String>
         {
-            public AddExpression(_String x, _String y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<string, string> MakeExpression(Column<string> left, Column<string> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<String> x, Column<String> y)
                 : base(x, y)
             {
             }
