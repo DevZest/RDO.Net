@@ -2208,5 +2208,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_String)Column.FromJson(null, json);
             Assert.AreEqual("1", columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_String_GreaterThan()
+        {
+            var column = _String.Const("b") > _String.Const("a");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
     }
 }

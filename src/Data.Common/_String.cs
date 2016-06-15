@@ -194,9 +194,18 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_String.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<String, bool?>
         {
-            public GreaterThanExpression(_String x, _String y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<string, bool?> MakeExpression(Column<string> left, Column<string> right)
+                {
+                    return new GreaterThanExpression(left, right);
+                }
+            }
+
+            public GreaterThanExpression(Column<String> x, Column<String> y)
                 : base(x, y)
             {
             }
