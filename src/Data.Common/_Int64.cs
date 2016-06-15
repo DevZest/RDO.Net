@@ -199,9 +199,18 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SubstractExpression.Converter), TypeId = "_Int64.Substract")]
         private sealed class SubstractExpression : BinaryExpression<Int64?>
         {
-            public SubstractExpression(_Int64 x, _Int64 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<long?, long?> MakeExpression(Column<long?> left, Column<long?> right)
+                {
+                    return new SubstractExpression(left, right);
+                }
+            }
+
+            public SubstractExpression(Column<Int64?> x, Column<Int64?> y)
                 : base(x, y)
             {
             }
