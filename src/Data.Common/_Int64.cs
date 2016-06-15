@@ -335,9 +335,18 @@ namespace DevZest.Data
             return new BitwiseAndExpression(x, y).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(BitwiseOrExpression.Converter), TypeId = "_Int64.BitwiseOr")]
         private sealed class BitwiseOrExpression : BinaryExpression<Int64?>
         {
-            public BitwiseOrExpression(_Int64 x, _Int64 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<long?, long?> MakeExpression(Column<long?> left, Column<long?> right)
+                {
+                    return new BitwiseOrExpression(left, right);
+                }
+            }
+
+            public BitwiseOrExpression(Column<Int64?> x, Column<Int64?> y)
                 : base(x, y)
             {
             }

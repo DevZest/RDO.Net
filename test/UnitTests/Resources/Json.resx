@@ -3950,6 +3950,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int64_BitwiseOr" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int64",
+   "Expression" : {
+      "TypeId" : "_Int64.BitwiseOr",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Int64",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int64",
+               "_Int64"
+            ],
+            "Value" : 1
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Int64",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int64",
+               "_Int64"
+            ],
+            "Value" : 0
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_ParamExpression_NotNullSourceColumn" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
