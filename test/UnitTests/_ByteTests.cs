@@ -1,15 +1,16 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _ByteTests
+    public class _ByteTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void ByteColumn_Param()
+        public void _Byte_Param()
         {
             TestParam(5);
             TestParam(null);
@@ -22,7 +23,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_implicit_convert()
+        public void _Byte_implicit_convert()
         {
             TestImplicit(5);
             TestImplicit(null);
@@ -35,7 +36,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_Const()
+        public void _Byte_Const()
         {
             TestConst(5);
             TestConst(null);
@@ -48,7 +49,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_ones_complement()
+        public void _Byte_OnesComplement()
         {
             byte x = 5;
             TestOnesComplement(x, (byte)~x);
@@ -65,7 +66,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_add()
+        public void _Byte_Add()
         {
             TestAdd(1, 2, 3);
             TestAdd(128, 128, 0);
@@ -84,7 +85,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_substract()
+        public void _Byte_Substract()
         {
             TestSubstract(5, 2, 3);
             TestSubstract(null, 2, null);
@@ -102,7 +103,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_multipy()
+        public void _Byte_Multiply()
         {
             TestMultiply(5, 5, 25);
             TestMultiply(5, null, null);
@@ -120,7 +121,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_divide()
+        public void _Byte_Divide()
         {
             TestDivide(12, 4, 3);
             TestDivide(5, null, null);
@@ -139,7 +140,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_modulo()
+        public void _Byte_Modulo()
         {
             TestModulo(5, 3, 2);
             TestModulo(100, null, null);
@@ -157,7 +158,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_bitwise_AND()
+        public void _Byte_BitwiseAnd()
         {
             TestBitwiseAnd(102, 55, 102 & 55);
             TestBitwiseAnd(100, null, null);
@@ -175,7 +176,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_Bitwise_OR()
+        public void _Byte_BitwiseOr()
         {
             TestBitwiseOr(5, 12, 5 | 12);
             TestBitwiseOr(5, null, null);
@@ -193,7 +194,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_bitwise_XOR()
+        public void _Byte_BitwiseXor()
         {
             TestBitwiseXor(64, 128, 64 ^ 128);
             TestBitwiseXor(32, null, null);
@@ -212,7 +213,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_less_than()
+        public void _Byte_LessThan()
         {
             TestLessThan(99, 100, true);
             TestLessThan(99, 99, false);
@@ -233,7 +234,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_less_than_or_equal()
+        public void _Byte_LessThanOrEqual()
         {
             TestLessThanOrEqual(99, 98, false);
             TestLessThanOrEqual(99, 99, true);
@@ -254,7 +255,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_greater_than()
+        public void _Byte_GreaterThan()
         {
             TestGreaterThan(100, 99, true);
             TestGreaterThan(100, 100, false);
@@ -275,7 +276,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_greater_than_or_equal()
+        public void _Byte_GreaterThanOrEqual()
         {
             TestGreaterThanOrEqual(100, 99, true);
             TestGreaterThanOrEqual(100, 100, true);
@@ -296,7 +297,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_equal()
+        public void _Byte_Equal()
         {
             TestEqual(2, 2, true);
             TestEqual(4, 5, false);
@@ -315,7 +316,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_test_not_equal()
+        public void _Byte_NotEqual()
         {
             TestNotEqual(1, 1, false);
             TestNotEqual(1, 2, true);
@@ -334,14 +335,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_DbBoolean()
+        public void _Byte_FromBoolean()
         {
-            TestDbBooleanCast(_Boolean.True, 1);
-            TestDbBooleanCast(_Boolean.False, 0);
-            TestDbBooleanCast(_Boolean.Null, null);
+            TestFromBoolean(_Boolean.True, 1);
+            TestFromBoolean(_Boolean.False, 0);
+            TestFromBoolean(_Boolean.Null, null);
         }
 
-        private void TestDbBooleanCast(_Boolean x, Byte? expectedValue)
+        private void TestFromBoolean(_Boolean x, Byte? expectedValue)
         {
             _Byte expr = (_Byte)x;
             var dbExpr = (DbCastExpression)expr.DbExpression;
@@ -350,14 +351,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_Int16Column()
+        public void _Byte_FromInt16()
         {
-            TestInt16ColumnCast(null, null);
-            TestInt16ColumnCast(127, 127);
-            TestInt16ColumnCast(1024, 0);
+            TestFromInt16(null, null);
+            TestFromInt16(127, 127);
+            TestFromInt16(1024, 0);
         }
 
-        private void TestInt16ColumnCast(Int16? x, Byte? expectedValue)
+        private void TestFromInt16(Int16? x, Byte? expectedValue)
         {
             _Int16 column1 = x;
             _Byte expr = (_Byte)column1;
@@ -367,13 +368,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_Int32Column()
+        public void _Byte_FromInt32()
         {
-            TestInt32ColumnCast(null, null);
-            TestInt32ColumnCast(5, 5);
+            TestFromInt32(null, null);
+            TestFromInt32(5, 5);
         }
 
-        private void TestInt32ColumnCast(Int32? x, Byte? expectedValue)
+        private void TestFromInt32(Int32? x, Byte? expectedValue)
         {
             _Int32 column1 = x;
             _Byte expr = (_Byte)column1;
@@ -383,13 +384,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_Int64Column()
+        public void _Byte_FromInt64()
         {
-            TestInt64ColumnCast(8, 8);
-            TestInt64ColumnCast(null, null);
+            TestFromInt64(8, 8);
+            TestFromInt64(null, null);
         }
 
-        private void TestInt64ColumnCast(Int64? x, Byte? expectedValue)
+        private void TestFromInt64(Int64? x, Byte? expectedValue)
         {
             _Int64 column1 = x;
             _Byte expr = (_Byte)column1;
@@ -399,13 +400,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_DecimalColumn()
+        public void _Byte_FromDecimal()
         {
-            TestDecimalColumnCast(8, 8);
-            TestDecimalColumnCast(null, null);
+            TestFromDecimal(8, 8);
+            TestFromDecimal(null, null);
         }
 
-        private void TestDecimalColumnCast(Decimal? x, Byte? expectedValue)
+        private void TestFromDecimal(Decimal? x, Byte? expectedValue)
         {
             _Decimal column1 = x;
             _Byte expr = (_Byte)column1;
@@ -415,13 +416,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_DoubleColumn()
+        public void _ByteColumn_FromDouble()
         {
-            TestDoubleColumnCast(8, 8);
-            TestDoubleColumnCast(null, null);
+            TestFromDouble(8, 8);
+            TestFromDouble(null, null);
         }
 
-        private void TestDoubleColumnCast(Double? x, Byte? expectedValue)
+        private void TestFromDouble(Double? x, Byte? expectedValue)
         {
             _Double column1 = x;
             _Byte expr = (_Byte)column1;
@@ -431,13 +432,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_SingleColumn()
+        public void _Byte_FromSingle()
         {
-            TestSingleColumnCast(8, 8);
-            TestSingleColumnCast(null, null);
+            TestFromSingle(8, 8);
+            TestFromSingle(null, null);
         }
 
-        private void TestSingleColumnCast(Single? x, Byte? expectedValue)
+        private void TestFromSingle(Single? x, Byte? expectedValue)
         {
             _Single column1 = x;
             _Byte expr = (_Byte)column1;
@@ -447,19 +448,272 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ByteColumn_cast_from_StringColumn()
+        public void _Byte_FromString()
         {
-            TestStringColumnCast("8", 8);
-            TestStringColumnCast(null, null);
+            TestFromString("8", 8);
+            TestFromString(null, null);
         }
 
-        private void TestStringColumnCast(String x, Byte? expectedValue)
+        private void TestFromString(String x, Byte? expectedValue)
         {
             _String column1 = x;
             _Byte expr = (_Byte)column1;
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(String), typeof(Byte?));
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Byte_Add_Converter()
+        {
+            var column = _Byte.Const(1) + _Byte.Const(2);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Add, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)3, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_BitwiseAnd_Converter()
+        {
+            var column = _Byte.Const(1) & _Byte.Const(0);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_BitwiseAnd, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)0, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_BitwiseOr_Converter()
+        {
+            var column = _Byte.Const(1) | _Byte.Const(0);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_BitwiseOr, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_BitwiseXor_Converter()
+        {
+            var column = _Byte.Const(1) ^ _Byte.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_BitwiseXor, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)0, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_Divide_Converter()
+        {
+            var column = _Byte.Const(12) / _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Divide, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)4, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_Equal_Converter()
+        {
+            var column = _Byte.Const(1) == _Byte.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromBoolean_Converter()
+        {
+            var column = (_Byte)_Boolean.True;
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromBoolean, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromDecimal_Converter()
+        {
+            var column = (_Byte)_Decimal.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromDecimal, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromDouble_Converter()
+        {
+            var column = (_Byte)_Double.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromDouble, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromInt16_Converter()
+        {
+            var column = (_Byte)_Int16.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromInt16, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromInt32_Converter()
+        {
+            var column = (_Byte)_Int32.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromInt32, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromInt64_Converter()
+        {
+            var column = (_Byte)_Int64.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromInt64, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromSingle_Converter()
+        {
+            var column = (_Byte)_Single.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromSingle, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_FromString_Converter()
+        {
+            var column = (_Byte)_String.Const("5");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_FromString, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)5, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_GreaterThan_Converter()
+        {
+            var column = _Byte.Const(3) > _Byte.Const(2);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_GreaterThanOrEqual_Converter()
+        {
+            var column = _Byte.Const(3) >= _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_GreaterThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_LessThan_Converter()
+        {
+            var column = _Byte.Const(3) < _Byte.Const(2);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_LessThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(false, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_LessThanOrEqual_Converter()
+        {
+            var column = _Byte.Const(3) <= _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_LessThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_Modulo_Converter()
+        {
+            var column = _Byte.Const(5) % _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Modulo, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)2, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_Multiply_Converter()
+        {
+            var column = _Byte.Const(5) * _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Multiply, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)15, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_NotEqual_Converter()
+        {
+            var column = _Byte.Const(5) != _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_OnesComplement_Converter()
+        {
+            var column = ~_Byte.Const(0);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_OnesComplement, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)255, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Byte_Substract_Converter()
+        {
+            var column = _Byte.Const(5) - _Byte.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_Substract, json);
+
+            var columnFromJson = (_Byte)Column.FromJson(null, json);
+            Assert.AreEqual((byte)2, columnFromJson.Eval());
         }
     }
 }

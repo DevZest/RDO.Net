@@ -1,15 +1,16 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _DoubleTests
+    public class _DoubleTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void DoubleColumn_Param()
+        public void _Double_Param()
         {
             TestParam(5.5);
             TestParam(null);
@@ -22,7 +23,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_implicit_cast()
+        public void _Double_Implicit()
         {
             TestImplicit(5.5);
             TestImplicit(null);
@@ -35,7 +36,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_Const()
+        public void _Double_Const()
         {
             TestConst(5.5);
             TestConst(null);
@@ -48,7 +49,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_negate()
+        public void _Double_Negate()
         {
             TestNegate(2, -2);
             TestNegate(null, null);
@@ -64,7 +65,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_add()
+        public void _Double_Add()
         {
             TestAdd(1, 2, 3);
             TestAdd(1, null, null);
@@ -82,7 +83,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_substract()
+        public void _Double_Substract()
         {
             TestSubstract(5, 2, 3);
             TestSubstract(null, 2, null);
@@ -100,7 +101,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_multipy()
+        public void _Double_Multiply()
         {
             TestMultiply(5, 5, 25);
             TestMultiply(5, null, null);
@@ -118,7 +119,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_divide()
+        public void _Double_Divide()
         {
             TestDivide(12, 4, 3);
             TestDivide(5, null, null);
@@ -137,7 +138,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_modulo()
+        public void _Double_Modulo()
         {
             TestModulo(5, 3, 2);
             TestModulo(100, null, null);
@@ -155,7 +156,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_less_than()
+        public void _Double_LessThan()
         {
             TestLessThan(99, 100, true);
             TestLessThan(99, 99, false);
@@ -176,7 +177,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_less_than_or_equal()
+        public void _Double_LessThanOrEqual()
         {
             TestLessThanOrEqual(99, 98, false);
             TestLessThanOrEqual(99, 99, true);
@@ -197,7 +198,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_greater_than()
+        public void _Double_GreaterThan()
         {
             TestGreaterThan(100, 99, true);
             TestGreaterThan(100, 100, false);
@@ -218,7 +219,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_greater_than_or_equal()
+        public void _Double_GreaterThanOrEqual()
         {
             TestGreaterThanOrEqual(100, 99, true);
             TestGreaterThanOrEqual(100, 100, true);
@@ -239,7 +240,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_equal()
+        public void _Double_Equal()
         {
             TestEqual(2, 2, true);
             TestEqual(4, 5, false);
@@ -258,7 +259,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_not_equal()
+        public void _Double_NotEqual()
         {
             TestNotEqual(1, 1, false);
             TestNotEqual(1, 2, true);
@@ -277,14 +278,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_BooleanColumn()
+        public void _Double_FromBoolean()
         {
-            TestBooleanColumnCast(_Boolean.True, 1);
-            TestBooleanColumnCast(_Boolean.False, 0);
-            TestBooleanColumnCast(_Boolean.Null, null);
+            TestFromBoolean(_Boolean.True, 1);
+            TestFromBoolean(_Boolean.False, 0);
+            TestFromBoolean(_Boolean.Null, null);
         }
 
-        private void TestBooleanColumnCast(_Boolean x, Double? expectedValue)
+        private void TestFromBoolean(_Boolean x, Double? expectedValue)
         {
             _Double expr = (_Double)x;
             var dbExpr = (DbCastExpression)expr.DbExpression;
@@ -293,13 +294,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_ByteColumn()
+        public void _Double_FromByte()
         {
-            TestByteColumnCast(null, null);
-            TestByteColumnCast(127, 127);
+            TestFromByte(null, null);
+            TestFromByte(127, 127);
         }
 
-        private void TestByteColumnCast(byte? x, Double? expectedValue)
+        private void TestFromByte(byte? x, Double? expectedValue)
         {
             _Byte column1 = x;
             _Double expr = (_Double)column1;
@@ -309,13 +310,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_Int16Column()
+        public void _Double_FromInt16()
         {
-            TestInt16ColumnCast(null, null);
-            TestInt16ColumnCast(5, 5);
+            TestFromInt16(null, null);
+            TestFromInt16(5, 5);
         }
 
-        private void TestInt16ColumnCast(Int16? x, Double? expectedValue)
+        private void TestFromInt16(Int16? x, Double? expectedValue)
         {
             _Int16 column1 = x;
             _Double expr = (_Double)column1;
@@ -325,13 +326,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_Int64Column()
+        public void _Double_FromInt64()
         {
-            TestInt64ColumnCast(8, 8);
-            TestInt64ColumnCast(null, null);
+            TestFromInt64(8, 8);
+            TestFromInt64(null, null);
         }
 
-        private void TestInt64ColumnCast(Int64? x, Double? expectedValue)
+        private void TestFromInt64(Int64? x, Double? expectedValue)
         {
             _Int64 column1 = x;
             _Double expr = (_Double)column1;
@@ -341,13 +342,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_Int32Column()
+        public void _Double_FromInt32()
         {
-            TestInt32ColumnCast(8, 8);
-            TestInt32ColumnCast(null, null);
+            TestFromInt32(8, 8);
+            TestFromInt32(null, null);
         }
 
-        private void TestInt32ColumnCast(Int32? x, Double? expectedValue)
+        private void TestFromInt32(Int32? x, Double? expectedValue)
         {
             _Int32 column1 = x;
             _Double expr = (_Double)column1;
@@ -357,13 +358,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_DecimalColumn()
+        public void _Double_FromDecimal()
         {
-            TestDecimalColumnCast(8, 8);
-            TestDecimalColumnCast(null, null);
+            TestFromDecimal(8, 8);
+            TestFromDecimal(null, null);
         }
 
-        private void TestDecimalColumnCast(Decimal? x, Double? expectedValue)
+        private void TestFromDecimal(Decimal? x, Double? expectedValue)
         {
             _Decimal column1 = x;
             _Double expr = (_Double)column1;
@@ -373,13 +374,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_SingleColumn()
+        public void _Double_FromSingle()
         {
-            TestSingleColumnCast(8, 8);
-            TestSingleColumnCast(null, null);
+            TestFromSingle(8, 8);
+            TestFromSingle(null, null);
         }
 
-        private void TestSingleColumnCast(Single? x, Double? expectedValue)
+        private void TestFromSingle(Single? x, Double? expectedValue)
         {
             _Single column1 = x;
             _Double expr = (_Double)column1;
@@ -389,19 +390,239 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DoubleColumn_cast_from_StringColumn()
+        public void _Double_FromString()
         {
-            TestStringColumnCast("8", 8);
-            TestStringColumnCast(null, null);
+            TestFromString("8", 8);
+            TestFromString(null, null);
         }
 
-        private void TestStringColumnCast(String x, Double? expectedValue)
+        private void TestFromString(String x, Double? expectedValue)
         {
             _String column1 = x;
             _Double expr = (_Double)column1;
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(String), typeof(Double?));
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Double_Add_Converter()
+        {
+            var column = _Double.Const(1) + _Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Add, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)2, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Divide_Converter()
+        {
+            var column = _Double.Const(6) / _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Divide, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)2, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Equal_Converter()
+        {
+            var column = _Double.Const(1) == _Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromBoolean_Converter()
+        {
+            var column = (_Double)_Boolean.True;
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromBoolean, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromByte_Converter()
+        {
+            var column = (_Double)_Byte.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromByte, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromDecimal_Converter()
+        {
+            var column = (_Double)_Decimal.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromDecimal, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromInt16_Converter()
+        {
+            var column = (_Double)_Int16.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromInt16, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromInt32_Converter()
+        {
+            var column = (_Double)_Int32.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromInt32, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromInt64_Converter()
+        {
+            var column = (_Double)_Int64.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromInt64, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromSingle_Converter()
+        {
+            var column = (_Double)_Single.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromSingle, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_FromString_Converter()
+        {
+            var column = (_Double)_String.Const("1");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_FromString, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)1, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_GreaterThan_Converter()
+        {
+            var column = _Double.Const(4) > _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_GreaterThanOrEqual_Converter()
+        {
+            var column = _Double.Const(3) >= _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_GreaterThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_LessThan_Converter()
+        {
+            var column = _Double.Const(3) < _Double.Const(4);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_LessThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_LessThanOrEqual_Converter()
+        {
+            var column = _Double.Const(3) <= _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_LessThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Modulo_Converter()
+        {
+            var column = _Double.Const(5) % _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Modulo, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)2, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Multiply_Converter()
+        {
+            var column = _Double.Const(5) * _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Multiply, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)15, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Negate_Converter()
+        {
+            var column = -_Double.Const(5);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Negate, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)(-5), columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_NotEqual_Converter()
+        {
+            var column = _Double.Const(2) != _Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Double_Substract_Converter()
+        {
+            var column = _Double.Const(5) - _Double.Const(3);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Double_Substract, json);
+
+            var columnFromJson = (_Double)Column.FromJson(null, json);
+            Assert.AreEqual((Double)2, columnFromJson.Eval());
         }
     }
 }

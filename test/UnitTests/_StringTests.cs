@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
@@ -7,10 +8,10 @@ using System.Globalization;
 namespace DevZest.Data
 {
     [TestClass]
-    public class _StringTests
+    public class _StringTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void StringColumn_Param()
+        public void _String_Param()
         {
             TestParam("ABC");
             TestParam(null);
@@ -23,7 +24,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_implicit_convert()
+        public void _String_Implicit()
         {
             TestImplicit("ABC");
             TestImplicit(null);
@@ -36,7 +37,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_Const()
+        public void _String_Const()
         {
             TestConst("ABC");
             TestConst(null);
@@ -48,7 +49,7 @@ namespace DevZest.Data
             column.VerifyConst(x);
         }
         [TestMethod]
-        public void StringColumn_add()
+        public void _String_Add()
         {
             TestAdd("A", "B", "AB");
             TestAdd("A", null, null);
@@ -66,7 +67,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_less_than()
+        public void _String_LessThan()
         {
             TestLessThan("099", "100", true);
             TestLessThan("99", "99", false);
@@ -87,7 +88,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_less_than_or_equal()
+        public void _String_LessThanOrEqual()
         {
             TestLessThanOrEqual("99", "98", false);
             TestLessThanOrEqual("99", "99", true);
@@ -108,7 +109,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_greater_than()
+        public void _String_GreaterThan()
         {
             TestGreaterThan("100", "099", true);
             TestGreaterThan("100", "100", false);
@@ -129,7 +130,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_greater_than_or_equal()
+        public void _String_GreaterThanOrEqual()
         {
             TestGreaterThanOrEqual("100", "099", true);
             TestGreaterThanOrEqual("100", "100", true);
@@ -150,7 +151,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_equal()
+        public void _String_Equal()
         {
             TestEqual("2", "2", true);
             TestEqual("4", "5", false);
@@ -169,7 +170,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_not_equal()
+        public void _String_NotEqual()
         {
             TestNotEqual("1", "1", false);
             TestNotEqual("1", "2", true);
@@ -188,14 +189,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbBoolean()
+        public void _String_FromBoolean()
         {
-            TestDbBooleanCast(_Boolean.True, "True");
-            TestDbBooleanCast(_Boolean.False, "False");
-            TestDbBooleanCast(_Boolean.Null, null);
+            TestFromBoolean(_Boolean.True, "True");
+            TestFromBoolean(_Boolean.False, "False");
+            TestFromBoolean(_Boolean.Null, null);
         }
 
-        private void TestDbBooleanCast(_Boolean x, String expectedValue)
+        private void TestFromBoolean(_Boolean x, String expectedValue)
         {
             _String expr = (_String)x;
             var dbExpr = (DbCastExpression)expr.DbExpression;
@@ -204,13 +205,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbByte()
+        public void _String_FromByte()
         {
-            TestDbByteCast(null, null);
-            TestDbByteCast(127, "127");
+            TestFromByte(null, null);
+            TestFromByte(127, "127");
         }
 
-        private void TestDbByteCast(byte? x, String expectedValue)
+        private void TestFromByte(byte? x, String expectedValue)
         {
             _Byte column1 = x;
             _String expr = (_String)column1;
@@ -220,13 +221,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbChar()
+        public void _String_FromChar()
         {
-            TestDbCharCast(null, null);
-            TestDbCharCast('A', "A");
+            TestFromChar(null, null);
+            TestFromChar('A', "A");
         }
 
-        private void TestDbCharCast(Char? x, String expectedValue)
+        private void TestFromChar(Char? x, String expectedValue)
         {
             _Char column1 = x;
             _String expr = (_String)column1;
@@ -236,14 +237,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbDateTime()
+        public void _String_FromDateTime()
         {
             var now = DateTime.Now;
-            TestDbDateTimeCast(null, null);
-            TestDbDateTimeCast(now, now.ToString("O", CultureInfo.InvariantCulture));
+            TestFromDateTime(null, null);
+            TestFromDateTime(now, now.ToString("O", CultureInfo.InvariantCulture));
         }
 
-        private void TestDbDateTimeCast(DateTime? x, String expectedValue)
+        private void TestFromDateTime(DateTime? x, String expectedValue)
         {
             _DateTime column1 = x;
             _String expr = (_String)column1;
@@ -253,14 +254,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbGuid()
+        public void _String_FromGuid()
         {
             var guid = Guid.NewGuid();
-            TestDbGuidCast(null, null);
-            TestDbGuidCast(guid, guid.ToString());
+            TestFromGuid(null, null);
+            TestFromGuid(guid, guid.ToString());
         }
 
-        private void TestDbGuidCast(Guid? x, String expectedValue)
+        private void TestFromGuid(Guid? x, String expectedValue)
         {
             _Guid column1 = x;
             _String expr = (_String)column1;
@@ -270,13 +271,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbInt16()
+        public void _String_FromInt16()
         {
-            TestDbInt16Cast(null, null);
-            TestDbInt16Cast(5, "5");
+            TestFromInt16(null, null);
+            TestFromInt16(5, "5");
         }
 
-        private void TestDbInt16Cast(Int16? x, String expectedValue)
+        private void TestFromInt16(Int16? x, String expectedValue)
         {
             _Int16 column1 = x;
             _String expr = (_String)column1;
@@ -286,13 +287,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbInt32()
+        public void _String_FromInt32()
         {
-            TestDbInt32Cast(1234567, "1234567");
-            TestDbInt32Cast(null, null);
+            TestFromInt32(1234567, "1234567");
+            TestFromInt32(null, null);
         }
 
-        private void TestDbInt32Cast(Int32? x, String expectedValue)
+        private void TestFromInt32(Int32? x, String expectedValue)
         {
             _Int32 column1 = x;
             _String expr = (_String)column1;
@@ -303,13 +304,13 @@ namespace DevZest.Data
 
 
         [TestMethod]
-        public void StringColumn_cast_from_DbInt64()
+        public void _String_FromInt64()
         {
-            TestDbInt64Cast(8, "8");
-            TestDbInt64Cast(null, null);
+            TestFromInt64(8, "8");
+            TestFromInt64(null, null);
         }
 
-        private void TestDbInt64Cast(Int64? x, String expectedValue)
+        private void TestFromInt64(Int64? x, String expectedValue)
         {
             _Int64 column1 = x;
             _String expr = (_String)column1;
@@ -319,13 +320,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbDecimal()
+        public void _String_FromDecimal()
         {
-            TestDbDecimalCast(8, "8");
-            TestDbDecimalCast(null, null);
+            TestFromDecimal(8, "8");
+            TestFromDecimal(null, null);
         }
 
-        private void TestDbDecimalCast(Decimal? x, String expectedValue)
+        private void TestFromDecimal(Decimal? x, String expectedValue)
         {
             _Decimal column1 = x;
             _String expr = (_String)column1;
@@ -335,13 +336,13 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbDouble()
+        public void _String_FromDouble()
         {
-            TestDbDoubleCast(8, "8");
-            TestDbDoubleCast(null, null);
+            TestFromDouble(8, "8");
+            TestFromDouble(null, null);
         }
 
-        private void TestDbDoubleCast(Double? x, String expectedValue)
+        private void TestFromDouble(Double? x, String expectedValue)
         {
             _Double column1 = x;
             _String expr = (_String)column1;
@@ -351,19 +352,217 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void StringColumn_cast_from_DbSingle()
+        public void _String_FromSingle()
         {
-            TestDbSingleCast(8, "8");
-            TestDbSingleCast(null, null);
+            TestFromSingle(8, "8");
+            TestFromSingle(null, null);
         }
 
-        private void TestDbSingleCast(Single? x, String expectedValue)
+        private void TestFromSingle(Single? x, String expectedValue)
         {
             _Single column1 = x;
             _String expr = (_String)column1;
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(Single?), typeof(String));
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _String_Add_Converter()
+        {
+            var column = _String.Const("a") + _String.Const("b");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_Add, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("ab", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_Equal_Converter()
+        {
+            var column = _String.Const("a") == _String.Const("a");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromBoolean_Converter()
+        {
+            var column = (_String)_Boolean.True;
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromBoolean, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("True", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromByte_Converter()
+        {
+            var column = (_String)_Byte.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromByte, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromChar_Converter()
+        {
+            var column = (_String)_Char.Const('a');
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromChar, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("a", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromDateTime_Converter()
+        {
+            var column = (_String)_DateTime.Const(new DateTime(2016, 6, 15));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromDateTime, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("2016-06-15T00:00:00.0000000", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromDecimal_Converter()
+        {
+            var column = (_String)_Decimal.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromDecimal, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromDouble_Converter()
+        {
+            var column = (_String)_Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromDouble, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromGuid_Converter()
+        {
+            var column = (_String)_Guid.Const(new Guid());
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromGuid, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("00000000-0000-0000-0000-000000000000", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromInt16_Converter()
+        {
+            var column = (_String)_Int16.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromInt16, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromInt32_Converter()
+        {
+            var column = (_String)_Int32.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromInt32, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromInt64_Converter()
+        {
+            var column = (_String)_Int64.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromInt64, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_FromSingle_Converter()
+        {
+            var column = (_String)_Single.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromSingle, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_GreaterThan_Converter()
+        {
+            var column = _String.Const("b") > _String.Const("a");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_GreaterThanOrEqual_Converter()
+        {
+            var column = _String.Const("a") >= _String.Const("a");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_GreaterThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_LessThan_Converter()
+        {
+            var column = _String.Const("a") < _String.Const("b");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_LessThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_LessThanOrEqual_Converter()
+        {
+            var column = _String.Const("a") <= _String.Const("a");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_LessThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _String_NotEqual_Converter()
+        {
+            var column = _String.Const("a") != _String.Const("b");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

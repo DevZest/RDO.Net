@@ -1,15 +1,16 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _BooleanTests
+    public class _BooleanTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void BooleanColumn_Param()
+        public void _Boolean_Param()
         {
             TestParam(true);
             TestParam(false);
@@ -23,7 +24,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_implicit_convert()
+        public void _Boolean_implicit_convert()
         {
             TestImplicit(true);
             TestImplicit(false);
@@ -37,7 +38,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_Const()
+        public void _Boolean_Const()
         {
             TestConst(true);
             TestConst(false);
@@ -51,7 +52,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_logical_NOT()
+        public void _Boolean_Not()
         {
             TestNot(_Boolean.True);
             TestNot(_Boolean.False);
@@ -67,7 +68,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_logical_AND()
+        public void _Boolean_And()
         {
             TestAnd(true, true, true);
             TestAnd(false, true, false);
@@ -89,7 +90,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_logical_OR()
+        public void _Boolean_Or()
         {
             TestOr(true, true, true);
             TestOr(false, true, true);
@@ -111,7 +112,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BooleanColumn_cast_from_StringColumn()
+        public void _Boolean_FromString()
         {
             TestStringColumnCast(null, null);
             TestStringColumnCast("True", true);
@@ -125,6 +126,50 @@ namespace DevZest.Data
             var dbExpr = (DbCastExpression)expr.DbExpression;
             dbExpr.Verify(column1, typeof(String), typeof(Boolean?));
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Boolean_And_Converter()
+        {
+            var column = _Boolean.Const(true) & _Boolean.Const(false);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Boolean_Add, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(false, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Boolean_FromString_Converter()
+        {
+            var column = (_Boolean)(_String.Const("true"));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Boolean_FromString, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Boolean_Not_Converter()
+        {
+            var column = !_Boolean.Const(true);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Boolean_Not, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(false, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _Boolean_Or_Converter()
+        {
+            var column = _Boolean.Const(true) | _Boolean.Const(false);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Boolean_Or, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data
 {
     [TestClass]
-    public class _DateTimeTests
+    public class _DateTimeTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void DateTimeColumn_Param()
+        public void _DateTime_Param()
         {
             TestParam(DateTime.Now);
             TestParam(null);
@@ -22,7 +23,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_implicit_convert()
+        public void _DateTime_Implicit()
         {
             TestImplicit(DateTime.Now);
             TestImplicit(null);
@@ -35,7 +36,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_Const()
+        public void _DateTime_Const()
         {
             TestConst(DateTime.Now);
             TestConst(null);
@@ -48,14 +49,14 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_convert_from_StringColumn()
+        public void _DateTime_FromString()
         {
             var now = DateTime.Now;
-            TestStringColumnCast(now.ToString("O"), now);
-            TestStringColumnCast(null, null);
+            TestFromString(now.ToString("O"), now);
+            TestFromString(null, null);
         }
 
-        private void TestStringColumnCast(String x, DateTime? expectedValue)
+        private void TestFromString(String x, DateTime? expectedValue)
         {
             _String column1 = x;
             _DateTime expr = (_DateTime)column1;
@@ -65,7 +66,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_less_than()
+        public void _DateTime_LessThan()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -88,7 +89,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_less_than_or_equal()
+        public void _DateTime_LessThanOrEqual()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -111,7 +112,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_greater_than()
+        public void _DateTime_GreaterThan()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -134,7 +135,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_greater_than_or_equal()
+        public void _DateTime_GreaterThanOrEqual()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -157,7 +158,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_equal()
+        public void _DateTime_Equal()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -178,7 +179,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DateTimeColumn_not_equal()
+        public void _DateTime_NotEqual()
         {
             var x = DateTime.Now;
             var y = x.AddSeconds(1);
@@ -196,6 +197,83 @@ namespace DevZest.Data
             var dbExpr = (DbBinaryExpression)expr.DbExpression;
             dbExpr.Verify(BinaryExpressionKind.NotEqual, column1, column2);
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _DateTime_Equal_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 14)) == _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_FromString_Converter()
+        {
+            var column = (_DateTime)_String.Const("2016/6/14");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_FromString, json);
+
+            var columnFromJson = (_DateTime)Column.FromJson(null, json);
+            Assert.AreEqual(new DateTime(2016, 6, 14), columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_GreaterThan_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 15)) > _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_GreaterThanOrEqual_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 14)) >= _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_GreaterThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_LessThan_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 13)) < _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_LessThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_LessThanOrEqual_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 14)) <= _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_LessThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_NotEqual_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 13)) != _DateTime.Const(new DateTime(2016, 6, 14));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

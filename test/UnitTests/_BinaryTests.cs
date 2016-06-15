@@ -7,7 +7,7 @@ namespace DevZest.Data
     public class _BinaryTests
     {
         [TestMethod]
-        public void BinaryColumn_implicit_convert()
+        public void _Binary_implicit_convert()
         {
             TestParam(new byte[0]);
             TestParam(null);
@@ -20,7 +20,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void BinaryColumn_Const()
+        public void _Binary_Const()
         {
             TestConstant(new byte[0]);
             TestConstant(null);
