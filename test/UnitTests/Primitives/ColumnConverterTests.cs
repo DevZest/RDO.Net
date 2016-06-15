@@ -2120,5 +2120,16 @@ namespace DevZest.Data.Primitives
             var columnFromJson = (_String)Column.FromJson(null, json);
             Assert.AreEqual("a", columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void Converter_String_FromDateTime()
+        {
+            var column = (_String)_DateTime.Const(new DateTime(2016, 6, 15));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_String_FromDateTime, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("2016-06-15T00:00:00.0000000", columnFromJson.Eval());
+        }
     }
 }

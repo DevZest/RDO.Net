@@ -5196,6 +5196,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromDateTime" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromDateTime",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_DateTime",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTime",
+               "_DateTime"
+            ],
+            "Value" : "2016-06-15T00:00:00.000"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {

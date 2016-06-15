@@ -558,9 +558,18 @@ namespace DevZest.Data
             return new FromCharCast(x).MakeColumn<_String>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDateTimeCast.Converter), TypeId = "_String.FromDateTime")]
         private sealed class FromDateTimeCast : CastExpression<DateTime?, String>
         {
-            public FromDateTimeCast(_DateTime x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<DateTime?, string> MakeExpression(Column<DateTime?> operand)
+                {
+                    return new FromDateTimeCast(operand);
+                }
+            }
+
+            public FromDateTimeCast(Column<DateTime?> x)
                 : base(x)
             {
             }
