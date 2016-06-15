@@ -801,9 +801,18 @@ namespace DevZest.Data
             return new FromDoubleCast(x).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromSingleCast.Converter), TypeId = "_Int64.FromSingle")]
         private sealed class FromSingleCast : CastExpression<Single?, Int64?>
         {
-            public FromSingleCast(_Single x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<float?, long?> MakeExpression(Column<float?> operand)
+                {
+                    return new FromSingleCast(operand);
+                }
+            }
+
+            public FromSingleCast(Column<Single?> x)
                 : base(x)
             {
             }

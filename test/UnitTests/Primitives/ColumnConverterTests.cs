@@ -1714,16 +1714,16 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Int64_FromSingle()
-        //{
-        //    var column = (_Int64)_Single.Const(1);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Int64_FromSingle, json);
+        [TestMethod]
+        public void Converter_Int64_FromSingle()
+        {
+            var column = (_Int64)_Single.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int64_FromSingle, json);
 
-        //    var columnFromJson = (_Int64)Column.FromJson(null, json);
-        //    Assert.AreEqual((Int64)1, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            Assert.AreEqual((Int64)1, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Int64_FromString()
