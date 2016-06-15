@@ -602,9 +602,18 @@ namespace DevZest.Data
             return new FromInt32Cast(x).MakeColumn<_Single>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDecimalCast.Converter), TypeId = "_Single.FromDecimal")]
         private sealed class FromDecimalCast : CastExpression<Decimal?, Single?>
         {
-            public FromDecimalCast(_Decimal x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<decimal?, float?> MakeExpression(Column<decimal?> operand)
+                {
+                    return new FromDecimalCast(operand);
+                }
+            }
+
+            public FromDecimalCast(Column<Decimal?> x)
                 : base(x)
             {
             }

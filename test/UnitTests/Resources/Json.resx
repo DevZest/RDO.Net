@@ -4686,6 +4686,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_FromDecimal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.FromDecimal",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
