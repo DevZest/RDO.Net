@@ -4992,6 +4992,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_Negate" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.Negate",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 5
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
