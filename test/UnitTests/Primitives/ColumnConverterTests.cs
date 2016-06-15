@@ -1615,16 +1615,16 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
-        //[TestMethod]
-        //public void Converter_Int64_BitwiseXor()
-        //{
-        //    var column = _Int64.Const(1) ^ _Int64.Const(1);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Int64_BitwiseXor, json);
+        [TestMethod]
+        public void Converter_Int64_BitwiseXor()
+        {
+            var column = _Int64.Const(1) ^ _Int64.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Int64_BitwiseXor, json);
 
-        //    var columnFromJson = (_Int64)Column.FromJson(null, json);
-        //    Assert.AreEqual((Int64)0, columnFromJson.Eval());
-        //}
+            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            Assert.AreEqual((Int64)0, columnFromJson.Eval());
+        }
 
         //[TestMethod]
         //public void Converter_Int64_Divide()
