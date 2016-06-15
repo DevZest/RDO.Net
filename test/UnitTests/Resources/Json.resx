@@ -5449,6 +5449,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_LessThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_String.LessThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "a"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "a"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
