@@ -832,9 +832,18 @@ namespace DevZest.Data
             return new FromSingleCast(x).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_Int64.FromString")]
         private sealed class FromStringCast : CastExpression<String, Int64?>
         {
-            public FromStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, long?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<String> x)
                 : base(x)
             {
             }
