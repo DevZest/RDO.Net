@@ -1912,6 +1912,17 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual((Single)1, columnFromJson.Eval());
         }
 
+        [TestMethod]
+        public void Converter_Single_FromDouble()
+        {
+            var column = (_Single)_Double.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Single_FromDouble, json);
+
+            var columnFromJson = (_Single)Column.FromJson(null, json);
+            Assert.AreEqual((Single)1, columnFromJson.Eval());
+        }
+
         //[TestMethod]
         //public void Converter_Single_FromInt16()
         //{
@@ -1940,17 +1951,6 @@ namespace DevZest.Data.Primitives
         //    var column = (_Single)_Int64.Const(1);
         //    var json = column.ToJson(true);
         //    Assert.AreEqual(Json.Converter_Single_FromInt64, json);
-
-        //    var columnFromJson = (_Single)Column.FromJson(null, json);
-        //    Assert.AreEqual((Single)1, columnFromJson.Eval());
-        //}
-
-        //[TestMethod]
-        //public void Converter_Single_FromSingle()
-        //{
-        //    var column = (_Single)_Single.Const(1);
-        //    var json = column.ToJson(true);
-        //    Assert.AreEqual(Json.Converter_Single_FromSingle, json);
 
         //    var columnFromJson = (_Single)Column.FromJson(null, json);
         //    Assert.AreEqual((Single)1, columnFromJson.Eval());

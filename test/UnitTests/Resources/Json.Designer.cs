@@ -4792,6 +4792,15 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string Converter_Single_FromDouble {
+            get {
+                return ResourceManager.GetString("Converter_Single_FromDouble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;ProductCategoryID&quot; : 0,
