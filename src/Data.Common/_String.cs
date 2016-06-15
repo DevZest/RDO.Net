@@ -492,9 +492,18 @@ namespace DevZest.Data
             return new FromDecimalCast(x).MakeColumn<_String>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromDoubleCast.Converter), TypeId = "_String.FromDouble")]
         private sealed class FromDoubleCast : CastExpression<Double?, String>
         {
-            public FromDoubleCast(_Double x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<double?, string> MakeExpression(Column<double?> operand)
+                {
+                    return new FromDoubleCast(operand);
+                }
+            }
+
+            public FromDoubleCast(Column<Double?> x)
                 : base(x)
             {
             }
