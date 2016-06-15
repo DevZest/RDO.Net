@@ -279,9 +279,18 @@ namespace DevZest.Data
             return new ModuloExpression(x, y).MakeColumn<_Single>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_Single.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<Single?, bool?>
         {
-            public LessThanExpression(_Single x, _Single y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<float?, bool?> MakeExpression(Column<float?> left, Column<float?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<Single?> x, Column<Single?> y)
                 : base(x, y)
             {
             }

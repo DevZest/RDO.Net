@@ -4868,6 +4868,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_LessThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_Single.LessThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 3
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 4
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
