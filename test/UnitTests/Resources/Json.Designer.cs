@@ -4093,11 +4093,54 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int64.FromBoolean&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Boolean&quot;,
+        ///               &quot;_Boolean&quot;
+        ///            ],
+        ///            &quot;Value&quot; : true
+        ///         }
+        ///      }
+        ///   }
+        ///}.
         /// </summary>
         internal static string Converter_Int64_FromBoolean {
             get {
                 return ResourceManager.GetString("Converter_Int64_FromBoolean", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int64.FromByte&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Byte&quot;,
+        ///               &quot;_Byte&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int64_FromByte {
+            get {
+                return ResourceManager.GetString("Converter_Int64_FromByte", resourceCulture);
             }
         }
         
