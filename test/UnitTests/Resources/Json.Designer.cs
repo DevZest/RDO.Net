@@ -4792,11 +4792,54 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Single.FromDouble&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Double&quot;,
+        ///               &quot;_Double&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
         /// </summary>
         internal static string Converter_Single_FromDouble {
             get {
                 return ResourceManager.GetString("Converter_Single_FromDouble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Single.FromInt16&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int16&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int16&quot;,
+        ///               &quot;_Int16&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Single_FromInt16 {
+            get {
+                return ResourceManager.GetString("Converter_Single_FromInt16", resourceCulture);
             }
         }
         
