@@ -4961,6 +4961,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_Multiply" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.Multiply",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 5
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 3
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
