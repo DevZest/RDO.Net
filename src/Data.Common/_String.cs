@@ -395,9 +395,18 @@ namespace DevZest.Data
             return new FromByteCast(x).MakeColumn<_String>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(FromInt16Cast.Converter), TypeId = "_String.FromInt16")]
         private sealed class FromInt16Cast : CastExpression<Int16?, String>
         {
-            public FromInt16Cast(_Int16 x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<short?, string> MakeExpression(Column<short?> operand)
+                {
+                    return new FromInt16Cast(operand);
+                }
+            }
+
+            public FromInt16Cast(Column<Int16?> x)
                 : base(x)
             {
             }
