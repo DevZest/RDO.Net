@@ -4553,6 +4553,37 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_Add" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "_Single.Add",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 1
+         }
+      },
+      "Right" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {

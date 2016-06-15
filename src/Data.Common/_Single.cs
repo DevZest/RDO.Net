@@ -116,9 +116,18 @@ namespace DevZest.Data
             return new NegateExpression(x).MakeColumn<_Single>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_Single.Add")]
         private sealed class AddExpression : BinaryExpression<Single?>
         {
-            public AddExpression(_Single x, _Single y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<float?, float?> MakeExpression(Column<float?> left, Column<float?> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<Single?> x, Column<Single?> y)
                 : base(x, y)
             {
             }
