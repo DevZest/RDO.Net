@@ -5136,6 +5136,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_String_FromBoolean" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_String.FromBoolean",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {
