@@ -125,9 +125,18 @@ namespace DevZest.Data
             return new NegateExpression(x).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(OnesComplementExpression.Converter), TypeId = "_Int64.OnesComplement")]
         private sealed class OnesComplementExpression : UnaryExpression<Int64?>
         {
-            public OnesComplementExpression(_Int64 x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override UnaryExpression<long?> MakeExpression(Column<long?> operand)
+                {
+                    return new OnesComplementExpression(operand);
+                }
+            }
+
+            public OnesComplementExpression(Column<Int64?> x)
                 : base(x)
             {
             }
