@@ -143,9 +143,18 @@ namespace DevZest.Data
             return new OnesComplementExpression(x).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_Int64.Add")]
         private sealed class AddExpression : BinaryExpression<Int64?>
         {
-            public AddExpression(_Int64 x, _Int64 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<long?, long?> MakeExpression(Column<long?> left, Column<long?> right)
+                {
+                    return new AddExpression(left, right);
+                }
+            }
+
+            public AddExpression(Column<Int64?> x, Column<Int64?> y)
                 : base(x, y)
             {
             }
