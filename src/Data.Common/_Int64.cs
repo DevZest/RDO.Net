@@ -297,9 +297,18 @@ namespace DevZest.Data
             return new ModuloExpression(x, y).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(BitwiseAndExpression.Converter), TypeId = "_Int64.BitwiseAnd")]
         private sealed class BitwiseAndExpression : BinaryExpression<Int64?>
         {
-            public BitwiseAndExpression(_Int64 x, _Int64 y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<long?, long?> MakeExpression(Column<long?> left, Column<long?> right)
+                {
+                    return new BitwiseAndExpression(left, right);
+                }
+            }
+
+            public BitwiseAndExpression(Column<Int64?> x, Column<Int64?> y)
                 : base(x, y)
             {
             }
