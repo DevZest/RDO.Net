@@ -90,7 +90,7 @@
     <Compile Include="_CharTests.cs" />
     <Compile Include="ColumnTests.cs" />
     <Compile Include="_DateTimeTests.cs" />
-    <Compile Include="DbFunctionsAggregateTests.cs" />
+    <Compile Include="FunctionsAggregateTests.cs" />
     <Compile Include="Helpers\DbQueryExtensions.cs" />
     <Compile Include="DbQueryTests.cs" />
     <Compile Include="DbSetTests.cs" />
@@ -122,7 +122,7 @@
     <Compile Include="_Int32Tests.cs" />
     <Compile Include="_BooleanTests.cs" />
     <Compile Include="DataSetTests.cs" />
-    <Compile Include="DbFunctionsTests.cs" />
+    <Compile Include="FunctionsTests.cs" />
     <Compile Include="Helpers\SimpleModelBase.cs" />
     <Compile Include="Helpers\SimpleModelKey.cs" />
     <Compile Include="Helpers\ModelCollectionExtensions.cs" />

@@ -32,8 +32,17 @@ namespace DevZest.Data
             }
         }
 
+        [ExpressionConverterNonGenerics(typeof(SumInt32.Converter), TypeId = "Sum(_Int32)")]
         private sealed class SumInt32 : SumBase<Int32?>
         {
+            private sealed class Converter : ConverterBase<Column<Int32?>, SumInt32>
+            {
+                protected override SumInt32 MakeExpression(Column<int?> param)
+                {
+                    return new SumInt32(param);
+                }
+            }
+
             public SumInt32(Column<Int32?> x)
                 : base(x)
             {
@@ -70,8 +79,17 @@ namespace DevZest.Data
             return new SumInt32(x).MakeColumn<_Int32>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SumInt64.Converter), TypeId = "Sum(_Int64)")]
         private sealed class SumInt64 : SumBase<Int64?>
         {
+            private sealed class Converter : ConverterBase<Column<Int64?>, SumInt64>
+            {
+                protected override SumInt64 MakeExpression(Column<long?> param)
+                {
+                    return new SumInt64(param);
+                }
+            }
+
             public SumInt64(Column<Int64?> x)
                 : base(x)
             {
@@ -108,8 +126,17 @@ namespace DevZest.Data
             return new SumInt64(x).MakeColumn<_Int64>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SumDecimal.Converter), TypeId = "Sum(_Decimal)")]
         private sealed class SumDecimal : SumBase<Decimal?>
         {
+            private sealed class Converter : ConverterBase<Column<Decimal?>, SumDecimal>
+            {
+                protected override SumDecimal MakeExpression(Column<decimal?> param)
+                {
+                    return new SumDecimal(param);
+                }
+            }
+
             public SumDecimal(Column<Decimal?> x)
                 : base(x)
             {
@@ -146,8 +173,17 @@ namespace DevZest.Data
             return new SumDecimal(x).MakeColumn<_Decimal>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SumDouble.Converter), TypeId = "Sum(_Double)")]
         private sealed class SumDouble : SumBase<Double?>
         {
+            private sealed class Converter : ConverterBase<Column<Double?>, SumDouble>
+            {
+                protected override SumDouble MakeExpression(Column<double?> param)
+                {
+                    return new SumDouble(param);
+                }
+            }
+
             public SumDouble(Column<Double?> x)
                 : base(x)
             {
@@ -184,8 +220,17 @@ namespace DevZest.Data
             return new SumDouble(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(SumSingle.Converter), TypeId = "Sum(_Single)")]
         private sealed class SumSingle : SumBase<Single?>
         {
+            private sealed class Converter : ConverterBase<Column<Single?>, SumSingle>
+            {
+                protected override SumSingle MakeExpression(Column<float?> param)
+                {
+                    return new SumSingle(param);
+                }
+            }
+
             public SumSingle(Column<Single?> x)
                 : base(x)
             {

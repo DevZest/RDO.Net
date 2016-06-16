@@ -91,6 +91,7 @@
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\ColumnListExtensions.cs" />
     <Compile Include="Primitives\JsonWriter.cs" />
+    <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />

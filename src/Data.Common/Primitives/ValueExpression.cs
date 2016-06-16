@@ -55,7 +55,7 @@ namespace DevZest.Data.Primitives
             return ModelSet.Empty;
         }
 
-        internal sealed override Type[] ArgColumnTypes
+        protected internal sealed override Type[] ArgColumnTypes
         {
             get { return new Type[] { Owner.GetType(), Owner.GetType() }; }
         }

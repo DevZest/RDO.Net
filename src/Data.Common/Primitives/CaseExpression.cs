@@ -157,7 +157,7 @@ namespace DevZest.Data.Primitives
             return GetCounterpart(expr);
         }
 
-        internal override Type[] ArgColumnTypes
+        protected internal override Type[] ArgColumnTypes
         {
             get { return new Type[] { Owner.GetType() }; }
         }

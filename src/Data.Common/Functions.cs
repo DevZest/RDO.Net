@@ -8,8 +8,17 @@ namespace DevZest.Data
     {
         #region IsNull
 
+        [ExpressionConverterNonGenerics(typeof(IsNullFunction.Converter), TypeId = "IsNull(Column)")]
         private sealed class IsNullFunction : ScalarFunctionExpression<bool?>
         {
+            private sealed class Converter : ConverterBase<Column, IsNullFunction>
+            {
+                protected override IsNullFunction MakeExpression(Column param)
+                {
+                    return new IsNullFunction(param);
+                }
+            }
+
             public IsNullFunction(Column column)
                 : base(column)
             {
@@ -44,8 +53,17 @@ namespace DevZest.Data
 
         #region IsNotNull
 
+        [ExpressionConverterNonGenerics(typeof(IsNotNullFunction.Converter), TypeId = "IsNotNull(Column)")]
         private sealed class IsNotNullFunction : ScalarFunctionExpression<bool?>
         {
+            private sealed class Converter : ConverterBase<Column, IsNotNullFunction>
+            {
+                protected override IsNotNullFunction MakeExpression(Column param)
+                {
+                    return new IsNotNullFunction(param);
+                }
+            }
+
             public IsNotNullFunction(Column column)
                 : base(column)
             {
@@ -80,8 +98,22 @@ namespace DevZest.Data
 
         #region IfNull
 
+        [ExpressionConverterGenerics(typeof(IfNullFunction<>.Converter), TypeId = "IfNull(Column, Column)")]
         private sealed class IfNullFunction<T> : ScalarFunctionExpression<T>
         {
+            private sealed class Converter : ConverterBase<Column<T>, Column<T>, IfNullFunction<T>>
+            {
+                protected override IfNullFunction<T> MakeExpression(Column<T> param1, Column<T> param2)
+                {
+                    return new IfNullFunction<T>(param1, param2);
+                }
+            }
+
+            protected internal override Type[] ArgColumnTypes
+            {
+                get { return new Type[] { Owner.GetType() }; }
+            }
+
             public IfNullFunction(Column<T> column, Column<T> replaceColumn)
                 : base(column, replaceColumn)
             {
@@ -143,8 +175,17 @@ namespace DevZest.Data
 
         #region GetDate
 
-        private class GetDateFunction : ScalarFunctionExpression<DateTime?>
+        [ExpressionConverterNonGenerics(typeof(GetDateFunction.Converter), TypeId = "GetDate()")]
+        private sealed class GetDateFunction : ScalarFunctionExpression<DateTime?>
         {
+            private sealed class Converter : ConverterBase<GetDateFunction>
+            {
+                protected override GetDateFunction MakeExpression()
+                {
+                    return new GetDateFunction();
+                }
+            }
+
             protected internal override DateTime? this[DataRow dataRow]
             {
                 get { return DateTime.Now; }
@@ -170,8 +211,17 @@ namespace DevZest.Data
 
         #region GetUtcDate
 
+        [ExpressionConverterNonGenerics(typeof(GetUtcDateFunction.Converter), TypeId = "GetUtcDate()")]
         private class GetUtcDateFunction : ScalarFunctionExpression<DateTime?>
         {
+            private sealed class Converter : ConverterBase<GetUtcDateFunction>
+            {
+                protected override GetUtcDateFunction MakeExpression()
+                {
+                    return new GetUtcDateFunction();
+                }
+            }
+
             protected internal override DateTime? this[DataRow dataRow]
             {
                 get { return DateTime.UtcNow; }
@@ -197,8 +247,17 @@ namespace DevZest.Data
 
         #region NewGuid
 
+        [ExpressionConverterNonGenerics(typeof(NewGuidFunction.Converter), TypeId = "NewGuid()")]
         private class NewGuidFunction : ScalarFunctionExpression<Guid?>
         {
+            private sealed class Converter : ConverterBase<NewGuidFunction>
+            {
+                protected override NewGuidFunction MakeExpression()
+                {
+                    return new NewGuidFunction();
+                }
+            }
+
             protected internal override Guid? this[DataRow dataRow]
             {
                 get { return Guid.NewGuid(); }

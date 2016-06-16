@@ -30,8 +30,17 @@ namespace DevZest.Data
             }
         }
 
+        [ExpressionConverterNonGenerics(typeof(AverageInt32.Converter), TypeId = "Average(_Int32)")]
         private sealed class AverageInt32 : AverageBase<Int32?, Double?>
         {
+            private sealed class Converter : ConverterBase<Column<Int32?>, AverageInt32>
+            {
+                protected override AverageInt32 MakeExpression(Column<int?> param)
+                {
+                    return new AverageInt32(param);
+                }
+            }
+
             public AverageInt32(Column<Int32?> x)
                 : base(x)
             {
@@ -70,8 +79,17 @@ namespace DevZest.Data
             return new AverageInt32(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AverageInt64.Converter), TypeId = "Average(_Int64)")]
         private sealed class AverageInt64 : AverageBase<Int64?, Double?>
         {
+            private sealed class Converter : ConverterBase<Column<Int64?>, AverageInt64>
+            {
+                protected override AverageInt64 MakeExpression(Column<long?> param)
+                {
+                    return new AverageInt64(param);
+                }
+            }
+
             public AverageInt64(Column<Int64?> x)
                 : base(x)
             {
@@ -110,8 +128,17 @@ namespace DevZest.Data
             return new AverageInt64(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AverageDecimal.Converter), TypeId = "Average(_Decimal)")]
         private sealed class AverageDecimal : AverageBase<Decimal?, Decimal?>
         {
+            private sealed class Converter : ConverterBase<Column<Decimal?>, AverageDecimal>
+            {
+                protected override AverageDecimal MakeExpression(Column<decimal?> param)
+                {
+                    return new AverageDecimal(param);
+                }
+            }
+
             public AverageDecimal(Column<Decimal?> x)
                 : base(x)
             {
@@ -150,8 +177,17 @@ namespace DevZest.Data
             return new AverageDecimal(x).MakeColumn<_Decimal>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AverageDouble.Converter), TypeId = "Average(_Double)")]
         private sealed class AverageDouble : AverageBase<Double?, Double?>
         {
+            private sealed class Converter : ConverterBase<Column<Double?>, AverageDouble>
+            {
+                protected override AverageDouble MakeExpression(Column<double?> param)
+                {
+                    return new AverageDouble(param);
+                }
+            }
+
             public AverageDouble(Column<Double?> x)
                 : base(x)
             {
@@ -190,8 +226,17 @@ namespace DevZest.Data
             return new AverageDouble(x).MakeColumn<_Double>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(AverageSingle.Converter), TypeId = "Average(_Single)")]
         private sealed class AverageSingle : AverageBase<Single?, Single?>
         {
+            private sealed class Converter : ConverterBase<Column<Single?>, AverageSingle>
+            {
+                protected override AverageSingle MakeExpression(Column<float?> param)
+                {
+                    return new AverageSingle(param);
+                }
+            }
+
             public AverageSingle(Column<Single?> x)
                 : base(x)
             {

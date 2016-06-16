@@ -7,8 +7,17 @@ namespace DevZest.Data
     {
         #region CountRows
 
+        [ExpressionConverterNonGenerics(typeof(CountRowsFunction.Converter), TypeId = "CountRows(Column)")]
         private sealed class CountRowsFunction : AggregateFunctionExpression<Int32?>
         {
+            private sealed class Converter : ConverterBase<Column, CountRowsFunction>
+            {
+                protected override CountRowsFunction MakeExpression(Column param)
+                {
+                    return new CountRowsFunction(param);
+                }
+            }
+
             public CountRowsFunction(Column x)
                 : base(x)
             {

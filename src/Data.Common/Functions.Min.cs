@@ -9,13 +9,27 @@ namespace DevZest.Data
     {
         #region Min
 
+        [ExpressionConverterGenerics(typeof(ComparableMinFunction<>.Converter), TypeId = "Min.Comparable(Column)")]
         private sealed class ComparableMinFunction<T> : AggregateFunctionExpression<T>
             where T : IComparable<T>
         {
+            private sealed class Converter : ConverterBase<Column<T>, ComparableMinFunction<T>>
+            {
+                protected override ComparableMinFunction<T> MakeExpression(Column<T> param)
+                {
+                    return new ComparableMinFunction<T>(param);
+                }
+            }
+
             public ComparableMinFunction(Column<T> x)
                 : base(x)
             {
                 _column = x;
+            }
+
+            protected internal override Type[] ArgColumnTypes
+            {
+                get { return new Type[] { Owner.GetType() }; }
             }
 
             private Column<T> _column;
@@ -47,13 +61,27 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class NullableMinFunction<T> : AggregateFunctionExpression<Nullable<T>>
+        [ExpressionConverterGenerics(typeof(NullableMinFunction<>.Converter), TypeId = "Min.Nullable(Column)")]
+        private sealed class NullableMinFunction<[UnderlyingValueType]T> : AggregateFunctionExpression<Nullable<T>>
             where T : struct, IComparable<T>
         {
+            private sealed class Converter : ConverterBase<Column<Nullable<T>>, NullableMinFunction<T>>
+            {
+                protected override NullableMinFunction<T> MakeExpression(Column<T?> param)
+                {
+                    return new NullableMinFunction<T>(param);
+                }
+            }
+
             public NullableMinFunction(Column<Nullable<T>> x)
                 : base(x)
             {
                 _column = x;
+            }
+
+            protected internal override Type[] ArgColumnTypes
+            {
+                get { return new Type[] { Owner.GetType() }; }
             }
 
             private Column<Nullable<T>> _column;

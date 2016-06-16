@@ -9,12 +9,26 @@ namespace DevZest.Data
     {
         #region First
 
+        [ExpressionConverterGenerics(typeof(FirstFunction<>.Converter), TypeId = "First(Column)")]
         private sealed class FirstFunction<T> : AggregateFunctionExpression<T>
         {
+            private sealed class Converter : ConverterBase<Column<T>, FirstFunction<T>>
+            {
+                protected override FirstFunction<T> MakeExpression(Column<T> param)
+                {
+                    return new FirstFunction<T>(param);
+                }
+            }
+
             public FirstFunction(Column<T> x)
                 : base(x)
             {
                 _column = x;
+            }
+
+            protected internal override Type[] ArgColumnTypes
+            {
+                get { return new Type[] { Owner.GetType() }; }
             }
 
             private Column<T> _column;

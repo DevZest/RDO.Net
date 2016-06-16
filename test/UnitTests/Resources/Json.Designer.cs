@@ -2582,6 +2582,530 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Average(_Decimal)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///            &quot;Name&quot; : &quot;DecimalColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Average_Decimal {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Average_Decimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Average(_Double)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///            &quot;Name&quot; : &quot;DoubleColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Average_Double {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Average_Double", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Average(_Int32)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Int32Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Average_Int32 {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Average_Int32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Average(_Int64)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///            &quot;Name&quot; : &quot;Int64Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Average_Int64 {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Average_Int64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Average(_Single)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///            &quot;Name&quot; : &quot;SingleColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Average_Single {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Average_Single", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Count(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Int32Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Count {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;CountRows(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Int32Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_CountRows {
+            get {
+                return ResourceManager.GetString("Converter_Functions_CountRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;First(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Id&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_First {
+            get {
+                return ResourceManager.GetString("Converter_Functions_First", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_DateTime&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;GetDate()&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : []
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_GetDate {
+            get {
+                return ResourceManager.GetString("Converter_Functions_GetDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_DateTime&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;GetUtcDate()&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : []
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_GetUtcDate {
+            get {
+                return ResourceManager.GetString("Converter_Functions_GetUtcDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;IfNull(Column, Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Expression&quot; : {
+        ///               &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///               &quot;ArgTypeIds&quot; : [
+        ///                  &quot;_Int32&quot;,
+        ///                  &quot;_Int32&quot;
+        ///               ],
+        ///               &quot;Value&quot; : null
+        ///            }
+        ///         },
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///        [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_Functions_IfNull {
+            get {
+                return ResourceManager.GetString("Converter_Functions_IfNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;IsNotNull(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Expression&quot; : {
+        ///               &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///               &quot;ArgTypeIds&quot; : [
+        ///                  &quot;_Int32&quot;,
+        ///                  &quot;_Int32&quot;
+        ///               ],
+        ///               &quot;Value&quot; : 2
+        ///            }
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_IsNotNull {
+            get {
+                return ResourceManager.GetString("Converter_Functions_IsNotNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;IsNull(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Expression&quot; : {
+        ///               &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///               &quot;ArgTypeIds&quot; : [
+        ///                  &quot;_Int32&quot;,
+        ///                  &quot;_Int32&quot;
+        ///               ],
+        ///               &quot;Value&quot; : null
+        ///            }
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_IsNull {
+            get {
+                return ResourceManager.GetString("Converter_Functions_IsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Last(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Id&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Last {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Last", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Max.Nullable(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Id&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Max {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Max", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Max.Comparable(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_String&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_String&quot;,
+        ///            &quot;Name&quot; : &quot;StringColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Max_String {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Max_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Min.Nullable(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_Int32&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Id&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Min {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Min", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Min.Comparable(Column)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [
+        ///         &quot;_String&quot;
+        ///      ],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_String&quot;,
+        ///            &quot;Name&quot; : &quot;StringColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Min_String {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Min_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Guid&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;NewGuid()&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : []
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_NewGuid {
+            get {
+                return ResourceManager.GetString("Converter_Functions_NewGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Sum(_Decimal)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///            &quot;Name&quot; : &quot;DecimalColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Sum_Decimal {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Sum_Decimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Sum(_Double)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///            &quot;Name&quot; : &quot;DoubleColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Sum_Double {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Sum_Double", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Sum(_Int32)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///            &quot;Name&quot; : &quot;Int32Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Sum_Int32 {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Sum_Int32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Sum(_Int64)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///            &quot;Name&quot; : &quot;Int64Column&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Sum_Int64 {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Sum_Int64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Sum(_Single)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///            &quot;Name&quot; : &quot;SingleColumn&quot;
+        ///         }
+        ///      ]
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Functions_Sum_Single {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Sum_Single", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Guid.Equal&quot;,

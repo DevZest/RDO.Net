@@ -17,7 +17,7 @@ namespace DevZest.Data.Primitives
     {
         protected ColumnExpression()
         {
-            //ExpressionConverter.EnsureInitialized(this);
+            ExpressionConverter.EnsureInitialized(this);
         }
 
         protected internal abstract T this[DataRow dataRow] { get; }
@@ -100,7 +100,7 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal virtual Type[] ArgColumnTypes
+        protected internal virtual Type[] ArgColumnTypes
         {
             get { return Array<Type>.Empty; }
         }

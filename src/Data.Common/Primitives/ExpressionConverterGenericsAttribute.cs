@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevZest.Data.Primitives
 {
@@ -40,10 +41,23 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < argTypeIds.Count; i++)
             {
                 var columnConverter = ColumnConverter.Get(argTypeIds[i]);
-                var typeArg = (typeof(Column).IsAssignableFrom(genericArgs[i].GetTypeInfo().BaseType)) ? columnConverter.ColumnType : columnConverter.DataType;
+                var typeArg = GetTypeArg(columnConverter, genericArgs[i]);
                 result[i] = typeArg;
             }
             return result;
+        }
+
+        private Type GetTypeArg(ColumnConverter columnConverter, Type argType)
+        {
+            var argBaseType = argType.GetTypeInfo().BaseType;
+            if (typeof(Column).IsAssignableFrom(argBaseType))
+                return columnConverter.ColumnType;
+
+            var dataType = columnConverter.DataType;
+            if (argType.GetTypeInfo().GetCustomAttribute<UnderlyingValueTypeAttribute>() != null)
+                return dataType.GetGenericArguments()[0];
+            else
+                return dataType;
         }
 
         private ExpressionConverter MakeExpression(IReadOnlyList<string> argTypeIds)

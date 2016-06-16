@@ -30,11 +30,25 @@ namespace DevZest.Data.SqlServer
 
         internal string XPath { get; private set; }
 
+        [ExpressionConverterGenerics(typeof(XmlValueFunction<>.Converter), TypeId = "SqlXmlModel.Value(string, Column)")]
         private sealed class XmlValueFunction<T> : ScalarFunctionExpression<T>
         {
+            private sealed class Converter : ConverterBase<Column<SqlXml>, Column, Column, XmlValueFunction<T>>
+            {
+                protected override XmlValueFunction<T> MakeExpression(Column<SqlXml> param1, Column param2, Column param3)
+                {
+                    return new XmlValueFunction<T>(param1, param2, param3);
+                }
+            }
+
             public XmlValueFunction(Column<SqlXml> column, Column xPath, Column targetColumn)
                 : base(column, xPath, targetColumn)
             {
+            }
+
+            protected override Type[] ArgColumnTypes
+            {
+                get { return new Type[] { Owner.GetType() }; }
             }
 
             protected override FunctionKey FunctionKey

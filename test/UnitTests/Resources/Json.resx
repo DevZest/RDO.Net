@@ -2620,6 +2620,397 @@
    }
 }</value>
   </data>
+  <data name="Converter_Functions_Average_Decimal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Decimal",
+   "Expression" : {
+      "TypeId" : "Average(_Decimal)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Decimal",
+            "Name" : "DecimalColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Average_Double" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "Average(_Double)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Double",
+            "Name" : "DoubleColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Average_Int32" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "Average(_Int32)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Int32Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Average_Int64" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "Average(_Int64)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int64",
+            "Name" : "Int64Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Average_Single" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "Average(_Single)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Single",
+            "Name" : "SingleColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Count" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "Count(Column)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Int32Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_CountRows" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "CountRows(Column)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Int32Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_First" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "First(Column)",
+      "ArgTypeIds" : [
+         "_Int32"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Id"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_GetDate" xml:space="preserve">
+    <value>{
+   "TypeId" : "_DateTime",
+   "Expression" : {
+      "TypeId" : "GetDate()",
+      "ArgTypeIds" : [],
+      "Params" : []
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_GetUtcDate" xml:space="preserve">
+    <value>{
+   "TypeId" : "_DateTime",
+   "Expression" : {
+      "TypeId" : "GetUtcDate()",
+      "ArgTypeIds" : [],
+      "Params" : []
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_IfNull" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "IfNull(Column, Column)",
+      "ArgTypeIds" : [
+         "_Int32"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Int32",
+                  "_Int32"
+               ],
+               "Value" : null
+            }
+         },
+         {
+            "TypeId" : "_Int32",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Int32",
+                  "_Int32"
+               ],
+               "Value" : 3
+            }
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_IsNotNull" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "IsNotNull(Column)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Int32",
+                  "_Int32"
+               ],
+               "Value" : 2
+            }
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_IsNull" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "IsNull(Column)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_Int32",
+                  "_Int32"
+               ],
+               "Value" : null
+            }
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Last" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "Last(Column)",
+      "ArgTypeIds" : [
+         "_Int32"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Id"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Max" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "Max.Nullable(Column)",
+      "ArgTypeIds" : [
+         "_Int32"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Id"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Max_String" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "Max.Comparable(Column)",
+      "ArgTypeIds" : [
+         "_String"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_String",
+            "Name" : "StringColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Min" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "Min.Nullable(Column)",
+      "ArgTypeIds" : [
+         "_Int32"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Id"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Min_String" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "Min.Comparable(Column)",
+      "ArgTypeIds" : [
+         "_String"
+      ],
+      "Params" : [
+         {
+            "TypeId" : "_String",
+            "Name" : "StringColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_NewGuid" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Guid",
+   "Expression" : {
+      "TypeId" : "NewGuid()",
+      "ArgTypeIds" : [],
+      "Params" : []
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Sum_Decimal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Decimal",
+   "Expression" : {
+      "TypeId" : "Sum(_Decimal)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Decimal",
+            "Name" : "DecimalColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Sum_Double" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Double",
+   "Expression" : {
+      "TypeId" : "Sum(_Double)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Double",
+            "Name" : "DoubleColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Sum_Int32" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int32",
+   "Expression" : {
+      "TypeId" : "Sum(_Int32)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int32",
+            "Name" : "Int32Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Sum_Int64" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Int64",
+   "Expression" : {
+      "TypeId" : "Sum(_Int64)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Int64",
+            "Name" : "Int64Column"
+         }
+      ]
+   }
+}</value>
+  </data>
+  <data name="Converter_Functions_Sum_Single" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Single",
+   "Expression" : {
+      "TypeId" : "Sum(_Single)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_Single",
+            "Name" : "SingleColumn"
+         }
+      ]
+   }
+}</value>
+  </data>
   <data name="Converter_Guid_Equal" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
