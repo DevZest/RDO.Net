@@ -7,7 +7,7 @@ namespace DevZest.Data.Primitives
 {
     public sealed class PrimaryKeyConstraint : DbTableConstraint, IIndexConstraint
     {
-        internal PrimaryKeyConstraint(Model model, string name, bool isClustered, Func<IList<ColumnSort>> getPrimaryKey)
+        internal PrimaryKeyConstraint(Model model, string name, bool isClustered, Func<IList<OrderBy>> getPrimaryKey)
             : base(name)
         {
             Debug.Assert(model != null);
@@ -27,16 +27,16 @@ namespace DevZest.Data.Primitives
             IsClustered = false;
         }
         
-        private Func<IList<ColumnSort>> _getPrimaryKey;
+        private Func<IList<OrderBy>> _getPrimaryKey;
 
-        private ReadOnlyCollection<ColumnSort> _primaryKey;
-        public ReadOnlyCollection<ColumnSort> PrimaryKey
+        private ReadOnlyCollection<OrderBy> _primaryKey;
+        public ReadOnlyCollection<OrderBy> PrimaryKey
         {
             get
             {
                 if (_primaryKey == null)
                 {
-                    _primaryKey = new ReadOnlyCollection<ColumnSort>(_getPrimaryKey());
+                    _primaryKey = new ReadOnlyCollection<OrderBy>(_getPrimaryKey());
                     _getPrimaryKey = null;
                 }
                 return _primaryKey;

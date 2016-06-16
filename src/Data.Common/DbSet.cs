@@ -61,35 +61,35 @@ namespace DevZest.Data
             return DbSession.CreateQuery(newModel, queryStatement);
         }
 
-        public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> OrderBy(params Func<T, OrderBy>[] fnOrderByList)
         {
             return OrderBy(-1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, OrderBy>[] fnOrderByList)
         {
             return OrderBy(offset, fetch, GetOrderByList(fnOrderByList));
         }
 
-        private ColumnSort[] GetOrderByList(Func<T, ColumnSort>[] fnOrderByList)
+        private OrderBy[] GetOrderByList(Func<T, OrderBy>[] fnOrderByList)
         {
             Check.NotNull(fnOrderByList, nameof(fnOrderByList));
 
-            var orderByList = new ColumnSort[fnOrderByList.Length];
+            var orderByList = new OrderBy[fnOrderByList.Length];
             for (int i = 0; i < fnOrderByList.Length; i++)
                 orderByList[i] = fnOrderByList[i](_);
 
             return orderByList;
         }
 
-        public DbQuery<T> OrderBy(params ColumnSort[] orderByList)
+        public DbQuery<T> OrderBy(params OrderBy[] orderByList)
         {
             Check.NotNull(orderByList, nameof(orderByList));
 
             return OrderBy(-1, -1, orderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
+        public DbQuery<T> OrderBy(int offset, int fetch, params OrderBy[] orderByList)
         {
             Check.NotNull(orderByList, nameof(orderByList));
 
@@ -98,24 +98,24 @@ namespace DevZest.Data
             return DbSession.CreateQuery(newModel, queryStatement);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, OrderBy>[] fnOrderByList)
         {
             return WhereOrderBy(predicate, -1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, OrderBy>[] fnOrderByList)
         {
             Check.NotNull(predicate, nameof(predicate));
             var orderByList = GetOrderByList(fnOrderByList);
             return WhereOrderBy(predicate(_), offset, fetch, orderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(_Boolean predicate, params ColumnSort[] orderByList)
+        public DbQuery<T> WhereOrderBy(_Boolean predicate, params OrderBy[] orderByList)
         {
             return WhereOrderBy(predicate, -1, -1, orderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(_Boolean predicate, int offset, int fetch, params ColumnSort[] orderByList)
+        public DbQuery<T> WhereOrderBy(_Boolean predicate, int offset, int fetch, params OrderBy[] orderByList)
         {
             Check.NotNull(predicate, nameof(predicate));
             Check.NotNull(orderByList, nameof(orderByList));

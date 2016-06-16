@@ -99,7 +99,7 @@
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
-    <Compile Include="ColumnSort.cs" />
+    <Compile Include="OrderBy.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />
     <Compile Include="DataSet_T.cs" />

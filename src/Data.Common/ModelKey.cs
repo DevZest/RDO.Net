@@ -10,7 +10,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public abstract class ModelKey : IReadOnlyCollection<ColumnSort>
+    public abstract class ModelKey : IReadOnlyCollection<OrderBy>
     {
         [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
         protected internal sealed class SortAttribute : Attribute
@@ -50,11 +50,11 @@ namespace DevZest.Data
             EnsureIntialized();
             var result = (ModelKey)this.MemberwiseClone();
             result._parentModel = model;
-            result._columns = new ColumnSort[_columns.Length];
+            result._columns = new OrderBy[_columns.Length];
             for (int i = 0; i < Count; i++)
             {
                 var columnSort = _columns[i];
-                result._columns[i] = new ColumnSort(columnSort.Column.Clone(model), columnSort.Direction);
+                result._columns[i] = new OrderBy(columnSort.Column.Clone(model), columnSort.Direction);
             }
             return result;
         }
@@ -79,7 +79,7 @@ namespace DevZest.Data
         {
         }
 
-        internal ColumnSort[] _columns;
+        internal OrderBy[] _columns;
         private bool IsInitialized
         {
             get { return _columns != null; }
@@ -94,7 +94,7 @@ namespace DevZest.Data
             }
         }
 
-        public ColumnSort this[int index]
+        public OrderBy this[int index]
         {
             get
             {
@@ -119,7 +119,7 @@ namespace DevZest.Data
                 return;
 
             var columnGetters = GetColumnGetters(this.GetType());
-            _columns = new ColumnSort[columnGetters.Count];
+            _columns = new OrderBy[columnGetters.Count];
             for (int i = 0; i < columnGetters.Count; i++)
             {
                 var column = columnGetters[i].Invoker(this);
@@ -131,7 +131,7 @@ namespace DevZest.Data
                     throw new InvalidOperationException(Strings.ColumnGroup_InconsistentParentModel(this.GetType().FullName, columnGetters[0].Name, columnGetters[i].Name));
 
                 var sort = columnGetters[i].Sort;
-                _columns[i] = new ColumnSort(column, sort == null ? SortDirection.Unspecified : sort.Direction);
+                _columns[i] = new OrderBy(column, sort == null ? SortDirection.Unspecified : sort.Direction);
             }
         }
 
@@ -201,7 +201,7 @@ namespace DevZest.Data
             return new ColumnGetter(getMethod.Name, getter, sort);
         }
 
-        public IEnumerator<ColumnSort> GetEnumerator()
+        public IEnumerator<OrderBy> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
                 yield return this[i];

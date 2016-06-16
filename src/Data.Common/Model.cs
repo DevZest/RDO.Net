@@ -545,17 +545,17 @@ namespace DevZest.Data
 
             var primaryKeyConstraint = GetInterceptor<PrimaryKeyConstraint>();
             if (primaryKeyConstraint == null)
-                AddDbTableConstraint(new PrimaryKeyConstraint(this, null, true, () => GetIdentityColumnSort(identity)), false);
+                AddDbTableConstraint(new PrimaryKeyConstraint(this, null, true, () => GetIdentityOrderByList(identity)), false);
             else
             {
                 ChangeClusteredIndexAsNonClustered();
-                AddDbTableConstraint(new UniqueConstraint(null, true, GetIdentityColumnSort(identity)), false);
+                AddDbTableConstraint(new UniqueConstraint(null, true, GetIdentityOrderByList(identity)), false);
             }
         }
 
-        private static IList<ColumnSort> GetIdentityColumnSort(Identity identity)
+        private static IList<OrderBy> GetIdentityOrderByList(Identity identity)
         {
-            return new ColumnSort[] { new ColumnSort(identity.Column, identity.Increment > 0 ? SortDirection.Ascending : SortDirection.Descending) };
+            return new OrderBy[] { new OrderBy(identity.Column, identity.Increment > 0 ? SortDirection.Ascending : SortDirection.Descending) };
         }
 
         internal DbFromClause FromClause
@@ -633,20 +633,20 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected void Unique(string constraintName, bool isClustered, params ColumnSort[] columns)
+        protected void Unique(string constraintName, bool isClustered, params OrderBy[] orderByList)
         {
-            Utilities.Check.NotNull(columns, nameof(columns));
-            if (columns.Length == 0)
-                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(columns));
+            Utilities.Check.NotNull(orderByList, nameof(orderByList));
+            if (orderByList.Length == 0)
+                throw new ArgumentException(Strings.Model_EmptyColumns, nameof(orderByList));
 
-            for (int i = 0; i < columns.Length; i++)
+            for (int i = 0; i < orderByList.Length; i++)
             {
-                var column = columns[i].Column;
+                var column = orderByList[i].Column;
                 if (column == null || column.ParentModel != this)
-                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(columns) + "[{0}]", i));
+                    throw new ArgumentException(Strings.Model_VerifyChildColumn, string.Format(CultureInfo.InvariantCulture, nameof(orderByList) + "[{0}]", i));
             }
 
-            AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, columns), false);
+            AddDbTableConstraint(new UniqueConstraint(constraintName, isClustered, orderByList), false);
         }
 
         protected void Check(string constraintName, _Boolean condition)

@@ -18,7 +18,7 @@ namespace DevZest.Data.Primitives
 
             _sourceDbAlias = model.DbAlias;
             _primaryKey = primaryKey.Clone(this);
-            var sortKeys = new ColumnSort[primaryKey.Count];
+            var sortKeys = new OrderBy[primaryKey.Count];
             for (int i = 0; i < sortKeys.Length; i++)
                 sortKeys[i] = primaryKey[i];
             AddDbTableConstraint(new PrimaryKeyConstraint(this, null, false, () => { return sortKeys; }), true);

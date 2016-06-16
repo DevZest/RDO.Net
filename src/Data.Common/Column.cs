@@ -253,17 +253,17 @@ namespace DevZest.Data
         }
 
         /// <summary>Gets this column as asending sorted.</summary>
-        /// <returns>The <see cref="ColumnSort"/> structure.</returns>
-        public ColumnSort Asc()
+        /// <returns>The <see cref="OrderBy"/> structure.</returns>
+        public OrderBy Asc()
         {
-            return new ColumnSort(this, SortDirection.Ascending);
+            return new OrderBy(this, SortDirection.Ascending);
         }
 
         /// <summary>Gets this column as descending sorted.</summary>
-        /// <returns>The <see cref="ColumnSort"/> structure.</returns>
-        public ColumnSort Desc()
+        /// <returns>The <see cref="OrderBy"/> structure.</returns>
+        public OrderBy Desc()
         {
-            return new ColumnSort(this, SortDirection.Descending);
+            return new OrderBy(this, SortDirection.Descending);
         }
 
         /// <summary>Declares nullability of this column.</summary>
