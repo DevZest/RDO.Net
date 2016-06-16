@@ -1,15 +1,16 @@
 ﻿using DevZest.Data.Helpers;
 using DevZest.Data.Primitives;
+using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace DevZest.Data.SqlServer
 {
     [TestClass]
-    public class _TimeSpanTests
+    public class _TimeSpanTests : ColumnConverterTestsBase
     {
         [TestMethod]
-        public void TimeSpanColumn_Param()
+        public void _TimeSpan_Param()
         {
             TestParam(TimeSpan.FromDays(5));
             TestParam(null);
@@ -22,7 +23,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_implicit_convert()
+        public void _TimeSpan_Implicit()
         {
             TestImplicit(TimeSpan.FromDays(5));
             TestImplicit(null);
@@ -35,7 +36,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_Const()
+        public void _TimeSpan_Const()
         {
             TestConst(TimeSpan.FromDays(5));
             TestConst(null);
@@ -48,14 +49,14 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_convert_from_StringColumn()
+        public void _TimeSpan_FromString()
         {
             var x = TimeSpan.FromDays(5);
-            TestDbStringCast(x.ToString(), x);
-            TestDbStringCast(null, null);
+            TestFromString(x.ToString(), x);
+            TestFromString(null, null);
         }
 
-        private void TestDbStringCast(String x, TimeSpan? expectedValue)
+        private void TestFromString(String x, TimeSpan? expectedValue)
         {
             _String column1 = x;
             _TimeSpan expr = (_TimeSpan)column1;
@@ -65,7 +66,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_less_than()
+        public void _TimeSpan_LessThan()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -88,7 +89,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_less_than_or_equal()
+        public void _TimeSpan_LessThanOrEqual()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -111,7 +112,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_greater_than()
+        public void _TimeSpan_GreaterThan()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -134,7 +135,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void DbDateTime_greater_than_or_equal()
+        public void _TimeSpan_GreaterThanOrEqual()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -157,7 +158,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_equal()
+        public void _TimeSpan_Equal()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -178,7 +179,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void TimeSpanColumn_not_equal()
+        public void _TimeSpan_NotEqual()
         {
             var x = TimeSpan.FromDays(5);
             var y = TimeSpan.FromDays(6);
@@ -196,6 +197,83 @@ namespace DevZest.Data.SqlServer
             var dbExpr = (DbBinaryExpression)expr.DbExpression;
             dbExpr.Verify(BinaryExpressionKind.NotEqual, column1, column2);
             expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _TimeSpan_Equal_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(5)) == _TimeSpan.Const(TimeSpan.FromDays(5));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_Equal, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_FromString_Converter()
+        {
+            var column = (_TimeSpan)_String.Const("5.00:00:00");
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_FromString, json);
+
+            var columnFromJson = (_TimeSpan)Column.FromJson(null, json);
+            Assert.AreEqual(TimeSpan.FromDays(5), columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_GreaterThan_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(6)) > _TimeSpan.Const(TimeSpan.FromDays(5));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_GreaterThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_GreaterThanOrEqual_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(5)) >= _TimeSpan.Const(TimeSpan.FromDays(5));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_GreaterThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_LessThan_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(5)) < _TimeSpan.Const(TimeSpan.FromDays(6));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_LessThan, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_LessThanOrEqual_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(5)) <= _TimeSpan.Const(TimeSpan.FromDays(5));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_LessThanOrEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _TimeSpan_NotEqual_Converter()
+        {
+            var column = _TimeSpan.Const(TimeSpan.FromDays(5)) != _TimeSpan.Const(TimeSpan.FromDays(6));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_NotEqual, json);
+
+            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

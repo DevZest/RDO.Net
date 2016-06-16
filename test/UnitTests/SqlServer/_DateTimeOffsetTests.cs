@@ -136,7 +136,7 @@ namespace DevZest.Data.SqlServer
         }
 
         [TestMethod]
-        public void DbDateTime_GreaterThanOrEqual()
+        public void _DateTimeOffset_GreaterThanOrEqual()
         {
             var x = DateTimeOffset.Now;
             var y = x.AddSeconds(1);

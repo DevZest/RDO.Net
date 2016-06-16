@@ -5850,6 +5850,200 @@ namespace DevZest.Data.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.Equal&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;Constant [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_Equal {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.FromString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_String&quot;,
+        ///               &quot;_String&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_TimeSpan_FromString {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_FromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.GreaterThan&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;6.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;Co [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_GreaterThan {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_GreaterThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.GreaterThanOrEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_GreaterThanOrEqual {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_GreaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.LessThan&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;Const [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_LessThan {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_LessThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.LessThanOrEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_LessThanOrEqual {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_LessThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.NotEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;Const [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_TimeSpan_NotEqual {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_NotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
         ///      &quot;ProductCategoryID&quot; : 0,

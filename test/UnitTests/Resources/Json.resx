@@ -5717,6 +5717,212 @@
    }
 }</value>
   </data>
+  <data name="Converter_TimeSpan_Equal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.Equal",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_TimeSpan",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_GreaterThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.GreaterThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "6.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_GreaterThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.GreaterThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_LessThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.LessThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "6.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_LessThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.LessThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_NotEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.NotEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "6.00:00:00"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="MultiLevelProductCategory" xml:space="preserve">
     <value>[
    {

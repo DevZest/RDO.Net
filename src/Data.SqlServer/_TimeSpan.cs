@@ -86,9 +86,18 @@ namespace DevZest.Data.SqlServer
             return Param(x);
         }
 
-        private sealed class DbStringCast : CastExpression<String, TimeSpan?>
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_TimeSpan.FromString")]
+        private sealed class FromStringCast : CastExpression<String, TimeSpan?>
         {
-            public DbStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, TimeSpan?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<String> x)
                 : base(x)
             {
             }
@@ -107,12 +116,21 @@ namespace DevZest.Data.SqlServer
         public static explicit operator _TimeSpan(_String x)
         {
             Check.NotNull(x, "x");
-            return new DbStringCast(x).MakeColumn<_TimeSpan>();
+            return new FromStringCast(x).MakeColumn<_TimeSpan>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_TimeSpan.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public LessThanExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
@@ -142,9 +160,18 @@ namespace DevZest.Data.SqlServer
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_TimeSpan.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public LessThanOrEqualExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new LessThanOrEqualExpression(left, right);
+                }
+            }
+
+            public LessThanOrEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
@@ -174,9 +201,18 @@ namespace DevZest.Data.SqlServer
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_TimeSpan.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public GreaterThanExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new GreaterThanExpression(left, right);
+                }
+            }
+
+            public GreaterThanExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
@@ -206,9 +242,18 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_TimeSpan.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public GreaterThanOrEqualExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new GreaterThanOrEqualExpression(left, right);
+                }
+            }
+
+            public GreaterThanOrEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
@@ -238,9 +283,18 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_TimeSpan.Equal")]
         private sealed class EqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public EqualExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new EqualExpression(left, right);
+                }
+            }
+
+            public EqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
@@ -271,9 +325,18 @@ namespace DevZest.Data.SqlServer
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_TimeSpan.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
-            public NotEqualExpression(_TimeSpan x, _TimeSpan y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<TimeSpan?, bool?> MakeExpression(Column<TimeSpan?> left, Column<TimeSpan?> right)
+                {
+                    return new NotEqualExpression(left, right);
+                }
+            }
+
+            public NotEqualExpression(Column<TimeSpan?> x, Column<TimeSpan?> y)
                 : base(x, y)
             {
             }
