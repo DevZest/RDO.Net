@@ -86,9 +86,18 @@ namespace DevZest.Data.SqlServer
             return Param(x);
         }
 
-        private sealed class DbStringCast : CastExpression<String, DateTimeOffset?>
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_DateTimeOffset.FromString")]
+        private sealed class FromStringCast : CastExpression<String, DateTimeOffset?>
         {
-            public DbStringCast(_String x)
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, DateTimeOffset?> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<String> x)
                 : base(x)
             {
             }
@@ -107,12 +116,21 @@ namespace DevZest.Data.SqlServer
         public static explicit operator _DateTimeOffset(_String x)
         {
             Check.NotNull(x, "x");
-            return new DbStringCast(x).MakeColumn<_DateTimeOffset>();
+            return new FromStringCast(x).MakeColumn<_DateTimeOffset>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_DateTimeOffset.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public LessThanExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new LessThanExpression(left, right);
+                }
+            }
+
+            public LessThanExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }
@@ -142,9 +160,18 @@ namespace DevZest.Data.SqlServer
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_DateTimeOffset.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public LessThanOrEqualExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new LessThanOrEqualExpression(left, right);
+                }
+            }
+
+            public LessThanOrEqualExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }
@@ -174,9 +201,18 @@ namespace DevZest.Data.SqlServer
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_DateTimeOffset.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public GreaterThanExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new GreaterThanExpression(left, right);
+                }
+            }
+
+            public GreaterThanExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }
@@ -206,9 +242,18 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_DateTimeOffset.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public GreaterThanOrEqualExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new GreaterThanOrEqualExpression(left, right);
+                }
+            }
+
+            public GreaterThanOrEqualExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }
@@ -238,9 +283,18 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_DateTimeOffset.Equal")]
         private sealed class EqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public EqualExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new EqualExpression(left, right);
+                }
+            }
+
+            public EqualExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }
@@ -271,9 +325,18 @@ namespace DevZest.Data.SqlServer
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_DateTimeOffset.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
-            public NotEqualExpression(_DateTimeOffset x, _DateTimeOffset y)
+            private sealed class Converter : ConverterBase
+            {
+                protected override BinaryExpression<DateTimeOffset?, bool?> MakeExpression(Column<DateTimeOffset?> left, Column<DateTimeOffset?> right)
+                {
+                    return new NotEqualExpression(left, right);
+                }
+            }
+
+            public NotEqualExpression(Column<DateTimeOffset?> x, Column<DateTimeOffset?> y)
                 : base(x, y)
             {
             }

@@ -1299,6 +1299,192 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.Equal&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///       [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_Equal {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.FromString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_String&quot;,
+        ///               &quot;_String&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_FromString {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_FromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.GreaterThan&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_GreaterThan {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_GreaterThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.GreaterThanOrEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOff [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_GreaterThanOrEqual {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_GreaterThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.LessThan&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-15T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_LessThan {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_LessThan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.LessThanOrEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_LessThanOrEqual {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_LessThanOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.NotEqual&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Left&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-15T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      },
+        ///      &quot;Right&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_NotEqual {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_NotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Decimal&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Decimal.Add&quot;,

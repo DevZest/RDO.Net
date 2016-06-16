@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.SqlServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DevZest.Data
@@ -9,6 +10,7 @@ namespace DevZest.Data
         public void Initialize()
         {
             ColumnConverter.EnsureInitialized(typeof(_Int32));
+            ColumnConverter.EnsureInitialized(typeof(_DateTimeOffset));
         }
     }
 }

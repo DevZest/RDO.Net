@@ -1166,6 +1166,212 @@
    }
 }</value>
   </data>
+  <data name="Converter_DateTimeOffset_Equal" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.Equal",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_DateTimeOffset",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_GreaterThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.GreaterThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-15T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_GreaterThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.GreaterThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_LessThan" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.LessThan",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-15T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_LessThanOrEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.LessThanOrEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTimeOffset_NotEqual" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.NotEqual",
+      "ArgTypeIds" : [],
+      "Left" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-15T00:00:00.0000000+00:00"
+         }
+      },
+      "Right" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_DateTime_Equal" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
