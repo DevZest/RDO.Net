@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data
@@ -11,6 +12,66 @@ namespace DevZest.Data
     {
         private sealed class Converter : ConverterBase<_Binary>
         {
+        }
+
+        [ExpressionConverterNonGenerics(typeof(ToStringExpression.Converter), TypeId = "_Binary.ToString")]
+        private sealed class ToStringExpression : CastExpression<Binary, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<Binary, string> MakeExpression(Column<Binary> operand)
+                {
+                    return new ToStringExpression(operand);
+                }
+            }
+
+            public ToStringExpression(Column<Binary> x)
+                : base(x)
+            {
+            }
+
+            protected override string Cast(Binary value)
+            {
+                return value == null ? null : Convert.ToBase64String(value.ToArray());
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new ToStringExpression(this).MakeColumn<_String>();
+        }
+
+        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Binary.FromString")]
+        private sealed class FromStringExpression : CastExpression<String, Binary>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, Binary> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringExpression(operand);
+                }
+            }
+
+            public FromStringExpression(Column<String> x)
+                : base(x)
+            {
+            }
+
+            protected override Binary Cast(String value)
+            {
+                if (value == null)
+                    return null;
+                return new Binary(Convert.FromBase64String(value));
+            }
+        }
+
+        /// <summary>Converts the supplied <see cref="_String" /> to <see cref="_Binary" />.</summary>
+        /// <returns>A <see cref="_Binary" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_String" /> object. </param>
+        public static explicit operator _Binary(_String x)
+        {
+            Check.NotNull(x, nameof(x));
+            return new FromStringExpression(x).MakeColumn<_Binary>();
         }
 
         protected override bool AreEqual(Binary x, Binary y)

@@ -6415,6 +6415,24 @@
    }
 ]</value>
   </data>
+  <data name="OrderByJson_ToJson_Parse" xml:space="preserve">
+    <value>[
+   {
+      "Column" : {
+         "TypeId" : "_Int32",
+         "Name" : "CustomerID"
+      },
+      "Direction" : "Ascending"
+   },
+   {
+      "Column" : {
+         "TypeId" : "_Int32",
+         "Name" : "SalesOrderID"
+      },
+      "Direction" : "Descending"
+   }
+]</value>
+  </data>
   <data name="ProductCategories" xml:space="preserve">
     <value>[
    {

@@ -23,7 +23,7 @@ namespace DevZest.Data.Primitives
             return stringBuilder;
         }
 
-        internal static StringBuilder WriteNameColumnPair<T>(this StringBuilder stringBuilder, string name, Column<T> column)
+        internal static StringBuilder WriteNameColumnPair(this StringBuilder stringBuilder, string name, Column column)
         {
             stringBuilder.WriteObjectName(name).WriteColumn(column);
             return stringBuilder;

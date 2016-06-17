@@ -6594,6 +6594,30 @@ namespace DevZest.Data.Resources {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
+        ///      &quot;Column&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Name&quot; : &quot;CustomerID&quot;
+        ///      },
+        ///      &quot;Direction&quot; : &quot;Ascending&quot;
+        ///   },
+        ///   {
+        ///      &quot;Column&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Name&quot; : &quot;SalesOrderID&quot;
+        ///      },
+        ///      &quot;Direction&quot; : &quot;Descending&quot;
+        ///   }
+        ///].
+        /// </summary>
+        internal static string OrderByJson_ToJson_Parse {
+            get {
+                return ResourceManager.GetString("OrderByJson_ToJson_Parse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
         ///      &quot;ProductCategoryID&quot; : 1,
         ///      &quot;ParentProductCategoryID&quot; : null,
         ///      &quot;Name&quot; : &quot;Bikes&quot;,

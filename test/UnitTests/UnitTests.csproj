@@ -83,6 +83,7 @@
     <Compile Include="Helpers\SimpleModelDataSetHelper.cs" />
     <Compile Include="Helpers\SqlCommandExtensions.cs" />
     <Compile Include="IgnoreColumnAttributeTests.cs" />
+    <Compile Include="OrderByJsonTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
     <Compile Include="ColumnConverterTestsBase.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
