@@ -83,6 +83,11 @@ namespace DevZest.Samples.AdventureWorksLT
         {
         }
 
+        public override _String CastToString()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Column<SalesOrderStatus> CreateParam(SalesOrderStatus value)
         {
             return Param(value, this);

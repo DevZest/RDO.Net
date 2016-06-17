@@ -14,6 +14,73 @@ namespace DevZest.Data.SqlServer
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_SqlXml.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<SqlXml, string>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<SqlXml, string> MakeExpression(Column<SqlXml> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<SqlXml> x)
+                : base(x)
+            {
+            }
+
+            protected override string Cast(SqlXml value)
+            {
+                return value == null ? null : value.Value;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_SqlXml" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_SqlXml" /> object. </param>
+        public static explicit operator _String(_SqlXml x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_SqlXml.FromString")]
+        private sealed class FromStringCast : CastExpression<String, SqlXml>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<string, SqlXml> MakeExpression(Column<string> operand)
+                {
+                    return new FromStringCast(operand);
+                }
+            }
+
+            public FromStringCast(Column<String> x)
+                : base(x)
+            {
+            }
+
+            protected override SqlXml Cast(String value)
+            {
+                return value == null ? null : CreateSqlXml(value);
+            }
+        }
+
+        /// <summary>Converts the supplied <see cref="_String" /> to <see cref="_DateTimeOffset" />.</summary>
+        /// <returns>A <see cref="_DateTimeOffset" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_String" /> object. </param>
+        public static explicit operator _SqlXml(_String x)
+        {
+            Check.NotNull(x, nameof(x));
+            return new FromStringCast(x).MakeColumn<_SqlXml>();
+        }
+
         protected override bool AreEqual(SqlXml x, SqlXml y)
         {
             return x == y;

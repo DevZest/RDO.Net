@@ -14,6 +14,42 @@ namespace DevZest.Data.SqlServer
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_DateTimeOffset.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<DateTimeOffset?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<DateTimeOffset?, string> MakeExpression(Column<DateTimeOffset?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<DateTimeOffset?> x)
+                : base(x)
+            {
+            }
+
+            protected override string Cast(DateTimeOffset? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString("o") : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_DateTimeOffset" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_DateTimeOffset" /> object. </param>
+        public static explicit operator _String(_DateTimeOffset x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
         {
             return x == y;

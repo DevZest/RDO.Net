@@ -15,6 +15,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Double.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Double?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<double?, string> MakeExpression(Column<double?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Double?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Double? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Double" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Double" /> object. </param>
+        public static explicit operator _String(_Double x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(double? x, double? y)
         {
             return x == y;

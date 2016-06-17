@@ -275,5 +275,33 @@ namespace DevZest.Data
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(false, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _Guid_CastToString()
+        {
+            var guid = Guid.NewGuid();
+            TestCastToString(null, null);
+            TestCastToString(guid, guid.ToString());
+        }
+
+        private void TestCastToString(Guid? x, String expectedValue)
+        {
+            _Guid column1 = x;
+            _String expr = (_String)column1;
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(Guid?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Guid_CastToString_Converter()
+        {
+            var column = (_String)_Guid.Const(new Guid());
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Guid_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("00000000-0000-0000-0000-000000000000", columnFromJson.Eval());
+        }
     }
 }

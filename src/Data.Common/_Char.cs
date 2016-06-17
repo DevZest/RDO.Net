@@ -14,6 +14,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Char.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Char?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<char?, string> MakeExpression(Column<char?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Char?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Char? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString() : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Char" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Char" /> object. </param>
+        public static explicit operator _String(_Char x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<char?> CreateParam(char? value)
         {

@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
-using System.Globalization;
 
 namespace DevZest.Data
 {
@@ -13,6 +12,42 @@ namespace DevZest.Data
     {
         private sealed class Converter : ConverterBase<_Guid>
         {
+        }
+
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Guid.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Guid?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<Guid?, string> MakeExpression(Column<Guid?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Guid?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Guid? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString() : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Guid" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Guid" /> object. </param>
+        public static explicit operator _String(_Guid x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
         }
 
         protected override bool AreEqual(Guid? x, Guid? y)

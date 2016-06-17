@@ -16,6 +16,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Single.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Single?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<float?, string> MakeExpression(Column<float?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Single?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Single? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Single" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Single" /> object. </param>
+        public static explicit operator _String(_Single x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(float? x, float? y)
         {
             return x == y;

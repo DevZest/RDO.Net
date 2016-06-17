@@ -7,6 +7,11 @@ namespace DevZest.Data
     public sealed class _DataSet<T> : Column<DataSet<T>>, IDataSetColumn
         where T : Model, new()
     {
+        public override _String CastToString()
+        {
+            return null;
+        }
+
         protected override bool AreEqual(DataSet<T> x, DataSet<T> y)
         {
             return x == y;

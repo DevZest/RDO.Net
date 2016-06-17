@@ -15,6 +15,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Int64.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Int64?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<long?, string> MakeExpression(Column<long?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Int64?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Int64? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Int64" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Int64" /> object. </param>
+        public static explicit operator _String(_Int64 x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(long? x, long? y)
         {
             return x == y;

@@ -117,6 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Converter_Binary_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Binary.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Binary",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Binary",
+               "_Binary"
+            ],
+            "Value" : "AQID"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Boolean_Add" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
@@ -143,6 +163,26 @@
                "_Boolean"
             ],
             "Value" : false
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Boolean_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Boolean.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Boolean",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Boolean",
+               "_Boolean"
+            ],
+            "Value" : true
          }
       }
    }
@@ -330,6 +370,26 @@
          }
       },
       "Right" : {
+         "TypeId" : "_Byte",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Byte",
+               "_Byte"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Byte_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Byte.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
          "TypeId" : "_Byte",
          "Expression" : {
             "TypeId" : "ConstantExpression",
@@ -941,6 +1001,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Char_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Char.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Char",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Char",
+               "_Char"
+            ],
+            "Value" : "a"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Char_Equal" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
@@ -1166,6 +1246,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_DateTimeOffset_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_DateTimeOffset.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_DateTimeOffset",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTimeOffset",
+               "_DateTimeOffset"
+            ],
+            "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_DateTimeOffset_Equal" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
@@ -1367,6 +1467,26 @@
                "_DateTimeOffset"
             ],
             "Value" : "2016-06-16T00:00:00.0000000+00:00"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_DateTime_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_DateTime.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_DateTime",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_DateTime",
+               "_DateTime"
+            ],
+            "Value" : "2016-06-15T00:00:00.000"
          }
       }
    }
@@ -1596,6 +1716,26 @@
          }
       },
       "Right" : {
+         "TypeId" : "_Decimal",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Decimal",
+               "_Decimal"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Decimal_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Decimal.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
          "TypeId" : "_Decimal",
          "Expression" : {
             "TypeId" : "ConstantExpression",
@@ -2117,6 +2257,26 @@
          }
       },
       "Right" : {
+         "TypeId" : "_Double",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Double",
+               "_Double"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Double_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Double.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
          "TypeId" : "_Double",
          "Expression" : {
             "TypeId" : "ConstantExpression",
@@ -3011,6 +3171,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Guid_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Guid.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Guid",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Guid",
+               "_Guid"
+            ],
+            "Value" : "00000000-0000-0000-0000-000000000000"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Guid_Equal" xml:space="preserve">
     <value>{
    "TypeId" : "_Boolean",
@@ -3328,6 +3508,26 @@
          }
       },
       "Right" : {
+         "TypeId" : "_Int16",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int16",
+               "_Int16"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_Int16_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Int16.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
          "TypeId" : "_Int16",
          "Expression" : {
             "TypeId" : "ConstantExpression",
@@ -3975,6 +4175,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int32_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Int32.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int32",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int32",
+               "_Int32"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Int32_Divide" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",
@@ -4609,6 +4829,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Int64_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Int64.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Int64",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Int64",
+               "_Int64"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Int64_Divide" xml:space="preserve">
     <value>{
    "TypeId" : "_Int64",
@@ -5181,6 +5421,26 @@
    }
 }</value>
   </data>
+  <data name="Converter_Single_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_Single.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_Single",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_Single",
+               "_Single"
+            ],
+            "Value" : 1
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_Single_Divide" xml:space="preserve">
     <value>{
    "TypeId" : "_Single",
@@ -5671,6 +5931,46 @@
    }
 }</value>
   </data>
+  <data name="Converter_SqlXml_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_SqlXml.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_SqlXml",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_SqlXml",
+               "_SqlXml"
+            ],
+            "Value" : "&lt;a&gt;&lt;/a&gt;"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_SqlXml_FromString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_SqlXml",
+   "Expression" : {
+      "TypeId" : "_SqlXml.FromString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_String",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_String",
+               "_String"
+            ],
+            "Value" : "&lt;a&gt;&lt;/a&gt;"
+         }
+      }
+   }
+}</value>
+  </data>
   <data name="Converter_String_Add" xml:space="preserve">
     <value>{
    "TypeId" : "_String",
@@ -5728,226 +6028,6 @@
                "_String"
             ],
             "Value" : "a"
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromBoolean" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromBoolean",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Boolean",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Boolean",
-               "_Boolean"
-            ],
-            "Value" : true
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromByte" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromByte",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Byte",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Byte",
-               "_Byte"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromChar" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromChar",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Char",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Char",
-               "_Char"
-            ],
-            "Value" : "a"
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromDateTime" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromDateTime",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_DateTime",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_DateTime",
-               "_DateTime"
-            ],
-            "Value" : "2016-06-15T00:00:00.000"
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromDecimal" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromDecimal",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Decimal",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Decimal",
-               "_Decimal"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromDouble" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromDouble",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Double",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Double",
-               "_Double"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromGuid" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromGuid",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Guid",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Guid",
-               "_Guid"
-            ],
-            "Value" : "00000000-0000-0000-0000-000000000000"
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromInt16" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromInt16",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Int16",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Int16",
-               "_Int16"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromInt32" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromInt32",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Int32",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Int32",
-               "_Int32"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromInt64" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromInt64",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Int64",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Int64",
-               "_Int64"
-            ],
-            "Value" : 1
-         }
-      }
-   }
-}</value>
-  </data>
-  <data name="Converter_String_FromSingle" xml:space="preserve">
-    <value>{
-   "TypeId" : "_String",
-   "Expression" : {
-      "TypeId" : "_String.FromSingle",
-      "ArgTypeIds" : [],
-      "Operand" : {
-         "TypeId" : "_Single",
-         "Expression" : {
-            "TypeId" : "ConstantExpression",
-            "ArgTypeIds" : [
-               "_Single",
-               "_Single"
-            ],
-            "Value" : 1
          }
       }
    }
@@ -6103,6 +6183,26 @@
                "_String"
             ],
             "Value" : "b"
+         }
+      }
+   }
+}</value>
+  </data>
+  <data name="Converter_TimeSpan_CastToString" xml:space="preserve">
+    <value>{
+   "TypeId" : "_String",
+   "Expression" : {
+      "TypeId" : "_TimeSpan.CastToString",
+      "ArgTypeIds" : [],
+      "Operand" : {
+         "TypeId" : "_TimeSpan",
+         "Expression" : {
+            "TypeId" : "ConstantExpression",
+            "ArgTypeIds" : [
+               "_TimeSpan",
+               "_TimeSpan"
+            ],
+            "Value" : "5.00:00:00"
          }
       }
    }

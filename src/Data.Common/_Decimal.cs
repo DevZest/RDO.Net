@@ -15,6 +15,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Decimal.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Decimal?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<decimal?, string> MakeExpression(Column<decimal?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Decimal?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Decimal? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Decimal" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Decimal" /> object. </param>
+        public static explicit operator _String(_Decimal x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(decimal? x, decimal? y)
         {
             return x == y;

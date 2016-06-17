@@ -3,6 +3,7 @@ using DevZest.Data.Primitives;
 using DevZest.Data.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Globalization;
 
 namespace DevZest.Data
 {
@@ -274,6 +275,34 @@ namespace DevZest.Data
 
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
+        }
+
+        [TestMethod]
+        public void _DateTime_CastToString()
+        {
+            var now = DateTime.Now;
+            TestCastToString(null, null);
+            TestCastToString(now, now.ToString("O", CultureInfo.InvariantCulture));
+        }
+
+        private void TestCastToString(DateTime? x, String expectedValue)
+        {
+            _DateTime column1 = x;
+            _String expr = column1.CastToString();
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(DateTime?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _DateTime_CastToString_Converter()
+        {
+            var column = _DateTime.Const(new DateTime(2016, 6, 15)).CastToString();
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTime_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("2016-06-15T00:00:00.0000000", columnFromJson.Eval());
         }
     }
 }

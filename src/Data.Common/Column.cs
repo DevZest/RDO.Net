@@ -429,9 +429,6 @@ namespace DevZest.Data
             return new ColumnJsonParser(jsonString).ParseTopLevelColumn(model);
         }
 
-        public virtual _String CastToString()
-        {
-            return null;
-        }
+        public abstract _String CastToString();
     }
 }

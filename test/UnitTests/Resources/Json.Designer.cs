@@ -62,6 +62,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Binary.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Binary&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Binary&quot;,
+        ///               &quot;_Binary&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;AQID&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Binary_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Binary_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Boolean.And&quot;,
@@ -86,6 +112,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_Boolean_Add {
             get {
                 return ResourceManager.GetString("Converter_Boolean_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Boolean.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Boolean&quot;,
+        ///               &quot;_Boolean&quot;
+        ///            ],
+        ///            &quot;Value&quot; : true
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Boolean_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Boolean_CastToString", resourceCulture);
             }
         }
         
@@ -283,6 +335,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_Byte_BitwiseXor {
             get {
                 return ResourceManager.GetString("Converter_Byte_BitwiseXor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Byte.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Byte&quot;,
+        ///               &quot;_Byte&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Byte_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Byte_CastToString", resourceCulture);
             }
         }
         
@@ -874,6 +952,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Char.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Char&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Char&quot;,
+        ///               &quot;_Char&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;a&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Char_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Char_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Char.Equal&quot;,
@@ -1105,6 +1209,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTime.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTime&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTime&quot;,
+        ///               &quot;_DateTime&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-15T00:00:00.000&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_DateTime_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_DateTime_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_DateTime.Equal&quot;,
@@ -1294,6 +1424,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_DateTime_NotEqual {
             get {
                 return ResourceManager.GetString("Converter_DateTime_NotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_DateTimeOffset.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_DateTimeOffset&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_DateTimeOffset&quot;,
+        ///               &quot;_DateTimeOffset&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;2016-06-16T00:00:00.0000000+00:00&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_DateTimeOffset_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_DateTimeOffset_CastToString", resourceCulture);
             }
         }
         
@@ -1509,6 +1665,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_Decimal_Add {
             get {
                 return ResourceManager.GetString("Converter_Decimal_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Decimal.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Decimal&quot;,
+        ///               &quot;_Decimal&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Decimal_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Decimal_CastToString", resourceCulture);
             }
         }
         
@@ -2055,6 +2237,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_Double_Add {
             get {
                 return ResourceManager.GetString("Converter_Double_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Double.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Double&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Double&quot;,
+        ///               &quot;_Double&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Double_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Double_CastToString", resourceCulture);
             }
         }
         
@@ -3106,6 +3314,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Guid.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Guid&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Guid&quot;,
+        ///               &quot;_Guid&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;00000000-0000-0000-0000-000000000000&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Guid_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Guid_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Guid.Equal&quot;,
@@ -3411,6 +3645,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_Int16_BitwiseXor {
             get {
                 return ResourceManager.GetString("Converter_Int16_BitwiseXor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int16.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int16&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int16&quot;,
+        ///               &quot;_Int16&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int16_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Int16_CastToString", resourceCulture);
             }
         }
         
@@ -4081,6 +4341,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int32.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int32&quot;,
+        ///               &quot;_Int32&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int32_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Int32_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Int32.Divide&quot;,
@@ -4746,6 +5032,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Int64.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Int64&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Int64&quot;,
+        ///               &quot;_Int64&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Int64_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Int64_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int64&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Int64.Divide&quot;,
@@ -5367,6 +5679,32 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_Single.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_Single&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_Single&quot;,
+        ///               &quot;_Single&quot;
+        ///            ],
+        ///            &quot;Value&quot; : 1
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_Single_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_Single_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Single&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_Single.Divide&quot;,
@@ -5891,6 +6229,58 @@ namespace DevZest.Data.Resources {
         ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_String&quot;,
         ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_SqlXml.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_SqlXml&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_SqlXml&quot;,
+        ///               &quot;_SqlXml&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;&lt;a&gt;&lt;/a&gt;&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_SqlXml_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_SqlXml_CastToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_SqlXml&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_SqlXml.FromString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_String&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_String&quot;,
+        ///               &quot;_String&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;&lt;a&gt;&lt;/a&gt;&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_SqlXml_FromString {
+            get {
+                return ResourceManager.GetString("Converter_SqlXml_FromString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;_String.Add&quot;,
         ///      &quot;ArgTypeIds&quot; : [],
         ///      &quot;Left&quot; : {
@@ -5942,292 +6332,6 @@ namespace DevZest.Data.Resources {
         internal static string Converter_String_Equal {
             get {
                 return ResourceManager.GetString("Converter_String_Equal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromBoolean&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Boolean&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Boolean&quot;,
-        ///               &quot;_Boolean&quot;
-        ///            ],
-        ///            &quot;Value&quot; : true
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromBoolean {
-            get {
-                return ResourceManager.GetString("Converter_String_FromBoolean", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromByte&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Byte&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Byte&quot;,
-        ///               &quot;_Byte&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromByte {
-            get {
-                return ResourceManager.GetString("Converter_String_FromByte", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromChar&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Char&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Char&quot;,
-        ///               &quot;_Char&quot;
-        ///            ],
-        ///            &quot;Value&quot; : &quot;a&quot;
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromChar {
-            get {
-                return ResourceManager.GetString("Converter_String_FromChar", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromDateTime&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_DateTime&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_DateTime&quot;,
-        ///               &quot;_DateTime&quot;
-        ///            ],
-        ///            &quot;Value&quot; : &quot;2016-06-15T00:00:00.000&quot;
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromDateTime {
-            get {
-                return ResourceManager.GetString("Converter_String_FromDateTime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromDecimal&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Decimal&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Decimal&quot;,
-        ///               &quot;_Decimal&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromDecimal {
-            get {
-                return ResourceManager.GetString("Converter_String_FromDecimal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromDouble&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Double&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Double&quot;,
-        ///               &quot;_Double&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromDouble {
-            get {
-                return ResourceManager.GetString("Converter_String_FromDouble", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromGuid&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Guid&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Guid&quot;,
-        ///               &quot;_Guid&quot;
-        ///            ],
-        ///            &quot;Value&quot; : &quot;00000000-0000-0000-0000-000000000000&quot;
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromGuid {
-            get {
-                return ResourceManager.GetString("Converter_String_FromGuid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromInt16&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Int16&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Int16&quot;,
-        ///               &quot;_Int16&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromInt16 {
-            get {
-                return ResourceManager.GetString("Converter_String_FromInt16", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromInt32&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Int32&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Int32&quot;,
-        ///               &quot;_Int32&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromInt32 {
-            get {
-                return ResourceManager.GetString("Converter_String_FromInt32", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromInt64&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Int64&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Int64&quot;,
-        ///               &quot;_Int64&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromInt64 {
-            get {
-                return ResourceManager.GetString("Converter_String_FromInt64", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {
-        ///   &quot;TypeId&quot; : &quot;_String&quot;,
-        ///   &quot;Expression&quot; : {
-        ///      &quot;TypeId&quot; : &quot;_String.FromSingle&quot;,
-        ///      &quot;ArgTypeIds&quot; : [],
-        ///      &quot;Operand&quot; : {
-        ///         &quot;TypeId&quot; : &quot;_Single&quot;,
-        ///         &quot;Expression&quot; : {
-        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
-        ///            &quot;ArgTypeIds&quot; : [
-        ///               &quot;_Single&quot;,
-        ///               &quot;_Single&quot;
-        ///            ],
-        ///            &quot;Value&quot; : 1
-        ///         }
-        ///      }
-        ///   }
-        ///}.
-        /// </summary>
-        internal static string Converter_String_FromSingle {
-            get {
-                return ResourceManager.GetString("Converter_String_FromSingle", resourceCulture);
             }
         }
         
@@ -6370,6 +6474,32 @@ namespace DevZest.Data.Resources {
         internal static string Converter_String_NotEqual {
             get {
                 return ResourceManager.GetString("Converter_String_NotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_String&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;_TimeSpan.CastToString&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Operand&quot; : {
+        ///         &quot;TypeId&quot; : &quot;_TimeSpan&quot;,
+        ///         &quot;Expression&quot; : {
+        ///            &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///            &quot;ArgTypeIds&quot; : [
+        ///               &quot;_TimeSpan&quot;,
+        ///               &quot;_TimeSpan&quot;
+        ///            ],
+        ///            &quot;Value&quot; : &quot;5.00:00:00&quot;
+        ///         }
+        ///      }
+        ///   }
+        ///}.
+        /// </summary>
+        internal static string Converter_TimeSpan_CastToString {
+            get {
+                return ResourceManager.GetString("Converter_TimeSpan_CastToString", resourceCulture);
             }
         }
         

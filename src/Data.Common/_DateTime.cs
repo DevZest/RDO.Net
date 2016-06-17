@@ -15,6 +15,33 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_DateTime.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<DateTime?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<DateTime?, string> MakeExpression(Column<DateTime?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<DateTime?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(DateTime? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString("O", CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
         protected override bool AreEqual(DateTime? x, DateTime? y)
         {
             return x == y;

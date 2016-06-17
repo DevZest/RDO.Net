@@ -293,5 +293,16 @@ namespace DevZest.Data.SqlServer
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _DateTimeOffset_CastToString_Converter()
+        {
+            var column = _DateTimeOffset.Const(new DateTimeOffset(new DateTime(2016, 6, 16), new TimeSpan())).CastToString();
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_DateTimeOffset_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("2016-06-16T00:00:00.0000000+00:00", columnFromJson.Eval());
+        }
     }
 }

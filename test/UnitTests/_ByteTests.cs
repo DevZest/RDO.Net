@@ -715,5 +715,32 @@ namespace DevZest.Data
             var columnFromJson = (_Byte)Column.FromJson(null, json);
             Assert.AreEqual((byte)2, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _Byte_CastToString()
+        {
+            TestCastToString(null, null);
+            TestCastToString(127, "127");
+        }
+
+        private void TestCastToString(byte? x, String expectedValue)
+        {
+            _Byte column1 = x;
+            _String expr = column1.CastToString();
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(byte?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Byte_CastToString_Converter()
+        {
+            var column = _Byte.Const(1).CastToString();
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Byte_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
     }
 }

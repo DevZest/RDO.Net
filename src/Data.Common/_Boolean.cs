@@ -265,5 +265,40 @@ namespace DevZest.Data
             return new FromStringExpression(x).MakeColumn<_Boolean>();
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Boolean.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Boolean?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<bool?, string> MakeExpression(Column<bool?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Boolean?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Boolean? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString() : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Boolean" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Boolean" /> object. </param>
+        public static explicit operator _String(_Boolean x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
     }
 }

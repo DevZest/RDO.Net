@@ -624,5 +624,32 @@ namespace DevZest.Data
             var columnFromJson = (_Single)Column.FromJson(null, json);
             Assert.AreEqual((Single)2, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _Single_CastToString()
+        {
+            TestCastToString(8, "8");
+            TestCastToString(null, null);
+        }
+
+        private void TestCastToString(Single? x, String expectedValue)
+        {
+            _Single column1 = x;
+            _String expr = (_String)column1;
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(Single?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Single_CastToString_Converter()
+        {
+            var column = (_String)_Single.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Single_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
     }
 }

@@ -171,5 +171,32 @@ namespace DevZest.Data
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _Boolean_CastToString()
+        {
+            TestCastToString(_Boolean.True, "True");
+            TestCastToString(_Boolean.False, "False");
+            TestCastToString(_Boolean.Null, null);
+        }
+
+        private void TestCastToString(_Boolean x, String expectedValue)
+        {
+            _String expr = x.CastToString();
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(x, typeof(bool?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Boolean_CastToString_Converter()
+        {
+            var column = _Boolean.True.CastToString();
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Boolean_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("True", columnFromJson.Eval());
+        }
     }
 }

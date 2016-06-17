@@ -14,6 +14,42 @@ namespace DevZest.Data.SqlServer
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_TimeSpan.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<TimeSpan?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<TimeSpan?, string> MakeExpression(Column<TimeSpan?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<TimeSpan?> x)
+                : base(x)
+            {
+            }
+
+            protected override string Cast(TimeSpan? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString("c") : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_TimeSpan" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_TimeSpan" /> object. </param>
+        public static explicit operator _String(_TimeSpan x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         protected override bool AreEqual(TimeSpan? x, TimeSpan? y)
         {
             return x == y;

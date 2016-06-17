@@ -14,18 +14,18 @@ namespace DevZest.Data
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(ToStringExpression.Converter), TypeId = "_Binary.ToString")]
-        private sealed class ToStringExpression : CastExpression<Binary, String>
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Binary.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Binary, String>
         {
             private sealed class Converter : ConverterBase
             {
                 protected override CastExpression<Binary, string> MakeExpression(Column<Binary> operand)
                 {
-                    return new ToStringExpression(operand);
+                    return new CastToStringExpression(operand);
                 }
             }
 
-            public ToStringExpression(Column<Binary> x)
+            public CastToStringExpression(Column<Binary> x)
                 : base(x)
             {
             }
@@ -38,7 +38,16 @@ namespace DevZest.Data
 
         public override _String CastToString()
         {
-            return new ToStringExpression(this).MakeColumn<_String>();
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Binary" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Binary" /> object. </param>
+        public static explicit operator _String(_Binary x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
         }
 
         [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Binary.FromString")]

@@ -624,5 +624,32 @@ namespace DevZest.Data
             var columnFromJson = (_Decimal)Column.FromJson(null, json);
             Assert.AreEqual((Decimal)2, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _Decimal_CastToString()
+        {
+            TestCastToString(8, "8");
+            TestCastToString(null, null);
+        }
+
+        private void TestCastToString(Decimal? x, String expectedValue)
+        {
+            _Decimal column1 = x;
+            _String expr = (_String)column1;
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(Decimal?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _Decimal_CastToString_Converter()
+        {
+            var column = (_String)_Decimal.Const(1);
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Decimal_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("1", columnFromJson.Eval());
+        }
     }
 }

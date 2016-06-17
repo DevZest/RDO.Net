@@ -275,5 +275,32 @@ namespace DevZest.Data.SqlServer
             var columnFromJson = (_Boolean)Column.FromJson(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
+
+        [TestMethod]
+        public void _TimeSpan_CastToString()
+        {
+            TestCastToString(TimeSpan.FromDays(5), "5.00:00:00");
+            TestCastToString(null, null);
+        }
+
+        private void TestCastToString(TimeSpan? x, String expectedValue)
+        {
+            _TimeSpan column1 = x;
+            _String expr = (_String)column1;
+            var dbExpr = (DbCastExpression)expr.DbExpression;
+            dbExpr.Verify(column1, typeof(TimeSpan?), typeof(String));
+            expr.VerifyEval(expectedValue);
+        }
+
+        [TestMethod]
+        public void _TimeSpan_CastToString_Converter()
+        {
+            var column = (_String)_TimeSpan.Const(TimeSpan.FromDays(5));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_TimeSpan_CastToString, json);
+
+            var columnFromJson = (_String)Column.FromJson(null, json);
+            Assert.AreEqual("5.00:00:00", columnFromJson.Eval());
+        }
     }
 }

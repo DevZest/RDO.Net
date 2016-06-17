@@ -15,6 +15,42 @@ namespace DevZest.Data
         {
         }
 
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Byte.CastToString")]
+        private sealed class CastToStringExpression : CastExpression<Byte?, String>
+        {
+            private sealed class Converter : ConverterBase
+            {
+                protected override CastExpression<byte?, string> MakeExpression(Column<byte?> operand)
+                {
+                    return new CastToStringExpression(operand);
+                }
+            }
+
+            public CastToStringExpression(Column<Byte?> x)
+                : base(x)
+            {
+            }
+
+            protected override String Cast(Byte? value)
+            {
+                return value.HasValue ? value.GetValueOrDefault().ToString(CultureInfo.InvariantCulture) : null;
+            }
+        }
+
+        public override _String CastToString()
+        {
+            return new CastToStringExpression(this).MakeColumn<_String>();
+        }
+
+        /// <summary>Converts the supplied <see cref="_Byte" /> to <see cref="_String" />.</summary>
+        /// <returns>A <see cref="_String" /> expression which contains the result.</returns>
+        /// <param name="x">A <see cref="_Byte" /> object. </param>
+        public static explicit operator _String(_Byte x)
+        {
+            Check.NotNull(x, nameof(x));
+            return x.CastToString();
+        }
+
         /// <inheritdoc/>
         protected sealed override Column<byte?> CreateParam(byte? value)
         {
@@ -884,18 +920,18 @@ namespace DevZest.Data
             return new FromSingleCast(x).MakeColumn<_Byte>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_Byte.FromString")]
-        private sealed class FromStringCast : CastExpression<String, Byte?>
+        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Byte.FromString")]
+        private sealed class FromStringExpression : CastExpression<String, Byte?>
         {
             private sealed class Converter : ConverterBase
             {
                 protected override CastExpression<string, byte?> MakeExpression(Column<string> operand)
                 {
-                    return new FromStringCast(operand);
+                    return new FromStringExpression(operand);
                 }
             }
 
-            public FromStringCast(Column<string> x)
+            public FromStringExpression(Column<string> x)
                 : base(x)
             {
             }
@@ -914,7 +950,7 @@ namespace DevZest.Data
         public static explicit operator _Byte(_String x)
         {
             Check.NotNull(x, nameof(x));
-            return new FromStringCast(x).MakeColumn<_Byte>();
+            return new FromStringExpression(x).MakeColumn<_Byte>();
         }
 
         /// <exclude />
