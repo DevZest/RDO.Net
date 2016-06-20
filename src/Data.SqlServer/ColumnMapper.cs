@@ -126,7 +126,7 @@ namespace DevZest.Data.SqlServer
 
             // .Value
             if (direction == ParameterDirection.Input || direction == ParameterDirection.InputOutput)
-                result.Value = ConvertParameterValue(value);
+                result.Value = value == null ? DBNull.Value : ConvertParameterValue(value);
 
             result.SetDebugInfo(this, value, version);
 

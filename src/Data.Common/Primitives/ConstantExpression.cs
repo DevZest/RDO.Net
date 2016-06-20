@@ -26,7 +26,12 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         public override DbExpression GetDbExpression()
         {
-            return new DbConstantExpression(Owner, Value);
+            object exprValue;
+            if (Owner.IsNull(Value))
+                exprValue = null;
+            else
+                exprValue = Value;
+            return new DbConstantExpression(Owner, exprValue);
         }
     }
 }

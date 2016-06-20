@@ -40,7 +40,12 @@ namespace DevZest.Data.Primitives
 
         public override DbExpression GetDbExpression()
         {
-            return new DbParamExpression(Owner, SourceColumn, Value);
+            object exprValue;
+            if (Owner.IsNull(Value))
+                exprValue = null;
+            else
+                exprValue = Value;
+            return new DbParamExpression(Owner, SourceColumn, exprValue);
         }
     }
 }
