@@ -419,18 +419,18 @@ namespace DevZest.Data
             yield return this;
         }
 
-        internal static T Clone<T>(T sourceModel, bool setDataSource)
+        internal static T Clone<T>(T prototype, bool setDataSource)
             where T : Model, new()
         {
             T result = new T();
-            result.InitializeClone(sourceModel, setDataSource);
+            result.InitializeClone(prototype, setDataSource);
             return result;
         }
 
-        private Model _sourceModel;
-        internal Model ClonedFrom
+        private Model _prototype;
+        internal Model Prototype
         {
-            get { return _sourceModel == null ? this : _sourceModel.ClonedFrom; }
+            get { return _prototype == null ? this : _prototype.Prototype; }
         }
 
         internal Model Clone(bool setDataSource)
@@ -440,22 +440,22 @@ namespace DevZest.Data
             return result;
         }
 
-        private void InitializeClone(Model sourceModel, bool setDataSource)
+        private void InitializeClone(Model prototype, bool setDataSource)
         {
-            Debug.Assert(sourceModel != null && sourceModel != this);
-            _sourceModel = sourceModel;
-            InitializeColumnLists(sourceModel);
-            if (setDataSource && sourceModel.DataSource != null)
-                SetDataSource(sourceModel.DataSource);
+            Debug.Assert(prototype != null && prototype != this);
+            _prototype = prototype;
+            InitializeColumnLists(prototype);
+            if (setDataSource && prototype.DataSource != null)
+                SetDataSource(prototype.DataSource);
         }
 
-        private void InitializeColumnLists(Model sourceModel)
+        private void InitializeColumnLists(Model prototype)
         {
             var accessors = s_columnListManager.GetAll(this.GetType());
             foreach (var accessor in accessors)
             {
                 var columnList = accessor.GetProperty(this);
-                var sourceColumnList = accessor.GetProperty(sourceModel);
+                var sourceColumnList = accessor.GetProperty(prototype);
                 columnList.Initialize(sourceColumnList);
             }
         }

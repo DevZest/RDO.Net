@@ -496,7 +496,7 @@ namespace DevZest.Data
         {
             Check.NotNull(model, paramName);
 
-            if (ParentModel.ClonedFrom != model.ClonedFrom)
+            if (ParentModel.Prototype != model.Prototype)
                 throw new ArgumentException(Strings.Column_VerifyCounterpartModel, nameof(model));
         }
 
