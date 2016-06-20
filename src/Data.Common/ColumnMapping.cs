@@ -87,5 +87,10 @@ namespace DevZest.Data
         {
             return string.Format(CultureInfo.InvariantCulture, "({0}, {1})", _source, _target);
         }
+
+        public void CopyValue(DataRow sourceDataRow, DataRow targetDataRow)
+        {
+            Source.CopyValue(sourceDataRow, Target, targetDataRow);
+        }
     }
 }

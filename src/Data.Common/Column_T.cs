@@ -596,15 +596,11 @@ namespace DevZest.Data
                 UpdateValue(dataRow, _scalarValue);
         }
 
-        internal sealed override void CloneValue(DataRow sourceDataRow, DataRow targetDataRow)
+        internal sealed override void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow)
         {
-            Debug.Assert(!IsExpression);
-            Debug.Assert(ParentModel == sourceDataRow.Model);
-            Debug.Assert(sourceDataRow.Model.Prototype == targetDataRow.Model.Prototype);
-
-            var counterpart = (Column<T>)targetDataRow.Model.Columns[Ordinal];
-            if (!counterpart.IsReadOnly(targetDataRow))
-                counterpart[targetDataRow] = this[sourceDataRow];
+            var target = (Column<T>)targetColumn;
+            if (!target.IsReadOnly(targetDataRow))
+                target[targetDataRow] = this[sourceDataRow];
         }
     }
 }

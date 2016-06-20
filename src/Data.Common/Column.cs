@@ -400,7 +400,7 @@ namespace DevZest.Data
 
         internal abstract void Load(DataRow dataRow);
 
-        internal abstract void CloneValue(DataRow sourceDataRow, DataRow targetDataRow);
+        internal abstract void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow);
 
         internal string TypeId
         {
