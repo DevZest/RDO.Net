@@ -606,11 +606,5 @@ namespace DevZest.Data
             if (!counterpart.IsReadOnly(targetDataRow))
                 counterpart[targetDataRow] = this[sourceDataRow];
         }
-
-        internal void WriteJson(StringBuilder stringBuilder)
-        {
-            var converter = ColumnConverter.Get(this);
-            converter.WriteJson(stringBuilder, this);
-        }
     }
 }
