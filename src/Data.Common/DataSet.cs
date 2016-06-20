@@ -20,12 +20,12 @@ namespace DevZest.Data
         {
         }
 
-        public DataSet DeriveNew()
+        public DataSet Clone()
         {
-            return InternalDeriveNew();
+            return InternalClone();
         }
 
-        internal abstract DataSet InternalDeriveNew();
+        internal abstract DataSet InternalClone();
 
         /// <inheritdoc/>
         public sealed override DataSourceKind Kind

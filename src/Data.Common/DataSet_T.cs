@@ -183,15 +183,15 @@ namespace DevZest.Data
             return new GlobalDataSet(model);
         }
 
-        public new DataSet<T> DeriveNew()
+        public new DataSet<T> Clone()
         {
             var model = Model.Clone(_, false);
             return Create(model);
         }
 
-        internal sealed override DataSet InternalDeriveNew()
+        internal sealed override DataSet InternalClone()
         {
-            return this.DeriveNew();
+            return this.Clone();
         }
 
         /// <summary>
