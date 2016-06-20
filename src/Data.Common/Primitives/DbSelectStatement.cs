@@ -71,7 +71,7 @@ namespace DevZest.Data.Primitives
 
             var selectItems = new ColumnMapping[primaryKey.Count];
             for (int i = 0; i < selectItems.Length; i++)
-                selectItems[i] = new ColumnMapping(Select[primaryKey[i].Column.Ordinal].Source, sequentialKeyModel.Columns[i]);
+                selectItems[i] = new ColumnMapping(Select[primaryKey[i].Column.Ordinal].SourceExpression, sequentialKeyModel.Columns[i]);
 
             return new DbSelectStatement(sequentialKeyModel, selectItems, From, Where, GroupBy, Having, OrderBy, Offset, Fetch);
         }
@@ -114,7 +114,7 @@ namespace DevZest.Data.Primitives
 
             foreach (var select in Select)
             {
-                if (!select.TargetColumn.IsSystem)
+                if (!select.Target.IsSystem)
                     newSelect.Add(select);
             }
 

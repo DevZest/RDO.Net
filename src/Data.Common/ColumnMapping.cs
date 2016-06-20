@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -11,45 +10,82 @@ namespace DevZest.Data
     public struct ColumnMapping
     {
         internal ColumnMapping(Column source, Column target)
-            : this(source == null ? DbConstantExpression.Null : source.DbExpression, target)
         {
+            if (source == null)
+                _source = DbConstantExpression.Null;
+            else
+                _source = source;
+
+            Debug.Assert(target != null);
+            _target = target;
         }
 
         internal ColumnMapping(DbExpression source, Column target)
         {
             Debug.Assert(source != null);
             Debug.Assert(target != null);
-            Source = source;
-            Target = (DbColumnExpression)target.DbExpression;
+            _source = source;
+            _target = target;
         }
 
-        /// <summary>Gets the source column of this mapping.</summary>
+        private readonly object _source;
+        private Column _target;
+
+        /// <summary>Gets the source <see cref="Column"/> of this mapping.</summary>
         /// <value>Returns <see langword="null"/> if source is expression.</value>
-        public Column SourceColumn
+        public Column Source
         {
             get
             {
-                var columnExpression = Source as DbColumnExpression;
+                var source = _source as Column;
+                return source ?? CalculatedSource;
+            }
+        }
+
+        private Column CalculatedSource
+        {
+            get
+            {
+                var columnExpression = SourceExpression as DbColumnExpression;
                 return columnExpression == null ? null : columnExpression.Column;
             }
         }
 
-        /// <summary>Gets the source of this mapping.</summary>
-        public readonly DbExpression Source;
-
-        /// <summary>Gets the target column of this mapping.</summary>
-        public Column TargetColumn
+        /// <summary>Gets the source <see cref="DbExpression"/> of this mapping.</summary>
+        public DbExpression SourceExpression
         {
-            get { return Target == null ? null : Target.Column; }
+            get
+            {
+                var sourceExpression = _source as DbExpression;
+                return sourceExpression ?? Source.DbExpression;
+            }
         }
 
-        /// <summary>Gets the target of this mapping.</summary>
-        public readonly DbColumnExpression Target;
+        private DbExpression CalculatedSourceExpression
+        {
+            get
+            {
+                var sourceColumn = Source;
+                return sourceColumn == null ? null : sourceColumn.DbExpression;
+            }
+        }
+
+        /// <summary>Gets the target <see cref="Column"/> of this mapping.</summary>
+        public Column Target
+        {
+            get { return _target; }
+        }
+
+        /// <summary>Gets the target <see cref="DbColumnExpression"/> of this mapping.</summary>
+        public DbColumnExpression TargetExpression
+        {
+            get { return _target.DbExpression as DbColumnExpression; }
+        }
 
         /// <inheritdoc/>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "({0}, {1})", Source, TargetColumn);
+            return string.Format(CultureInfo.InvariantCulture, "({0}, {1})", _source, _target);
         }
     }
 }

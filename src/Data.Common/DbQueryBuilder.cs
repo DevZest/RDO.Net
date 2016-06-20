@@ -35,8 +35,8 @@ namespace DevZest.Data
         {
             foreach (var columnMapping in select)
             {
-                var source = EliminateSubQuery(columnMapping.Source);
-                SelectCore(source, columnMapping.TargetColumn);
+                var source = EliminateSubQuery(columnMapping.SourceExpression);
+                SelectCore(source, columnMapping.Target);
             }
         }
 
@@ -138,14 +138,14 @@ namespace DevZest.Data
 
         private Model Join(Model model, DbJoinKind kind, IList<ColumnMapping> relationship)
         {
-            Debug.Assert(relationship[0].TargetColumn.ParentModel == model);
+            Debug.Assert(relationship[0].Target.ParentModel == model);
 
             var result = MakeAlias(model);
             var resultFromClause = result.FromClause;
             if (result != model)
             {
                 resultFromClause = resultFromClause.Clone(result);
-                relationship = relationship.Select(x => new ColumnMapping(x.Source, result.Columns[x.TargetColumn.Ordinal])).ToList();
+                relationship = relationship.Select(x => new ColumnMapping(x.SourceExpression, result.Columns[x.Target.Ordinal])).ToList();
             }
 
             AddSourceModel(result);
@@ -167,7 +167,7 @@ namespace DevZest.Data
             for (int i = 0; i < relationship.Count; i++)
             {
                 var mapping = relationship[i];
-                var source = mapping.Source;
+                var source = mapping.SourceExpression;
                 var replacedSource = EliminateSubQuery(source);
                 if (source != replacedSource  && result == null)
                 {
@@ -176,7 +176,7 @@ namespace DevZest.Data
                         result[j] = relationship[j];
                 }
                 if (result != null)
-                    result[i] = new ColumnMapping(replacedSource, mapping.Target.Column);
+                    result[i] = new ColumnMapping(replacedSource, mapping.TargetExpression.Column);
             }
             return result ?? relationship;
         }
@@ -399,7 +399,7 @@ namespace DevZest.Data
 
             for (int i = 0; i < selectList.Count; i++)
             {
-                if (selectList[i].Source != fromColumns[i].DbExpression)
+                if (selectList[i].SourceExpression != fromColumns[i].DbExpression)
                     return null;
             }
             return fromQuery;

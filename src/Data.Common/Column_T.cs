@@ -231,8 +231,8 @@ namespace DevZest.Data
                 return null;
             foreach (var parentMapping in parentMappings)
             {
-                if (parentMapping.Source == column.DbExpression)
-                    return (Column<T>)parentMapping.TargetColumn;
+                if (parentMapping.SourceExpression == column.DbExpression)
+                    return (Column<T>)parentMapping.Target;
             }
             return null;
         }

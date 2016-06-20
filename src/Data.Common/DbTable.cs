@@ -205,9 +205,9 @@ namespace DevZest.Data
             for (int i = 0; i < mappings.Count; i++)
             {
                 var mapping = mappings[i];
-                var sourceColumn = mapping.SourceColumn;
+                var sourceColumn = mapping.Source;
                 var source = paramManager.GetParam(sourceColumn);
-                result[i] = new ColumnMapping(source, mapToSource ? sourceColumn : mapping.TargetColumn);
+                result[i] = new ColumnMapping(source, mapToSource ? sourceColumn : mapping.Target);
             }
             return result;
         }

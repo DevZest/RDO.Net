@@ -65,7 +65,7 @@ namespace DevZest.Data.SqlServer
         private static IList<Column> GetInsertList(Model model, IReadOnlyList<ColumnMapping> select)
         {
             if (select != null)
-                return select.Select(x => x.TargetColumn).ToList();
+                return select.Select(x => x.Target).ToList();
             else
                 return model.GetInsertableColumns().ToList();
         }
@@ -106,9 +106,9 @@ namespace DevZest.Data.SqlServer
             for (int i = 0; i < selectList.Count; i++)
             {
                 var select = selectList[i];
-                sqlBuilder.Append(select.TargetColumn.DbColumnName.ToQuotedIdentifier());
+                sqlBuilder.Append(select.Target.DbColumnName.ToQuotedIdentifier());
                 sqlBuilder.Append(" = ");
-                select.Source.Accept(result._expressionGenerator);
+                select.SourceExpression.Accept(result._expressionGenerator);
                 if (i != selectList.Count - 1)
                     sqlBuilder.Append(',');
                 sqlBuilder.AppendLine();
@@ -208,11 +208,11 @@ namespace DevZest.Data.SqlServer
                 if (i > 0)
                     SqlBuilder.Append(" AND ");
                 var columnMapping = joinOn[i];
-                var source = columnMapping.Source;
-                var target = columnMapping.TargetColumn;
-                columnMapping.Source.Accept(_expressionGenerator);
+                var source = columnMapping.SourceExpression;
+                var target = columnMapping.Target;
+                columnMapping.SourceExpression.Accept(_expressionGenerator);
                 SqlBuilder.Append(" = ");
-                columnMapping.Target.Accept(_expressionGenerator);
+                columnMapping.TargetExpression.Accept(_expressionGenerator);
             }
         }
 
@@ -300,7 +300,7 @@ namespace DevZest.Data.SqlServer
         private void GenerateSelectClause(ReadOnlyCollection<ColumnMapping> select, bool appendLine)
         {
             SqlBuilder.Append("SELECT");
-            GenerateExpressionList(select.Count, i => select[i].Source, i => select[i].TargetColumn, appendLine);
+            GenerateExpressionList(select.Count, i => select[i].SourceExpression, i => select[i].Target, appendLine);
         }
 
         private void GenerateExpressionList(int count, Func<int, DbExpression> getSelectExpression, Func<int, Column> getTargetColumn, bool appendLine)

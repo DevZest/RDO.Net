@@ -32,11 +32,11 @@ namespace DevZest.Data
                 var relationship = childModel.ParentRelationship;
                 foreach (var mapping in relationship)
                 {
-                    if (mapping.TargetColumn == identityColumn)
+                    if (mapping.Target == identityColumn)
                     {
                         var childTable = (IDbTable)childModel.DataSource;
-                        Debug.Assert(mapping.SourceColumn != null);
-                        result.Add(childTable.BuildUpdateIdentityStatement(mapping.SourceColumn, identityMappings));
+                        Debug.Assert(mapping.Source != null);
+                        result.Add(childTable.BuildUpdateIdentityStatement(mapping.Source, identityMappings));
                     }
                 }
             }

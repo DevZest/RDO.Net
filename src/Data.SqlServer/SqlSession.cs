@@ -166,14 +166,14 @@ namespace DevZest.Data.SqlServer
 
                 var columnMappings = model.GetColumnMappings(dataSet._, columnMappingsBuilder, true);
 
-                var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.Source).Column).ToList());
+                var xml = GetSqlXml(dataSet, columnMappings.Select(x => ((DbColumnExpression)x.SourceExpression).Column).ToList());
 
                 var sourceTable = GetTable(xml, XML_ROW_XPATH);
                 SqlXmlModel xmlModel;
                 builder.From(sourceTable, out xmlModel);
                 for (int i = 0; i < columnMappings.Count; i++)
                 {
-                    var targetColumn = columnMappings[i].TargetColumn;
+                    var targetColumn = columnMappings[i].Target;
                     builder.SelectColumn(xmlModel[GetColumnTagXPath(i), targetColumn], targetColumn);
                 }
                 builder.OrderBy(xmlModel[GetColumnTagXPath(columnMappings.Count), dataSetOrdinalColumn].Asc());

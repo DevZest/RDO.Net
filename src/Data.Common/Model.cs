@@ -716,10 +716,10 @@ namespace DevZest.Data
             for (int i = 0; i < result.Length; i++)
             {
                 var mapping = parentRelationship[i];
-                var source = GetSource(mapping.Source, columnMappings);
+                var source = GetSource(mapping.SourceExpression, columnMappings);
                 if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source));
-                result[i] = new ColumnMapping(source, mapping.TargetColumn);
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
+                result[i] = new ColumnMapping(source, mapping.Target);
             }
 
             return result;
@@ -729,8 +729,8 @@ namespace DevZest.Data
         {
             foreach (var mapping in relationship)
             {
-                if (mapping.Target == target)
-                    return mapping.Source;
+                if (mapping.TargetExpression == target)
+                    return mapping.SourceExpression;
             }
             return null;
         }

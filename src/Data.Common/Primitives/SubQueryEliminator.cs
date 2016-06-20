@@ -91,7 +91,7 @@ namespace DevZest.Data.Primitives
         {
             var column = expression.Column;
             if (column.ParentModel == _selectStatement.Model)
-                return _selectStatement.Select[column.Ordinal].Source;
+                return _selectStatement.Select[column.Ordinal].SourceExpression;
             else
                 return expression;
         }

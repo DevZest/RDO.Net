@@ -30,7 +30,7 @@ namespace DevZest.Data
             Debug.Assert(columns.Count <= sourceColumns.Count);
             Debug.Assert(columns.Count <= query.Select.Count);
             for (int i = 0; i < columns.Count; i++)
-                SelectList.Add(new ColumnMapping(query.Select[i].Source, columns[i]));
+                SelectList.Add(new ColumnMapping(query.Select[i].SourceExpression, columns[i]));
 
             if (action != null)
                 action(this);
@@ -139,8 +139,8 @@ namespace DevZest.Data
             for (int i = 0; i < relationship.Count; i++)
             {
                 var mapping = relationship[i];
-                var source = GetSource(mapping.SourceColumn.Ordinal);
-                var targetColumn = GetCorrespondingPrimaryKeyColumn(mapping.TargetColumn, targetModel);
+                var source = GetSource(mapping.Source.Ordinal);
+                var targetColumn = GetCorrespondingPrimaryKeyColumn(mapping.Target, targetModel);
                 result[i] = new ColumnMapping(source, targetColumn);
             }
             return result;
@@ -150,8 +150,8 @@ namespace DevZest.Data
         {
             foreach (var select in SelectList)
             {
-                if (select.TargetColumn.Ordinal == ordinal)
-                    return select.Source;
+                if (select.Target.Ordinal == ordinal)
+                    return select.SourceExpression;
             }
 
             return DbConstantExpression.Null;
@@ -181,11 +181,11 @@ namespace DevZest.Data
             var result = new ColumnMapping[Model.Columns.Count];
 
             foreach (var selectItem in SelectList)
-                result[selectItem.TargetColumn.Ordinal] = selectItem;
+                result[selectItem.Target.Ordinal] = selectItem;
 
             for (int i = 0; i < result.Length; i++)
             {
-                if (result[i].TargetColumn == null)
+                if (result[i].Target == null)
                     result[i] = new ColumnMapping(DbConstantExpression.Null, Model.Columns[i]);
             }
 
@@ -200,8 +200,8 @@ namespace DevZest.Data
             {
                 var column = columnSort.Column;
                 var param = column.CreateParam(parentRow).DbExpression;
-                var sourceColumnOrdinal = parentRelationship.Where(x => x.TargetColumn.Ordinal == column.Ordinal).Single().SourceColumn.Ordinal;
-                var sourceExpression = SelectList[sourceColumnOrdinal].Source;
+                var sourceColumnOrdinal = parentRelationship.Where(x => x.Target.Ordinal == column.Ordinal).Single().Source.Ordinal;
+                var sourceExpression = SelectList[sourceColumnOrdinal].SourceExpression;
                 var equalCondition = new DbBinaryExpression(BinaryExpressionKind.Equal, sourceExpression, param);
                 WhereExpression = WhereExpression == null ? equalCondition : new DbBinaryExpression(BinaryExpressionKind.And, equalCondition, WhereExpression);
             }

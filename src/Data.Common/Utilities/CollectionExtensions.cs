@@ -33,10 +33,10 @@ namespace DevZest.Data.Utilities
             for (int i = 0; i < result.Length; i++)
             {
                 var mapping = parentMappings[i];
-                var source = GetSource(mapping.Source, columnMappings);
+                var source = GetSource(mapping.SourceExpression, columnMappings);
                 if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.Source));
-                result[i] = new ColumnMapping(source, mapping.TargetColumn);
+                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
+                result[i] = new ColumnMapping(source, mapping.Target);
             }
 
             return result;
@@ -46,8 +46,8 @@ namespace DevZest.Data.Utilities
         {
             foreach (var mapping in mappings)
             {
-                if (mapping.Target == target)
-                    return mapping.Source;
+                if (mapping.TargetExpression == target)
+                    return mapping.SourceExpression;
             }
             return null;
         }
@@ -56,7 +56,7 @@ namespace DevZest.Data.Utilities
         {
             foreach (var mapping in columnMappings)
             {
-                if (mapping.SourceColumn == source)
+                if (mapping.Source == source)
                     return true;
             }
             return false;
@@ -66,7 +66,7 @@ namespace DevZest.Data.Utilities
         {
             foreach (var mapping in columnMappings)
             {
-                if (mapping.TargetColumn == target)
+                if (mapping.Target == target)
                     return true;
             }
             return false;

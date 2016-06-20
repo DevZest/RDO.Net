@@ -105,8 +105,8 @@ namespace DevZest.Data.Primitives
             var columnKeys = new HashSet<ColumnKey>(columns.Select(x => x.Key));
             foreach (var resultItem in result)
             {
-                if (!columnKeys.Contains(resultItem.TargetColumn.Key))
-                    throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.TargetColumn));
+                if (!columnKeys.Contains(resultItem.Target.Key))
+                    throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
             }
 
             return result;

@@ -34,7 +34,7 @@ namespace DevZest.Data
             if (keyMappings != null)
             {
                 Join(Model, DbJoinKind.LeftJoin, keyMappings);
-                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].TargetColumn.DbExpression });
+                var isNullExpr = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
                 WhereExpression = And(WhereExpression, isNullExpr);
             }
 
