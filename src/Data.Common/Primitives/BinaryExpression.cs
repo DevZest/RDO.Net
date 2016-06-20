@@ -107,13 +107,5 @@ namespace DevZest.Data.Primitives
         /// <param name="y">The right operand value.</param>
         /// <returns>The result.</returns>
         protected abstract TResult EvalCore(T x, T y);
-
-        internal sealed override Column<TResult> GetCounterpart(Model model)
-        {
-            var expr = (BinaryExpression<T, TResult>)this.MemberwiseClone();
-            expr.Left = Left.GetCounterpart(model);
-            expr.Right = Right.GetCounterpart(model);
-            return GetCounterpart(expr);
-        }
     }
 }

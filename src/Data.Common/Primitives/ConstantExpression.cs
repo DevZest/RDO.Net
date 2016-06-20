@@ -28,10 +28,5 @@ namespace DevZest.Data.Primitives
         {
             return new DbConstantExpression(Owner, Value);
         }
-
-        internal sealed override Column<T> GetCounterpart(Model model)
-        {
-            return Owner;
-        }
     }
 }

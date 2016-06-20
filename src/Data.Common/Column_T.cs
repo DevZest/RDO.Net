@@ -478,28 +478,6 @@ namespace DevZest.Data
             return new Default<T>(this);
         }
 
-        public new Column<T> GetCounterpart(Model model)
-        {
-            if (model == ParentModel)
-                return this;
-
-            VerifyCounterpartModel(model, nameof(model));
-            return IsExpression ? Expression.GetCounterpart(model) : (Column<T>)model.Columns[Ordinal];
-        }
-
-        internal sealed override Column InternalGetCounterpart(Model model)
-        {
-            return this.GetCounterpart(model);
-        }
-
-        private void VerifyCounterpartModel(Model model, string paramName)
-        {
-            Check.NotNull(model, paramName);
-
-            if (ParentModel.Prototype != model.Prototype)
-                throw new ArgumentException(Strings.Column_VerifyCounterpartModel, nameof(model));
-        }
-
         /// <summary>Defines the default constant value for this column.</summary>
         /// <param name="defaultValue">The default constant value.</param>
         /// <remarks>To define default expression value, call <see cref="ColumnExtensions.Default{T}(T, T)"/> method.</remarks>
@@ -618,9 +596,13 @@ namespace DevZest.Data
                 UpdateValue(dataRow, _scalarValue);
         }
 
-        internal sealed override void CopyValue(DataRow sourceDataRow, DataRow targetDataRow)
+        internal sealed override void CloneValue(DataRow sourceDataRow, DataRow targetDataRow)
         {
-            var counterpart = GetCounterpart(targetDataRow.Model);
+            Debug.Assert(!IsExpression);
+            Debug.Assert(ParentModel == sourceDataRow.Model);
+            Debug.Assert(sourceDataRow.Model.Prototype == targetDataRow.Model.Prototype);
+
+            var counterpart = (Column<T>)targetDataRow.Model.Columns[Ordinal];
             if (!counterpart.IsReadOnly(targetDataRow))
                 counterpart[targetDataRow] = this[sourceDataRow];
         }

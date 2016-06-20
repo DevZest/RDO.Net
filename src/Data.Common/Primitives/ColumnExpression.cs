@@ -91,15 +91,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal abstract Column<T> GetCounterpart(Model model);
-
-        internal Column<T> GetCounterpart(ColumnExpression<T> expr)
-        {
-            Column<T> result = (Column<T>)Activator.CreateInstance(Owner.GetType());
-            result.Expression = expr;
-            return result;
-        }
-
         protected internal virtual Type[] ArgColumnTypes
         {
             get { return Array<Type>.Empty; }

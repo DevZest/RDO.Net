@@ -109,19 +109,5 @@ namespace DevZest.Data.Primitives
 
             return new DbFunctionExpression(FunctionKey, paramList);
         }
-
-        internal sealed override Column<T> GetCounterpart(Model model)
-        {
-            if (Parameters == null)
-                return this.Owner;
-
-            var functionExpr = (FunctionExpression<T>)this.MemberwiseClone();
-            var parameters = new Column[Parameters.Count];
-            for (int i = 0; i < Parameters.Count; i++)
-                parameters[i] = Parameters[i].GetCounterpart(model);
-            Parameters = new ReadOnlyCollection<Column>(parameters);
-
-            return GetCounterpart(functionExpr);
-        }
     }
 }

@@ -72,13 +72,5 @@ namespace DevZest.Data.Primitives
         {
             return new DbCastExpression(Operand.DbExpression, typeof(TSource), this.Owner);
         }
-
-        /// <inheritdoc/>
-        internal sealed override Column<TTarget> GetCounterpart(Model model)
-        {
-            var expr = (CastExpression<TSource, TTarget>)this.MemberwiseClone();
-            expr.Operand = Operand.GetCounterpart(model);
-            return GetCounterpart(expr);
-        }
     }
 }

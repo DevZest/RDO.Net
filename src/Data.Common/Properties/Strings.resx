@@ -387,9 +387,6 @@
   <data name="DataRow_MismatchWithSavedDataRow" xml:space="preserve">
     <value>Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.</value>
   </data>
-  <data name="Column_VerifyCounterpartModel" xml:space="preserve">
-    <value>The model is invalid. There is no derivation relationship between this model and ParentModel.</value>
-  </data>
   <data name="JsonParser_InvalidObjectName" xml:space="preserve">
     <value>The object name "{objectName}" is invalid, "{expectedObjectName}" expected.</value>
   </data>

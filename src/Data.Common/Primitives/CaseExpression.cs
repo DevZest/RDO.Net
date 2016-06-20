@@ -146,17 +146,6 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal sealed override Column<TResult> GetCounterpart(Model model)
-        {
-            var expr = (CaseExpression<TResult>)this.MemberwiseClone();
-            expr._when = _when.GetCounterpart(model);
-            expr._then = _then.GetCounterpart(model);
-            if (_else != null)
-                expr._else = _else.GetCounterpart(model);
-
-            return GetCounterpart(expr);
-        }
-
         protected internal override Type[] ArgColumnTypes
         {
             get { return new Type[] { Owner.GetType() }; }

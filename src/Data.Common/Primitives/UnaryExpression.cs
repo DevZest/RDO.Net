@@ -74,12 +74,5 @@ namespace DevZest.Data.Primitives
         /// <param name="x">The given value.</param>
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
-
-        internal sealed override Column<T> GetCounterpart(Model model)
-        {
-            var expr = (UnaryExpression<T>)this.MemberwiseClone();
-            expr.Operand = Operand.GetCounterpart(model);
-            return GetCounterpart(expr);
-        }
     }
 }
