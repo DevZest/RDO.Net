@@ -34,7 +34,7 @@ namespace DevZest.Data.Primitives
             var left = expression.Left.Accept(this);
             var right = expression.Right.Accept(this);
             if (expression.Left != left || expression.Right != right)
-                return new DbBinaryExpression(expression.Kind, expression.Left.Accept(this), expression.Right.Accept(this));
+                return new DbBinaryExpression(expression.Kind, left, right);
             return expression;
         }
 
