@@ -311,7 +311,7 @@ namespace DevZest.Data
         /// <summary>Creates <see cref="ColumnMapping"/> from given <see cref="Column"/>.</summary>
         /// <param name="column">The source <see cref="Column"/>.</param>
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
-        public abstract ColumnMapping From(Column column);
+        public abstract ColumnMapping MapFrom(Column column);
 
         public abstract object GetValue(DataRow dataRow);
 

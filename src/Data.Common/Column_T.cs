@@ -550,12 +550,6 @@ namespace DevZest.Data
         /// <summary>Mapping this column with another column.</summary>
         /// <param name="sourceColumn">The source column.</param>
         /// <returns>The <see cref="ColumnMapping"/> contains <paramref name="sourceColumn"/> and this column.</returns>
-        public ColumnMapping From(Column<T> sourceColumn)
-        {
-            Check.NotNull(sourceColumn, nameof(sourceColumn));
-            return new ColumnMapping(sourceColumn, this);
-        }
-
         /// <summary>Mapping this column with constant value.</summary>
         /// <param name="value">The constant value.</param>
         /// <returns>The <see cref="ColumnMapping"/> contains the constant value and this column.</returns>
@@ -564,10 +558,9 @@ namespace DevZest.Data
             return new ColumnMapping(CreateParam(value), this);
         }
 
-        /// <inheritdoc/>
-        public sealed override ColumnMapping From(Column column)
+        public sealed override ColumnMapping MapFrom(Column column)
         {
-            return From((Column<T>)column);
+            return ColumnMapping.Create((Column<T>)column, this);
         }
 
         public sealed override object GetValue(DataRow dataRow)

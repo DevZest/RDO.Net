@@ -41,7 +41,7 @@ namespace DevZest.Data
         {
             VerifySource(sourceColumn);
             VerifyTarget(targetColumn);
-            _result.Add(targetColumn.From(sourceColumn));
+            _result.Add(ColumnMapping.Create(sourceColumn, targetColumn));
             return this;
         }
 

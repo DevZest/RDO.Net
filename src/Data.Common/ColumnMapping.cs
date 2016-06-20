@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -9,6 +10,13 @@ namespace DevZest.Data
     /// </summary>
     public struct ColumnMapping
     {
+        public static ColumnMapping Create<T>(Column<T> source, Column<T> target)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(target, nameof(target));
+            return new ColumnMapping(source, target);
+        }
+
         internal ColumnMapping(Column source, Column target)
         {
             if (source == null)
