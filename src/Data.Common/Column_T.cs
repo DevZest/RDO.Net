@@ -547,17 +547,6 @@ namespace DevZest.Data
             return Computation;
         }
 
-        /// <summary>Mapping this column with another column.</summary>
-        /// <param name="sourceColumn">The source column.</param>
-        /// <returns>The <see cref="ColumnMapping"/> contains <paramref name="sourceColumn"/> and this column.</returns>
-        /// <summary>Mapping this column with constant value.</summary>
-        /// <param name="value">The constant value.</param>
-        /// <returns>The <see cref="ColumnMapping"/> contains the constant value and this column.</returns>
-        public ColumnMapping From(T value)
-        {
-            return new ColumnMapping(CreateParam(value), this);
-        }
-
         public sealed override ColumnMapping MapFrom(Column column)
         {
             return ColumnMapping.Create((Column<T>)column, this);
