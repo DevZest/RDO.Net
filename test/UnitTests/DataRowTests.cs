@@ -35,5 +35,17 @@ namespace DevZest.Data
             var grandChildDataRow = childDataRow[0][1];
             Assert.IsTrue(DataRow.FromString(dataSet, "/[1]/Child[1]/Child[1]") == grandChildDataRow);
         }
+
+        [TestMethod]
+        public void DataRow_CopyValuesFrom()
+        {
+            var dataSet1 = GetDataSet(3);
+            var dataSet2 = dataSet1.Clone();
+
+            dataSet2.AddRow(x => x.CopyValuesFrom(dataSet1[1]));
+            dataSet1.RemoveAt(2);
+            dataSet1.RemoveAt(0);
+            Assert.AreEqual(dataSet1.ToJsonString(true), dataSet2.ToJsonString(true));
+        }
     }
 }
