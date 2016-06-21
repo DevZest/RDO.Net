@@ -10,7 +10,7 @@ namespace DevZest.Data
     /// </summary>
     public struct ColumnMapping
     {
-        public static ColumnMapping Create<T>(Column<T> source, Column<T> target)
+        public static ColumnMapping Map<T>(Column<T> source, Column<T> target)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(target, nameof(target));

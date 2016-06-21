@@ -311,8 +311,8 @@ namespace DevZest.Data.SqlServer
 
             var select = new ColumnMapping[]
             {
-                ColumnMapping.Create(source.GetIdentity(false).Column, identityMapping.OldValue),
-                ColumnMapping.Create(sourceSysRowId, identityMapping.OriginalSysRowId)
+                ColumnMapping.Map(source.GetIdentity(false).Column, identityMapping.OldValue),
+                ColumnMapping.Map(sourceSysRowId, identityMapping.OriginalSysRowId)
             };
 
             var from = GetAutoJoinFromClause(sourceData, targetTable);
@@ -330,7 +330,7 @@ namespace DevZest.Data.SqlServer
             if (target == null)
                 return source.GetFromClause();
 
-            var mappings = new ColumnMapping[] { ColumnMapping.Create(source.Model.GetIdentity(false).Column, target.Model.GetIdentity(false).Column) };
+            var mappings = new ColumnMapping[] { ColumnMapping.Map(source.Model.GetIdentity(false).Column, target.Model.GetIdentity(false).Column) };
             return new DbJoinClause(DbJoinKind.LeftJoin, source.GetFromClause(), target.GetFromClause(), new ReadOnlyCollection<ColumnMapping>(mappings));
         }
 
@@ -346,10 +346,10 @@ namespace DevZest.Data.SqlServer
             var identityOutput = identityOutputs._;
             var select = new ColumnMapping[]
             {
-                ColumnMapping.Create(identityOutput.NewValue, identityMapping.NewValue)
+                ColumnMapping.Map(identityOutput.NewValue, identityMapping.NewValue)
             };
 
-            var mappings = new ColumnMapping[] { ColumnMapping.Create(identityMapping.GetIdentity(true).Column, identityOutput.GetIdentity(true).Column) };
+            var mappings = new ColumnMapping[] { ColumnMapping.Map(identityMapping.GetIdentity(true).Column, identityOutput.GetIdentity(true).Column) };
             var from = new DbJoinClause(DbJoinKind.InnerJoin, identityMappings.GetFromClause(), identityOutputs.GetFromClause(),
                 new ReadOnlyCollection<ColumnMapping>(mappings));
             return new DbSelectStatement(identityMapping, select, from, null, null, -1, -1);

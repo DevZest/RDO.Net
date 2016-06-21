@@ -549,7 +549,7 @@ namespace DevZest.Data
 
         public sealed override ColumnMapping MapFrom(Column column)
         {
-            return ColumnMapping.Create((Column<T>)column, this);
+            return ColumnMapping.Map((Column<T>)column, this);
         }
 
         public sealed override object GetValue(DataRow dataRow)
