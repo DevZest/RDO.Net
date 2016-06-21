@@ -75,7 +75,7 @@ namespace DevZest.Data
 
             model.EnsureChildModelsInitialized();
             var childModels = model.ChildModels;
-            _childDataSets = new DataSet[childModels.Count];
+            _childDataSets = childModels.Count == 0 ? Array<DataSet>.Empty : new DataSet[childModels.Count];
             for (int i = 0; i < childModels.Count; i++)
                 _childDataSets[i] = childModels[i].DataSet.CreateSubDataSet(this);
 
@@ -133,6 +133,7 @@ namespace DevZest.Data
         {
             foreach (var dataSet in _childDataSets)
                 dataSet.Clear();
+            _childDataSets = null;
         }
 
         /// <summary>Gets the children data set of this <see cref="DataRow"/>.</summary>
@@ -285,6 +286,9 @@ namespace DevZest.Data
         internal void OnRemoved(DataRowRemovedEventArgs e)
         {
             Debug.Assert(e.DataRow == this);
+
+            if (e.Model.SavedDataRow == this)
+                e.Model.SavedDataRow = null;
 
             e.Model.OnRowRemoved(e);
             if (e.ParentDataRow != null)
@@ -501,6 +505,58 @@ namespace DevZest.Data
             Check.NotNull(columnMappings, nameof(columnMappings));
             for (int i = 0; i < columnMappings.Count; i++)
                 columnMappings[i].CopyValue(from, this);
+        }
+
+        public void Move(int offset)
+        {
+            if (offset == 0)
+                return;
+
+            var dataSet = DataSet;
+            if (dataSet == null)
+                return;
+
+            var newIndex = Index + offset;
+            if (newIndex < 0 || newIndex > dataSet.Count - 1)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            var restore = Backup();
+            var model = Model;
+            model.LockSavedDataRow();
+            dataSet.Remove(this);
+            model.UnlockSavedDataRow();
+            dataSet.Insert(newIndex, this, restore);
+        }
+
+        private Action<DataRow> Backup()
+        {
+            var dataSet = DataSet;
+
+            if (Model.SavedDataRow == null && !HasChild)
+            {
+                Save();
+                return dataRow => dataRow.Load();
+            }
+            else
+            {
+                var savedDataSet = dataSet.Clone();
+                savedDataSet.AddRow(dataRow => dataRow.CopyValuesFrom(this));
+                return dataRow => dataRow.CopyValuesFrom(savedDataSet[0]);
+            }
+        }
+
+        private bool HasChild
+        {
+            get
+            {
+                for (int i = 0; i < _childDataSets.Length; i++)
+                {
+                    if (_childDataSets[i].Count > 0)
+                        return true;
+                }
+
+                return false;
+            }
         }
     }
 }

@@ -32,9 +32,9 @@ namespace DevZest.Data.Helpers
             public SimpleModel Child { get; private set; }
         }
 
-        protected DataSet<SimpleModel> GetDataSet(int count)
+        protected DataSet<SimpleModel> GetDataSet(int count, bool createChildren = true)
         {
-            return SimpleModelBase.GetDataSet<SimpleModel>(count, x => x.Child, AddRows);
+            return SimpleModelBase.GetDataSet<SimpleModel>(count, x => x.Child, AddRows, createChildren);
         }
 
         private void AddRows(DataSet<SimpleModel> dataSet, int count)

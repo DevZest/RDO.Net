@@ -28,7 +28,7 @@ namespace DevZest.Data.Helpers
 
         public SimpleModelKey ParentKey { get; private set; }
 
-        public static DataSet<T> GetDataSet<T>(int count, Func<T, T> childGetter, Action<DataSet<T>, int> addRows)
+        public static DataSet<T> GetDataSet<T>(int count, Func<T, T> childGetter, Action<DataSet<T>, int> addRows, bool createChildren = true)
             where T : SimpleModelBase, new()
         {
             var dataSet = DataSet<T>.New();
@@ -36,14 +36,17 @@ namespace DevZest.Data.Helpers
             Assert.AreEqual(true, dataSet._.DesignMode);
 
             addRows(dataSet, count);
-            for (int i = 0; i < dataSet.Count; i++)
+            if (createChildren)
             {
-                var children = dataSet[i].Children(childGetter(model));
-                addRows(children, count);
-                for (int j = 0; j < children.Count; j++)
+                for (int i = 0; i < dataSet.Count; i++)
                 {
-                    var grandChildren = children[j].Children(childGetter(children._));
-                    addRows(grandChildren, count);
+                    var children = dataSet[i].Children(childGetter(model));
+                    addRows(children, count);
+                    for (int j = 0; j < children.Count; j++)
+                    {
+                        var grandChildren = children[j].Children(childGetter(children._));
+                        addRows(grandChildren, count);
+                    }
                 }
             }
 

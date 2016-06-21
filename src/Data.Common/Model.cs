@@ -753,6 +753,29 @@ namespace DevZest.Data
         {
         }
 
-        public DataRow SavedDataRow { get; internal set; }
+        private DataRow _savedDataRow;
+        private bool _isSavedDataRowLocked;
+        public DataRow SavedDataRow
+        {
+            get { return _savedDataRow; }
+            internal set
+            {
+                if (_isSavedDataRowLocked)
+                    return;
+                _savedDataRow = value;
+            }
+        }
+
+        internal void LockSavedDataRow()
+        {
+            Debug.Assert(!_isSavedDataRowLocked);
+            _isSavedDataRowLocked = true;
+        }
+
+        internal void UnlockSavedDataRow()
+        {
+            Debug.Assert(_isSavedDataRowLocked);
+            _isSavedDataRowLocked = false;
+        }
     }
 }
