@@ -38,10 +38,10 @@ namespace DevZest.Data
         /// Creates a new instance of <see cref="DataRow"/> and add to this data set.
         /// </summary>
         /// <returns>The new <see cref="DataRow"/> object.</returns>
-        public DataRow AddRow()
+        public DataRow AddRow(Action<DataRow> updateAction = null)
         {
             var result = new DataRow();
-            this.Add(result);
+            this.Add(result, updateAction);
             return result;
         }
 
@@ -114,6 +114,11 @@ namespace DevZest.Data
         /// <inheritdoc cref="IList{T}.InternalInsert(int, T)"/>
         public void Insert(int index, DataRow dataRow)
         {
+            Insert(index, dataRow, null);
+        }
+
+        public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
+        {
             Check.NotNull(dataRow, nameof(dataRow));
             if (IsReadOnly)
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
@@ -123,6 +128,19 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.DataSet_InvalidNewDataRow, nameof(dataRow));
 
             InternalInsert(index, dataRow);
+
+            if (updateAction != null)
+            {
+                dataRow.BeginUpdate();
+                try
+                {
+                    updateAction(dataRow);
+                }
+                finally
+                {
+                    dataRow.EndUpdate(true);
+                }
+            }
             dataRow.OnAdded();
         }
 
@@ -170,7 +188,12 @@ namespace DevZest.Data
 
         public void Add(DataRow dataRow)
         {
-            Insert(Count, dataRow);
+            Insert(Count, dataRow, null);
+        }
+
+        public void Add(DataRow dataRow, Action<DataRow> updateAction)
+        {
+            Insert(Count, dataRow, updateAction);
         }
 
         public void Clear()

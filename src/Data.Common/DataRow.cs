@@ -252,7 +252,7 @@ namespace DevZest.Data
                 ParentDataRow.BubbleUpdatedEvent(modelSet);
         }
 
-        internal void OnUpdated()
+        internal void OnUpdated(bool omitNotification = false)
         {
             if (IsUpdating)
             {
@@ -262,10 +262,13 @@ namespace DevZest.Data
 
             _isUpdated = false;
             _validationMessages = null;
-            Model.OnRowUpdated(this);
-            if (ParentDataRow != null)
-                DataSet.OnRowUpdated(this);
-            Model.DataSet.OnRowUpdated(this);
+            if (!omitNotification)
+            {
+                Model.OnRowUpdated(this);
+                if (ParentDataRow != null)
+                    DataSet.OnRowUpdated(this);
+                Model.DataSet.OnRowUpdated(this);
+            }
         }
 
         internal void OnAdded()
@@ -434,9 +437,14 @@ namespace DevZest.Data
 
         public void EndUpdate()
         {
+            EndUpdate(false);
+        }
+
+        internal void EndUpdate(bool omitNotification)
+        {
             _updateLevel--;
             if (_updateLevel == 0 && _isUpdated)
-                OnUpdated();
+                OnUpdated(omitNotification);
         }
 
         public void Update(Action<DataRow> updateAction)
