@@ -1,7 +1,10 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace DevZest.Data
 {
@@ -15,6 +18,48 @@ namespace DevZest.Data
             Check.NotNull(source, nameof(source));
             Check.NotNull(target, nameof(target));
             return new ColumnMapping(source, target);
+        }
+
+        public static IList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
+            where TSource : Model, new()
+            where TTarget : Model, new()
+        {
+            Check.NotNull(targetModel, nameof(targetModel));
+            Check.NotNull(sourceModel, nameof(sourceModel));
+
+            if (columnMappingsBuilder == null)
+                return GetColumnMappings(sourceModel, targetModel, isInsertable);
+
+            var result = new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
+            var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
+            var columnKeys = new HashSet<ColumnKey>(columns.Select(x => x.Key));
+            foreach (var resultItem in result)
+            {
+                if (!columnKeys.Contains(resultItem.Target.Key))
+                    throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
+            }
+
+            return result;
+        }
+
+        private static List<ColumnMapping> GetColumnMappings(Model sourceModel, Model targetModel, bool isInsertable)
+        {
+            Check.NotNull(targetModel, nameof(targetModel));
+            Check.NotNull(sourceModel, nameof(sourceModel));
+
+            var result = new List<ColumnMapping>();
+            var sourceColumns = sourceModel.Columns;
+            var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
+            foreach (var column in columns)
+            {
+                if (column.IsSystem)
+                    continue;
+                var sourceColumn = sourceColumns[column.Key];
+                if (sourceColumn != null)
+                    result.Add(new ColumnMapping(sourceColumn, column));
+            }
+
+            return result;
         }
 
         internal ColumnMapping(Column source, Column target)

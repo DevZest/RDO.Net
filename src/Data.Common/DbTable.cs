@@ -247,7 +247,7 @@ namespace DevZest.Data
         private IList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
         {
-            return _.GetColumnMappings(sourceModel, columnMappingsBuilder, isInsertable);
+            return ColumnMapping.Map(sourceModel, _, columnMappingsBuilder, isInsertable);
         }
 
         internal int UpdateOrigin(DataSource origin, int rowsAffected)
