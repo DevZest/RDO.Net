@@ -732,14 +732,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The model is invalid. There is no derivation relationship between this model and ParentModel.
-        /// </summary>
-        public static string Column_VerifyCounterpartModel
-        {
-            get { return GetString("Column_VerifyCounterpartModel"); }
-        }
-
-        /// <summary>
         /// The object name "{objectName}" is invalid, "{expectedObjectName}" expected.
         /// </summary>
         public static string JsonParser_InvalidObjectName(object objectName, object expectedObjectName)
@@ -809,6 +801,14 @@ namespace DevZest.Data
         public static string Case_WhenThenNotMatch
         {
             get { return GetString("Case_WhenThenNotMatch"); }
+        }
+
+        /// <summary>
+        /// The source DataRow and this DataRow must belong to DataSets which have clone relationship.
+        /// </summary>
+        public static string DataRow_VerifyPrototype
+        {
+            get { return GetString("DataRow_VerifyPrototype"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

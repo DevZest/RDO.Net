@@ -461,5 +461,46 @@ namespace DevZest.Data
                 EndUpdate();
             }
         }
+
+        public void CopyValuesFrom(DataRow from, bool recursive = true)
+        {
+            Check.NotNull(from, nameof(from));
+            var fromPrototype = from.Model.Prototype;
+            var thisPrototype = this.Model.Prototype;
+            if (fromPrototype == null || fromPrototype != thisPrototype)
+                throw new ArgumentException(Strings.DataRow_VerifyPrototype, nameof(from));
+
+            DoCopyValuesFrom(from, recursive);
+        }
+
+        private void DoCopyValuesFrom(DataRow from, bool recursive)
+        {
+            var thisColumns = Model.Columns;
+            var fromColumns = from.Model.Columns;
+            for (int i = 0; i < thisColumns.Count; i++)
+                thisColumns[i].MapFrom(fromColumns[i]).CopyValue(from, this);
+
+            if (recursive)
+                CopyChildren(from);
+        }
+
+        private void CopyChildren(DataRow from)
+        {
+            for (int i = 0; i < _childDataSets.Length; i++)
+            {
+                var children = _childDataSets[i];
+                var fromChildren = from._childDataSets[i];
+                for (int j = 0; j < fromChildren.Count; j++)
+                    children.AddRow(x => x.DoCopyValuesFrom(fromChildren[j], true));
+            }
+        }
+
+        public void CopyValuesFrom(DataRow from, IList<ColumnMapping> columnMappings)
+        {
+            Check.NotNull(from, nameof(from));
+            Check.NotNull(columnMappings, nameof(columnMappings));
+            for (int i = 0; i < columnMappings.Count; i++)
+                columnMappings[i].CopyValue(from, this);
+        }
     }
 }
