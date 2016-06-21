@@ -412,47 +412,45 @@ namespace DevZest.Data
             if (Model.SavedDataRow != this)
                 throw new InvalidOperationException(Strings.DataRow_MismatchWithSavedDataRow);
 
-            Update(() =>
+            Update(x =>
             {
                 foreach (var column in Model.Columns)
-                    column.Load(this);
+                    column.Load(x);
             });
         }
 
-        private bool _isUpdating;
+        private int _updateLevel;
         private bool _isUpdated;
 
         public bool IsUpdating
         {
-            get { return _isUpdating; }
-            private set
-            {
-                Debug.Assert(_isUpdating != value);
-                _isUpdating = value;
-
-                if (!_isUpdating && _isUpdated)
-                    OnUpdated();
-            }
+            get { return _updateLevel > 0; }
         }
 
-        public void Update(Action updateAction)
+        public void BeginUpdate()
+        {
+            _updateLevel++;
+        }
+
+        public void EndUpdate()
+        {
+            _updateLevel--;
+            if (_updateLevel == 0 && _isUpdated)
+                OnUpdated();
+        }
+
+        public void Update(Action<DataRow> updateAction)
         {
             Check.NotNull(updateAction, nameof(updateAction));
 
-            if (IsUpdating)
-            {
-                updateAction();
-                return;
-            }
-
+            BeginUpdate();
             try
             {
-                IsUpdating = true;
-                updateAction();
+                updateAction(this);
             }
             finally
             {
-                IsUpdating = false;
+                EndUpdate();
             }
         }
     }

@@ -361,7 +361,7 @@ namespace DevZest.Data
             Debug.Assert(ParentModel == dataRow.Model);
 
             var modelSet = OnChildValueChanged(dataRow, ModelSet.Empty);
-            dataRow.Update(() => dataRow.OnUpdated(modelSet.Union(ParentModel)));
+            dataRow.Update(x => x.OnUpdated(modelSet.Union(ParentModel)));
         }
 
         private IModelSet OnChildValueChanged(DataRow dataRow, IModelSet modelSet)
