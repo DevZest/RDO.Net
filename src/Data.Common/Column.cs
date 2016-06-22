@@ -79,23 +79,6 @@ namespace DevZest.Data
             }
         }
 
-        private Func<string> _displayNameGetter;
-        public string DisplayName
-        {
-            get { return _displayNameGetter != null ? _displayNameGetter() : Name; }
-            set
-            {
-                VerifyDesignMode();
-                _displayNameGetter = () => value;
-            }
-        }
-
-        public void SetDisplayName(Func<string> displayNameGetter)
-        {
-            VerifyDesignMode();
-            _displayNameGetter = displayNameGetter;
-        }
-
         /// <summary>Gets a value indicates whether current column is expression.</summary>
         public abstract bool IsExpression { get; }
 
@@ -423,5 +406,96 @@ namespace DevZest.Data
         }
 
         public abstract _String CastToString();
+
+        private Func<string> _displayShortNameGetter;
+        /// <summary>Gets or sets a value that is used for display the short name in the UI.</summary>
+		/// <returns>A value that is used for display the short name in the UI.</returns>
+        /// <remarks>The <see cref="DisplayShortName"/> is typically used as the grid column caption.</remarks>
+        public string DisplayShortName
+        {
+            get { return _displayShortNameGetter != null ? _displayShortNameGetter() : DisplayName; }
+            set
+            {
+                VerifyDesignMode();
+                _displayShortNameGetter = () => value;
+            }
+        }
+
+        /// <summary>Sets the <see cref="DisplayShortName"/> value getter.</summary>
+        /// <param name="displayShortNameGetter">The <see cref="DisplayShortName"/> value getter.</param>
+        /// <remarks>This method is typically used to provide localizable <see cref="DisplayShortName"/> value.</remarks>
+        public void SetDisplayShortName(Func<string> displayShortNameGetter)
+        {
+            VerifyDesignMode();
+            _displayShortNameGetter = displayShortNameGetter;
+        }
+
+        private Func<string> _displayNameGetter;
+        /// <summary>Gets or sets a value that is used for display the name in the UI.</summary>
+		/// <returns>A value that is used for display the name in the UI.</returns>
+        /// <remarks>The <see cref="DisplayName"/> is typically used as the field label for a UI element that is bound to this <see cref="Column"/>.</remarks>
+        public string DisplayName
+        {
+            get { return _displayNameGetter != null ? _displayNameGetter() : Name; }
+            set
+            {
+                VerifyDesignMode();
+                _displayNameGetter = () => value;
+            }
+        }
+
+        /// <summary>Sets the <see cref="DisplayName"/> value getter.</summary>
+        /// <param name="displayNameGetter">The <see cref="DisplayName"/> value getter.</param>
+        /// <remarks>This method is typically used to provide localizable <see cref="DisplayName"/> value.</remarks>
+        public void SetDisplayName(Func<string> displayNameGetter)
+        {
+            VerifyDesignMode();
+            _displayNameGetter = displayNameGetter;
+        }
+
+        private Func<string> _displayDescriptionGetter;
+        /// <summary>Gets or sets a value that is used to display a description in the UI.</summary>
+		/// <returns>The value that is used to display a description in the UI.</returns>
+        /// <remarks>The <see cref="DisplayDescription"/> is typically used as a tooltip or description UI element that is bound to this <see cref="Column"/>.</remarks>
+        public string DisplayDescription
+        {
+            get { return _displayDescriptionGetter != null ? _displayDescriptionGetter() : null; }
+            set
+            {
+                VerifyDesignMode();
+                _displayDescriptionGetter = () => value;
+            }
+        }
+
+        /// <summary>Sets the <see cref="DisplayDescription"/> value getter.</summary>
+        /// <param name="displayDescriptionGetter">The <see cref="DisplayDescription"/> value getter.</param>
+        /// <remarks>This method is typically used to provide localizable <see cref="DisplayDescription"/> value.</remarks>
+        public void SetDisplayDescription(Func<string> displayDescriptionGetter)
+        {
+            VerifyDesignMode();
+            _displayDescriptionGetter = displayDescriptionGetter;
+        }
+
+        private Func<string> _displayPromptGetter;
+        /// <summary>Gets or sets a value that will be used to set the watermark for prompts in the UI.</summary>
+		/// <returns>A value that will be used to display a watermark in the UI.</returns>
+        public string DisplayPrompt
+        {
+            get { return _displayPromptGetter != null ? _displayPromptGetter() : null; }
+            set
+            {
+                VerifyDesignMode();
+                _displayPromptGetter = () => value;
+            }
+        }
+
+        /// <summary>Sets the <see cref="DisplayPrompt"/> value getter.</summary>
+        /// <param name="displayPromptGetter">The <see cref="DisplayPrompt"/> value getter.</param>
+        /// <remarks>This method is typically used to provide localizable <see cref="DisplayPrompt"/> value.</remarks>
+        public void SetDisplayPrompt(Func<string> displayPromptGetter)
+        {
+            VerifyDesignMode();
+            _displayPromptGetter = displayPromptGetter;
+        }
     }
 }
