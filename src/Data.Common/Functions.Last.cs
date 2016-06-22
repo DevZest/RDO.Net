@@ -9,7 +9,7 @@ namespace DevZest.Data
     {
         #region Last
 
-        [ExpressionConverterGenerics(typeof(LastFunction<>.Converter), TypeId = "Last(Column)")]
+        [ExpressionConverterGenerics(typeof(LastFunction<>.Converter), Id = "Last(Column)")]
         private sealed class LastFunction<T> : AggregateFunctionExpression<T>
         {
             private sealed class Converter : ConverterBase<Column<T>, LastFunction<T>>

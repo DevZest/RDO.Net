@@ -42,7 +42,7 @@ namespace DevZest.Data.Primitives
 
             attribute.Initialize(expressionType);
             s_attributesByType.AddOrUpdate(expressionType, attribute, (t, oldValue) => attribute);
-            s_attributesByTypeId.AddOrUpdate(attribute.TypeId, attribute, (t, oldValue) => attribute);
+            s_attributesByTypeId.AddOrUpdate(attribute.Id, attribute, (t, oldValue) => attribute);
             return true;
         }
 
@@ -74,7 +74,7 @@ namespace DevZest.Data.Primitives
         {
             var typeKey = GetTypeKey(expression);
             ExpressionConverterAttribute attribute;
-            return s_attributesByType.TryGetValue(typeKey, out attribute) ? attribute.TypeId : null;
+            return s_attributesByType.TryGetValue(typeKey, out attribute) ? attribute.Id : null;
         }
 
         internal static ExpressionConverter Get(string typeId, IReadOnlyList<string> argColumnTypeIds)

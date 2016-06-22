@@ -89,7 +89,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), TypeId = "_String.Add")]
+        [ExpressionConverterNonGenerics(typeof(AddExpression.Converter), Id = "_String.Add")]
         private sealed class AddExpression : BinaryExpression<String>
         {
             private sealed class Converter : ConverterBase
@@ -130,7 +130,7 @@ namespace DevZest.Data
             return new AddExpression(x, y).MakeColumn<_String>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_String.LessThan")]
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_String.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -171,7 +171,7 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_String.LessThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_String.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -212,7 +212,7 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_String.GreaterThan")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_String.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -253,7 +253,7 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_String.GreaterThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_String.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -294,7 +294,7 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_String.Equal")]
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_String.Equal")]
         private sealed class EqualExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -336,7 +336,7 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_String.NotEqual")]
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_String.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<String, bool?>
         {
             private sealed class Converter : ConverterBase

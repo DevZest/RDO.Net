@@ -30,7 +30,7 @@ namespace DevZest.Data.SqlServer
 
         internal string XPath { get; private set; }
 
-        [ExpressionConverterGenerics(typeof(XmlValueFunction<>.Converter), TypeId = "SqlXmlModel.Value(string, Column)")]
+        [ExpressionConverterGenerics(typeof(XmlValueFunction<>.Converter), Id = "SqlXmlModel.Value(string, Column)")]
         private sealed class XmlValueFunction<T> : ScalarFunctionExpression<T>
         {
             private sealed class Converter : ConverterBase<Column<SqlXml>, Column, Column, XmlValueFunction<T>>

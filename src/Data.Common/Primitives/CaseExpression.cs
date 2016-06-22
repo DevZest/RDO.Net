@@ -9,7 +9,7 @@ namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a CASE WHEN..ELSE... expression.</summary>
     /// <typeparam name="TResult">The data type of the result.</typeparam>
-    [ExpressionConverterGenerics(typeof(CaseExpression<>.Converter), TypeId = "CaseExpression")]
+    [ExpressionConverterGenerics(typeof(CaseExpression<>.Converter), Id = "CaseExpression")]
     public sealed class CaseExpression<TResult> : ColumnExpression<TResult>
     {
         private sealed class Converter : ExpressionConverter

@@ -14,7 +14,7 @@ namespace DevZest.Data.SqlServer
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_TimeSpan.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_TimeSpan.CastToString")]
         private sealed class CastToStringExpression : CastExpression<TimeSpan?, String>
         {
             private sealed class Converter : ConverterBase
@@ -122,7 +122,7 @@ namespace DevZest.Data.SqlServer
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_TimeSpan.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_TimeSpan.FromString")]
         private sealed class FromStringCast : CastExpression<String, TimeSpan?>
         {
             private sealed class Converter : ConverterBase
@@ -155,7 +155,7 @@ namespace DevZest.Data.SqlServer
             return new FromStringCast(x).MakeColumn<_TimeSpan>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_TimeSpan.LessThan")]
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_TimeSpan.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -196,7 +196,7 @@ namespace DevZest.Data.SqlServer
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_TimeSpan.LessThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_TimeSpan.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -237,7 +237,7 @@ namespace DevZest.Data.SqlServer
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_TimeSpan.GreaterThan")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_TimeSpan.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -278,7 +278,7 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_TimeSpan.GreaterThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_TimeSpan.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -319,7 +319,7 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_TimeSpan.Equal")]
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_TimeSpan.Equal")]
         private sealed class EqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -361,7 +361,7 @@ namespace DevZest.Data.SqlServer
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_TimeSpan.NotEqual")]
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_TimeSpan.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<TimeSpan?, bool?>
         {
             private sealed class Converter : ConverterBase

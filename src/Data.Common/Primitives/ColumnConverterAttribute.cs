@@ -11,7 +11,7 @@ namespace DevZest.Data.Primitives
             Converter = (ColumnConverter)Activator.CreateInstance(converterType);
         }
 
-        public string TypeId
+        public string Id
         {
             get { return Converter.TypeId; }
             set { Converter.TypeId = value; }

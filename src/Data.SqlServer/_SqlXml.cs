@@ -14,7 +14,7 @@ namespace DevZest.Data.SqlServer
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_SqlXml.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_SqlXml.CastToString")]
         private sealed class CastToStringExpression : CastExpression<SqlXml, string>
         {
             private sealed class Converter : ConverterBase
@@ -50,7 +50,7 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_SqlXml.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_SqlXml.FromString")]
         private sealed class FromStringCast : CastExpression<String, SqlXml>
         {
             private sealed class Converter : ConverterBase

@@ -4,7 +4,7 @@ namespace DevZest.Data.Primitives
 {
     /// <summary>Represents a constant value expression.</summary>
     /// <typeparam name="T">The data type.</typeparam>
-    [ExpressionConverterGenerics(typeof(ConstantExpression<>.Converter<>), TypeId = "ConstantExpression")]
+    [ExpressionConverterGenerics(typeof(ConstantExpression<>.Converter<>), Id = "ConstantExpression")]
     public sealed class ConstantExpression<T> : ValueExpression<T>
     {
         private sealed class Converter<TColumn> : ConverterBase<TColumn>

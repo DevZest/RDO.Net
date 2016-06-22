@@ -15,7 +15,7 @@ namespace DevZest.Data
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_DateTime.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_DateTime.CastToString")]
         private sealed class CastToStringExpression : CastExpression<DateTime?, String>
         {
             private sealed class Converter : ConverterBase
@@ -115,7 +115,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_DateTime.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_DateTime.FromString")]
         private sealed class FromStringCast : CastExpression<String, DateTime?>
         {
             private sealed class Converter : ConverterBase
@@ -148,7 +148,7 @@ namespace DevZest.Data
             return new FromStringCast(x).MakeColumn<_DateTime>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_DateTime.LessThan")]
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_DateTime.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -189,7 +189,7 @@ namespace DevZest.Data
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_DateTime.LessThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_DateTime.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -230,7 +230,7 @@ namespace DevZest.Data
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_DateTime.GreaterThan")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_DateTime.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -271,7 +271,7 @@ namespace DevZest.Data
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_DateTime.GreaterThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_DateTime.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -312,7 +312,7 @@ namespace DevZest.Data
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_DateTime.Equal")]
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_DateTime.Equal")]
         private sealed class EqualExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -354,7 +354,7 @@ namespace DevZest.Data
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_DateTime.NotEqual")]
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_DateTime.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<DateTime?, bool?>
         {
             private sealed class Converter : ConverterBase

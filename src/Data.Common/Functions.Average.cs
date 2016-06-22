@@ -30,7 +30,7 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(AverageInt32.Converter), TypeId = "Average(_Int32)")]
+        [ExpressionConverterNonGenerics(typeof(AverageInt32.Converter), Id = "Average(_Int32)")]
         private sealed class AverageInt32 : AverageBase<Int32?, Double?>
         {
             private sealed class Converter : ConverterBase<Column<Int32?>, AverageInt32>
@@ -79,7 +79,7 @@ namespace DevZest.Data
             return new AverageInt32(x).MakeColumn<_Double>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AverageInt64.Converter), TypeId = "Average(_Int64)")]
+        [ExpressionConverterNonGenerics(typeof(AverageInt64.Converter), Id = "Average(_Int64)")]
         private sealed class AverageInt64 : AverageBase<Int64?, Double?>
         {
             private sealed class Converter : ConverterBase<Column<Int64?>, AverageInt64>
@@ -128,7 +128,7 @@ namespace DevZest.Data
             return new AverageInt64(x).MakeColumn<_Double>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AverageDecimal.Converter), TypeId = "Average(_Decimal)")]
+        [ExpressionConverterNonGenerics(typeof(AverageDecimal.Converter), Id = "Average(_Decimal)")]
         private sealed class AverageDecimal : AverageBase<Decimal?, Decimal?>
         {
             private sealed class Converter : ConverterBase<Column<Decimal?>, AverageDecimal>
@@ -177,7 +177,7 @@ namespace DevZest.Data
             return new AverageDecimal(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AverageDouble.Converter), TypeId = "Average(_Double)")]
+        [ExpressionConverterNonGenerics(typeof(AverageDouble.Converter), Id = "Average(_Double)")]
         private sealed class AverageDouble : AverageBase<Double?, Double?>
         {
             private sealed class Converter : ConverterBase<Column<Double?>, AverageDouble>
@@ -226,7 +226,7 @@ namespace DevZest.Data
             return new AverageDouble(x).MakeColumn<_Double>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AverageSingle.Converter), TypeId = "Average(_Single)")]
+        [ExpressionConverterNonGenerics(typeof(AverageSingle.Converter), Id = "Average(_Single)")]
         private sealed class AverageSingle : AverageBase<Single?, Single?>
         {
             private sealed class Converter : ConverterBase<Column<Single?>, AverageSingle>

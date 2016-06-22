@@ -32,7 +32,7 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterNonGenerics(typeof(SumInt32.Converter), TypeId = "Sum(_Int32)")]
+        [ExpressionConverterNonGenerics(typeof(SumInt32.Converter), Id = "Sum(_Int32)")]
         private sealed class SumInt32 : SumBase<Int32?>
         {
             private sealed class Converter : ConverterBase<Column<Int32?>, SumInt32>
@@ -79,7 +79,7 @@ namespace DevZest.Data
             return new SumInt32(x).MakeColumn<_Int32>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SumInt64.Converter), TypeId = "Sum(_Int64)")]
+        [ExpressionConverterNonGenerics(typeof(SumInt64.Converter), Id = "Sum(_Int64)")]
         private sealed class SumInt64 : SumBase<Int64?>
         {
             private sealed class Converter : ConverterBase<Column<Int64?>, SumInt64>
@@ -126,7 +126,7 @@ namespace DevZest.Data
             return new SumInt64(x).MakeColumn<_Int64>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SumDecimal.Converter), TypeId = "Sum(_Decimal)")]
+        [ExpressionConverterNonGenerics(typeof(SumDecimal.Converter), Id = "Sum(_Decimal)")]
         private sealed class SumDecimal : SumBase<Decimal?>
         {
             private sealed class Converter : ConverterBase<Column<Decimal?>, SumDecimal>
@@ -173,7 +173,7 @@ namespace DevZest.Data
             return new SumDecimal(x).MakeColumn<_Decimal>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SumDouble.Converter), TypeId = "Sum(_Double)")]
+        [ExpressionConverterNonGenerics(typeof(SumDouble.Converter), Id = "Sum(_Double)")]
         private sealed class SumDouble : SumBase<Double?>
         {
             private sealed class Converter : ConverterBase<Column<Double?>, SumDouble>
@@ -220,7 +220,7 @@ namespace DevZest.Data
             return new SumDouble(x).MakeColumn<_Double>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(SumSingle.Converter), TypeId = "Sum(_Single)")]
+        [ExpressionConverterNonGenerics(typeof(SumSingle.Converter), Id = "Sum(_Single)")]
         private sealed class SumSingle : SumBase<Single?>
         {
             private sealed class Converter : ConverterBase<Column<Single?>, SumSingle>

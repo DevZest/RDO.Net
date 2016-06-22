@@ -100,7 +100,7 @@ namespace DevZest.Data
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotExpression.Converter), TypeId = "_Boolean.Not")]
+        [ExpressionConverterNonGenerics(typeof(NotExpression.Converter), Id = "_Boolean.Not")]
         private sealed class NotExpression : UnaryExpression<bool?>
         {
             private sealed class Converter : ConverterBase
@@ -136,7 +136,7 @@ namespace DevZest.Data
             return new NotExpression(x).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(AndExpression.Converter), TypeId = "_Boolean.And")]
+        [ExpressionConverterNonGenerics(typeof(AndExpression.Converter), Id = "_Boolean.And")]
         private sealed class AndExpression : BinaryExpression<bool?>
         {
             private sealed class Converter : ConverterBase
@@ -184,7 +184,7 @@ namespace DevZest.Data
             return new AndExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(OrExpression.Converter), TypeId = "_Boolean.Or")]
+        [ExpressionConverterNonGenerics(typeof(OrExpression.Converter), Id = "_Boolean.Or")]
         private sealed class OrExpression : BinaryExpression<bool?>
         {
             private sealed class Converter : ConverterBase
@@ -232,7 +232,7 @@ namespace DevZest.Data
             return new OrExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Boolean.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), Id = "_Boolean.FromString")]
         private sealed class FromStringExpression : CastExpression<String, Boolean?>
         {
             private sealed class Converter : ConverterBase
@@ -265,7 +265,7 @@ namespace DevZest.Data
             return new FromStringExpression(x).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Boolean.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Boolean.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Boolean?, String>
         {
             private sealed class Converter : ConverterBase

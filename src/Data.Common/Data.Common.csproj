@@ -79,7 +79,6 @@
     <Compile Include="Model.Validator.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
-    <Compile Include="Primitives\ConverterAttribute.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\ColumnJsonParser.cs" />
     <Compile Include="Primitives\ColumnJsonWriter.cs" />

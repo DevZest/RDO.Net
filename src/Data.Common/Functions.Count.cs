@@ -7,7 +7,7 @@ namespace DevZest.Data
     {
         #region Count
 
-        [ExpressionConverterNonGenerics(typeof(CountFunction.Converter), TypeId = "Count(Column)")]
+        [ExpressionConverterNonGenerics(typeof(CountFunction.Converter), Id = "Count(Column)")]
         private sealed class CountFunction : AggregateFunctionExpression<Int32?>
         {
             private sealed class Converter : ConverterBase<Column, CountFunction>

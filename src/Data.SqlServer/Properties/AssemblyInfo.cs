@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DevZest")]
 [assembly: AssemblyProduct("DevZest RDO.NET SQL Server Implementation")]
-[assembly: AssemblyCopyright("Copyright © DevZest  2015")]
+[assembly: AssemblyCopyright("Copyright © Weifen Luo|DevZest")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]

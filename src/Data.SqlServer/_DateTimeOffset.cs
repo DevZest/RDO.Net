@@ -14,7 +14,7 @@ namespace DevZest.Data.SqlServer
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_DateTimeOffset.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_DateTimeOffset.CastToString")]
         private sealed class CastToStringExpression : CastExpression<DateTimeOffset?, String>
         {
             private sealed class Converter : ConverterBase
@@ -122,7 +122,7 @@ namespace DevZest.Data.SqlServer
             return Param(x);
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), TypeId = "_DateTimeOffset.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringCast.Converter), Id = "_DateTimeOffset.FromString")]
         private sealed class FromStringCast : CastExpression<String, DateTimeOffset?>
         {
             private sealed class Converter : ConverterBase
@@ -155,7 +155,7 @@ namespace DevZest.Data.SqlServer
             return new FromStringCast(x).MakeColumn<_DateTimeOffset>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), TypeId = "_DateTimeOffset.LessThan")]
+        [ExpressionConverterNonGenerics(typeof(LessThanExpression.Converter), Id = "_DateTimeOffset.LessThan")]
         private sealed class LessThanExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -196,7 +196,7 @@ namespace DevZest.Data.SqlServer
             return new LessThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), TypeId = "_DateTimeOffset.LessThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(LessThanOrEqualExpression.Converter), Id = "_DateTimeOffset.LessThanOrEqual")]
         private sealed class LessThanOrEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -237,7 +237,7 @@ namespace DevZest.Data.SqlServer
             return new LessThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), TypeId = "_DateTimeOffset.GreaterThan")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanExpression.Converter), Id = "_DateTimeOffset.GreaterThan")]
         private sealed class GreaterThanExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -278,7 +278,7 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), TypeId = "_DateTimeOffset.GreaterThanOrEqual")]
+        [ExpressionConverterNonGenerics(typeof(GreaterThanOrEqualExpression.Converter), Id = "_DateTimeOffset.GreaterThanOrEqual")]
         private sealed class GreaterThanOrEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -319,7 +319,7 @@ namespace DevZest.Data.SqlServer
             return new GreaterThanOrEqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), TypeId = "_DateTimeOffset.Equal")]
+        [ExpressionConverterNonGenerics(typeof(EqualExpression.Converter), Id = "_DateTimeOffset.Equal")]
         private sealed class EqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase
@@ -361,7 +361,7 @@ namespace DevZest.Data.SqlServer
             return new EqualExpression(x, y).MakeColumn<_Boolean>();
         }
 
-        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), TypeId = "_DateTimeOffset.NotEqual")]
+        [ExpressionConverterNonGenerics(typeof(NotEqualExpression.Converter), Id = "_DateTimeOffset.NotEqual")]
         private sealed class NotEqualExpression : BinaryExpression<DateTimeOffset?, bool?>
         {
             private sealed class Converter : ConverterBase

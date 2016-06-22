@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    [ExpressionConverterGenerics(typeof(ParamExpression<>.Converter<>), TypeId = "ParamExpression")]
+    [ExpressionConverterGenerics(typeof(ParamExpression<>.Converter<>), Id = "ParamExpression")]
     public sealed class ParamExpression<T> : ValueExpression<T>
     {
         private const string SOURCE_COLUMN = nameof(SourceColumn);

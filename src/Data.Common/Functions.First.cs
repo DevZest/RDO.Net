@@ -9,7 +9,7 @@ namespace DevZest.Data
     {
         #region First
 
-        [ExpressionConverterGenerics(typeof(FirstFunction<>.Converter), TypeId = "First(Column)")]
+        [ExpressionConverterGenerics(typeof(FirstFunction<>.Converter), Id = "First(Column)")]
         private sealed class FirstFunction<T> : AggregateFunctionExpression<T>
         {
             private sealed class Converter : ConverterBase<Column<T>, FirstFunction<T>>

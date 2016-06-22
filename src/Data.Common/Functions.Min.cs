@@ -9,7 +9,7 @@ namespace DevZest.Data
     {
         #region Min
 
-        [ExpressionConverterGenerics(typeof(ComparableMinFunction<>.Converter), TypeId = "Min.Comparable(Column)")]
+        [ExpressionConverterGenerics(typeof(ComparableMinFunction<>.Converter), Id = "Min.Comparable(Column)")]
         private sealed class ComparableMinFunction<T> : AggregateFunctionExpression<T>
             where T : IComparable<T>
         {
@@ -61,7 +61,7 @@ namespace DevZest.Data
             }
         }
 
-        [ExpressionConverterGenerics(typeof(NullableMinFunction<>.Converter), TypeId = "Min.Nullable(Column)")]
+        [ExpressionConverterGenerics(typeof(NullableMinFunction<>.Converter), Id = "Min.Nullable(Column)")]
         private sealed class NullableMinFunction<[UnderlyingValueType]T> : AggregateFunctionExpression<Nullable<T>>
             where T : struct, IComparable<T>
         {

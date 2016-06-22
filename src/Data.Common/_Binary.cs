@@ -14,7 +14,7 @@ namespace DevZest.Data
         {
         }
 
-        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), TypeId = "_Binary.CastToString")]
+        [ExpressionConverterNonGenerics(typeof(CastToStringExpression.Converter), Id = "_Binary.CastToString")]
         private sealed class CastToStringExpression : CastExpression<Binary, String>
         {
             private sealed class Converter : ConverterBase
@@ -50,7 +50,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), TypeId = "_Binary.FromString")]
+        [ExpressionConverterNonGenerics(typeof(FromStringExpression.Converter), Id = "_Binary.FromString")]
         private sealed class FromStringExpression : CastExpression<String, Binary>
         {
             private sealed class Converter : ConverterBase

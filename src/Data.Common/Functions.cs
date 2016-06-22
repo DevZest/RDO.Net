@@ -8,7 +8,7 @@ namespace DevZest.Data
     {
         #region IsNull
 
-        [ExpressionConverterNonGenerics(typeof(IsNullFunction.Converter), TypeId = "IsNull(Column)")]
+        [ExpressionConverterNonGenerics(typeof(IsNullFunction.Converter), Id = "IsNull(Column)")]
         private sealed class IsNullFunction : ScalarFunctionExpression<bool?>
         {
             private sealed class Converter : ConverterBase<Column, IsNullFunction>
@@ -53,7 +53,7 @@ namespace DevZest.Data
 
         #region IsNotNull
 
-        [ExpressionConverterNonGenerics(typeof(IsNotNullFunction.Converter), TypeId = "IsNotNull(Column)")]
+        [ExpressionConverterNonGenerics(typeof(IsNotNullFunction.Converter), Id = "IsNotNull(Column)")]
         private sealed class IsNotNullFunction : ScalarFunctionExpression<bool?>
         {
             private sealed class Converter : ConverterBase<Column, IsNotNullFunction>
@@ -98,7 +98,7 @@ namespace DevZest.Data
 
         #region IfNull
 
-        [ExpressionConverterGenerics(typeof(IfNullFunction<>.Converter), TypeId = "IfNull(Column, Column)")]
+        [ExpressionConverterGenerics(typeof(IfNullFunction<>.Converter), Id = "IfNull(Column, Column)")]
         private sealed class IfNullFunction<T> : ScalarFunctionExpression<T>
         {
             private sealed class Converter : ConverterBase<Column<T>, Column<T>, IfNullFunction<T>>
@@ -175,7 +175,7 @@ namespace DevZest.Data
 
         #region GetDate
 
-        [ExpressionConverterNonGenerics(typeof(GetDateFunction.Converter), TypeId = "GetDate()")]
+        [ExpressionConverterNonGenerics(typeof(GetDateFunction.Converter), Id = "GetDate()")]
         private sealed class GetDateFunction : ScalarFunctionExpression<DateTime?>
         {
             private sealed class Converter : ConverterBase<GetDateFunction>
@@ -211,7 +211,7 @@ namespace DevZest.Data
 
         #region GetUtcDate
 
-        [ExpressionConverterNonGenerics(typeof(GetUtcDateFunction.Converter), TypeId = "GetUtcDate()")]
+        [ExpressionConverterNonGenerics(typeof(GetUtcDateFunction.Converter), Id = "GetUtcDate()")]
         private class GetUtcDateFunction : ScalarFunctionExpression<DateTime?>
         {
             private sealed class Converter : ConverterBase<GetUtcDateFunction>
@@ -247,7 +247,7 @@ namespace DevZest.Data
 
         #region NewGuid
 
-        [ExpressionConverterNonGenerics(typeof(NewGuidFunction.Converter), TypeId = "NewGuid()")]
+        [ExpressionConverterNonGenerics(typeof(NewGuidFunction.Converter), Id = "NewGuid()")]
         private class NewGuidFunction : ScalarFunctionExpression<Guid?>
         {
             private sealed class Converter : ConverterBase<NewGuidFunction>
