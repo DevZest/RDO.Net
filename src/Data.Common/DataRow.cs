@@ -536,5 +536,32 @@ namespace DevZest.Data
                 return false;
             }
         }
+
+        public bool BeginEdit()
+        {
+            if (Model.EditingRow != null)
+                return false;
+
+            Model.BeginEdit(this);
+            return true;
+        }
+
+        public bool EndEdit()
+        {
+            if (Model.EditingRow != this)
+                return false;
+
+            Model.EndEdit(this);
+            return true;
+        }
+
+        public bool CancelEdit()
+        {
+            if (Model.EditingRow != this)
+                return false;
+
+            Model.CancelEdit();
+            return true;
+        }
     }
 }
