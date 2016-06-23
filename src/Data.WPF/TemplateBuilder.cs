@@ -107,15 +107,15 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Hierarchical(Model childModel)
+        public TemplateBuilder Recurse(Model childModel)
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
 
             if (childModel.GetParentModel() != _model || childModel.GetType() != _model.GetType())
-                throw new ArgumentException(Strings.TemplateBuilder_InvalidFlattenHierarchyChildModel);
+                throw new ArgumentException(Strings.TemplateBuilder_InvalidRecursiveChildModel);
 
-            Template.HierarchicalModelOrdinal = childModel.GetOrdinal();
+            Template.RecursiveModelOrdinal = childModel.GetOrdinal();
             return this;
         }
 

@@ -53,9 +53,9 @@ namespace DevZest.Data.Windows
             get { return RowManager as LayoutManager; }
         }
 
-        private bool IsHierarchical
+        private bool IsRecursive
         {
-            get { return !IsEof && RowManager.IsHierarchical; }
+            get { return !IsEof && RowManager.IsRecursive; }
         }
 
         public DataPresenter DataPresenter
@@ -79,11 +79,11 @@ namespace DevZest.Data.Windows
             get { return DataRow == null; }
         }
 
-        public RowPresenter HierarchicalParent
+        public RowPresenter RecursiveParent
         {
             get
             {
-                if (!IsHierarchical)
+                if (!IsRecursive)
                     return null;
 
                 var parentDataRow = DataRow.ParentDataRow;
@@ -91,14 +91,14 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public int HierarchicalChildrenCount
+        public int RecursiveChildrenCount
         {
             get
             {
-                if (!IsHierarchical)
+                if (!IsRecursive)
                     return 0;
 
-                OnGetState(RowPresenterState.HierarchicalChildren);
+                OnGetState(RowPresenterState.RecursiveChildren);
                 return ChildDataSet.Count;
             }
         }
@@ -107,17 +107,17 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                Debug.Assert(IsHierarchical);
-                return DataRow[Template.HierarchicalModelOrdinal];
+                Debug.Assert(IsRecursive);
+                return DataRow[Template.RecursiveModelOrdinal];
             }
         }
 
-        public RowPresenter GetHierarchicalChild(int index)
+        public RowPresenter GetRecursiveChild(int index)
         {
-            if (index < 0 || index >= HierarchicalChildrenCount)
+            if (index < 0 || index >= RecursiveChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            OnGetState(RowPresenterState.HierarchicalChildren);
+            OnGetState(RowPresenterState.RecursiveChildren);
             return RowManager.RowMappings_GetRow(ChildDataSet[index]);
         }
 
@@ -149,7 +149,7 @@ namespace DevZest.Data.Windows
             get
             {
                 OnGetState(RowPresenterState.Index);
-                if (RowManager.IsHierarchical)
+                if (RowManager.IsRecursive)
                     return _index;
                 else
                     return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
@@ -160,9 +160,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public int HierarchicalLevel
+        public int Depth
         {
-            get { return IsHierarchical ? DataRow.Model.GetHierarchicalLevel() : 0; }
+            get { return IsRecursive ? DataRow.Model.GetDepth() : 0; }
         }
 
         private bool _isExpanded = false;
@@ -182,7 +182,7 @@ namespace DevZest.Data.Windows
 
         public void Expand()
         {
-            VerifyHierarchical();
+            VerifyRecursive();
 
             if (IsExpanded)
                 return;
@@ -193,7 +193,7 @@ namespace DevZest.Data.Windows
 
         public void Collapse()
         {
-            VerifyHierarchical();
+            VerifyRecursive();
 
             if (!IsExpanded)
                 return;
@@ -202,10 +202,10 @@ namespace DevZest.Data.Windows
             IsExpanded = false;
         }
 
-        private void VerifyHierarchical()
+        private void VerifyRecursive()
         {
-            if (!IsHierarchical)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyHierarchical);
+            if (!IsRecursive)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyRecursive);
         }
 
         private bool _isCurrent;
@@ -256,7 +256,7 @@ namespace DevZest.Data.Windows
         {
             VerifyColumn(column, nameof(column));
 
-            if (HierarchicalLevel > 0)
+            if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             return DataRow == null ? default(T) : column[DataRow];
@@ -284,7 +284,7 @@ namespace DevZest.Data.Windows
             {
                 VerifyColumn(column, nameof(column));
 
-                if (HierarchicalLevel > 0)
+                if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
             }
@@ -292,7 +292,7 @@ namespace DevZest.Data.Windows
             {
                 VerifyColumn(column, nameof(column));
 
-                if (HierarchicalLevel > 0)
+                if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
                 BeginEdit();
@@ -325,7 +325,7 @@ namespace DevZest.Data.Windows
         {
             VerifyColumn(column, nameof(column));
 
-            if (HierarchicalLevel > 0)
+            if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             BeginEdit();
@@ -448,16 +448,16 @@ namespace DevZest.Data.Windows
 
         public RowPresenter InsertChildRow(int ordinal)
         {
-            VerifyHierarchical();
+            VerifyRecursive();
 
-            if (ordinal < 0 || ordinal > HierarchicalChildrenCount)
+            if (ordinal < 0 || ordinal > RecursiveChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(ordinal));
 
-            var childRow = ordinal == HierarchicalChildrenCount ? null : GetHierarchicalChild(ordinal);
+            var childRow = ordinal == RecursiveChildrenCount ? null : GetRecursiveChild(ordinal);
             var childDataSet = ChildDataSet;
             var index = childRow == null ? childDataSet.Count : childRow.DataRow.Index;
             childDataSet.Insert(index, new DataRow());
-            var result = GetHierarchicalChild(ordinal);
+            var result = GetRecursiveChild(ordinal);
             result.BeginEdit(true);
             return result;
         }

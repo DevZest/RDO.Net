@@ -5,7 +5,7 @@
         IsSelected = 0,
         IsCurrent,
         Index,
-        HierarchicalChildren,
+        RecursiveChildren,
         IsExpanded,
         IsEditing
     }

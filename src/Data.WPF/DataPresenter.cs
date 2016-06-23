@@ -98,9 +98,9 @@ namespace DevZest.Data.Windows
             get { return _template; }
         }
 
-        public bool IsHierarchical
+        public bool IsRecursive
         {
-            get { return Template.HierarchicalModelOrdinal >= 0; }
+            get { return Template.IsRecursive; }
         }
 
         private LayoutManager _layoutManager;

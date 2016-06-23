@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows.Primitives
             where T : Model, new()
         {
             var template = new Template();
-            template.HierarchicalModelOrdinal = hierarchicalModelOrdinal;
+            template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(rows.Count, hiearchicalLevels.Length);
 
             for (int i = 0; i < rows.Count; i++)
-                Assert.AreEqual(hiearchicalLevels[i], rows[i].HierarchicalLevel);
+                Assert.AreEqual(hiearchicalLevels[i], rows[i].Depth);
         }
 
         protected static void VerifyRowOrdinal(IReadOnlyList<RowPresenter> rows)

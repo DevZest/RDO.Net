@@ -156,11 +156,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The row must be hierarchical.
+        /// The row must be recursive.
         /// </summary>
-        public static string RowPresenter_VerifyHierarchical
+        public static string RowPresenter_VerifyRecursive
         {
-            get { return GetString("RowPresenter_VerifyHierarchical"); }
+            get { return GetString("RowPresenter_VerifyRecursive"); }
         }
 
         /// <summary>
@@ -206,9 +206,9 @@ namespace DevZest.Data.Windows
         /// <summary>
         /// The child model is invalid. It must be direct child model and has the same type.
         /// </summary>
-        public static string TemplateBuilder_InvalidFlattenHierarchyChildModel
+        public static string TemplateBuilder_InvalidRecursiveChildModel
         {
-            get { return GetString("TemplateBuilder_InvalidFlattenHierarchyChildModel"); }
+            get { return GetString("TemplateBuilder_InvalidRecursiveChildModel"); }
         }
 
         /// <summary>

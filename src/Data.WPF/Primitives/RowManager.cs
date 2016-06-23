@@ -27,9 +27,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return _template; }
         }
 
-        public bool IsHierarchical
+        public bool IsRecursive
         {
-            get { return Template.HierarchicalModelOrdinal >= 0; }
+            get { return Template.IsRecursive; }
         }
 
         private readonly DataSet _dataSet;
@@ -106,7 +106,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(dataRow != null);
 
-            var rows = _rowMappings[dataRow.Model.GetHierarchicalLevel()];
+            var rows = _rowMappings[dataRow.Model.GetDepth()];
             var row = new RowPresenter(this, dataRow);
             var ordinal = dataRow.Ordinal;
             rows.Insert(ordinal, row);
@@ -116,19 +116,19 @@ namespace DevZest.Data.Windows.Primitives
         internal RowPresenter RowMappings_GetRow(DataRow dataRow)
         {
             Debug.Assert(dataRow != null);
-            return RowMappings_GetRow(dataRow.Model.GetHierarchicalLevel(), dataRow.Ordinal);
+            return RowMappings_GetRow(dataRow.Model.GetDepth(), dataRow.Ordinal);
         }
 
-        private RowPresenter RowMappings_GetRow(int hierarchicalLevel, int ordinal)
+        private RowPresenter RowMappings_GetRow(int depth, int ordinal)
         {
-            return _rowMappings[hierarchicalLevel][ordinal];
+            return _rowMappings[depth][ordinal];
         }
 
-        private void RowMappings_Remove(int hierarchicalLevel, int ordinal)
+        private void RowMappings_Remove(int depth, int ordinal)
         {
-            DisposeRow(_rowMappings[hierarchicalLevel][ordinal]);
-            _rowMappings[hierarchicalLevel].RemoveAt(ordinal);
-            if (!IsHierarchical)
+            DisposeRow(_rowMappings[depth][ordinal]);
+            _rowMappings[depth].RemoveAt(ordinal);
+            if (!IsRecursive)
                 OnSetState(DataPresenterState.Rows);
         }
 
@@ -152,7 +152,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(row != null);
 
             _rows.Insert(index, row);
-            if (IsHierarchical)
+            if (IsRecursive)
             {
                 Debug.Assert(row.Index == -1);
                 row.Index = index;
@@ -190,7 +190,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void Rows_UpdateIndex(int startIndex)
         {
-            Debug.Assert(IsHierarchical);
+            Debug.Assert(IsRecursive);
 
             for (int i = startIndex; i < _rows.Count; i++)
                 _rows[i].Index = i;
@@ -213,68 +213,68 @@ namespace DevZest.Data.Windows.Primitives
 
         private DataSet GetChildDataSet(DataSet dataSet)
         {
-            return IsHierarchical && dataSet.Count > 0 ? dataSet.Model.GetChildModels()[Template.HierarchicalModelOrdinal].GetDataSet() : null;
+            return IsRecursive && dataSet.Count > 0 ? dataSet.Model.GetChildModels()[Template.RecursiveModelOrdinal].GetDataSet() : null;
         }
 
         private void InitializeRows()
         {
-            _rows = IsHierarchical ? new List<RowPresenter>() : _rowMappings[0];
-            if (IsHierarchical)
+            _rows = IsRecursive ? new List<RowPresenter>() : _rowMappings[0];
+            if (IsRecursive)
             {
                 int index = 0;
                 foreach (var row in _rowMappings[0])
-                    index = InsertHierarchicalRow(index, row);
+                    index = InsertRowRecursively(index, row);
             }
         }
 
-        private int InsertHierarchicalRow(int index, RowPresenter row)
+        private int InsertRowRecursively(int index, RowPresenter row)
         {
-            Debug.Assert(IsHierarchical && !row.IsEof);
+            Debug.Assert(IsRecursive && !row.IsEof);
 
             Rows_Insert(index++, row);
             if (row.IsExpanded)
             {
-                var children = row.DataRow[Template.HierarchicalModelOrdinal];
+                var children = row.DataRow[Template.RecursiveModelOrdinal];
                 foreach (var childDataRow in children)
                 {
                     var childRow = RowMappings_GetRow(childDataRow);
-                    index = InsertHierarchicalRow(index, childRow);
+                    index = InsertRowRecursively(index, childRow);
                 }
             }
             return index;
         }
 
-        private int GetHierarchicalOrdinal(RowPresenter row)
+        private int GetIndex(RowPresenter row)
         {
             Debug.Assert(!row.IsEof);
 
-            if (!IsHierarchical)
+            if (!IsRecursive)
                 return -1;
 
-            var parentRow = row.HierarchicalParent;
+            var parentRow = row.RecursiveParent;
             var prevSiblingRow = PrevSiblingOf(row);
             if (parentRow == null)
-                return prevSiblingRow == null ? 0 : NextHierarchicalOrdinalOf(prevSiblingRow);
+                return prevSiblingRow == null ? 0 : NextIndexOf(prevSiblingRow);
             else if (parentRow.Index >= 0 && parentRow.IsExpanded)
-                return prevSiblingRow == null ? parentRow.Index + 1 : NextHierarchicalOrdinalOf(prevSiblingRow);
+                return prevSiblingRow == null ? parentRow.Index + 1 : NextIndexOf(prevSiblingRow);
             else
                 return -1;
         }
 
         private RowPresenter PrevSiblingOf(RowPresenter row)
         {
-            return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.HierarchicalLevel, row.DataRow.Ordinal - 1);
+            return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.Depth, row.DataRow.Ordinal - 1);
         }
 
-        private int NextHierarchicalOrdinalOf(RowPresenter row)
+        private int NextIndexOf(RowPresenter row)
         {
-            Debug.Assert(IsHierarchical && row != null && row.Index >= 0);
+            Debug.Assert(IsRecursive && row != null && row.Index >= 0);
 
-            var hierarchicalLevel = row.HierarchicalLevel;
+            var depth = row.Depth;
             var result = row.Index + 1;
             for (; result < _rows.Count; result++)
             {
-                if (_rows[result].HierarchicalLevel <= hierarchicalLevel)
+                if (_rows[result].Depth <= depth)
                     break;
             }
             return result;
@@ -282,18 +282,18 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnDataRowAdded(object sender, DataRow dataRow)
         {
-            if (IsHierarchical && dataRow.Model.GetHierarchicalLevel() == _rowMappings.Count - 1)
+            if (IsRecursive && dataRow.Model.GetDepth() == _rowMappings.Count - 1)
                 _rowMappings.Add(new List<RowPresenter>());
 
             if (EditingEofRow != null && EditingEofRow.DataRow == dataRow)
                 return;
 
             var row = RowMappings_CreateRow(dataRow);
-            var hierarchicalOrdinal = GetHierarchicalOrdinal(row);
-            if (hierarchicalOrdinal >= 0)
+            var index = GetIndex(row);
+            if (index >= 0)
             {
-                hierarchicalOrdinal = InsertHierarchicalRow(hierarchicalOrdinal, row);
-                Rows_UpdateIndex(hierarchicalOrdinal);
+                index = InsertRowRecursively(index, row);
+                Rows_UpdateIndex(index);
             }
             else
                 OnSetState(DataPresenterState.Rows);
@@ -302,23 +302,23 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
-            OnDataRowRemoved(e.Model.GetHierarchicalLevel(), e.Index);
+            OnDataRowRemoved(e.Model.GetDepth(), e.Index);
             OnRowsChanged();
         }
 
-        private void OnDataRowRemoved(int hierarchicalLevel, int ordinal)
+        private void OnDataRowRemoved(int depth, int ordinal)
         {
-            if (IsHierarchical)
+            if (IsRecursive)
             {
-                var row = RowMappings_GetRow(hierarchicalLevel, ordinal);
-                var hierarchicalOrdinal = row.Index;
-                if (hierarchicalOrdinal >= 0)
+                var row = RowMappings_GetRow(depth, ordinal);
+                var index = row.Index;
+                if (index >= 0)
                 {
-                    Rows_RemoveAt(hierarchicalOrdinal);
-                    Rows_UpdateIndex(hierarchicalOrdinal);
+                    Rows_RemoveAt(index);
+                    Rows_UpdateIndex(index);
                 }
             }
-            RowMappings_Remove(hierarchicalLevel, ordinal);
+            RowMappings_Remove(depth, ordinal);
         }
 
         private void OnRowsChanged()
@@ -375,14 +375,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                var lastHierarchicalRow = LastHierarchicalRow;
-                if (lastHierarchicalRow == null)
+                var lastRow = LastRow;
+                if (lastRow == null)
                     return null;
-                return lastHierarchicalRow.IsEof ? lastHierarchicalRow : null;
+                return lastRow.IsEof ? lastRow : null;
             }
         }
 
-        private RowPresenter LastHierarchicalRow
+        private RowPresenter LastRow
         {
             get { return _rows.Count == 0 ? null : _rows[_rows.Count - 1]; }
         }
@@ -536,13 +536,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Expand(RowPresenter row)
         {
-            Debug.Assert(IsHierarchical && !row.IsExpanded);
+            Debug.Assert(IsRecursive && !row.IsExpanded);
 
             var nextOrdinal = row.Index + 1;
-            for (int i = 0; i < row.HierarchicalChildrenCount; i++)
+            for (int i = 0; i < row.RecursiveChildrenCount; i++)
             {
-                var childRow = row.GetHierarchicalChild(i);
-                nextOrdinal = InsertHierarchicalRow(nextOrdinal, childRow);
+                var childRow = row.GetRecursiveChild(i);
+                nextOrdinal = InsertRowRecursively(nextOrdinal, childRow);
             }
             Rows_UpdateIndex(nextOrdinal);
             OnSetState(DataPresenterState.Rows);
@@ -550,10 +550,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Collapse(RowPresenter row)
         {
-            Debug.Assert(IsHierarchical && row.IsExpanded);
+            Debug.Assert(IsRecursive && row.IsExpanded);
 
             var nextOrdinal = row.Index + 1;
-            int count = NextHierarchicalOrdinalOf(row) - nextOrdinal;
+            int count = NextIndexOf(row) - nextOrdinal;
             if (count == 0)
                 return;
 
@@ -569,7 +569,7 @@ namespace DevZest.Data.Windows.Primitives
 
 
             var row = ordinal < Rows.Count ? Rows[ordinal] : null;
-            if (row != null && row.HierarchicalLevel != 0)
+            if (row != null && row.Depth != 0)
                 throw new ArgumentException(Strings.RowManager_OrdinalNotTopLevel, nameof(ordinal));
 
             var index = row == null ? DataSet.Count : row.DataRow.Index;

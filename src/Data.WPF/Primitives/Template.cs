@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows.Primitives
             InternalGridColumns = new GridColumnCollection(this);
             InternalGridRows = new GridRowCollection(this);
             BlockDimensions = 1;
-            HierarchicalModelOrdinal = -1;
+            RecursiveModelOrdinal = -1;
         }
 
         internal RowManager RowManager { get; set; }
@@ -320,15 +320,15 @@ namespace DevZest.Data.Windows.Primitives
         private EofVisibility _eofVisibility = EofVisibility.Never;
         public EofVisibility EofVisibility
         {
-            get { return IsHierarchical ? EofVisibility.Never : _eofVisibility; }
+            get { return IsRecursive ? EofVisibility.Never : _eofVisibility; }
             internal set { _eofVisibility = value; }
         }
 
-        public int HierarchicalModelOrdinal { get; internal set; }
+        public int RecursiveModelOrdinal { get; internal set; }
 
-        public bool IsHierarchical
+        public bool IsRecursive
         {
-            get { return HierarchicalModelOrdinal >= 0; }
+            get { return RecursiveModelOrdinal >= 0; }
         }
 
         private Func<BlockView> _blockViewConstructor;
