@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 
@@ -254,7 +255,7 @@ namespace DevZest.Data
         {
             foreach (var dataRow in dataSet)
             {
-                foreach (var message in dataRow.ValidationMessages)
+                foreach (var message in dataRow.Validate())
                 {
                     if (message.Level >= validationLevel)
                         yield return new ValidationEntry(dataRow, message);
@@ -296,6 +297,11 @@ namespace DevZest.Data
         public DataRow EditingRow
         {
             get { return Model.EditingRow; }
+        }
+
+        public ReadOnlyCollection<ValidationMessage> ValidateEditingRow()
+        {
+            return EditingRow == null ? ValidationMessageCollection.Empty : Model.Validate(EditingRow);
         }
 
         public DataRow BeginAdd()

@@ -341,6 +341,24 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
+        internal ValidationMessageCollection Validate(DataRow dataRow)
+        {
+            var result = ValidationMessageCollection.Empty;
+            foreach (var validator in Validators)
+            {
+                var isValid = validator.IsValidCondition[dataRow];
+                if (isValid == true)
+                    continue;
+
+                if (result == ValidationMessageCollection.Empty)
+                    result = new ValidationMessageCollection();
+                var message = validator.Message[dataRow];
+                result.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
+            }
+
+            return result;
+        }
+
         public ModelKey PrimaryKey
         {
             get { return GetPrimaryKeyCore(); }

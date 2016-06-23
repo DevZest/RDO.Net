@@ -262,7 +262,6 @@ namespace DevZest.Data
             }
 
             _isUpdated = false;
-            _validationMessages = null;
             if (!omitNotification)
             {
                 Model.OnRowUpdated(this);
@@ -334,55 +333,12 @@ namespace DevZest.Data
             return false;
         }
 
-        private class ValidationMessageCollection : ReadOnlyCollection<ValidationMessage>
+        public ReadOnlyCollection<ValidationMessage> Validate()
         {
-            public ValidationMessageCollection()
-                : base(new List<ValidationMessage>())
-            {
-            }
-
-            public void Add(ValidationMessage item)
-            {
-                Items.Add(item);
-            }
+            return Model.Validate(this);
         }
 
-        private static ValidationMessageCollection s_emptyValidationMessages = new ValidationMessageCollection();
-        private ValidationMessageCollection _validationMessages;
-
-        public ReadOnlyCollection<ValidationMessage> ValidationMessages
-        {
-            get
-            {
-                if (IsUpdating && _isUpdated)
-                    return GetValidationMessages();
-
-                if (_validationMessages == null)
-                    _validationMessages = GetValidationMessages();
-
-                return _validationMessages;
-            }
-        }
-
-        private ValidationMessageCollection GetValidationMessages()
-        {
-            var result = s_emptyValidationMessages;
-            foreach (var validator in Model.Validators)
-            {
-                var isValid = validator.IsValidCondition[this];
-                if (isValid == true)
-                    continue;
-
-                if (result == s_emptyValidationMessages)
-                    result = new ValidationMessageCollection();
-                var message = validator.Message[this];
-                result.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
-            }
-
-            return result;
-        }
-
-        private ValidationMessageCollection _mergedValidationMessages = s_emptyValidationMessages;
+        private ValidationMessageCollection _mergedValidationMessages = ValidationMessageCollection.Empty;
         public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
         {
             get { return _mergedValidationMessages; }
@@ -391,14 +347,14 @@ namespace DevZest.Data
         internal void Merge(ValidationResult result)
         {
             var oldValue = _mergedValidationMessages;
-            _mergedValidationMessages = s_emptyValidationMessages;
+            _mergedValidationMessages = ValidationMessageCollection.Empty;
             for (int i = 0; i < result.Count; i++)
             {
                 var entry = result[i];
                 if (entry.DataRow != this)
                     continue;
 
-                if (_mergedValidationMessages == s_emptyValidationMessages)
+                if (_mergedValidationMessages == ValidationMessageCollection.Empty)
                     _mergedValidationMessages = new ValidationMessageCollection();
                 _mergedValidationMessages.Add(entry.Message);
             }
