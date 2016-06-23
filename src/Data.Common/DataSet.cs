@@ -297,5 +297,42 @@ namespace DevZest.Data
         {
             get { return Model.EditingRow; }
         }
+
+        public DataRow BeginInsert()
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+
+            if (EditingRow != null)
+                return null;
+
+            Model.BeginEdit(DataRow.Placeholder);
+            return DataRow.Placeholder;
+        }
+
+        public DataRow EndInsert(int index)
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+
+            if (EditingRow != DataRow.Placeholder)
+                return null;
+
+            var result = new DataRow();
+            Insert(index, result, dataRow => Model.EndEdit(dataRow));
+            return result;
+        }
+
+        public bool CancelInsert()
+        {
+            if (IsReadOnly)
+                throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
+
+            if (EditingRow != DataRow.Placeholder)
+                return false;
+
+            Model.CancelEdit();
+            return true;
+        }
     }
 }
