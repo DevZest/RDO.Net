@@ -67,12 +67,6 @@ namespace DevZest.Data.Primitives
             get { return Eval(dataRow); }
         }
 
-        /// <inheritdoc/>
-        protected internal sealed override T Eval()
-        {
-            return Eval(null);
-        }
-
         private T Eval(DataRow dataRow)
         {
             if (Param.ParentModel.DataSource.Kind != DataSourceKind.DataSet)

@@ -48,5 +48,10 @@ namespace DevZest.Data.Helpers
         {
             Assert.AreEqual(expectedValue, column.GetDefault().Value);
         }
+
+        public static T Eval<T>(this Column<T> column)
+        {
+            return column[null];
+        }
     }
 }

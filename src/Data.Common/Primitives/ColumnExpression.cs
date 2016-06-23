@@ -22,8 +22,6 @@ namespace DevZest.Data.Primitives
 
         protected internal abstract T this[DataRow dataRow] { get; }
 
-        protected internal abstract T Eval();
-
         private Column<T> _owner;
         /// <summary>
         /// Gets the <see cref="Column{T}" /> object which owns this expression.

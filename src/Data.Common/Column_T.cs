@@ -265,10 +265,7 @@ namespace DevZest.Data
             get
             {
                 if (IsExpression)
-                {
-                    Check.NotNull(dataRow, nameof(dataRow));
                     return Expression[dataRow];
-                }
 
                 VerifyDataRow(dataRow, nameof(dataRow));
                 return ValueOf(dataRow);
@@ -283,13 +280,6 @@ namespace DevZest.Data
         private T ValueOf(DataRow dataRow)
         {
             return dataRow == ParentModel.EditingRow ? _editingValue : ValueManager[dataRow.Ordinal];
-        }
-
-        public T Eval()
-        {
-            if (!IsExpression)
-                throw new InvalidOperationException(Strings.Column_Eval_NullExpression);
-            return Expression.Eval();
         }
 
         private void SetValue(DataRow dataRow, T value)
@@ -430,11 +420,6 @@ namespace DevZest.Data
         public sealed override bool IsNull(DataRow dataRow)
         {
             return IsNull(this[dataRow]);
-        }
-
-        public sealed override bool IsEvalNull
-        {
-            get { return IsNull(Eval()); }
         }
 
         /// <inheritdoc/>

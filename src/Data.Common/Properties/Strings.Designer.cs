@@ -716,14 +716,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The Expression property is null. The Eval operation can only be performed against expression column.
-        /// </summary>
-        public static string Column_Eval_NullExpression
-        {
-            get { return GetString("Column_Eval_NullExpression"); }
-        }
-
-        /// <summary>
         /// Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.
         /// </summary>
         public static string DataRow_MismatchWithSavedDataRow

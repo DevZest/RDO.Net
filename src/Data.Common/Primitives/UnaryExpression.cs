@@ -64,12 +64,6 @@ namespace DevZest.Data.Primitives
             get { return EvalCore(Operand[dataRow]); }
         }
 
-        /// <inheritdoc/>
-        protected internal sealed override T Eval()
-        {
-            return EvalCore(Operand.Eval());
-        }
-
         /// <summary>Evaluates against the given value.</summary>
         /// <param name="x">The given value.</param>
         /// <returns>The result.</returns>

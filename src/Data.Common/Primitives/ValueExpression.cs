@@ -40,11 +40,6 @@ namespace DevZest.Data.Primitives
             get { return Value; }
         }
 
-        protected internal sealed override T Eval()
-        {
-            return Value;
-        }
-
         protected sealed override IModelSet GetParentModelSet()
         {
             return ModelSet.Empty;

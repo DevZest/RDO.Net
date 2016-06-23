@@ -80,20 +80,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        /// <inheritdoc/>
-        protected internal sealed override TResult Eval()
-        {
-            var onValue = _on.Eval();
-            for (int i = 0; i < _when.Count; i++)
-            {
-                var whenValue = _when[i].Eval();
-                if (EqualityComparer<TOn>.Default.Equals(onValue, whenValue))
-                    return _then[i].Eval();
-            }
-
-            return _else.Eval();
-        }
-
         public CaseOnWhen<TOn, TResult> When(Column<TOn> when)
         {
             Check.NotNull(when, nameof(when));

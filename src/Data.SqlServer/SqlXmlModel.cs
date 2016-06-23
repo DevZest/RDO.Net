@@ -70,11 +70,6 @@ namespace DevZest.Data.SqlServer
             {
                 get { throw new NotSupportedException(); }
             }
-
-            protected override T Eval()
-            {
-                throw new NotSupportedException();
-            }
         }
 
         private sealed class ValueFunctionInvoker<T> : GenericInvoker<T, _SqlXml, Column>

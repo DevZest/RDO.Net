@@ -36,11 +36,6 @@ namespace DevZest.Data
             {
                 get { return _column.IsNull(dataRow); }
             }
-
-            protected internal override bool? Eval()
-            {
-                return _column.IsEvalNull;
-            }
         }
 
         public static _Boolean IsNull(this Column x)
@@ -80,11 +75,6 @@ namespace DevZest.Data
             protected internal override bool? this[DataRow dataRow]
             {
                 get { return !_column.IsNull(dataRow); }
-            }
-
-            protected internal override bool? Eval()
-            {
-                return !_column.IsEvalNull;
             }
         }
 
@@ -137,12 +127,6 @@ namespace DevZest.Data
                     return _column.IsNull(dataRow) ? _replaceColumn[dataRow] : _column[dataRow];
                 }
             }
-
-            protected internal override T Eval()
-            {
-                var result = _column.Eval();
-                return _column.IsEvalNull ? _replaceColumn.Eval() : _column.Eval();
-            }
         }
 
         public static T IfNull<T>(this T x, T replaceColumn)
@@ -191,11 +175,6 @@ namespace DevZest.Data
                 get { return DateTime.Now; }
             }
 
-            protected internal override DateTime? Eval()
-            {
-                return DateTime.Now;
-            }
-
             protected override FunctionKey FunctionKey
             {
                 get { return FunctionKeys.GetDate; }
@@ -227,11 +206,6 @@ namespace DevZest.Data
                 get { return DateTime.UtcNow; }
             }
 
-            protected internal override DateTime? Eval()
-            {
-                return DateTime.UtcNow;
-            }
-
             protected override FunctionKey FunctionKey
             {
                 get { return FunctionKeys.GetUtcDate; }
@@ -261,11 +235,6 @@ namespace DevZest.Data
             protected internal override Guid? this[DataRow dataRow]
             {
                 get { return Guid.NewGuid(); }
-            }
-
-            protected internal override Guid? Eval()
-            {
-                return Guid.NewGuid();
             }
 
             protected override FunctionKey FunctionKey

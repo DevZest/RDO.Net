@@ -50,12 +50,6 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected internal sealed override TTarget Eval()
-        {
-            return Cast(Operand.Eval());
-        }
-
-        /// <inheritdoc/>
         protected sealed override IModelSet GetParentModelSet()
         {
             return Operand.ParentModel;

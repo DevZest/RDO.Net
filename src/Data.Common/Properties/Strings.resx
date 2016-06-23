@@ -381,9 +381,6 @@
   <data name="DataRow_DeserializeColumn_InvalidColumnName" xml:space="preserve">
     <value>The column name '{columnName}' is invalid for DataRow '{dataRowString}'.</value>
   </data>
-  <data name="Column_Eval_NullExpression" xml:space="preserve">
-    <value>The Expression property is null. The Eval operation can only be performed against expression column.</value>
-  </data>
   <data name="DataRow_MismatchWithSavedDataRow" xml:space="preserve">
     <value>Mismatch with Model.SavedDataRow. The DataRow must be previously saved by calling DataRow.Save.</value>
   </data>

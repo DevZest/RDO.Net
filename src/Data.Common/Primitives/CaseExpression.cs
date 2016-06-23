@@ -99,19 +99,6 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected internal sealed override TResult Eval()
-        {
-            for (int i = 0; i < _when.Count; i++)
-            {
-                var whenValue = _when[i].Eval();
-                if (whenValue == true)
-                    return _then[i].Eval();
-            }
-
-            return _else.Eval();
-        }
-
-        /// <inheritdoc/>
         public override DbExpression GetDbExpression()
         {
             return new DbCaseExpression(null,

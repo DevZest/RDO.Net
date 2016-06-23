@@ -13,7 +13,7 @@ namespace DevZest.Data.Primitives
         private Column<T> _defaultValue;
         public T Value
         {
-            get { return _defaultValue.Eval(); }
+            get { return _defaultValue[null]; }
         }
 
         public override DbExpression DbExpression

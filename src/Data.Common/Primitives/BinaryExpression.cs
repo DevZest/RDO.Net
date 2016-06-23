@@ -94,14 +94,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        /// <inheritdoc/>
-        protected internal sealed override TResult Eval()
-        {
-            var x = Left.Eval();
-            var y = Right.Eval();
-            return EvalCore(x, y);
-        }
-
         /// <summary>Evaluates the expression against two operand values.</summary>
         /// <param name="x">The left operand value.</param>
         /// <param name="y">The right operand value.</param>

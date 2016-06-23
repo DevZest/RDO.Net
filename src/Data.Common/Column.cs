@@ -289,8 +289,6 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if the value of given <see cref="DataRow"/> is null, otherwise <see langword="false"/>.</returns>
         public abstract bool IsNull(DataRow dataRow);
 
-        public abstract bool IsEvalNull { get; }
-
         /// <summary>Creates <see cref="ColumnMapping"/> from given <see cref="Column"/>.</summary>
         /// <param name="column">The source <see cref="Column"/>.</param>
         /// <returns>The created <see cref="ColumnMapping"/>.</returns>
