@@ -298,7 +298,7 @@ namespace DevZest.Data
             get { return Model.EditingRow; }
         }
 
-        public DataRow BeginInsert()
+        public DataRow BeginAdd()
         {
             if (IsReadOnly)
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
@@ -310,7 +310,12 @@ namespace DevZest.Data
             return DataRow.Placeholder;
         }
 
-        public DataRow EndInsert(int index)
+        public DataRow EndAdd()
+        {
+            return EndAdd(Count);
+        }
+
+        public DataRow EndAdd(int index)
         {
             if (IsReadOnly)
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
@@ -323,7 +328,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public bool CancelInsert()
+        public bool CancelAdd()
         {
             if (IsReadOnly)
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
