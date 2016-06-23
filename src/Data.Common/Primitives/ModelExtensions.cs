@@ -120,10 +120,10 @@ namespace DevZest.Data.Primitives
             return model.DataSet;
         }
 
-        public static int GetHierarchicalLevel(this Model model)
+        public static int GetDepth(this Model model)
         {
             Check.NotNull(model, nameof(model));
-            return model.HierarchicalLevel;
+            return model.Depth;
         }
     }
 }

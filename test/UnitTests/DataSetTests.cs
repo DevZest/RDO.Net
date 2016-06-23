@@ -384,14 +384,14 @@ namespace DevZest.Data
         {
             int count = 3;
             var dataSet = GetDataSet(count);
-            Assert.AreEqual(0, dataSet.Model.GetHierarchicalLevel());
+            Assert.AreEqual(0, dataSet.Model.GetDepth());
 
             var childModel = dataSet.Model.GetChildModels()[0];
-            Assert.AreEqual(1, childModel.GetHierarchicalLevel());
+            Assert.AreEqual(1, childModel.GetDepth());
             Assert.AreEqual(childModel, childModel.GetDataSet().Model);
 
             var grandChildModel = childModel.GetChildModels()[0];
-            Assert.AreEqual(2, grandChildModel.GetHierarchicalLevel());
+            Assert.AreEqual(2, grandChildModel.GetDepth());
             Assert.AreEqual(grandChildModel, grandChildModel.GetDataSet().Model);
         }
     }
