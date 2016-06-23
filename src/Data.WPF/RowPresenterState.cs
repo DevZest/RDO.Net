@@ -4,7 +4,7 @@
     {
         IsSelected = 0,
         IsCurrent,
-        Ordinal,
+        Index,
         HierarchicalChildren,
         IsExpanded,
         IsEditing

@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("Auto")
                     .Layout(Orientation.Vertical)
-                    .RowItem().Bind((r, e) => { e.DesiredHeight = 10 * (r.Ordinal + 1); }).At(0, 0);
+                    .RowItem().Bind((r, e) => { e.DesiredHeight = 10 * (r.Index + 1); }).At(0, 0);
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("Auto")
                     .Layout(Orientation.Vertical, 2)
-                    .RowItem().Bind((r, e) => { e.DesiredHeight = 10 * (r.Ordinal + 1); }).At(0, 0);
+                    .RowItem().Bind((r, e) => { e.DesiredHeight = 10 * (r.Index + 1); }).At(0, 0);
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));

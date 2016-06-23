@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowManager = null;
-            _ordinal = -1;
+            _index = -1;
             _rowItemsId = -1;
         }
 
@@ -143,20 +143,20 @@ namespace DevZest.Data.Windows
             RowManager.OnSetState(this, rowPresenterState);
         }
 
-        private int _ordinal = -1;
-        public int Ordinal
+        private int _index = -1;
+        public int Index
         {
             get
             {
-                OnGetState(RowPresenterState.Ordinal);
+                OnGetState(RowPresenterState.Index);
                 if (RowManager.IsHierarchical)
-                    return _ordinal;
+                    return _index;
                 else
                     return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
             }
             internal set
             {
-                _ordinal = value;
+                _index = value;
             }
         }
 
@@ -572,12 +572,12 @@ namespace DevZest.Data.Windows
 
         internal int BlockOrdinal
         {
-            get { return Ordinal / ElementManager.BlockDimensions; }
+            get { return Index / ElementManager.BlockDimensions; }
         }
 
         internal int BlockDimension
         {
-            get { return Ordinal % ElementManager.BlockDimensions; }
+            get { return Index % ElementManager.BlockDimensions; }
         }
     }
 }

@@ -86,7 +86,7 @@ namespace DevZest.Data.Windows.Primitives
         protected static void VerifyRowOrdinal(IReadOnlyList<RowPresenter> rows)
         {
             for (int i = 0; i < rows.Count; i++)
-                Assert.AreEqual(i, rows[i].Ordinal);
+                Assert.AreEqual(i, rows[i].Index);
         }
     }
 }
