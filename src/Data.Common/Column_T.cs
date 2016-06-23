@@ -133,7 +133,7 @@ namespace DevZest.Data
             public void AddRow(DataRow dataRow)
             {
                 Debug.Assert(Model == dataRow.Model);
-                _values.Insert(dataRow.Ordinal, _column.GetDefaultValue(dataRow));
+                _values.Insert(dataRow.Ordinal, _column.GetDefaultValue());
             }
 
             public void RemoveRow(DataRow dataRow)
@@ -271,7 +271,7 @@ namespace DevZest.Data
                 }
 
                 VerifyDataRow(dataRow, nameof(dataRow));
-                return ValueManager[dataRow.Ordinal];
+                return dataRow == ParentModel.EditingRow ? _editingValue : ValueManager[dataRow.Ordinal];
             }
             set
             {
@@ -293,7 +293,10 @@ namespace DevZest.Data
             if (IsReadOnly(dataRow.Ordinal))
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
 
-            UpdateValue(dataRow, value);
+            if (dataRow == ParentModel.EditingRow)
+                _editingValue = value;
+            else
+                UpdateValue(dataRow, value);
         }
 
         private void UpdateValue(DataRow dataRow, T value)
@@ -308,7 +311,7 @@ namespace DevZest.Data
         private void VerifyDataRow(DataRow dataRow, string paramName)
         {
             Check.NotNull(dataRow, paramName);
-            if (dataRow.Model != ParentModel)
+            if (dataRow != ParentModel.EditingRow && dataRow.Model != ParentModel)
                 throw new ArgumentException(Strings.Column_VerifyDataRow, paramName);
         }
 
@@ -397,8 +400,6 @@ namespace DevZest.Data
         {
             _valueManager.ClearRows();
         }
-
-        private T _scalarValue;
 
         /// <inheritdoc/>
         public override bool IsExpression
@@ -515,10 +516,10 @@ namespace DevZest.Data
         /// <returns>The deserialized value.</returns>
         protected internal abstract T DeserializeValue(JsonValue value);
 
-        internal virtual T GetDefaultValue(DataRow dataRow)
+        internal virtual T GetDefaultValue()
         {
             var defaultDef = this.GetDefault();
-            return defaultDef != null ? defaultDef.DefaultValue[dataRow] : default(T);
+            return defaultDef != null ? defaultDef.Value : default(T);
         }
 
         /// <summary>Defines the computation expression for this column.</summary>
@@ -564,25 +565,23 @@ namespace DevZest.Data
 
         protected abstract bool AreEqual(T x, T y);
 
-        internal sealed override void Save(DataRow dataRow)
-        {
-            var listValues = _valueManager as ListValueManager;
-            if (listValues != null)
-                _scalarValue = listValues[dataRow.Ordinal];
-        }
-
-        internal sealed override void Load(DataRow dataRow)
-        {
-            var listValues = _valueManager as ListValueManager;
-            if (listValues != null)
-                UpdateValue(dataRow, _scalarValue);
-        }
-
         internal sealed override void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow)
         {
             var target = (Column<T>)targetColumn;
             if (!target.IsReadOnly(targetDataRow))
                 target[targetDataRow] = this[sourceDataRow];
+        }
+
+        private T _editingValue;
+        internal sealed override void BeginEdit(DataRow dataRow)
+        {
+            _editingValue = dataRow == DataRow.Placeholder ? GetDefaultValue() : ValueManager[dataRow.Ordinal];
+        }
+
+        internal sealed override void EndEdit(DataRow dataRow)
+        {
+            if (!IsReadOnly(dataRow))
+                UpdateValue(dataRow, _editingValue);
         }
     }
 }

@@ -292,5 +292,10 @@ namespace DevZest.Data
                 }
             }
         }
+
+        public DataRow EditingRow
+        {
+            get { return Model.EditingRow; }
+        }
     }
 }

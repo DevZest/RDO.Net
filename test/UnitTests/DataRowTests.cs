@@ -75,7 +75,6 @@ namespace DevZest.Data
                 // Move forward without children
                 var dataSet = GetDataSet(3, false);
                 dataSet[0].Move(2);
-                Assert.AreEqual(dataSet._.SavedDataRow, dataSet[2]);
                 Assert.AreEqual(1, dataSet._.Id[0]);
                 Assert.AreEqual(2, dataSet._.Id[1]);
                 Assert.AreEqual(0, dataSet._.Id[2]);
@@ -85,7 +84,6 @@ namespace DevZest.Data
                 // Move backward without children
                 var dataSet = GetDataSet(3, false);
                 dataSet[1].Move(-1);
-                Assert.AreEqual(dataSet._.SavedDataRow, dataSet[0]);
                 Assert.AreEqual(1, dataSet._.Id[0]);
                 Assert.AreEqual(0, dataSet._.Id[1]);
                 Assert.AreEqual(2, dataSet._.Id[2]);

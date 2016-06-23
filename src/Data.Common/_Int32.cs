@@ -1034,10 +1034,10 @@ namespace DevZest.Data
         Identity _identity;
         int _currentIdentityValue;
 
-        internal override int? GetDefaultValue(DataRow dataRow)
+        internal override int? GetDefaultValue()
         {
             if (ParentModel.IsIdentityGenerationDisabled)
-                return base.GetDefaultValue(dataRow);
+                return base.GetDefaultValue();
 
             if (!_isIdentityInitialized)
             {
@@ -1052,7 +1052,7 @@ namespace DevZest.Data
 
             if (_identity != null)
                 return _currentIdentityValue -= _identity.Increment;
-            return base.GetDefaultValue(dataRow);
+            return base.GetDefaultValue();
         }
     }
 }

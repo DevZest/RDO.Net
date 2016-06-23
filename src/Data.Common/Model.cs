@@ -753,29 +753,40 @@ namespace DevZest.Data
         {
         }
 
-        private DataRow _savedDataRow;
-        private bool _isSavedDataRowLocked;
-        public DataRow SavedDataRow
+        internal DataRow EditingRow { get; private set; }
+
+        internal void BeginEdit(DataRow dataRow)
         {
-            get { return _savedDataRow; }
-            internal set
-            {
-                if (_isSavedDataRowLocked)
-                    return;
-                _savedDataRow = value;
-            }
+            Debug.Assert(EditingRow == null && dataRow != null);
+            EditingRow = dataRow;
+            foreach (var column in Columns)
+                column.BeginEdit(dataRow);
         }
 
-        internal void LockSavedDataRow()
+        internal void EndEdit(DataRow dataRow)
         {
-            Debug.Assert(!_isSavedDataRowLocked);
-            _isSavedDataRowLocked = true;
+            Debug.Assert(EditingRow != null);
+            Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
+
+            dataRow.BeginUpdate();
+            foreach (var column in Columns)
+                column.EndEdit(dataRow);
+            EditingRow = null;
+            dataRow.EndUpdate();
         }
 
-        internal void UnlockSavedDataRow()
+        internal void CancelEdit()
         {
-            Debug.Assert(_isSavedDataRowLocked);
-            _isSavedDataRowLocked = false;
+            Debug.Assert(EditingRow != null);
+            EditingRow = null;
+        }
+
+        internal void LockEditingRow(Action action)
+        {
+            var editingRow = EditingRow;
+            EditingRow = DataRow.Placeholder;
+            action();
+            EditingRow = editingRow;
         }
     }
 }

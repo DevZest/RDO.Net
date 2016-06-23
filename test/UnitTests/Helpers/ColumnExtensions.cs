@@ -46,7 +46,7 @@ namespace DevZest.Data.Helpers
 
         public static void VerifyDefault<T>(this Column<T> column, T expectedValue)
         {
-            Assert.AreEqual(expectedValue, column.GetDefault().DefaultValue.Eval());
+            Assert.AreEqual(expectedValue, column.GetDefault().Value);
         }
     }
 }

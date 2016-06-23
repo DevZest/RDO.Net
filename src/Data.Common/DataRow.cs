@@ -1,11 +1,9 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -14,6 +12,8 @@ namespace DevZest.Data
     /// </summary>
     public sealed class DataRow : EventArgs
     {
+        public static readonly DataRow Placeholder = new DataRow();
+
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
         {
@@ -287,8 +287,8 @@ namespace DevZest.Data
         {
             Debug.Assert(e.DataRow == this);
 
-            if (e.Model.SavedDataRow == this)
-                e.Model.SavedDataRow = null;
+            if (e.Model.EditingRow == this)
+                e.Model.CancelEdit();
 
             e.Model.OnRowRemoved(e);
             if (e.ParentDataRow != null)
@@ -407,25 +407,6 @@ namespace DevZest.Data
                 OnUpdated();
         }
 
-        public void Save()
-        {
-            foreach (var column in Model.Columns)
-                column.Save(this);
-            Model.SavedDataRow = this;
-        }
-
-        public void Load()
-        {
-            if (Model.SavedDataRow != this)
-                throw new InvalidOperationException(Strings.DataRow_MismatchWithSavedDataRow);
-
-            Update(x =>
-            {
-                foreach (var column in Model.Columns)
-                    column.Load(x);
-            });
-        }
-
         private int _updateLevel;
         private bool _isUpdated;
 
@@ -521,10 +502,7 @@ namespace DevZest.Data
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
             var restore = Backup();
-            var model = Model;
-            model.LockSavedDataRow();
-            dataSet.Remove(this);
-            model.UnlockSavedDataRow();
+            Model.LockEditingRow(() => dataSet.Remove(this));
             dataSet.Insert(newIndex, this, restore);
         }
 
@@ -532,10 +510,10 @@ namespace DevZest.Data
         {
             var dataSet = DataSet;
 
-            if (Model.SavedDataRow == null && !HasChild)
+            if (Model.EditingRow == null && !HasChild)
             {
-                Save();
-                return dataRow => dataRow.Load();
+                Model.BeginEdit(this);
+                return dataRow => dataRow.Model.EndEdit(dataRow);
             }
             else
             {

@@ -6,16 +6,19 @@ namespace DevZest.Data.Primitives
     {
         internal Default(Column<T> defaultValue)
         {
-            Debug.Assert(defaultValue != null);
-            Debug.Assert(defaultValue.IsExpression);
-            DefaultValue = defaultValue;
+            Debug.Assert(defaultValue != null && defaultValue.IsExpression);
+            _defaultValue = defaultValue;
         }
 
-        public Column<T> DefaultValue { get; private set; }
-
-        public override DbExpression DefaultValueExpression
+        private Column<T> _defaultValue;
+        public T Value
         {
-            get { return DefaultValue.DbExpression; }
+            get { return _defaultValue.Eval(); }
+        }
+
+        public override DbExpression DbExpression
+        {
+            get { return _defaultValue.DbExpression; }
         }
     }
 }

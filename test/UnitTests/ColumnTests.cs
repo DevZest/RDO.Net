@@ -35,7 +35,7 @@ namespace DevZest.Data
         {
             var dateTime = new _DateTime();
             dateTime.Default(Functions.GetDate());
-            var defaultValue = dateTime.GetDefault().DefaultValue.Eval();
+            var defaultValue = dateTime.GetDefault().Value;
             var span = DateTime.Now - defaultValue;
             Assert.IsTrue(span.Value.Seconds < 1);
         }

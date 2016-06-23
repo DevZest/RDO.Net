@@ -379,9 +379,9 @@ namespace DevZest.Data
             return null;
         }
 
-        internal abstract void Save(DataRow dataRow);
+        internal abstract void BeginEdit(DataRow dataRow);
 
-        internal abstract void Load(DataRow dataRow);
+        internal abstract void EndEdit(DataRow dataRow);
 
         internal abstract void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow);
 

@@ -41,7 +41,7 @@ namespace DevZest.Data.SqlServer
                 return;
 
             sqlBuilder.Append(" DEFAULT(");
-            defaultDef.DefaultValueExpression.GenerateSql(sqlBuilder, sqlVersion);
+            defaultDef.DbExpression.GenerateSql(sqlBuilder, sqlVersion);
             sqlBuilder.Append(")");
         }
 
