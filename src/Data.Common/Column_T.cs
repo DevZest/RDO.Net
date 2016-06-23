@@ -271,13 +271,18 @@ namespace DevZest.Data
                 }
 
                 VerifyDataRow(dataRow, nameof(dataRow));
-                return dataRow == ParentModel.EditingRow ? _editingValue : ValueManager[dataRow.Ordinal];
+                return ValueOf(dataRow);
             }
             set
             {
                 VerifyDataRow(dataRow, nameof(dataRow));
                 SetValue(dataRow, value);
             }
+        }
+
+        private T ValueOf(DataRow dataRow)
+        {
+            return dataRow == ParentModel.EditingRow ? _editingValue : ValueManager[dataRow.Ordinal];
         }
 
         public T Eval()
@@ -336,7 +341,7 @@ namespace DevZest.Data
 
         public bool IsReadOnly(DataRow parentDataRow, int childOrdinal)
         {
-            return IsReadOnly(GetOrdinal(parentDataRow, childOrdinal));
+            return IsReadOnly(GetDataRow(parentDataRow, childOrdinal));
         }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>
@@ -355,19 +360,14 @@ namespace DevZest.Data
         {
             get
             {
-                var ordinal = GetOrdinal(parentDataRow, childOrdinal);
-                return ValueManager[ordinal];
+                var dataRow = GetDataRow(parentDataRow, childOrdinal);
+                return ValueOf(dataRow);
             }
             set
             {
                 var dataRow = GetDataRow(parentDataRow, childOrdinal);
                 SetValue(dataRow, value);
             }
-        }
-
-        private int GetOrdinal(DataRow parentDataRow, int childOrdinal)
-        {
-            return parentDataRow == null ? childOrdinal : GetDataRow(parentDataRow, childOrdinal).Ordinal;
         }
 
         private DataRow GetDataRow(DataRow parentDataRow, int childOrdinal)
