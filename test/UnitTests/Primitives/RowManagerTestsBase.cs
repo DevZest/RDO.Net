@@ -75,12 +75,12 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected static void VerifyHierarchicalLevel(IReadOnlyList<RowPresenter> rows, params int[] hiearchicalLevels)
+        protected static void VerifyDepths(IReadOnlyList<RowPresenter> rows, params int[] depths)
         {
-            Assert.AreEqual(rows.Count, hiearchicalLevels.Length);
+            Assert.AreEqual(rows.Count, depths.Length);
 
             for (int i = 0; i < rows.Count; i++)
-                Assert.AreEqual(hiearchicalLevels[i], rows[i].Depth);
+                Assert.AreEqual(depths[i], rows[i].Depth);
         }
 
         protected static void VerifyRowOrdinal(IReadOnlyList<RowPresenter> rows)

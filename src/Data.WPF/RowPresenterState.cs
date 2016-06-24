@@ -7,6 +7,5 @@
         Index,
         RecursiveChildren,
         IsExpanded,
-        IsEditing
     }
 }

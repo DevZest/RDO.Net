@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
 
         public bool IsEof
         {
-            get { return DataRow == null; }
+            get { return DataRow == null || DataRow == DataRow.Placeholder; }
         }
 
         public RowPresenter RecursiveParent
@@ -295,7 +295,8 @@ namespace DevZest.Data.Windows
                 if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
-                BeginEdit();
+                if (AutoBeginEdit)
+                    BeginEdit();
                 SuppressViewUpdate();
 
                 try
@@ -321,6 +322,11 @@ namespace DevZest.Data.Windows
             RowManager.ResumeViewUpdate();
         }
 
+        private bool AutoBeginEdit
+        {
+            get { return RowManager.AutoBeginEdit; }
+        }
+
         public void SetValue<T>(Column<T> column, T value)
         {
             VerifyColumn(column, nameof(column));
@@ -328,7 +334,8 @@ namespace DevZest.Data.Windows
             if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
-            BeginEdit();
+            if (AutoBeginEdit)
+                BeginEdit();
             SuppressViewUpdate();
 
             try
@@ -343,7 +350,7 @@ namespace DevZest.Data.Windows
 
         public ReadOnlyCollection<ValidationMessage> ValidationMessages
         {
-            get { return DataRow == null ? null : DataRow.ValidationMessages; }
+            get { throw new NotImplementedException(); }
         }
 
         public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
@@ -366,19 +373,44 @@ namespace DevZest.Data.Windows
 
         public bool IsEditing
         {
-            get
-            {
-                OnGetState(RowPresenterState.IsEditing);
-                return DataRow != null && EditingRow == this;
-            }
-            private set
-            {
-                Debug.Assert(DataRow != null);
-                Debug.Assert(IsEditing != value);
+            get { return GetEditingRow(Model) == this; }
+        }
 
-                EditingRow = value ? this : null;
-                OnSetState(RowPresenterState.IsEditing);
-            }
+        private readonly static ConditionalWeakTable<Model, RowPresenter> s_editingRows = new ConditionalWeakTable<Model, RowPresenter>();
+
+        private static RowPresenter GetEditingRow(Model model)
+        {
+            RowPresenter result;
+            return s_editingRows.TryGetValue(model, out result) ? result : null;
+        }
+
+        private static void ClearEditingRow(Model model)
+        {
+            s_editingRows.Remove(model);
+        }
+
+        private static void BeginEdit(Model model, RowPresenter value)
+        {
+            Debug.Assert(value != null);
+
+            var oldValue = GetEditingRow(model);
+            Debug.Assert(oldValue != value);
+
+            if (oldValue != null)
+                oldValue.CancelEdit();
+
+            if (value != null)
+                s_editingRows.Add(model, value);
+        }
+
+        private DataSet DataSet
+        {
+            get { return RowManager.DataSet; }
+        }
+
+        private Model Model
+        {
+            get { return DataSet.Model; }
         }
 
         public void BeginEdit()
@@ -386,29 +418,15 @@ namespace DevZest.Data.Windows
             if (IsEditing)
                 return;
 
-            BeginEdit(false);
-        }
-
-        private bool _isNew;
-        internal void BeginEdit(bool isNew)
-        {
-            _isNew = isNew;
-
-            bool isEof = IsEof;
-            if (isEof)
-                RowManager.BeginEditEof();
-
-            Debug.Assert(DataRow != null);
-
-            var editingRow = EditingRow;
-            if (editingRow == this)
-                return;
-            if (editingRow != null)
-                editingRow.EndEdit();
-
-            if (!isEof && !_isNew)
-                DataRow.Save();
-            IsEditing = true;
+            BeginEdit(Model, this);
+            if (IsEof)
+            {
+                DataRow = DataRow.Placeholder;
+                DataSet.BeginAdd();
+            }
+            else
+                DataRow.BeginEdit();
+            RowManager.EditingRow = this;
         }
 
         public void EndEdit()
@@ -416,8 +434,15 @@ namespace DevZest.Data.Windows
             if (!IsEditing)
                 return;
 
-            _isNew = false;
-            IsEditing = false;
+            if (IsEof)
+            {
+                DataSet.EndAdd();
+                DataRow = null;
+            }
+            else
+                DataRow.EndEdit();
+            ClearEditingRow(Model);
+            RowManager.EditingRow = null;
         }
 
         public void CancelEdit()
@@ -425,16 +450,15 @@ namespace DevZest.Data.Windows
             if (!IsEditing)
                 return;
 
-            bool isNew = _isNew;
-            _isNew = false;
-            IsEditing = false;  // IsEditing must be changed first because it requires non null DataRow
-
-            if (isNew)
-                Delete();
-            else if (RowManager.EditingEofRow == this)
-                RowManager.CancelEditEof();
+            if (IsEof)
+            {
+                DataSet.CancelAdd();
+                DataRow = null;
+            }
             else
-                DataRow.Load();
+                DataRow.CancelEdit();
+            ClearEditingRow(Model);
+            RowManager.EditingRow = null;
         }
 
         public void Delete()
@@ -443,23 +467,20 @@ namespace DevZest.Data.Windows
             if (IsEof)
                 throw new InvalidOperationException(Strings.RowPresenter_DeleteEof);
 
-            DataRow.DataSet.RemoveAt(DataRow.Index);
+            DataRow.DataSet.Remove(DataRow);
         }
 
-        public RowPresenter InsertChildRow(int ordinal)
+        public RowPresenter InsertChildRow(int ordinal, Action<DataRow> updateAction = null)
         {
             VerifyRecursive();
 
-            if (ordinal < 0 || ordinal > RecursiveChildrenCount)
+            var childDataSet = ChildDataSet;
+            if (ordinal < 0 || ordinal > childDataSet.Count)
                 throw new ArgumentOutOfRangeException(nameof(ordinal));
 
-            var childRow = ordinal == RecursiveChildrenCount ? null : GetRecursiveChild(ordinal);
-            var childDataSet = ChildDataSet;
-            var index = childRow == null ? childDataSet.Count : childRow.DataRow.Index;
-            childDataSet.Insert(index, new DataRow());
-            var result = GetRecursiveChild(ordinal);
-            result.BeginEdit(true);
-            return result;
+            var dataRow = new DataRow();
+            childDataSet.Insert(ordinal, dataRow, updateAction);
+            return RowManager.RowMappings_GetRow(dataRow);
         }
 
         internal RowView View { get; set; }

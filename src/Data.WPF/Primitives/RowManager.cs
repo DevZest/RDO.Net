@@ -19,6 +19,7 @@ namespace DevZest.Data.Windows.Primitives
             InitializeRows();
             CoerceEofRow();
             SetCurrentRow(CoercedCurrentRow);
+            AutoBeginEdit = true;
         }
 
         private readonly Template _template;
@@ -285,9 +286,6 @@ namespace DevZest.Data.Windows.Primitives
             if (IsRecursive && dataRow.Model.GetDepth() == _rowMappings.Count - 1)
                 _rowMappings.Add(new List<RowPresenter>());
 
-            if (EditingEofRow != null && EditingEofRow.DataRow == dataRow)
-                return;
-
             var row = RowMappings_CreateRow(dataRow);
             var index = GetIndex(row);
             if (index >= 0)
@@ -507,32 +505,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal RowPresenter EditingEofRow { get; private set; }
-
-        internal void BeginEditEof()
-        {
-            var eofRow = EofRow;
-            Debug.Assert(eofRow != null);
-            EditingEofRow = eofRow;
-            EditingEofRow.DataRow = new DataRow();
-            DataSet.Add(EditingEofRow.DataRow);
-            OnRowsChanged();
-            Invalidate(eofRow);
-        }
-
-        internal void CancelEditEof()
-        {
-            Debug.Assert(EditingEofRow != null);
-
-            var eofRow = EofRow;
-            EditingEofRow.DataRow = null;
-            if (eofRow != null)
-            {
-                RemoveEofRow(eofRow);
-                OnRowsChanged();
-            }
-            EditingEofRow = null;
-        }
+        public bool AutoBeginEdit { get; set; }
 
         internal void Expand(RowPresenter row)
         {
@@ -562,21 +535,13 @@ namespace DevZest.Data.Windows.Primitives
             OnSetState(DataPresenterState.Rows);
         }
 
-        public RowPresenter InsertRow(int ordinal)
+        public RowPresenter InsertRow(int ordinal, Action<DataRow> updateAction = null)
         {
-            if (ordinal < 0 || ordinal > Rows.Count)
+            if (ordinal < 0 || ordinal > DataSet.Count)
                 throw new ArgumentOutOfRangeException(nameof(ordinal));
 
-
-            var row = ordinal < Rows.Count ? Rows[ordinal] : null;
-            if (row != null && row.Depth != 0)
-                throw new ArgumentException(Strings.RowManager_OrdinalNotTopLevel, nameof(ordinal));
-
-            var index = row == null ? DataSet.Count : row.DataRow.Index;
-            DataSet.Insert(index, new DataRow());
-            var result = Rows[ordinal];
-            result.BeginEdit(true);
-            return result;
+            DataSet.Insert(ordinal, new DataRow(), updateAction);
+            return _rowMappings[0][ordinal];
         }
     }
 }

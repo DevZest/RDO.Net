@@ -65,35 +65,6 @@ namespace DevZest.Data.Windows.Primitives
 
             var row = rowManager.InsertRow(0);
             Assert.AreEqual(3, rows.Count);
-            Assert.IsTrue(row.IsEditing);
-
-            row.CancelEdit();
-            Assert.AreEqual(2, rows.Count);
-        }
-
-        [TestMethod]
-        public void RowManager_InsertRow_Hierarchical()
-        {
-            var dataSet = MockProductCategories(3);
-            var rowManager = CreateRowManager(dataSet);
-            var rows = rowManager.Rows;
-
-            var row = rowManager.InsertRow(1);
-            Assert.IsTrue(row.IsEditing);
-            VerifyHierarchicalLevel(rows, 0, 0, 0, 0);
-
-            row.CancelEdit();
-            VerifyHierarchicalLevel(rows, 0, 0, 0);
-
-            rows[0].Expand();
-            try
-            {
-                rowManager.InsertRow(1);
-                Assert.Fail("An exception should be thrown because the ordinal is a child row.");
-            }
-            catch (ArgumentException)
-            {
-            }
         }
     }
 }
