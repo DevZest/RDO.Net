@@ -380,7 +380,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void DataSet_HierarchicalLevel()
+        public void DataSet_Depth()
         {
             int count = 3;
             var dataSet = GetDataSet(count);
@@ -393,6 +393,35 @@ namespace DevZest.Data
             var grandChildModel = childModel.GetChildModels()[0];
             Assert.AreEqual(2, grandChildModel.GetDepth());
             Assert.AreEqual(grandChildModel, grandChildModel.GetDataSet().Model);
+        }
+
+        [TestMethod]
+        public void DataSet_BeginAdd_EndAdd()
+        {
+            var dataSet = DataSet<SimpleModel>.New();
+            var dataRow = dataSet.BeginAdd();
+            Assert.AreEqual(DataRow.Placeholder, dataRow);
+            Assert.AreEqual(dataRow, dataSet.EditingRow);
+            dataSet._.Id[dataRow] = 5;
+            Assert.AreEqual(5, dataSet._.Id[dataRow]);
+            dataSet.EndAdd();
+            Assert.AreEqual(null, dataSet.EditingRow);
+            Assert.AreEqual(1, dataSet.Count);
+            Assert.AreEqual(5, dataSet._.Id[0]);
+        }
+
+        [TestMethod]
+        public void DataSet_BeginAdd_CancelAdd()
+        {
+            var dataSet = DataSet<SimpleModel>.New();
+            var dataRow = dataSet.BeginAdd();
+            Assert.AreEqual(DataRow.Placeholder, dataRow);
+            Assert.AreEqual(dataRow, dataSet.EditingRow);
+            dataSet._.Id[dataRow] = 5;
+            Assert.AreEqual(5, dataSet._.Id[dataRow]);
+            dataSet.CancelAdd();
+            Assert.AreEqual(null, dataSet.EditingRow);
+            Assert.AreEqual(0, dataSet.Count);
         }
     }
 }

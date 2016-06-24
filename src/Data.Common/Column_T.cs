@@ -285,7 +285,7 @@ namespace DevZest.Data
         private void SetValue(DataRow dataRow, T value)
         {
             Debug.Assert(dataRow != null);
-            if (IsReadOnly(dataRow.Ordinal))
+            if (IsReadOnly(dataRow))
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
 
             if (dataRow == ParentModel.EditingRow)
@@ -316,7 +316,7 @@ namespace DevZest.Data
         public bool IsReadOnly(DataRow dataRow)
         {
             VerifyDataRow(dataRow, nameof(dataRow));
-            return IsReadOnly(dataRow.Ordinal);
+            return dataRow == DataRow.Placeholder ? false : IsReadOnly(dataRow.Ordinal);
         }
 
         /// <summary>Gets a value indicates whether this column is readonly for provided <see cref="DataRow"/> ordinal.</summary>
