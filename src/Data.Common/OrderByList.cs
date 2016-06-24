@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DevZest.Data
 {
-    public static class OrderByJson
+    public static class OrderByList
     {
         private const string COLUMN = nameof(OrderBy.Column);
         private const string DIRECTION = nameof(OrderBy.Direction);
@@ -43,7 +43,7 @@ namespace DevZest.Data
                 .WriteEndObject();
         }
 
-        public static IReadOnlyList<OrderBy> Parse(Model model, string json)
+        public static IReadOnlyList<OrderBy> ParseJson(Model model, string json)
         {
             return string.IsNullOrEmpty(json) ? null : new OrderByJsonParser(json).ParseOrderByList(model);
         }
