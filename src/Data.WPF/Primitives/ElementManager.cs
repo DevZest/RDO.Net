@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
             BlockViewStartIndex = Template.ScalarItemsSplit;
         }
 
-        internal void RefreshElements()
+        private void RefreshElements()
         {
             if (Elements.Count == 0)
                 return;
