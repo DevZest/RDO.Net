@@ -82,7 +82,7 @@ namespace DevZest.Data
             {
                 ExpectToken(TokenKind.CurlyOpen);
                 ExpectObjectName(COLUMN);
-                var column = ParseColumn(model);
+                var column = ParseColumn<Column>(model);
                 ExpectComma();
                 var direction = ParseDirection();
                 ExpectToken(TokenKind.CurlyClose);

@@ -396,11 +396,12 @@ namespace DevZest.Data
             return result;
         }
 
-        public static Column FromJson(Model model, string jsonString)
+        public static T ParseJson<T>(Model model, string jsonString)
+            where T : Column
         {
             Check.NotEmpty(jsonString, nameof(jsonString));
 
-            return new ColumnJsonParser(jsonString).ParseTopLevelColumn(model);
+            return new ColumnJsonParser(jsonString).ParseTopLevelColumn<T>(model);
         }
 
         public abstract _String CastToString();

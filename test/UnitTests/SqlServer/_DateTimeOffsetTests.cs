@@ -209,7 +209,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_Equal, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -220,7 +220,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_FromString, json);
 
-            var columnFromJson = (_DateTimeOffset)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_DateTimeOffset>(null, json);
             Assert.AreEqual(new DateTimeOffset(new DateTime(2016, 6, 16), new TimeSpan()), columnFromJson.Eval());
         }
 
@@ -234,7 +234,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_GreaterThan, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -248,7 +248,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_GreaterThanOrEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -262,7 +262,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_LessThan, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -276,7 +276,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_LessThanOrEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -290,7 +290,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_NotEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -301,7 +301,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_DateTimeOffset_CastToString, json);
 
-            var columnFromJson = (_String)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_String>(null, json);
             Assert.AreEqual("2016-06-16T00:00:00.0000000+00:00", columnFromJson.Eval());
         }
     }

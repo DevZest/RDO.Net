@@ -42,7 +42,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_IsNull, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -71,7 +71,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_IsNotNull, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -101,7 +101,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_IfNull, json);
 
-            var columnFromJson = (_Int32)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int32>(null, json);
             Assert.AreEqual(3, columnFromJson.Eval());
         }
 
@@ -123,7 +123,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_GetDate, json);
 
-            var columnFromJson = (_DateTime)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_DateTime>(null, json);
             var currentDate = columnFromJson.Eval();
             var span = DateTime.Now - currentDate;
             Assert.AreEqual(true, span.Value.Seconds < 1);
@@ -147,7 +147,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_GetUtcDate, json);
 
-            var columnFromJson = (_DateTime)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_DateTime>(null, json);
             var currentDate = columnFromJson.Eval();
             var span = DateTime.UtcNow - currentDate;
             Assert.AreEqual(true, span.Value.Seconds < 1);
@@ -170,7 +170,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Functions_NewGuid, json);
 
-            var columnFromJson = (_Guid)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Guid>(null, json);
             var newGuid = columnFromJson.Eval();
             Assert.IsTrue(newGuid.HasValue);
         }

@@ -73,7 +73,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_SqlXml_FromString, json);
 
-            var columnFromJson = (_SqlXml)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_SqlXml>(null, json);
             Assert.AreEqual("<a></a>", columnFromJson.Eval().Value);
         }
 
@@ -100,7 +100,7 @@ namespace DevZest.Data.SqlServer
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_SqlXml_CastToString, json);
 
-            var columnFromJson = (_String)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_String>(null, json);
             Assert.AreEqual("<a></a>", columnFromJson.Eval());
         }
     }

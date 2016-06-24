@@ -42,7 +42,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Binary_CastToString, json);
 
-            var fromJsonColumn = (_String)Column.FromJson(null, json);
+            var fromJsonColumn = Column.ParseJson<_String>(null, json);
             Assert.AreEqual(Convert.ToBase64String(bytes), fromJsonColumn.Eval());
         }
     }

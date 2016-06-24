@@ -20,14 +20,16 @@ namespace DevZest.Data.Primitives
             ExpectToken(TokenKind.Comma);
         }
 
-        internal Column ParseTopLevelColumn(Model model)
+        internal T ParseTopLevelColumn<T>(Model model)
+            where T : Column
         {
-            var result = ParseColumn(model);
+            var result = ParseColumn<T>(model);
             ExpectToken(TokenKind.Eof);
             return result;
         }
 
-        internal Column ParseColumn(Model model, bool allowsNull = false)
+        internal T ParseColumn<T>(Model model, bool allowsNull = false)
+            where T : Column
         {
             if (allowsNull && PeekToken().Kind == TokenKind.Null)
             {
@@ -35,7 +37,7 @@ namespace DevZest.Data.Primitives
                 return null;
             }
 
-            Column result;
+            T result;
 
             var converter = ExpectColumnConverter();
   
@@ -44,14 +46,14 @@ namespace DevZest.Data.Primitives
             if (objectName == NAME)
             {
                 var name = ExpectToken(TokenKind.String).Text;
-                result = model[name] as Column;
+                result = model[name] as T;
                 if (result == null || result.GetType() != converter.ColumnType)
                     throw new FormatException(Strings.ColumnJsonParser_InvalidColumnType(name, converter.ColumnType.FullName));
             }
             else if (objectName == EXPRESSION)
             {
                 var expression = ParseExpression(model);
-                result = converter.MakeColumn(expression);
+                result = (T)converter.MakeColumn(expression);
             }
             else
                 throw new FormatException(Strings.ColumnJsonParser_InvalidObjectName(objectName, NAME, EXPRESSION));
@@ -108,7 +110,7 @@ namespace DevZest.Data.Primitives
             where T : Column
         {
             ExpectObjectName(name);
-            return (T)ParseColumn(model, allowsNull);
+            return ParseColumn<T>(model, allowsNull);
         }
 
         internal List<T> ParseNameColumnsPair<T>(string name, Model model)
@@ -121,12 +123,12 @@ namespace DevZest.Data.Primitives
 
             while (PeekToken().Kind == TokenKind.CurlyOpen)
             {
-                result.Add((T)ParseColumn(model));
+                result.Add(ParseColumn<T>(model));
 
                 while (PeekToken().Kind == TokenKind.Comma)
                 {
                     ConsumeToken();
-                    result.Add((T)ParseColumn(model));
+                    result.Add(ParseColumn<T>(model));
                 }
             }
 

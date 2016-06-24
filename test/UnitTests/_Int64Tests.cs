@@ -483,7 +483,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Add, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)2, columnFromJson.Eval());
         }
 
@@ -494,7 +494,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_BitwiseAnd, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)0, columnFromJson.Eval());
         }
 
@@ -505,7 +505,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_BitwiseOr, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -516,7 +516,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_BitwiseXor, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)0, columnFromJson.Eval());
         }
 
@@ -527,7 +527,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Divide, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)3, columnFromJson.Eval());
         }
 
@@ -538,7 +538,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Equal, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -549,7 +549,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromBoolean, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -560,7 +560,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromByte, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -571,7 +571,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromDecimal, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -582,7 +582,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromDouble, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -593,7 +593,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromInt16, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -604,7 +604,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromInt32, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -615,7 +615,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromSingle, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -626,7 +626,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_FromString, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)1, columnFromJson.Eval());
         }
 
@@ -637,7 +637,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_GreaterThan, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -648,7 +648,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_GreaterThanOrEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -659,7 +659,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_LessThan, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -670,7 +670,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_LessThanOrEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -681,7 +681,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Modulo, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)2, columnFromJson.Eval());
         }
 
@@ -692,7 +692,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Multiply, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)15, columnFromJson.Eval());
         }
 
@@ -703,7 +703,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Negate, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)(-5), columnFromJson.Eval());
         }
 
@@ -714,7 +714,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_NotEqual, json);
 
-            var columnFromJson = (_Boolean)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
             Assert.AreEqual(true, columnFromJson.Eval());
         }
 
@@ -725,7 +725,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_OnesComplement, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)(-1), columnFromJson.Eval());
         }
 
@@ -736,7 +736,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_Substract, json);
 
-            var columnFromJson = (_Int64)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_Int64>(null, json);
             Assert.AreEqual((Int64)2, columnFromJson.Eval());
         }
 
@@ -763,7 +763,7 @@ namespace DevZest.Data
             var json = column.ToJson(true);
             Assert.AreEqual(Json.Converter_Int64_CastToString, json);
 
-            var columnFromJson = (_String)Column.FromJson(null, json);
+            var columnFromJson = Column.ParseJson<_String>(null, json);
             Assert.AreEqual("1", columnFromJson.Eval());
         }
     }
