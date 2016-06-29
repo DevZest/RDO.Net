@@ -65,24 +65,6 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            public TBuilder Initialize(Action<TElement> initializer)
-            {
-                TemplateItem.InitInitializer(initializer);
-                return This;
-            }
-
-            public TBuilder Cleanup(Action<TElement> cleanupAction)
-            {
-                TemplateItem.InitCleanupAction(cleanupAction);
-                return This;
-            }
-
-            public TBuilder Behaviors(params IBehavior<TElement>[] behaviors)
-            {
-                TemplateItem.InitBehaviors(behaviors);
-                return This;
-            }
-
             public TBuilder AutoSize(int autoSizeOrder)
             {
                 TemplateItem.AutoSizeOrder = autoSizeOrder;
@@ -100,35 +82,6 @@ namespace DevZest.Data.Windows.Primitives
                 TemplateItem.AutoSizeOrder = autoSizeOrder;
                 TemplateItem.AutoSizeWaiver = autoSizeWaiver;
                 return This;
-            }
-        }
-
-        private sealed class Behavior
-        {
-            internal static Behavior Create<T>(IBehavior<T> behavior)
-                where T : UIElement, new()
-            {
-                return behavior == null ? null : new Behavior(x => behavior.Attach((T)x), x => behavior.Detach((T)x));
-            }
-
-            private Behavior(Action<UIElement> attachAction, Action<UIElement> detachAction)
-            {
-                Debug.Assert(attachAction != null);
-                Debug.Assert(detachAction != null);
-                _attachAction = attachAction;
-                _detachAction = detachAction;
-            }
-
-            Action<UIElement> _attachAction;
-            public void Attach(UIElement element)
-            {
-                _attachAction(element);
-            }
-
-            Action<UIElement> _detachAction;
-            public void Detach(UIElement element)
-            {
-                _detachAction(element);
             }
         }
 
@@ -163,127 +116,42 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal UIElement Generate()
+        protected UIElement Mount(params Action<UIElement>[] initializers)
         {
-            return CachedList.GetOrCreate(ref _cachedUIElements, Create);
-        }
-
-        private IList<BindingBase> _bindings = Array<BindingBase>.Empty;
-
-        internal void AddBinding(BindingBase binding)
-        {
-            Debug.Assert(binding != null);
-            if (_bindings == Array<BindingBase>.Empty)
-                _bindings = new List<BindingBase>();
-            _bindings.Add(binding);
-        }
-
-        private IList<Behavior> _behaviors = Array<Behavior>.Empty;
-
-        private void InitBehaviors<T>(IList<IBehavior<T>> behaviors)
-            where T : UIElement, new()
-        {
-            Debug.Assert(_behaviors == Array<Behavior>.Empty);
-
-            if (behaviors == null || behaviors.Count == 0)
-                return;
-
-            _behaviors = new Behavior[behaviors.Count];
-            for (int i = 0; i < _behaviors.Count; i++)
-                _behaviors[i] = Behavior.Create(behaviors[i]);
-        }
-
-        private Action<UIElement> _initializer;
-        private void InitInitializer<T>(Action<T> initializer)
-            where T : UIElement
-        {
-            if (initializer == null)
-                _initializer = null;
-            else
-                _initializer = x => initializer((T)x);
-        }
-
-        internal virtual void Initialize(UIElement element)
-        {
-            Debug.Assert(element != null && element.GetTemplateItem() == this);
-
-            if (_initializer != null)
-                _initializer(element);
-
-            foreach (var binding in _bindings)
+            var element = CachedList.GetOrCreate(ref _cachedUIElements, Create);
+            if (initializers != null)
             {
-                foreach (var trigger in binding.Triggers)
-                    trigger.Attach(element);
+                foreach (var initializer in initializers)
+                {
+                    if (initializer != null)
+                        initializer(element);
+                }
             }
-
-            foreach (var behavior in _behaviors)
-                behavior.Attach(element);
-
-            UpdateTarget(element);
+            OnMount(element);
+            Refresh(element);
+            SetBindings(element);
+            return element;
         }
 
-        private void Recycle(UIElement element)
+        protected virtual void SetBindings(UIElement element)
+        {
+        }
+
+        protected abstract void OnMount(UIElement element);
+
+        protected abstract void OnUnmount(UIElement element);
+
+        internal void Unmount(UIElement element)
         {
             Debug.Assert(element != null && element.GetTemplateItem() == this);
+            OnUnmount(element);
+            Cleanup(element);
             CachedList.Recycle(ref _cachedUIElements, element);
         }
 
-        private Action<UIElement> _cleanupAction;
-        private void InitCleanupAction<T>(Action<T> cleanupAction)
-            where T : UIElement
-        {
-            if (cleanupAction == null)
-                _cleanupAction = null;
-            else
-                _cleanupAction = x => cleanupAction((T)x);
-        }
+        protected abstract void Cleanup(UIElement element);
 
-        internal virtual void Cleanup(UIElement element)
-        {
-            foreach (var binding in _bindings)
-            {
-                foreach (var trigger in binding.Triggers)
-                    trigger.Detach(element);
-            }
-
-            foreach (var behavior in _behaviors)
-                behavior.Detach(element);
-
-            if (_cleanupAction != null)
-                _cleanupAction(element);
-
-            Recycle(element);
-        }
-
-        internal void UpdateTarget(UIElement element)
-        {
-            var bindingContext = BindingContext.Current;
-            bindingContext.Enter(this, element);
-            try
-            {
-                foreach (var binding in _bindings)
-                    binding.UpdateTarget(bindingContext, element);
-            }
-            finally
-            {
-                bindingContext.Exit();
-            }
-        }
-
-        internal void UpdateSource(UIElement element)
-        {
-            var bindingContext = BindingContext.Current;
-            bindingContext.Enter(this, element);
-            try
-            {
-                foreach (var binding in _bindings)
-                    binding.UpdateSource(bindingContext, element);
-            }
-            finally
-            {
-                bindingContext.Exit();
-            }
-        }
+        internal abstract void Refresh(UIElement elment);
 
         internal void VerifyRowRange()
         {

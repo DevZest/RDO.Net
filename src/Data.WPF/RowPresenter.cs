@@ -510,20 +510,11 @@ namespace DevZest.Data.Windows
             if (_rowItemsId == newValue)
                 return;
 
-            var bindingContext = BindingContext.Current;
-            bindingContext.Enter(this);
-            try
-            {
-                if (_rowItemsId >= 0)
-                    ClearElements();
+            if (_rowItemsId >= 0)
+                ClearElements();
 
-                _rowItemsId = newValue;
-                InitializeElements();
-            }
-            finally
-            {
-                bindingContext.Exit();
-            }
+            _rowItemsId = newValue;
+            InitializeElements();
         }
 
         internal RowItemCollection RowItems
@@ -545,10 +536,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < rowItems.Count; i++)
             {
                 var rowItem = rowItems[i];
-                var element = rowItem.Generate();
-                element.SetRowPresenter(this);
-                ElementCollection.Add(element);
-                rowItem.Initialize(element);
+                rowItem.Mount(this, x => ElementCollection.Add(x));
             }
         }
 
@@ -569,8 +557,7 @@ namespace DevZest.Data.Windows
             {
                 var rowItem = rowItems[i];
                 var element = Elements[i];
-                rowItem.Cleanup(element);
-                element.SetRowPresenter(null);
+                rowItem.Unmount(element);
             }
             ElementCollection.RemoveRange(0, Elements.Count);
         }
@@ -587,7 +574,7 @@ namespace DevZest.Data.Windows
             {
                 var rowItem = rowItems[i];
                 var element = Elements[i];
-                rowItem.UpdateTarget(element);
+                rowItem.Refresh(element);
             }
         }
 

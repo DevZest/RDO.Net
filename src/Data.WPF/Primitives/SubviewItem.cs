@@ -51,19 +51,18 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Func<RowPresenter, DataPresenter> DataPresenterConstructor { get; private set; }
 
-        internal sealed override void Initialize(UIElement element)
+        protected sealed override void Initialize(UIElement element, RowPresenter rowPresenter)
         {
-            base.Initialize(element);
+            base.Initialize(element, rowPresenter);
             var dataView = (DataView)element;
-            var parentRow = dataView.GetRowPresenter();
-            dataView.Initialize(this[parentRow]);
+            dataView.Initialize(this[rowPresenter]);
         }
 
-        internal sealed override void Cleanup(UIElement element)
+        protected override void Cleanup(UIElement element)
         {
-            base.Cleanup(element);
             var dataView = (DataView)element;
             dataView.Cleanup();
+            base.Cleanup(element);
         }
 
         void IConcatList<SubviewItem>.Sort(Comparison<SubviewItem> comparision)

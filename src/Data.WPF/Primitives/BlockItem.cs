@@ -42,50 +42,6 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private sealed class Binding : BindingBase
-        {
-            internal static Binding Bind<T>(TemplateItem templateItem, Action<IBlockPresenter, T> updateTarget)
-                where T : UIElement
-            {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), null, null);
-            }
-
-            internal static Binding BindToSource<T>(TemplateItem templateItem, Action<T, IBlockPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
-            {
-                return new Binding(templateItem, null, (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            internal static Binding BindTwoWay<T>(TemplateItem templateItem, Action<IBlockPresenter, T> updateTarget, Action<T, IBlockPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
-            {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            private Binding(TemplateItem templateItem, Action<IBlockPresenter, UIElement> updateTarget, Action<UIElement, IBlockPresenter> updateSource, BindingTrigger[] triggers)
-                : base(templateItem, triggers)
-            {
-                _updateTargetAction = updateTarget;
-                _updateSourceAction = updateSource;
-            }
-
-            private Action<IBlockPresenter, UIElement> _updateTargetAction;
-
-            private Action<UIElement, IBlockPresenter> _updateSourceAction;
-
-            public override void UpdateTarget(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateTargetAction != null)
-                    _updateTargetAction(bindingContext.BlockPresenter, element);
-            }
-
-            public override void UpdateSource(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateSourceAction != null)
-                    _updateSourceAction(element, bindingContext.BlockPresenter);
-            }
-        }
-
         public sealed class Builder<T> : TemplateItem.Builder<T, BlockItem, Builder<T>>
             where T : UIElement, new()
         {
@@ -104,21 +60,27 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddBlockItem(gridRange, item);
             }
 
-            public Builder<T> Bind(Action<IBlockPresenter, T> updateTarget)
+            public Builder<T> OnMount(Action<T, IBlockPresenter> onMount)
             {
-                TemplateItem.AddBinding(Binding.Bind(TemplateItem, updateTarget));
+                if (onMount == null)
+                    throw new ArgumentNullException(nameof(onMount));
+                TemplateItem.OnMount(onMount);
                 return This;
             }
 
-            public Builder<T> BindToSource(Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
+            public Builder<T> OnUnmount(Action<T, IBlockPresenter> onUnmount)
             {
-                TemplateItem.AddBinding(Binding.BindToSource(TemplateItem, updateSource, triggers));
+                if (onUnmount == null)
+                    throw new ArgumentNullException(nameof(onUnmount));
+                TemplateItem.OnUnmount(onUnmount);
                 return This;
             }
 
-            public Builder<T> BindTwoWay(Action<IBlockPresenter, T> updateTarget, Action<T, IBlockPresenter> updateSource, params BindingTrigger[] triggers)
+            public Builder<T> OnRefresh(Action<T, IBlockPresenter> onRefresh)
             {
-                TemplateItem.AddBinding(Binding.BindTwoWay(TemplateItem, updateTarget, updateSource, triggers));
+                if (onRefresh == null)
+                    throw new ArgumentNullException(nameof(onRefresh));
+                TemplateItem.OnRefresh(onRefresh);
                 return This;
             }
         }
@@ -132,6 +94,59 @@ namespace DevZest.Data.Windows.Primitives
         private BlockItem(Func<UIElement> constructor)
             : base(constructor)
         {
+        }
+
+        internal UIElement Mount(IBlockPresenter blockPresenter, Action<UIElement> initializer)
+        {
+            Debug.Assert(blockPresenter != null);
+            return base.Mount(x => x.SetBlockPresenter(blockPresenter), initializer);
+        }
+
+        protected sealed override void OnMount(UIElement element)
+        {
+            if (_onMount != null)
+                _onMount(element, element.GetBlockPresenter());
+        }
+
+        protected override void Cleanup(UIElement element)
+        {
+            element.SetBlockPresenter(null);
+        }
+
+        private Action<UIElement, IBlockPresenter> _onMount;
+        private void OnMount<T>(Action<T, IBlockPresenter> onMount)
+            where T : UIElement
+        {
+            Debug.Assert(onMount != null);
+            _onMount = (element, blockPresenter) => onMount((T)element, blockPresenter);
+        }
+
+        protected sealed override void OnUnmount(UIElement element)
+        {
+            if (_onMount != null)
+                _onMount(element, element.GetBlockPresenter());
+        }
+
+        private Action<UIElement, IBlockPresenter> _onUnmount;
+        private void OnUnmount<T>(Action<T, IBlockPresenter> onUnmount)
+            where T : UIElement
+        {
+            Debug.Assert(onUnmount != null);
+            _onUnmount = (element, blockPresenter) => onUnmount((T)element, blockPresenter);
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            if (_onRefresh != null)
+                _onRefresh(element, element.GetBlockPresenter());
+        }
+
+        private Action<UIElement, IBlockPresenter> _onRefresh;
+        private void OnRefresh<T>(Action<T, IBlockPresenter> onRefresh)
+            where T : UIElement
+        {
+            Debug.Assert(onRefresh != null);
+            _onRefresh = (element, blockPresenter) => onRefresh((T)element, blockPresenter);
         }
 
         internal override void VerifyRowRange(GridRange rowRange)

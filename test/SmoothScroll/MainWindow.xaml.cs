@@ -20,29 +20,31 @@ namespace SmoothScroll
             dataView.Show(dataSet, (TemplateBuilder builder, Foo _) =>
             {
                 builder.GridColumns("*")
-                    .GridRows("Auto")
-                    .Layout(Orientation.Vertical)
-                    .RowItem<TextBlock>().Bind((row, textBlock) =>
+                .GridRows("Auto")
+                .Layout(Orientation.Vertical)
+                .RowItem<TextBlock>()
+                    .OnRefresh((v, p) =>
                     {
-                        textBlock.Text = row.GetValue(_.Text);
-                        if (row.GetValue(_.IsSectionHeader).Value)
+                        v.Text = p.GetValue(_.Text);
+                        if (p.GetValue(_.IsSectionHeader).Value)
                         {
-                            textBlock.Foreground = Brushes.White;
-                            textBlock.Background = Brushes.Black;
-                            textBlock.Padding = new Thickness(0);
-                            textBlock.TextWrapping = TextWrapping.NoWrap;
+                            v.Foreground = Brushes.White;
+                            v.Background = Brushes.Black;
+                            v.Padding = new Thickness(0);
+                            v.TextWrapping = TextWrapping.NoWrap;
                         }
                         else
                         {
-                            var r = row.GetValue(_.BackgroundR).Value;
-                            var g = row.GetValue(_.BackgroundG).Value;
-                            var b = row.GetValue(_.BackgroundB).Value;
-                            textBlock.Foreground = Brushes.Black;
-                            textBlock.Background = new SolidColorBrush(Color.FromArgb(255, r, g, b));
-                            textBlock.Padding = new Thickness(10);
-                            textBlock.TextWrapping = TextWrapping.Wrap;
+                            var r = p.GetValue(_.BackgroundR).Value;
+                            var g = p.GetValue(_.BackgroundG).Value;
+                            var b = p.GetValue(_.BackgroundB).Value;
+                            v.Foreground = Brushes.Black;
+                            v.Background = new SolidColorBrush(Color.FromArgb(255, r, g, b));
+                            v.Padding = new Thickness(10);
+                            v.TextWrapping = TextWrapping.Wrap;
                         }
-                    }).At(0, 0);
+                    })
+                .At(0, 0);
             });
         }
 

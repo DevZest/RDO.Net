@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -41,50 +42,6 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private sealed class Binding : BindingBase
-        {
-            internal static Binding Bind<T>(TemplateItem templateItem, Action<DataPresenter, T> updateTarget)
-                where T : UIElement
-            {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), null, null);
-            }
-
-            internal static Binding BindToSource<T>(TemplateItem templateItem, Action<T, DataPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
-            {
-                return new Binding(templateItem, null, (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            internal static Binding BindTwoWay<T>(TemplateItem templateItem, Action<DataPresenter, T> updateTarget, Action<T, DataPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
-            {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            private Binding(TemplateItem templateItem, Action<DataPresenter, UIElement> updateTarget, Action<UIElement, DataPresenter> updateSource, BindingTrigger[] triggers)
-                : base(templateItem, triggers)
-            {
-                _updateTargetAction = updateTarget;
-                _updateSourceAction = updateSource;
-            }
-
-            private Action<DataPresenter, UIElement> _updateTargetAction;
-
-            private Action<UIElement, DataPresenter> _updateSourceAction;
-
-            public override void UpdateTarget(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateTargetAction != null)
-                    _updateTargetAction(bindingContext.DataPresenter, element);
-            }
-
-            public override void UpdateSource(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateSourceAction != null)
-                    _updateSourceAction(element, bindingContext.DataPresenter);
-            }
-        }
-
         public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
             where T : UIElement, new()
         {
@@ -104,21 +61,27 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddScalarItem(gridRange, item);
             }
 
-            public Builder<T> Bind(Action<DataPresenter, T> updateTarget)
+            public Builder<T> OnMount(Action<T, DataPresenter> onMount)
             {
-                TemplateItem.AddBinding(Binding.Bind(TemplateItem, updateTarget));
+                if (onMount == null)
+                    throw new ArgumentNullException(nameof(onMount));
+                TemplateItem.OnMount(onMount);
                 return This;
             }
 
-            public Builder<T> BindToSource(Action<T, DataPresenter> updateSource, params BindingTrigger[] triggers)
+            public Builder<T> OnUnmount(Action<T, DataPresenter> onUnmount)
             {
-                TemplateItem.AddBinding(Binding.BindToSource(TemplateItem, updateSource, triggers));
+                if (onUnmount == null)
+                    throw new ArgumentNullException(nameof(onUnmount));
+                TemplateItem.OnUnmount(onUnmount);
                 return This;
             }
 
-            public Builder<T> BindTwoWay(Action<DataPresenter, T> updateTarget, Action<T, DataPresenter> updateSource, params BindingTrigger[] triggers)
+            public Builder<T> OnRefresh(Action<T, DataPresenter> onRefresh)
             {
-                TemplateItem.AddBinding(Binding.BindTwoWay(TemplateItem, updateTarget, updateSource, triggers));
+                if (onRefresh == null)
+                    throw new ArgumentNullException(nameof(onRefresh));
+                TemplateItem.OnRefresh(onRefresh);
                 return This;
             }
         }
@@ -132,6 +95,57 @@ namespace DevZest.Data.Windows.Primitives
         private ScalarItem(Func<UIElement> constructor)
             : base(constructor)
         {
+        }
+
+        internal UIElement Mount(Action<UIElement> initializer)
+        {
+            return base.Mount(initializer);
+        }
+
+        protected sealed override void Cleanup(UIElement element)
+        {
+        }
+
+        protected sealed override void OnMount(UIElement element)
+        {
+            if (_onMount != null)
+                _onMount(element, element.GetDataPresenter());
+        }
+
+        private Action<UIElement, DataPresenter> _onMount;
+        private void OnMount<T>(Action<T, DataPresenter> onMount)
+            where T : UIElement
+        {
+            Debug.Assert(onMount != null);
+            _onMount = (element, dataPresenter) => onMount((T)element, dataPresenter);
+        }
+
+        protected sealed override void OnUnmount(UIElement element)
+        {
+            if (_onUnmount != null)
+                _onUnmount(element, element.GetDataPresenter());
+        }
+
+        private Action<UIElement, DataPresenter> _onUnmount;
+        private void OnUnmount<T>(Action<T, DataPresenter> onUnmount)
+            where T : UIElement
+        {
+            Debug.Assert(onUnmount != null);
+            _onUnmount = (element, dataPresenter) => onUnmount((T)element, dataPresenter);
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            if (_onRefresh != null)
+                _onRefresh(element, element.GetDataPresenter());
+        }
+
+        private Action<UIElement, DataPresenter> _onRefresh;
+        private void OnRefresh<T>(Action<T, DataPresenter> onRefresh)
+            where T : UIElement
+        {
+            Debug.Assert(onRefresh != null);
+            _onRefresh = (element, dataPresenter) => onRefresh((T)element, dataPresenter);
         }
 
         public bool IsMultidimensional { get; private set; }

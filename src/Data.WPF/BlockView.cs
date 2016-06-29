@@ -164,9 +164,7 @@ namespace DevZest.Data.Windows
 
         private void AddElement(BlockItem blockItem)
         {
-            var element = blockItem.Generate();
-            AddElement(element);
-            blockItem.Initialize(element);
+            blockItem.Mount(this, x => ElementCollection.Add(x));
         }
 
         private bool AddElement(int blockIndex, int offset)
@@ -177,14 +175,8 @@ namespace DevZest.Data.Windows
                 return false;
             var row = rows[index];
             var rowView = ElementManager.Realize(row);
-            AddElement(rowView);
+            ElementCollection.Add(rowView);
             return true;
-        }
-
-        private void AddElement(UIElement element)
-        {
-            ElementCollection.Add(element);
-            element.SetBlockPresenter(this);
         }
 
         internal void ClearElements()
@@ -209,7 +201,7 @@ namespace DevZest.Data.Windows
         {
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
-            blockItem.Cleanup(element);
+            blockItem.Unmount(element);
             RemoveAt(lastIndex);
         }
 
@@ -223,7 +215,6 @@ namespace DevZest.Data.Windows
 
         private void RemoveAt(int index)
         {
-            Elements[index].SetBlockPresenter(null);
             ElementCollection.RemoveAt(index);
         }
 
@@ -249,7 +240,7 @@ namespace DevZest.Data.Windows
         private void RefreshElement(BlockItem blockItem, int index)
         {
             var element = Elements[index];
-            blockItem.UpdateTarget(element);
+            blockItem.Refresh(element);
         }
 
         private GridSpan VariantByBlockGridSpan

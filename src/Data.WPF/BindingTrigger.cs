@@ -7,9 +7,9 @@ namespace DevZest.Data.Windows
 {
     public abstract class BindingTrigger
     {
-        public static BindingTrigger Initialized
+        public static BindingTrigger Manual
         {
-            get { return InitializedTrigger.Singleton; }
+            get { return ManualTrigger.Singleton; }
         }
 
         public static BindingTrigger LostFocus
@@ -24,19 +24,16 @@ namespace DevZest.Data.Windows
             return new DependencyPropertyChangedTrigger(property);
         }
 
-        private sealed class InitializedTrigger : BindingTrigger
+        private sealed class ManualTrigger : BindingTrigger
         {
-            public static readonly InitializedTrigger Singleton = new InitializedTrigger();
+            public static readonly ManualTrigger Singleton = new ManualTrigger();
 
-            private InitializedTrigger()
+            private ManualTrigger()
             {
             }
 
             protected internal override void Attach(UIElement element)
             {
-                var templateItem = element.GetTemplateItem();
-                if (templateItem != null)
-                    templateItem.UpdateSource(element);
             }
 
             protected internal override void Detach(UIElement element)
@@ -64,7 +61,7 @@ namespace DevZest.Data.Windows
 
             private void OnLostFocus(object sender, RoutedEventArgs e)
             {
-                UpdateSource((UIElement)sender);
+                UpdateBinding((UIElement)sender);
             }
         }
 
@@ -91,7 +88,7 @@ namespace DevZest.Data.Windows
 
             private void OnPropertyChanged(object sender, EventArgs e)
             {
-                UpdateSource((UIElement)sender);
+                UpdateBinding((UIElement)sender);
             }
         }
 
@@ -99,11 +96,11 @@ namespace DevZest.Data.Windows
 
         protected internal abstract void Detach(UIElement element);
 
-        protected void UpdateSource(UIElement element)
+        protected void UpdateBinding(UIElement element)
         {
-            var templateItem = element.GetTemplateItem();
-            if (templateItem != null)
-                templateItem.UpdateSource(element);
+            var rowItem = element.GetTemplateItem() as RowItem;
+            if (rowItem != null)
+                rowItem.UpdateBinding(element, this);
         }
     }
 }

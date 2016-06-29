@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -40,47 +41,21 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private sealed class Binding : BindingBase
+        private struct Binding
         {
-            internal static Binding Bind<T>(TemplateItem templateItem, Action<RowPresenter, T> updateTarget)
-                where T : UIElement
+            public Binding(BindingTrigger trigger, Action<RowPresenter, UIElement> action)
             {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), null, null);
+                Trigger = trigger;
+                Action = action;
             }
 
-            internal static Binding BindToSource<T>(TemplateItem templateItem, Action<T, RowPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
+            public readonly BindingTrigger Trigger;
+            public readonly Action<RowPresenter, UIElement> Action;
+
+            public void Update(UIElement element, BindingTrigger trigger)
             {
-                return new Binding(templateItem, null, (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            internal static Binding BindTwoWay<T>(TemplateItem templateItem, Action<RowPresenter, T> updateTarget, Action<T, RowPresenter> updateSource, BindingTrigger[] triggers)
-                where T : UIElement
-            {
-                return new Binding(templateItem, (source, element) => updateTarget(source, (T)element), (element, source) => updateSource((T)element, source), triggers);
-            }
-
-            private Binding(TemplateItem templateItem, Action<RowPresenter, UIElement> updateTarget, Action<UIElement, RowPresenter> updateSource, BindingTrigger[] triggers)
-                : base(templateItem, triggers)
-            {
-                _updateTargetAction = updateTarget;
-                _updateSourceAction = updateSource;
-            }
-
-            private Action<RowPresenter, UIElement> _updateTargetAction;
-
-            private Action<UIElement, RowPresenter> _updateSourceAction;
-
-            public override void UpdateTarget(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateTargetAction != null)
-                    _updateTargetAction(bindingContext.RowPresenter, element);
-            }
-
-            public override void UpdateSource(BindingContext bindingContext, UIElement element)
-            {
-                if (_updateSourceAction != null)
-                    _updateSourceAction(element, bindingContext.RowPresenter);
+                if (trigger == Trigger)
+                    Action(element.GetRowPresenter(), element);
             }
         }
 
@@ -102,21 +77,37 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddRowItem(gridRange, item);
             }
 
-            public Builder<T> Bind(Action<RowPresenter, T> updateTargetAction)
+            public Builder<T> OnMount(Action<T, RowPresenter> onMount)
             {
-                TemplateItem.AddBinding(Binding.Bind(TemplateItem, updateTargetAction));
+                if (onMount == null)
+                    throw new ArgumentNullException(nameof(onMount));
+                TemplateItem.OnMount(onMount);
                 return This;
             }
 
-            public Builder<T> BindToSource(Action<T, RowPresenter> updateSourceAction, params BindingTrigger[] triggers)
+            public Builder<T> OnUnmount(Action<T, RowPresenter> onUnmount)
             {
-                TemplateItem.AddBinding(Binding.BindToSource(TemplateItem, updateSourceAction, triggers));
+                if (onUnmount == null)
+                    throw new ArgumentNullException(nameof(onUnmount));
+                TemplateItem.OnUnmount(onUnmount);
                 return This;
             }
 
-            public Builder<T> BindTwoWay(Action<RowPresenter, T> updateTargetAction, Action<T, RowPresenter> updateSourceAction, params BindingTrigger[] triggers)
+            public Builder<T> OnRefresh(Action<T, RowPresenter> onRefresh)
             {
-                TemplateItem.AddBinding(Binding.BindTwoWay(TemplateItem, updateTargetAction, updateSourceAction, triggers));
+                if (onRefresh == null)
+                    throw new ArgumentNullException(nameof(onRefresh));
+                TemplateItem.OnRefresh(onRefresh);
+                return This;
+            }
+
+            public Builder<T> Bind(BindingTrigger trigger, Action<RowPresenter, T> action)
+            {
+                if (trigger == null)
+                    throw new ArgumentNullException(nameof(trigger));
+                if (action == null)
+                    throw new ArgumentNullException(nameof(action));
+                TemplateItem.Bind(trigger, action);
                 return This;
             }
         }
@@ -130,6 +121,88 @@ namespace DevZest.Data.Windows.Primitives
         internal RowItem(Func<UIElement> constructor)
             : base(constructor)
         {
+        }
+
+        internal UIElement Mount(RowPresenter rowPresenter, Action<UIElement> initializer)
+        {
+            Debug.Assert(rowPresenter != null);
+            return base.Mount(x => Initialize(x, rowPresenter), initializer);
+        }
+
+        protected virtual void Initialize(UIElement element, RowPresenter rowPresenter)
+        {
+            element.SetRowPresenter(rowPresenter);
+        }
+
+        protected override void SetBindings(UIElement element)
+        {
+            foreach (var binding in _bindings)
+                binding.Trigger.Attach(element);
+        }
+
+        protected override void Cleanup(UIElement element)
+        {
+            foreach (var binding in _bindings)
+                binding.Trigger.Detach(element);
+            element.SetRowPresenter(null);
+        }
+
+        protected sealed override void OnMount(UIElement element)
+        {
+            if (_onMount != null)
+                _onMount(element, element.GetRowPresenter());
+        }
+
+        private Action<UIElement, RowPresenter> _onMount;
+        private void OnMount<T>(Action<T, RowPresenter> onMount)
+            where T : UIElement
+        {
+            Debug.Assert(onMount != null);
+            _onMount = (element, rowPresenter) => onMount((T)element, rowPresenter);
+        }
+
+        protected sealed override void OnUnmount(UIElement element)
+        {
+            if (_onMount != null)
+                _onMount(element, element.GetRowPresenter());
+        }
+
+        private Action<UIElement, RowPresenter> _onUnmount;
+        private void OnUnmount<T>(Action<T, RowPresenter> onUnmount)
+            where T : UIElement
+        {
+            Debug.Assert(onUnmount != null);
+            _onUnmount = (element, rowPresenter) => onUnmount((T)element, rowPresenter);
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            if (_onRefresh != null)
+                _onRefresh(element, element.GetRowPresenter());
+        }
+
+        private Action<UIElement, RowPresenter> _onRefresh;
+        private void OnRefresh<T>(Action<T, RowPresenter> onRefresh)
+            where T : UIElement
+        {
+            Debug.Assert(onRefresh != null);
+            _onRefresh = (element, rowPresenter) => onRefresh((T)element, rowPresenter);
+        }
+
+        private IList<Binding> _bindings = Array<Binding>.Empty;
+        private void Bind<T>(BindingTrigger trigger, Action<RowPresenter, T> action)
+            where T : UIElement
+        {
+            if (_bindings == Array<Binding>.Empty)
+                _bindings = new List<Binding>();
+
+            _bindings.Add(new Binding(trigger, (rowPresenter, element) => action(rowPresenter, (T)element)));
+        }
+
+        internal void UpdateBinding(UIElement element, BindingTrigger trigger)
+        {
+            foreach (var binding in _bindings)
+                binding.Update(element, trigger);
         }
 
         internal sealed override void VerifyRowRange(GridRange rowRange)

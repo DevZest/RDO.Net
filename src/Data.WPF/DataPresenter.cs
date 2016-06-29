@@ -6,6 +6,7 @@ using System.Linq;
 using DevZest.Data.Windows.Factories;
 using DevZest.Data.Windows.Primitives;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -66,8 +67,14 @@ namespace DevZest.Data.Windows
             {
                 var column = columns[i];
                 templateBuilder
-                    .ColumnHeader(column).At(i, 0)
-                    .TextBlock(column);
+                    .ScalarItem<ColumnHeader>()
+                    .At(i, 0)
+                    .RowItem<TextBlock>()
+                        .OnRefresh((element, row) =>
+                        {
+                            element.Text = (row[column] ?? string.Empty).ToString();
+                        })
+                    .At(i, 1);
             }
         }
 

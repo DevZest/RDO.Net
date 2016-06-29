@@ -120,7 +120,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarItem.BlockDimensions; i++)
                 {
                     var element = scalarItem[i];
-                    scalarItem.UpdateTarget(element);
+                    scalarItem.Refresh(element);
                 }
             }
         }
@@ -157,11 +157,7 @@ namespace DevZest.Data.Windows.Primitives
         private int InsertDataElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
-            {
-                var element = scalarItem.Generate();
-                ElementCollection.Insert(index + i + 1, element);
-                scalarItem.Initialize(element);
-            }
+                scalarItem.Mount(x => ElementCollection.Insert(index + i + 1, x));
             return index + count;
         }
 
@@ -171,7 +167,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var element = Elements[index + 1];
                 Debug.Assert(element.GetTemplateItem() == scalarItem);
-                scalarItem.Cleanup(element);
+                scalarItem.Unmount(element);
                 ElementCollection.RemoveAt(index + 1);
             }
         }
