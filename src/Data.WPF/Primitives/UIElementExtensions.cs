@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows.Primitives
         public static DataPresenter GetDataPresenter(this UIElement element)
         {
             var templateItem = element.GetTemplateItem();
-            return templateItem == null ? null : templateItem.Template.DataPresenter;
+            return templateItem == null || templateItem.Template == null ? null : templateItem.Template.DataPresenter;
         }
 
         internal static void SetTemplateItem(this UIElement element, TemplateItem value)
