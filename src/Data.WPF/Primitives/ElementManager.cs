@@ -224,7 +224,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private bool _isDirty;
-        protected sealed override void Invalidate(RowPresenter row)
+        internal sealed override void Invalidate(RowPresenter row)
         {
             if (_isDirty || ElementCollection == null)
                 return;

@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows.Primitives
             {
             }
 
-            protected override void Invalidate(RowPresenter row)
+            internal override void Invalidate(RowPresenter row)
             {
             }
         }

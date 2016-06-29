@@ -39,64 +39,26 @@ namespace DevZest.Data.Windows.Primitives
             get { return _dataSet; }
         }
 
-        int _rowPresenterStateFlags;
+        internal abstract void Invalidate(RowPresenter rowPresenter);
 
-        private static int GetMask(RowPresenterState rowPresenterState)
+        protected virtual void OnRowsChanged()
         {
-            return 1 << (int)rowPresenterState;
+            Invalidate(null);
         }
 
-        private bool GetStateFlag(RowPresenterState rowPresenterState)
+        protected virtual void OnCurrentRowChanged()
         {
-            return (_rowPresenterStateFlags & GetMask(rowPresenterState)) != 0;
+            Invalidate(null);
         }
 
-        private void SetStateFlag(RowPresenterState rowPresenterState)
+        private void OnEditingRowChanged()
         {
-            _rowPresenterStateFlags |= GetMask(rowPresenterState);
-
+            Invalidate(null);
         }
 
-        internal void OnGetState(RowPresenter rowPresenter, RowPresenterState rowPresenterState)
+        private void OnSelectedRowsChanged()
         {
-            SetStateFlag(rowPresenterState);
-        }
-
-        internal void OnSetState(RowPresenter rowPresenter, RowPresenterState rowPresenterState)
-        {
-            if (GetStateFlag(rowPresenterState))
-                Invalidate(rowPresenter);
-        }
-
-        protected abstract void Invalidate(RowPresenter rowPresenter);
-
-        int _dataPresenterStateFlags;
-
-        private static int GetMask(DataPresenterState dataPresenterState)
-        {
-            return 1 << (int)dataPresenterState;
-        }
-
-        private bool GetStateFlag(DataPresenterState dataPresenterState)
-        {
-            return (_dataPresenterStateFlags & GetMask(dataPresenterState)) != 0;
-        }
-
-        private void SetStateFlag(DataPresenterState dataPresenterState)
-        {
-            _dataPresenterStateFlags |= GetMask(dataPresenterState);
-
-        }
-
-        protected void OnGetState(DataPresenterState dataPresenterState)
-        {
-            SetStateFlag(dataPresenterState);
-        }
-
-        protected virtual void OnSetState(DataPresenterState dataPresenterState)
-        {
-            if (GetStateFlag(dataPresenterState))
-                Invalidate(null);
+            Invalidate(null);
         }
 
         private List<List<RowPresenter>> _rowMappings;
@@ -128,7 +90,7 @@ namespace DevZest.Data.Windows.Primitives
             DisposeRow(_rowMappings[depth][ordinal]);
             _rowMappings[depth].RemoveAt(ordinal);
             if (!IsRecursive)
-                OnSetState(DataPresenterState.Rows);
+                OnRowsChanged();
         }
 
         protected virtual void DisposeRow(RowPresenter row)
@@ -139,11 +101,7 @@ namespace DevZest.Data.Windows.Primitives
         private List<RowPresenter> _rows;
         public IReadOnlyList<RowPresenter> Rows
         {
-            get
-            {
-                OnGetState(DataPresenterState.Rows);
-                return _rows;
-            }
+            get { return _rows; }
         }
 
         private void Rows_Insert(int index, RowPresenter row)
@@ -292,14 +250,14 @@ namespace DevZest.Data.Windows.Primitives
                 Rows_UpdateIndex(index);
             }
             else
-                OnSetState(DataPresenterState.Rows);
-            OnRowsChanged();
+                OnRowsChanged();
+            OnDataSetChanged();
         }
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
             OnDataRowRemoved(e.Model.GetDepth(), e.Index);
-            OnRowsChanged();
+            OnDataSetChanged();
         }
 
         private void OnDataRowRemoved(int depth, int ordinal)
@@ -317,11 +275,11 @@ namespace DevZest.Data.Windows.Primitives
             RowMappings_Remove(depth, ordinal);
         }
 
-        private void OnRowsChanged()
+        private void OnDataSetChanged()
         {
             CoerceEofRow();
             CurrentRow = CoercedCurrentRow;
-            OnSetState(DataPresenterState.Rows);
+            OnRowsChanged();
         }
 
         private void CoerceEofRow()
@@ -433,15 +391,11 @@ namespace DevZest.Data.Windows.Primitives
         private RowPresenter _currentRow;
         public virtual RowPresenter CurrentRow
         {
-            get
-            {
-                OnGetState(DataPresenterState.CurrentRow);
-                return _currentRow;
-            }
+            get { return _currentRow; }
             set
             {
                 SetCurrentRow(value);
-                OnSetState(DataPresenterState.CurrentRow);
+                OnCurrentRowChanged();
             }
         }
 
@@ -469,37 +423,29 @@ namespace DevZest.Data.Windows.Primitives
         private HashSet<RowPresenter> _selectedRows = new HashSet<RowPresenter>();
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
-            get
-            {
-                OnGetState(DataPresenterState.SelectedRows);
-                return _selectedRows;
-            }
+            get { return _selectedRows; }
         }
 
         internal void AddSelectedRow(RowPresenter row)
         {
             _selectedRows.Add(row);
-            OnSetState(DataPresenterState.SelectedRows);
+            OnSelectedRowsChanged();
         }
 
         internal void RemoveSelectedRow(RowPresenter row)
         {
             _selectedRows.Remove(row);
-            OnSetState(DataPresenterState.SelectedRows);
+            OnSelectedRowsChanged();
         }
 
         private RowPresenter _editingRow;
         public virtual RowPresenter EditingRow
         {
-            get
-            {
-                OnGetState(DataPresenterState.EditingRow);
-                return _editingRow;
-            }
+            get { return _editingRow; }
             internal set
             {
                 _editingRow = value;
-                OnSetState(DataPresenterState.EditingRow);
+                OnEditingRowChanged();
             }
         }
 
@@ -516,7 +462,7 @@ namespace DevZest.Data.Windows.Primitives
                 nextOrdinal = InsertRowRecursively(nextOrdinal, childRow);
             }
             Rows_UpdateIndex(nextOrdinal);
-            OnSetState(DataPresenterState.Rows);
+            OnRowsChanged();
         }
 
         internal void Collapse(RowPresenter row)
@@ -530,7 +476,7 @@ namespace DevZest.Data.Windows.Primitives
 
             Rows_RemoveRange(nextOrdinal, count);
             Rows_UpdateIndex(nextOrdinal);
-            OnSetState(DataPresenterState.Rows);
+            OnRowsChanged();
         }
 
         public RowPresenter InsertRow(int ordinal, Action<DataRow> updateAction = null)

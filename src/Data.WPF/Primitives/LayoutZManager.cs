@@ -19,14 +19,11 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViews.RealizeFirst(CurrentRow.Index);
         }
 
-        protected override void OnSetState(DataPresenterState dataPresenterState)
+        protected override void OnCurrentRowChanged()
         {
-            base.OnSetState(dataPresenterState);
-            if (dataPresenterState == DataPresenterState.CurrentRow)
-            {
-                BlockViews.VirtualizeAll();
-                RefreshBlock();
-            }
+            BlockViews.VirtualizeAll();
+            RefreshBlock();
+            base.OnCurrentRowChanged();
         }
 
         protected override void PrepareMeasureBlocks()

@@ -61,7 +61,6 @@
     <Compile Include="Primitives\GridSpan.cs" />
     <Compile Include="Primitives\GridTrackCollection.cs" />
     <Compile Include="Primitives\IElementCollection.cs" />
-    <Compile Include="DataPresenterState.cs" />
     <Compile Include="Primitives\IGridTrackCollection.cs" />
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
@@ -79,7 +78,6 @@
     <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
-    <Compile Include="RowPresenterState.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />
     <Compile Include="TemplateBuilder.cs" />

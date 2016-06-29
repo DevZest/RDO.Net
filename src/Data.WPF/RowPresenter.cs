@@ -93,14 +93,7 @@ namespace DevZest.Data.Windows
 
         public int RecursiveChildrenCount
         {
-            get
-            {
-                if (!IsRecursive)
-                    return 0;
-
-                OnGetState(RowPresenterState.RecursiveChildren);
-                return ChildDataSet.Count;
-            }
+            get { return !IsRecursive ? 0 : ChildDataSet.Count; }
         }
 
         private DataSet ChildDataSet
@@ -117,7 +110,6 @@ namespace DevZest.Data.Windows
             if (index < 0 || index >= RecursiveChildrenCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            OnGetState(RowPresenterState.RecursiveChildren);
             return RowManager.RowMappings_GetRow(ChildDataSet[index]);
         }
 
@@ -133,14 +125,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private void OnGetState(RowPresenterState rowPresenterState)
+        private void Invalidate()
         {
-            RowManager.OnGetState(this, rowPresenterState);
-        }
-
-        private void OnSetState(RowPresenterState rowPresenterState)
-        {
-            RowManager.OnSetState(this, rowPresenterState);
+            RowManager.Invalidate(this);
         }
 
         private int _index = -1;
@@ -148,7 +135,6 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                OnGetState(RowPresenterState.Index);
                 if (RowManager.IsRecursive)
                     return _index;
                 else
@@ -157,6 +143,7 @@ namespace DevZest.Data.Windows
             internal set
             {
                 _index = value;
+                Invalidate();
             }
         }
 
@@ -168,15 +155,11 @@ namespace DevZest.Data.Windows
         private bool _isExpanded = false;
         public bool IsExpanded
         {
-            get
-            {
-                OnGetState(RowPresenterState.IsExpanded);
-                return _isExpanded;
-            }
+            get { return _isExpanded; }
             private set
             {
                 _isExpanded = value;
-                OnSetState(RowPresenterState.IsExpanded);
+                Invalidate();
             }
         }
 
@@ -211,11 +194,7 @@ namespace DevZest.Data.Windows
         private bool _isCurrent;
         public bool IsCurrent
         {
-            get
-            {
-                OnGetState(RowPresenterState.IsCurrent);
-                return _isCurrent;
-            }
+            get { return _isCurrent; }
             internal set
             {
                 if (_isCurrent == value)
@@ -223,18 +202,14 @@ namespace DevZest.Data.Windows
 
                 _isCurrent = value;
                 if (_rowManager !=null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
-                    OnSetState(RowPresenterState.IsCurrent);
+                    Invalidate();
             }
         }
 
         private bool _isSelected;
         public bool IsSelected
         {
-            get
-            {
-                OnGetState(RowPresenterState.IsSelected);
-                return _isSelected;
-            }
+            get { return _isSelected; }
             set
             {
                 if (_isSelected == value)
@@ -248,7 +223,7 @@ namespace DevZest.Data.Windows
                 if (_isSelected)
                     RowManager.AddSelectedRow(this);
 
-                OnSetState(RowPresenterState.IsSelected);
+                Invalidate();
             }
         }
 

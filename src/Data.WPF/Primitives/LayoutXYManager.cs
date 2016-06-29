@@ -257,11 +257,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return ToVector(0, BlockDimensionLength); }
         }
 
-        protected override void OnSetState(DataPresenterState dataPresenterState)
+        protected override void OnRowsChanged()
         {
-            base.OnSetState(dataPresenterState);
-            if (dataPresenterState == DataPresenterState.Rows)
-                InvalidateBlocks();
+            InvalidateBlocks();
+            base.OnRowsChanged();
         }
 
         internal override Size Measure(Size availableSize)
