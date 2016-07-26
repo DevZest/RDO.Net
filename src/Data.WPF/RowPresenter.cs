@@ -55,7 +55,7 @@ namespace DevZest.Data.Windows
 
         private bool IsRecursive
         {
-            get { return !IsEof && RowManager.IsRecursive; }
+            get { return !IsEof && RowManager.Template.IsRecursive; }
         }
 
         public DataPresenter DataPresenter
@@ -135,7 +135,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                if (RowManager.IsRecursive)
+                if (RowManager.IsQuery)
                     return _index;
                 else
                     return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;

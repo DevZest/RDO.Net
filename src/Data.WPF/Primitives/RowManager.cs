@@ -28,7 +28,31 @@ namespace DevZest.Data.Windows.Primitives
             get { return _template; }
         }
 
-        public bool IsRecursive
+        private _Boolean[] _where;
+
+        private OrderBy[][] _orderBy;
+
+        public void Where(_Boolean where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OrderBy(OrderBy[] orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WhereOrderBy(_Boolean where, OrderBy[] orderBy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsQuery
+        {
+            get { return IsRecursive || _where != null || _orderBy != null; }
+        }
+
+        private bool IsRecursive
         {
             get { return Template.IsRecursive; }
         }
@@ -89,7 +113,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             DisposeRow(_rowMappings[depth][ordinal]);
             _rowMappings[depth].RemoveAt(ordinal);
-            if (!IsRecursive)
+            if (!IsQuery)
                 OnRowsChanged();
         }
 
@@ -109,11 +133,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(row != null);
 
             _rows.Insert(index, row);
-            if (IsRecursive)
-            {
-                Debug.Assert(row.Index == -1);
-                row.Index = index;
-            }
+            row.Index = index;
         }
 
         private void Rows_RemoveAt(int index)
@@ -147,7 +167,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void Rows_UpdateIndex(int startIndex)
         {
-            Debug.Assert(IsRecursive);
+            Debug.Assert(IsQuery);
 
             for (int i = startIndex; i < _rows.Count; i++)
                 _rows[i].Index = i;
@@ -175,8 +195,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitializeRows()
         {
-            _rows = IsRecursive ? new List<RowPresenter>() : _rowMappings[0];
-            if (IsRecursive)
+            _rows = IsQuery ? new List<RowPresenter>() : _rowMappings[0];
+            if (IsQuery)
             {
                 int index = 0;
                 foreach (var row in _rowMappings[0])
