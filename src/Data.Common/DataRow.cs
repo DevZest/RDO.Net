@@ -12,7 +12,7 @@ namespace DevZest.Data
     /// </summary>
     public sealed class DataRow : EventArgs
     {
-        public static readonly DataRow Placeholder = new DataRow();
+        internal static readonly DataRow Placeholder = new DataRow();
 
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
@@ -495,7 +495,7 @@ namespace DevZest.Data
 
         public bool BeginEdit()
         {
-            if (Model.EditingRow != null)
+            if (Model == null || Model.EditingRow != null)
                 return false;
 
             Model.BeginEdit(this);
@@ -504,7 +504,7 @@ namespace DevZest.Data
 
         public bool EndEdit()
         {
-            if (Model.EditingRow != this)
+            if (Model == null || Model.EditingRow != this)
                 return false;
 
             Model.EndEdit(this);
@@ -513,7 +513,7 @@ namespace DevZest.Data
 
         public bool CancelEdit()
         {
-            if (Model.EditingRow != this)
+            if (Model == null || Model.EditingRow != this)
                 return false;
 
             Model.CancelEdit();

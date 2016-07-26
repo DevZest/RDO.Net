@@ -299,6 +299,15 @@ namespace DevZest.Data
             get { return Model.EditingRow; }
         }
 
+        public DataRow AddingRow
+        {
+            get
+            {
+                var editingRow = EditingRow;
+                return editingRow == DataRow.Placeholder ? editingRow : null;
+            }
+        }
+
         public ReadOnlyCollection<ValidationMessage> ValidateEditingRow()
         {
             return EditingRow == null ? ValidationMessageCollection.Empty : Model.Validate(EditingRow);
