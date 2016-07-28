@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
 
         public bool IsEof
         {
-            get { return DataRow == null || DataRow == DataRow.Placeholder; }
+            get { return DataRow == null; }
         }
 
         public RowPresenter RecursiveParent
@@ -395,10 +395,7 @@ namespace DevZest.Data.Windows
 
             BeginEdit(Model, this);
             if (IsEof)
-            {
-                DataRow = DataRow.Placeholder;
-                DataSet.BeginAdd();
-            }
+                DataRow = DataSet.BeginAdd();
             else
                 DataRow.BeginEdit();
             RowManager.EditingRow = this;
