@@ -101,9 +101,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder EOF(EofVisibility value)
+        public TemplateBuilder EmptyRowPosition(EmptyRowPosition value)
         {
-            Template.EofVisibility = value;
+            Template.EmptyRowPosition = value;
             return this;
         }
 
@@ -188,7 +188,7 @@ namespace DevZest.Data.Windows
 
             return new SubviewItem.Builder<TView>(this, rowPresenter =>
             {
-                if (rowPresenter.IsEof)
+                if (rowPresenter.IsEmpty)
                     return null;
                 return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
             });

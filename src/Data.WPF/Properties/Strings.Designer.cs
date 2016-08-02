@@ -132,6 +132,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// BeginEdit failed. Editing multiple row at the same time is not allowed.
+        /// </summary>
+        public static string RowPresenter_BeginEditFailed
+        {
+            get { return GetString("RowPresenter_BeginEditFailed"); }
+        }
+
+        /// <summary>
         /// The EOF row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteEof

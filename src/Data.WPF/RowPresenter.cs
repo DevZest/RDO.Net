@@ -55,7 +55,7 @@ namespace DevZest.Data.Windows
 
         private bool IsRecursive
         {
-            get { return !IsEof && RowManager.Template.IsRecursive; }
+            get { return !IsEmpty && RowManager.Template.IsRecursive; }
         }
 
         public DataPresenter DataPresenter
@@ -72,11 +72,21 @@ namespace DevZest.Data.Windows
             get { return RowManager.Template; }
         }
 
-        internal DataRow DataRow { get; set; }
+        public DataRow DataRow { get; internal set; }
 
-        public bool IsEof
+        public bool IsEmpty
         {
-            get { return DataRow == null; }
+            get { return RowManager.EmptyRow == this; }
+        }
+
+        public bool IsEditing
+        {
+            get { return RowManager.EditingRow == this; }
+        }
+
+        public bool IsAdding
+        {
+            get { return IsEmpty && IsEditing; }
         }
 
         public RowPresenter RecursiveParent
@@ -138,7 +148,7 @@ namespace DevZest.Data.Windows
                 if (RowManager.IsQuery)
                     return _index;
                 else
-                    return IsEof ? RowManager.Rows.Count - 1 : DataRow.Index;
+                    return IsEmpty ? RowManager.Rows.Count - 1 : DataRow.Index;
             }
             internal set
             {
@@ -201,7 +211,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                if (_rowManager !=null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
+                if (_rowManager != null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
                     Invalidate();
             }
         }
@@ -270,8 +280,7 @@ namespace DevZest.Data.Windows
                 if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
-                if (AutoBeginEdit)
-                    BeginEdit();
+                BeginEdit();
                 SuppressViewUpdate();
 
                 try
@@ -297,20 +306,14 @@ namespace DevZest.Data.Windows
             RowManager.ResumeViewUpdate();
         }
 
-        private bool AutoBeginEdit
-        {
-            get { return RowManager.AutoBeginEdit; }
-        }
-
-        public void SetValue<T>(Column<T> column, T value)
+        public void EditValue<T>(Column<T> column, T value)
         {
             VerifyColumn(column, nameof(column));
 
             if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
-            if (AutoBeginEdit)
-                BeginEdit();
+            BeginEdit();
             SuppressViewUpdate();
 
             try
@@ -333,51 +336,6 @@ namespace DevZest.Data.Windows
             get { return DataRow == null ? null : DataRow.MergedValidationMessages; }
         }
 
-        private RowPresenter EditingRow
-        {
-            get
-            {
-                Debug.Assert(DataRow != null);
-                return RowManager.EditingRow;
-            }
-            set
-            {
-                RowManager.EditingRow = value;
-            }
-        }
-
-        public bool IsEditing
-        {
-            get { return GetEditingRow(Model) == this; }
-        }
-
-        private readonly static ConditionalWeakTable<Model, RowPresenter> s_editingRows = new ConditionalWeakTable<Model, RowPresenter>();
-
-        private static RowPresenter GetEditingRow(Model model)
-        {
-            RowPresenter result;
-            return s_editingRows.TryGetValue(model, out result) ? result : null;
-        }
-
-        private static void ClearEditingRow(Model model)
-        {
-            s_editingRows.Remove(model);
-        }
-
-        private static void BeginEdit(Model model, RowPresenter value)
-        {
-            Debug.Assert(value != null);
-
-            var oldValue = GetEditingRow(model);
-            Debug.Assert(oldValue != value);
-
-            if (oldValue != null)
-                oldValue.CancelEdit();
-
-            if (value != null)
-                s_editingRows.Add(model, value);
-        }
-
         private DataSet DataSet
         {
             get { return RowManager.DataSet; }
@@ -393,12 +351,20 @@ namespace DevZest.Data.Windows
             if (IsEditing)
                 return;
 
-            BeginEdit(Model, this);
-            if (IsEof)
+            bool success;
+            if (IsEmpty)
+            {
                 DataRow = DataSet.BeginAdd();
+                success = DataRow != null;
+            }
             else
-                DataRow.BeginEdit();
-            RowManager.EditingRow = this;
+                success = DataRow.BeginEdit();
+
+            if (success)
+                RowManager.EditingRow = this;
+
+            if (!IsEditing)
+                throw new InvalidOperationException(Strings.RowPresenter_BeginEditFailed);
         }
 
         public void EndEdit()
@@ -406,14 +372,10 @@ namespace DevZest.Data.Windows
             if (!IsEditing)
                 return;
 
-            if (IsEof)
-            {
-                DataSet.EndAdd();
-                DataRow = null;
-            }
+            if (IsEmpty)
+                DataRow = DataSet.EndAdd();
             else
                 DataRow.EndEdit();
-            ClearEditingRow(Model);
             RowManager.EditingRow = null;
         }
 
@@ -422,21 +384,20 @@ namespace DevZest.Data.Windows
             if (!IsEditing)
                 return;
 
-            if (IsEof)
+            if (IsEmpty)
             {
                 DataSet.CancelAdd();
                 DataRow = null;
             }
             else
                 DataRow.CancelEdit();
-            ClearEditingRow(Model);
             RowManager.EditingRow = null;
         }
 
         public void Delete()
         {
             VerifyDisposed();
-            if (IsEof)
+            if (IsEmpty)
                 throw new InvalidOperationException(Strings.RowPresenter_DeleteEof);
 
             DataRow.DataSet.Remove(DataRow);

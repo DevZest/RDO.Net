@@ -50,7 +50,6 @@
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="IBlockPresenter.cs" />
-    <Compile Include="EofVisibility.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\Clip.cs" />
@@ -80,6 +79,7 @@
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />
+    <Compile Include="EmptyRowPosition.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Primitives\RowItem.cs" />

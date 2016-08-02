@@ -162,6 +162,9 @@
   <data name="RowManager_OrdinalNotTopLevel" xml:space="preserve">
     <value>The specified ordinal must be a top level row.</value>
   </data>
+  <data name="RowPresenter_BeginEditFailed" xml:space="preserve">
+    <value>BeginEdit failed. Editing multiple row at the same time is not allowed.</value>
+  </data>
   <data name="RowPresenter_DeleteEof" xml:space="preserve">
     <value>The EOF row cannot be deleted.</value>
   </data>

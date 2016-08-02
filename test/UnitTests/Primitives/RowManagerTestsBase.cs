@@ -57,11 +57,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EofVisibility eofVisibility)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EmptyRowPosition rowPlaceholder)
             where T : Model, new()
         {
             var template = new Template();
-            template.EofVisibility = eofVisibility;
+            template.EmptyRowPosition = rowPlaceholder;
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }

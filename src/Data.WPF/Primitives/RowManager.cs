@@ -17,9 +17,8 @@ namespace DevZest.Data.Windows.Primitives
 
             InitializeRowMappings();
             InitializeRows();
-            CoerceEofRow();
+            CoerceEmptyRow();
             SetCurrentRow(CoercedCurrentRow);
-            AutoBeginEdit = true;
         }
 
         private readonly Template _template;
@@ -206,7 +205,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int InsertRowRecursively(int index, RowPresenter row)
         {
-            Debug.Assert(IsRecursive && !row.IsEof);
+            Debug.Assert(IsRecursive && !row.IsEmpty);
 
             Rows_Insert(index++, row);
             if (row.IsExpanded)
@@ -223,7 +222,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int GetIndex(RowPresenter row)
         {
-            Debug.Assert(!row.IsEof);
+            Debug.Assert(!row.IsEmpty);
 
             if (!IsRecursive)
                 return -1;
@@ -297,63 +296,63 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnDataSetChanged()
         {
-            CoerceEofRow();
+            CoerceEmptyRow();
             CurrentRow = CoercedCurrentRow;
             OnRowsChanged();
         }
 
-        private void CoerceEofRow()
+        private void CoerceEmptyRow()
         {
-            if (HasEof)
+            var index = EmptyRowIndex;
+            if (index >= 0)
             {
-                if (EofRow == null)
-                    AddEofRow();
+                if (EmptyRow == null)
+                    AddEmptyRow(index);
             }
             else
             {
-                var eofRow = EofRow;
-                if (eofRow != null)
-                    RemoveEofRow(eofRow);
+                var placeholder = EmptyRow;
+                if (placeholder != null)
+                    RemoveEmptyRow();
             }
         }
 
-        private bool HasEof
+        private int EmptyRowIndex
         {
             get
             {
-                var eofVisibility = Template.EofVisibility;
-                if (eofVisibility == EofVisibility.Never)
-                    return false;
-                else if (eofVisibility == EofVisibility.NoData)
-                    return DataSet.Count == 0;
+                var emptyRowPosition = Template.EmptyRowPosition;
+                if (emptyRowPosition == EmptyRowPosition.None)
+                    return -1;
+                else if (emptyRowPosition == EmptyRowPosition.NoData)
+                    return DataSet.Count == 0 ? 0 : -1;
+                else if (IsRecursive)
+                    return -1;
                 else
-                    return true;
+                    return emptyRowPosition == EmptyRowPosition.Top ? 0 : DataSet.Count;
             }
         }
 
-        private void AddEofRow()
+        private void AddEmptyRow(int index)
         {
-            Debug.Assert(EofRow == null);
-            var row = new RowPresenter(this, null);
-            Rows_Insert(_rows.Count, row);
+            Debug.Assert(EmptyRow == null);
+            EmptyRow = new RowPresenter(this, null);
+            Rows_Insert(index, EmptyRow);
         }
 
-        private void RemoveEofRow(RowPresenter eofRow)
+        private void RemoveEmptyRow()
         {
-            Debug.Assert(eofRow == EofRow);
-            Rows_RemoveAt(eofRow.Index);
-            eofRow.Dispose();
+            Debug.Assert(EmptyRow != null);
+            Rows_RemoveAt(EmptyRow.Index);
+            EmptyRow.Dispose();
+            EmptyRow = null;
         }
 
-        private RowPresenter EofRow
+        internal RowPresenter EmptyRow { get; private set; }
+
+        private RowPresenter FirstRow
         {
-            get
-            {
-                var lastRow = LastRow;
-                if (lastRow == null)
-                    return null;
-                return lastRow.IsEof ? lastRow : null;
-            }
+            get { return _rows.Count == 0 ? null : _rows[0]; }
         }
 
         private RowPresenter LastRow
@@ -468,8 +467,6 @@ namespace DevZest.Data.Windows.Primitives
                 OnEditingRowChanged();
             }
         }
-
-        public bool AutoBeginEdit { get; set; }
 
         internal void Expand(RowPresenter row)
         {

@@ -317,12 +317,7 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        private EofVisibility _eofVisibility = EofVisibility.Never;
-        public EofVisibility EofVisibility
-        {
-            get { return IsRecursive ? EofVisibility.Never : _eofVisibility; }
-            internal set { _eofVisibility = value; }
-        }
+        public EmptyRowPosition EmptyRowPosition { get; internal set; }
 
         public int RecursiveModelOrdinal { get; internal set; }
 
