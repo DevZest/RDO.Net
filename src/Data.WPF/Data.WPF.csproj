@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="DataPresenter_T.cs" />
-    <Compile Include="Factories\RowHeader.cs" />
+    <Compile Include="Controls\RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="Primitives\RowItem.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="Factories\ColumnHeader.cs" />
+    <Compile Include="Controls\ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
@@ -111,8 +111,8 @@
     <Compile Include="Primitives\TemplateItem.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
-    <Compile Include="Factories\ValidationMessageView.cs" />
-    <Compile Include="Factories\ValidationSummaryView.cs" />
+    <Compile Include="Controls\ValidationMessageView.cs" />
+    <Compile Include="Controls\ValidationSummaryView.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
   </ItemGroup>
   <ItemGroup>
