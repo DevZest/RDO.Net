@@ -35,16 +35,16 @@ namespace DevZest.Data.Windows.Primitives
                 .BlockView<AutoInitBlockView>()
                 .RowView<AutoInitRowView>()
                 .ScalarItem<TextBlock>()
-                    .OnMount((v, p) => v.Text = _.Name.DisplayName)
+                    .OnMount(v => v.Text = _.Name.DisplayName)
                 .At(1, 0)
                 .BlockItem<TextBlock>()
-                    .OnRefresh((v, p) => v.Text = p.Ordinal.ToString())
+                    .OnRefresh((v, b) => v.Text = b.Ordinal.ToString())
                 .At(0, 1)
                 .RowItem<TextBlock>()
                     .OnRefresh((v, p) => v.Text = p.GetValue(_.Name))
                 .At(1, 1)
                 .ScalarItem<TextBlock>(true)
-                    .OnMount((v, p) => v.Text = _.Name.DisplayName)
+                    .OnMount(v => v.Text = _.Name.DisplayName)
                 .At(1, 2);
         }
 

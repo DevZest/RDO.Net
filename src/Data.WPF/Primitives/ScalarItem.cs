@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddScalarItem(gridRange, item);
             }
 
-            public Builder<T> OnMount(Action<T, DataPresenter> onMount)
+            public Builder<T> OnMount(Action<T> onMount)
             {
                 if (onMount == null)
                     throw new ArgumentNullException(nameof(onMount));
@@ -69,7 +69,7 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public Builder<T> OnUnmount(Action<T, DataPresenter> onUnmount)
+            public Builder<T> OnUnmount(Action<T> onUnmount)
             {
                 if (onUnmount == null)
                     throw new ArgumentNullException(nameof(onUnmount));
@@ -77,7 +77,7 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public Builder<T> OnRefresh(Action<T, DataPresenter> onRefresh)
+            public Builder<T> OnRefresh(Action<T> onRefresh)
             {
                 if (onRefresh == null)
                     throw new ArgumentNullException(nameof(onRefresh));
@@ -109,43 +109,43 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override void OnMount(UIElement element)
         {
             if (_onMount != null)
-                _onMount(element, element.GetDataPresenter());
+                _onMount(element);
         }
 
-        private Action<UIElement, DataPresenter> _onMount;
-        private void OnMount<T>(Action<T, DataPresenter> onMount)
+        private Action<UIElement> _onMount;
+        private void OnMount<T>(Action<T> onMount)
             where T : UIElement
         {
             Debug.Assert(onMount != null);
-            _onMount = (element, dataPresenter) => onMount((T)element, dataPresenter);
+            _onMount = element => onMount((T)element);
         }
 
         protected sealed override void OnUnmount(UIElement element)
         {
             if (_onUnmount != null)
-                _onUnmount(element, element.GetDataPresenter());
+                _onUnmount(element);
         }
 
-        private Action<UIElement, DataPresenter> _onUnmount;
-        private void OnUnmount<T>(Action<T, DataPresenter> onUnmount)
+        private Action<UIElement> _onUnmount;
+        private void OnUnmount<T>(Action<T> onUnmount)
             where T : UIElement
         {
             Debug.Assert(onUnmount != null);
-            _onUnmount = (element, dataPresenter) => onUnmount((T)element, dataPresenter);
+            _onUnmount = element => onUnmount((T)element);
         }
 
         internal sealed override void Refresh(UIElement element)
         {
             if (_onRefresh != null)
-                _onRefresh(element, element.GetDataPresenter());
+                _onRefresh(element);
         }
 
-        private Action<UIElement, DataPresenter> _onRefresh;
-        private void OnRefresh<T>(Action<T, DataPresenter> onRefresh)
+        private Action<UIElement> _onRefresh;
+        private void OnRefresh<T>(Action<T> onRefresh)
             where T : UIElement
         {
             Debug.Assert(onRefresh != null);
-            _onRefresh = (element, dataPresenter) => onRefresh((T)element, dataPresenter);
+            _onRefresh = element => onRefresh((T)element);
         }
 
         public bool IsMultidimensional { get; private set; }

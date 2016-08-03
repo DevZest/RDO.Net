@@ -68,16 +68,16 @@ namespace SampleApp
                 .OnRefresh((v, p) => v.Text = p.GetValue(_.TotalDue).ToString())
             .At(9, 1)
             .ScalarItem<TextBlock>()
-                .OnMount((v, p) =>
+                .OnMount((v) =>
                 {
                     v.TextAlignment = TextAlignment.Right;
                     v.Text = "Total: ";
                 })
             .At(2, 2, 8, 2)
             .ScalarItem<TextBlock>()
-                .OnRefresh((v, p) =>
+                .OnRefresh((v) =>
                 {
-                    v.Text = p.Rows.Sum(x => x.GetValue(_.TotalDue)).ToString();
+                    v.Text = Rows.Sum(x => x.GetValue(_.TotalDue)).ToString();
                 })
             .At(9, 2);
         }

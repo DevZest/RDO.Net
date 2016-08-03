@@ -7,7 +7,7 @@ namespace DevZest.Data.Windows.Factories
         public static ScalarItem.Builder<PlaceHolder> ScalarItem(this TemplateBuilder templateBuilder, bool isMultidimensional = false, double desiredWidth = 0, double desiredHeight = 0)
         {
             return templateBuilder.ScalarItem<PlaceHolder>(isMultidimensional)
-                .OnMount((x, data) =>
+                .OnMount((x) =>
                 {
                     x.DesiredWidth = desiredWidth;
                     x.DesiredHeight = desiredHeight;

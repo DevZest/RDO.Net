@@ -17,9 +17,9 @@ namespace DevZest.Data.Windows.Primitives
             string source = SOURCE;
 
             var builder = new ScalarItem.Builder<TextBlock>(null);
-            builder.OnMount((v, p) => v.Text = INITIALIZED)
-                .OnRefresh((v, p) => v.Text = source)
-                .OnUnmount((v, p) => v.Text = CLEANUP);
+            builder.OnMount(v => v.Text = INITIALIZED)
+                .OnRefresh(v => v.Text = source)
+                .OnUnmount(v => v.Text = CLEANUP);
 
             var item = builder.TemplateItem;
             var element = (TextBlock)item.Mount(null);
