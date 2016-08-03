@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
+    <Compile Include="DataPresenter_T.cs" />
     <Compile Include="Factories\RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\GridLine.cs" />

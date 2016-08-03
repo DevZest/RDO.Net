@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <local:SalesOrderList x:Name="_salesOrderList" />
+        <dz:DataView x:Name="_dataView" />
     </Grid>
 </Window>

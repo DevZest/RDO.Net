@@ -6,10 +6,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System;
 
 namespace SampleApp
 {
-    public class SalesOrderList : DataView
+    public class SalesOrderList : DataPresenter<SalesOrder>
     {
         private readonly Pen _frozenLine;
         
@@ -19,12 +20,7 @@ namespace SampleApp
             _frozenLine.Freeze();
         }
 
-        public void Show(DataSet<SalesOrder> salesOrders)
-        {
-            Show(salesOrders, BuildTemplate);
-        }
-
-        private void BuildTemplate(TemplateBuilder builder, SalesOrder _)
+        protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder.GridColumns("20", "50", "70", "150", "150", "60", "150", "100", "100", "100")
             .GridRows("20", "Auto", "20")

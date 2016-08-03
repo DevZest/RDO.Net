@@ -12,11 +12,11 @@ namespace SampleApp
         public MainWindow()
         {
             InitializeComponent();
-            _salesOrders = LoadSalesOrders();
-            _salesOrderList.Show(_salesOrders);
+            _salesOrderList = new SalesOrderList();
+            _salesOrderList.Show(LoadSalesOrders(), _dataView);
         }
 
-        private DataSet<SalesOrder> _salesOrders;
+        private SalesOrderList _salesOrderList;
 
         private DataSet<SalesOrder> LoadSalesOrders()
         {

@@ -116,17 +116,5 @@ namespace DevZest.Data.Windows
                 DataPresenter = null;
             }
         }
-
-        public void Show<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction = null)
-            where T : Model, new()
-        {
-            if (dataSet == null)
-                throw new ArgumentNullException(nameof(dataSet));
-
-            Cleanup();
-
-            var dataPresenter = DataPresenter.Create(dataSet, buildTemplateAction);
-            Initialize(dataPresenter);
-        }
     }
 }

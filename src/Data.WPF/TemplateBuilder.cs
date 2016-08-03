@@ -177,43 +177,43 @@ namespace DevZest.Data.Windows
             return new RowItem.Builder<T>(this);
         }
 
-        public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> buildTemplateAction)
-            where TModel : Model, new()
-            where TView : DataView, new()
-        {
-            if (childModel == null)
-                throw new ArgumentNullException(nameof(childModel));
-            if (buildTemplateAction == null)
-                throw new ArgumentNullException(nameof(buildTemplateAction));
+        //public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(TModel childModel, Action<TemplateBuilder, TModel> buildTemplateAction)
+        //    where TModel : Model, new()
+        //    where TView : DataView, new()
+        //{
+        //    if (childModel == null)
+        //        throw new ArgumentNullException(nameof(childModel));
+        //    if (buildTemplateAction == null)
+        //        throw new ArgumentNullException(nameof(buildTemplateAction));
 
-            return new SubviewItem.Builder<TView>(this, rowPresenter =>
-            {
-                if (rowPresenter.IsEmpty)
-                    return null;
-                return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
-            });
-        }
+        //    return new SubviewItem.Builder<TView>(this, rowPresenter =>
+        //    {
+        //        if (rowPresenter.IsEmpty)
+        //            return null;
+        //        return DataPresenter.Create(rowPresenter, childModel, buildTemplateAction);
+        //    });
+        //}
 
-        public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> buildTemplateAction)
-            where TModel : Model, new()
-            where TView : DataView, new()
-        {
-            if (child == null)
-                throw new ArgumentNullException(nameof(child));
-            if (buildTemplateAction == null)
-                throw new ArgumentNullException(nameof(buildTemplateAction));
+        //public SubviewItem.Builder<TView> SubviewItem<TModel, TView>(_DataSet<TModel> child, Action<TemplateBuilder, TModel> buildTemplateAction)
+        //    where TModel : Model, new()
+        //    where TView : DataView, new()
+        //{
+        //    if (child == null)
+        //        throw new ArgumentNullException(nameof(child));
+        //    if (buildTemplateAction == null)
+        //        throw new ArgumentNullException(nameof(buildTemplateAction));
 
-            return new SubviewItem.Builder<TView>(this, rowPresenter =>
-            {
-                var dataRow = rowPresenter.DataRow;
-                if (dataRow == null)
-                    return null;
-                var childDataSet = child[dataRow];
-                if (childDataSet == null)
-                    return null;
-                return DataPresenter.Create(childDataSet, buildTemplateAction);
-            });
-        }
+        //    return new SubviewItem.Builder<TView>(this, rowPresenter =>
+        //    {
+        //        var dataRow = rowPresenter.DataRow;
+        //        if (dataRow == null)
+        //            return null;
+        //        var childDataSet = child[dataRow];
+        //        if (childDataSet == null)
+        //            return null;
+        //        return DataPresenter.Create(childDataSet, buildTemplateAction);
+        //    });
+        //}
 
         public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)
         {

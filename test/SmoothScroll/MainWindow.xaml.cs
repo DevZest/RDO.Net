@@ -12,12 +12,9 @@ namespace SmoothScroll
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private class FooList : DataPresenter<Foo>
         {
-            InitializeComponent();
-
-            var dataSet = GetTestData(10000);
-            dataView.Show(dataSet, (TemplateBuilder builder, Foo _) =>
+            protected override void BuildTemplate(TemplateBuilder builder)
             {
                 builder.GridColumns("*")
                 .GridRows("Auto")
@@ -45,7 +42,15 @@ namespace SmoothScroll
                         }
                     })
                 .At(0, 0);
-            });
+            }
+        }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            var fooList = new FooList();
+            fooList.Show(GetTestData(10000), dataView);
         }
 
         private static void AddSectionHeader(DataSet<Foo> dataSet, int index)
