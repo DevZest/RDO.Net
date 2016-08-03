@@ -86,7 +86,6 @@
     <Compile Include="Primitives\RowItem.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="Primitives\SubviewItem.cs" />
     <Compile Include="Factories\ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />

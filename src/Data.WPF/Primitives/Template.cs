@@ -100,12 +100,6 @@ namespace DevZest.Data.Windows.Primitives
             _rowItemGroups = _rowItemGroups.Concat(new RowItemCollection());
         }
 
-        private IConcatList<SubviewItem> _subviewItems = ConcatList<SubviewItem>.Empty;
-        public IReadOnlyList<SubviewItem> SubviewItems
-        {
-            get { return _subviewItems; }
-        }
-
         private GridRange? _rowRange;
         public GridRange RowRange
         {
@@ -264,15 +258,6 @@ namespace DevZest.Data.Windows.Primitives
             var currentRowItems = CurrentRowItems;
             rowItem.Construct(this, gridRange, CurrentRowItems.Count);
             CurrentRowItems.Add(gridRange, rowItem);
-        }
-
-        internal void AddSubviewItem(GridRange gridRange, SubviewItem subviewItem)
-        {
-            Debug.Assert(IsValid(gridRange));
-            var currentRowItems = CurrentRowItems;
-            subviewItem.Seal(this, gridRange, currentRowItems.Count, SubviewItems.Count);
-            currentRowItems.Add(gridRange, subviewItem);
-            _subviewItems = _subviewItems.Concat(subviewItem);
         }
 
         internal bool IsValid(GridRange gridRange)

@@ -123,18 +123,6 @@ namespace DevZest.Data.Windows
             return RowManager.RowMappings_GetRow(ChildDataSet[index]);
         }
 
-        public DataPresenter this[SubviewItem subviewItem]
-        {
-            get
-            {
-                if (subviewItem == null)
-                    throw new ArgumentNullException(nameof(subviewItem));
-                if (subviewItem.Template != Template)
-                    throw new ArgumentException(Strings.RowPresenter_InvalidSubviewItem);
-                return subviewItem[this];
-            }
-        }
-
         private void Invalidate()
         {
             RowManager.Invalidate(this);
