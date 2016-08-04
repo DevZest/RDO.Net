@@ -52,6 +52,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The DataPresenter is not initialized: the DataSet property is null.
+        /// </summary>
+        public static string DataPresenter_NullDataSet
+        {
+            get { return GetString("DataPresenter_NullDataSet"); }
+        }
+
+        /// <summary>
         /// Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.
         /// </summary>
         public static string GridColumn_InvalidAutoWidth(object ordinal)

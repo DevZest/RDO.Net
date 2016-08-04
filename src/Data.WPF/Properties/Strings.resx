@@ -132,6 +132,9 @@
   <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
     <value>DataElementPanel must be element of DataView's control template to implement IScrollInfo.</value>
   </data>
+  <data name="DataPresenter_NullDataSet" xml:space="preserve">
+    <value>The DataPresenter is not initialized: the DataSet property is null.</value>
+  </data>
   <data name="GridColumn_InvalidAutoWidth" xml:space="preserve">
     <value>Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.</value>
   </data>

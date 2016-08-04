@@ -2,17 +2,13 @@
 using DevZest.Data.Windows.Primitives;
 using System.Windows;
 using DevZest.Data.Windows.Controls;
+using System.Diagnostics;
+using System;
 
 namespace DevZest.Data.Windows
 {
     public abstract class DataPresenter
     {
-        private readonly RowPresenter _parent;
-        public RowPresenter Parent
-        {
-            get { return _parent; }
-        }
-
         public DataSet DataSet
         {
             get { return GetDataSet(); }
@@ -20,51 +16,58 @@ namespace DevZest.Data.Windows
 
         internal abstract DataSet GetDataSet();
 
-        private readonly Template _template = new Template();
-        public Template Template
-        {
-            get { return _template; }
-        }
+        public DataView View { get; private set; }
 
-        public bool IsRecursive
-        {
-            get { return Template.IsRecursive; }
-        }
+        public abstract Template Template { get; }
 
-        private LayoutManager _layoutManager;
-        internal LayoutManager LayoutManager
-        {
-            get { return _layoutManager ?? (_layoutManager = LayoutManager.Create(this)); }
-        }
+        internal abstract LayoutManager LayoutManager { get; }
 
         public IReadOnlyList<RowPresenter> Rows
         {
-            get { return LayoutManager.Rows; }
+            get { return LayoutManager == null ? null : LayoutManager.Rows; }
         }
 
         public RowPresenter CurrentRow
         {
-            get { return LayoutManager.CurrentRow; }
+            get { return LayoutManager == null ? null : LayoutManager.CurrentRow; }
         }
 
         public RowPresenter EditingRow
         {
-            get { return LayoutManager.EditingRow; }
+            get { return LayoutManager == null ? null : LayoutManager.EditingRow; }
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
-            get { return LayoutManager.SelectedRows; }
+            get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
-        public IReadOnlyList<BlockView> BlockViews
+        public void Attach(DataView view)
         {
-            get { return LayoutManager.BlockViews; }
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+
+            if (View == view)
+                return;
+
+            if (DataSet == null)
+                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+
+            if (View != null)
+                Detach();
+
+            View = view;
+            View.DataPresenter = this;
         }
 
-        public IReadOnlyList<UIElement> Elements
+        public void Detach()
         {
-            get { return LayoutManager.Elements; }
+            if (View == null)
+                return;
+
+            View.DataPresenter = null;
+            LayoutManager.ClearElements();
+            View = null;
         }
     }
 }

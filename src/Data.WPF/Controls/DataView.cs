@@ -39,7 +39,16 @@ namespace DevZest.Data.Windows.Controls
         public DataPresenter DataPresenter
         {
             get { return (DataPresenter)GetValue(DataPresenterProperty); }
-            private set { SetValue(DataPresenterPropertyKey, value); }
+            internal set
+            {
+                Debug.Assert((value == null) != (DataPresenter == null));
+
+                SetValue(DataPresenterPropertyKey, value);
+                if (value != null)
+                    Scrollable = value.Template.Orientation.HasValue;
+                else
+                    ClearValue(ScrollablePropertyKey);
+            }
         }
 
         private LayoutManager LayoutManager
@@ -74,7 +83,7 @@ namespace DevZest.Data.Windows.Controls
         public bool Scrollable
         {
             get { return (bool)GetValue(ScrollableProperty); }
-            private set { SetValue(ScrollablePropertyKey, value); }
+            private set { SetValue(ScrollablePropertyKey, BooleanBoxes.Box(value)); }
         }
 
         public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -99,22 +108,6 @@ namespace DevZest.Data.Windows.Controls
         {
             get { return (double)GetValue(ScrollLineWidthProperty); }
             set { SetValue(ScrollLineWidthProperty, value); }
-        }
-
-        internal void Initialize(DataPresenter dataPresenter)
-        {
-            Debug.Assert(dataPresenter != null);
-            DataPresenter = dataPresenter;
-            Scrollable = dataPresenter.Template.Orientation.HasValue;
-        }
-
-        internal void Cleanup()
-        {
-            if (LayoutManager != null)
-            {
-                LayoutManager.ClearElements();
-                DataPresenter = null;
-            }
         }
     }
 }
