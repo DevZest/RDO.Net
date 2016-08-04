@@ -110,8 +110,6 @@
     <Compile Include="Primitives\TemplateItem.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
-    <Compile Include="Controls\ValidationMessageView.cs" />
-    <Compile Include="Controls\ValidationSummaryView.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
   </ItemGroup>
   <ItemGroup>
