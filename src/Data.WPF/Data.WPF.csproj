@@ -77,7 +77,7 @@
     <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
-    <Compile Include="BlockView.cs" />
+    <Compile Include="Controls\BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />
     <Compile Include="EmptyRowPosition.cs" />
     <Compile Include="TemplateBuilder.cs" />
@@ -90,13 +90,13 @@
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowElementPanel.cs" />
-    <Compile Include="RowView.cs" />
+    <Compile Include="Controls\RowView.cs" />
     <Compile Include="RowPresenter.cs" />
     <Compile Include="Primitives\GridLengthParser.cs" />
     <Compile Include="Primitives\GridRange.cs" />
     <Compile Include="DataPresenter.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="DataView.cs" />
+    <Compile Include="Controls\DataView.cs" />
     <Compile Include="Primitives\GridColumn.cs" />
     <Compile Include="Primitives\GridTrack.cs" />
     <Compile Include="Primitives\GridRow.cs" />

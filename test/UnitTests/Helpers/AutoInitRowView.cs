@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DevZest.Data.Windows.Controls;
+using System.Windows;
 
 namespace DevZest.Data.Windows.Helpers
 {

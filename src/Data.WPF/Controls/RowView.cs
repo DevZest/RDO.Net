@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Controls
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowElementPanel))]
     public class RowView : Control

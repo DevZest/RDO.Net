@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Collections;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Controls
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
     public class BlockView : Control, IReadOnlyList<RowPresenter>
