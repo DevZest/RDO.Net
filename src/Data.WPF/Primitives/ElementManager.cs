@@ -16,11 +16,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal BlockViewCollection BlockViews { get; private set; }
 
-        public IReadOnlyList<IBlockPresenter> Blocks
-        {
-            get { return BlockViews; }
-        }
-
         List<RowView> _cachedRowViews;
 
         internal RowView Realize(RowPresenter row)

@@ -9,7 +9,7 @@ using System.Collections;
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
-    public class BlockView : Control, IBlockPresenter
+    public class BlockView : Control, IReadOnlyList<RowPresenter>
     {
         static BlockView()
         {

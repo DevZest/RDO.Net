@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Factories
         public static BlockItem.Builder<PlaceHolder> BlockItem(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
         {
             return templateBuilder.BlockItem<PlaceHolder>()
-                .OnMount((x, data) =>
+                .OnMount((x, ordinal, rows) =>
                 {
                     x.DesiredWidth = desiredWidth;
                     x.DesiredHeight = desiredHeight;

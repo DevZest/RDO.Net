@@ -60,7 +60,7 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddBlockItem(gridRange, item);
             }
 
-            public Builder<T> OnMount(Action<T, IBlockPresenter> onMount)
+            public Builder<T> OnMount(Action<T, int, IReadOnlyList<RowPresenter>> onMount)
             {
                 if (onMount == null)
                     throw new ArgumentNullException(nameof(onMount));
@@ -68,7 +68,7 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public Builder<T> OnUnmount(Action<T, IBlockPresenter> onUnmount)
+            public Builder<T> OnUnmount(Action<T, int, IReadOnlyList<RowPresenter>> onUnmount)
             {
                 if (onUnmount == null)
                     throw new ArgumentNullException(nameof(onUnmount));
@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public Builder<T> OnRefresh(Action<T, IBlockPresenter> onRefresh)
+            public Builder<T> OnRefresh(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
             {
                 if (onRefresh == null)
                     throw new ArgumentNullException(nameof(onRefresh));
@@ -96,57 +96,66 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        internal UIElement Mount(IBlockPresenter blockPresenter, Action<UIElement> initializer)
+        internal UIElement Mount(BlockView blockView, Action<UIElement> initializer)
         {
-            Debug.Assert(blockPresenter != null);
-            return base.Mount(x => x.SetBlockPresenter(blockPresenter), initializer);
+            Debug.Assert(blockView != null);
+            return base.Mount(x => x.SetBlockView(blockView), initializer);
         }
 
         protected sealed override void OnMount(UIElement element)
         {
             if (_onMount != null)
-                _onMount(element, element.GetBlockPresenter());
+            {
+                var blockView = element.GetBlockView();
+                _onMount(element, blockView.Ordinal, blockView);
+            }
         }
 
         protected override void Cleanup(UIElement element)
         {
-            element.SetBlockPresenter(null);
+            element.SetBlockView(null);
         }
 
-        private Action<UIElement, IBlockPresenter> _onMount;
-        private void OnMount<T>(Action<T, IBlockPresenter> onMount)
+        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onMount;
+        private void OnMount<T>(Action<T, int, IReadOnlyList<RowPresenter>> onMount)
             where T : UIElement
         {
             Debug.Assert(onMount != null);
-            _onMount = (element, blockPresenter) => onMount((T)element, blockPresenter);
+            _onMount = (element, ordinal, rows) => onMount((T)element, ordinal, rows);
         }
 
         protected sealed override void OnUnmount(UIElement element)
         {
             if (_onMount != null)
-                _onMount(element, element.GetBlockPresenter());
+            {
+                var blockView = element.GetBlockView();
+                _onMount(element, blockView.Ordinal, blockView);
+            }
         }
 
-        private Action<UIElement, IBlockPresenter> _onUnmount;
-        private void OnUnmount<T>(Action<T, IBlockPresenter> onUnmount)
+        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onUnmount;
+        private void OnUnmount<T>(Action<T, int, IReadOnlyList<RowPresenter>> onUnmount)
             where T : UIElement
         {
             Debug.Assert(onUnmount != null);
-            _onUnmount = (element, blockPresenter) => onUnmount((T)element, blockPresenter);
+            _onUnmount = (element, ordinal, rows) => onUnmount((T)element, ordinal, rows);
         }
 
         internal sealed override void Refresh(UIElement element)
         {
             if (_onRefresh != null)
-                _onRefresh(element, element.GetBlockPresenter());
+            {
+                var blockView = element.GetBlockView();
+                _onRefresh(element, blockView.Ordinal, blockView);
+            }
         }
 
-        private Action<UIElement, IBlockPresenter> _onRefresh;
-        private void OnRefresh<T>(Action<T, IBlockPresenter> onRefresh)
+        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onRefresh;
+        private void OnRefresh<T>(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
             where T : UIElement
         {
             Debug.Assert(onRefresh != null);
-            _onRefresh = (element, blockPresenter) => onRefresh((T)element, blockPresenter);
+            _onRefresh = (element, ordinal, rows) => onRefresh((T)element, ordinal, rows);
         }
 
         internal override void VerifyRowRange(GridRange rowRange)

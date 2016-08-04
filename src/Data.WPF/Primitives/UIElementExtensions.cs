@@ -25,25 +25,25 @@ namespace DevZest.Data.Windows.Primitives
             element.SetValue(TemplateItemProperty, value);
         }
 
-        private static readonly DependencyProperty BlockPresenterProperty = DependencyProperty.RegisterAttached(nameof(IBlockPresenter),
-            typeof(IBlockPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),
+            typeof(BlockView), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static IBlockPresenter GetBlockPresenter(this UIElement element)
+        public static BlockView GetBlockView(this UIElement element)
         {
-            return (IBlockPresenter)element.GetValue(BlockPresenterProperty);
+            return (BlockView)element.GetValue(BlockViewProperty);
         }
 
-        internal static void SetBlockPresenter(this UIElement element, IBlockPresenter value)
+        internal static void SetBlockView(this UIElement element, BlockView value)
         {
             if (value == null)
             {
-                Debug.Assert(element.GetBlockPresenter() != null);
-                element.ClearValue(BlockPresenterProperty);
+                Debug.Assert(element.GetBlockView() != null);
+                element.ClearValue(BlockViewProperty);
             }
             else
             {
-                Debug.Assert(element.GetBlockPresenter() == null);
-                element.SetValue(BlockPresenterProperty, value);
+                Debug.Assert(element.GetBlockView() == null);
+                element.SetValue(BlockViewProperty, value);
             }
         }
 

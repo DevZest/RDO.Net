@@ -38,7 +38,7 @@ namespace DevZest.Data.Windows.Primitives
                     .OnMount(v => v.Text = _.Name.DisplayName)
                 .At(1, 0)
                 .BlockItem<TextBlock>()
-                    .OnRefresh((v, b) => v.Text = b.Ordinal.ToString())
+                    .OnRefresh((v, ordinal, rows) => v.Text = ordinal.ToString())
                 .At(0, 1)
                 .RowItem<TextBlock>()
                     .OnRefresh((v, p) => v.Text = p.GetValue(_.Name))

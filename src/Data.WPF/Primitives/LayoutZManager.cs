@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshBlock()
         {
-            if (CurrentRow != null && Blocks.Count == 0)
+            if (CurrentRow != null && BlockViews.Count == 0)
                 BlockViews.RealizeFirst(CurrentRow.Index);
         }
 

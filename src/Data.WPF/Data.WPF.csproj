@@ -50,7 +50,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
-    <Compile Include="IBlockPresenter.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
     <Compile Include="Primitives\BlockItem.cs" />
     <Compile Include="Primitives\Clip.cs" />

@@ -56,9 +56,9 @@ namespace DevZest.Data.Windows
             get { return LayoutManager.SelectedRows; }
         }
 
-        public IReadOnlyList<IBlockPresenter> Blocks
+        public IReadOnlyList<BlockView> BlockViews
         {
-            get { return LayoutManager.Blocks; }
+            get { return LayoutManager.BlockViews; }
         }
 
         public IReadOnlyList<UIElement> Elements
