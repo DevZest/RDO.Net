@@ -22,6 +22,7 @@ namespace DevZest.Data.Windows
             get { return _dataSet; }
             set
             {
+                Detach();
                 _dataSet = value;
                 _template = new Template();
                 using (var builder = new TemplateBuilder(Template, DataSet.Model))
