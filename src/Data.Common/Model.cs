@@ -571,9 +571,9 @@ namespace DevZest.Data
             }
         }
 
-        private static IList<OrderBy> GetIdentityOrderByList(Identity identity)
+        private static IList<ColumnSort> GetIdentityOrderByList(Identity identity)
         {
-            return new OrderBy[] { new OrderBy(identity.Column, identity.Increment > 0 ? SortDirection.Ascending : SortDirection.Descending) };
+            return new ColumnSort[] { new ColumnSort(identity.Column, identity.Increment > 0 ? SortDirection.Ascending : SortDirection.Descending) };
         }
 
         internal DbFromClause FromClause
@@ -651,7 +651,7 @@ namespace DevZest.Data
             return sysParentRowId.Column;
         }
 
-        protected void Unique(string constraintName, bool isClustered, params OrderBy[] orderByList)
+        protected void Unique(string constraintName, bool isClustered, params ColumnSort[] orderByList)
         {
             Utilities.Check.NotNull(orderByList, nameof(orderByList));
             if (orderByList.Length == 0)

@@ -59,7 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
-    <Compile Include="OrderByList.cs" />
+    <Compile Include="OrderBy.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
-    <Compile Include="OrderBy.cs" />
+    <Compile Include="ColumnSort.cs" />
     <Compile Include="Column_T.cs" />
     <Compile Include="DataRow.cs" />
     <Compile Include="DataSet_T.cs" />

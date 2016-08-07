@@ -130,7 +130,7 @@ namespace DevZest.Data
 
         public DbExpression HavingExpression { get; private set; }
 
-        public new DbAggregateQueryBuilder OrderBy(params OrderBy[] orderByList)
+        public new DbAggregateQueryBuilder OrderBy(params ColumnSort[] orderByList)
         {
             base.OrderBy(orderByList);
             return this;

@@ -323,12 +323,12 @@ namespace DevZest.Data
 
         public int Fetch { get; private set; }
 
-        public DbQueryBuilder OrderBy(params OrderBy[] orderByList)
+        public DbQueryBuilder OrderBy(params ColumnSort[] orderByList)
         {
             return OrderBy(-1, -1, orderByList);
         }
 
-        public DbQueryBuilder OrderBy(int offset, int fetch, params OrderBy[] orderByList)
+        public DbQueryBuilder OrderBy(int offset, int fetch, params ColumnSort[] orderByList)
         {
             Check.NotNull(orderByList, nameof(orderByList));
             VerifyOrderByList(orderByList);
@@ -340,7 +340,7 @@ namespace DevZest.Data
             return this;
         }
 
-        private IList<DbExpressionSort> EliminateSubQuery(IList<OrderBy> orderByList)
+        private IList<DbExpressionSort> EliminateSubQuery(IList<ColumnSort> orderByList)
         {
             if (orderByList == null)
                 return null;
@@ -367,7 +367,7 @@ namespace DevZest.Data
                 throw new ArgumentOutOfRangeException(nameof(fetch));
         }
 
-        private void VerifyOrderByList(OrderBy[] orderByList)
+        private void VerifyOrderByList(ColumnSort[] orderByList)
         {
             Debug.Assert(orderByList != null);
             for (int i = 0; i < orderByList.Length; i++)

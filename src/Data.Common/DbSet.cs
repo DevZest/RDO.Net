@@ -63,21 +63,21 @@ namespace DevZest.Data
                 return x => x.Where(condition);
         }
 
-        public DbQuery<T> OrderBy(params Func<T, OrderBy>[] fnOrderByList)
+        public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
         {
             return OrderBy(-1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, OrderBy>[] fnOrderByList)
+        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
         {
             T newModel;
             var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, fnOrderByList), out newModel);
             return DbSession.CreateQuery(newModel, queryStatement);
         }
 
-        private Action<DbQueryBuilder> GetOrderByQueryBuilder(int offset, int fetch, Func<T, OrderBy>[] fnOrderByList)
+        private Action<DbQueryBuilder> GetOrderByQueryBuilder(int offset, int fetch, Func<T, ColumnSort>[] fnOrderByList)
         {
-            var orderByList = fnOrderByList == null ? Array<OrderBy>.Empty : new OrderBy[fnOrderByList.Length];
+            var orderByList = fnOrderByList == null ? Array<ColumnSort>.Empty : new ColumnSort[fnOrderByList.Length];
             for (int i = 0; i < orderByList.Length; i++)
                 orderByList[i] = fnOrderByList[i](_);
 
@@ -87,12 +87,12 @@ namespace DevZest.Data
                 return x => x.OrderBy(offset, fetch, orderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, OrderBy>[] fnOrderByList)
+        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, ColumnSort>[] fnOrderByList)
         {
             return WhereOrderBy(predicate, -1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, OrderBy>[] fnOrderByList)
+        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
         {
             Check.NotNull(predicate, nameof(predicate));
 

@@ -6,16 +6,16 @@ namespace DevZest.Data.Primitives
 {
     public sealed class UniqueConstraint : DbTableConstraint, IIndexConstraint
     {
-        internal UniqueConstraint(string name, bool isClustered, IList<OrderBy> columns)
+        internal UniqueConstraint(string name, bool isClustered, IList<ColumnSort> columns)
             : base(name)
         {
             IsClustered = isClustered;
-            Columns = new ReadOnlyCollection<OrderBy>(columns);
+            Columns = new ReadOnlyCollection<ColumnSort>(columns);
         }
 
         public bool IsClustered { get; private set; }
 
-        public ReadOnlyCollection<OrderBy> Columns { get; private set; }
+        public ReadOnlyCollection<ColumnSort> Columns { get; private set; }
 
         void IIndexConstraint.AsNonClustered()
         {

@@ -11,22 +11,22 @@ namespace DevZest.Data
         public void OrderByJson_ToJson_Parse()
         {
             var salesOrder = new SalesOrder();
-            var orderByList = new OrderBy[]
+            var orderBy = new ColumnSort[]
             {
                 salesOrder.CustomerID.Asc(),
                 salesOrder.SalesOrderID.Desc()
             };
 
-            var json = orderByList.ToJson(true);
+            var json = orderBy.ToJson(true);
             Assert.AreEqual(Json.OrderByJson_ToJson_Parse, json);
 
             var _ = new SalesOrder();
-            var fromJsonList = OrderByList.ParseJson(_, json);
-            Assert.AreEqual(2, fromJsonList.Count);
-            Assert.AreEqual(_.CustomerID, fromJsonList[0].Column);
-            Assert.AreEqual(SortDirection.Ascending, fromJsonList[0].Direction);
-            Assert.AreEqual(_.SalesOrderID, fromJsonList[1].Column);
-            Assert.AreEqual(SortDirection.Descending, fromJsonList[1].Direction);
+            var fromJsonOrderBy = OrderBy.ParseJson(_, json);
+            Assert.AreEqual(2, fromJsonOrderBy.Length);
+            Assert.AreEqual(_.CustomerID, fromJsonOrderBy[0].Column);
+            Assert.AreEqual(SortDirection.Ascending, fromJsonOrderBy[0].Direction);
+            Assert.AreEqual(_.SalesOrderID, fromJsonOrderBy[1].Column);
+            Assert.AreEqual(SortDirection.Descending, fromJsonOrderBy[1].Direction);
         }
     }
 }
