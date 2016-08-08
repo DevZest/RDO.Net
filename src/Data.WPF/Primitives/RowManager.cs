@@ -29,19 +29,19 @@ namespace DevZest.Data.Windows.Primitives
 
         private _Boolean[] _where;
 
-        private OrderBy[][] _orderBy;
+        private ColumnSort[][] _orderBy;
 
         public void Where(_Boolean where)
         {
             throw new NotImplementedException();
         }
 
-        public void OrderBy(OrderBy[] orderBy)
+        public void OrderBy(ColumnSort[] orderBy)
         {
             throw new NotImplementedException();
         }
 
-        public void WhereOrderBy(_Boolean where, OrderBy[] orderBy)
+        public void WhereOrderBy(_Boolean where, ColumnSort[] orderBy)
         {
             throw new NotImplementedException();
         }
@@ -311,8 +311,8 @@ namespace DevZest.Data.Windows.Primitives
             }
             else
             {
-                var placeholder = EmptyRow;
-                if (placeholder != null)
+                var emptyRow = EmptyRow;
+                if (emptyRow != null)
                     RemoveEmptyRow();
             }
         }
