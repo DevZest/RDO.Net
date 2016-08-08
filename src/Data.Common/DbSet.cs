@@ -48,19 +48,22 @@ namespace DevZest.Data
         public DbQuery<T> Where(Func<T, _Boolean> predicate)
         {
             Check.NotNull(predicate, nameof(predicate));
-
-            T newModel;
-            var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(predicate), out newModel);
-            return DbSession.CreateQuery(newModel, queryStatement);
+            return Where(predicate(_));
         }
 
-        private Action<DbQueryBuilder> GetWhereQueryBuilder(Func<T, _Boolean> predicate)
+        private Action<DbQueryBuilder> GetWhereQueryBuilder(_Boolean condition)
         {
-            var condition = predicate(_);
             if (condition == null)
                 return x => { };
             else
                 return x => x.Where(condition);
+        }
+
+        public DbQuery<T> Where(_Boolean condition)
+        {
+            T newModel;
+            var queryStatement = GetSimpleQueryStatement(GetWhereQueryBuilder(condition), out newModel);
+            return DbSession.CreateQuery(newModel, queryStatement);
         }
 
         public DbQuery<T> OrderBy(params Func<T, ColumnSort>[] fnOrderByList)
@@ -68,23 +71,38 @@ namespace DevZest.Data
             return OrderBy(-1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> OrderBy(int offset, int fetch, params Func<T, ColumnSort>[] fnOrderBy)
+        {
+            var orderBy = GetOrderBy(fnOrderBy);
+            return OrderBy(offset, fetch, orderBy);
+        }
+
+        private ColumnSort[] GetOrderBy(Func<T, ColumnSort>[] fnOrderBy)
+        {
+            var orderBy = fnOrderBy == null ? Array<ColumnSort>.Empty : new ColumnSort[fnOrderBy.Length];
+            for (int i = 0; i < orderBy.Length; i++)
+                orderBy[i] = fnOrderBy[i](_);
+            return orderBy;
+        }
+
+        public DbQuery<T> OrderBy(params ColumnSort[] orderBy)
+        {
+            return OrderBy(-1, -1, orderBy);
+        }
+
+        public DbQuery<T> OrderBy(int offset, int fetch, params ColumnSort[] orderBy)
         {
             T newModel;
-            var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, fnOrderByList), out newModel);
+            var queryStatement = GetSimpleQueryStatement(GetOrderByQueryBuilder(offset, fetch, orderBy), out newModel);
             return DbSession.CreateQuery(newModel, queryStatement);
         }
 
-        private Action<DbQueryBuilder> GetOrderByQueryBuilder(int offset, int fetch, Func<T, ColumnSort>[] fnOrderByList)
+        private Action<DbQueryBuilder> GetOrderByQueryBuilder(int offset, int fetch, ColumnSort[] orderBy)
         {
-            var orderByList = fnOrderByList == null ? Array<ColumnSort>.Empty : new ColumnSort[fnOrderByList.Length];
-            for (int i = 0; i < orderByList.Length; i++)
-                orderByList[i] = fnOrderByList[i](_);
-
-            if (orderByList.Length == 0)
+            if (orderBy == null || orderBy.Length == 0)
                 return x => { };
             else
-                return x => x.OrderBy(offset, fetch, orderByList);
+                return x => x.OrderBy(offset, fetch, orderBy);
         }
 
         public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, params Func<T, ColumnSort>[] fnOrderByList)
@@ -92,12 +110,31 @@ namespace DevZest.Data
             return WhereOrderBy(predicate, -1, -1, fnOrderByList);
         }
 
-        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderByList)
+        public DbQuery<T> WhereOrderBy(Func<T, _Boolean> predicate, int offset, int fetch, params Func<T, ColumnSort>[] fnOrderBy)
         {
             Check.NotNull(predicate, nameof(predicate));
 
-            var whereQueryBuilder = GetWhereQueryBuilder(predicate);
-            var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, fnOrderByList);
+            var whereQueryBuilder = GetWhereQueryBuilder(predicate(_));
+            var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, GetOrderBy(fnOrderBy));
+            Action<DbQueryBuilder> whereOrderByQueryBuilder = x =>
+            {
+                whereQueryBuilder(x);
+                orderByQueryBuilder(x);
+            };
+            T newModel;
+            var queryStatement = GetSimpleQueryStatement(whereOrderByQueryBuilder, out newModel);
+            return DbSession.CreateQuery(newModel, queryStatement);
+        }
+
+        public DbQuery<T> WhereOrderBy(_Boolean condition, params ColumnSort[] orderBy)
+        {
+            return WhereOrderBy(condition, -1, -1, orderBy);
+        }
+
+        public DbQuery<T> WhereOrderBy(_Boolean condition, int offset, int fetch, params ColumnSort[] orderBy)
+        {
+            var whereQueryBuilder = GetWhereQueryBuilder(condition);
+            var orderByQueryBuilder = GetOrderByQueryBuilder(offset, fetch, orderBy);
             Action<DbQueryBuilder> whereOrderByQueryBuilder = x =>
             {
                 whereQueryBuilder(x);
