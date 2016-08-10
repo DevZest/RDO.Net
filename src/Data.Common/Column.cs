@@ -496,5 +496,7 @@ namespace DevZest.Data
             VerifyDesignMode();
             _displayPromptGetter = displayPromptGetter;
         }
+
+        public abstract int Compare(DataRow x, DataRow y);
     }
 }

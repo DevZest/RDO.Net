@@ -568,5 +568,15 @@ namespace DevZest.Data
             if (!IsReadOnly(dataRow))
                 UpdateValue(dataRow, _editingValue);
         }
+
+        public sealed override int Compare(DataRow x, DataRow y)
+        {
+            return Comparer.Compare(this[x], this[y]);
+        }
+
+        protected virtual IComparer<T> Comparer
+        {
+            get { return Comparer<T>.Default; }
+        }
     }
 }
