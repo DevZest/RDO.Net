@@ -12,7 +12,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a column of <see cref="Model"/>.
     /// </summary>
-    public abstract class Column : ModelMember, IColumnSet
+    public abstract class Column : ModelMember, IColumnSet, IComparer<DataRow>
     {
         protected Column()
         {
