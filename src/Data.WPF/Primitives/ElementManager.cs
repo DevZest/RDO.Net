@@ -9,8 +9,8 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet)
-            : base(template, dataSet)
+        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            : base(template, dataSet, where, orderBy)
         {
             BlockViews = new BlockViewCollection(this);
         }

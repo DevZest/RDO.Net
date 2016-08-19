@@ -12,14 +12,14 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_Never()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.None);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Insert);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsEmpty);
+            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
@@ -27,16 +27,16 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_Always()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Bottom);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.AreEqual(true, rowManager.Rows[0].IsEmpty);
+            Assert.AreEqual(true, rowManager.Rows[0].IsPlaceholder);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(2, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsEmpty);
-            Assert.IsTrue(rowManager.Rows[1].IsEmpty);
+            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
+            Assert.IsTrue(rowManager.Rows[1].IsPlaceholder);
             Assert.AreEqual(rowManager.Rows[1], rowManager.CurrentRow);
         }
 
@@ -44,15 +44,15 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_NoData()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.NoData);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.NoData);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsTrue(rowManager.Rows[0].IsEmpty);
+            Assert.IsTrue(rowManager.Rows[0].IsPlaceholder);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsEmpty);
+            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
@@ -60,10 +60,10 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_InsertRow()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Bottom);
             var rows = rowManager.Rows;
 
-            var row = rowManager.InsertRow(0);
+            //var row = rowManager.InsertRow(0);
             Assert.AreEqual(3, rows.Count);
         }
     }

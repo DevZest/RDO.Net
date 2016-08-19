@@ -10,25 +10,25 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract partial class LayoutManager : ElementManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
         {
-            var result = LayoutManager.Create(dataPresenter.Template, dataPresenter.DataSet);
+            var result = LayoutManager.Create(template, dataSet, where, orderBy);
             result.DataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet)
+        internal static LayoutManager Create(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutZManager(template, dataSet);
+                return new LayoutZManager(template, dataSet, where, orderBy);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutXManager(template, dataSet);
+                return new LayoutXManager(template, dataSet, where, orderBy);
             else
-                return new LayoutYManager(template, dataSet);
+                return new LayoutYManager(template, dataSet, where, orderBy);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet)
-            : base(template, dataSet)
+        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            : base(template, dataSet, where, orderBy)
         {
         }
 

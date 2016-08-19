@@ -13,7 +13,7 @@ namespace SampleApp
         {
             InitializeComponent();
             _salesOrderList = new SalesOrderList();
-            _salesOrderList.Show(LoadSalesOrders(), _dataView);
+            _salesOrderList.Show(_dataView, LoadSalesOrders());
         }
 
         private SalesOrderList _salesOrderList;

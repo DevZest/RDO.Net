@@ -9,18 +9,29 @@ namespace DevZest.Data.Windows
 {
     public abstract class DataPresenter
     {
-        public DataSet DataSet
-        {
-            get { return GetDataSet(); }
-        }
-
-        internal abstract DataSet GetDataSet();
-
-        public DataView View { get; private set; }
-
-        public abstract Template Template { get; }
+        public abstract DataView View { get; }
 
         internal abstract LayoutManager LayoutManager { get; }
+
+        public Template Template
+        {
+            get { return LayoutManager == null ? null : LayoutManager.Template; }
+        }
+
+        public DataSet DataSet
+        {
+            get { return LayoutManager == null ? null : LayoutManager.DataSet; }
+        }
+
+        public _Boolean Where
+        {
+            get { return LayoutManager == null ? null : LayoutManager.Where; }
+        }
+
+        public IReadOnlyList<ColumnSort> OrderBy
+        {
+            get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
+        }
 
         public IReadOnlyList<RowPresenter> Rows
         {
@@ -40,34 +51,6 @@ namespace DevZest.Data.Windows
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
-        }
-
-        public void Attach(DataView view)
-        {
-            if (view == null)
-                throw new ArgumentNullException(nameof(view));
-
-            if (View == view)
-                return;
-
-            if (DataSet == null)
-                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
-
-            if (View != null)
-                Detach();
-
-            View = view;
-            View.DataPresenter = this;
-        }
-
-        public void Detach()
-        {
-            if (View == null)
-                return;
-
-            View.DataPresenter = null;
-            LayoutManager.ClearElements();
-            View = null;
         }
     }
 }

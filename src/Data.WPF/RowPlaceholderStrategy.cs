@@ -1,8 +1,8 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum EmptyRowPosition
+    public enum RowPlaceholderStrategy
     {
-        None = 0,
+        Insert = 0,
         Top,
         Bottom,
         NoData

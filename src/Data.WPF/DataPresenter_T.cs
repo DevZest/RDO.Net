@@ -1,42 +1,52 @@
 ﻿using DevZest.Data.Windows.Controls;
 using DevZest.Data.Windows.Primitives;
 using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows
 {
     public abstract class DataPresenter<T> : DataPresenter
         where T : Model, new()
     {
-        public void Show(DataSet<T> dataSet, DataView view)
+        public void Show(DataView view, DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
+            DetachView();
             DataSet = dataSet;
-            Attach(view);
+            var template = new Template();
+            using (var builder = new TemplateBuilder(template, DataSet.Model))
+            {
+                BuildTemplate(builder);
+            }
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
+            AttachView(view);
         }
 
-        private DataSet<T> _dataSet;
-        public new DataSet<T> DataSet
+        private void DetachView()
         {
-            get { return _dataSet; }
-            set
+            if (_view != null)
             {
-                Detach();
-                _dataSet = value;
-                _template = new Template();
-                using (var builder = new TemplateBuilder(Template, DataSet.Model))
-                {
-                    BuildTemplate(builder);
-                }
-                _layoutManager = LayoutManager.Create(this);
+                _view.DataPresenter = null;
+                LayoutManager.ClearElements();
+                _view = null;
             }
         }
 
-        private Template _template;
-        public sealed override Template Template
+        private void AttachView(DataView value)
         {
-            get { return _template; }
+            Debug.Assert(View == null && value != null);
+            _view = value;
+            _view.DataPresenter = this;
+        }
+
+        public new DataSet<T> DataSet { get; private set; }
+
+        private DataView _view;
+        public sealed override DataView View
+        {
+            get { return _view; }
         }
 
         private LayoutManager _layoutManager;
@@ -47,14 +57,9 @@ namespace DevZest.Data.Windows
 
         protected abstract void BuildTemplate(TemplateBuilder builder);
 
-        internal sealed override DataSet GetDataSet()
-        {
-            return _dataSet;
-        }
-
         public T _
         {
-            get { return _dataSet == null ? null : _dataSet._; }
+            get { return DataSet == null ? null : DataSet._; }
         }
     }
 }

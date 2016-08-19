@@ -17,8 +17,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private sealed class ConcreteElementManager : ElementManager
         {
-            public ConcreteElementManager(Template template, DataSet dataSet)
-                : base(template, dataSet)
+            public ConcreteElementManager(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+                : base(template, dataSet, where, orderBy)
             {
             }
         }

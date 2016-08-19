@@ -50,7 +50,7 @@ namespace SmoothScroll
             InitializeComponent();
 
             var fooList = new FooList();
-            fooList.Show(GetTestData(10000), dataView);
+            fooList.Show(dataView, GetTestData(10000));
         }
 
         private static void AddSectionHeader(DataSet<Foo> dataSet, int index)

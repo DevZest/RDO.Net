@@ -47,8 +47,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(Template template, DataSet dataSet)
-                : base(template, dataSet)
+            public ConcreteRowManager(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+                : base(template, dataSet, where, orderBy)
             {
             }
 
@@ -57,11 +57,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, EmptyRowPosition rowPlaceholder)
+        internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, RowPlaceholderStrategy rowPlaceholderStrategy)
             where T : Model, new()
         {
             var template = new Template();
-            template.EmptyRowPosition = rowPlaceholder;
+            template.RowPlaceholderStrategy = rowPlaceholderStrategy;
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }

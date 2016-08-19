@@ -50,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Bottom);
 
             var row = rowManager.Rows[0];
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
@@ -67,21 +67,21 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_CancelEdit_Eof()
         {
             var dataSet = DataSet<SalesOrder>.New();
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Bottom);
 
             var rows = rowManager.Rows;
             var row = rows[0];
             Assert.AreEqual(1, rows.Count);
-            Assert.IsTrue(row.IsEmpty);
+            Assert.IsTrue(row.IsPlaceholder);
 
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
-            Assert.IsTrue(row.IsEmpty);
+            Assert.IsTrue(row.IsPlaceholder);
             Assert.AreEqual(1, rows.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
             row.CancelEdit();
             Assert.IsFalse(row.IsEditing);
-            Assert.IsTrue(row.IsEmpty);
+            Assert.IsTrue(row.IsPlaceholder);
             Assert.AreEqual(1, rows.Count);
         }
 
@@ -110,7 +110,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_Delete()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, EmptyRowPosition.None);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderStrategy.Insert);
             var rows = rowManager.Rows;
             Assert.AreEqual(1, rows.Count);
             rows[0].Delete();
@@ -139,7 +139,7 @@ namespace DevZest.Data.Windows.Primitives
             rows[0].Expand();
             VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
 
-            var newChildRow = rows[0].InsertChildRow(1);
+            //var newChildRow = rows[0].InsertChildRow(1);
             VerifyDepths(rows, 0, 1, 1, 1, 1, 0, 0);
         }
     }

@@ -2,22 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class RowManager
+    internal abstract class RowManager : IReadOnlyList<RowPresenter>
     {
-        internal RowManager(Template template, DataSet dataSet)
+        internal RowManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _template.RowManager = this;
             _dataSet = dataSet;
+            dataSet.RowAdded += OnDataRowAdded;
+            dataSet.RowRemoved += OnDataRowRemoved;
+            dataSet.RowUpdated += OnDataRowUpdated;
+            _where = MakeRecursive(where);
+            _orderBy = MakeRecursive(orderBy);
+            Initialize();
+        }
 
-            InitializeRowMappings();
-            InitializeRows();
-            CoerceEmptyRow();
+        private void Initialize()
+        {
+            RowMappings_Initialize();
+            MappedRows_Initialize();
+            FlatRows_Initialize();
+            Rows_Initialize();
             SetCurrentRow(CoercedCurrentRow);
         }
 
@@ -27,33 +39,202 @@ namespace DevZest.Data.Windows.Primitives
             get { return _template; }
         }
 
-        private _Boolean[] _where;
-
-        private ColumnSort[][] _orderBy;
-
-        public void Where(_Boolean where)
+        private abstract class Recursive<T> : IReadOnlyList<T>
+            where T : class
         {
-            throw new NotImplementedException();
+            private readonly RowManager _rowManager;
+            private string _sealizedString;
+            private readonly List<T> _list;
+
+            protected Recursive(RowManager rowManager, T firstValue)
+            {
+                _rowManager = rowManager;
+                _list = new List<T>();
+                _list.Add(firstValue);
+            }
+
+            private Model RootModel
+            {
+                get { return _rowManager.DataSet.Model; }
+            }
+
+            private int RecursiveModelOrdinal
+            {
+                get { return _rowManager.Template.RecursiveModelOrdinal; }
+            }
+
+            public T this[int index]
+            {
+                get
+                {
+                    for (int i = _list.Count; i <= index; i++)
+                        _list.Add(null);
+
+                    if (_list[index] == null)
+                    {
+                        if (_sealizedString == null)
+                            _sealizedString = Serialize(RootModel, _list[0]);
+                        _list[index] = Deserialize(_sealizedString, GetChildModel(index));
+                    }
+
+                    return _list[index];
+                }
+            }
+
+            private Model GetChildModel(int index)
+            {
+                Debug.Assert(index > 0);
+                var result = _rowManager.DataSet.Model;
+                for (int i = 1; i <= index; i++)
+                    result = result.GetChildModels()[RecursiveModelOrdinal];
+                return result;
+            }
+
+            protected abstract string Serialize(Model model, T first);
+
+            protected abstract T Deserialize(string serializedString, Model model);
+
+            public int Count
+            {
+                get { return _list.Count; }
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                for (int i = 0; i < Count; i++)
+                    yield return this[i];
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
         }
 
-        public void OrderBy(ColumnSort[] orderBy)
+        private sealed class RecursiveWhere : Recursive<_Boolean>
         {
-            throw new NotImplementedException();
+            public RecursiveWhere(RowManager rowManager, _Boolean where)
+                : base(rowManager, where)
+            {
+            }
+
+            protected override string Serialize(Model model, _Boolean first)
+            {
+                return first.ToJson(false);
+            }
+
+            protected override _Boolean Deserialize(string serializedString, Model model)
+            {
+                return Column.ParseJson<_Boolean>(model, serializedString);
+            }
         }
 
-        public void WhereOrderBy(_Boolean where, ColumnSort[] orderBy)
+        private sealed class RecursiveOrderBy : Recursive<ColumnSort[]>
         {
-            throw new NotImplementedException();
+            public RecursiveOrderBy(RowManager rowManager, ColumnSort[] orderBy)
+                : base(rowManager, orderBy)
+            {
+            }
+
+            protected override string Serialize(Model model, ColumnSort[] first)
+            {
+                return Data.OrderBy.ToJson(first, false);
+            }
+
+            protected override ColumnSort[] Deserialize(string serializedString, Model model)
+            {
+                return Data.OrderBy.ParseJson(model, serializedString);
+            }
         }
 
-        public bool IsQuery
+        private IReadOnlyList<_Boolean> _where;
+        public _Boolean Where
         {
-            get { return IsRecursive || _where != null || _orderBy != null; }
+            get { return _where == null ? null : _where[0]; }
+        }
+
+        private bool SetWhere(_Boolean where)
+        {
+            var value = MakeRecursive(where);
+            if (_where == value)
+                return false;
+
+            _where = value;
+            return true;
+        }
+
+        private IReadOnlyList<_Boolean> MakeRecursive(_Boolean where)
+        {
+            if (where == null)
+                return null;
+            else if (IsRecursive)
+                return new RecursiveWhere(this, where);
+            else
+                return new _Boolean[] { where };
+        }
+
+        public void Select(_Boolean where)
+        {
+            var changed = SetWhere(where);
+            if (changed)
+                Initialize();
+        }
+
+        private IReadOnlyList<ColumnSort[]> _orderBy;
+
+        public IReadOnlyList<ColumnSort> OrderBy
+        {
+            get { return _orderBy == null ? null : _orderBy[0]; }
+        }
+
+        private bool SetOrderBy(ColumnSort[] orderBy)
+        {
+            var value = MakeRecursive(orderBy);
+            if (_orderBy == value)
+                return false;
+
+            _orderBy = value;
+            return true;
+        }
+
+        private IReadOnlyList<ColumnSort[]> MakeRecursive(ColumnSort[] orderBy)
+        {
+            if (orderBy == null || orderBy.Length == 0)
+                return null;
+            else if (IsRecursive)
+                return new RecursiveOrderBy(this, orderBy);
+            else
+                return new ColumnSort[][] { orderBy };
+        }
+
+        public void Sort(ColumnSort[] orderBy)
+        {
+            var changed = SetOrderBy(orderBy);
+            if (changed)
+                Initialize();
+        }
+
+        public void Select(_Boolean where, ColumnSort[] orderBy)
+        {
+            var whereChanged = SetWhere(where);
+            var orderByChanged = SetOrderBy(orderBy);
+            if (whereChanged || orderByChanged)
+                Initialize();
         }
 
         private bool IsRecursive
         {
             get { return Template.IsRecursive; }
+        }
+
+        internal int GetDepth(DataRow dataRow)
+        {
+            return GetDepth(dataRow.Model);
+        }
+
+        private int GetDepth(Model model)
+        {
+            return model.GetDepth() - DataSet.Model.GetDepth();
         }
 
         private readonly DataSet _dataSet;
@@ -84,106 +265,30 @@ namespace DevZest.Data.Windows.Primitives
             Invalidate(null);
         }
 
-        private List<List<RowPresenter>> _rowMappings;
-
-        private RowPresenter RowMappings_CreateRow(DataRow dataRow)
-        {
-            Debug.Assert(dataRow != null);
-
-            var rows = _rowMappings[dataRow.Model.GetDepth()];
-            var row = new RowPresenter(this, dataRow);
-            var ordinal = dataRow.Ordinal;
-            rows.Insert(ordinal, row);
-            return row;
-        }
-
-        internal RowPresenter RowMappings_GetRow(DataRow dataRow)
-        {
-            Debug.Assert(dataRow != null);
-            return RowMappings_GetRow(dataRow.Model.GetDepth(), dataRow.Ordinal);
-        }
-
-        private RowPresenter RowMappings_GetRow(int depth, int ordinal)
-        {
-            return _rowMappings[depth][ordinal];
-        }
-
-        private void RowMappings_Remove(int depth, int ordinal)
-        {
-            DisposeRow(_rowMappings[depth][ordinal]);
-            _rowMappings[depth].RemoveAt(ordinal);
-            if (!IsQuery)
-                OnRowsChanged();
-        }
-
         protected virtual void DisposeRow(RowPresenter row)
         {
             row.Dispose();
         }
 
-        private List<RowPresenter> _rows;
-        public IReadOnlyList<RowPresenter> Rows
+        /// <summary>Mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/></summary>
+        private Dictionary<DataRow, RowPresenter> _rowMappings;
+
+        private void RowMappings_Initialize()
         {
-            get { return _rows; }
-        }
+            if (IsRecursive || _where != null || _orderBy != null)
+                _rowMappings = new Dictionary<DataRow, RowPresenter>();
 
-        private void Rows_Insert(int index, RowPresenter row)
-        {
-            Debug.Assert(row != null);
+            if (!IsRecursive || _where == null)
+                return;
 
-            _rows.Insert(index, row);
-            row.Index = index;
-        }
-
-        private void Rows_RemoveAt(int index)
-        {
-            SetPrevCurrentRowIndex(index, 1);
-            _rows[index].Index = -1;
-            _rows.RemoveAt(index);
-        }
-
-        private void Rows_RemoveRange(int startIndex, int count)
-        {
-            Debug.Assert(count > 0);
-
-            SetPrevCurrentRowIndex(startIndex, count);
-            for (int i = 0; i < count; i++)
-                _rows[startIndex + i].Index = -1;
-
-            _rows.RemoveRange(startIndex, count);
-        }
-
-        private int _prevCurrentRowIndex = -1;
-        private void SetPrevCurrentRowIndex(int startRemovalIndex, int count)
-        {
-            if (_currentRow != null)
+            //If any child row fulfills the WHERE predicates, all the rows along the parent chain should be kept
+            for (var dataSet = GetChildDataSet(DataSet); dataSet != null; dataSet = GetChildDataSet(dataSet))
             {
-                var currentRowViewOrdinal = _currentRow.Index;
-                if (currentRowViewOrdinal >= startRemovalIndex && currentRowViewOrdinal < startRemovalIndex + count)
-                    _prevCurrentRowIndex = currentRowViewOrdinal;
-            }
-        }
-
-        private void Rows_UpdateIndex(int startIndex)
-        {
-            Debug.Assert(IsQuery);
-
-            for (int i = startIndex; i < _rows.Count; i++)
-                _rows[i].Index = i;
-        }
-
-        private void InitializeRowMappings()
-        {
-            _rowMappings = new List<List<RowPresenter>>();
-            for (var dataSet = DataSet; dataSet != null; dataSet = GetChildDataSet(dataSet))
-            {
-                _rowMappings.Add(new List<RowPresenter>());
                 foreach (var dataRow in dataSet)
-                    RowMappings_CreateRow(dataRow);
-
-                dataSet.RowAdded += OnDataRowAdded;
-                dataSet.RowRemoved += OnDataRowRemoved;
-                dataSet.RowUpdated += OnDataRowUpdated;
+                {
+                    if (Predicate(dataRow))
+                        RowMappings_InitializeAncestors(dataRow);
+                }
             }
         }
 
@@ -192,173 +297,376 @@ namespace DevZest.Data.Windows.Primitives
             return IsRecursive && dataSet.Count > 0 ? dataSet.Model.GetChildModels()[Template.RecursiveModelOrdinal].GetDataSet() : null;
         }
 
-        private void InitializeRows()
+        private void RowMappings_InitializeAncestors(DataRow dataRow)
         {
-            _rows = IsQuery ? new List<RowPresenter>() : _rowMappings[0];
-            if (IsQuery)
+            for (dataRow = dataRow.ParentDataRow; dataRow != null; dataRow = dataRow.ParentDataRow)
             {
-                int index = 0;
-                foreach (var row in _rowMappings[0])
-                    index = InsertRowRecursively(index, row);
+                bool exists = RowMappings_ExistsOrCreate(dataRow);
+                if (exists)
+                    return;
             }
         }
 
-        private int InsertRowRecursively(int index, RowPresenter row)
+        private RowPresenter RowMappings_GetOrCreate(DataRow dataRow)
         {
-            Debug.Assert(IsRecursive && !row.IsEmpty);
+            RowPresenter result;
+            if (_rowMappings.TryGetValue(dataRow, out result))
+                return result;
+            result = new RowPresenter(this, dataRow);
+            _rowMappings.Add(dataRow, result);
+            return result;
+        }
 
-            Rows_Insert(index++, row);
+        private bool RowMappings_ExistsOrCreate(DataRow dataRow)
+        {
+            if (_rowMappings.ContainsKey(dataRow))
+                return true;
+            var row = new RowPresenter(this, dataRow);
+            _rowMappings.Add(dataRow, row);
+            return false;
+        }
+
+        internal IEnumerable<RowPresenter> RowMappings_GetOrCreateChildren(DataRow dataRow)
+        {
+            IEnumerable<DataRow> childDataRows = dataRow[Template.RecursiveModelOrdinal];
+            childDataRows = Filter(childDataRows);
+            childDataRows = Sort(childDataRows, GetDepth(dataRow) + 1);
+            return childDataRows.Select(x => RowMappings_GetOrCreate(x));
+        }
+
+        private List<RowPresenter> _mappedRows;
+
+        private void MappedRows_Initialize()
+        {
+            _mappedRows = new List<RowPresenter>();
+            var dataRows = Filter(DataSet);
+            dataRows = Sort(dataRows, 0);
+            foreach (var dataRow in dataRows)
+            {
+                var row =_rowMappings == null ? new RowPresenter(this, dataRow) : RowMappings_GetOrCreate(dataRow);
+                _mappedRows.Add(row);
+                if (IsRecursive)
+                    row.InitializeChildren();
+                else
+                    row.Index = _mappedRows.Count - 1;
+            }
+        }
+
+        private IEnumerable<DataRow> Filter(IEnumerable<DataRow> dataRows)
+        {
+            return _where == null ? dataRows : dataRows.Where(x => IsRecursive && _rowMappings.ContainsKey(x) ? true : Predicate(x));
+        }
+
+        private bool Predicate(DataRow dataRow)
+        {
+            var result = _where[dataRow.Model.GetDepth() - DataSet.Model.GetDepth()][dataRow];
+            return result.HasValue && result.GetValueOrDefault();
+        }
+
+        private IEnumerable<DataRow> Sort(IEnumerable<DataRow> dataRows, int depth)
+        {
+            if (_orderBy == null)
+                return dataRows;
+
+            var orderBy = _orderBy[depth];
+            var column = orderBy[0].Column;
+            var direction = orderBy[0].Direction;
+            IOrderedEnumerable<DataRow> result = direction == SortDirection.Descending ? dataRows.OrderByDescending(x => x, column) : dataRows.OrderBy(x => x, column);
+            for (int i = 1; i < orderBy.Length; i++)
+            {
+                column = orderBy[i].Column;
+                direction = orderBy[i].Direction;
+                result = direction == SortDirection.Descending ? result.ThenByDescending(x => x, column) : result.ThenBy(x => x, column);
+            }
+            return result;
+        }
+
+        private List<RowPresenter> _flatRows;
+
+        private void FlatRows_Initialize()
+        {
+            _flatRows = IsRecursive ? new List<RowPresenter>() : _mappedRows;
+            if (IsRecursive)
+            {
+                int index = 0;
+                foreach (var row in _mappedRows)
+                    FlatRows_Insert(index++, row);
+            }
+        }
+
+        private void FlatRows_Insert(int index, RowPresenter row)
+        {
+            Debug.Assert(row != null);
+
+            _flatRows.Insert(index, row);
+            row.Index = index;
+        }
+
+        internal void Expand(RowPresenter row)
+        {
+            Debug.Assert(IsRecursive && !row.IsExpanded);
+
+            var nextIndex = row.Index + 1;
+            for (int i = 0; i < row.Children.Count; i++)
+            {
+                var childRow = row.Children[i];
+                nextIndex = FlatRows_InsertRecursively(nextIndex, childRow);
+            }
+            FlatRows_UpdateIndex(nextIndex);
+            OnRowsChanged();
+        }
+
+        private int FlatRows_InsertRecursively(int index, RowPresenter row)
+        {
+            Debug.Assert(IsRecursive && !row.IsPlaceholder);
+
+            FlatRows_Insert(index++, row);
             if (row.IsExpanded)
             {
-                var children = row.DataRow[Template.RecursiveModelOrdinal];
-                foreach (var childDataRow in children)
-                {
-                    var childRow = RowMappings_GetRow(childDataRow);
-                    index = InsertRowRecursively(index, childRow);
-                }
+                var children = row.Children;
+                foreach (var childRow in children)
+                    index = FlatRows_InsertRecursively(index, childRow);
             }
             return index;
         }
 
-        private int GetIndex(RowPresenter row)
+        internal void Collapse(RowPresenter row)
         {
-            Debug.Assert(!row.IsEmpty);
+            Debug.Assert(IsRecursive && row.IsExpanded);
 
-            if (!IsRecursive)
-                return -1;
+            var nextIndex = row.Index + 1;
+            int count = FlatRows_NextIndexOf(row) - nextIndex;
+            if (count == 0)
+                return;
 
-            var parentRow = row.RecursiveParent;
-            var prevSiblingRow = PrevSiblingOf(row);
-            if (parentRow == null)
-                return prevSiblingRow == null ? 0 : NextIndexOf(prevSiblingRow);
-            else if (parentRow.Index >= 0 && parentRow.IsExpanded)
-                return prevSiblingRow == null ? parentRow.Index + 1 : NextIndexOf(prevSiblingRow);
-            else
-                return -1;
+            FlatRows_RemoveRange(nextIndex, count);
+            FlatRows_UpdateIndex(nextIndex);
+            OnRowsChanged();
         }
 
-        private RowPresenter PrevSiblingOf(RowPresenter row)
-        {
-            return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.Depth, row.DataRow.Ordinal - 1);
-        }
-
-        private int NextIndexOf(RowPresenter row)
+        private int FlatRows_NextIndexOf(RowPresenter row)
         {
             Debug.Assert(IsRecursive && row != null && row.Index >= 0);
 
             var depth = row.Depth;
             var result = row.Index + 1;
-            for (; result < _rows.Count; result++)
+            for (; result < _flatRows.Count; result++)
             {
-                if (_rows[result].Depth <= depth)
+                if (_flatRows[result].Depth <= depth)
                     break;
             }
             return result;
         }
 
-        private void OnDataRowAdded(object sender, DataRow dataRow)
+        private void FlatRows_RemoveRange(int startIndex, int count)
         {
-            if (IsRecursive && dataRow.Model.GetDepth() == _rowMappings.Count - 1)
-                _rowMappings.Add(new List<RowPresenter>());
+            Debug.Assert(count > 0);
 
-            var row = RowMappings_CreateRow(dataRow);
-            var index = GetIndex(row);
-            if (index >= 0)
+            for (int i = 0; i < count; i++)
+                _flatRows[startIndex + i].Index = -1;
+
+            _flatRows.RemoveRange(startIndex, count);
+        }
+
+        private void FlatRows_RemoveAt(int index)
+        {
+            SaveCurrentRowIndex(index, 1);
+            _flatRows[index].Index = -1;
+            _flatRows.RemoveAt(index);
+        }
+
+        private int _savedCurrentRowIndex = -1;
+        private void SaveCurrentRowIndex(int startRemovalIndex, int count)
+        {
+            if (_currentRow != null)
             {
-                index = InsertRowRecursively(index, row);
-                Rows_UpdateIndex(index);
+                var currentRowIndex = _currentRow.Index;
+                if (currentRowIndex >= startRemovalIndex && currentRowIndex < startRemovalIndex + count)
+                    _savedCurrentRowIndex = currentRowIndex;
+            }
+        }
+
+        private void FlatRows_UpdateIndex(int startIndex)
+        {
+            Debug.Assert(_flatRows != _mappedRows);
+
+            for (int i = startIndex; i < _flatRows.Count; i++)
+                _flatRows[i].Index = i;
+        }
+
+        public RowPresenter Placeholder { get; private set; }
+
+        private int PlaceholderIndex
+        {
+            get { return Placeholder == null ? -1 : Placeholder.Index; }
+        }
+
+        public IReadOnlyList<RowPresenter> Rows
+        {
+            get { return this; }
+        }
+
+        #region IReadOnlyList<RowPresenter>
+
+        private int Rows_Count
+        {
+            get
+            {
+                var result = _flatRows.Count;
+                if (Placeholder != null)
+                    result++;
+                return result;
+            }
+        }
+
+        private RowPresenter Rows_Item(int index)
+        {
+            Debug.Assert(index >= 0 && index < Rows_Count);
+
+            if (index == PlaceholderIndex)
+                return Placeholder;
+
+            if (PlaceholderIndex >= 0 && index > PlaceholderIndex)
+                index--;
+            return _flatRows[index];
+        }
+
+        int IReadOnlyCollection<RowPresenter>.Count
+        {
+            get { return Rows_Count; }
+        }
+
+        RowPresenter IReadOnlyList<RowPresenter>.this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Rows_Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return Rows_Item(index);
+            }
+        }
+
+        IEnumerator<RowPresenter> IEnumerable<RowPresenter>.GetEnumerator()
+        {
+            for (int i = 0; i < Rows_Count; i++)
+                yield return Rows_Item(i);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            for (int i = 0; i < Rows_Count; i++)
+                yield return Rows_Item(i);
+        }
+
+        #endregion
+
+        private void Rows_Initialize()
+        {
+            var rowPlaceholderStrategy = Template.RowPlaceholderStrategy;
+            if (rowPlaceholderStrategy == RowPlaceholderStrategy.Top)
+                Placeholder = new RowPresenter(this, 0);
+            else if (rowPlaceholderStrategy == RowPlaceholderStrategy.Bottom)
+                Placeholder = new RowPresenter(this, _flatRows.Count);
+            else
+                Rows_CoerceNoDataPlaceholder();
+        }
+
+        private void Rows_CoerceNoDataPlaceholder()
+        {
+            if (Template.RowPlaceholderStrategy != RowPlaceholderStrategy.NoData)
+                return;
+
+            var index = _flatRows.Count == 0 ? 0 : -1;
+            if (index == 0)
+            {
+                if (Placeholder == null)
+                    Placeholder = new RowPresenter(this, 0);
             }
             else
-                OnRowsChanged();
-            OnDataSetChanged();
+            {
+                if (Placeholder != null)
+                {
+                    var placeholder = Placeholder;
+                    Placeholder = null;
+                    DisposeRow(placeholder);
+                }
+            }
+        }
+
+        //private void RowMappings_Remove(int depth, int ordinal)
+        //{
+        //    DisposeRow(_rowMappings[depth][ordinal]);
+        //    _rowMappings[depth].RemoveAt(ordinal);
+        //    if (!IsQuery)
+        //        OnRowsChanged();
+        //}
+
+        //private int GetIndex(RowPresenter row)
+        //{
+        //    Debug.Assert(!row.IsPlaceholder);
+
+        //    if (!IsRecursive)
+        //        return -1;
+
+        //    var parentRow = row.Parent;
+        //    var prevSiblingRow = PrevSiblingOf(row);
+        //    if (parentRow == null)
+        //        return prevSiblingRow == null ? 0 : FlatRows_NextIndexOf(prevSiblingRow);
+        //    else if (parentRow.Index >= 0 && parentRow.IsExpanded)
+        //        return prevSiblingRow == null ? parentRow.Index + 1 : FlatRows_NextIndexOf(prevSiblingRow);
+        //    else
+        //        return -1;
+        //}
+
+        //private RowPresenter PrevSiblingOf(RowPresenter row)
+        //{
+        //    return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.Depth, row.DataRow.Ordinal - 1);
+        //}
+
+        private void OnDataRowAdded(object sender, DataRow dataRow)
+        {
+            //if (IsRecursive && dataRow.Model.GetDepth() == _rowMappings.Count - 1)
+            //    _rowMappings.Add(new List<RowPresenter>());
+
+            //var row = RowMappings_CreateRow(dataRow);
+            //var index = GetIndex(row);
+            //if (index >= 0)
+            //{
+            //    index = InsertRowRecursively(index, row);
+            //    FlatRows_UpdateIndex(index);
+            //}
+            //else
+            //    OnRowsChanged();
+            //OnDataSetChanged();
         }
 
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
-            OnDataRowRemoved(e.Model.GetDepth(), e.Index);
-            OnDataSetChanged();
+            //OnDataRowRemoved(e.Model.GetDepth(), e.Index);
+            //OnDataSetChanged();
         }
 
         private void OnDataRowRemoved(int depth, int ordinal)
         {
-            if (IsRecursive)
-            {
-                var row = RowMappings_GetRow(depth, ordinal);
-                var index = row.Index;
-                if (index >= 0)
-                {
-                    Rows_RemoveAt(index);
-                    Rows_UpdateIndex(index);
-                }
-            }
-            RowMappings_Remove(depth, ordinal);
+            //if (IsRecursive)
+            //{
+            //    var row = RowMappings_GetRow(depth, ordinal);
+            //    var index = row.Index;
+            //    if (index >= 0)
+            //    {
+            //        Rows_RemoveAt(index);
+            //        Rows_UpdateIndex(index);
+            //    }
+            //}
+            //RowMappings_Remove(depth, ordinal);
         }
 
-        private void OnDataSetChanged()
-        {
-            CoerceEmptyRow();
-            CurrentRow = CoercedCurrentRow;
-            OnRowsChanged();
-        }
-
-        private void CoerceEmptyRow()
-        {
-            var index = EmptyRowIndex;
-            if (index >= 0)
-            {
-                if (EmptyRow == null)
-                    AddEmptyRow(index);
-            }
-            else
-            {
-                var emptyRow = EmptyRow;
-                if (emptyRow != null)
-                    RemoveEmptyRow();
-            }
-        }
-
-        private int EmptyRowIndex
-        {
-            get
-            {
-                var emptyRowPosition = Template.EmptyRowPosition;
-                if (emptyRowPosition == EmptyRowPosition.None)
-                    return -1;
-                else if (emptyRowPosition == EmptyRowPosition.NoData)
-                    return DataSet.Count == 0 ? 0 : -1;
-                else if (IsRecursive)
-                    return -1;
-                else
-                    return emptyRowPosition == EmptyRowPosition.Top ? 0 : DataSet.Count;
-            }
-        }
-
-        private void AddEmptyRow(int index)
-        {
-            Debug.Assert(EmptyRow == null);
-            EmptyRow = new RowPresenter(this, null);
-            Rows_Insert(index, EmptyRow);
-        }
-
-        private void RemoveEmptyRow()
-        {
-            Debug.Assert(EmptyRow != null);
-            Rows_RemoveAt(EmptyRow.Index);
-            EmptyRow.Dispose();
-            EmptyRow = null;
-        }
-
-        internal RowPresenter EmptyRow { get; private set; }
-
-        private RowPresenter FirstRow
-        {
-            get { return _rows.Count == 0 ? null : _rows[0]; }
-        }
-
-        private RowPresenter LastRow
-        {
-            get { return _rows.Count == 0 ? null : _rows[_rows.Count - 1]; }
-        }
+        //private void OnDataSetChanged()
+        //{
+        //    CoerceEmptyRow();
+        //    CurrentRow = CoercedCurrentRow;
+        //    OnRowsChanged();
+        //}
 
         private RowPresenter CoercedCurrentRow
         {
@@ -371,11 +679,11 @@ namespace DevZest.Data.Windows.Primitives
                 }
                 else
                 {
-                    if (_prevCurrentRowIndex != -1)
+                    if (_savedCurrentRowIndex != -1)
                     {
-                        var currentRowOrdinal = Math.Min(Rows.Count - 1, _prevCurrentRowIndex);
-                        _prevCurrentRowIndex = -1;
-                        return currentRowOrdinal < 0 ? null : Rows[currentRowOrdinal];
+                        var currentRowIndex = Math.Min(Rows.Count - 1, _savedCurrentRowIndex);
+                        _savedCurrentRowIndex = -1;
+                        return currentRowIndex < 0 ? null : Rows[currentRowIndex];
                     }
                     else if (Rows.Count == 0)
                         return null;
@@ -400,11 +708,11 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnDataRowUpdated(object sender, DataRow dataRow)
         {
-            if (_viewUpdateSuppressed != dataRow)
-            {
-                var row = RowMappings_GetRow(dataRow);
-                Invalidate(row);
-            }
+            //if (_viewUpdateSuppressed != dataRow)
+            //{
+            //    var row = RowMappings_GetRow(dataRow);
+            //    Invalidate(row);
+            //}
         }
 
         private RowPresenter _currentRow;
@@ -466,43 +774,6 @@ namespace DevZest.Data.Windows.Primitives
                 _editingRow = value;
                 OnEditingRowChanged();
             }
-        }
-
-        internal void Expand(RowPresenter row)
-        {
-            Debug.Assert(IsRecursive && !row.IsExpanded);
-
-            var nextOrdinal = row.Index + 1;
-            for (int i = 0; i < row.RecursiveChildrenCount; i++)
-            {
-                var childRow = row.GetRecursiveChild(i);
-                nextOrdinal = InsertRowRecursively(nextOrdinal, childRow);
-            }
-            Rows_UpdateIndex(nextOrdinal);
-            OnRowsChanged();
-        }
-
-        internal void Collapse(RowPresenter row)
-        {
-            Debug.Assert(IsRecursive && row.IsExpanded);
-
-            var nextOrdinal = row.Index + 1;
-            int count = NextIndexOf(row) - nextOrdinal;
-            if (count == 0)
-                return;
-
-            Rows_RemoveRange(nextOrdinal, count);
-            Rows_UpdateIndex(nextOrdinal);
-            OnRowsChanged();
-        }
-
-        public RowPresenter InsertRow(int ordinal, Action<DataRow> updateAction = null)
-        {
-            if (ordinal < 0 || ordinal > DataSet.Count)
-                throw new ArgumentOutOfRangeException(nameof(ordinal));
-
-            DataSet.Insert(ordinal, new DataRow(), updateAction);
-            return _rowMappings[0][ordinal];
         }
     }
 }
