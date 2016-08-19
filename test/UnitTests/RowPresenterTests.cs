@@ -123,10 +123,10 @@ namespace DevZest.Data.Windows.Primitives
             var dataSet = MockProductCategories(3);
             var rowManager = CreateRowManager(dataSet);
             var rows = rowManager.Rows;
-            VerifyRowOrdinal(rows);
+            VerifyIndex(rows);
             VerifyDepths(rows, 0, 0, 0);
             rows[0].Delete();
-            VerifyRowOrdinal(rows);
+            VerifyIndex(rows);
             VerifyDepths(rows, 0, 0);
         }
 

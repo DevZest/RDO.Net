@@ -83,7 +83,7 @@ namespace DevZest.Data.Windows.Primitives
                 Assert.AreEqual(depths[i], rows[i].Depth);
         }
 
-        protected static void VerifyRowOrdinal(IReadOnlyList<RowPresenter> rows)
+        protected static void VerifyIndex(IReadOnlyList<RowPresenter> rows)
         {
             for (int i = 0; i < rows.Count; i++)
                 Assert.AreEqual(i, rows[i].Index);
