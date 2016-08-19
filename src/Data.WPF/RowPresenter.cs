@@ -142,7 +142,7 @@ namespace DevZest.Data.Windows
 
         public int Depth
         {
-            get { return Parent == null ? 0 : RowManager.GetDepth(Parent.DataRow); }
+            get { return Parent == null ? 0 : RowManager.GetDepth(Parent.DataRow) + 1; }
         }
 
         private bool _isExpanded = false;
