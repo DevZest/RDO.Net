@@ -33,6 +33,28 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
         }
 
+        private LayoutManager RequireLayoutManager()
+        {
+            if (LayoutManager == null)
+                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+            return LayoutManager;
+        }
+
+        public void Select(_Boolean where)
+        {
+            RequireLayoutManager().Select(where);
+        }
+
+        public void Select(_Boolean where, ColumnSort[] orderBy)
+        {
+            RequireLayoutManager().Select(where, orderBy);
+        }
+
+        public void Sort(ColumnSort[] orderBy)
+        {
+            RequireLayoutManager().Sort(orderBy);
+        }
+
         public IReadOnlyList<RowPresenter> Rows
         {
             get { return LayoutManager == null ? null : LayoutManager.Rows; }
