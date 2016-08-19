@@ -4,7 +4,6 @@ using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -100,15 +99,24 @@ namespace DevZest.Data.Windows
             get { return IsPlaceholder && IsEditing; }
         }
 
-        public RowPresenter Parent { get; private set; }
+        public RowPresenter Parent { get; internal set; }
 
-        public IReadOnlyList<RowPresenter> Children { get; private set; }
+        private List<RowPresenter> _children;
+        public IReadOnlyList<RowPresenter> Children
+        {
+            get
+            {
+                if (_children != null)
+                    return _children;
+                return Array<RowPresenter>.Empty;
+            }
+        }
 
         internal void InitializeChildren()
         {
             Debug.Assert(IsRecursive);
 
-            Children = RowManager.RowMappings_GetOrCreateChildren(DataRow).ToList();
+            _children = RowManager.RowMappings_GetOrCreateChildren(this);
             foreach (var child in Children)
                 child.InitializeChildren();
         }

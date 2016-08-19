@@ -326,12 +326,22 @@ namespace DevZest.Data.Windows.Primitives
             return false;
         }
 
-        internal IEnumerable<RowPresenter> RowMappings_GetOrCreateChildren(DataRow dataRow)
+        internal List<RowPresenter> RowMappings_GetOrCreateChildren(RowPresenter parent)
         {
-            IEnumerable<DataRow> childDataRows = dataRow[Template.RecursiveModelOrdinal];
+            var parentDataRow = parent.DataRow;
+            IEnumerable<DataRow> childDataRows = parentDataRow[Template.RecursiveModelOrdinal];
             childDataRows = Filter(childDataRows);
-            childDataRows = Sort(childDataRows, GetDepth(dataRow) + 1);
-            return childDataRows.Select(x => RowMappings_GetOrCreate(x));
+            childDataRows = Sort(childDataRows, GetDepth(parentDataRow) + 1);
+            List<RowPresenter> result = null;
+            foreach (var childDataRow in childDataRows)
+            {
+                if (result == null)
+                    result = new List<RowPresenter>();
+                var row = RowMappings_GetOrCreate(childDataRow);
+                row.Parent = parent;
+                result.Add(RowMappings_GetOrCreate(childDataRow));
+            }
+            return result;
         }
 
         private List<RowPresenter> _mappedRows;
