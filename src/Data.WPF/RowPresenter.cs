@@ -10,20 +10,20 @@ namespace DevZest.Data.Windows
 {
     public sealed class RowPresenter
     {
-        internal RowPresenter(RowManager rowManager, DataRow dataRow)
-            : this(rowManager, dataRow, -1)
+        internal RowPresenter(RowMapper rowMapper, DataRow dataRow)
+            : this(rowMapper, dataRow, -1)
         {
         }
 
-        internal RowPresenter(RowManager rowManager, int index)
-            : this(rowManager, null, index)
+        internal RowPresenter(RowMapper rowMapper, int index)
+            : this(rowMapper, null, index)
         {
         }
 
-        private RowPresenter(RowManager rowManager, DataRow dataRow, int index)
+        private RowPresenter(RowMapper rowMapper, DataRow dataRow, int index)
         {
-            Debug.Assert(rowManager != null);
-            _rowManager = rowManager;
+            Debug.Assert(rowMapper != null);
+            _rowMapper = rowMapper;
             DataRow = dataRow;
             Index = index;
             _rowItemsId = -1;
@@ -32,24 +32,24 @@ namespace DevZest.Data.Windows
         internal void Dispose()
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
-            _rowManager = null;
+            _rowMapper = null;
             Index = -1;
             _rowItemsId = -1;
         }
 
         private void VerifyDisposed()
         {
-            if (_rowManager == null)
+            if (_rowMapper == null)
                 throw new ObjectDisposedException(GetType().FullName);
         }
 
-        private RowManager _rowManager;
+        private RowMapper _rowMapper;
         internal RowManager RowManager
         {
             get
             {
                 VerifyDisposed();
-                return _rowManager;
+                return _rowMapper as RowManager;
             }
         }
 
@@ -116,7 +116,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(IsRecursive);
 
-            _children = RowManager.RowMappings_GetOrCreateChildren(this);
+            _children = RowManager.GetOrCreateChildren(this);
             foreach (var child in Children)
                 child.InitializeChildren();
         }
@@ -194,7 +194,7 @@ namespace DevZest.Data.Windows
                     return;
 
                 _isCurrent = value;
-                if (_rowManager != null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
+                if (_rowMapper != null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
                     Invalidate();
             }
         }

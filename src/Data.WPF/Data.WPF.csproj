@@ -74,6 +74,8 @@
     <Compile Include="Primitives\LineFigure.cs" />
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
+    <Compile Include="Primitives\RowMapper.cs" />
+    <Compile Include="Primitives\RowManagerBase.cs" />
     <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
