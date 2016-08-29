@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
+    /// <summary>Flatten recursive rows.</summary>
     internal abstract class RowListMananger : RowMapper
     {
         protected RowListMananger(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
