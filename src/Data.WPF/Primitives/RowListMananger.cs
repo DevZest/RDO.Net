@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class RowManagerBase : RowMapper
+    internal abstract class RowListMananger : RowMapper
     {
-        protected RowManagerBase(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        protected RowListMananger(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)
         {
         }

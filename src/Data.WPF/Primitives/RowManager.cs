@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class RowManager : RowManagerBase, IReadOnlyList<RowPresenter>
+    internal abstract class RowManager : RowListMananger, IReadOnlyList<RowPresenter>
     {
         protected RowManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)

@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Primitives;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.Linq;
 
 namespace DevZest.Data.Windows.Primitives
 {
+    /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filter and sort.</summary>
     internal abstract class RowMapper
     {
         private abstract class Recursive<T> : IReadOnlyList<T>
@@ -251,7 +251,7 @@ namespace DevZest.Data.Windows.Primitives
                 foreach (var dataRow in dataSet)
                 {
                     if (Predicate(dataRow))
-                        RowMappings_InitializeAncestors(dataRow);
+                        MapAncestors(dataRow);
                 }
             }
         }
@@ -261,7 +261,7 @@ namespace DevZest.Data.Windows.Primitives
             return IsRecursive && dataSet.Count > 0 ? dataSet.Model.GetChildModels()[Template.RecursiveModelOrdinal].GetDataSet() : null;
         }
 
-        private void RowMappings_InitializeAncestors(DataRow dataRow)
+        private void MapAncestors(DataRow dataRow)
         {
             for (dataRow = dataRow.ParentDataRow; dataRow != null; dataRow = dataRow.ParentDataRow)
             {
