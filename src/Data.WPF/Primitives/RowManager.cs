@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Primitives
             public static readonly _PlaceholderManager Inserting = new InsertingPlaceholderManager();
             public static readonly _PlaceholderManager Top = new TopPlaceholderManager();
             public static readonly _PlaceholderManager Bottom = new BottomPlaceholderManager();
-            public static readonly _PlaceholderManager NoData = new NoDataPlaceholderManager();
+            public static readonly _PlaceholderManager EmptyDataSet = new EmptyDataSetPlaceholderManager();
 
             public abstract void Initialize(RowManager rowManager);
 
@@ -55,16 +55,16 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            private sealed class NoDataPlaceholderManager : _PlaceholderManager
+            private sealed class EmptyDataSetPlaceholderManager : _PlaceholderManager
             {
                 public override void Initialize(RowManager rowManager)
                 {
-                    rowManager.CoerceNoDataPlaceholder();
+                    rowManager.CoerceEmptyDataSetPlaceholder();
                 }
 
                 public override void Coerce(RowManager rowManager)
                 {
-                    rowManager.CoerceNoDataPlaceholder();
+                    rowManager.CoerceEmptyDataSetPlaceholder();
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace DevZest.Data.Windows.Primitives
                     case RowPlaceholderPosition.Top:
                         return _PlaceholderManager.Top;
                     case RowPlaceholderPosition.EmptyDataSet:
-                        return _PlaceholderManager.NoData;
+                        return _PlaceholderManager.EmptyDataSet;
                     case RowPlaceholderPosition.Inserting:
                         return _PlaceholderManager.Inserting;
                 }
@@ -191,7 +191,7 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        private void CoerceNoDataPlaceholder()
+        private void CoerceEmptyDataSetPlaceholder()
         {
             Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.EmptyDataSet);
 
