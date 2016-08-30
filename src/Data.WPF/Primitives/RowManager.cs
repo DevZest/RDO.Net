@@ -1,67 +1,78 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Collections;
 
 namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class RowManager : RowListMananger, IReadOnlyList<RowPresenter>
     {
+        private abstract class _PlaceholderManager
+        {
+            public static readonly _PlaceholderManager Inserting = new InsertingPlaceholderManager();
+            public static readonly _PlaceholderManager Top = new TopPlaceholderManager();
+            public static readonly _PlaceholderManager Bottom = new BottomPlaceholderManager();
+            public static readonly _PlaceholderManager NoData = new NoDataPlaceholderManager();
+
+            public abstract void Initialize(RowManager rowManager);
+
+            public abstract void Coerce(RowManager rowManager);
+
+            private sealed class InsertingPlaceholderManager : _PlaceholderManager
+            {
+                public override void Initialize(RowManager rowManager)
+                {
+                }
+
+                public override void Coerce(RowManager rowManager)
+                {
+                    rowManager.CoerceInsertingPlaceholder();
+                }
+            }
+
+            private sealed class TopPlaceholderManager : _PlaceholderManager
+            {
+                public override void Initialize(RowManager rowManager)
+                {
+                    rowManager.InitializeTopPlaceholder();
+                }
+
+                public override void Coerce(RowManager rowManager)
+                {
+                }
+            }
+
+            private sealed class BottomPlaceholderManager : _PlaceholderManager
+            {
+                public override void Initialize(RowManager rowManager)
+                {
+                    rowManager.InitializeBottomPlaceholder();
+                }
+
+                public override void Coerce(RowManager rowManager)
+                {
+                    rowManager.CoerceBottomPlaceholder();
+                }
+            }
+
+            private sealed class NoDataPlaceholderManager : _PlaceholderManager
+            {
+                public override void Initialize(RowManager rowManager)
+                {
+                    rowManager.CoerceNoDataPlaceholder();
+                }
+
+                public override void Coerce(RowManager rowManager)
+                {
+                    rowManager.CoerceNoDataPlaceholder();
+                }
+            }
+        }
+
         protected RowManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;
-        }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            var rowPlaceholderStrategy = Template.RowPlaceholderStrategy;
-            if (rowPlaceholderStrategy == RowPlaceholderStrategy.Top)
-                Placeholder = new RowPresenter(this, 0);
-            else if (rowPlaceholderStrategy == RowPlaceholderStrategy.Bottom)
-                Placeholder = new RowPresenter(this, base.Rows.Count);
-            else
-                Rows_CoerceNoDataPlaceholder();
-        }
-
-        //private void Initialize()
-        //{
-        //    Rows_Initialize();
-        //    SetCurrentRow(CoercedCurrentRow);
-        //}
-
-        protected virtual void OnCurrentRowChanged()
-        {
-            Invalidate(null);
-        }
-
-        private void OnEditingRowChanged()
-        {
-            Invalidate(null);
-        }
-
-        private void OnSelectedRowsChanged()
-        {
-            Invalidate(null);
-        }
-
-        protected virtual void DisposeRow(RowPresenter row)
-        {
-            row.Dispose();
-        }
-
-        private int _savedCurrentRowIndex = -1;
-        private void SaveCurrentRowIndex(int startRemovalIndex, int count)
-        {
-            if (_currentRow != null)
-            {
-                var currentRowIndex = _currentRow.Index;
-                if (currentRowIndex >= startRemovalIndex && currentRowIndex < startRemovalIndex + count)
-                    _savedCurrentRowIndex = currentRowIndex;
-            }
         }
 
         public RowPresenter Placeholder { get; private set; }
@@ -130,10 +141,59 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private void Rows_CoerceNoDataPlaceholder()
+        private RowPlaceholderPosition PlaceholderPosition
         {
-            if (Template.RowPlaceholderStrategy != RowPlaceholderStrategy.NoData)
+            get { return Template.RowPlaceholderPosition; }
+        }
+
+        private _PlaceholderManager PlaceholderManager
+        {
+            get
+            {
+                switch (PlaceholderPosition)
+                {
+                    case RowPlaceholderPosition.Bottom:
+                        return _PlaceholderManager.Bottom;
+                    case RowPlaceholderPosition.Top:
+                        return _PlaceholderManager.Top;
+                    case RowPlaceholderPosition.EmptyDataSet:
+                        return _PlaceholderManager.NoData;
+                    case RowPlaceholderPosition.Inserting:
+                        return _PlaceholderManager.Inserting;
+                }
+                return null;
+            }
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+            PlaceholderManager.Initialize(this);
+            SetCurrentRow(CoercedCurrentRow);
+        }
+
+        private void InitializeTopPlaceholder()
+        {
+            Placeholder = new RowPresenter(this, 0);
+        }
+
+        private void InitializeBottomPlaceholder()
+        {
+            Placeholder = new RowPresenter(this, base.Rows.Count);
+        }
+
+        private void CoerceInsertingPlaceholder()
+        {
+            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.Inserting);
+
+            if (Placeholder == null)
                 return;
+            throw new NotImplementedException();
+        }
+
+        private void CoerceNoDataPlaceholder()
+        {
+            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.EmptyDataSet);
 
             var index = base.Rows.Count == 0 ? 0 : -1;
             if (index == 0)
@@ -149,6 +209,44 @@ namespace DevZest.Data.Windows.Primitives
                     Placeholder = null;
                     DisposeRow(placeholder);
                 }
+            }
+        }
+
+        private void CoerceBottomPlaceholder()
+        {
+            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.Bottom && Placeholder != null);
+
+            Placeholder.Index = base.Rows.Count;
+        }
+
+        protected virtual void OnCurrentRowChanged()
+        {
+            Invalidate(null);
+        }
+
+        private void OnEditingRowChanged()
+        {
+            Invalidate(null);
+        }
+
+        private void OnSelectedRowsChanged()
+        {
+            Invalidate(null);
+        }
+
+        protected virtual void DisposeRow(RowPresenter row)
+        {
+            row.Dispose();
+        }
+
+        private int _savedCurrentRowIndex = -1;
+        private void SaveCurrentRowIndex(int startRemovalIndex, int count)
+        {
+            if (_currentRow != null)
+            {
+                var currentRowIndex = _currentRow.Index;
+                if (currentRowIndex >= startRemovalIndex && currentRowIndex < startRemovalIndex + count)
+                    _savedCurrentRowIndex = currentRowIndex;
             }
         }
 

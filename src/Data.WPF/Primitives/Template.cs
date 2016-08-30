@@ -303,7 +303,7 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        public RowPlaceholderStrategy RowPlaceholderStrategy { get; internal set; }
+        public RowPlaceholderPosition RowPlaceholderPosition { get; internal set; }
 
         public int RecursiveModelOrdinal { get; internal set; }
 
