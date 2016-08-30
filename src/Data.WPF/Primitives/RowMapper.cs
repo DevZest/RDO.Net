@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new _Boolean[] { where };
         }
 
-        public void Select(_Boolean where)
+        public void Query(_Boolean where)
         {
             var changed = SetWhere(where);
             if (changed)
@@ -208,14 +208,14 @@ namespace DevZest.Data.Windows.Primitives
                 return new ColumnSort[][] { orderBy };
         }
 
-        public void Sort(ColumnSort[] orderBy)
+        public void Query(ColumnSort[] orderBy)
         {
             var changed = SetOrderBy(orderBy);
             if (changed)
                 Initialize();
         }
 
-        public void Select(_Boolean where, ColumnSort[] orderBy)
+        public void Query(_Boolean where, ColumnSort[] orderBy)
         {
             var whereChanged = SetWhere(where);
             var orderByChanged = SetOrderBy(orderBy);
@@ -250,7 +250,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 foreach (var dataRow in dataSet)
                 {
-                    if (Predicate(dataRow))
+                    if (PassesFilter(dataRow))
                         MapAncestors(dataRow);
                 }
             }
@@ -310,12 +310,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private IEnumerable<DataRow> Filter(IEnumerable<DataRow> dataRows)
         {
-            return _where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : Predicate(x));
+            return _where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : PassesFilter(x));
         }
 
-        private bool Predicate(DataRow dataRow)
+        private bool PassesFilter(DataRow dataRow)
         {
-            var result = _where[dataRow.Model.GetDepth() - DataSet.Model.GetDepth()][dataRow];
+            var result = _where[GetDepth(dataRow)][dataRow];
             return result.HasValue && result.GetValueOrDefault();
         }
 

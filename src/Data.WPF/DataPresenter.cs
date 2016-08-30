@@ -40,19 +40,19 @@ namespace DevZest.Data.Windows
             return LayoutManager;
         }
 
-        public void Select(_Boolean where)
+        public void Query(_Boolean where)
         {
-            RequireLayoutManager().Select(where);
+            RequireLayoutManager().Query(where);
         }
 
-        public void Select(_Boolean where, ColumnSort[] orderBy)
+        public void Query(_Boolean where, ColumnSort[] orderBy)
         {
-            RequireLayoutManager().Select(where, orderBy);
+            RequireLayoutManager().Query(where, orderBy);
         }
 
-        public void Sort(ColumnSort[] orderBy)
+        public void Query(ColumnSort[] orderBy)
         {
-            RequireLayoutManager().Sort(orderBy);
+            RequireLayoutManager().Query(orderBy);
         }
 
         public IReadOnlyList<RowPresenter> Rows
