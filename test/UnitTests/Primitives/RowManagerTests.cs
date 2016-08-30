@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_EofRowMapping_Never()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.Inserting);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.None);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);

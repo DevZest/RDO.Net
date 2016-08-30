@@ -110,7 +110,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_Delete()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.Inserting);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.None);
             var rows = rowManager.Rows;
             Assert.AreEqual(1, rows.Count);
             rows[0].Delete();

@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
     {
         private abstract class _PlaceholderManager
         {
-            public static readonly _PlaceholderManager Inserting = new InsertingPlaceholderManager();
+            public static readonly _PlaceholderManager None = new NonePlaceholderManager();
             public static readonly _PlaceholderManager Top = new TopPlaceholderManager();
             public static readonly _PlaceholderManager Bottom = new BottomPlaceholderManager();
             public static readonly _PlaceholderManager EmptyDataSet = new EmptyDataSetPlaceholderManager();
@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public abstract void Coerce(RowManager rowManager);
 
-            private sealed class InsertingPlaceholderManager : _PlaceholderManager
+            private sealed class NonePlaceholderManager : _PlaceholderManager
             {
                 public override void Initialize(RowManager rowManager)
                 {
@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows.Primitives
 
                 public override void Coerce(RowManager rowManager)
                 {
-                    rowManager.CoerceInsertingPlaceholder();
+                    rowManager.CoerceNoPlaceholder();
                 }
             }
 
@@ -69,6 +69,71 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private abstract class _InsertCommand
+        {
+            public static readonly _InsertCommand Top = new InsertBeforeCommand(null, null);
+            public static readonly _InsertCommand Bottom = new InsertAfterCommand(null, null);
+            public static _InsertCommand Before(RowPresenter parent, RowPresenter reference)
+            {
+                return new InsertBeforeCommand(parent, reference);
+            }
+
+            public static _InsertCommand After(RowPresenter parent, RowPresenter reference)
+            {
+                return new InsertAfterCommand(parent, reference);
+            }
+
+            protected _InsertCommand(RowPresenter parent, RowPresenter reference)
+            {
+                _parent = parent;
+                Reference = reference;
+            }
+
+            private readonly RowPresenter _parent;
+            protected RowPresenter Parent { get; }
+
+            protected RowPresenter Reference { get; private set; }
+
+            public void CoercePlaceholderIndex(RowManager rowManager)
+            {
+                rowManager.Placeholder.Index = GetPlaceholderIndex(rowManager);
+            }
+
+            protected abstract int GetPlaceholderIndex(RowManager rowManager);
+
+            private sealed class InsertBeforeCommand : _InsertCommand
+            {
+                public InsertBeforeCommand(RowPresenter parent, RowPresenter reference)
+                    : base(parent, reference)
+                {
+                }
+
+                protected override int GetPlaceholderIndex(RowManager rowManager)
+                {
+                    if (Reference != null)
+                        return Reference.Index;
+                    else
+                        return Parent != null ? Parent.Index + 1 : 0;
+                }
+            }
+
+            private sealed class InsertAfterCommand : _InsertCommand
+            {
+                public InsertAfterCommand(RowPresenter parent, RowPresenter reference)
+                    : base(parent, reference)
+                {
+                }
+
+                protected override int GetPlaceholderIndex(RowManager rowManager)
+                {
+                    if (Reference != null)
+                        return Reference.Index;
+                    else
+                        return Parent != null ? Parent.Index + Parent.Children.Count + 1 : rowManager.BaseRows.Count;
+                }
+            }
+        }
+
         protected RowManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)
         {
@@ -85,6 +150,11 @@ namespace DevZest.Data.Windows.Primitives
         public sealed override IReadOnlyList<RowPresenter> Rows
         {
             get { return this; }
+        }
+
+        private IReadOnlyList<RowPresenter> BaseRows
+        {
+            get { return base.Rows; }
         }
 
         #region IReadOnlyList<RowPresenter>
@@ -158,8 +228,8 @@ namespace DevZest.Data.Windows.Primitives
                         return _PlaceholderManager.Top;
                     case RowPlaceholderPosition.EmptyDataSet:
                         return _PlaceholderManager.EmptyDataSet;
-                    case RowPlaceholderPosition.Inserting:
-                        return _PlaceholderManager.Inserting;
+                    case RowPlaceholderPosition.None:
+                        return _PlaceholderManager.None;
                 }
                 return null;
             }
@@ -182,13 +252,21 @@ namespace DevZest.Data.Windows.Primitives
             Placeholder = new RowPresenter(this, base.Rows.Count);
         }
 
-        private void CoerceInsertingPlaceholder()
+        private void CoerceNoPlaceholder()
         {
-            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.Inserting);
+            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.None);
 
-            if (Placeholder == null)
-                return;
-            throw new NotImplementedException();
+            ClearPlaceholder();
+        }
+
+        private void ClearPlaceholder()
+        {
+            if (Placeholder != null)
+            {
+                var placeholder = Placeholder;
+                Placeholder = null;
+                DisposeRow(placeholder);
+            }
         }
 
         private void CoerceEmptyDataSetPlaceholder()
@@ -202,14 +280,7 @@ namespace DevZest.Data.Windows.Primitives
                     Placeholder = new RowPresenter(this, 0);
             }
             else
-            {
-                if (Placeholder != null)
-                {
-                    var placeholder = Placeholder;
-                    Placeholder = null;
-                    DisposeRow(placeholder);
-                }
-            }
+                ClearPlaceholder();
         }
 
         private void CoerceBottomPlaceholder()

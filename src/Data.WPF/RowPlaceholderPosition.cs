@@ -2,7 +2,7 @@
 {
     public enum RowPlaceholderPosition
     {
-        Inserting = 0,
+        None = 0,
         Top,
         Bottom,
         EmptyDataSet
