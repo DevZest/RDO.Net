@@ -388,7 +388,7 @@ namespace DevZest.Data
                 OnUpdated(omitNotification);
         }
 
-        public void Update(Action<DataRow> updateAction)
+        internal void Update(Action<DataRow> updateAction)
         {
             Check.NotNull(updateAction, nameof(updateAction));
 

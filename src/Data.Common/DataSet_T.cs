@@ -281,5 +281,34 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChild));
             return dataRow == null ? (DataSet<TChild>)childModel.DataSet : dataRow.Children(childModel);
         }
+
+        private Action<DataRow> GetUpdateAction(Action<T, DataRow> updateAction)
+        {
+            Action<DataRow> result;
+            if (updateAction == null)
+                result = null;
+            else
+                result = (DataRow x) => updateAction(_, x);
+            return result;
+        }
+
+        public DataRow Insert(int index, Action<T, DataRow> updateAction)
+        {
+            var result = new DataRow();
+            Insert(index, result, GetUpdateAction(updateAction));
+            return result;
+        }
+
+        public DataRow AddRow(Action<T, DataRow> updateAction = null)
+        {
+            return Insert(Count, updateAction);
+        }
+
+        public DataRow Update(int index, Action<T, DataRow> updateAction)
+        {
+            var dataRow = this[index];
+            dataRow.Update(GetUpdateAction(updateAction));
+            return dataRow;
+        }
     }
 }

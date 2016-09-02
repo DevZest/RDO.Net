@@ -36,13 +36,10 @@ namespace DevZest.Data
 
         internal abstract DataSet CreateSubDataSet(DataRow parentRow);
 
-        /// Creates a new instance of <see cref="DataRow"/> and add to this data set.
-        /// </summary>
-        /// <returns>The new <see cref="DataRow"/> object.</returns>
-        public DataRow AddRow(Action<DataRow> updateAction = null)
+        internal DataRow AddRow(Action<DataRow> updateAction = null)
         {
             var result = new DataRow();
-            this.Add(result, updateAction);
+            Insert(Count, result, updateAction);
             return result;
         }
 
@@ -118,7 +115,7 @@ namespace DevZest.Data
             Insert(index, dataRow, null);
         }
 
-        public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
+        internal void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
         {
             Check.NotNull(dataRow, nameof(dataRow));
             if (IsReadOnly)
@@ -190,11 +187,6 @@ namespace DevZest.Data
         public void Add(DataRow dataRow)
         {
             Insert(Count, dataRow, null);
-        }
-
-        public void Add(DataRow dataRow, Action<DataRow> updateAction)
-        {
-            Insert(Count, dataRow, updateAction);
         }
 
         public void Clear()
