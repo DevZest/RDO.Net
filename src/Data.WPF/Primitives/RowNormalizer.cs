@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
@@ -31,7 +32,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private void UpdateIndex(int startIndex)
         {
-            for (int i = startIndex; i < _rows.Count; i++)
+            UpdateIndex(startIndex, _rows.Count - 1);
+        }
+
+        private void UpdateIndex(int startIndex, int endIndex)
+        {
+            for (int i = startIndex; i <= endIndex; i++)
                 _rows[i].RawIndex = i;
         }
 
@@ -118,55 +124,59 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override void OnRowAdded(RowPresenter row, int index)
         {
-            index = AddRow(row, index);
-            if (index >= 0)
+            if (IsRecursive)
             {
-                UpdateIndex(index);
-                OnRowsChanged();
+                var parent = row.Parent;
+                if (parent != null)
+                {
+                    if (parent.IsExpanded)
+                        index = parent.RawIndex + index + 1;
+                    else
+                        return;
+                }
+                _rows.Insert(index, row);
             }
-        }
-
-        private int AddRow(RowPresenter row, int index)
-        {
-            if (!IsRecursive)
-                return index;
-
-            var parent = row.Parent;
-            if (parent != null)
-            {
-                if (parent.IsExpanded)
-                    index = parent.RawIndex + index + 1;
-                else
-                    return -1;
-            }
-            _rows.Insert(index, row);
-            return index;
+            UpdateIndex(index);
+            OnRowsChanged();
         }
 
         protected sealed override void OnRowRemoved(RowPresenter parent, int index)
         {
-            index = RemoveRow(parent, index);
-            if (index >= 0)
+            if (IsRecursive)
             {
-                UpdateIndex(index);
-                OnRowsChanged();
+                if (parent != null)
+                {
+                    if (parent.IsExpanded)
+                        index = parent.RawIndex + index + 1;
+                    else
+                        return;
+                }
+                _rows.RemoveAt(index);
             }
+            UpdateIndex(index);
+            OnRowsChanged();
         }
 
-        private int RemoveRow(RowPresenter parent, int index)
+        protected sealed override void OnRowMoved(RowPresenter row, int oldIndex, int newIndex)
         {
-            if (!IsRecursive)
-                return index;
-
-            if (parent != null)
+            if (IsRecursive)
             {
-                if (parent.IsExpanded)
-                    index = parent.RawIndex + index + 1;
-                else
-                    return -1;
+                var parent = row.Parent;
+                if (parent != null)
+                {
+                    if (parent.IsExpanded)
+                    {
+                        oldIndex = parent.RawIndex + oldIndex + 1;
+                        newIndex = parent.RawIndex + newIndex + 1;
+                    }
+                    else
+                        return;
+                }
+                _rows.RemoveAt(oldIndex);
+                _rows.Insert(newIndex, row);
             }
-            _rows.RemoveAt(index);
-            return index;
+            UpdateIndex(Math.Min(oldIndex, newIndex), Math.Max(oldIndex, newIndex));
+            OnRowsChanged();
         }
     }
 }
