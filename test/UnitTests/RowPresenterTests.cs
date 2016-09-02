@@ -13,7 +13,6 @@ namespace DevZest.Data.Windows.Primitives
             var rowManager = CreateRowManager(dataSet);
             var rows = rowManager.Rows;
             rows[0].Expand();
-            VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
 
             Assert.AreEqual("Name-1", rows[0].GetValue(dataSet._.Name));
             Assert.AreEqual("Name-1-1", rows[1].GetValue(dataSet._.Name));
@@ -35,7 +34,6 @@ namespace DevZest.Data.Windows.Primitives
             var rowManager = CreateRowManager(dataSet);
             var rows = rowManager.Rows;
             rows[0].Expand();
-            VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
 
             Assert.AreEqual("Name-1", rows[0][dataSet._.Name]);
             Assert.AreEqual("Name-1-1", rows[1][dataSet._.Name]);
@@ -87,27 +85,6 @@ namespace DevZest.Data.Windows.Primitives
             Assert.IsFalse(row.IsEditing);
             Assert.IsTrue(row.IsPlaceholder);
             Assert.AreEqual(1, rows.Count);
-        }
-
-        [TestMethod]
-        public void RowPresenter_Expand_Collapse()
-        {
-            var productCategories = MockProductCategories(3);
-            var rowManager = CreateRowManager(productCategories);
-            var rows = rowManager.Rows;
-            VerifyDepths(rows, 0, 0, 0);
-
-            rowManager.Rows[0].Expand();
-            VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
-
-            rowManager.Rows[1].Expand();
-            VerifyDepths(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
-
-            rowManager.Rows[0].Collapse();
-            VerifyDepths(rows, 0, 0, 0);
-
-            rowManager.Rows[0].Expand();
-            VerifyDepths(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
         }
 
         [TestMethod]

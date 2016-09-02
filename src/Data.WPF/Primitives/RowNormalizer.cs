@@ -37,28 +37,30 @@ namespace DevZest.Data.Windows.Primitives
 
         protected virtual void OnRowsChanged()
         {
-            Invalidate(null);
         }
-
-        internal abstract void Invalidate(RowPresenter rowPresenter);
 
         internal void Expand(RowPresenter row)
         {
             Debug.Assert(IsRecursive && !row.IsExpanded);
 
-            var nextIndex = row.Index + 1;
+            var nextIndex = row.RawIndex + 1;
+            var lastIndex = nextIndex;
             for (int i = 0; i < row.Children.Count; i++)
             {
                 var childRow = row.Children[i];
-                nextIndex = InsertRecursively(nextIndex, childRow);
+                lastIndex = InsertRecursively(lastIndex, childRow);
             }
+
+            if (lastIndex == nextIndex)
+                return;
+
             UpdateIndex(nextIndex);
             OnRowsChanged();
         }
 
         private int InsertRecursively(int index, RowPresenter row)
         {
-            Debug.Assert(IsRecursive && !row.IsPlaceholder);
+            Debug.Assert(IsRecursive);
 
             _rows.Insert(index++, row);
             if (row.IsExpanded)
@@ -74,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsRecursive && row.IsExpanded);
 
-            var nextIndex = row.Index + 1;
+            var nextIndex = row.RawIndex + 1;
             int count = NextIndexOf(row) - nextIndex;
             if (count == 0)
                 return;
@@ -86,10 +88,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private int NextIndexOf(RowPresenter row)
         {
-            Debug.Assert(IsRecursive && row != null && row.Index >= 0);
+            Debug.Assert(IsRecursive && row != null && row.RawIndex >= 0);
 
             var depth = row.Depth;
-            var result = row.Index + 1;
+            var result = row.RawIndex + 1;
             for (; result < _rows.Count; result++)
             {
                 if (_rows[result].Depth <= depth)

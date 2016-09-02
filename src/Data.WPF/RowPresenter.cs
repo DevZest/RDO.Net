@@ -59,23 +59,24 @@ namespace DevZest.Data.Windows
             }
         }
 
+        private RowNormalizer RowNormalizer
+        {
+            get { return RowMapper as RowNormalizer; }
+        }
+
         internal RowManager RowManager
         {
-            get
-            {
-                VerifyDisposed();
-                return _rowMapper as RowManager;
-            }
+            get { return RowMapper as RowManager; }
         }
 
         internal ElementManager ElementManager
         {
-            get { return RowManager as ElementManager; }
+            get { return RowMapper as ElementManager; }
         }
 
         internal LayoutManager LayoutManager
         {
-            get { return RowManager as LayoutManager; }
+            get { return RowMapper as LayoutManager; }
         }
 
         private bool IsRecursive
@@ -155,7 +156,9 @@ namespace DevZest.Data.Windows
 
         private void Invalidate()
         {
-            RowManager.Invalidate(this);
+            var rowManager = RowManager;
+            if (rowManager != null)
+                RowManager.Invalidate(this);
         }
 
         internal int RawIndex { get; set; }
@@ -197,7 +200,7 @@ namespace DevZest.Data.Windows
             if (IsExpanded)
                 return;
 
-            RowManager.Expand(this);
+            RowNormalizer.Expand(this);
             IsExpanded = true;
         }
 
@@ -208,7 +211,7 @@ namespace DevZest.Data.Windows
             if (!IsExpanded)
                 return;
 
-            RowManager.Collapse(this);
+            RowNormalizer.Collapse(this);
             IsExpanded = false;
         }
 

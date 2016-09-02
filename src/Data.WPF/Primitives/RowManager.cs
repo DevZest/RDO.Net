@@ -472,5 +472,12 @@ namespace DevZest.Data.Windows.Primitives
             _selectedRows.Remove(row);
             OnSelectedRowsChanged();
         }
+
+        protected override void OnRowsChanged()
+        {
+            Invalidate(null);
+        }
+
+        internal abstract void Invalidate(RowPresenter rowPresenter);
     }
 }
