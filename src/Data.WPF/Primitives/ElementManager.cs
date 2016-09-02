@@ -49,23 +49,23 @@ namespace DevZest.Data.Windows.Primitives
             CachedList.Recycle(ref _cachedRowViews, rowView);
         }
 
-        public sealed override RowPresenter EditingRow
-        {
-            internal set
-            {
-                var oldValue = base.EditingRow;
-                if (oldValue == value)
-                    return;
+        //public sealed override RowPresenter EditingRow
+        //{
+        //    internal set
+        //    {
+        //        var oldValue = base.EditingRow;
+        //        if (oldValue == value)
+        //            return;
 
-                if (oldValue != null && BlockViews.Contains(oldValue))
-                    Virtualize(oldValue);
+        //        if (oldValue != null && BlockViews.Contains(oldValue))
+        //            Virtualize(oldValue);
 
-                if (value != null)
-                    Realize(value);
+        //        if (value != null)
+        //            Realize(value);
 
-                base.EditingRow = value;
-            }
-        }
+        //        base.EditingRow = value;
+        //    }
+        //}
 
         internal IElementCollection ElementCollection { get; private set; }
 

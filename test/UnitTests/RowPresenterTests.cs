@@ -18,10 +18,12 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual("Name-1", rows[0].GetValue(dataSet._.Name));
             Assert.AreEqual("Name-1-1", rows[1].GetValue(dataSet._.Name));
 
+            rowManager.CurrentRow = rows[0];
             rows[0].EditValue(dataSet._.Name, "NewName-1");
-            rows[0].EndEdit();
+            rowManager.CommitEdit();
+            rowManager.CurrentRow = rows[1];
             rows[1].EditValue(dataSet._.Name, "NewName-1-1");
-            rows[1].EndEdit();
+            rowManager.CommitEdit();
             Assert.AreEqual("NewName-1", rows[0].GetValue(dataSet._.Name));
             Assert.AreEqual("NewName-1-1", rows[1].GetValue(dataSet._.Name));
         }
@@ -39,9 +41,9 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual("Name-1-1", rows[1][dataSet._.Name]);
 
             rows[0][dataSet._.Name] = "NewName-1";
-            rows[0].EndEdit();
+            rowManager.CommitEdit();
             rows[1][dataSet._.Name] = "NewName-1-1";
-            rows[0].EndEdit();
+            rowManager.CommitEdit();
             Assert.AreEqual("NewName-1", rows[0][dataSet._.Name]);
             Assert.AreEqual("NewName-1-1", rows[1][dataSet._.Name]);
         }
@@ -55,10 +57,11 @@ namespace DevZest.Data.Windows.Primitives
             var row = rowManager.Rows[0];
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
 
+            rowManager.CurrentRow = rowManager.Rows[0];
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
-            row.CancelEdit();
+            rowManager.CancelEdit();
             Assert.IsFalse(row.IsEditing);
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
         }
@@ -74,12 +77,13 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(1, rows.Count);
             Assert.IsTrue(row.IsPlaceholder);
 
+            rowManager.CurrentRow = row;
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
             Assert.IsTrue(row.IsPlaceholder);
             Assert.AreEqual(1, rows.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
-            row.CancelEdit();
+            rowManager.CancelEdit();
             Assert.IsFalse(row.IsEditing);
             Assert.IsTrue(row.IsPlaceholder);
             Assert.AreEqual(1, rows.Count);

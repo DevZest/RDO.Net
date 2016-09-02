@@ -15,17 +15,17 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal RowPresenter(RowMapper rowMapper, int index)
-            : this(rowMapper, null, index)
+        internal RowPresenter(RowMapper rowMapper, int placeholderIndex)
+            : this(rowMapper, null, placeholderIndex)
         {
         }
 
-        private RowPresenter(RowMapper rowMapper, DataRow dataRow, int index)
+        private RowPresenter(RowMapper rowMapper, DataRow dataRow, int absoluteIndex)
         {
             Debug.Assert(rowMapper != null);
             _rowMapper = rowMapper;
             DataRow = dataRow;
-            Index = index;
+            RawIndex = absoluteIndex;
             _rowItemsId = -1;
         }
 
@@ -33,17 +33,32 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowMapper = null;
-            Index = -1;
+            Parent = null;
             _rowItemsId = -1;
+        }
+
+        internal bool IsDisposed
+        {
+            get { return _rowMapper == null; }
         }
 
         private void VerifyDisposed()
         {
-            if (_rowMapper == null)
+            if (IsDisposed)
                 throw new ObjectDisposedException(GetType().FullName);
         }
 
         private RowMapper _rowMapper;
+
+        private RowMapper RowMapper
+        {
+            get
+            {
+                VerifyDisposed();
+                return _rowMapper;
+            }
+        }
+
         internal RowManager RowManager
         {
             get
@@ -65,7 +80,7 @@ namespace DevZest.Data.Windows
 
         private bool IsRecursive
         {
-            get { return !IsPlaceholder && RowManager.Template.IsRecursive; }
+            get { return !IsPlaceholder && Template.IsRecursive; }
         }
 
         public DataPresenter DataPresenter
@@ -79,19 +94,19 @@ namespace DevZest.Data.Windows
 
         public Template Template
         {
-            get { return RowManager.Template; }
+            get { return IsDisposed ? null : _rowMapper.Template; }
         }
 
         public DataRow DataRow { get; internal set; }
 
         public bool IsPlaceholder
         {
-            get { return RowManager.Placeholder == this; }
+            get { return RowManager == null ? false : RowManager.Placeholder == this; }
         }
 
         public bool IsEditing
         {
-            get { return RowManager.EditingRow == this; }
+            get { return RowManager.CurrentRow == this && RowManager.IsEditing; }
         }
 
         public bool IsAdding
@@ -102,6 +117,7 @@ namespace DevZest.Data.Windows
         public RowPresenter Parent { get; internal set; }
 
         private List<RowPresenter> _children;
+
         public IReadOnlyList<RowPresenter> Children
         {
             get
@@ -116,9 +132,25 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(IsRecursive);
 
-            _children = RowManager.GetOrCreateChildren(this);
+            _children = _rowMapper.GetOrCreateChildren(this);
             foreach (var child in Children)
                 child.InitializeChildren();
+        }
+
+        internal void InsertChild(int index, RowPresenter child)
+        {
+            Debug.Assert(index >= 0 && index <= Children.Count);
+            if (_children == null)
+                _children = new List<RowPresenter>();
+            _children.Insert(index, child);
+        }
+
+        internal void RemoveChild(int index)
+        {
+            Debug.Assert(index >= 0 && index < Children.Count);
+            _children.RemoveAt(index);
+            if (_children.Count == 0)
+                _children = null;
         }
 
         private void Invalidate()
@@ -126,23 +158,25 @@ namespace DevZest.Data.Windows
             RowManager.Invalidate(this);
         }
 
-        private int _index;
+        internal int RawIndex { get; set; }
+
         public int Index
         {
             get
             {
-                var result = _index;
+                if (IsDisposed)
+                    return -1;
+                var result = RawIndex;
                 var placeholder = RowManager.Placeholder;
                 if (placeholder != null && placeholder != this && result >= placeholder.Index)
                     result++;
                 return result;
             }
-            internal set { _index = value; }
         }
 
         public int Depth
         {
-            get { return Parent == null ? 0 : RowManager.GetDepth(Parent.DataRow) + 1; }
+            get { return Parent == null ? 0 : RowMapper.GetDepth(Parent.DataRow) + 1; }
         }
 
         private bool _isExpanded = false;
@@ -184,36 +218,26 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyRecursive);
         }
 
-        private bool _isCurrent;
         public bool IsCurrent
         {
-            get { return _isCurrent; }
-            internal set
-            {
-                if (_isCurrent == value)
-                    return;
-
-                _isCurrent = value;
-                if (_rowMapper != null)  // RowPresenter can be disposed upon here, check to avoid ObjectDisposedException
-                    Invalidate();
-            }
+            get { return RowManager.CurrentRow == this; }
         }
 
-        private bool _isSelected;
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get { return RowManager.IsSelected(this); }
             set
             {
-                if (_isSelected == value)
+                if (IsPlaceholder)
                     return;
 
-                if (_isSelected)
+                var oldValue = IsSelected;
+                if (oldValue == value)
+                    return;
+
+                if (oldValue)
                     RowManager.RemoveSelectedRow(this);
-
-                _isSelected = value;
-
-                if (_isSelected)
+                if (value)
                     RowManager.AddSelectedRow(this);
 
                 Invalidate();
@@ -224,7 +248,7 @@ namespace DevZest.Data.Windows
         {
             VerifyColumn(column, nameof(column));
 
-            if (Depth > 0)
+            if (Depth != RowMapper.GetDepth(column.GetParentModel()))
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             return DataRow == null ? default(T) : column[DataRow];
@@ -235,7 +259,7 @@ namespace DevZest.Data.Windows
             if (column == null)
                 throw new ArgumentNullException(paramName);
 
-            if (column.GetParentModel() != RowManager.DataSet.Model)
+            if (column.GetParentModel() != RowMapper.DataSet.Model)
                 throw new ArgumentException(Strings.RowPresenter_VerifyColumn, paramName);
         }
 
@@ -277,6 +301,16 @@ namespace DevZest.Data.Windows
             }
         }
 
+        private void BeginEdit()
+        {
+            if (IsEditing)
+                return;
+
+            if (RowManager.CurrentRow != this)
+                throw new InvalidOperationException();
+            RowManager.BeginEdit();
+        }
+
         private void SuppressViewUpdate()
         {
             Debug.Assert(DataRow != null);
@@ -309,57 +343,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private DataSet DataSet
+        public DataSet DataSet
         {
             get { return Parent == null ? RowManager.DataSet : Parent.DataRow[Template.RecursiveModelOrdinal]; }
-        }
-
-        public void BeginEdit()
-        {
-            if (IsEditing)
-                return;
-
-            bool success;
-            if (IsPlaceholder)
-            {
-                DataRow = DataSet.BeginAdd();
-                success = DataRow != null;
-            }
-            else
-                success = DataRow.BeginEdit();
-
-            if (success)
-                RowManager.EditingRow = this;
-
-            if (!IsEditing)
-                throw new InvalidOperationException(Strings.RowPresenter_BeginEditFailed);
-        }
-
-        public void EndEdit()
-        {
-            if (!IsEditing)
-                return;
-
-            if (IsPlaceholder)
-                DataRow = DataSet.EndAdd();
-            else
-                DataRow.EndEdit();
-            RowManager.EditingRow = null;
-        }
-
-        public void CancelEdit()
-        {
-            if (!IsEditing)
-                return;
-
-            if (IsPlaceholder)
-            {
-                DataSet.CancelAdd();
-                DataRow = null;
-            }
-            else
-                DataRow.CancelEdit();
-            RowManager.EditingRow = null;
         }
 
         public void Delete()

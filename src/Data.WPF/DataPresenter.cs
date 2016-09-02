@@ -65,9 +65,14 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.CurrentRow; }
         }
 
+        public bool IsEditing
+        {
+            get { return LayoutManager == null ? false : LayoutManager.IsEditing; }
+        }
+
         public RowPresenter EditingRow
         {
-            get { return LayoutManager == null ? null : LayoutManager.EditingRow; }
+            get { return CurrentRow != null && IsEditing ? CurrentRow : null; }
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows

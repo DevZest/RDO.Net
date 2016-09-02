@@ -18,6 +18,8 @@ namespace DevZest.Data.Windows.Primitives
 
             public abstract void Coerce(RowManager rowManager);
 
+            public abstract void BeginEdit(RowManager rowManager);
+
             private sealed class NonePlaceholderManager : _PlaceholderManager
             {
                 public override void Initialize(RowManager rowManager)
@@ -27,6 +29,11 @@ namespace DevZest.Data.Windows.Primitives
                 public override void Coerce(RowManager rowManager)
                 {
                     rowManager.CoerceNoPlaceholder();
+                }
+
+                public override void BeginEdit(RowManager rowManager)
+                {
+                    throw new NotSupportedException();
                 }
             }
 
@@ -39,6 +46,11 @@ namespace DevZest.Data.Windows.Primitives
 
                 public override void Coerce(RowManager rowManager)
                 {
+                }
+
+                public override void BeginEdit(RowManager rowManager)
+                {
+                    rowManager._insertCommand = _InsertCommand.Top;
                 }
             }
 
@@ -53,6 +65,11 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     rowManager.CoerceBottomPlaceholder();
                 }
+
+                public override void BeginEdit(RowManager rowManager)
+                {
+                    rowManager._insertCommand = _InsertCommand.Bottom;
+                }
             }
 
             private sealed class EmptyDataSetPlaceholderManager : _PlaceholderManager
@@ -65,6 +82,11 @@ namespace DevZest.Data.Windows.Primitives
                 public override void Coerce(RowManager rowManager)
                 {
                     rowManager.CoerceEmptyDataSetPlaceholder();
+                }
+
+                public override void BeginEdit(RowManager rowManager)
+                {
+                    rowManager._insertCommand = _InsertCommand.Bottom;
                 }
             }
         }
@@ -96,7 +118,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public void CoercePlaceholderIndex(RowManager rowManager)
             {
-                rowManager.Placeholder.Index = GetPlaceholderIndex(rowManager);
+                rowManager.Placeholder.RawIndex = GetPlaceholderIndex(rowManager);
             }
 
             protected abstract int GetPlaceholderIndex(RowManager rowManager);
@@ -140,7 +162,14 @@ namespace DevZest.Data.Windows.Primitives
             Template.RowManager = this;
         }
 
+        private _InsertCommand _insertCommand;
+
         public RowPresenter Placeholder { get; private set; }
+
+        public bool IsInserting
+        {
+            get { return _insertCommand != null; }
+        }
 
         private int PlaceholderIndex
         {
@@ -239,7 +268,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             base.Initialize();
             PlaceholderManager.Initialize(this);
-            SetCurrentRow(CoercedCurrentRow);
+            //SetCurrentRow(CoercedCurrentRow);
         }
 
         private void InitializeTopPlaceholder()
@@ -287,7 +316,84 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.Bottom && Placeholder != null);
 
-            Placeholder.Index = base.Rows.Count;
+            Placeholder.RawIndex = base.Rows.Count;
+        }
+
+        private void CoercePlaceholder()
+        {
+            if (_insertCommand != null)
+                _insertCommand.CoercePlaceholderIndex(this);
+            else
+                PlaceholderManager.Coerce(this);
+        }
+
+        private RowPresenter _currentRow;
+        public virtual RowPresenter CurrentRow
+        {
+            get { return _currentRow; }
+            internal set
+            {
+                Debug.Assert(value == null || value.RowManager == this);
+                if (value == _currentRow)
+                    return;
+                _currentRow = value;
+                OnCurrentRowChanged();
+            }
+        }
+
+        public bool IsEditing { get; private set; }
+
+        public bool CanBeginEdit
+        {
+            get { return CurrentRow != null && !IsEditing && CurrentRow.DataSet.EditingRow == null; }
+        }
+
+        public void BeginEdit()
+        {
+            if (!CanBeginEdit)
+                throw new InvalidOperationException();
+
+            var currentRow = CurrentRow;
+            if (currentRow.IsPlaceholder)
+            {
+                currentRow.DataRow = DataSet.BeginAdd();
+                PlaceholderManager.BeginEdit(this);
+            }
+            else
+            {
+                CurrentRow.DataRow.BeginEdit();
+            }
+
+            IsEditing = true;
+        }
+
+        public void CommitEdit()
+        {
+            if (!IsEditing)
+                return;
+
+            //if (IsPlaceholder)
+            //    DataRow = DataSet.EndAdd();
+            //else
+            //    DataRow.EndEdit();
+
+            IsEditing = false;
+        }
+
+        public void CancelEdit()
+        {
+            if (!IsEditing)
+                return;
+
+            //if (CurrentRow.IsPlaceholder)
+            //{
+            //    CurrentRow.DataSet.CancelAdd();
+            //    CurrentRow.DataRow = null;
+            //}
+            //else
+            //    DataRow.CancelEdit();
+
+            IsEditing = false;
         }
 
         protected virtual void OnCurrentRowChanged()
@@ -295,30 +401,9 @@ namespace DevZest.Data.Windows.Primitives
             Invalidate(null);
         }
 
-        private void OnEditingRowChanged()
-        {
-            Invalidate(null);
-        }
-
         private void OnSelectedRowsChanged()
         {
             Invalidate(null);
-        }
-
-        protected virtual void DisposeRow(RowPresenter row)
-        {
-            row.Dispose();
-        }
-
-        private int _savedCurrentRowIndex = -1;
-        private void SaveCurrentRowIndex(int startRemovalIndex, int count)
-        {
-            if (_currentRow != null)
-            {
-                var currentRowIndex = _currentRow.Index;
-                if (currentRowIndex >= startRemovalIndex && currentRowIndex < startRemovalIndex + count)
-                    _savedCurrentRowIndex = currentRowIndex;
-            }
         }
 
         //private void RowMappings_Remove(int depth, int ordinal)
@@ -351,30 +436,6 @@ namespace DevZest.Data.Windows.Primitives
         //    return row.DataRow.Index == 0 ? null : RowMappings_GetRow(row.Depth, row.DataRow.Ordinal - 1);
         //}
 
-        private RowPresenter CoercedCurrentRow
-        {
-            get
-            {
-                if (_currentRow == null)
-                {
-                    if (Rows.Count > 0)
-                        return Rows[0];
-                }
-                else
-                {
-                    if (_savedCurrentRowIndex != -1)
-                    {
-                        var currentRowIndex = Math.Min(Rows.Count - 1, _savedCurrentRowIndex);
-                        _savedCurrentRowIndex = -1;
-                        return currentRowIndex < 0 ? null : Rows[currentRowIndex];
-                    }
-                    else if (Rows.Count == 0)
-                        return null;
-                }
-                return _currentRow;
-            }
-        }
-
         private DataRow _viewUpdateSuppressed;
 
         internal void SuppressViewUpdate(DataRow dataRow)
@@ -389,42 +450,15 @@ namespace DevZest.Data.Windows.Primitives
             _viewUpdateSuppressed = null;
         }
 
-        private RowPresenter _currentRow;
-        public virtual RowPresenter CurrentRow
-        {
-            get { return _currentRow; }
-            set
-            {
-                SetCurrentRow(value);
-                OnCurrentRowChanged();
-            }
-        }
-
-        private void SetCurrentRow(RowPresenter value)
-        {
-            if (_currentRow == value)
-                return;
-
-            if (value != null)
-            {
-                if (value.RowManager != this || value.Index < 0)
-                    throw new ArgumentException(Strings.RowManager_InvalidCurrentRow, nameof(value));
-            }
-
-            var oldValue = _currentRow;
-            if (_currentRow != null)
-                _currentRow.IsCurrent = false;
-
-            _currentRow = value;
-
-            if (_currentRow != null)
-                _currentRow.IsCurrent = true;
-        }
-
         private HashSet<RowPresenter> _selectedRows = new HashSet<RowPresenter>();
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get { return _selectedRows; }
+        }
+
+        internal bool IsSelected(RowPresenter row)
+        {
+            return _selectedRows.Contains(row);
         }
 
         internal void AddSelectedRow(RowPresenter row)
@@ -437,17 +471,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             _selectedRows.Remove(row);
             OnSelectedRowsChanged();
-        }
-
-        private RowPresenter _editingRow;
-        public virtual RowPresenter EditingRow
-        {
-            get { return _editingRow; }
-            internal set
-            {
-                _editingRow = value;
-                OnEditingRowChanged();
-            }
         }
     }
 }
