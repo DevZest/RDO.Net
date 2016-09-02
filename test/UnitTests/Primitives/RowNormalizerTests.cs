@@ -61,5 +61,21 @@ namespace DevZest.Data.Windows.Primitives
             rows[0].Expand();
             VerifyDepths(rows, 0, 1, 2, 2, 2, 1, 1, 0, 0);
         }
+
+        [TestMethod]
+        public void RowNormalizer_OnDataRowAdded()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(3);
+            var rowNormalizer = CreateRowNormalizer(dataSet);
+            var rows = rowNormalizer.Rows;
+
+            dataSet.SubCategories(0).AddRow();
+            VerifyDepths(rows, 0, 0, 0);
+
+            rows[0].Expand();
+            VerifyDepths(rows, 0, 1, 1, 1, 1, 0, 0);
+            dataSet.SubCategories(0).AddRow();
+            VerifyDepths(rows, 0, 1, 1, 1, 1, 1, 0, 0);
+        }
     }
 }

@@ -110,18 +110,5 @@ namespace DevZest.Data.Windows.Primitives
             VerifyIndex(rows);
             VerifyDepths(rows, 0, 0);
         }
-
-        [TestMethod]
-        public void RowPresenter_InsertChildRow()
-        {
-            var dataSet = MockProductCategories(3);
-            var rowManager = CreateRowManager(dataSet);
-            var rows = rowManager.Rows;
-            rows[0].Expand();
-            VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
-
-            //var newChildRow = rows[0].InsertChildRow(1);
-            VerifyDepths(rows, 0, 1, 1, 1, 1, 0, 0);
-        }
     }
 }

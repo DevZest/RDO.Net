@@ -115,5 +115,32 @@ namespace DevZest.Data.Windows.Primitives
             _rows[index].RawIndex = -1;
             _rows.RemoveAt(index);
         }
+
+        protected sealed override void OnRowAdded(RowPresenter row, int index)
+        {
+            index = AddRow(row, index);
+            if (index >= 0)
+            {
+                UpdateIndex(index);
+                OnRowsChanged();
+            }
+        }
+
+        private int AddRow(RowPresenter row, int index)
+        {
+            if (!IsRecursive)
+                return index;
+
+            var parent = row.Parent;
+            if (parent != null)
+            {
+                if (parent.IsExpanded)
+                    index = parent.RawIndex + index + 1;
+                else
+                    return -1;
+            }
+            _rows.Insert(index, row);
+            return index;
+        }
     }
 }
