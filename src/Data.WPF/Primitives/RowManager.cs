@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class RowManager : RowListMananger, IReadOnlyList<RowPresenter>
+    internal abstract class RowManager : RowNormalizer, IReadOnlyList<RowPresenter>
     {
         private abstract class _PlaceholderManager
         {

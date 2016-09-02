@@ -75,7 +75,7 @@
     <Compile Include="Primitives\RowItemCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\RowMapper.cs" />
-    <Compile Include="Primitives\RowListMananger.cs" />
+    <Compile Include="Primitives\RowNormalizer.cs" />
     <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />

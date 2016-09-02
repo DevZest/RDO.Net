@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    /// <summary>Flatten recursive rows.</summary>
-    internal abstract class RowListMananger : RowMapper
+    /// <summary>Normalizes rows if recursive.</summary>
+    internal abstract class RowNormalizer : RowMapper
     {
-        protected RowListMananger(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        protected RowNormalizer(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)
         {
         }
