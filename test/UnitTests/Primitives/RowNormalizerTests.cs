@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Helpers;
+using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
@@ -29,6 +30,14 @@ namespace DevZest.Data.Windows.Primitives
             template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
             return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
         }
+
+        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+            where T : Model, new()
+        {
+            var template = new Template();
+            return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
+        }
+
 
         private static void VerifyDepths(IReadOnlyList<RowPresenter> rows, params int[] depths)
         {
@@ -76,6 +85,31 @@ namespace DevZest.Data.Windows.Primitives
             VerifyDepths(rows, 0, 1, 1, 1, 1, 0, 0);
             dataSet.SubCategories(0).AddRow();
             VerifyDepths(rows, 0, 1, 1, 1, 1, 1, 0, 0);
+        }
+
+        [TestMethod]
+        public void RowNormalizer_OnDataRowRemoved_simple()
+        {
+            var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var rowNormalizer = CreateSimpleRowNormalizer(dataSet);
+            var rows = rowNormalizer.Rows;
+
+            Assert.AreEqual(1, rows.Count);
+            rows[0].Delete();
+            Assert.AreEqual(0, rows.Count);
+        }
+
+        [TestMethod]
+        public void RowNormalizer_OnDataRowRemoved_recursive()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(3);
+            var rowNormalizer = CreateRowNormalizer(dataSet);
+            var rows = rowNormalizer.Rows;
+
+            VerifyDepths(rows, 0, 0, 0);
+
+            rows[0].Delete();
+            VerifyDepths(rows, 0, 0);
         }
     }
 }

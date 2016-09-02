@@ -142,5 +142,31 @@ namespace DevZest.Data.Windows.Primitives
             _rows.Insert(index, row);
             return index;
         }
+
+        protected sealed override void OnRowRemoved(RowPresenter parent, int index)
+        {
+            index = RemoveRow(parent, index);
+            if (index >= 0)
+            {
+                UpdateIndex(index);
+                OnRowsChanged();
+            }
+        }
+
+        private int RemoveRow(RowPresenter parent, int index)
+        {
+            if (!IsRecursive)
+                return index;
+
+            if (parent != null)
+            {
+                if (parent.IsExpanded)
+                    index = parent.RawIndex + index + 1;
+                else
+                    return -1;
+            }
+            _rows.RemoveAt(index);
+            return index;
+        }
     }
 }
