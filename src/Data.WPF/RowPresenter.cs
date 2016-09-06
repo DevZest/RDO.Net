@@ -289,16 +289,7 @@ namespace DevZest.Data.Windows
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
                 BeginEdit();
-                SuppressViewUpdate();
-
-                try
-                {
-                    column.SetValue(DataRow, value);
-                }
-                finally
-                {
-                    ResumeViewUpdate();
-                }
+                column.SetValue(DataRow, value);
             }
         }
 
@@ -312,18 +303,6 @@ namespace DevZest.Data.Windows
             RowManager.BeginEdit();
         }
 
-        private void SuppressViewUpdate()
-        {
-            Debug.Assert(DataRow != null);
-            RowManager.SuppressViewUpdate(DataRow);
-        }
-
-        private void ResumeViewUpdate()
-        {
-            Debug.Assert(DataRow != null);
-            RowManager.ResumeViewUpdate();
-        }
-
         public void EditValue<T>(Column<T> column, T value)
         {
             VerifyColumn(column, nameof(column));
@@ -332,16 +311,7 @@ namespace DevZest.Data.Windows
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             BeginEdit();
-            SuppressViewUpdate();
-
-            try
-            {
-                column[DataRow] = value;
-            }
-            finally
-            {
-                ResumeViewUpdate();
-            }
+            column[DataRow] = value;
         }
 
         public DataSet DataSet

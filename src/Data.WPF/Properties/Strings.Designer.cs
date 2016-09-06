@@ -36,14 +36,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// BlockItems[{index}] is out of vertical side of RowRange.
-        /// </summary>
-        public static string BlockItem_OutOfVerticalRowRange(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_OutOfVerticalRowRange", "index"), index);
-        }
-
-        /// <summary>
         /// DataElementPanel must be element of DataView's control template to implement IScrollInfo.
         /// </summary>
         public static string DataElementPanel_NullScrollHandler
@@ -92,14 +84,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The GridRange is empty.
-        /// </summary>
-        public static string GridRange_VerifyNotEmpty
-        {
-            get { return GetString("GridRange_VerifyNotEmpty"); }
-        }
-
-        /// <summary>
         /// Auto height GridRows[{ordinal}] is invalid for multidimensional layout.
         /// </summary>
         public static string GridRow_InvalidAutoHeight(object ordinal)
@@ -124,43 +108,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The value is invalid. It does not belong to this RowManager.
-        /// </summary>
-        public static string RowManager_InvalidCurrentRow
-        {
-            get { return GetString("RowManager_InvalidCurrentRow"); }
-        }
-
-        /// <summary>
-        /// The specified ordinal must be a top level row.
-        /// </summary>
-        public static string RowManager_OrdinalNotTopLevel
-        {
-            get { return GetString("RowManager_OrdinalNotTopLevel"); }
-        }
-
-        /// <summary>
-        /// BeginEdit failed. Editing multiple row at the same time is not allowed.
-        /// </summary>
-        public static string RowPresenter_BeginEditFailed
-        {
-            get { return GetString("RowPresenter_BeginEditFailed"); }
-        }
-
-        /// <summary>
         /// The EOF row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteEof
         {
             get { return GetString("RowPresenter_DeleteEof"); }
-        }
-
-        /// <summary>
-        /// The SubviewItem is invalid.
-        /// </summary>
-        public static string RowPresenter_InvalidSubviewItem
-        {
-            get { return GetString("RowPresenter_InvalidSubviewItem"); }
         }
 
         /// <summary>

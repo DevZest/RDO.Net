@@ -126,9 +126,6 @@
   <data name="BlockItem_OutOfHorizontalRowRange" xml:space="preserve">
     <value>BlockItems[{index}] is out of horizontal side of RowRange.</value>
   </data>
-  <data name="BlockItem_OutOfVerticalRowRange" xml:space="preserve">
-    <value>BlockItems[{index}] is out of vertical side of RowRange.</value>
-  </data>
   <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
     <value>DataElementPanel must be element of DataView's control template to implement IScrollInfo.</value>
   </data>
@@ -147,9 +144,6 @@
   <data name="GridRange_InvalidOwner" xml:space="preserve">
     <value>The GridRange does not belong to the same Template.</value>
   </data>
-  <data name="GridRange_VerifyNotEmpty" xml:space="preserve">
-    <value>The GridRange is empty.</value>
-  </data>
   <data name="GridRow_InvalidAutoHeight" xml:space="preserve">
     <value>Auto height GridRows[{ordinal}] is invalid for multidimensional layout.</value>
   </data>
@@ -159,20 +153,8 @@
   <data name="RowItem_OutOfRowRange" xml:space="preserve">
     <value>RowItems[{index}] is out of the RowRange.</value>
   </data>
-  <data name="RowManager_InvalidCurrentRow" xml:space="preserve">
-    <value>The value is invalid. It does not belong to this RowManager.</value>
-  </data>
-  <data name="RowManager_OrdinalNotTopLevel" xml:space="preserve">
-    <value>The specified ordinal must be a top level row.</value>
-  </data>
-  <data name="RowPresenter_BeginEditFailed" xml:space="preserve">
-    <value>BeginEdit failed. Editing multiple row at the same time is not allowed.</value>
-  </data>
   <data name="RowPresenter_DeleteEof" xml:space="preserve">
     <value>The EOF row cannot be deleted.</value>
-  </data>
-  <data name="RowPresenter_InvalidSubviewItem" xml:space="preserve">
-    <value>The SubviewItem is invalid.</value>
   </data>
   <data name="RowPresenter_VerifyColumn" xml:space="preserve">
     <value>The column is invalid. It does not belong to the DataSet.</value>
