@@ -240,24 +240,24 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private RowPlaceholderPosition PlaceholderPosition
+        private RowPlaceholderMode PlaceholderMode
         {
-            get { return Template.RowPlaceholderPosition; }
+            get { return Template.RowPlaceholderMode; }
         }
 
         private _PlaceholderManager PlaceholderManager
         {
             get
             {
-                switch (PlaceholderPosition)
+                switch (PlaceholderMode)
                 {
-                    case RowPlaceholderPosition.Bottom:
+                    case RowPlaceholderMode.Tail:
                         return _PlaceholderManager.Bottom;
-                    case RowPlaceholderPosition.Top:
+                    case RowPlaceholderMode.Head:
                         return _PlaceholderManager.Top;
-                    case RowPlaceholderPosition.EmptyDataSet:
+                    case RowPlaceholderMode.EmptyView:
                         return _PlaceholderManager.EmptyDataSet;
-                    case RowPlaceholderPosition.None:
+                    case RowPlaceholderMode.Explicit:
                         return _PlaceholderManager.None;
                 }
                 return null;
@@ -283,7 +283,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void CoerceNoPlaceholder()
         {
-            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.None);
+            Debug.Assert(PlaceholderMode == RowPlaceholderMode.Explicit);
 
             ClearPlaceholder();
         }
@@ -300,7 +300,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void CoerceEmptyDataSetPlaceholder()
         {
-            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.EmptyDataSet);
+            Debug.Assert(PlaceholderMode == RowPlaceholderMode.EmptyView);
 
             var index = base.Rows.Count == 0 ? 0 : -1;
             if (index == 0)
@@ -314,7 +314,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void CoerceBottomPlaceholder()
         {
-            Debug.Assert(PlaceholderPosition == RowPlaceholderPosition.Bottom && Placeholder != null);
+            Debug.Assert(PlaceholderMode == RowPlaceholderMode.Tail && Placeholder != null);
 
             Placeholder.RawIndex = base.Rows.Count;
         }

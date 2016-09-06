@@ -102,9 +102,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder RowPlaceholderPosition(RowPlaceholderPosition value)
+        public TemplateBuilder With(RowPlaceholderMode value)
         {
-            Template.RowPlaceholderPosition = value;
+            Template.RowPlaceholderMode = value;
             return this;
         }
 

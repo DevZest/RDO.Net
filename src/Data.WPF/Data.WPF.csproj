@@ -81,7 +81,7 @@
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="Controls\BlockView.cs" />
     <Compile Include="Primitives\BlockViewCollection.cs" />
-    <Compile Include="RowPlaceholderPosition.cs" />
+    <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />
     <Compile Include="Primitives\RowItem.cs" />

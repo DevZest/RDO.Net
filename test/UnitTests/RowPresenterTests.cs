@@ -50,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
 
             var row = rowManager.Rows[0];
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
@@ -68,7 +68,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowPresenter_CancelEdit_Eof()
         {
             var dataSet = DataSet<SalesOrder>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderPosition.Bottom);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
 
             var rows = rowManager.Rows;
             var row = rows[0];
