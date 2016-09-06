@@ -98,7 +98,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
             Assert.AreEqual(3, layoutManager.BlockViews.Last.Ordinal);
 
-            var rowItem = layoutManager.Template.RowItemGroups[0][0];
+            var rowItem = layoutManager.Template.RowItems[0];
             BlockView block;
 
             block = layoutManager.BlockViews[0];
@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
             Assert.AreEqual(3, layoutManager.BlockViews.Last.Ordinal);
 
-            rowItem = layoutManager.Template.RowItemGroups[0][0];
+            rowItem = layoutManager.Template.RowItems[0];
 
             block = layoutManager.BlockViews[0];
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetBlockRect(block));
@@ -167,7 +167,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, layoutManager.BlockViews.First.Ordinal);
             Assert.AreEqual(2, layoutManager.BlockViews.Last.Ordinal);
 
-            var rowItem = layoutManager.Template.RowItemGroups[0][0];
+            var rowItem = layoutManager.Template.RowItems[0];
             BlockView block;
 
             block = layoutManager.BlockViews[0];
@@ -458,7 +458,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var blocks = layoutManager.BlockViews;
             var blockItems = layoutManager.Template.BlockItems;
-            var rowItem = layoutManager.Template.RowItemGroups[0][0];
+            var rowItem = layoutManager.Template.RowItems[0];
 
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, blocks.First.Ordinal);
@@ -578,7 +578,7 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var blocks = layoutManager.BlockViews;
-            var rowItems = layoutManager.Template.RowItemGroups[0];
+            var rowItems = layoutManager.Template.RowItems;
 
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, blocks.First.Ordinal);

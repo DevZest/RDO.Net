@@ -79,26 +79,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return InternalBlockItems; }
         }
 
-        private Func<RowPresenter, int> _rowItemGroupSelector;
-        public Func<RowPresenter, int> RowItemGroupSelector
+        internal RowItemCollection InternalRowItems = new RowItemCollection();
+        public IReadOnlyList<RowItem> RowItems
         {
-            get { return _rowItemGroupSelector ?? (rowPresenter => 0); }
-            internal set { _rowItemGroupSelector = value; }
-        }
-
-        private IConcatList<RowItemCollection> _rowItemGroups = new RowItemCollection();
-        internal IReadOnlyList<RowItemCollection> InternalRowItemGroups
-        {
-            get { return _rowItemGroups; }
-        }
-        public IReadOnlyList<IReadOnlyList<RowItem>> RowItemGroups
-        {
-            get { return _rowItemGroups; }
-        }
-
-        internal void NextRowItemGroup()
-        {
-            _rowItemGroups = _rowItemGroups.Concat(new RowItemCollection());
+            get { return InternalRowItems; }
         }
 
         private GridRange? _rowRange;
@@ -116,8 +100,8 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange CalcRowRange()
         {
             var result = new GridRange();
-            foreach (var rowItems in InternalRowItemGroups)
-                result = result.Union(rowItems.Range);
+            foreach (var rowItem in InternalRowItems)
+                result = result.Union(rowItem.GridRange);
             return result;
         }
 
@@ -144,11 +128,10 @@ namespace DevZest.Data.Windows.Primitives
             if (RowRange.IsEmpty)
                 throw new InvalidOperationException(Strings.Template_EmptyRowRange);
 
-            for (int i = 0; i < RowItemGroups.Count; i++)
+            for (int i = 0; i < RowItems.Count; i++)
             {
-                var rowItems = RowItemGroups[i];
-                for (int j = 0; j < rowItems.Count; j++)
-                    rowItems[i].VerifyRowRange();
+                var rowItem = RowItems[i];
+                    rowItem.VerifyRowRange();
             }
 
             for (int i = 0; i < ScalarItems.Count; i++)
@@ -171,10 +154,10 @@ namespace DevZest.Data.Windows.Primitives
 
             ScalarItems.ForEach(x => x.VerifyFrozenMargins(nameof(ScalarItems)));
             BlockItems.ForEach(x => x.VerifyFrozenMargins(nameof(BlockItems)));
-            for (int i = 0; i < RowItemGroups.Count; i++)
+            for (int i = 0; i < RowItems.Count; i++)
             {
-                var rowItems = RowItemGroups[i];
-                rowItems.ForEach(x => x.VerifyFrozenMargins(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(RowItemGroups), i)));
+                var rowItems = RowItems[i];
+                rowItems.ForEach(x => x.VerifyFrozenMargins(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(RowItems), i)));
             }
         }
 
@@ -219,15 +202,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool HasRowItem
         {
-            get
-            {
-                foreach (var rowItems in RowItemGroups)
-                {
-                    if (rowItems.Count > 0)
-                        return true;
-                }
-                return false;
-            }
+            get { return RowItems.Count > 0; }
         }
 
         internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
@@ -248,17 +223,11 @@ namespace DevZest.Data.Windows.Primitives
                 BlockItemsSplit = InternalBlockItems.Count;
         }
 
-        private RowItemCollection CurrentRowItems
-        {
-            get { return InternalRowItemGroups[InternalRowItemGroups.Count - 1]; }
-        }
-
         internal void AddRowItem(GridRange gridRange, RowItem rowItem)
         {
             Debug.Assert(IsValid(gridRange));
-            var currentRowItems = CurrentRowItems;
-            rowItem.Construct(this, gridRange, CurrentRowItems.Count);
-            CurrentRowItems.Add(gridRange, rowItem);
+            rowItem.Construct(this, gridRange, InternalRowItems.Count);
+            InternalRowItems.Add(gridRange, rowItem);
         }
 
         internal bool IsValid(GridRange gridRange)
@@ -396,8 +365,7 @@ namespace DevZest.Data.Windows.Primitives
                 InternalGridColumns.InvalidateStarLengthTracks();
                 InternalScalarItems.InvalidateAutoWidthItems();
                 InternalBlockItems.InvalidateAutoWidthItems();
-                foreach (var rowItems in InternalRowItemGroups)
-                    rowItems.InvalidateAutoWidthItems();
+                InternalRowItems.InvalidateAutoHeightItems();
             }
         }
 
@@ -418,8 +386,7 @@ namespace DevZest.Data.Windows.Primitives
                 InternalGridRows.InvalidateStarLengthTracks();
                 InternalScalarItems.InvalidateAutoHeightItems();
                 InternalBlockItems.InvalidateAutoHeightItems();
-                foreach (var rowItems in InternalRowItemGroups)
-                    rowItems.InvalidateAutoHeightItems();
+                InternalRowItems.InvalidateAutoHeightItems();
             }
         }
 

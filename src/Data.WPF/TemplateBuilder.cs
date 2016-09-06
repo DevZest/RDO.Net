@@ -154,12 +154,6 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder RowItemGroup(Func<RowPresenter, int> rowItemsSelector)
-        {
-            Template.RowItemGroupSelector = rowItemsSelector;
-            return this;
-        }
-
         public ScalarItem.Builder<T> ScalarItem<T>(bool isMultidimensional = false)
             where T : UIElement, new()
         {

@@ -26,7 +26,6 @@ namespace DevZest.Data.Windows
             _rowMapper = rowMapper;
             DataRow = dataRow;
             RawIndex = absoluteIndex;
-            _rowItemsId = -1;
         }
 
         internal void Dispose()
@@ -34,7 +33,6 @@ namespace DevZest.Data.Windows
             Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowMapper = null;
             Parent = null;
-            _rowItemsId = -1;
         }
 
         internal bool IsDisposed
@@ -377,26 +375,9 @@ namespace DevZest.Data.Windows
                 InitElementPanel(elementPanel);
         }
 
-        private int _rowItemsId;
-        private void SelectRowItemGroup()
-        {
-            var newValue = Template.RowItemGroupSelector(this);
-            if (newValue < 0 || newValue >= Template.RowItemGroups.Count)
-                throw new InvalidOperationException();
-
-            if (_rowItemsId == newValue)
-                return;
-
-            if (_rowItemsId >= 0)
-                ClearElements();
-
-            _rowItemsId = newValue;
-            InitializeElements();
-        }
-
         internal RowItemCollection RowItems
         {
-            get { return Template.InternalRowItemGroups[_rowItemsId]; }
+            get { return Template.InternalRowItems; }
         }
 
         internal void InitElementPanel(RowElementPanel elementPanel)
@@ -404,7 +385,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(ElementCollection == null);
 
             ElementCollection = ElementCollectionFactory.Create(elementPanel);
-            SelectRowItemGroup();
+            InitializeElements();
         }
 
         private void InitializeElements()
@@ -423,7 +404,6 @@ namespace DevZest.Data.Windows
 
             ClearElements();
             ElementCollection = null;
-            _rowItemsId = -1;
         }
 
         private void ClearElements()
@@ -444,7 +424,6 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            SelectRowItemGroup();
             var rowItems = RowItems;
             Debug.Assert(Elements.Count == rowItems.Count);
             for (int i = 0; i < rowItems.Count; i++)
