@@ -90,6 +90,7 @@
     <Compile Include="Controls\ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
+    <Compile Include="Utilities\DependencyObject.Contains.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowElementPanel.cs" />
     <Compile Include="Controls\RowView.cs" />

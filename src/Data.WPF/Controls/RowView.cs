@@ -1,7 +1,10 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using DevZest.Data.Windows.Utilities;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Controls
 {
@@ -56,23 +59,50 @@ namespace DevZest.Data.Windows.Controls
             get { return Template == null ? null : Template.FindName("PART_Panel", this) as RowElementPanel; }
         }
 
-        //protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        //{
-        //    base.OnPreviewLostKeyboardFocus(e);
-        //}
+        private static RowView Focused { get; set; }
 
-        //protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        //{
-        //    base.OnLostKeyboardFocus(e);
-        //    if (View != null)
-        //        View.IsFocused = false;
-        //}
+        internal static RowPresenter FocusedRow
+        {
+            get { return Focused == null ? null : Focused.RowPresenter; }
+        }
 
-        //protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        //{
-        //    base.OnPreviewGotKeyboardFocus(e);
-        //    if (View != null)
-        //        View.IsFocused = true;
-        //}
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            Focused = this;
+            base.OnGotKeyboardFocus(e);
+        }
+
+        protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            Debug.Assert(Focused == this);
+            if (ShouldCommitEditing(e.NewFocus))
+            {
+                RowPresenter.RowManager.CommitEdit();
+            }
+            base.OnPreviewLostKeyboardFocus(e);
+        }
+
+        private bool ShouldCommitEditing(IInputElement newFocus)
+        {
+            if (RowPresenter == null || !RowPresenter.IsEditing)
+                return false;
+
+            var element = newFocus as DependencyObject;
+            if (element == null)
+                return true;
+
+            if (this.Contains(element))
+                return false;
+
+            var currentFocusScope = FocusManager.GetFocusScope(this);
+            var newFocusScope = FocusManager.GetFocusScope((DependencyObject)element);
+            return !currentFocusScope.Contains(newFocusScope);
+        }
+
+        protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            Focused = null;
+            base.OnLostKeyboardFocus(e);
+        }
     }
 }
