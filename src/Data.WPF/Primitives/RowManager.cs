@@ -231,6 +231,11 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;
+            var coercedPlaceholderIndex = CoercedPlaceholderIndex;
+            if (coercedPlaceholderIndex >= 0)
+                Placeholder = new RowPresenter(this, coercedPlaceholderIndex);
+            if (Rows.Count > 0)
+                _currentRow = Rows[0];
         }
 
         public RowPresenter Placeholder { get; private set; }
@@ -309,9 +314,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.RowPlaceholderMode; }
         }
 
-        protected override void Initialize()
+        protected override void Reload()
         {
-            base.Initialize();
+            base.Reload();
             CoercePlaceholder();
             CoerceCurrentRow();
         }

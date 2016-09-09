@@ -205,7 +205,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var changed = SetWhere(where);
             if (changed)
-                Initialize();
+                Reload();
         }
 
         private IReadOnlyList<ColumnSort[]> _orderBy;
@@ -239,7 +239,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             var changed = SetOrderBy(orderBy);
             if (changed)
-                Initialize();
+                Reload();
         }
 
         public void Query(_Boolean where, ColumnSort[] orderBy)
@@ -247,10 +247,15 @@ namespace DevZest.Data.Windows.Primitives
             var whereChanged = SetWhere(where);
             var orderByChanged = SetOrderBy(orderBy);
             if (whereChanged || orderByChanged)
-                Initialize();
+                Reload();
         }
 
-        protected virtual void Initialize()
+        protected virtual void Reload()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
         {
             InitializeMappings();
             InitializeRows();

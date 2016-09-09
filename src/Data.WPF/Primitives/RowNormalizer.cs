@@ -10,6 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         protected RowNormalizer(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)
         {
+            Initialize();
         }
 
         private List<RowPresenter> _rows;
@@ -18,9 +19,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return _rows; }
         }
 
-        protected override void Initialize()
+        protected override void Reload()
         {
-            base.Initialize();
+            base.Reload();
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             _rows = IsRecursive ? new List<RowPresenter>() : (List<RowPresenter>)base.Rows;
             if (IsRecursive)
             {

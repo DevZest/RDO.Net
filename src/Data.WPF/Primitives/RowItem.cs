@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class RowItem : TemplateItem, IConcatList<RowItem>
+    public sealed class RowItem : TemplateItem, IConcatList<RowItem>
     {
         #region IConcatList<RowItem>
 
@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows.Primitives
             return base.Mount(x => Initialize(x, rowPresenter), initializer);
         }
 
-        protected virtual void Initialize(UIElement element, RowPresenter rowPresenter)
+        private void Initialize(UIElement element, RowPresenter rowPresenter)
         {
             element.SetRowPresenter(rowPresenter);
         }
