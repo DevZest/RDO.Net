@@ -164,12 +164,10 @@ namespace DevZest.Data.Windows.Primitives
 
             private int GetInsertIndex(RowManager rowManager)
             {
-                return GetPlaceholderIndex(rowManager) - ParentIndex;
-            }
-
-            private int ParentIndex
-            {
-                get { return Parent != null ? Parent.RawIndex : 0; }
+                var result = GetPlaceholderIndex(rowManager);
+                if (Parent != null)
+                    result -= Parent.RawIndex + 1;
+                return result;
             }
 
             protected sealed override void BeginEdit(RowManager rowManager)
