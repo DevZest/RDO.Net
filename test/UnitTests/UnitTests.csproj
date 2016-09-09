@@ -84,7 +84,6 @@
     <Compile Include="Primitives\LayoutXYManagerTests.cs" />
     <Compile Include="Primitives\LayoutZManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
-    <Compile Include="Primitives\RowManagerTestsBase.cs" />
     <Compile Include="Primitives\RowMapperTests.cs" />
     <Compile Include="Primitives\RowNormalizerTests.cs" />
     <Compile Include="StringRes.Designer.cs">
