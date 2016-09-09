@@ -90,24 +90,24 @@ namespace DevZest.Data.Windows
             get { return !IsEditing && RequireLayoutManager().DataSet.EditingRow == null; }
         }
 
-        public void BeginInsertBefore(RowPresenter child = null)
+        public void BeginInsertBefore(RowPresenter row = null)
         {
-            VerifyInsert(child);
-            RequireLayoutManager().BeginInsertBefore(null, child);
+            VerifyInsert(row);
+            RequireLayoutManager().BeginInsertBefore(null, row);
         }
 
-        public void BeginInsertAfter(RowPresenter child = null)
+        public void BeginInsertAfter(RowPresenter row = null)
         {
-            VerifyInsert(child);
-            RequireLayoutManager().BeginInsertAfter(null, child);
+            VerifyInsert(row);
+            RequireLayoutManager().BeginInsertAfter(null, row);
         }
 
-        private void VerifyInsert(RowPresenter child)
+        private void VerifyInsert(RowPresenter row)
         {
             if (!CanInsert)
                 throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
-            if (child != null & child.RowManager != RequireLayoutManager())
-                throw new ArgumentException(Strings.DataPresenter_InvalidChildRow, nameof(child));
+            if (row != null & row.RowManager != RequireLayoutManager())
+                throw new ArgumentException(Strings.DataPresenter_InvalidRow, nameof(row));
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows

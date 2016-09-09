@@ -129,8 +129,8 @@
   <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
     <value>DataElementPanel must be element of DataView's control template to implement IScrollInfo.</value>
   </data>
-  <data name="DataPresenter_InvalidChildRow" xml:space="preserve">
-    <value>The child row is invalid.</value>
+  <data name="DataPresenter_InvalidRow" xml:space="preserve">
+    <value>The row is invalid.</value>
   </data>
   <data name="DataPresenter_NullDataSet" xml:space="preserve">
     <value>The DataPresenter is not initialized: the DataSet property is null.</value>

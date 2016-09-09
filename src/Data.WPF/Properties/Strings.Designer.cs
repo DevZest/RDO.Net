@@ -44,11 +44,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The child row is invalid.
+        /// The row is invalid.
         /// </summary>
-        public static string DataPresenter_InvalidChildRow
+        public static string DataPresenter_InvalidRow
         {
-            get { return GetString("DataPresenter_InvalidChildRow"); }
+            get { return GetString("DataPresenter_InvalidRow"); }
         }
 
         /// <summary>
