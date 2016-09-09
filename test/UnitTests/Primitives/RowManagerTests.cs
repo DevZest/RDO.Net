@@ -161,14 +161,53 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_InsertRow()
+        public void RowManager_InsertBefore()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
             var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
             var rows = rowManager.Rows;
 
-            //var row = rowManager.InsertRow(0);
+            rowManager.BeginInsertBefore(null, rows[0]);
+            Assert.AreEqual(2, rows.Count);
+            Assert.IsTrue(rows[0].IsPlaceholder);
+            rowManager.RollbackEdit();
+            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual(dataSet[0], rows[0].DataRow);
+            Assert.IsTrue(rows[1].IsPlaceholder);
+
+            rowManager.BeginInsertBefore(null, rows[0]);
+            Assert.AreEqual(2, rows.Count);
+            Assert.IsTrue(rows[0].IsPlaceholder);
+            rowManager.CommitEdit();
             Assert.AreEqual(3, rows.Count);
+            Assert.AreEqual(dataSet[0], rows[0].DataRow);
+            Assert.AreEqual(dataSet[1], rows[1].DataRow);
+            Assert.IsTrue(rows[2].IsPlaceholder);
+        }
+
+        [TestMethod]
+        public void RowManager_InsertAfter()
+        {
+            var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
+            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rows = rowManager.Rows;
+
+            rowManager.BeginInsertAfter(null, rows[0]);
+            Assert.AreEqual(2, rows.Count);
+            Assert.IsTrue(rows[1].IsPlaceholder);
+            rowManager.RollbackEdit();
+            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual(dataSet[0], rows[0].DataRow);
+            Assert.IsTrue(rows[1].IsPlaceholder);
+
+            rowManager.BeginInsertAfter(null, rows[0]);
+            Assert.AreEqual(2, rows.Count);
+            Assert.IsTrue(rows[1].IsPlaceholder);
+            rowManager.CommitEdit();
+            Assert.AreEqual(3, rows.Count);
+            Assert.AreEqual(dataSet[0], rows[0].DataRow);
+            Assert.AreEqual(dataSet[1], rows[1].DataRow);
+            Assert.IsTrue(rows[2].IsPlaceholder);
         }
     }
 }
