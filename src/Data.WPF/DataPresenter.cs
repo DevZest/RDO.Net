@@ -75,6 +75,41 @@ namespace DevZest.Data.Windows
             get { return CurrentRow != null && IsEditing ? CurrentRow : null; }
         }
 
+        public bool IsInserting
+        {
+            get { return IsEditing && LayoutManager.CurrentRow == LayoutManager.Placeholder; }
+        }
+
+        public RowPresenter InsertingRow
+        {
+            get { return IsInserting ? CurrentRow : null; }
+        }
+
+        public bool CanInsert
+        {
+            get { return !IsEditing && RequireLayoutManager().DataSet.EditingRow == null; }
+        }
+
+        public void BeginInsertBefore(RowPresenter child = null)
+        {
+            VerifyInsert(child);
+            RequireLayoutManager().BeginInsertBefore(null, child);
+        }
+
+        public void BeginInsertAfter(RowPresenter child = null)
+        {
+            VerifyInsert(child);
+            RequireLayoutManager().BeginInsertAfter(null, child);
+        }
+
+        private void VerifyInsert(RowPresenter child)
+        {
+            if (!CanInsert)
+                throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
+            if (child != null & child.RowManager != RequireLayoutManager())
+                throw new ArgumentException(Strings.DataPresenter_InvalidChildRow, nameof(child));
+        }
+
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }

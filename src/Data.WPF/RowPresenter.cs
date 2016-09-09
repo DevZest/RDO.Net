@@ -108,7 +108,7 @@ namespace DevZest.Data.Windows
             get { return RowManager.CurrentRow == this && RowManager.IsEditing; }
         }
 
-        public bool IsAdding
+        public bool IsInserting
         {
             get { return IsPlaceholder && IsEditing; }
         }
@@ -154,9 +154,9 @@ namespace DevZest.Data.Windows
 
         private void Invalidate()
         {
-            var rowManager = RowManager;
-            if (rowManager != null)
-                RowManager.Invalidate(this);
+            var elementManager = ElementManager;
+            if (elementManager != null)
+                elementManager.Invalidate(this);
         }
 
         internal int RawIndex { get; set; }
@@ -293,14 +293,19 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private void BeginEdit()
+        public bool CanEdit
+        {
+            get { return !RowManager.IsEditing && DataSet.EditingRow == null; }
+        }
+
+        public void BeginEdit()
         {
             if (IsEditing)
                 return;
 
-            if (RowManager.CurrentRow != this)
-                throw new InvalidOperationException();
-            RowManager.BeginEdit();
+            if (!CanEdit)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyCanEdit);
+            RowManager.BeginEdit(this);
         }
 
         public void EditValue<T>(Column<T> column, T value)
@@ -314,6 +319,48 @@ namespace DevZest.Data.Windows
             column[DataRow] = value;
         }
 
+        public void CancelEdit()
+        {
+            if (!IsEditing)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
+
+            RowManager.RollbackEdit();
+        }
+
+        public void EndEdit()
+        {
+            if (!IsEditing)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
+
+            RowManager.CommitEdit();
+        }
+
+        public bool CanInsert
+        {
+            get { return IsRecursive && CanEdit; }
+        }
+
+        public void BeginInsertBefore(RowPresenter child = null)
+        {
+            VerifyInsert(child);
+            RowManager.BeginInsertBefore(this, child);
+        }
+
+        public void BeginInsertAfter(RowPresenter child = null)
+        {
+            VerifyInsert(child);
+            RowManager.BeginInsertAfter(this, child);
+        }
+
+        private void VerifyInsert(RowPresenter child)
+        {
+            VerifyRecursive();
+            if (child != null && child.Parent != this)
+                throw new ArgumentException(Strings.RowPresenter_InvalidChildRow, nameof(child));
+            if (!CanInsert)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyCanInsert);
+        }
+
         public DataSet DataSet
         {
             get { return Parent == null ? RowManager.DataSet : Parent.DataRow[Template.RecursiveModelOrdinal]; }
@@ -323,7 +370,7 @@ namespace DevZest.Data.Windows
         {
             VerifyDisposed();
             if (IsPlaceholder)
-                throw new InvalidOperationException(Strings.RowPresenter_DeleteEof);
+                throw new InvalidOperationException(Strings.RowPresenter_DeletePlaceholder);
 
             DataRow.DataSet.Remove(DataRow);
         }

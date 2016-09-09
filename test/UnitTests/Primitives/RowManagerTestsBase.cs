@@ -51,10 +51,6 @@ namespace DevZest.Data.Windows.Primitives
                 : base(template, dataSet, where, orderBy)
             {
             }
-
-            internal override void Invalidate(RowPresenter row)
-            {
-            }
         }
 
         internal static RowManager CreateRowManager<T>(DataSet<T> dataSet, RowPlaceholderMode rowPlaceholderPosition)

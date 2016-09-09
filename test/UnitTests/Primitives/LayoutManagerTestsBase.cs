@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class LayoutManagerTestsBase : RowManagerTestsBase
+    public abstract class LayoutManagerTestsBase
     {
         internal static LayoutManager CreateLayoutManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
             where T : Model, new()

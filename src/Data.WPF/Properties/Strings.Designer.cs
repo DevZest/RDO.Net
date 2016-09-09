@@ -44,11 +44,27 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The child row is invalid.
+        /// </summary>
+        public static string DataPresenter_InvalidChildRow
+        {
+            get { return GetString("DataPresenter_InvalidChildRow"); }
+        }
+
+        /// <summary>
         /// The DataPresenter is not initialized: the DataSet property is null.
         /// </summary>
         public static string DataPresenter_NullDataSet
         {
             get { return GetString("DataPresenter_NullDataSet"); }
+        }
+
+        /// <summary>
+        /// The CanInsert property must be true.
+        /// </summary>
+        public static string DataPresenter_VerifyCanInsert
+        {
+            get { return GetString("DataPresenter_VerifyCanInsert"); }
         }
 
         /// <summary>
@@ -108,11 +124,35 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The EOF row cannot be deleted.
+        /// The placeholder row cannot be deleted.
         /// </summary>
-        public static string RowPresenter_DeleteEof
+        public static string RowPresenter_DeletePlaceholder
         {
-            get { return GetString("RowPresenter_DeleteEof"); }
+            get { return GetString("RowPresenter_DeletePlaceholder"); }
+        }
+
+        /// <summary>
+        /// The child row is invalid.
+        /// </summary>
+        public static string RowPresenter_InvalidChildRow
+        {
+            get { return GetString("RowPresenter_InvalidChildRow"); }
+        }
+
+        /// <summary>
+        /// The CanEdit property must be true.
+        /// </summary>
+        public static string RowPresenter_VerifyCanEdit
+        {
+            get { return GetString("RowPresenter_VerifyCanEdit"); }
+        }
+
+        /// <summary>
+        /// The CanInsert property must be true.
+        /// </summary>
+        public static string RowPresenter_VerifyCanInsert
+        {
+            get { return GetString("RowPresenter_VerifyCanInsert"); }
         }
 
         /// <summary>
@@ -121,6 +161,14 @@ namespace DevZest.Data.Windows
         public static string RowPresenter_VerifyColumn
         {
             get { return GetString("RowPresenter_VerifyColumn"); }
+        }
+
+        /// <summary>
+        /// The IsEditing property must be true.
+        /// </summary>
+        public static string RowPresenter_VerifyIsEditing
+        {
+            get { return GetString("RowPresenter_VerifyIsEditing"); }
         }
 
         /// <summary>

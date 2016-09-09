@@ -11,7 +11,7 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
-    public class ElementManagerTests : RowManagerTestsBase
+    public class ElementManagerTests
     {
         #region Helpers
 
@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_Elements()
         {
-            var dataSet = MockProductCategories(8, false);
+            var dataSet = ProductCategoryDataSet.Mock(8, false);
             var _ = dataSet._;
             var elementManager = MockElementManager(dataSet);
             var template = elementManager.Template;
@@ -322,7 +322,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_RefreshElements()
         {
-            var dataSet = MockProductCategories(8, false);
+            var dataSet = ProductCategoryDataSet.Mock(8, false);
             var _ = dataSet._;
             var elementManager = MockElementManager(dataSet);
             var template = elementManager.Template;

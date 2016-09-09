@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Factories;
+using DevZest.Data.Windows.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Windows;
@@ -13,7 +14,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutZManager_Measure()
         {
-            var dataSet = MockProductCategories(3, false);
+            var dataSet = ProductCategoryDataSet.Mock(3, false);
             var layoutManager = CreateLayoutManager(dataSet, (builder, _) =>
             {
                 builder.GridColumns("20", "Auto", "*")
@@ -54,7 +55,7 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutZManager_GridLineFigures()
         {
             var pen = new Pen();
-            var dataSet = MockProductCategories(3, false);
+            var dataSet = ProductCategoryDataSet.Mock(3, false);
             var layoutManager = CreateLayoutManager(dataSet, (builder, _) =>
             {
                 builder.GridColumns("20", "20")

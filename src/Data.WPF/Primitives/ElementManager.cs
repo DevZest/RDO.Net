@@ -219,8 +219,26 @@ namespace DevZest.Data.Windows.Primitives
             BlockViewStartIndex += delta;
         }
 
+        protected override void OnCurrentRowChanged()
+        {
+            base.OnCurrentRowChanged();
+            Invalidate(null);
+        }
+
+        protected override void OnSelectedRowsChanged()
+        {
+            base.OnSelectedRowsChanged();
+            Invalidate(null);
+        }
+
+        protected override void OnRowsChanged()
+        {
+            base.OnRowsChanged();
+            Invalidate(null);
+        }
+
         private bool _isDirty;
-        internal sealed override void Invalidate(RowPresenter row)
+        internal void Invalidate(RowPresenter row)
         {
             if (_isDirty || ElementCollection == null)
                 return;

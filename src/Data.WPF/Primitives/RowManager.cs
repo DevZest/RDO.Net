@@ -7,105 +7,139 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class RowManager : RowNormalizer, IReadOnlyList<RowPresenter>
     {
-        private abstract class _PlaceholderManager
+        private abstract class _EditHandler
         {
-            public static readonly _PlaceholderManager Explicit = new ExplicitPlaceholderManager();
-            public static readonly _PlaceholderManager Head = new HeadPlaceholderManager();
-            public static readonly _PlaceholderManager Tail = new TailPlaceholderManager();
-            public static readonly _PlaceholderManager EmptyView = new EmptyViewPlaceholderManager();
-
-            public abstract void Initialize(RowManager rowManager);
-
-            public abstract void Coerce(RowManager rowManager);
-
-            public abstract void BeginEdit(RowManager rowManager);
-
-            private sealed class ExplicitPlaceholderManager : _PlaceholderManager
+            public static void EnterEditMode(RowManager rowManager)
             {
-                public override void Initialize(RowManager rowManager)
-                {
-                }
-
-                public override void Coerce(RowManager rowManager)
-                {
-                    rowManager.CoerceExplicitPlaceholder();
-                }
-
-                public override void BeginEdit(RowManager rowManager)
-                {
-                    throw new NotSupportedException();
-                }
+                Debug.Assert(rowManager.CurrentRow.CanEdit);
+                var currentRow = rowManager.CurrentRow;
+                if (currentRow.IsPlaceholder)
+                    InsertHandler.EnterEditMode(rowManager);
+                else
+                    Singleton.OpenEdit(rowManager);
             }
 
-            private sealed class HeadPlaceholderManager : _PlaceholderManager
+            private static _EditHandler Singleton = new DataRowEditCommand();
+
+            protected _EditHandler()
             {
-                public override void Initialize(RowManager rowManager)
-                {
-                    rowManager.InitializeHeadPlaceholder();
-                }
-
-                public override void Coerce(RowManager rowManager)
-                {
-                }
-
-                public override void BeginEdit(RowManager rowManager)
-                {
-                    rowManager._insertCommand = _InsertCommand.Head;
-                }
             }
 
-            private sealed class TailPlaceholderManager : _PlaceholderManager
+            public abstract void OnRowsChanged(RowManager rowManager);
+
+            protected void OpenEdit(RowManager rowManager)
             {
-                public override void Initialize(RowManager rowManager)
-                {
-                    rowManager.InitializeTailPlaceholder();
-                }
-
-                public override void Coerce(RowManager rowManager)
-                {
-                    rowManager.CoerceTailPlaceholder();
-                }
-
-                public override void BeginEdit(RowManager rowManager)
-                {
-                    rowManager._insertCommand = _InsertCommand.Tail;
-                }
+                rowManager.EditHandler = this;
+                BeginEdit(rowManager);
+                CoercePlaceholderIndex(rowManager);
             }
 
-            private sealed class EmptyViewPlaceholderManager : _PlaceholderManager
+            public void RollbackEdit(RowManager rowManager)
             {
-                public override void Initialize(RowManager rowManager)
+                CancelEdit(rowManager);
+                rowManager.EditHandler = null;
+            }
+
+            public void CommitEdit(RowManager rowManager)
+            {
+                EndEdit(rowManager);
+                rowManager.EditHandler = null;
+            }
+
+            protected abstract void BeginEdit(RowManager rowManager);
+
+            protected abstract void CancelEdit(RowManager rowManager);
+
+            protected abstract void EndEdit(RowManager rowManager);
+
+            public abstract void CoercePlaceholderIndex(RowManager rowManager);
+
+            private sealed class DataRowEditCommand : _EditHandler
+            {
+                protected override void BeginEdit(RowManager rowManager)
                 {
-                    rowManager.CoerceEmptyViewPlaceholder();
+                    rowManager.CurrentRow.DataRow.BeginEdit();
                 }
 
-                public override void Coerce(RowManager rowManager)
+                protected override void CancelEdit(RowManager rowManager)
                 {
-                    rowManager.CoerceEmptyViewPlaceholder();
+                    rowManager.CurrentRow.DataRow.CancelEdit();
                 }
 
-                public override void BeginEdit(RowManager rowManager)
+                protected override void EndEdit(RowManager rowManager)
                 {
-                    rowManager._insertCommand = _InsertCommand.Tail;
+                    rowManager.CurrentRow.DataRow.EndEdit();
+                }
+
+                public override void CoercePlaceholderIndex(RowManager rowManager)
+                {
+                }
+
+                public override void OnRowsChanged(RowManager rowManager)
+                {
+                    if (rowManager.CurrentRow.IsDisposed)
+                        RollbackEdit(rowManager);
                 }
             }
         }
 
-        private abstract class _InsertCommand
+        private abstract class InsertHandler : _EditHandler
         {
-            public static readonly _InsertCommand Head = new InsertBeforeCommand(null, null);
-            public static readonly _InsertCommand Tail = new InsertAfterCommand(null, null);
-            public static _InsertCommand Before(RowPresenter parent, RowPresenter reference)
+            public static new void EnterEditMode(RowManager rowManager)
             {
-                return new InsertBeforeCommand(parent, reference);
+                Debug.Assert(rowManager.CurrentRow.CanEdit);
+                GetEditCommand(rowManager.PlaceholderMode).OpenEdit(rowManager);
             }
 
-            public static _InsertCommand After(RowPresenter parent, RowPresenter reference)
+            private static InsertHandler GetEditCommand(RowPlaceholderMode placeholderMode)
             {
-                return new InsertAfterCommand(parent, reference);
+                if (placeholderMode == RowPlaceholderMode.Head)
+                    return Head;
+                else if (placeholderMode == RowPlaceholderMode.Tail)
+                    return Tail;
+                else
+                {
+                    Debug.Assert(placeholderMode == RowPlaceholderMode.EmptyView);
+                    return Tail;
+                }
             }
 
-            protected _InsertCommand(RowPresenter parent, RowPresenter reference)
+            public static void BeginInsertBefore(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            {
+                BeginInsert(rowManager, GetInsertBeforeHandler(parent, child));
+            }
+
+            private static InsertHandler GetInsertBeforeHandler(RowPresenter parent, RowPresenter child)
+            {
+                return parent == null && child == null ? Tail : new InsertBeforeHandler(parent, child);
+            }
+
+            public static void BeginInsertAfter(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            {
+                BeginInsert(rowManager, GetInsertAfterHandler(parent, child));
+            }
+
+            private static InsertHandler GetInsertAfterHandler(RowPresenter parent, RowPresenter child)
+            {
+                return parent == null && child == null ? Tail : new InsertAfterHandler(parent, child);
+            }
+
+            private static void BeginInsert(RowManager rowManager, InsertHandler insertHandler)
+            {
+                if (rowManager.Placeholder == null)
+                    rowManager.Placeholder = new RowPresenter(rowManager, null);
+                insertHandler.CoercePlaceholderIndex(rowManager);
+
+                if (rowManager.CurrentRow != rowManager.Placeholder)
+                    rowManager.SetCurrentRow(rowManager.Placeholder);
+
+                insertHandler.OpenEdit(rowManager);
+            }
+
+            private static readonly InsertHandler Head = new InsertBeforeHandler(null, null);
+            private static readonly InsertHandler Tail = new InsertAfterHandler(null, null);
+
+            protected InsertHandler(RowPresenter parent, RowPresenter reference)
             {
                 _parent = parent;
                 Reference = reference;
@@ -116,16 +150,55 @@ namespace DevZest.Data.Windows.Primitives
 
             protected RowPresenter Reference { get; private set; }
 
-            public void CoercePlaceholderIndex(RowManager rowManager)
+            public sealed override void CoercePlaceholderIndex(RowManager rowManager)
             {
                 rowManager.Placeholder.RawIndex = GetPlaceholderIndex(rowManager);
             }
 
             protected abstract int GetPlaceholderIndex(RowManager rowManager);
 
-            private sealed class InsertBeforeCommand : _InsertCommand
+            private DataSet GetDataSet(RowManager rowManager)
             {
-                public InsertBeforeCommand(RowPresenter parent, RowPresenter reference)
+                return _parent == null ? rowManager.DataSet : _parent.DataSet;
+            }
+
+            private int GetInsertIndex(RowManager rowManager)
+            {
+                return GetPlaceholderIndex(rowManager) - ParentIndex;
+            }
+
+            private int ParentIndex
+            {
+                get { return Parent != null ? Parent.RawIndex : 0; }
+            }
+
+            protected sealed override void BeginEdit(RowManager rowManager)
+            {
+                Debug.Assert(rowManager.CurrentRow.IsPlaceholder);
+                rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
+            }
+
+            protected sealed override void CancelEdit(RowManager rowManager)
+            {
+                Debug.Assert(rowManager.CurrentRow.IsPlaceholder);
+                rowManager.CurrentRow.DataRow = null;
+                GetDataSet(rowManager).CancelAdd();
+            }
+
+            protected sealed override void EndEdit(RowManager rowManager)
+            {
+                rowManager.CurrentRow.DataRow = null;
+                GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
+            }
+
+            public override void OnRowsChanged(RowManager rowManager)
+            {
+                CoercePlaceholderIndex(rowManager);
+            }
+
+            private sealed class InsertBeforeHandler : InsertHandler
+            {
+                public InsertBeforeHandler(RowPresenter parent, RowPresenter reference)
                     : base(parent, reference)
                 {
                 }
@@ -133,15 +206,15 @@ namespace DevZest.Data.Windows.Primitives
                 protected override int GetPlaceholderIndex(RowManager rowManager)
                 {
                     if (Reference != null)
-                        return Reference.Index;
+                        return Reference.RawIndex;
                     else
-                        return Parent != null ? Parent.Index + 1 : 0;
+                        return Parent != null ? Parent.RawIndex + 1 : 0;
                 }
             }
 
-            private sealed class InsertAfterCommand : _InsertCommand
+            private sealed class InsertAfterHandler : InsertHandler
             {
-                public InsertAfterCommand(RowPresenter parent, RowPresenter reference)
+                public InsertAfterHandler(RowPresenter parent, RowPresenter reference)
                     : base(parent, reference)
                 {
                 }
@@ -149,9 +222,9 @@ namespace DevZest.Data.Windows.Primitives
                 protected override int GetPlaceholderIndex(RowManager rowManager)
                 {
                     if (Reference != null)
-                        return Reference.Index;
+                        return Reference.RawIndex + 1;
                     else
-                        return Parent != null ? Parent.Index + Parent.Children.Count + 1 : rowManager.BaseRows.Count;
+                        return Parent != null ? Parent.RawIndex + Parent.Children.Count + 1 : rowManager.BaseRows.Count;
                 }
             }
         }
@@ -162,14 +235,7 @@ namespace DevZest.Data.Windows.Primitives
             Template.RowManager = this;
         }
 
-        private _InsertCommand _insertCommand;
-
         public RowPresenter Placeholder { get; private set; }
-
-        public bool IsInserting
-        {
-            get { return _insertCommand != null; }
-        }
 
         private int PlaceholderIndex
         {
@@ -245,52 +311,25 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.RowPlaceholderMode; }
         }
 
-        private _PlaceholderManager PlaceholderManager
-        {
-            get
-            {
-                switch (PlaceholderMode)
-                {
-                    case RowPlaceholderMode.Explicit:
-                        return _PlaceholderManager.Explicit;
-                    case RowPlaceholderMode.Tail:
-                        return _PlaceholderManager.Tail;
-                    case RowPlaceholderMode.Head:
-                        return _PlaceholderManager.Head;
-                    case RowPlaceholderMode.EmptyView:
-                        return _PlaceholderManager.EmptyView;
-                }
-                return null;
-            }
-        }
-
         protected override void Initialize()
         {
             base.Initialize();
-            PlaceholderManager.Initialize(this);
-            //SetCurrentRow(CoercedCurrentRow);
+            CoercePlaceholder();
+            CoerceCurrentRow();
         }
 
-        private void InitializeHeadPlaceholder()
+        private void CoercePlaceholder()
         {
-            Placeholder = new RowPresenter(this, 0);
-        }
-
-        private void InitializeTailPlaceholder()
-        {
-            Placeholder = new RowPresenter(this, base.Rows.Count);
-        }
-
-        private void CoerceExplicitPlaceholder()
-        {
-            Debug.Assert(PlaceholderMode == RowPlaceholderMode.Explicit);
-
-            ClearPlaceholder();
-        }
-
-        private void ClearPlaceholder()
-        {
-            if (Placeholder != null)
+            Debug.Assert(!IsEditing);
+            var coercedPlaceholderIndex = CoercedPlaceholderIndex;
+            if (coercedPlaceholderIndex >= 0)
+            {
+                if (Placeholder == null)
+                    Placeholder = new RowPresenter(this, coercedPlaceholderIndex);
+                else
+                    Placeholder.RawIndex = coercedPlaceholderIndex;
+            }
+            else if (Placeholder != null)
             {
                 var placeholder = Placeholder;
                 Placeholder = null;
@@ -298,33 +337,43 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void CoerceEmptyViewPlaceholder()
+        private int CoercedPlaceholderIndex
         {
-            Debug.Assert(PlaceholderMode == RowPlaceholderMode.EmptyView);
-
-            var index = base.Rows.Count == 0 ? 0 : -1;
-            if (index == 0)
+            get
             {
-                if (Placeholder == null)
-                    Placeholder = new RowPresenter(this, 0);
+                if (PlaceholderMode == RowPlaceholderMode.Head)
+                    return 0;
+                else if (PlaceholderMode == RowPlaceholderMode.Tail)
+                    return base.Rows.Count;
+                else if (PlaceholderMode == RowPlaceholderMode.EmptyView && base.Rows.Count == 0)
+                    return 0;
+                else
+                    return -1;
             }
-            else
-                ClearPlaceholder();
         }
 
-        private void CoerceTailPlaceholder()
+        private void CoerceCurrentRow()
         {
-            Debug.Assert(PlaceholderMode == RowPlaceholderMode.Tail && Placeholder != null);
-
-            Placeholder.RawIndex = base.Rows.Count;
+            if (CurrentRow == null)
+            {
+                if (Rows.Count > 0)
+                    SetCurrentRow(Rows[0]);
+            }
+            else if (CurrentRow.IsDisposed)
+            {
+                var index = CurrentRow.RawIndex;
+                Debug.Assert(index >= 0);
+                if (Placeholder != null && index >= Placeholder.RawIndex)
+                    index++;
+                index = Math.Min(index, Rows.Count - 1);
+                SetCurrentRow(index >= 0 ? Rows[index] : null);
+            }
         }
 
-        private void CoercePlaceholder()
+        protected virtual void SetCurrentRow(RowPresenter row)
         {
-            if (_insertCommand != null)
-                _insertCommand.CoercePlaceholderIndex(this);
-            else
-                PlaceholderManager.Coerce(this);
+            Debug.Assert(CurrentRow != row);
+            CurrentRow = row;
         }
 
         private RowPresenter _currentRow;
@@ -341,69 +390,62 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public bool IsEditing { get; private set; }
-
-        public bool CanBeginEdit
+        private _EditHandler _editHandler;
+        private _EditHandler EditHandler
         {
-            get { return CurrentRow != null && !IsEditing && CurrentRow.DataSet.EditingRow == null; }
-        }
-
-        public void BeginEdit()
-        {
-            if (!CanBeginEdit)
-                throw new InvalidOperationException();
-
-            var currentRow = CurrentRow;
-            if (currentRow.IsPlaceholder)
+            get { return _editHandler; }
+            set
             {
-                currentRow.DataRow = DataSet.BeginAdd();
-                PlaceholderManager.BeginEdit(this);
+                Debug.Assert(_editHandler != value);
+                _editHandler = value;
+                if (_editHandler == null)
+                    CoercePlaceholder();
             }
-            else
-            {
-                CurrentRow.DataRow.BeginEdit();
-            }
-
-            IsEditing = true;
         }
 
-        public void CommitEdit()
+        public bool IsEditing
         {
-            if (!IsEditing)
-                return;
-
-            //if (IsPlaceholder)
-            //    DataRow = DataSet.EndAdd();
-            //else
-            //    DataRow.EndEdit();
-
-            IsEditing = false;
+            get { return EditHandler != null; }
         }
 
-        public void CancelEdit()
+        internal void BeginInsertBefore(RowPresenter parent, RowPresenter child)
         {
-            if (!IsEditing)
-                return;
+            Debug.Assert(!IsEditing);
+            InsertHandler.BeginInsertBefore(this, parent, child);
+        }
 
-            //if (CurrentRow.IsPlaceholder)
-            //{
-            //    CurrentRow.DataSet.CancelAdd();
-            //    CurrentRow.DataRow = null;
-            //}
-            //else
-            //    DataRow.CancelEdit();
+        internal void BeginInsertAfter(RowPresenter parent, RowPresenter child)
+        {
+            Debug.Assert(!IsEditing);
+            InsertHandler.BeginInsertAfter(this, parent, child);
+        }
 
-            IsEditing = false;
+        internal void BeginEdit(RowPresenter row)
+        {
+            Debug.Assert(row.CanEdit);
+            if (CurrentRow != row)
+                SetCurrentRow(row);
+            _EditHandler.EnterEditMode(this);
+        }
+
+        internal void CommitEdit()
+        {
+            Debug.Assert(IsEditing);
+            EditHandler.CommitEdit(this);
+        }
+
+        internal void RollbackEdit()
+        {
+            Debug.Assert(IsEditing);
+            EditHandler.RollbackEdit(this);
         }
 
         protected virtual void OnCurrentRowChanged()
         {
-            Invalidate(null);
         }
 
-        private void OnSelectedRowsChanged()
+        protected virtual void OnSelectedRowsChanged()
         {
-            Invalidate(null);
         }
 
         private HashSet<RowPresenter> _selectedRows = new HashSet<RowPresenter>();
@@ -431,9 +473,11 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnRowsChanged()
         {
-            Invalidate(null);
+            if (EditHandler != null)
+                EditHandler.OnRowsChanged(this);
+            else
+                CoercePlaceholder();
+            CoerceCurrentRow();
         }
-
-        internal abstract void Invalidate(RowPresenter rowPresenter);
     }
 }
