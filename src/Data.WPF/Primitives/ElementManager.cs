@@ -93,7 +93,7 @@ namespace DevZest.Data.Windows.Primitives
 
             var scalarItems = Template.ScalarItems;
             for (int i = 0; i < scalarItems.Count; i++)
-                InsertDataElementsAfter(scalarItems[i], Elements.Count - 1, 1);
+                InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
             BlockViewStartIndex = Template.ScalarItemsSplit;
         }
 
@@ -102,13 +102,13 @@ namespace DevZest.Data.Windows.Primitives
             if (Elements.Count == 0)
                 return;
 
-            RefreshDataElements();
-            RefreshBlocks();
+            RefreshScalarElements();
+            RefreshBlockViews();
 
             _isDirty = false;
         }
 
-        private void RefreshDataElements()
+        private void RefreshScalarElements()
         {
             var scalarItems = Template.ScalarItems;
             foreach (var scalarItem in scalarItems)
@@ -121,7 +121,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void RefreshBlocks()
+        private void RefreshBlockViews()
         {
             var count = BlockViews.Count;
             for (int i = 0; i < count; i++)
@@ -143,21 +143,21 @@ namespace DevZest.Data.Windows.Primitives
                 var scalarItem = scalarItems[i];
                 scalarItem.CumulativeBlockDimensionsDelta = 0;
                 int count = scalarItem.IsMultidimensional ? BlockDimensions : 1;
-                RemoveDataElementsAfter(scalarItem, -1, count);
+                RemoveScalarElementsAfter(scalarItem, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
             _blockDimensions = 1;
             ElementCollection = null;
         }
 
-        private int InsertDataElementsAfter(ScalarItem scalarItem, int index, int count)
+        private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
                 scalarItem.Mount(x => ElementCollection.Insert(index + i + 1, x));
             return index + count;
         }
 
-        private void RemoveDataElementsAfter(ScalarItem scalarItem, int index, int count)
+        private void RemoveScalarElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
@@ -211,9 +211,9 @@ namespace DevZest.Data.Windows.Primitives
                     delta += blockDimensionsDelta;
 
                 if (blockDimensionsDelta > 0)
-                    index = InsertDataElementsAfter(scalarItem, index, blockDimensionsDelta);
+                    index = InsertScalarElementsAfter(scalarItem, index, blockDimensionsDelta);
                 else
-                    RemoveDataElementsAfter(scalarItem, index, -blockDimensionsDelta);
+                    RemoveScalarElementsAfter(scalarItem, index, -blockDimensionsDelta);
             }
 
             BlockViewStartIndex += delta;

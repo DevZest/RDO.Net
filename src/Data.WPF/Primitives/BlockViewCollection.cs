@@ -118,26 +118,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.Orientation; }
         }
 
-        private int FrozenHeadLastTrack
-        {
-            get
-            {
-                Debug.Assert(Orientation.HasValue);
-                return (Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FrozenTop : Template.FrozenLeft) - 1;
-            }
-        }
-
-        private int FrozenTailFirstTrack
-        {
-            get
-            {
-                Debug.Assert(Orientation.HasValue);
-                var frozenTail = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.FrozenBottom : Template.FrozenRight;
-                var lastTrackOrdinal = Orientation == System.Windows.Controls.Orientation.Vertical ? Template.Range().Bottom.Ordinal : Template.Range().Right.Ordinal;
-                return lastTrackOrdinal - frozenTail + 1;
-            }
-        }
-
         public int MaxBlockCount
         {
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
