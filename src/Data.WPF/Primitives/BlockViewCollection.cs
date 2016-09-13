@@ -40,14 +40,14 @@ namespace DevZest.Data.Windows.Primitives
 
         List<BlockView> _cachedBlockViews;
 
-        private BlockView Realize(int blockOrdinal)
+        private BlockView Mount(int blockOrdinal)
         {
             var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
             blockView.Initialize(_elementManager, blockOrdinal);
             return blockView;
         }
 
-        private void Virtualize(BlockView blockView)
+        private void Unmount(BlockView blockView)
         {
             Debug.Assert(blockView != null);
 
@@ -152,34 +152,34 @@ namespace DevZest.Data.Windows.Primitives
             Template.InitializeBlockView(blockView);
         }
 
-        internal void RealizeFirst(int blockOrdinal)
+        internal void MountFirst(int blockOrdinal)
         {
             Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
 
-            var blockView = Realize(blockOrdinal);
+            var blockView = Mount(blockOrdinal);
             Insert(BlockViewStartIndex, blockView);
             Count = 1;
         }
 
-        internal void RealizePrev()
+        internal void MountPrev()
         {
             Debug.Assert(First != null && First.Ordinal >= 1);
 
-            var blockView = Realize(First.Ordinal - 1);
+            var blockView = Mount(First.Ordinal - 1);
             Insert(BlockViewStartIndex, blockView);
             Count++;
         }
 
-        internal void RealizeNext()
+        internal void MountNext()
         {
             Debug.Assert(Last != null && Last.Ordinal + 1 < MaxBlockCount);
 
-            var blockView = Realize(Last.Ordinal + 1);
+            var blockView = Mount(Last.Ordinal + 1);
             Insert(BlockViewStartIndex + Count, blockView);
             Count++;
         }
 
-        internal void VirtualizeHead(int count)
+        internal void UnmountHead(int count)
         {
             Debug.Assert(count >= 0 && count <= Count);
 
@@ -187,13 +187,13 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             for (int i = 0; i < count; i++)
-                Virtualize(this[i]);
+                Unmount(this[i]);
 
             ElementCollection.RemoveRange(BlockViewStartIndex, count);
             Count -= count;
         }
 
-        internal void VirtualizeTail(int count)
+        internal void UnmountTail(int count)
         {
             Debug.Assert(count >= 0 && count <= Count);
 
@@ -202,28 +202,36 @@ namespace DevZest.Data.Windows.Primitives
 
             var offset = Count - count;
             for (int i = 0; i < count; i++)
-                Virtualize(this[offset + i]);
+                Unmount(this[offset + i]);
 
             ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
             Count -= count;
         }
 
-        internal void VirtualizeAll()
+        internal void UnmountAll()
         {
             for (int i = 0; i < Count; i++)
-                Virtualize(this[i]);
+                Unmount(this[i]);
             ElementCollection.RemoveRange(BlockViewStartIndex, Count);
             Count = 0;
         }
 
-        private bool IsRealized(int blockOrdinal)
+        internal void Clear()
+        {
+            for (int i = 0; i < Count; i++)
+                Unmount(this[i]);
+            ElementCollection.RemoveRange(BlockViewStartIndex, Count);
+            Count = 0;
+        }
+
+        private bool IsMounted(int blockOrdinal)
         {
             return First != null && blockOrdinal >= First.Ordinal && blockOrdinal <= Last.Ordinal;
         }
 
         public BlockView GetBlockView(int blockOrdinal)
         {
-            return IsRealized(blockOrdinal) ? this[blockOrdinal - First.Ordinal] : null;
+            return IsMounted(blockOrdinal) ? this[blockOrdinal - First.Ordinal] : null;
         }
 
         public double AvgLength

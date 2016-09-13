@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows.Primitives
 
         List<RowView> _cachedRowViews;
 
-        internal RowView Realize(RowPresenter row)
+        internal RowView Mount(RowPresenter row)
         {
             Debug.Assert(row != null);
 
@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows.Primitives
             return rowView;
         }
 
-        internal void Virtualize(RowPresenter row)
+        internal void Unmount(RowPresenter row)
         {
             Debug.Assert(row != null && row.View != null);
 
@@ -58,10 +58,10 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 if (oldValue != null && BlockViews.Contains(oldValue))
-                    Virtualize(oldValue);
+                    Unmount(oldValue);
 
                 if (value != null)
-                    Realize(value);
+                    Mount(value);
 
                 base.CurrentRow = value;
             }
@@ -136,7 +136,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ElementCollection == null)
                 return;
 
-            BlockViews.VirtualizeAll();
+            BlockViews.Clear();
             var scalarItems = Template.ScalarItems;
             for (int i = 0; i < scalarItems.Count; i++)
             {
@@ -189,7 +189,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(blockDimensionsDelta != 0);
 
-            BlockViews.VirtualizeAll();
+            BlockViews.UnmountAll();
 
             var index = -1;
             var delta = 0;
