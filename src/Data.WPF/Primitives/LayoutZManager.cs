@@ -17,12 +17,12 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshBlock()
         {
             if (CurrentRow != null && BlockViews.Count == 0)
-                BlockViews.MountFirst(CurrentRow.Index);
+                BlockViews.RealizeFirst(CurrentRow.Index);
         }
 
         protected override void OnCurrentRowChanged()
         {
-            BlockViews.UnmountAll();
+            BlockViews.VirtualizeAll();
             RefreshBlock();
             base.OnCurrentRowChanged();
         }

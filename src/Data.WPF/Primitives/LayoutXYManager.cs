@@ -90,12 +90,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitBlocks()
         {
-            BlockViews.UnmountAll();
+            BlockViews.VirtualizeAll();
 
             var initialBlockOrdinal = GetInitialBlockOrdinal();
             if (initialBlockOrdinal >= 0)
             {
-                BlockViews.MountFirst(initialBlockOrdinal);
+                BlockViews.RealizeFirst(initialBlockOrdinal);
                 BlockViews[0].Measure(Size.Empty);
             }
             _isBlocksDirty = false;
@@ -445,7 +445,7 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && availableLength > 0; blockOrdinal--)
             {
-                BlockViews.MountPrev();
+                BlockViews.RealizePrev();
                 var block = BlockViews.First;
                 block.Measure(Size.Empty);
                 var measuredLength = Math.Min(availableLength, GetBlockLengthMain(block));
@@ -524,7 +524,7 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount && availableLength > 0; blockOrdinal++)
             {
-                BlockViews.MountNext();
+                BlockViews.RealizeNext();
                 var block = BlockViews.Last;
                 block.Measure(Size.Empty);
                 var measuredLength = GetBlockLengthMain(block);

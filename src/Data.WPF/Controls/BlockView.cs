@@ -174,7 +174,7 @@ namespace DevZest.Data.Windows.Controls
             if (index >= rows.Count)
                 return false;
             var row = rows[index];
-            var rowView = ElementManager.Mount(row);
+            var rowView = ElementManager.Realize(row);
             ElementCollection.Add(rowView);
             return true;
         }
@@ -209,7 +209,7 @@ namespace DevZest.Data.Windows.Controls
         {
             var lastIndex = Elements.Count - 1;
             var rowView = (RowView)Elements[lastIndex];
-            ElementManager.Unmount(rowView.RowPresenter);
+            ElementManager.Virtualize(rowView.RowPresenter);
             RemoveAt(lastIndex);
         }
 
