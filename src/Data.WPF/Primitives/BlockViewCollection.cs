@@ -35,7 +35,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int BlockViewStartIndex
         {
-            get { return _elementManager.BlockViewStartIndex; }
+            get { return _elementManager.HeadScalarElementsCount; }
         }
 
         List<BlockView> _cachedBlockViews;

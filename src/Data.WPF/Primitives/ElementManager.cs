@@ -74,7 +74,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return ElementCollection; }
         }
 
-        internal int BlockViewStartIndex { get; private set; }
+        internal int HeadScalarElementsCount { get; private set; }
 
         internal void SetElementsPanel(FrameworkElement elementsPanel)
         {
@@ -94,7 +94,7 @@ namespace DevZest.Data.Windows.Primitives
             var scalarItems = Template.ScalarItems;
             for (int i = 0; i < scalarItems.Count; i++)
                 InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
-            BlockViewStartIndex = Template.ScalarItemsSplit;
+            HeadScalarElementsCount = Template.ScalarItemsSplit;
         }
 
         private void RefreshElements()
@@ -216,7 +216,7 @@ namespace DevZest.Data.Windows.Primitives
                     RemoveScalarElementsAfter(scalarItem, index, -blockDimensionsDelta);
             }
 
-            BlockViewStartIndex += delta;
+            HeadScalarElementsCount += delta;
         }
 
         protected override void OnCurrentRowChanged()
