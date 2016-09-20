@@ -97,7 +97,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int IndexOf(int ordinal)
         {
-            Debug.Assert(ordinal >= 0 && ordinal < MaxBlockCount);
+            Debug.Assert(ordinal >= 0 && ordinal < MaxCount);
 
             var first = First;
             if (first == null)
@@ -108,17 +108,7 @@ namespace DevZest.Data.Windows.Primitives
             return -1;
         }
 
-        private GridRange RowRange
-        {
-            get { return Template.RowRange; }
-        }
-
-        private Orientation? Orientation
-        {
-            get { return Template.Orientation; }
-        }
-
-        public int MaxBlockCount
+        public int MaxCount
         {
             get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
         }
@@ -154,7 +144,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void RealizeFirst(int blockOrdinal)
         {
-            Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxBlockCount);
+            Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxCount);
 
             var blockView = Realize(blockOrdinal);
             Insert(BlockViewStartIndex, blockView);
@@ -172,7 +162,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void RealizeNext()
         {
-            Debug.Assert(Last != null && Last.Ordinal + 1 < MaxBlockCount);
+            Debug.Assert(Last != null && Last.Ordinal + 1 < MaxCount);
 
             var blockView = Realize(Last.Ordinal + 1);
             Insert(BlockViewStartIndex + Count, blockView);

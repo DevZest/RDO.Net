@@ -220,7 +220,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxBlockCount
         {
-            get { return BlockViewList.MaxBlockCount; }
+            get { return BlockViewList.MaxCount; }
         }
 
         private int MaxFrozenHead
