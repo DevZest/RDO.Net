@@ -7,122 +7,243 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class BlockViewList : IReadOnlyList<BlockView>
+    internal abstract class BlockViewList : IReadOnlyList<BlockView>
     {
-        internal BlockViewList(ElementManager elementManager)
+        public static BlockViewList Empty
         {
-            Debug.Assert(elementManager != null);
-            _elementManager = elementManager;
+            get { return EmptyBlockViewList.Singleton; }
         }
 
-        private readonly ElementManager _elementManager;
-
-        private Template Template
+        public static BlockViewList Create(ElementManager elementManager)
         {
-            get { return _elementManager.Template; }
+            return new BlockViewListImpl(elementManager);
         }
 
-        private IElementCollection ElementCollection
+        private sealed class EmptyBlockViewList : BlockViewList
         {
-            get { return _elementManager.ElementCollection; }
+            public static readonly EmptyBlockViewList Singleton = new EmptyBlockViewList();
+
+            private EmptyBlockViewList()
+            {
+            }
+
+            public override BlockView this[int index]
+            {
+                get { throw new ArgumentOutOfRangeException(nameof(index)); }
+            }
+
+            public override int Count
+            {
+                get { return 0; }
+            }
+
+            public override int MaxCount
+            {
+                get { throw new NotSupportedException(); }
+            }
+
+            public override void Clear()
+            {
+            }
+
+            public override void RealizeFirst(int blockOrdinal)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void RealizeNext()
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void RealizePrev()
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void VirtualizeAll()
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void VirtualizeHead(int count)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void VirtualizeTail(int count)
+            {
+                throw new NotSupportedException();
+            }
         }
 
-        private IReadOnlyList<UIElement> Elements
+        private sealed class BlockViewListImpl : BlockViewList
         {
-            get { return _elementManager.Elements; }
+            internal BlockViewListImpl(ElementManager elementManager)
+            {
+                Debug.Assert(elementManager != null);
+                _elementManager = elementManager;
+            }
+
+            private readonly ElementManager _elementManager;
+
+            private Template Template
+            {
+                get { return _elementManager.Template; }
+            }
+
+            private IElementCollection ElementCollection
+            {
+                get { return _elementManager.ElementCollection; }
+            }
+
+            private IReadOnlyList<UIElement> Elements
+            {
+                get { return _elementManager.Elements; }
+            }
+
+            private int BlockViewStartIndex
+            {
+                get { return _elementManager.HeadScalarElementsCount; }
+            }
+
+            List<BlockView> _cachedBlockViews;
+
+            private BlockView Realize(int blockOrdinal)
+            {
+                var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
+                blockView.Initialize(_elementManager, blockOrdinal);
+                return blockView;
+            }
+
+            private void Virtualize(BlockView blockView)
+            {
+                Debug.Assert(blockView != null);
+
+                if (Template.BlockViewCleanupAction != null)
+                    Template.BlockViewCleanupAction(blockView);
+                blockView.Cleanup();
+                CachedList.Recycle(ref _cachedBlockViews, blockView);
+            }
+
+            private IReadOnlyList<RowPresenter> Rows
+            {
+                get { return _elementManager.Rows; }
+            }
+
+            private int BlockDimensions
+            {
+                get { return _elementManager.BlockDimensions; }
+            }
+
+            public override int MaxCount
+            {
+                get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
+            }
+
+            private int _count;
+            public override int Count
+            {
+                get { return _count; }
+            }
+
+            public override BlockView this[int index]
+            {
+                get
+                {
+                    if (index < 0 || index >= Count)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    return (BlockView)Elements[BlockViewStartIndex + index];
+                }
+            }
+
+            private void Insert(int index, BlockView blockView)
+            {
+                ElementCollection.Insert(index, blockView);
+                Template.InitializeBlockView(blockView);
+            }
+
+            public override void RealizeFirst(int blockOrdinal)
+            {
+                Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxCount);
+
+                var blockView = Realize(blockOrdinal);
+                Insert(BlockViewStartIndex, blockView);
+                _count = 1;
+            }
+
+            public override void RealizePrev()
+            {
+                Debug.Assert(First != null && First.Ordinal >= 1);
+
+                var blockView = Realize(First.Ordinal - 1);
+                Insert(BlockViewStartIndex, blockView);
+                _count++;
+            }
+
+            public override void RealizeNext()
+            {
+                Debug.Assert(Last != null && Last.Ordinal + 1 < MaxCount);
+
+                var blockView = Realize(Last.Ordinal + 1);
+                Insert(BlockViewStartIndex + Count, blockView);
+                _count++;
+            }
+
+            public override void VirtualizeHead(int count)
+            {
+                Debug.Assert(count >= 0 && count <= Count);
+
+                if (count == 0)
+                    return;
+
+                for (int i = 0; i < count; i++)
+                    Virtualize(this[i]);
+
+                ElementCollection.RemoveRange(BlockViewStartIndex, count);
+                _count -= count;
+            }
+
+            public override void VirtualizeTail(int count)
+            {
+                Debug.Assert(count >= 0 && count <= Count);
+
+                if (count == 0)
+                    return;
+
+                var offset = Count - count;
+                for (int i = 0; i < count; i++)
+                    Virtualize(this[offset + i]);
+
+                ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
+                _count -= count;
+            }
+
+            public override void VirtualizeAll()
+            {
+                for (int i = 0; i < Count; i++)
+                    Virtualize(this[i]);
+                ElementCollection.RemoveRange(BlockViewStartIndex, Count);
+                _count = 0;
+            }
+
+            public override void Clear()
+            {
+                for (int i = 0; i < Count; i++)
+                    Virtualize(this[i]);
+                ElementCollection.RemoveRange(BlockViewStartIndex, Count);
+                _count = 0;
+            }
         }
 
-        private int BlockViewStartIndex
-        {
-            get { return _elementManager.HeadScalarElementsCount; }
-        }
-
-        List<BlockView> _cachedBlockViews;
-
-        private BlockView Realize(int blockOrdinal)
-        {
-            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
-            blockView.Initialize(_elementManager, blockOrdinal);
-            return blockView;
-        }
-
-        private void Virtualize(BlockView blockView)
-        {
-            Debug.Assert(blockView != null);
-
-            if (Template.BlockViewCleanupAction != null)
-                Template.BlockViewCleanupAction(blockView);
-            blockView.Cleanup();
-            CachedList.Recycle(ref _cachedBlockViews, blockView);
-        }
-
-        public BlockView First
-        {
-            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex]; }
-        }
-
-        public BlockView Last
-        {
-            get { return Count == 0 ? null : (BlockView)Elements[BlockViewStartIndex + Count - 1]; }
-        }
-
-        private IReadOnlyList<RowPresenter> Rows
-        {
-            get { return _elementManager.Rows; }
-        }
-
-        private int BlockDimensions
-        {
-            get { return _elementManager.BlockDimensions; }
-        }
+        public abstract BlockView this[int index] { get; }
 
         public bool Contains(RowPresenter row)
         {
-            Debug.Assert(row != null && row.RowManager == _elementManager);
             return this[row] != null;
         }
 
-        internal BlockView this[RowPresenter row]
-        {
-            get
-            {
-                if (Count == 0)
-                    return null;
-
-                var index = IndexOf(row.BlockOrdinal);
-                return index == -1 ? null : this[index];
-            }
-        }
-
-        internal int IndexOf(int ordinal)
-        {
-            Debug.Assert(ordinal >= 0 && ordinal < MaxCount);
-
-            var first = First;
-            if (first == null)
-                return -1;
-
-            if (ordinal >= first.Ordinal && ordinal <= Last.Ordinal)
-                return ordinal - first.Ordinal;
-            return -1;
-        }
-
-        public int MaxCount
-        {
-            get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
-        }
-
-        public int Count { get; private set; }
-
-        public BlockView this[int index]
-        {
-            get
-            {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return (BlockView)Elements[BlockViewStartIndex + index];
-            }
-        }
+        public abstract int Count { get; }
 
         public IEnumerator<BlockView> GetEnumerator()
         {
@@ -135,83 +256,56 @@ namespace DevZest.Data.Windows.Primitives
             return GetEnumerator();
         }
 
-        private void Insert(int index, BlockView blockView)
+        public abstract int MaxCount { get; }
+
+        public BlockView this[RowPresenter row]
         {
-            ElementCollection.Insert(index, blockView);
-            Template.InitializeBlockView(blockView);
+            get
+            {
+                if (Count == 0)
+                    return null;
+
+                var index = IndexOf(row.BlockOrdinal);
+                return index == -1 ? null : this[index];
+            }
         }
 
-        internal void RealizeFirst(int blockOrdinal)
+        private int IndexOf(int ordinal)
         {
-            Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxCount);
+            Debug.Assert(ordinal >= 0 && ordinal < MaxCount);
 
-            var blockView = Realize(blockOrdinal);
-            Insert(BlockViewStartIndex, blockView);
-            Count = 1;
+            var first = First;
+            if (first == null)
+                return -1;
+
+            if (ordinal >= first.Ordinal && ordinal <= Last.Ordinal)
+                return ordinal - first.Ordinal;
+            return -1;
         }
 
-        internal void RealizePrev()
+        public BlockView First
         {
-            Debug.Assert(First != null && First.Ordinal >= 1);
-
-            var blockView = Realize(First.Ordinal - 1);
-            Insert(BlockViewStartIndex, blockView);
-            Count++;
+            get { return Count == 0 ? null : this[0]; }
         }
 
-        internal void RealizeNext()
+        public BlockView Last
         {
-            Debug.Assert(Last != null && Last.Ordinal + 1 < MaxCount);
-
-            var blockView = Realize(Last.Ordinal + 1);
-            Insert(BlockViewStartIndex + Count, blockView);
-            Count++;
+            get { return Count == 0 ? null : this[Count - 1]; }
         }
 
-        internal void VirtualizeHead(int count)
-        {
-            Debug.Assert(count >= 0 && count <= Count);
+        public abstract void VirtualizeHead(int count);
 
-            if (count == 0)
-                return;
+        public abstract void VirtualizeTail(int count);
 
-            for (int i = 0; i < count; i++)
-                Virtualize(this[i]);
+        public abstract void VirtualizeAll();
 
-            ElementCollection.RemoveRange(BlockViewStartIndex, count);
-            Count -= count;
-        }
+        public abstract void RealizeFirst(int blockOrdinal);
 
-        internal void VirtualizeTail(int count)
-        {
-            Debug.Assert(count >= 0 && count <= Count);
+        public abstract void RealizePrev();
 
-            if (count == 0)
-                return;
+        public abstract void RealizeNext();
 
-            var offset = Count - count;
-            for (int i = 0; i < count; i++)
-                Virtualize(this[offset + i]);
-
-            ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
-            Count -= count;
-        }
-
-        internal void VirtualizeAll()
-        {
-            for (int i = 0; i < Count; i++)
-                Virtualize(this[i]);
-            ElementCollection.RemoveRange(BlockViewStartIndex, Count);
-            Count = 0;
-        }
-
-        internal void Clear()
-        {
-            for (int i = 0; i < Count; i++)
-                Virtualize(this[i]);
-            ElementCollection.RemoveRange(BlockViewStartIndex, Count);
-            Count = 0;
-        }
+        public abstract void Clear();
 
         private bool IsRealized(int blockOrdinal)
         {

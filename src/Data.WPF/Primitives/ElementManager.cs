@@ -9,10 +9,10 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
             : base(template, dataSet, where, orderBy)
         {
-            BlockViewList = new BlockViewList(this);
+            BlockViewList = emptyBlockViewList ? BlockViewList.Empty : BlockViewList.Create(this);
         }
 
         internal BlockViewList BlockViewList { get; private set; }

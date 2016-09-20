@@ -27,8 +27,8 @@ namespace DevZest.Data.Windows.Primitives
                 return new LayoutYManager(template, dataSet, where, orderBy);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
-            : base(template, dataSet, where, orderBy)
+        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
+            : base(template, dataSet, where, orderBy, emptyBlockViewList)
         {
         }
 
