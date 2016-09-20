@@ -48,7 +48,7 @@
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="Controls\RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Primitives\BlockViewGap.cs" />
+    <Compile Include="Primitives\CurrentBlockViewPosition.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
     <Compile Include="Controls\BlockView.cs" />
-    <Compile Include="Primitives\BlockViewCollection.cs" />
+    <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="BindingTrigger.cs" />

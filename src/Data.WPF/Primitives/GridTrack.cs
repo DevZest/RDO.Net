@@ -213,14 +213,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return VariantByBlockIndex >= 0; }
         }
 
-        private BlockViewCollection BlockViews
+        private BlockViewList BlockViewList
         {
-            get { return LayoutXYManager.BlockViews; }
+            get { return LayoutXYManager.BlockViewList; }
         }
 
         private int MaxBlockCount
         {
-            get { return BlockViews.MaxBlockCount; }
+            get { return BlockViewList.MaxBlockCount; }
         }
 
         private int MaxFrozenHead
@@ -262,21 +262,21 @@ namespace DevZest.Data.Windows.Primitives
             if (!Owner.VariantByBlock)
                 return Owner.GetGridSpan(Template.RowRange).MeasuredLength * count;
 
-            var unrealized = BlockViews.Count == 0 ? 0 : BlockViews.First.Ordinal;
+            var unrealized = BlockViewList.Count == 0 ? 0 : BlockViewList.First.Ordinal;
             if (count <= unrealized)
-                return count * BlockViews.AvgLength;
+                return count * BlockViewList.AvgLength;
 
-            var realized = BlockViews.Count == 0 ? 0 : BlockViews.Last.Ordinal - BlockViews.First.Ordinal + 1;
+            var realized = BlockViewList.Count == 0 ? 0 : BlockViewList.Last.Ordinal - BlockViewList.First.Ordinal + 1;
             if (count <= unrealized + realized)
-                return unrealized * BlockViews.AvgLength + GetRealizedBlocksLength(count - unrealized);
+                return unrealized * BlockViewList.AvgLength + GetRealizedBlocksLength(count - unrealized);
 
-            return GetRealizedBlocksLength(realized) + (count - realized) * BlockViews.AvgLength;
+            return GetRealizedBlocksLength(realized) + (count - realized) * BlockViewList.AvgLength;
         }
 
         private double GetRealizedBlocksLength(int count)
         {
-            Debug.Assert(count >= 0 && count <= BlockViews.Count);
-            return count == 0 ? 0 : BlockViews[count - 1].EndOffset;
+            Debug.Assert(count >= 0 && count <= BlockViewList.Count);
+            return count == 0 ? 0 : BlockViewList[count - 1].EndOffset;
         }
 
         private Span GetRelativeSpan(BlockView block)
@@ -292,7 +292,7 @@ namespace DevZest.Data.Windows.Primitives
             if (!VariantByBlock)
                 return GetRelativeSpan();
 
-            var block = BlockViews.GetBlockView(blockOrdinal);
+            var block = BlockViewList.GetBlockView(blockOrdinal);
             return block != null ? GetRelativeSpan(block) : new Span(VariantByBlockStartOffset, VariantByBlockEndOffset);
         }
 

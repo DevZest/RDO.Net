@@ -24,14 +24,14 @@ namespace DevZest.Data.Windows.Primitives
 
         internal static void VerifyBlockViewRect(LayoutManager layoutManager, int blockViewIndex, Rect expectedRect)
         {
-            var blockView = layoutManager.BlockViews[blockViewIndex];
+            var blockView = layoutManager.BlockViewList[blockViewIndex];
             var rect = layoutManager.GetBlockRect(blockView);
             Assert.AreEqual(expectedRect, rect);
         }
 
         internal static void VerifyRowRect(LayoutManager layoutManager, int blockViewIndex, int blockDimension, Rect expectedRect)
         {
-            var blockView = layoutManager.BlockViews[blockViewIndex];
+            var blockView = layoutManager.BlockViewList[blockViewIndex];
             var rect = layoutManager.GetRowRect(blockView, blockDimension);
             Assert.AreEqual(expectedRect, rect);
         }

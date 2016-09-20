@@ -60,11 +60,6 @@ namespace DevZest.Data.Windows.Controls
             get { return LayoutManager as LayoutXYManager; }
         }
 
-        private BlockViewCollection BlockViews
-        {
-            get { return LayoutManager == null ? null : LayoutManager.BlockViews; }
-        }
-
         public DataPresenter DataPresenter
         {
             get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }

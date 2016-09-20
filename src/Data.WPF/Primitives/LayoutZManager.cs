@@ -16,13 +16,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshBlock()
         {
-            if (CurrentRow != null && BlockViews.Count == 0)
-                BlockViews.RealizeFirst(CurrentRow.Index);
+            if (CurrentRow != null && BlockViewList.Count == 0)
+                BlockViewList.RealizeFirst(CurrentRow.Index);
         }
 
         protected override void OnCurrentRowChanged()
         {
-            BlockViews.VirtualizeAll();
+            BlockViewList.VirtualizeAll();
             RefreshBlock();
             base.OnCurrentRowChanged();
         }
@@ -30,8 +30,8 @@ namespace DevZest.Data.Windows.Primitives
         protected override void PrepareMeasureBlocks()
         {
             RefreshBlock();
-            if (BlockViews.Count == 1)
-                BlockViews[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
+            if (BlockViewList.Count == 1)
+                BlockViewList[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)

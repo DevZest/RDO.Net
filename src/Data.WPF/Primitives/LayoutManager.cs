@@ -177,9 +177,9 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            for (int i = 0; i < BlockViews.Count; i++)
+            for (int i = 0; i < BlockViewList.Count; i++)
             {
-                var block = BlockViews[i];
+                var block = BlockViewList[i];
                 block.Measure(GetBlockSize(block));
             }
 
@@ -255,7 +255,7 @@ namespace DevZest.Data.Windows.Primitives
             if (rowItems.AutoSizeItems.Count == 0)
                 return;
 
-            var blockView = BlockViews[row];
+            var blockView = BlockViewList[row];
             Debug.Assert(blockView != null);
             foreach (var rowItem in rowItems.AutoSizeItems)
             {
@@ -331,9 +331,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void ArrangeBlocks()
         {
-            for (int i = 0; i < BlockViews.Count; i++)
+            for (int i = 0; i < BlockViewList.Count; i++)
             {
-                var block = BlockViews[i];
+                var block = BlockViewList[i];
                 var rect = GetBlockRect(block);
                 var clip = GetBlockClip(block);
                 Arrange(block, rect, clip);
@@ -404,8 +404,6 @@ namespace DevZest.Data.Windows.Primitives
             if (rowItems.Count == 0)
                 return;
 
-            var block = BlockViews[row];
-            Debug.Assert(block != null);
             foreach (var rowItem in rowItems)
             {
                 var element = row.Elements[rowItem.Ordinal];

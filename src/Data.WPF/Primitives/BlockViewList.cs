@@ -8,9 +8,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class BlockViewCollection : IReadOnlyList<BlockView>
+    internal sealed class BlockViewList : IReadOnlyList<BlockView>
     {
-        internal BlockViewCollection(ElementManager elementManager)
+        internal BlockViewList(ElementManager elementManager)
         {
             Debug.Assert(elementManager != null);
             _elementManager = elementManager;

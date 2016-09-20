@@ -55,8 +55,8 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             _isBlockLengthsValid = true; // Avoid re-entrance
-            for (int i = 1; i < BlockViews.Count; i++)
-                BlockViews[i].StartOffset = BlockViews[i - 1].EndOffset;
+            for (int i = 1; i < BlockViewList.Count; i++)
+                BlockViewList[i].StartOffset = BlockViewList[i - 1].EndOffset;
 
             var gridSpan = VariantByBlockGridSpan;
             if (gridSpan.IsEmpty)
@@ -66,9 +66,9 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var gridTrack = gridSpan[i];
                 double totalLength = 0;
-                for (int j = 0; j < BlockViews.Count; j++)
-                    totalLength += BlockViews[j].GetMeasuredLength(gridTrack);
-                gridTrack.VariantByBlockAvgLength = BlockViews.Count == 0 ? 1 : totalLength / BlockViews.Count;
+                for (int j = 0; j < BlockViewList.Count; j++)
+                    totalLength += BlockViewList[j].GetMeasuredLength(gridTrack);
+                gridTrack.VariantByBlockAvgLength = BlockViewList.Count == 0 ? 1 : totalLength / BlockViewList.Count;
             }
 
             for (int i = 1; i < gridSpan.Count; i++)
@@ -81,8 +81,8 @@ namespace DevZest.Data.Windows.Primitives
             if (_isBlocksDirty)
                 return;
 
-            for (int i = 0; i < BlockViews.Count; i++)
-                BlockViews[i].ClearElements();
+            for (int i = 0; i < BlockViewList.Count; i++)
+                BlockViewList[i].ClearElements();
             _isBlocksDirty = true;
 
             InvalidateMeasure();
@@ -90,13 +90,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InitBlocks()
         {
-            BlockViews.VirtualizeAll();
+            BlockViewList.VirtualizeAll();
 
             var initialBlockOrdinal = GetInitialBlockOrdinal();
             if (initialBlockOrdinal >= 0)
             {
-                BlockViews.RealizeFirst(initialBlockOrdinal);
-                BlockViews[0].Measure(Size.Empty);
+                BlockViewList.RealizeFirst(initialBlockOrdinal);
+                BlockViewList[0].Measure(Size.Empty);
             }
             _isBlocksDirty = false;
         }
@@ -184,7 +184,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private int MaxBlockCount
         {
-            get { return BlockViews.MaxBlockCount; }
+            get { return BlockViewList.MaxBlockCount; }
         }
 
         private int FrozenHeadMain
@@ -355,7 +355,7 @@ namespace DevZest.Data.Windows.Primitives
                     return availableLength;
 
                 var scrollable = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
-                var blockEndOffset = BlockViews.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndOffset(BlockViews[BlockViews.Count - 1]);
+                var blockEndOffset = BlockViewList.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndOffset(BlockViewList[BlockViewList.Count - 1]);
                 return scrollable - (blockEndOffset - ScrollStartMain);
             }
         }
@@ -424,7 +424,7 @@ namespace DevZest.Data.Windows.Primitives
             if (availableLength <= 0)
                 return;
 
-            var block = BlockViews[0];
+            var block = BlockViewList[0];
             var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartOffset(block));
             if (scrollLength > 0)
             {
@@ -438,15 +438,15 @@ namespace DevZest.Data.Windows.Primitives
 
         private double RealizeBackward(double availableLength)
         {
-            if (BlockViews.Count == 0)
+            if (BlockViewList.Count == 0)
                 return availableLength;
 
-            Debug.Assert(BlockViews.Count > 0);
+            Debug.Assert(BlockViewList.Count > 0);
 
-            for (int blockOrdinal = BlockViews.First.Ordinal - 1; blockOrdinal >= 0 && availableLength > 0; blockOrdinal--)
+            for (int blockOrdinal = BlockViewList.First.Ordinal - 1; blockOrdinal >= 0 && availableLength > 0; blockOrdinal--)
             {
-                BlockViews.RealizePrev();
-                var block = BlockViews.First;
+                BlockViewList.RealizePrev();
+                var block = BlockViewList.First;
                 block.Measure(Size.Empty);
                 var measuredLength = Math.Min(availableLength, GetBlockLengthMain(block));
                 AdjustScrollStartMain(-measuredLength);
@@ -490,13 +490,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void MeasureForwardRepeat(GridOffset gridOffset, double fraction, double availableLength)
         {
-            Debug.Assert(BlockViews.Count == 1);
+            Debug.Assert(BlockViewList.Count == 1);
             if (FrozenTailMain > 0)
                 availableLength -= FrozenTailLengthMain;
 
             var gridTrack = gridOffset.GridTrack;
             Debug.Assert(gridTrack.IsRepeat);
-            var block = BlockViews[0];
+            var block = BlockViewList[0];
             Debug.Assert(block.Ordinal == gridOffset.BlockOrdinal);
             availableLength -= GetBlockLengthMain(block) - GetRelativeOffsetMain(block, gridTrack, fraction);
             RealizeForward(availableLength);
@@ -515,17 +515,17 @@ namespace DevZest.Data.Windows.Primitives
 
         private double RealizeForward(double availableLength)
         {
-            if (BlockViews.Count == 0)
+            if (BlockViewList.Count == 0)
                 return 0;
 
-            Debug.Assert(BlockViews.Last != null);
+            Debug.Assert(BlockViewList.Last != null);
 
             double result = 0;
 
-            for (int blockOrdinal = BlockViews.Last.Ordinal + 1; blockOrdinal < MaxBlockCount && availableLength > 0; blockOrdinal++)
+            for (int blockOrdinal = BlockViewList.Last.Ordinal + 1; blockOrdinal < MaxBlockCount && availableLength > 0; blockOrdinal++)
             {
-                BlockViews.RealizeNext();
-                var block = BlockViews.Last;
+                BlockViewList.RealizeNext();
+                var block = BlockViewList.Last;
                 block.Measure(Size.Empty);
                 var measuredLength = GetBlockLengthMain(block);
                 result += measuredLength;
@@ -1061,14 +1061,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetRowItemStartLocationMain(RowPresenter row, RowItem rowItem)
         {
-            var block = BlockViews[row];
+            var block = BlockViewList[row];
             var startGridTrack = GridTracksMain.GetGridSpan(rowItem.GridRange).StartTrack;
             return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetBlockStartLocationMain(block);
         }
 
         protected override Size GetRowItemSize(RowPresenter row, RowItem rowItem)
         {
-            var valueMain = GetMeasuredLengthMain(BlockViews[row], rowItem.GridRange);
+            var valueMain = GetMeasuredLengthMain(BlockViewList[row], rowItem.GridRange);
             var valueCross = GetRowItemEndLocationCross(row, rowItem) - GetRowItemStartLocationCross(row, rowItem);
             return ToSize(valueMain, valueCross);
         }
@@ -1196,8 +1196,8 @@ namespace DevZest.Data.Windows.Primitives
             if (!prevTrack.IsRepeat)
                 return GetEndLocationMain(new GridOffset(prevTrack));
 
-            if (BlockViews.Last != null)
-                return GetEndLocationMain(new GridOffset(prevTrack, BlockViews.Last));
+            if (BlockViewList.Last != null)
+                return GetEndLocationMain(new GridOffset(prevTrack, BlockViewList.Last));
 
             prevTrack = MaxFrozenHeadMain == 0 ? null : GridTracksMain[MaxFrozenHeadMain - 1];
             return prevTrack == null ? -ScrollOffsetMain : GetEndLocationMain(new GridOffset(prevTrack));
@@ -1335,12 +1335,12 @@ namespace DevZest.Data.Windows.Primitives
                 var first = 0;
                 if (isHead)
                     first += 1;
-                var last = BlockViews.Count - 1;
+                var last = BlockViewList.Count - 1;
                 if (last == MaxBlockCount - 1 && isTail && !isStretch)
                     last -= 1;
                 for (int i = first; i <= last; i++)
                 {
-                    var block = BlockViews[i];
+                    var block = BlockViewList[i];
                     var value = GetLocationMain(prevGridTrack, nextGridTrack, block, (prevGridTrack != null && prevGridTrack.IsRepeat), out gridTrack);
                     if (!Clip.IsClipped(value, GetMinClipMain(gridTrack), GetMaxClipMain(gridTrack)))
                         yield return value;
