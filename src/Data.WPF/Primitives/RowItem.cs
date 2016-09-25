@@ -77,19 +77,19 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddRowItem(gridRange, item);
             }
 
-            public Builder<T> OnMount(Action<T, RowPresenter> onMount)
+            public Builder<T> OnSetup(Action<T, RowPresenter> onSetup)
             {
-                if (onMount == null)
-                    throw new ArgumentNullException(nameof(onMount));
-                TemplateItem.OnMount(onMount);
+                if (onSetup == null)
+                    throw new ArgumentNullException(nameof(onSetup));
+                TemplateItem.InitOnSetup(onSetup);
                 return This;
             }
 
-            public Builder<T> OnUnmount(Action<T, RowPresenter> onUnmount)
+            public Builder<T> OnCleanup(Action<T, RowPresenter> onCleanup)
             {
-                if (onUnmount == null)
-                    throw new ArgumentNullException(nameof(onUnmount));
-                TemplateItem.OnUnmount(onUnmount);
+                if (onCleanup == null)
+                    throw new ArgumentNullException(nameof(onCleanup));
+                TemplateItem.InitOnCleanup(onCleanup);
                 return This;
             }
 
@@ -97,7 +97,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (onRefresh == null)
                     throw new ArgumentNullException(nameof(onRefresh));
-                TemplateItem.OnRefresh(onRefresh);
+                TemplateItem.InitOnRefresh(onRefresh);
                 return This;
             }
 
@@ -123,66 +123,58 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        internal UIElement Mount(RowPresenter rowPresenter, Action<UIElement> initializer)
+        private Action<UIElement, RowPresenter> _onSetup;
+        private void InitOnSetup<T>(Action<T, RowPresenter> onSetup)
+            where T : UIElement
+        {
+            Debug.Assert(onSetup != null);
+            _onSetup = (element, rowPresenter) => onSetup((T)element, rowPresenter);
+        }
+
+        private void OnSetup(UIElement element, RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter != null);
-            return base.Mount(x => Initialize(x, rowPresenter), initializer);
-        }
-
-        private void Initialize(UIElement element, RowPresenter rowPresenter)
-        {
             element.SetRowPresenter(rowPresenter);
-        }
-
-        protected override void SetBindings(UIElement element)
-        {
+            if (_onSetup != null)
+                _onSetup(element, rowPresenter);
             foreach (var binding in _bindings)
                 binding.Trigger.Attach(element);
         }
 
-        protected override void Cleanup(UIElement element)
+        internal UIElement Setup(RowPresenter rowPresenter)
+        {
+            return Setup(x => OnSetup(x, rowPresenter));
+        }
+
+        private Action<UIElement, RowPresenter> _onCleanup;
+        private void InitOnCleanup<T>(Action<T, RowPresenter> onCleanup)
+            where T : UIElement
+        {
+            Debug.Assert(onCleanup != null);
+            _onCleanup = (element, rowPresenter) => onCleanup((T)element, rowPresenter);
+        }
+
+        protected override void OnCleanup(UIElement element)
         {
             foreach (var binding in _bindings)
                 binding.Trigger.Detach(element);
+            if (_onCleanup != null)
+                _onCleanup(element, element.GetRowPresenter());
             element.SetRowPresenter(null);
-        }
-
-        protected sealed override void OnMount(UIElement element)
-        {
-            if (_onMount != null)
-                _onMount(element, element.GetRowPresenter());
-        }
-
-        private Action<UIElement, RowPresenter> _onMount;
-        private void OnMount<T>(Action<T, RowPresenter> onMount)
-            where T : UIElement
-        {
-            Debug.Assert(onMount != null);
-            _onMount = (element, rowPresenter) => onMount((T)element, rowPresenter);
-        }
-
-        protected sealed override void OnUnmount(UIElement element)
-        {
-            if (_onMount != null)
-                _onMount(element, element.GetRowPresenter());
-        }
-
-        private Action<UIElement, RowPresenter> _onUnmount;
-        private void OnUnmount<T>(Action<T, RowPresenter> onUnmount)
-            where T : UIElement
-        {
-            Debug.Assert(onUnmount != null);
-            _onUnmount = (element, rowPresenter) => onUnmount((T)element, rowPresenter);
         }
 
         internal sealed override void Refresh(UIElement element)
         {
             if (_onRefresh != null)
-                _onRefresh(element, element.GetRowPresenter());
+            {
+                var rowPresenter = element.GetRowPresenter();
+                if (!rowPresenter.IsEditing)
+                    _onRefresh(element, rowPresenter);
+            }
         }
 
         private Action<UIElement, RowPresenter> _onRefresh;
-        private void OnRefresh<T>(Action<T, RowPresenter> onRefresh)
+        private void InitOnRefresh<T>(Action<T, RowPresenter> onRefresh)
             where T : UIElement
         {
             Debug.Assert(onRefresh != null);

@@ -61,19 +61,19 @@ namespace DevZest.Data.Windows.Primitives
                 template.AddScalarItem(gridRange, item);
             }
 
-            public Builder<T> OnMount(Action<T> onMount)
+            public Builder<T> OnSetup(Action<T> onSetup)
             {
-                if (onMount == null)
-                    throw new ArgumentNullException(nameof(onMount));
-                TemplateItem.OnMount(onMount);
+                if (onSetup == null)
+                    throw new ArgumentNullException(nameof(onSetup));
+                TemplateItem.InitOnSetup(onSetup);
                 return This;
             }
 
-            public Builder<T> OnUnmount(Action<T> onUnmount)
+            public Builder<T> OnCleanup(Action<T> onCleanup)
             {
-                if (onUnmount == null)
-                    throw new ArgumentNullException(nameof(onUnmount));
-                TemplateItem.OnUnmount(onUnmount);
+                if (onCleanup == null)
+                    throw new ArgumentNullException(nameof(onCleanup));
+                TemplateItem.InitOnCleanup(onCleanup);
                 return This;
             }
 
@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (onRefresh == null)
                     throw new ArgumentNullException(nameof(onRefresh));
-                TemplateItem.OnRefresh(onRefresh);
+                TemplateItem.InitOnRefresh(onRefresh);
                 return This;
             }
         }
@@ -97,55 +97,51 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        internal UIElement Mount(Action<UIElement> initializer)
-        {
-            return base.Mount(initializer);
-        }
-
-        protected sealed override void Cleanup(UIElement element)
-        {
-        }
-
-        protected sealed override void OnMount(UIElement element)
-        {
-            if (_onMount != null)
-                _onMount(element);
-        }
-
-        private Action<UIElement> _onMount;
-        private void OnMount<T>(Action<T> onMount)
+        private Action<UIElement> _onSetup;
+        private void InitOnSetup<T>(Action<T> onSetup)
             where T : UIElement
         {
-            Debug.Assert(onMount != null);
-            _onMount = element => onMount((T)element);
+            Debug.Assert(onSetup != null);
+            _onSetup = element => onSetup((T)element);
         }
 
-        protected sealed override void OnUnmount(UIElement element)
+        private void OnSetup(UIElement element)
         {
-            if (_onUnmount != null)
-                _onUnmount(element);
+            if (_onSetup != null)
+                _onSetup(element);
         }
 
-        private Action<UIElement> _onUnmount;
-        private void OnUnmount<T>(Action<T> onUnmount)
+        internal UIElement Setup()
+        {
+            return Setup(x => OnSetup(x));
+        }
+
+        private Action<UIElement> _onCleanup;
+        private void InitOnCleanup<T>(Action<T> onCleanup)
             where T : UIElement
         {
-            Debug.Assert(onUnmount != null);
-            _onUnmount = element => onUnmount((T)element);
+            Debug.Assert(onCleanup != null);
+            _onCleanup = element => onCleanup((T)element);
+        }
+
+        protected override void OnCleanup(UIElement element)
+        {
+            if (_onCleanup != null)
+                _onCleanup(element);
+        }
+
+        private Action<UIElement> _onRefresh;
+        private void InitOnRefresh<T>(Action<T> onRefresh)
+            where T : UIElement
+        {
+            Debug.Assert(onRefresh != null);
+            _onRefresh = element => onRefresh((T)element);
         }
 
         internal sealed override void Refresh(UIElement element)
         {
             if (_onRefresh != null)
                 _onRefresh(element);
-        }
-
-        private Action<UIElement> _onRefresh;
-        private void OnRefresh<T>(Action<T> onRefresh)
-            where T : UIElement
-        {
-            Debug.Assert(onRefresh != null);
-            _onRefresh = element => onRefresh((T)element);
         }
 
         public bool IsMultidimensional { get; private set; }

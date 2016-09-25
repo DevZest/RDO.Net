@@ -7,7 +7,7 @@ namespace DevZest.Data.Windows.Factories
         public static ScalarItem.Builder<PlaceHolder> ScalarItem(this TemplateBuilder templateBuilder, bool isMultidimensional = false, double desiredWidth = 0, double desiredHeight = 0)
         {
             return templateBuilder.ScalarItem<PlaceHolder>(isMultidimensional)
-                .OnMount((x) =>
+                .OnSetup((x) =>
                 {
                     x.DesiredWidth = desiredWidth;
                     x.DesiredHeight = desiredHeight;
@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Factories
         public static BlockItem.Builder<PlaceHolder> BlockItem(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
         {
             return templateBuilder.BlockItem<PlaceHolder>()
-                .OnMount((x, ordinal, rows) =>
+                .OnSetup((x, ordinal, rows) =>
                 {
                     x.DesiredWidth = desiredWidth;
                     x.DesiredHeight = desiredHeight;
@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows.Factories
         public static RowItem.Builder<PlaceHolder> RowItem(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
         {
             return templateBuilder.RowItem<PlaceHolder>()
-                .OnMount((x, data) =>
+                .OnSetup((x, data) =>
                 {
                     x.DesiredWidth = desiredWidth;
                     x.DesiredHeight = desiredHeight;

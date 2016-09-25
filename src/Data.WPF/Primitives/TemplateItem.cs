@@ -116,40 +116,24 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected UIElement Mount(params Action<UIElement>[] initializers)
+        protected virtual UIElement Setup(Action<UIElement> onSetup)
         {
+            Debug.Assert(onSetup != null);
             var element = CachedList.GetOrCreate(ref _cachedUIElements, Create);
-            if (initializers != null)
-            {
-                foreach (var initializer in initializers)
-                {
-                    if (initializer != null)
-                        initializer(element);
-                }
-            }
-            OnMount(element);
+            if (onSetup != null)
+                onSetup(element);
             Refresh(element);
-            SetBindings(element);
             return element;
         }
 
-        protected virtual void SetBindings(UIElement element)
-        {
-        }
-
-        protected abstract void OnMount(UIElement element);
-
-        protected abstract void OnUnmount(UIElement element);
-
-        internal void Unmount(UIElement element)
+        internal void Cleanup(UIElement element)
         {
             Debug.Assert(element != null && element.GetTemplateItem() == this);
-            OnUnmount(element);
-            Cleanup(element);
+            OnCleanup(element);
             CachedList.Recycle(ref _cachedUIElements, element);
         }
 
-        protected abstract void Cleanup(UIElement element);
+        protected abstract void OnCleanup(UIElement element);
 
         internal abstract void Refresh(UIElement elment);
 

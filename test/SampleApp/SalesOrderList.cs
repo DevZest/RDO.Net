@@ -68,7 +68,7 @@ namespace SampleApp
                 .OnRefresh((v, p) => v.Text = p.GetValue(_.TotalDue).ToString())
             .At(9, 1)
             .ScalarItem<TextBlock>()
-                .OnMount((v) =>
+                .OnSetup((v) =>
                 {
                     v.TextAlignment = TextAlignment.Right;
                     v.Text = "Total: ";

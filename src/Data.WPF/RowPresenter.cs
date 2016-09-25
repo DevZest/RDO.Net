@@ -411,7 +411,8 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < rowItems.Count; i++)
             {
                 var rowItem = rowItems[i];
-                rowItem.Mount(this, x => ElementCollection.Add(x));
+                var element = rowItem.Setup(this);
+                ElementCollection.Add(element);
             }
         }
 
@@ -431,7 +432,7 @@ namespace DevZest.Data.Windows
             {
                 var rowItem = rowItems[i];
                 var element = Elements[i];
-                rowItem.Unmount(element);
+                rowItem.Cleanup(element);
             }
             ElementCollection.RemoveRange(0, Elements.Count);
         }

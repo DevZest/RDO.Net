@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows.Primitives
                 .BlockView<AutoInitBlockView>()
                 .RowView<AutoInitRowView>()
                 .ScalarItem<TextBlock>()
-                    .OnMount(v => v.Text = _.Name.DisplayName)
+                    .OnSetup(v => v.Text = _.Name.DisplayName)
                 .At(1, 0)
                 .BlockItem<TextBlock>()
                     .OnRefresh((v, ordinal, rows) => v.Text = ordinal.ToString())
@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
                     .OnRefresh((v, p) => v.Text = p.GetValue(_.Name))
                 .At(1, 1)
                 .ScalarItem<TextBlock>(true)
-                    .OnMount(v => v.Text = _.Name.DisplayName)
+                    .OnSetup(v => v.Text = _.Name.DisplayName)
                 .At(1, 2);
         }
 

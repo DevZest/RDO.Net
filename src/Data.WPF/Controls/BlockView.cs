@@ -159,7 +159,8 @@ namespace DevZest.Data.Windows.Controls
 
         private void AddElement(BlockItem blockItem)
         {
-            blockItem.Mount(this, x => ElementCollection.Add(x));
+            var element = blockItem.Setup(this);
+            ElementCollection.Add(element);
         }
 
         private bool AddElement(int blockIndex, int offset)
@@ -196,7 +197,7 @@ namespace DevZest.Data.Windows.Controls
         {
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
-            blockItem.Unmount(element);
+            blockItem.Cleanup(element);
             RemoveAt(lastIndex);
         }
 

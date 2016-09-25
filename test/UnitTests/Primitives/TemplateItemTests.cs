@@ -17,12 +17,12 @@ namespace DevZest.Data.Windows.Primitives
             string source = SOURCE;
 
             var builder = new ScalarItem.Builder<TextBlock>(null);
-            builder.OnMount(v => v.Text = INITIALIZED)
+            builder.OnSetup(v => v.Text = INITIALIZED)
                 .OnRefresh(v => v.Text = source)
-                .OnUnmount(v => v.Text = CLEANUP);
+                .OnCleanup(v => v.Text = CLEANUP);
 
             var item = builder.TemplateItem;
-            var element = (TextBlock)item.Mount(null);
+            var element = (TextBlock)item.Setup();
             Assert.IsTrue(element.GetTemplateItem() == item);
             Assert.AreEqual(SOURCE, element.Text);
 
@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows.Primitives
             item.Refresh(element);
             Assert.AreEqual(SOURCE_CHANGED, element.Text);
 
-            item.Unmount(element);
+            item.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
         }
     }

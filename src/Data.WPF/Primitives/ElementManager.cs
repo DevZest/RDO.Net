@@ -13,9 +13,55 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy)
         {
             BlockViewList = emptyBlockViewList ? BlockViewList.Empty : BlockViewList.Create(this);
+            CoerceCurrentBlockView();
         }
 
         internal BlockViewList BlockViewList { get; private set; }
+
+        internal BlockView CurrentBlockView { get; private set; }
+
+        internal CurrentBlockViewPosition CurrentBlockViewPosition
+        {
+            get
+            {
+                if (CurrentBlockView == null)
+                    return CurrentBlockViewPosition.None;
+                else if (BlockViewList.Count == 0)
+                    return CurrentBlockViewPosition.Alone;
+                else if (CurrentBlockView.Ordinal < BlockViewList.First.Ordinal - 1)
+                    return CurrentBlockViewPosition.BeforeList;
+                else if (CurrentBlockView.Ordinal > BlockViewList.Last.Ordinal + 1)
+                    return CurrentBlockViewPosition.AfterList;
+                else
+                    return CurrentBlockViewPosition.WithinList;
+            }
+        }
+
+        private void CoerceCurrentBlockView()
+        {
+            Debug.Assert(BlockViewList.Count == 0);
+
+            //throw new NotImplementedException();
+        }
+
+        List<BlockView> _cachedBlockViews;
+
+        internal BlockView Realize(int blockOrdinal)
+        {
+            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
+            blockView.Initialize(this, blockOrdinal);
+            return blockView;
+        }
+
+        internal void Virtualize(BlockView blockView)
+        {
+            Debug.Assert(blockView != null);
+
+            if (Template.BlockViewCleanupAction != null)
+                Template.BlockViewCleanupAction(blockView);
+            blockView.Cleanup();
+            CachedList.Recycle(ref _cachedBlockViews, blockView);
+        }
 
         List<RowView> _cachedRowViews;
 
@@ -153,7 +199,10 @@ namespace DevZest.Data.Windows.Primitives
         private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
         {
             for (int i = 0; i < count; i++)
-                scalarItem.Mount(x => ElementCollection.Insert(index + i + 1, x));
+            {
+                var element = scalarItem.Setup();
+                ElementCollection.Insert(index + i + 1, element);
+            }
             return index + count;
         }
 
@@ -163,7 +212,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var element = Elements[index + 1];
                 Debug.Assert(element.GetTemplateItem() == scalarItem);
-                scalarItem.Unmount(element);
+                scalarItem.Cleanup(element);
                 ElementCollection.RemoveAt(index + 1);
             }
         }

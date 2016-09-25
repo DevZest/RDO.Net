@@ -107,25 +107,6 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _elementManager.HeadScalarElementsCount; }
             }
 
-            List<BlockView> _cachedBlockViews;
-
-            private BlockView Realize(int blockOrdinal)
-            {
-                var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
-                blockView.Initialize(_elementManager, blockOrdinal);
-                return blockView;
-            }
-
-            private void Virtualize(BlockView blockView)
-            {
-                Debug.Assert(blockView != null);
-
-                if (Template.BlockViewCleanupAction != null)
-                    Template.BlockViewCleanupAction(blockView);
-                blockView.Cleanup();
-                CachedList.Recycle(ref _cachedBlockViews, blockView);
-            }
-
             private IReadOnlyList<RowPresenter> Rows
             {
                 get { return _elementManager.Rows; }
@@ -161,6 +142,16 @@ namespace DevZest.Data.Windows.Primitives
             {
                 ElementCollection.Insert(index, blockView);
                 Template.InitializeBlockView(blockView);
+            }
+
+            private BlockView Realize(int blockOrdinal)
+            {
+                return _elementManager.Realize(blockOrdinal);
+            }
+
+            private void Virtualize(BlockView blockView)
+            {
+                _elementManager.Virtualize(blockView);
             }
 
             public override void RealizeFirst(int blockOrdinal)
