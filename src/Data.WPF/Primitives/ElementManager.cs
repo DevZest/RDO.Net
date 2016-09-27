@@ -20,6 +20,41 @@ namespace DevZest.Data.Windows.Primitives
 
         internal BlockView CurrentBlockView { get; private set; }
 
+        List<BlockView> _cachedBlockViews;
+
+        internal BlockView Realize(int blockOrdinal)
+        {
+            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
+            blockView.Setup(this, blockOrdinal);
+            return blockView;
+        }
+
+        internal void Virtualize(BlockView blockView)
+        {
+            Debug.Assert(blockView != null);
+            blockView.Cleanup();
+            CachedList.Recycle(ref _cachedBlockViews, blockView);
+        }
+
+        List<RowView> _cachedRowViews;
+
+        internal RowView Realize(RowPresenter row)
+        {
+            Debug.Assert(row != null && row.View == null);
+
+            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.RowViewConstructor);
+            rowView.Setup(row);
+            return rowView;
+        }
+
+        internal void Virtualize(RowPresenter row)
+        {
+            var rowView = row.View;
+            Debug.Assert(rowView != null);
+            rowView.Cleanup();
+            CachedList.Recycle(ref _cachedRowViews, rowView);
+        }
+
         internal CurrentBlockViewPosition CurrentBlockViewPosition
         {
             get
@@ -42,57 +77,6 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(BlockViewList.Count == 0);
 
             //throw new NotImplementedException();
-        }
-
-        List<BlockView> _cachedBlockViews;
-
-        internal BlockView Realize(int blockOrdinal)
-        {
-            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
-            blockView.Initialize(this, blockOrdinal);
-            return blockView;
-        }
-
-        internal void Virtualize(BlockView blockView)
-        {
-            Debug.Assert(blockView != null);
-
-            if (Template.BlockViewCleanupAction != null)
-                Template.BlockViewCleanupAction(blockView);
-            blockView.Cleanup();
-            CachedList.Recycle(ref _cachedBlockViews, blockView);
-        }
-
-        List<RowView> _cachedRowViews;
-
-        internal RowView Realize(RowPresenter row)
-        {
-            Debug.Assert(row != null);
-
-            if (row.View != null)
-                return row.View;
-
-            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.RowViewConstructor);
-            row.View = rowView;
-            rowView.Initialize(row);
-            if (Template.RowViewInitializer != null)
-                Template.RowViewInitializer(rowView);
-            return rowView;
-        }
-
-        internal void Virtualize(RowPresenter row)
-        {
-            Debug.Assert(row != null && row.View != null);
-
-            if (row.IsCurrent)
-                return;
-
-            var rowView = row.View;
-            if (Template.RowViewCleanupAction != null)
-                Template.RowViewCleanupAction(rowView);
-            row.View = null;
-            rowView.Cleanup();
-            CachedList.Recycle(ref _cachedRowViews, rowView);
         }
 
         public sealed override RowPresenter CurrentRow
@@ -173,7 +157,7 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < count; i++)
             {
                 var blockView = BlockViewList[i];
-                blockView.RefreshElements();
+                blockView.Refresh();
             }
         }
 
@@ -298,7 +282,7 @@ namespace DevZest.Data.Windows.Primitives
             if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || (BlockViewList.Contains(row) && row.Elements != null))
+            if (row == null || BlockViewList.Contains(row))
             {
                 _isDirty = true;
                 BeginRefreshElements();

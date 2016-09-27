@@ -240,41 +240,41 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal Size MeasureRow(RowPresenter row, Size constraintSize)
+        internal Size MeasureRow(RowView rowView, Size constraintSize)
         {
             if (IsPreparingMeasure)
-                PrepareMeasureRow(row);
+                PrepareMeasureRow(rowView);
             else
-                FinalizeMeasureRow(row);
+                FinalizeMeasureRow(rowView);
             return constraintSize;
         }
 
-        private void PrepareMeasureRow(RowPresenter row)
+        private void PrepareMeasureRow(RowView rowView)
         {
-            var rowItems = row.RowItems;
+            var rowItems = rowView.RowItems;
             if (rowItems.AutoSizeItems.Count == 0)
                 return;
 
-            var blockView = BlockViewList[row];
+            var blockView = BlockViewList[rowView.RowPresenter];
             Debug.Assert(blockView != null);
             foreach (var rowItem in rowItems.AutoSizeItems)
             {
-                var element = row.Elements[rowItem.Ordinal];
+                var element = rowView.Elements[rowItem.Ordinal];
                 element.Measure(rowItem.AvailableAutoSize);
                 UpdateAutoSize(blockView, rowItem, element.DesiredSize);
             }
         }
 
-        private void FinalizeMeasureRow(RowPresenter row)
+        private void FinalizeMeasureRow(RowView rowView)
         {
-            var rowItems = row.RowItems;
+            var rowItems = rowView.RowItems;
             if (rowItems.Count == 0)
                 return;
 
             foreach (var rowItem in rowItems)
             {
-                var element = row.Elements[rowItem.Ordinal];
-                element.Measure(GetRowItemSize(row, rowItem));
+                var element = rowView.Elements[rowItem.Ordinal];
+                element.Measure(GetRowItemSize(rowView.RowPresenter, rowItem));
             }
         }
 
@@ -398,17 +398,17 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract Thickness GetRowItemClip(RowPresenter row, RowItem rowItem);
 
-        internal void ArrangeRow(RowPresenter row)
+        internal void ArrangeRow(RowView rowView)
         {
-            var rowItems = row.RowItems;
+            var rowItems = rowView.RowItems;
             if (rowItems.Count == 0)
                 return;
 
             foreach (var rowItem in rowItems)
             {
-                var element = row.Elements[rowItem.Ordinal];
-                var rect = GetRowItemRect(row, rowItem);
-                var clip = GetRowItemClip(row, rowItem);
+                var element = rowView.Elements[rowItem.Ordinal];
+                var rect = GetRowItemRect(rowView.RowPresenter, rowItem);
+                var clip = GetRowItemClip(rowView.RowPresenter, rowItem);
                 Arrange(element, rect, clip);
             }
         }

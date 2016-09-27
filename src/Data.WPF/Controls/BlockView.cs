@@ -21,12 +21,11 @@ namespace DevZest.Data.Windows.Controls
             Ordinal = -1;
         }
 
-        internal void Initialize(ElementManager elementManager, int ordinal)
+        internal void Setup(ElementManager elementManager, int ordinal)
         {
             ElementManager = elementManager;
             Ordinal = ordinal;
-            if (ElementCollection != null)
-                InitializeElements();
+            SetupElements();
         }
 
         public override void OnApplyTemplate()
@@ -38,14 +37,46 @@ namespace DevZest.Data.Windows.Controls
 
             var panel = Template.FindName("PART_Panel", this) as BlockElementPanel;
             if (panel != null)
-                InitializeElements(panel);
+                Setup(panel);
+        }
+
+        internal void Setup(FrameworkElement elementsPanel)
+        {
+            if (ElementCollection != null)
+            {
+                if (ElementCollection.Parent == elementsPanel)
+                    return;
+
+                CleanupElements();
+            }
+
+            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
+            SetupElements();
+        }
+
+        private void SetupElements()
+        {
+            if (ElementManager == null || ElementCollection == null)
+                return;
+
+            AddElements();
+            if (ElementManager.Template.OnSetupBlockView != null)
+                ElementManager.Template.OnSetupBlockView(this);
         }
 
         internal void Cleanup()
         {
+            CleanupElements();
+            Ordinal = -1;
+            ElementManager = null;
+        }
+
+        private void CleanupElements()
+        {
+            if (ElementManager.Template.OnCleanupBlockView != null)
+                ElementManager.Template.OnCleanupBlockView(this);
             ClearMeasuredLengths();
             ClearElements();
-            Ordinal = -1;
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -118,27 +149,15 @@ namespace DevZest.Data.Windows.Controls
             get { return ElementManager.Template.BlockItemsSplit; }
         }
 
-        internal IElementCollection ElementCollection { get; private set; }
+        private IElementCollection ElementCollection { get; set; }
 
         internal IReadOnlyList<UIElement> Elements
         {
             get { return ElementCollection; }
         }
 
-        internal void InitializeElements(FrameworkElement elementsPanel)
+        private void AddElements()
         {
-            if (ElementCollection != null)
-                ClearElements();
-
-            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
-
-            if (ElementManager != null)
-                InitializeElements();
-        }
-
-        private void InitializeElements()
-        {
-            Debug.Assert(ElementManager != null);
             var blockItems = BlockItems;
             for (int i = 0; i < BlockItemsSplit; i++)
                 AddElement(blockItems[i]);
@@ -152,9 +171,6 @@ namespace DevZest.Data.Windows.Controls
 
             for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
                 AddElement(blockItems[i]);
-
-            // Initialization happens only after all elements are generated because BlockView implements both view and presenter all together.
-            ElementManager.Template.InitializeBlockView(this);
         }
 
         private void AddElement(BlockItem blockItem)
@@ -175,7 +191,7 @@ namespace DevZest.Data.Windows.Controls
             return true;
         }
 
-        internal void ClearElements()
+        private void ClearElements()
         {
             if (ElementCollection == null)
                 return;
@@ -214,7 +230,7 @@ namespace DevZest.Data.Windows.Controls
             ElementCollection.RemoveAt(index);
         }
 
-        internal void RefreshElements()
+        internal void Refresh()
         {
             if (Elements == null)
                 return;
@@ -224,16 +240,16 @@ namespace DevZest.Data.Windows.Controls
             var index = 0;
 
             for (int i = 0; i < BlockItemsSplit; i++)
-                RefreshElement(blockItems[i], index++);
+                Refresh(blockItems[i], index++);
 
             for (int i = 0; i < blockDimensions; i++)
-                ((RowView)Elements[index++]).RowPresenter.RefreshElements();
+                ((RowView)Elements[index++]).Refresh();
 
             for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
-                RefreshElement(blockItems[i], index++);
+                Refresh(blockItems[i], index++);
         }
 
-        private void RefreshElement(BlockItem blockItem, int index)
+        private void Refresh(BlockItem blockItem, int index)
         {
             var element = Elements[index];
             blockItem.Refresh(element);

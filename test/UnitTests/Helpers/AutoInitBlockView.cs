@@ -7,7 +7,7 @@ namespace DevZest.Data.Windows.Helpers
     {
         public AutoInitBlockView()
         {
-            InitializeElements(null);
+            Setup(null);
         }
 
         protected override Size MeasureOverride(Size constraint)

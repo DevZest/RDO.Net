@@ -120,37 +120,37 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder RowView<T>(Action<T> rowViewIntializer = null, Action<T> rowViewCleanupAction = null)
+        public TemplateBuilder RowView<T>(Action<T> onSetup = null, Action<T> onCleanup = null)
             where T : RowView, new()
         {
             Template.RowViewConstructor = () => new T();
 
-            if (rowViewIntializer == null)
-                Template.RowViewInitializer = null;
+            if (onSetup == null)
+                Template.OnSetupRowView = null;
             else
-                Template.RowViewInitializer = rowView => rowViewIntializer((T)rowView);
+                Template.OnSetupRowView = rowView => onSetup((T)rowView);
 
-            if (rowViewCleanupAction == null)
-                Template.RowViewCleanupAction = null;
+            if (onCleanup == null)
+                Template.OnCleanupRowView = null;
             else
-                Template.RowViewCleanupAction = rowView => rowViewCleanupAction((T)rowView);
+                Template.OnCleanupRowView = rowView => onCleanup((T)rowView);
             return this;
         }
 
-        public TemplateBuilder BlockView<T>(Action<T> blockViewIntializer = null, Action<T> blockViewCleanupAction = null)
+        public TemplateBuilder BlockView<T>(Action<T> onSetup = null, Action<T> onCleanup = null)
             where T : BlockView, new()
         {
             Template.BlockViewConstructor = () => new T();
 
-            if (blockViewIntializer == null)
-                Template.BlockViewInitializer = null;
+            if (onSetup == null)
+                Template.OnSetupBlockView = null;
             else
-                Template.BlockViewInitializer = blockView => blockViewIntializer((T)blockView);
+                Template.OnSetupBlockView = blockView => onSetup((T)blockView);
 
-            if (blockViewCleanupAction == null)
-                Template.BlockViewCleanupAction = null;
+            if (onCleanup == null)
+                Template.OnCleanupBlockView = null;
             else
-                Template.BlockViewCleanupAction = blockView => blockViewCleanupAction((T)blockView);
+                Template.OnCleanupBlockView = blockView => onCleanup((T)blockView);
             return this;
         }
 

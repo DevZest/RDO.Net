@@ -75,19 +75,6 @@ namespace DevZest.Data.Windows.Primitives
                 gridSpan[i].VariantByBlockStartOffset = gridSpan[i - 1].VariantByBlockEndOffset;
         }
 
-        private bool _isBlocksDirty;
-        private void InvalidateBlocks()
-        {
-            if (_isBlocksDirty)
-                return;
-
-            for (int i = 0; i < BlockViewList.Count; i++)
-                BlockViewList[i].ClearElements();
-            _isBlocksDirty = true;
-
-            InvalidateMeasure();
-        }
-
         private void InitBlocks()
         {
             BlockViewList.VirtualizeAll();
@@ -98,7 +85,6 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViewList.RealizeFirst(initialBlockOrdinal);
                 BlockViewList[0].Measure(Size.Empty);
             }
-            _isBlocksDirty = false;
         }
 
         private int GetInitialBlockOrdinal()
@@ -260,8 +246,8 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnRowsChanged()
         {
-            InvalidateBlocks();
             base.OnRowsChanged();
+            InvalidateMeasure();
         }
 
         internal override Size Measure(Size availableSize)

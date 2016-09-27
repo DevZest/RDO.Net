@@ -40,11 +40,11 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                var rowPresenter = RowPresenter;
-                if (rowPresenter == null)
+                var rowView = RowView;
+                if (rowView == null)
                     return Array<UIElement>.Empty;
 
-                return rowPresenter.Elements ?? Array<UIElement>.Empty;
+                return rowView.Elements ?? Array<UIElement>.Empty;
             }
         }
 
@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
-            return layoutManager != null ? layoutManager.MeasureRow(RowPresenter, availableSize) : base.MeasureOverride(availableSize);
+            return layoutManager != null ? layoutManager.MeasureRow(RowView, availableSize) : base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
             if (layoutManager == null)
                 return base.ArrangeOverride(finalSize);
 
-            layoutManager.ArrangeRow(RowPresenter);
+            layoutManager.ArrangeRow(RowView);
             return finalSize;
         }
     }

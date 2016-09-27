@@ -141,7 +141,6 @@ namespace DevZest.Data.Windows.Primitives
             private void Insert(int index, BlockView blockView)
             {
                 ElementCollection.Insert(index, blockView);
-                Template.InitializeBlockView(blockView);
             }
 
             private BlockView Realize(int blockOrdinal)

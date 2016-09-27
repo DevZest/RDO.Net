@@ -377,79 +377,9 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        internal IElementCollection ElementCollection { get; set; }
-        internal IReadOnlyList<UIElement> Elements
-        {
-            get { return ElementCollection; }
-        }
-
-        internal void SetElementPanel(RowElementPanel elementPanel)
-        {
-            if (ElementCollection != null)
-                Cleanup();
-
-            if (elementPanel != null)
-                InitElementPanel(elementPanel);
-        }
-
         internal RowItemCollection RowItems
         {
             get { return Template.InternalRowItems; }
-        }
-
-        internal void InitElementPanel(RowElementPanel elementPanel)
-        {
-            Debug.Assert(ElementCollection == null);
-
-            ElementCollection = ElementCollectionFactory.Create(elementPanel);
-            InitializeElements();
-        }
-
-        private void InitializeElements()
-        {
-            var rowItems = RowItems;
-            for (int i = 0; i < rowItems.Count; i++)
-            {
-                var rowItem = rowItems[i];
-                var element = rowItem.Setup(this);
-                ElementCollection.Add(element);
-            }
-        }
-
-        internal void Cleanup()
-        {
-            Debug.Assert(ElementCollection != null);
-
-            ClearElements();
-            ElementCollection = null;
-        }
-
-        private void ClearElements()
-        {
-            var rowItems = RowItems;
-            Debug.Assert(Elements.Count == rowItems.Count);
-            for (int i = 0; i < rowItems.Count; i++)
-            {
-                var rowItem = rowItems[i];
-                var element = Elements[i];
-                rowItem.Cleanup(element);
-            }
-            ElementCollection.RemoveRange(0, Elements.Count);
-        }
-
-        internal void RefreshElements()
-        {
-            if (Elements == null)
-                return;
-
-            var rowItems = RowItems;
-            Debug.Assert(Elements.Count == rowItems.Count);
-            for (int i = 0; i < rowItems.Count; i++)
-            {
-                var rowItem = rowItems[i];
-                var element = Elements[i];
-                rowItem.Refresh(element);
-            }
         }
 
         internal int BlockOrdinal

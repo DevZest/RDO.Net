@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using DevZest.Data.Windows.Utilities;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,36 +28,114 @@ namespace DevZest.Data.Windows.Controls
             private set { SetValue(RowPresenterPropertyKey, value); }
         }
 
-        internal virtual void Initialize(RowPresenter rowPresenter)
+        internal RowItemCollection RowItems
+        {
+            get { return RowPresenter.RowItems; }
+        }
+
+        private IElementCollection ElementCollection { get; set; }
+        internal IReadOnlyList<UIElement> Elements
+        {
+            get { return ElementCollection; }
+        }
+
+        internal virtual void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
-            SetElementPanel();
+            rowPresenter.View = this;
+            SetupElements();
         }
 
         internal void Cleanup()
         {
             Debug.Assert(RowPresenter != null);
-            RowPresenter.Cleanup();
+            Debug.Assert(ElementCollection != null);
+
+            CleanupElements();
+            RowPresenter.View = null;
             RowPresenter = null;
+        }
+
+        private void CleanupElements()
+        {
+            if (RowPresenter.Template.OnCleanupRowView != null)
+                RowPresenter.Template.OnCleanupRowView(this);
+            ClearElements();
         }
 
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (RowPresenter != null)
-                SetElementPanel();
+
+            if (Template == null)
+                return;
+
+            var panel = Template.FindName("PART_Panel", this) as RowElementPanel;
+            if (panel != null)
+                Setup(panel);
         }
 
-        private void SetElementPanel()
+        internal void Setup(FrameworkElement elementsPanel)
         {
-            Debug.Assert(RowPresenter != null);
-            RowPresenter.SetElementPanel(ElementPanel);
+            if (ElementCollection != null)
+            {
+                if (ElementCollection.Parent == elementsPanel)
+                    return;
+
+                CleanupElements();
+            }
+
+            ElementCollection = ElementCollectionFactory.Create(elementsPanel);
+            SetupElements();
         }
 
-        private RowElementPanel ElementPanel
+        private void SetupElements()
         {
-            get { return Template == null ? null : Template.FindName("PART_Panel", this) as RowElementPanel; }
+            if (RowPresenter == null || ElementCollection == null)
+                return;
+
+            AddElements();
+            if (RowPresenter.Template.OnSetupRowView != null)
+                RowPresenter.Template.OnSetupRowView(this);
+        }
+
+        private void AddElements()
+        {
+            var rowItems = RowItems;
+            for (int i = 0; i < rowItems.Count; i++)
+            {
+                var rowItem = rowItems[i];
+                var element = rowItem.Setup(RowPresenter);
+                ElementCollection.Add(element);
+            }
+        }
+
+        private void ClearElements()
+        {
+            var rowItems = RowItems;
+            Debug.Assert(Elements.Count == rowItems.Count);
+            for (int i = 0; i < rowItems.Count; i++)
+            {
+                var rowItem = rowItems[i];
+                var element = Elements[i];
+                rowItem.Cleanup(element);
+            }
+            ElementCollection.RemoveRange(0, Elements.Count);
+        }
+
+        internal void Refresh()
+        {
+            Debug.Assert(RowPresenter != null || Elements != null);
+
+            var rowItems = RowItems;
+            Debug.Assert(Elements.Count == rowItems.Count);
+            for (int i = 0; i < rowItems.Count; i++)
+            {
+                var rowItem = rowItems[i];
+                var element = Elements[i];
+                rowItem.Refresh(element);
+            }
         }
 
         private static RowView Focused { get; set; }

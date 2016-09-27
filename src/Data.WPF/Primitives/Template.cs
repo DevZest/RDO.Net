@@ -288,15 +288,9 @@ namespace DevZest.Data.Windows.Primitives
             set { _blockViewConstructor = value; }
         }
 
-        internal Action<BlockView> BlockViewInitializer { get; set; }
+        internal Action<BlockView> OnSetupBlockView { get; set; }
 
-        internal void InitializeBlockView(BlockView blockView)
-        {
-            if (BlockViewInitializer != null)
-                BlockViewInitializer(blockView);
-        }
-
-        internal Action<BlockView> BlockViewCleanupAction { get; set; }
+        internal Action<BlockView> OnCleanupBlockView { get; set; }
 
         private Func<RowView> _rowViewConstructor;
         internal Func<RowView> RowViewConstructor
@@ -305,9 +299,9 @@ namespace DevZest.Data.Windows.Primitives
             set { _rowViewConstructor = value; }
         }
 
-        internal Action<RowView> RowViewInitializer { get; set; }
+        internal Action<RowView> OnSetupRowView { get; set; }
 
-        internal Action<RowView> RowViewCleanupAction { get; set; }
+        internal Action<RowView> OnCleanupRowView { get; set; }
 
         internal void InitMeasure(Size availableSize)
         {
