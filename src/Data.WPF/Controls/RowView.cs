@@ -183,5 +183,15 @@ namespace DevZest.Data.Windows.Controls
             Focused = null;
             base.OnLostKeyboardFocus(e);
         }
+
+        internal int BlockOrdinal
+        {
+            get { return RowPresenter.Index / RowPresenter.ElementManager.BlockDimensions; }
+        }
+
+        internal int BlockDimension
+        {
+            get { return RowPresenter.Index % RowPresenter.ElementManager.BlockDimensions; }
+        }
     }
 }

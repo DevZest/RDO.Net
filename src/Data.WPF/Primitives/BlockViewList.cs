@@ -228,9 +228,9 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract BlockView this[int index] { get; }
 
-        public bool Contains(RowPresenter row)
+        public bool Contains(RowView rowView)
         {
-            return this[row] != null;
+            return this[rowView] != null;
         }
 
         public abstract int Count { get; }
@@ -248,14 +248,14 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract int MaxCount { get; }
 
-        public BlockView this[RowPresenter row]
+        public BlockView this[RowView rowView]
         {
             get
             {
                 if (Count == 0)
                     return null;
 
-                var index = IndexOf(row.BlockOrdinal);
+                var index = IndexOf(rowView.BlockOrdinal);
                 return index == -1 ? null : this[index];
             }
         }

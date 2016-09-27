@@ -255,7 +255,7 @@ namespace DevZest.Data.Windows.Primitives
             if (rowItems.AutoSizeItems.Count == 0)
                 return;
 
-            var blockView = BlockViewList[rowView.RowPresenter];
+            var blockView = BlockViewList[rowView];
             Debug.Assert(blockView != null);
             foreach (var rowItem in rowItems.AutoSizeItems)
             {
@@ -274,7 +274,7 @@ namespace DevZest.Data.Windows.Primitives
             foreach (var rowItem in rowItems)
             {
                 var element = rowView.Elements[rowItem.Ordinal];
-                element.Measure(GetRowItemSize(rowView.RowPresenter, rowItem));
+                element.Measure(GetRowItemSize(rowView, rowItem));
             }
         }
 
@@ -385,18 +385,18 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal Rect GetRowItemRect(RowPresenter row, RowItem rowItem)
+        internal Rect GetRowItemRect(RowView rowView, RowItem rowItem)
         {
-            var location = GetRowItemLocation(row, rowItem);
-            var size = GetRowItemSize(row, rowItem);
+            var location = GetRowItemLocation(rowView, rowItem);
+            var size = GetRowItemSize(rowView, rowItem);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetRowItemLocation(RowPresenter row, RowItem rowItem);
+        protected abstract Point GetRowItemLocation(RowView rowView, RowItem rowItem);
 
-        protected abstract Size GetRowItemSize(RowPresenter row, RowItem rowItem);
+        protected abstract Size GetRowItemSize(RowView rowView, RowItem rowItem);
 
-        internal abstract Thickness GetRowItemClip(RowPresenter row, RowItem rowItem);
+        internal abstract Thickness GetRowItemClip(RowView rowView, RowItem rowItem);
 
         internal void ArrangeRow(RowView rowView)
         {
@@ -407,8 +407,8 @@ namespace DevZest.Data.Windows.Primitives
             foreach (var rowItem in rowItems)
             {
                 var element = rowView.Elements[rowItem.Ordinal];
-                var rect = GetRowItemRect(rowView.RowPresenter, rowItem);
-                var clip = GetRowItemClip(rowView.RowPresenter, rowItem);
+                var rect = GetRowItemRect(rowView, rowItem);
+                var clip = GetRowItemClip(rowView, rowItem);
                 Arrange(element, rect, clip);
             }
         }

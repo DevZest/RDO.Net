@@ -96,17 +96,17 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetRowItemLocation(RowPresenter row, RowItem rowItem)
+        protected override Point GetRowItemLocation(RowView rowView, RowItem rowItem)
         {
             return Template.RowRange.GetLocation(rowItem.GridRange);
         }
 
-        protected override Size GetRowItemSize(RowPresenter row, RowItem rowItem)
+        protected override Size GetRowItemSize(RowView rowView, RowItem rowItem)
         {
             return rowItem.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetRowItemClip(RowPresenter row, RowItem rowItem)
+        internal override Thickness GetRowItemClip(RowView rowView, RowItem rowItem)
         {
             return new Thickness();
         }

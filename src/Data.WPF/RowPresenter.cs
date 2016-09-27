@@ -381,15 +381,5 @@ namespace DevZest.Data.Windows
         {
             get { return Template.InternalRowItems; }
         }
-
-        internal int BlockOrdinal
-        {
-            get { return Index / ElementManager.BlockDimensions; }
-        }
-
-        internal int BlockDimension
-        {
-            get { return Index % ElementManager.BlockDimensions; }
-        }
     }
 }

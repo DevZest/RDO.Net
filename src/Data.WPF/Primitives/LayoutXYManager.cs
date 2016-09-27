@@ -1038,49 +1038,49 @@ namespace DevZest.Data.Windows.Primitives
             return GetEndLocationCross(Template.RowRange, blockDimension);
         }
 
-        protected override Point GetRowItemLocation(RowPresenter row, RowItem rowItem)
+        protected override Point GetRowItemLocation(RowView rowView, RowItem rowItem)
         {
-            var valueMain = GetRowItemStartLocationMain(row, rowItem);
-            var valueCross = GetRowItemStartLocationCross(row, rowItem) - GetRowStartLocationCross(row.BlockDimension);
+            var valueMain = GetRowItemStartLocationMain(rowView, rowItem);
+            var valueCross = GetRowItemStartLocationCross(rowView, rowItem) - GetRowStartLocationCross(rowView.BlockDimension);
             return ToPoint(valueMain, valueCross);
         }
 
-        private double GetRowItemStartLocationMain(RowPresenter row, RowItem rowItem)
+        private double GetRowItemStartLocationMain(RowView rowView, RowItem rowItem)
         {
-            var block = BlockViewList[row];
+            var block = BlockViewList[rowView];
             var startGridTrack = GridTracksMain.GetGridSpan(rowItem.GridRange).StartTrack;
             return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetBlockStartLocationMain(block);
         }
 
-        protected override Size GetRowItemSize(RowPresenter row, RowItem rowItem)
+        protected override Size GetRowItemSize(RowView rowView, RowItem rowItem)
         {
-            var valueMain = GetMeasuredLengthMain(BlockViewList[row], rowItem.GridRange);
-            var valueCross = GetRowItemEndLocationCross(row, rowItem) - GetRowItemStartLocationCross(row, rowItem);
+            var valueMain = GetMeasuredLengthMain(BlockViewList[rowView], rowItem.GridRange);
+            var valueCross = GetRowItemEndLocationCross(rowView, rowItem) - GetRowItemStartLocationCross(rowView, rowItem);
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetRowItemClip(RowPresenter row, RowItem rowItem)
+        internal override Thickness GetRowItemClip(RowView rowView, RowItem rowItem)
         {
             var clipMain = new Clip();
-            var clipCross = GetRowItemClipCross(row, rowItem);
+            var clipCross = GetRowItemClipCross(rowView, rowItem);
             return ToThickness(clipMain, clipCross);
         }
 
-        private double GetRowItemStartLocationCross(RowPresenter row, RowItem rowItem)
+        private double GetRowItemStartLocationCross(RowView rowView, RowItem rowItem)
         {
-            return GetStartLocationCross(rowItem.GridRange, row.BlockDimension);
+            return GetStartLocationCross(rowItem.GridRange, rowView.BlockDimension);
         }
 
-        private double GetRowItemEndLocationCross(RowPresenter row, RowItem rowItem)
+        private double GetRowItemEndLocationCross(RowView rowView, RowItem rowItem)
         {
-            return GetEndLocationCross(rowItem.GridRange, row.BlockDimension);
+            return GetEndLocationCross(rowItem.GridRange, rowView.BlockDimension);
         }
 
-        private Clip GetRowItemClipCross(RowPresenter row, RowItem rowItem)
+        private Clip GetRowItemClipCross(RowView rowView, RowItem rowItem)
         {
-            var startLocation = GetRowItemStartLocationCross(row, rowItem);
-            var endLocation = GetRowItemEndLocationCross(row, rowItem);
-            var containerClip = GetBlockClipCross().Merge(GetRowClipCross(row.BlockDimension));
+            var startLocation = GetRowItemStartLocationCross(rowView, rowItem);
+            var endLocation = GetRowItemEndLocationCross(rowView, rowItem);
+            var containerClip = GetBlockClipCross().Merge(GetRowClipCross(rowView.BlockDimension));
             return GetClipCross(startLocation, endLocation, rowItem, containerClip);
         }
 

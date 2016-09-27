@@ -16,10 +16,6 @@ namespace DevZest.Data.Windows.Primitives
             CoerceCurrentBlockView();
         }
 
-        internal BlockViewList BlockViewList { get; private set; }
-
-        internal BlockView CurrentBlockView { get; private set; }
-
         List<BlockView> _cachedBlockViews;
 
         internal BlockView Realize(int blockOrdinal)
@@ -55,6 +51,10 @@ namespace DevZest.Data.Windows.Primitives
             CachedList.Recycle(ref _cachedRowViews, rowView);
         }
 
+        internal BlockViewList BlockViewList { get; private set; }
+
+        internal BlockView CurrentBlockView { get; private set; }
+
         internal CurrentBlockViewPosition CurrentBlockViewPosition
         {
             get
@@ -77,24 +77,6 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(BlockViewList.Count == 0);
 
             //throw new NotImplementedException();
-        }
-
-        public sealed override RowPresenter CurrentRow
-        {
-            internal set
-            {
-                var oldValue = base.CurrentRow;
-                if (oldValue == value)
-                    return;
-
-                if (oldValue != null && BlockViewList.Contains(oldValue))
-                    Virtualize(oldValue);
-
-                if (value != null)
-                    Realize(value);
-
-                base.CurrentRow = value;
-            }
         }
 
         internal IElementCollection ElementCollection { get; private set; }
@@ -282,7 +264,7 @@ namespace DevZest.Data.Windows.Primitives
             if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || BlockViewList.Contains(row))
+            if (row == null || row.View != null)
             {
                 _isDirty = true;
                 BeginRefreshElements();

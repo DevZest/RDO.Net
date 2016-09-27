@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Windows.Helpers;
+﻿using DevZest.Data.Windows.Controls;
+using DevZest.Data.Windows.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows;
@@ -38,8 +39,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal static void VerifyRowItemRect(LayoutManager layoutManager, RowPresenter row, int rowItemIndex, Rect expectedRect)
         {
-            var rowItems = row.RowItems;
-            var rect = layoutManager.GetRowItemRect(row, rowItems[rowItemIndex]);
+            VerifyRowItemRect(layoutManager, row.View, rowItemIndex, expectedRect);
+        }
+
+        private static void VerifyRowItemRect(LayoutManager layoutManager, RowView rowView, int rowItemIndex, Rect expectedRect)
+        {
+            var rowItems = rowView.RowItems;
+            var rect = layoutManager.GetRowItemRect(rowView, rowItems[rowItemIndex]);
             Assert.AreEqual(expectedRect, rect);
         }
     }
