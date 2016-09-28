@@ -191,7 +191,13 @@ namespace DevZest.Data.Windows.Primitives
                 int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.ScalarItems[ordinal - 1].CumulativeBlockDimensionsDelta;
                 var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
                 if (ordinal >= Template.ScalarItemsSplit)
+                {
                     elementIndex += ElementManager.BlockViewList.Count;
+                    if (ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.Alone ||
+                        ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.BeforeList ||
+                        ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.AfterList)
+                        elementIndex++;
+                }
                 return ElementManager.Elements[elementIndex];
             }
         }

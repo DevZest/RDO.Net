@@ -42,10 +42,6 @@ namespace DevZest.Data.Windows.Primitives
                 get { throw new NotSupportedException(); }
             }
 
-            public override void Clear()
-            {
-            }
-
             public override void RealizeFirst(int blockOrdinal)
             {
                 throw new NotSupportedException();
@@ -63,17 +59,6 @@ namespace DevZest.Data.Windows.Primitives
 
             public override void VirtualizeAll()
             {
-                throw new NotSupportedException();
-            }
-
-            public override void VirtualizeHead(int count)
-            {
-                throw new NotSupportedException();
-            }
-
-            public override void VirtualizeTail(int count)
-            {
-                throw new NotSupportedException();
             }
         }
 
@@ -102,9 +87,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _elementManager.Elements; }
             }
 
-            private int BlockViewStartIndex
+            private int StartIndex
             {
-                get { return _elementManager.HeadScalarElementsCount; }
+                get { return _elementManager.BlockViewListStartIndex; }
             }
 
             private IReadOnlyList<RowPresenter> Rows
@@ -134,94 +119,37 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     if (index < 0 || index >= Count)
                         throw new ArgumentOutOfRangeException(nameof(index));
-                    return (BlockView)Elements[BlockViewStartIndex + index];
+                    return (BlockView)Elements[StartIndex + index];
                 }
-            }
-
-            private void Insert(int index, BlockView blockView)
-            {
-                ElementCollection.Insert(index, blockView);
-            }
-
-            private BlockView Realize(int blockOrdinal)
-            {
-                return _elementManager.Realize(blockOrdinal);
-            }
-
-            private void Virtualize(BlockView blockView)
-            {
-                _elementManager.Virtualize(blockView);
             }
 
             public override void RealizeFirst(int blockOrdinal)
             {
                 Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxCount);
-
-                var blockView = Realize(blockOrdinal);
-                Insert(BlockViewStartIndex, blockView);
-                _count = 1;
+                _elementManager.Realize(blockOrdinal);
+                _count += 1;
             }
 
             public override void RealizePrev()
             {
                 Debug.Assert(First != null && First.Ordinal >= 1);
-
-                var blockView = Realize(First.Ordinal - 1);
-                Insert(BlockViewStartIndex, blockView);
-                _count++;
+                _elementManager.Realize(First.Ordinal - 1);
+                _count += 1;
             }
 
             public override void RealizeNext()
             {
                 Debug.Assert(Last != null && Last.Ordinal + 1 < MaxCount);
-
-                var blockView = Realize(Last.Ordinal + 1);
-                Insert(BlockViewStartIndex + Count, blockView);
-                _count++;
-            }
-
-            public override void VirtualizeHead(int count)
-            {
-                Debug.Assert(count >= 0 && count <= Count);
-
-                if (count == 0)
-                    return;
-
-                for (int i = 0; i < count; i++)
-                    Virtualize(this[i]);
-
-                ElementCollection.RemoveRange(BlockViewStartIndex, count);
-                _count -= count;
-            }
-
-            public override void VirtualizeTail(int count)
-            {
-                Debug.Assert(count >= 0 && count <= Count);
-
-                if (count == 0)
-                    return;
-
-                var offset = Count - count;
-                for (int i = 0; i < count; i++)
-                    Virtualize(this[offset + i]);
-
-                ElementCollection.RemoveRange(BlockViewStartIndex + offset, count);
-                _count -= count;
+                _elementManager.Realize(Last.Ordinal + 1);
+                _count += 1;
             }
 
             public override void VirtualizeAll()
             {
-                for (int i = 0; i < Count; i++)
-                    Virtualize(this[i]);
-                ElementCollection.RemoveRange(BlockViewStartIndex, Count);
-                _count = 0;
-            }
+                if (_count == 0)
+                    return;
 
-            public override void Clear()
-            {
-                for (int i = 0; i < Count; i++)
-                    Virtualize(this[i]);
-                ElementCollection.RemoveRange(BlockViewStartIndex, Count);
+                _elementManager.VirtualizeAll();
                 _count = 0;
             }
         }
@@ -283,19 +211,13 @@ namespace DevZest.Data.Windows.Primitives
             get { return Count == 0 ? null : this[Count - 1]; }
         }
 
-        public abstract void VirtualizeHead(int count);
-
-        public abstract void VirtualizeTail(int count);
-
-        public abstract void VirtualizeAll();
-
         public abstract void RealizeFirst(int blockOrdinal);
 
         public abstract void RealizePrev();
 
         public abstract void RealizeNext();
 
-        public abstract void Clear();
+        public abstract void VirtualizeAll();
 
         private bool IsRealized(int blockOrdinal)
         {

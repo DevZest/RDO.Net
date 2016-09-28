@@ -14,24 +14,10 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private void RefreshBlock()
-        {
-            if (CurrentRow != null && BlockViewList.Count == 0)
-                BlockViewList.RealizeFirst(CurrentRow.Index);
-        }
-
-        protected override void OnCurrentRowChanged()
-        {
-            BlockViewList.VirtualizeAll();
-            RefreshBlock();
-            base.OnCurrentRowChanged();
-        }
-
         protected override void PrepareMeasureBlocks()
         {
-            RefreshBlock();
-            if (BlockViewList.Count == 1)
-                BlockViewList[0].Measure(Size.Empty);  // Available size is ignored when preparing blocks
+            if (CurrentBlockView != null)
+                CurrentBlockView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
         protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)

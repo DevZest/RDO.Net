@@ -118,10 +118,10 @@ namespace DevZest.Data.Windows.Primitives
             return IsVariantLength(block, gridTrack) ? block.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
         }
 
-        private void SetMeasuredAutoLength(BlockView block, GridTrack gridTrack, double value)
+        private void SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
         {
-            if (IsVariantLength(block, gridTrack))
-                block.SetMeasuredLength(gridTrack, value);
+            if (IsVariantLength(blockView, gridTrack))
+                blockView.SetMeasuredLength(gridTrack, value);
             else
             {
                 var delta = value - gridTrack.MeasuredLength;
@@ -255,8 +255,7 @@ namespace DevZest.Data.Windows.Primitives
             if (rowItems.AutoSizeItems.Count == 0)
                 return;
 
-            var blockView = BlockViewList[rowView];
-            Debug.Assert(blockView != null);
+            var blockView = this[rowView];
             foreach (var rowItem in rowItems.AutoSizeItems)
             {
                 var element = rowView.Elements[rowItem.Ordinal];

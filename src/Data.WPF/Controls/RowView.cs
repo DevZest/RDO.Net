@@ -39,6 +39,20 @@ namespace DevZest.Data.Windows.Controls
             get { return ElementCollection; }
         }
 
+        internal void Reload(RowPresenter rowPresenter)
+        {
+            Debug.Assert(RowPresenter != null);
+            if (RowPresenter.Template.OnCleanupRowView != null)
+                RowPresenter.Template.OnCleanupRowView(this);
+            RowPresenter.View = null;
+
+            RowPresenter = rowPresenter;
+            rowPresenter.View = this;
+            if (RowPresenter.Template.OnSetupRowView != null)
+                RowPresenter.Template.OnSetupRowView(this);
+            Refresh();
+        }
+
         internal virtual void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);

@@ -30,8 +30,8 @@ namespace DevZest.Data.Windows.Primitives
 
             var measuredSize = layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Assert.AreEqual(new Size(330, 65), measuredSize);
-            VerifyBlockViewRect(layoutManager, 0, new Rect(20, 0, 310, 65));
-            VerifyRowRect(layoutManager, 0, 0, new Rect(0, 0, 310, 65));
+            VerifyBlockViewRect(layoutManager, -1, new Rect(20, 0, 310, 65));
+            VerifyRowRect(layoutManager, -1, 0, new Rect(0, 0, 310, 65));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 0, new Rect(0, 0, 110, 25));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 1, new Rect(110, 0, 200, 25));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 2, new Rect(0, 25, 110, 20));
@@ -41,8 +41,8 @@ namespace DevZest.Data.Windows.Primitives
 
             measuredSize = layoutManager.Measure(new Size(300, 300));
             Assert.AreEqual(new Size(300, 300), measuredSize);
-            VerifyBlockViewRect(layoutManager, 0, new Rect(20, 0, 280, 300));
-            VerifyRowRect(layoutManager, 0, 0, new Rect(0, 0, 280, 300));
+            VerifyBlockViewRect(layoutManager, -1, new Rect(20, 0, 280, 300));
+            VerifyRowRect(layoutManager, -1, 0, new Rect(0, 0, 280, 300));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 0, new Rect(0, 0, 110, 25));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 1, new Rect(110, 0, 170, 25));
             VerifyRowItemRect(layoutManager, layoutManager.CurrentRow, 2, new Rect(0, 25, 110, 255));

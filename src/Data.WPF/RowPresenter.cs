@@ -30,7 +30,6 @@ namespace DevZest.Data.Windows
 
         internal void Dispose()
         {
-            Debug.Assert(View == null, "Row should be virtualized first before dispose.");
             _rowMapper = null;
             Parent = null;
         }

@@ -60,6 +60,11 @@ namespace DevZest.Data.Windows.Controls
                 return;
 
             AddElements();
+            OnSetup();
+        }
+
+        private void OnSetup()
+        {
             if (ElementManager.Template.OnSetupBlockView != null)
                 ElementManager.Template.OnSetupBlockView(this);
         }
@@ -73,10 +78,15 @@ namespace DevZest.Data.Windows.Controls
 
         private void CleanupElements()
         {
+            OnCleanup();
+            ClearElements();
+        }
+
+        private void OnCleanup()
+        {
             if (ElementManager.Template.OnCleanupBlockView != null)
                 ElementManager.Template.OnCleanupBlockView(this);
             ClearMeasuredLengths();
-            ClearElements();
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -164,7 +174,7 @@ namespace DevZest.Data.Windows.Controls
 
             for (int i = 0; i < ElementManager.BlockDimensions; i++)
             {
-                var success = AddElement(Ordinal, i);
+                var success = AddRowView(i);
                 if (!success)   // Exceeded the total count of the rows
                     break;
             }
@@ -179,15 +189,15 @@ namespace DevZest.Data.Windows.Controls
             ElementCollection.Add(element);
         }
 
-        private bool AddElement(int blockIndex, int offset)
+        private bool AddRowView(int offset)
         {
             var rows = ElementManager.Rows;
-            var index = blockIndex * ElementManager.BlockDimensions + offset;
-            if (index >= rows.Count)
+            var rowIndex = Ordinal * ElementManager.BlockDimensions + offset;
+            if (rowIndex >= rows.Count)
                 return false;
-            var row = rows[index];
-            var rowView = ElementManager.Realize(row);
-            ElementCollection.Add(rowView);
+            var row = rows[rowIndex];
+            var rowView = ElementManager.Setup(row);
+            ElementCollection.Insert(BlockItemsSplit + offset, rowView);
             return true;
         }
 
@@ -203,7 +213,7 @@ namespace DevZest.Data.Windows.Controls
                 RemoveLastElement(blockItems[i]);
 
             for (int i = blockDimensions - 1; i >= 0; i--)
-                RemoveLastRow();
+                RemoveRowViewAt(Elements.Count - 1);
 
             for (int i = BlockItemsSplit - 1; i >= 0 ; i--)
                 RemoveLastElement(blockItems[i]);
@@ -217,12 +227,11 @@ namespace DevZest.Data.Windows.Controls
             RemoveAt(lastIndex);
         }
 
-        private void RemoveLastRow()
+        private void RemoveRowViewAt(int index)
         {
-            var lastIndex = Elements.Count - 1;
-            var rowView = (RowView)Elements[lastIndex];
-            ElementManager.Virtualize(rowView.RowPresenter);
-            RemoveAt(lastIndex);
+            var rowView = (RowView)Elements[index];
+            ElementManager.Cleanup(rowView.RowPresenter);
+            RemoveAt(index);
         }
 
         private void RemoveAt(int index)
@@ -253,6 +262,63 @@ namespace DevZest.Data.Windows.Controls
         {
             var element = Elements[index];
             blockItem.Refresh(element);
+        }
+
+        internal void OnCurrentRowChanged(RowPresenter oldValue)
+        {
+            Debug.Assert(ElementManager.CurrentBlockView == this);
+
+            var currentRowView = RemoveAllRowViewsExcept(oldValue);
+            currentRowView.Reload(ElementManager.CurrentRow);
+            FillMissingRowViews(currentRowView);
+        }
+
+        internal void OnBlockDimensionsChanged(int blockDimensionsDelta)
+        {
+            Debug.Assert(ElementManager.CurrentBlockView == this);
+
+            var currentRowView = RemoveAllRowViewsExcept(ElementManager.CurrentRow);
+            FillMissingRowViews(currentRowView);
+        }
+
+        private RowView RemoveAllRowViewsExcept(RowPresenter row)
+        {
+            OnCleanup();
+
+            RowView result = null;
+            var startIndex = BlockItemsSplit;
+            int blockDimensions = Elements.Count - BlockItems.Count;
+            for (int i = blockDimensions - 1; i >= 0; i--)
+            {
+                var index = startIndex + i;
+                var rowView = (RowView)Elements[index];
+                if (rowView.RowPresenter == row)
+                    result = rowView;
+                else
+                    RemoveRowViewAt(index);
+            }
+            Debug.Assert(result != null);
+            return result;
+        }
+
+        private void FillMissingRowViews(RowView currentRowView)
+        {
+            var currentRowIndex = currentRowView.RowPresenter.Index;
+            var blockDimensions = ElementManager.BlockDimensions;
+            Ordinal = currentRowIndex / blockDimensions;
+            var offset = currentRowIndex % blockDimensions;
+
+            for (int i = 0; i < offset; i++)
+                AddRowView(i);
+
+            for (int i = offset + 1; i < blockDimensions; i++)
+            {
+                var success = AddRowView(i);
+                if (!success)   // Exceeded the total count of the rows
+                    break;
+            }
+
+            OnSetup();
         }
 
         private GridSpan VariantByBlockGridSpan

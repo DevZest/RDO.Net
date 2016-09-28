@@ -13,28 +13,146 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy)
         {
             BlockViewList = emptyBlockViewList ? BlockViewList.Empty : BlockViewList.Create(this);
-            CoerceCurrentBlockView();
         }
 
         List<BlockView> _cachedBlockViews;
 
-        internal BlockView Realize(int blockOrdinal)
+        private BlockView Setup(int blockOrdinal)
         {
             var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
             blockView.Setup(this, blockOrdinal);
             return blockView;
         }
 
-        internal void Virtualize(BlockView blockView)
+        private void Cleanup(BlockView blockView)
         {
             Debug.Assert(blockView != null);
             blockView.Cleanup();
             CachedList.Recycle(ref _cachedBlockViews, blockView);
         }
 
+        internal BlockViewList BlockViewList { get; private set; }
+
+        private BlockView _currentBlockView;
+        internal BlockView CurrentBlockView
+        {
+            get { return _currentBlockView; }
+            private set
+            {
+                Debug.Assert(CurrentBlockViewPosition == CurrentBlockViewPosition.None || CurrentBlockViewPosition == CurrentBlockViewPosition.Alone);
+                _currentBlockView = value;
+                CurrentBlockViewPosition = value != null ? CurrentBlockViewPosition.Alone : CurrentBlockViewPosition.None;
+            }
+        }
+
+        private void CoerceCurrentBlockView(RowPresenter oldValue)
+        {
+            Debug.Assert(BlockViewList.Count == 0);
+
+            var newValue = CurrentRow;
+            if (newValue != null)
+            {
+                if (CurrentBlockView == null)
+                {
+                    CurrentBlockView = Setup(newValue.Index / BlockDimensions);
+                    ElementCollection.Insert(HeadScalarElementsCount, CurrentBlockView);
+                }
+                else
+                    CurrentBlockView.OnCurrentRowChanged(oldValue);
+            }
+            else if (CurrentBlockView != null)
+                ClearCurrentBlockView();
+        }
+
+        private void ClearCurrentBlockView()
+        {
+            Debug.Assert(CurrentBlockView != null);
+            Cleanup(CurrentBlockView);
+            ElementCollection.RemoveAt(HeadScalarElementsCount);
+            CurrentBlockView = null;
+        }
+
+        internal CurrentBlockViewPosition CurrentBlockViewPosition { get; private set; }
+
+        protected BlockView this[RowView rowView]
+        {
+            get
+            {
+                if (CurrentBlockView != null && rowView.BlockOrdinal == CurrentBlockView.Ordinal)
+                    return CurrentBlockView;
+                return BlockViewList[rowView];
+            }
+        }
+
+        internal void Realize(int blockOrdinal)
+        {
+            CurrentBlockViewPosition = DoRealize(blockOrdinal);
+        }
+
+        private CurrentBlockViewPosition DoRealize(int blockOrdinal)
+        {
+            Debug.Assert(CurrentBlockView != null);
+
+            if (CurrentBlockView.Ordinal == blockOrdinal)
+                return CurrentBlockViewPosition.WithinList;
+
+            var index = HeadScalarElementsCount;
+            switch (CurrentBlockViewPosition)
+            {
+                case CurrentBlockViewPosition.Alone:
+                    if (blockOrdinal > CurrentBlockView.Ordinal)
+                        index++;
+                    break;
+                case CurrentBlockViewPosition.BeforeList:
+                    index++;
+                    if (blockOrdinal > BlockViewList.Last.Ordinal)
+                        index += BlockViewList.Count;
+                    break;
+                case CurrentBlockViewPosition.WithinList:
+                case CurrentBlockViewPosition.AfterList:
+                    if (blockOrdinal > BlockViewList.Last.Ordinal)
+                        index += BlockViewList.Count;
+                    break;
+            }
+
+            var blockView = Setup(blockOrdinal);
+            ElementCollection.Insert(index, blockView);
+            if (CurrentBlockViewPosition == CurrentBlockViewPosition.Alone)
+                return blockOrdinal > CurrentBlockView.Ordinal ? CurrentBlockViewPosition.BeforeList : CurrentBlockViewPosition.AfterList;
+            return CurrentBlockViewPosition;
+        }
+
+        internal int BlockViewListStartIndex
+        {
+            get
+            {
+                var result = HeadScalarElementsCount;
+                if (CurrentBlockViewPosition == CurrentBlockViewPosition.BeforeList)
+                    result++;
+                return result;
+            }
+        }
+
+        internal void VirtualizeAll()
+        {
+            Debug.Assert(BlockViewList.Count > 0);
+
+            var startIndex = BlockViewListStartIndex;
+            for (int i = BlockViewList.Count - 1; i >= 0; i--)
+            {
+                var blockView = BlockViewList[i];
+                if (blockView == CurrentBlockView)
+                    continue;
+                Cleanup(blockView);
+                ElementCollection.RemoveAt(startIndex + i);
+            }
+
+            CurrentBlockViewPosition = CurrentBlockViewPosition.Alone;
+        }
+
         List<RowView> _cachedRowViews;
 
-        internal RowView Realize(RowPresenter row)
+        internal RowView Setup(RowPresenter row)
         {
             Debug.Assert(row != null && row.View == null);
 
@@ -43,40 +161,12 @@ namespace DevZest.Data.Windows.Primitives
             return rowView;
         }
 
-        internal void Virtualize(RowPresenter row)
+        internal void Cleanup(RowPresenter row)
         {
             var rowView = row.View;
             Debug.Assert(rowView != null);
             rowView.Cleanup();
             CachedList.Recycle(ref _cachedRowViews, rowView);
-        }
-
-        internal BlockViewList BlockViewList { get; private set; }
-
-        internal BlockView CurrentBlockView { get; private set; }
-
-        internal CurrentBlockViewPosition CurrentBlockViewPosition
-        {
-            get
-            {
-                if (CurrentBlockView == null)
-                    return CurrentBlockViewPosition.None;
-                else if (BlockViewList.Count == 0)
-                    return CurrentBlockViewPosition.Alone;
-                else if (CurrentBlockView.Ordinal < BlockViewList.First.Ordinal - 1)
-                    return CurrentBlockViewPosition.BeforeList;
-                else if (CurrentBlockView.Ordinal > BlockViewList.Last.Ordinal + 1)
-                    return CurrentBlockViewPosition.AfterList;
-                else
-                    return CurrentBlockViewPosition.WithinList;
-            }
-        }
-
-        private void CoerceCurrentBlockView()
-        {
-            Debug.Assert(BlockViewList.Count == 0);
-
-            //throw new NotImplementedException();
         }
 
         internal IElementCollection ElementCollection { get; private set; }
@@ -107,15 +197,16 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
                 InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
             HeadScalarElementsCount = Template.ScalarItemsSplit;
+            CoerceCurrentBlockView(null);
         }
 
         private void RefreshElements()
         {
-            if (Elements.Count == 0)
+            if (Elements == null || Elements.Count == 0)
                 return;
 
             RefreshScalarElements();
-            RefreshBlockViewList();
+            RefreshBlockViews();
 
             _isDirty = false;
         }
@@ -133,14 +224,12 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void RefreshBlockViewList()
+        private void RefreshBlockViews()
         {
-            var count = BlockViewList.Count;
-            for (int i = 0; i < count; i++)
-            {
-                var blockView = BlockViewList[i];
+            if (CurrentBlockView != null && CurrentBlockViewPosition != CurrentBlockViewPosition.WithinList)
+                CurrentBlockView.Refresh();
+            foreach (var blockView in BlockViewList)
                 blockView.Refresh();
-            }
         }
 
         internal void ClearElements()
@@ -148,7 +237,10 @@ namespace DevZest.Data.Windows.Primitives
             if (ElementCollection == null)
                 return;
 
-            BlockViewList.Clear();
+            BlockViewList.VirtualizeAll();
+            if (CurrentBlockView != null)
+                ClearCurrentBlockView();
+
             var scalarItems = Template.ScalarItems;
             for (int i = 0; i < scalarItems.Count; i++)
             {
@@ -212,6 +304,8 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarItems.Count; i++)
             {
                 index++;
+                if (i == Template.ScalarItemsSplit && CurrentBlockView != null)
+                    index += 1;
                 var scalarItem = scalarItems[i];
 
                 var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : scalarItems[i - 1].CumulativeBlockDimensionsDelta;
@@ -232,11 +326,19 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             HeadScalarElementsCount += delta;
+
+            if (CurrentBlockView != null)
+                CurrentBlockView.OnBlockDimensionsChanged(blockDimensionsDelta);
         }
 
-        protected override void OnCurrentRowChanged()
+        protected override void OnCurrentRowChanged(RowPresenter oldValue)
         {
-            base.OnCurrentRowChanged();
+            base.OnCurrentRowChanged(oldValue);
+            if (ElementCollection != null)
+            {
+                BlockViewList.VirtualizeAll();
+                CoerceCurrentBlockView(oldValue);
+            }
             Invalidate(null);
         }
 
