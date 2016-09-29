@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Windows.Controls;
-using DevZest.Data.Windows.Helpers;
+﻿using DevZest.Data.Windows.Helpers;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

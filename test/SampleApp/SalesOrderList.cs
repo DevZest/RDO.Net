@@ -1,6 +1,5 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Windows;
-using DevZest.Data.Windows.Controls;
 using DevZest.Samples.AdventureWorksLT;
 using System.Linq;
 using System.Windows;

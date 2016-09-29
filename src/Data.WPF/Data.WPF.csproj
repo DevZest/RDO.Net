@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="DataPresenter_T.cs" />
-    <Compile Include="Controls\RowHeader.cs" />
+    <Compile Include="RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\CurrentBlockViewPosition.cs" />
     <Compile Include="Primitives\GridLine.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Primitives\Span.cs" />
     <Compile Include="Primitives\RecapItemCollection.cs" />
     <Compile Include="Primitives\TemplateItemCollection.cs" />
-    <Compile Include="Controls\BlockView.cs" />
+    <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="TemplateBuilder.cs" />
@@ -88,19 +88,19 @@
     <Compile Include="Primitives\RowItem.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
-    <Compile Include="Controls\ColumnHeader.cs" />
+    <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\DependencyObject.Contains.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowElementPanel.cs" />
-    <Compile Include="Controls\RowView.cs" />
+    <Compile Include="RowView.cs" />
     <Compile Include="RowPresenter.cs" />
     <Compile Include="Primitives\GridLengthParser.cs" />
     <Compile Include="Primitives\GridRange.cs" />
     <Compile Include="DataPresenter.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="Controls\DataView.cs" />
+    <Compile Include="DataView.cs" />
     <Compile Include="Primitives\GridColumn.cs" />
     <Compile Include="Primitives\GridTrack.cs" />
     <Compile Include="Primitives\GridRow.cs" />

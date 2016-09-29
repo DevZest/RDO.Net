@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DevZest.Data.Windows.Controls
+namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowElementPanel))]
     public class RowView : Control
