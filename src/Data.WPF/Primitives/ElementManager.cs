@@ -73,6 +73,16 @@ namespace DevZest.Data.Windows.Primitives
 
         internal CurrentBlockViewPosition CurrentBlockViewPosition { get; private set; }
 
+        internal bool IsCurrentBlockViewIsolated
+        {
+            get
+            {
+                return CurrentBlockViewPosition == CurrentBlockViewPosition.Alone
+                    || CurrentBlockViewPosition == CurrentBlockViewPosition.BeforeList
+                    || CurrentBlockViewPosition == CurrentBlockViewPosition.AfterList;
+            }
+        }
+
         protected BlockView this[RowView rowView]
         {
             get

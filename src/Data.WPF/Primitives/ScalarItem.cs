@@ -193,9 +193,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (ordinal >= Template.ScalarItemsSplit)
                 {
                     elementIndex += ElementManager.BlockViewList.Count;
-                    if (ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.Alone ||
-                        ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.BeforeList ||
-                        ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.AfterList)
+                    if (ElementManager.IsCurrentBlockViewIsolated)
                         elementIndex++;
                 }
                 return ElementManager.Elements[elementIndex];

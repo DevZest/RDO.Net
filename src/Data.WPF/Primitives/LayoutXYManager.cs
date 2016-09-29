@@ -1046,14 +1046,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetRowItemStartLocationMain(RowView rowView, RowItem rowItem)
         {
-            var block = BlockViewList[rowView];
+            var block = this[rowView];
             var startGridTrack = GridTracksMain.GetGridSpan(rowItem.GridRange).StartTrack;
             return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetBlockStartLocationMain(block);
         }
 
         protected override Size GetRowItemSize(RowView rowView, RowItem rowItem)
         {
-            var valueMain = GetMeasuredLengthMain(BlockViewList[rowView], rowItem.GridRange);
+            var valueMain = GetMeasuredLengthMain(this[rowView], rowItem.GridRange);
             var valueCross = GetRowItemEndLocationCross(rowView, rowItem) - GetRowItemStartLocationCross(rowView, rowItem);
             return ToSize(valueMain, valueCross);
         }

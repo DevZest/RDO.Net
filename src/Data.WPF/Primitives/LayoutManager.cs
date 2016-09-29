@@ -176,6 +176,9 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
+            if (IsCurrentBlockViewIsolated)
+                CurrentBlockView.Measure(GetBlockSize(CurrentBlockView));
+
             for (int i = 0; i < BlockViewList.Count; i++)
             {
                 var block = BlockViewList[i];
@@ -329,13 +332,18 @@ namespace DevZest.Data.Windows.Primitives
 
         private void ArrangeBlocks()
         {
+            if (IsCurrentBlockViewIsolated)
+                Arrange(CurrentBlockView);
+
             for (int i = 0; i < BlockViewList.Count; i++)
-            {
-                var block = BlockViewList[i];
-                var rect = GetBlockRect(block);
-                var clip = GetBlockClip(block);
-                Arrange(block, rect, clip);
-            }
+                Arrange(BlockViewList[i]);
+        }
+
+        private void Arrange(BlockView blockView)
+        {
+            var rect = GetBlockRect(blockView);
+            var clip = GetBlockClip(blockView);
+            Arrange(blockView, rect, clip);
         }
 
         internal Rect GetBlockItemRect(BlockView block, BlockItem blockItem)
