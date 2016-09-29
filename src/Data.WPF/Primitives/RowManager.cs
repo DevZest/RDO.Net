@@ -131,7 +131,7 @@ namespace DevZest.Data.Windows.Primitives
                 insertHandler.CoercePlaceholderIndex(rowManager);
 
                 if (rowManager.CurrentRow != rowManager.Placeholder)
-                    rowManager.SetCurrentRow(rowManager.Placeholder);
+                    rowManager.CurrentRow = rowManager.Placeholder;
 
                 insertHandler.OpenEdit(rowManager);
             }
@@ -360,7 +360,7 @@ namespace DevZest.Data.Windows.Primitives
             if (CurrentRow == null)
             {
                 if (Rows.Count > 0)
-                    SetCurrentRow(Rows[0]);
+                    CurrentRow = Rows[0];
             }
             else if (CurrentRow.IsDisposed)
             {
@@ -369,14 +369,8 @@ namespace DevZest.Data.Windows.Primitives
                 if (Placeholder != null && index >= Placeholder.RawIndex)
                     index++;
                 index = Math.Min(index, Rows.Count - 1);
-                SetCurrentRow(index >= 0 ? Rows[index] : null);
+                CurrentRow = index >= 0 ? Rows[index] : null;
             }
-        }
-
-        private void SetCurrentRow(RowPresenter row)
-        {
-            Debug.Assert(CurrentRow != row);
-            CurrentRow = row;
         }
 
         private RowPresenter _currentRow;
@@ -428,7 +422,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(row.CanEdit);
             if (CurrentRow != row)
-                SetCurrentRow(row);
+                CurrentRow = row;
             _EditHandler.EnterEditMode(this);
         }
 
