@@ -41,7 +41,8 @@ namespace DevZest.Data.Windows.Controls
 
         internal void Reload(RowPresenter rowPresenter)
         {
-            Debug.Assert(RowPresenter != null);
+            Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
+
             if (RowPresenter.Template.OnCleanupRowView != null)
                 RowPresenter.Template.OnCleanupRowView(this);
             RowPresenter.View = null;

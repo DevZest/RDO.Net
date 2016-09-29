@@ -149,7 +149,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (_count == 0)
                     return;
 
-                _elementManager.VirtualizeAll();
+                _elementManager.VirtualizeBlockViewList();
                 _count = 0;
             }
         }

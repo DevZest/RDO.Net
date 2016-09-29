@@ -264,21 +264,45 @@ namespace DevZest.Data.Windows.Controls
             blockItem.Refresh(element);
         }
 
-        internal void OnCurrentRowChanged(RowPresenter oldValue)
+        internal void Reload()
         {
-            Debug.Assert(ElementManager.CurrentBlockView == this);
-
-            var currentRowView = RemoveAllRowViewsExcept(oldValue);
-            currentRowView.Reload(ElementManager.CurrentRow);
-            FillMissingRowViews(currentRowView);
+            Reload(ElementManager.CurrentRow);
         }
 
-        internal void OnBlockDimensionsChanged(int blockDimensionsDelta)
+        internal void Reload(RowPresenter oldCurrentRow)
         {
-            Debug.Assert(ElementManager.CurrentBlockView == this);
+            Debug.Assert(ElementManager.CurrentBlockView == this && ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.Alone);
 
-            var currentRowView = RemoveAllRowViewsExcept(ElementManager.CurrentRow);
+            var currentRow = ElementManager.CurrentRow;
+            var currentRowView = RemoveAllRowViewsExcept(oldCurrentRow);
+            if (oldCurrentRow != currentRow)
+                currentRowView.Reload(currentRow);
             FillMissingRowViews(currentRowView);
+            Ordinal = currentRow.Index / ElementManager.BlockDimensions;
+        }
+
+        internal void ReloadIfInvalid()
+        {
+            if (IsInvalid)
+                Reload();
+        }
+
+        private bool IsInvalid
+        {
+            get
+            {
+                var startRowIndex = Ordinal * ElementManager.BlockDimensions;
+                var startIndex = BlockItemsSplit;
+                int blockDimensions = Elements.Count - BlockItems.Count;
+                for (int i = 0; i < blockDimensions; i++)
+                {
+                    var index = startIndex + i;
+                    var rowView = (RowView)Elements[index];
+                    if (rowView.RowPresenter.Index != startRowIndex + i)
+                        return true;
+                }
+                return false;
+            }
         }
 
         private RowView RemoveAllRowViewsExcept(RowPresenter row)

@@ -58,7 +58,7 @@ namespace DevZest.Data.Windows.Primitives
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentBlockView);
                 }
                 else
-                    CurrentBlockView.OnCurrentRowChanged(oldValue);
+                    CurrentBlockView.Reload(oldValue);
             }
             else if (CurrentBlockView != null)
                 ClearCurrentBlockView();
@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal void VirtualizeAll()
+        internal void VirtualizeBlockViewList()
         {
             Debug.Assert(BlockViewList.Count > 0);
 
@@ -328,7 +328,7 @@ namespace DevZest.Data.Windows.Primitives
             HeadScalarElementsCount += delta;
 
             if (CurrentBlockView != null)
-                CurrentBlockView.OnBlockDimensionsChanged(blockDimensionsDelta);
+                CurrentBlockView.Reload();
         }
 
         protected override void OnCurrentRowChanged(RowPresenter oldValue)
@@ -350,10 +350,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnRowsChanged()
         {
+            // when oldCurrentRow != CurrentRow, CurrentBlockView should have been reloaded in OnCurrentRowChanged override
             var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
-            //if (oldCurrentRow == CurrentRow && CurrentBlockView != null)
-            //    CurrentBlockView.OnRowsChanged();
+            BlockViewList.VirtualizeAll();
+            if (CurrentBlockView != null && oldCurrentRow == CurrentRow)
+                CurrentBlockView.ReloadIfInvalid();
         }
 
         protected override void OnRowUpdated(RowPresenter row)
