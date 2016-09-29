@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows
         {
             var elementManager = ElementManager;
             if (elementManager != null)
-                elementManager.Invalidate(this);
+                elementManager.InvalidateElements();
         }
 
         internal int RawIndex { get; set; }

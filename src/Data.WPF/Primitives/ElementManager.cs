@@ -339,38 +339,37 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViewList.VirtualizeAll();
                 CoerceCurrentBlockView(oldValue);
             }
-            Invalidate(null);
+            InvalidateElements();
         }
 
         protected override void OnSelectedRowsChanged()
         {
             base.OnSelectedRowsChanged();
-            Invalidate(null);
+            InvalidateElements();
         }
 
         protected override void OnRowsChanged()
         {
+            var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
-            Invalidate(null);
+            //if (oldCurrentRow == CurrentRow && CurrentBlockView != null)
+            //    CurrentBlockView.OnRowsChanged();
         }
 
         protected override void OnRowUpdated(RowPresenter row)
         {
             base.OnRowUpdated(row);
-            Invalidate(row);
+            InvalidateElements();
         }
 
         private bool _isDirty;
-        internal void Invalidate(RowPresenter row)
+        internal void InvalidateElements()
         {
             if (_isDirty || ElementCollection == null)
                 return;
 
-            if (row == null || row.View != null)
-            {
-                _isDirty = true;
-                BeginRefreshElements();
-            }
+            _isDirty = true;
+            BeginRefreshElements();
         }
 
         private void BeginRefreshElements()
