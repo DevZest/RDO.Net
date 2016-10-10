@@ -5,30 +5,30 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class BindingTrigger
+    public abstract class TriggerEvent
     {
-        public static BindingTrigger Manual
+        public static TriggerEvent Manual
         {
-            get { return ManualTrigger.Singleton; }
+            get { return ManualTriggerEvent.Singleton; }
         }
 
-        public static BindingTrigger LostFocus
+        public static TriggerEvent LostFocus
         {
-            get { return LostFocusTrigger.Singleton; }
+            get { return LostFocusTriggerEvent.Singleton; }
         }
 
-        public static BindingTrigger PropertyChanged(DependencyProperty property)
+        public static TriggerEvent PropertyChanged(DependencyProperty property)
         {
             if (property == null)
                 throw new ArgumentNullException(nameof(property));
-            return new DependencyPropertyChangedTrigger(property);
+            return new DependencyPropertyChangedTriggerEvent(property);
         }
 
-        private sealed class ManualTrigger : BindingTrigger
+        private sealed class ManualTriggerEvent : TriggerEvent
         {
-            public static readonly ManualTrigger Singleton = new ManualTrigger();
+            public static readonly ManualTriggerEvent Singleton = new ManualTriggerEvent();
 
-            private ManualTrigger()
+            private ManualTriggerEvent()
             {
             }
 
@@ -41,11 +41,11 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private sealed class LostFocusTrigger : BindingTrigger
+        private sealed class LostFocusTriggerEvent : TriggerEvent
         {
-            public static LostFocusTrigger Singleton = new LostFocusTrigger();
+            public static LostFocusTriggerEvent Singleton = new LostFocusTriggerEvent();
 
-            private LostFocusTrigger()
+            private LostFocusTriggerEvent()
             {
             }
 
@@ -61,13 +61,13 @@ namespace DevZest.Data.Windows
 
             private void OnLostFocus(object sender, RoutedEventArgs e)
             {
-                UpdateBinding((UIElement)sender);
+                Execute((UIElement)sender);
             }
         }
 
-        private sealed class DependencyPropertyChangedTrigger : BindingTrigger
+        private sealed class DependencyPropertyChangedTriggerEvent : TriggerEvent
         {
-            public DependencyPropertyChangedTrigger(DependencyProperty property)
+            public DependencyPropertyChangedTriggerEvent(DependencyProperty property)
             {
                 _property = property;
             }
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows
 
             private void OnPropertyChanged(object sender, EventArgs e)
             {
-                UpdateBinding((UIElement)sender);
+                Execute((UIElement)sender);
             }
         }
 
@@ -96,11 +96,11 @@ namespace DevZest.Data.Windows
 
         protected internal abstract void Detach(UIElement element);
 
-        protected void UpdateBinding(UIElement element)
+        protected void Execute(UIElement element)
         {
             var rowItem = element.GetTemplateItem() as RowItem;
             if (rowItem != null)
-                rowItem.UpdateBinding(element, this);
+                rowItem.ExecuteTrigger(element, this);
         }
     }
 }

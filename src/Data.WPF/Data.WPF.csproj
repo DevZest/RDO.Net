@@ -84,7 +84,7 @@
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="TemplateBuilder.cs" />
-    <Compile Include="BindingTrigger.cs" />
+    <Compile Include="TriggerEvent.cs" />
     <Compile Include="Primitives\RowItem.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />

@@ -41,20 +41,20 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private struct Binding
+        private struct Trigger
         {
-            public Binding(BindingTrigger trigger, Action<RowPresenter, UIElement> action)
+            public Trigger(TriggerEvent triggerEvent, Action<RowPresenter, UIElement> action)
             {
-                Trigger = trigger;
+                Event = triggerEvent;
                 Action = action;
             }
 
-            public readonly BindingTrigger Trigger;
+            public readonly TriggerEvent Event;
             public readonly Action<RowPresenter, UIElement> Action;
 
-            public void Update(UIElement element, BindingTrigger trigger)
+            public void Execute(UIElement element, TriggerEvent triggerEvent)
             {
-                if (trigger == Trigger)
+                if (triggerEvent == Event)
                     Action(element.GetRowPresenter(), element);
             }
         }
@@ -101,13 +101,13 @@ namespace DevZest.Data.Windows.Primitives
                 return This;
             }
 
-            public Builder<T> Bind(BindingTrigger trigger, Action<RowPresenter, T> action)
+            public Builder<T> AddTrigger(TriggerEvent triggerEvent, Action<RowPresenter, T> triggerAction)
             {
-                if (trigger == null)
-                    throw new ArgumentNullException(nameof(trigger));
-                if (action == null)
-                    throw new ArgumentNullException(nameof(action));
-                TemplateItem.Bind(trigger, action);
+                if (triggerEvent == null)
+                    throw new ArgumentNullException(nameof(triggerEvent));
+                if (triggerAction == null)
+                    throw new ArgumentNullException(nameof(triggerAction));
+                TemplateItem.AddTrigger(triggerEvent, triggerAction);
                 return This;
             }
         }
@@ -137,8 +137,8 @@ namespace DevZest.Data.Windows.Primitives
             element.SetRowPresenter(rowPresenter);
             if (_onSetup != null)
                 _onSetup(element, rowPresenter);
-            foreach (var binding in _bindings)
-                binding.Trigger.Attach(element);
+            foreach (var trigger in _triggers)
+                trigger.Event.Attach(element);
         }
 
         internal UIElement Setup(RowPresenter rowPresenter)
@@ -156,8 +156,8 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnCleanup(UIElement element)
         {
-            foreach (var binding in _bindings)
-                binding.Trigger.Detach(element);
+            foreach (var trigger in _triggers)
+                trigger.Event.Detach(element);
             if (_onCleanup != null)
                 _onCleanup(element, element.GetRowPresenter());
             element.SetRowPresenter(null);
@@ -181,20 +181,20 @@ namespace DevZest.Data.Windows.Primitives
             _onRefresh = (element, rowPresenter) => onRefresh((T)element, rowPresenter);
         }
 
-        private IList<Binding> _bindings = Array<Binding>.Empty;
-        private void Bind<T>(BindingTrigger trigger, Action<RowPresenter, T> action)
+        private IList<Trigger> _triggers = Array<Trigger>.Empty;
+        private void AddTrigger<T>(TriggerEvent trigger, Action<RowPresenter, T> action)
             where T : UIElement
         {
-            if (_bindings == Array<Binding>.Empty)
-                _bindings = new List<Binding>();
+            if (_triggers == Array<Trigger>.Empty)
+                _triggers = new List<Trigger>();
 
-            _bindings.Add(new Binding(trigger, (rowPresenter, element) => action(rowPresenter, (T)element)));
+            _triggers.Add(new Trigger(trigger, (rowPresenter, element) => action(rowPresenter, (T)element)));
         }
 
-        internal void UpdateBinding(UIElement element, BindingTrigger trigger)
+        internal void ExecuteTrigger(UIElement element, TriggerEvent triggerEvent)
         {
-            foreach (var binding in _bindings)
-                binding.Update(element, trigger);
+            foreach (var trigger in _triggers)
+                trigger.Execute(element, triggerEvent);
         }
 
         internal sealed override void VerifyRowRange(GridRange rowRange)
