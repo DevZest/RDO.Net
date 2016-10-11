@@ -12,27 +12,35 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// BlockItems[{index}] intersects with RowRange.
+        /// BlockBindings[{index}] intersects with RowRange.
         /// </summary>
-        public static string BlockItem_IntersectsWithRowRange(object index)
+        public static string BlockBinding_IntersectsWithRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_IntersectsWithRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockBinding_IntersectsWithRowRange", "index"), index);
         }
 
         /// <summary>
-        /// BlockItem is invalid when Template.Orientation is null.
+        /// BlockBinding is invalid when Template.Orientation is null.
         /// </summary>
-        public static string BlockItem_NullOrientation
+        public static string BlockBinding_NullOrientation
         {
-            get { return GetString("BlockItem_NullOrientation"); }
+            get { return GetString("BlockBinding_NullOrientation"); }
         }
 
         /// <summary>
-        /// BlockItems[{index}] is out of horizontal side of RowRange.
+        /// BlockBindings[{index}] is out of horizontal side of RowRange.
         /// </summary>
-        public static string BlockItem_OutOfHorizontalRowRange(object index)
+        public static string BlockBinding_OutOfHorizontalRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("BlockItem_OutOfHorizontalRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockBinding_OutOfHorizontalRowRange", "index"), index);
+        }
+
+        /// <summary>
+        /// BlockBindings[{index}] is out of vertical side of RowRange.
+        /// </summary>
+        public static string BlockBinding_OutOfVerticalRowRange(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BlockBinding_OutOfVerticalRowRange", "index"), index);
         }
 
         /// <summary>
@@ -116,11 +124,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// RowItems[{index}] is out of the RowRange.
+        /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
-        public static string RowItem_OutOfRowRange(object index)
+        public static string RowBinding_OutOfRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("RowItem_OutOfRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("RowBinding_OutOfRowRange", "index"), index);
         }
 
         /// <summary>
@@ -180,43 +188,43 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// ScalarItems[{index}] intersects with RowRange.
+        /// ScalarBindings[{index}] intersects with RowRange.
         /// </summary>
-        public static string ScalarItem_IntersectsWithRowRange(object index)
+        public static string ScalarBinding_IntersectsWithRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_IntersectsWithRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_IntersectsWithRowRange", "index"), index);
         }
 
         /// <summary>
-        /// The Stretches value is invalid. It cuts across ScalarItems[{ordinal}].
+        /// The Stretches value is invalid. It cuts across ScalarBindings[{ordinal}].
         /// </summary>
-        public static string ScalarItem_InvalidStretches(object ordinal)
+        public static string ScalarBinding_InvalidStretches(object ordinal)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_InvalidStretches", "ordinal"), ordinal);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_InvalidStretches", "ordinal"), ordinal);
         }
 
         /// <summary>
-        /// Multidimensional ScalarItems[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
+        /// Multidimensional ScalarBindings[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
         /// </summary>
-        public static string ScalarItem_OneDimensionalTemplate(object index)
+        public static string ScalarBinding_OneDimensionalTemplate(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OneDimensionalTemplate", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_OneDimensionalTemplate", "index"), index);
         }
 
         /// <summary>
-        /// Multidimensional ScalarItems[{index}] is out of horizontal side of RowRange.
+        /// Multidimensional ScalarBindings[{index}] is out of horizontal side of RowRange.
         /// </summary>
-        public static string ScalarItem_OutOfHorizontalRowRange(object index)
+        public static string ScalarBinding_OutOfHorizontalRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OutOfHorizontalRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_OutOfHorizontalRowRange", "index"), index);
         }
 
         /// <summary>
-        /// Multidimensional ScalarItems[{index}] is out of vertical side of RowRange.
+        /// Multidimensional ScalarBindings[{index}] is out of vertical side of RowRange.
         /// </summary>
-        public static string ScalarItem_OutOfVerticalRowRange(object index)
+        public static string ScalarBinding_OutOfVerticalRowRange(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarItem_OutOfVerticalRowRange", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_OutOfVerticalRowRange", "index"), index);
         }
 
         /// <summary>

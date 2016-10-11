@@ -5,24 +5,24 @@ namespace DevZest.Data.Windows.Primitives
 {
     public static class UIElementExtensions
     {
-        private static readonly DependencyProperty TemplateItemProperty = DependencyProperty.RegisterAttached(nameof(TemplateItem),
-            typeof(TemplateItem), typeof(UIElementExtensions), new PropertyMetadata(null));
+        private static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(nameof(Binding),
+            typeof(Binding), typeof(UIElementExtensions), new PropertyMetadata(null));
 
-        public static TemplateItem GetTemplateItem(this UIElement element)
+        public static Binding GetBinding(this UIElement element)
         {
-            return (TemplateItem)element.GetValue(TemplateItemProperty);
+            return (Binding)element.GetValue(BindingProperty);
         }
 
         public static DataPresenter GetDataPresenter(this UIElement element)
         {
-            var templateItem = element.GetTemplateItem();
-            return templateItem == null || templateItem.Template == null ? null : templateItem.Template.DataPresenter;
+            var binding = element.GetBinding();
+            return binding == null || binding.Template == null ? null : binding.Template.DataPresenter;
         }
 
-        internal static void SetTemplateItem(this UIElement element, TemplateItem value)
+        internal static void SetBinding(this UIElement element, Binding value)
         {
-            Debug.Assert(value != null && element.GetTemplateItem() == null);
-            element.SetValue(TemplateItemProperty, value);
+            Debug.Assert(value != null && element.GetBinding() == null);
+            element.SetValue(BindingProperty, value);
         }
 
         private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),

@@ -52,7 +52,7 @@
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="Primitives\BlockElementPanel.cs" />
-    <Compile Include="Primitives\BlockItem.cs" />
+    <Compile Include="Primitives\BlockBinding.cs" />
     <Compile Include="Primitives\Clip.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
     <Compile Include="Primitives\GridColumnCollection.cs" />
@@ -73,19 +73,19 @@
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\GridLineFigure.cs" />
     <Compile Include="Primitives\LineFigure.cs" />
-    <Compile Include="Primitives\RowItemCollection.cs" />
+    <Compile Include="Primitives\RowBindingCollection.cs" />
     <Compile Include="Primitives\RowManager.cs" />
     <Compile Include="Primitives\RowMapper.cs" />
     <Compile Include="Primitives\RowNormalizer.cs" />
     <Compile Include="Primitives\Span.cs" />
-    <Compile Include="Primitives\RecapItemCollection.cs" />
-    <Compile Include="Primitives\TemplateItemCollection.cs" />
+    <Compile Include="Primitives\RecapBindingCollection.cs" />
+    <Compile Include="Primitives\BindingCollection.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="TriggerEvent.cs" />
-    <Compile Include="Primitives\RowItem.cs" />
+    <Compile Include="Primitives\RowBinding.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ColumnHeader.cs" />
@@ -110,8 +110,8 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\ScalarItem.cs" />
-    <Compile Include="Primitives\TemplateItem.cs" />
+    <Compile Include="Primitives\ScalarBinding.cs" />
+    <Compile Include="Primitives\Binding.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />

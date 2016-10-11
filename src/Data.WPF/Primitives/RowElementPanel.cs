@@ -62,7 +62,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Size MeasureOverride(Size availableSize)
         {
             var layoutManager = LayoutManager;
-            return layoutManager != null ? layoutManager.MeasureRow(RowView, availableSize) : base.MeasureOverride(availableSize);
+            return layoutManager != null ? layoutManager.Measure(RowView, availableSize) : base.MeasureOverride(availableSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows.Primitives
             if (layoutManager == null)
                 return base.ArrangeOverride(finalSize);
 
-            layoutManager.ArrangeRow(RowView);
+            layoutManager.ArrangeChildren(RowView);
             return finalSize;
         }
     }

@@ -433,7 +433,7 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViewList.RealizePrev();
                 var block = BlockViewList.First;
                 block.Measure(Size.Empty);
-                var measuredLength = Math.Min(availableLength, GetBlockLengthMain(block));
+                var measuredLength = Math.Min(availableLength, GetLengthMain(block));
                 AdjustScrollStartMain(-measuredLength);
                 availableLength -= measuredLength;
             }
@@ -483,14 +483,14 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(gridTrack.IsRepeat);
             var block = BlockViewList[0];
             Debug.Assert(block.Ordinal == gridOffset.BlockOrdinal);
-            availableLength -= GetBlockLengthMain(block) - GetRelativeOffsetMain(block, gridTrack, fraction);
+            availableLength -= GetLengthMain(block) - GetRelativeOffsetMain(block, gridTrack, fraction);
             RealizeForward(availableLength);
         }
 
         private double GetRelativeOffsetMain(BlockView block, GridTrack gridTrack)
         {
             Debug.Assert(GridTracksMain.GetGridSpan(Template.BlockRange).Contains(gridTrack));
-            return GetStartLocationMain(new GridOffset(gridTrack, block)) - GetBlockStartLocationMain(block);
+            return GetStartLocationMain(new GridOffset(gridTrack, block)) - GetStartLocationMain(block);
         }
 
         private double GetRelativeOffsetMain(BlockView block, GridTrack gridTrack, double fraction)
@@ -512,7 +512,7 @@ namespace DevZest.Data.Windows.Primitives
                 BlockViewList.RealizeNext();
                 var block = BlockViewList.Last;
                 block.Measure(Size.Empty);
-                var measuredLength = GetBlockLengthMain(block);
+                var measuredLength = GetLengthMain(block);
                 result += measuredLength;
                 availableLength -= measuredLength;
             }
@@ -588,9 +588,9 @@ namespace DevZest.Data.Windows.Primitives
             return endTrack.IsFrozenTail;
         }
 
-        private bool IsFrozenHeadCross(TemplateItem templateItem)
+        private bool IsFrozenHeadCross(Binding binding)
         {
-            return IsFrozenHeadCross(templateItem.GridRange);
+            return IsFrozenHeadCross(binding.GridRange);
         }
 
         private bool IsFrozenHeadCross(GridRange gridRange)
@@ -598,31 +598,31 @@ namespace DevZest.Data.Windows.Primitives
             return GridTracksCross.GetGridSpan(gridRange).StartTrack.IsFrozenHead;
         }
 
-        protected sealed override Size GetScalarItemSize(ScalarItem scalarItem)
+        protected sealed override Size GetSize(ScalarBinding scalarBinding)
         {
-            var valueMain = GetScalarItemLengthMain(scalarItem);
-            var valueCross = GetScalarItemLengthCross(scalarItem);
+            var valueMain = GetLengthMain(scalarBinding);
+            var valueCross = GetLengthCross(scalarBinding);
             return ToSize(valueMain, valueCross);
         }
 
-        private double GetScalarItemLengthMain(ScalarItem scalarItem)
+        private double GetLengthMain(ScalarBinding scalarBinding)
         {
-            var gridRange = scalarItem.GridRange;
+            var gridRange = scalarBinding.GridRange;
             var startGridOffset = GetStartGridOffset(gridRange);
             var endGridOffset = GetEndGridOffset(gridRange);
             return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.End - startGridOffset.Span.Start;
         }
 
-        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
+        protected override Point GetLocation(ScalarBinding scalarBinding, int blockDimension)
         {
-            var valueMain = GetScalarItemStartLocationMain(scalarItem);
-            var valueCross = GetScalarItemStartLocationCross(scalarItem, blockDimension);
+            var valueMain = GetStartLocationMain(scalarBinding);
+            var valueCross = GetStartLocationCross(scalarBinding, blockDimension);
             return ToPoint(valueMain, valueCross);
         }
 
-        private double GetScalarItemStartLocationMain(ScalarItem scalarItem)
+        private double GetStartLocationMain(ScalarBinding scalarBinding)
         {
-            var startGridOffset = GetStartGridOffset(scalarItem.GridRange);
+            var startGridOffset = GetStartGridOffset(scalarBinding.GridRange);
             return GetStartLocationMain(startGridOffset);
         }
 
@@ -665,34 +665,34 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        private double GetScalarItemStartLocationCross(ScalarItem scalarItem, int blockDimension)
+        private double GetStartLocationCross(ScalarBinding scalarBinding, int blockDimension)
         {
-            return GetStartLocationCross(scalarItem.GridRange, blockDimension);
+            return GetStartLocationCross(scalarBinding.GridRange, blockDimension);
         }
 
-        private double GetScalarItemLengthCross(ScalarItem scalarItem)
+        private double GetLengthCross(ScalarBinding scalarBinding)
         {
-            var gridRange = scalarItem.GridRange;
+            var gridRange = scalarBinding.GridRange;
             var startLocation = GetStartLocationCross(gridRange, 0);
-            var endLocation = GetEndLocationCross(gridRange, ShouldStretchCross(scalarItem) ? BlockDimensions - 1 : 0);
+            var endLocation = GetEndLocationCross(gridRange, ShouldStretchCross(scalarBinding) ? BlockDimensions - 1 : 0);
             return endLocation - startLocation;
         }
 
-        private bool ShouldStretchCross(ScalarItem scalarItem)
+        private bool ShouldStretchCross(ScalarBinding scalarBinding)
         {
-            if (BlockDimensions > 1 && !scalarItem.IsMultidimensional)
+            if (BlockDimensions > 1 && !scalarBinding.IsMultidimensional)
             {
                 var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
-                var scalarItemSpan = GridTracksCross.GetGridSpan(scalarItem.GridRange);
-                if (rowSpan.Contains(scalarItemSpan))
+                var scalarBindingSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);
+                if (rowSpan.Contains(scalarBindingSpan))
                     return true;
             }
             return false;
         }
 
-        private Clip GetClipMain(double startLocation, double endLocation, TemplateItem templateItem)
+        private Clip GetClipMain(double startLocation, double endLocation, Binding binding)
         {
-            return GetClipMain(startLocation, endLocation, templateItem.GridRange);
+            return GetClipMain(startLocation, endLocation, binding.GridRange);
         }
 
         private Clip GetClipMain(double startLocation, double endLocation, GridRange gridRange)
@@ -720,9 +720,9 @@ namespace DevZest.Data.Windows.Primitives
             return FrozenTailMain == 0 || gridTrack.IsFrozenTail ? new double?() : ViewportMain - FrozenTailLengthMain;
         }
 
-        private Clip GetClipCross(double startLocation, double endLocation, TemplateItem templateItem, Clip containerClip)
+        private Clip GetClipCross(double startLocation, double endLocation, Binding binding, Clip containerClip)
         {
-            return GetClipCross(startLocation, endLocation, templateItem.GridRange, containerClip);
+            return GetClipCross(startLocation, endLocation, binding.GridRange, containerClip);
         }
 
         private Clip GetClipCross(double startLocation, double endLocation, GridRange gridRange, Clip containerClip, int? blockDimension = null)
@@ -755,25 +755,25 @@ namespace DevZest.Data.Windows.Primitives
             return !blockDimension.HasValue ? gridTrack.IsFrozenTail : blockDimension.Value == BlockDimensions - 1 && gridTrack.IsFrozenTail;
         }
 
-        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        internal override Thickness GetClip(ScalarBinding scalarBinding, int blockDimension)
         {
-            var clipMain = GetScalarItemClipMain(scalarItem);
-            var clipCross = GetScalarItemClipCross(scalarItem, blockDimension);
+            var clipMain = GetClipMain(scalarBinding);
+            var clipCross = GetClipCross(scalarBinding, blockDimension);
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetScalarItemClipMain(ScalarItem scalarItem)
+        private Clip GetClipMain(ScalarBinding scalarBinding)
         {
-            var startLocation = GetScalarItemStartLocationMain(scalarItem);
-            var endLocation = startLocation + GetScalarItemLengthMain(scalarItem);
-            return GetClipMain(startLocation, endLocation, scalarItem);
+            var startLocation = GetStartLocationMain(scalarBinding);
+            var endLocation = startLocation + GetLengthMain(scalarBinding);
+            return GetClipMain(startLocation, endLocation, scalarBinding);
         }
 
-        private Clip GetScalarItemClipCross(ScalarItem scalarItem, int blockDimension)
+        private Clip GetClipCross(ScalarBinding scalarBinding, int blockDimension)
         {
-            var startLocation = GetScalarItemStartLocationCross(scalarItem, blockDimension);
-            var endLocation = startLocation + GetScalarItemLengthCross(scalarItem);
-            return GetClipCross(startLocation, endLocation, scalarItem, new Clip());
+            var startLocation = GetStartLocationCross(scalarBinding, blockDimension);
+            var endLocation = startLocation + GetLengthCross(scalarBinding);
+            return GetClipCross(startLocation, endLocation, scalarBinding, new Clip());
         }
 
         private double GetStartLocationCross(GridRange gridRange, int blockDimension)
@@ -876,17 +876,17 @@ namespace DevZest.Data.Windows.Primitives
                 return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof;
         }
 
-        protected override Point GetBlockLocation(BlockView block)
+        protected override Point GetLocation(BlockView block)
         {
-            var valueMain = GetBlockStartLocationMain(block);
+            var valueMain = GetStartLocationMain(block);
             var valueCross = GetBlockStartLocationCross();
             return ToPoint(valueMain, valueCross);
         }
 
-        private double GetBlockStartLocationMain(BlockView block)
+        private double GetStartLocationMain(BlockView blockView)
         {
             var startTrack = GridTracksMain.GetGridSpan(Template.BlockRange).StartTrack;
-            return GetStartLocationMain(new GridOffset(startTrack, block));
+            return GetStartLocationMain(new GridOffset(startTrack, blockView));
         }
 
         private double GetBlockStartLocationCross()
@@ -899,16 +899,16 @@ namespace DevZest.Data.Windows.Primitives
             return GetEndLocationCross(Template.BlockRange, BlockDimensions - 1);
         }
 
-        protected override Size GetBlockSize(BlockView block)
+        protected override Size GetSize(BlockView block)
         {
-            var valueMain = GetBlockLengthMain(block);
+            var valueMain = GetLengthMain(block);
             var valueCross = GetBlockLengthCross();
             return ToSize(valueMain, valueCross);
         }
 
-        private double GetBlockLengthMain(BlockView block)
+        private double GetLengthMain(BlockView blockView)
         {
-            return GetMeasuredLengthMain(block, Template.BlockRange);
+            return GetMeasuredLengthMain(blockView, Template.BlockRange);
         }
 
         private double GetBlockLengthCross()
@@ -916,17 +916,17 @@ namespace DevZest.Data.Windows.Primitives
             return GetBlockEndLocationCross() - GetBlockStartLocationCross();
         }
 
-        internal override Thickness GetBlockClip(BlockView block)
+        internal override Thickness GetClip(BlockView blockView)
         {
-            var clipMain = GetBlockClipMain(block);
+            var clipMain = GetClipMain(blockView);
             var clipCross = GetBlockClipCross();
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetBlockClipMain(BlockView block)
+        private Clip GetClipMain(BlockView blockView)
         {
-            var startLocation = GetBlockStartLocationMain(block);
-            var endLocation = startLocation + GetBlockLengthMain(block);
+            var startLocation = GetStartLocationMain(blockView);
+            var endLocation = startLocation + GetLengthMain(blockView);
             return GetClipMain(startLocation, endLocation, Template.BlockRange);
         }
 
@@ -947,83 +947,83 @@ namespace DevZest.Data.Windows.Primitives
             return new GridOffset(GridTracksMain.BlockEnd, block).Span.End;
         }
 
-        protected override Point GetBlockItemLocation(BlockView block, BlockItem blockItem)
+        protected override Point GetLocation(BlockView blockView, BlockBinding blockBinding)
         {
-            var valueMain = GetBlockItemStartLocationMain(block, blockItem);
-            var valueCross = GetBlockItemStartLocationCross(block, blockItem) - GetBlockStartLocationCross();
+            var valueMain = GetStartLocationMain(blockView, blockBinding);
+            var valueCross = GetStartLocationCross(blockView, blockBinding) - GetBlockStartLocationCross();
             return ToPoint(valueMain, valueCross);
         }
 
-        private double GetBlockItemStartLocationMain(BlockView block, BlockItem blockItem)
+        private double GetStartLocationMain(BlockView blockView, BlockBinding blockBinding)
         {
-            var startTrack = GridTracksMain.GetGridSpan(blockItem.GridRange).StartTrack;
-            return GetRelativeOffsetMain(block, startTrack);
+            var startTrack = GridTracksMain.GetGridSpan(blockBinding.GridRange).StartTrack;
+            return GetRelativeOffsetMain(blockView, startTrack);
         }
 
-        protected override Size GetBlockItemSize(BlockView block, BlockItem blockItem)
+        protected override Size GetSize(BlockView blockView, BlockBinding blockBinding)
         {
-            var valueMain = GetMeasuredLengthMain(block, blockItem.GridRange);
-            var valueCross = GetBlockItemEndLocationCross(block, blockItem) - GetBlockItemStartLocationCross(block, blockItem);
+            var valueMain = GetMeasuredLengthMain(blockView, blockBinding.GridRange);
+            var valueCross = GetEndLocationCross(blockView, blockBinding) - GetStartLocationCross(blockView, blockBinding);
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetBlockItemClip(BlockView block, BlockItem blockItem)
+        internal override Thickness GetClip(BlockView blockView, BlockBinding blockBinding)
         {
             var clipMain = new Clip();
-            var clipCross = GetBlockItemClipCross(block, blockItem);
+            var clipCross = GetClipCross(blockView, blockBinding);
             return ToThickness(clipMain, clipCross);
         }
 
-        private bool IsHead(BlockItem blockItem)
+        private bool IsHead(BlockBinding blockBinding)
         {
-            return GridTracksCross.GetGridSpan(blockItem.GridRange).EndTrack.Ordinal < GridTracksCross.GetGridSpan(Template.RowRange).StartTrack.Ordinal;
+            return GridTracksCross.GetGridSpan(blockBinding.GridRange).EndTrack.Ordinal < GridTracksCross.GetGridSpan(Template.RowRange).StartTrack.Ordinal;
         }
 
-        private double GetBlockItemStartLocationCross(BlockView block, BlockItem blockItem)
+        private double GetStartLocationCross(BlockView blockView, BlockBinding blockBinding)
         {
-            return GetStartLocationCross(blockItem.GridRange, IsHead(blockItem) ? 0 : BlockDimensions - 1);
+            return GetStartLocationCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : BlockDimensions - 1);
         }
 
-        private double GetBlockItemEndLocationCross(BlockView block, BlockItem blockItem)
+        private double GetEndLocationCross(BlockView blockView, BlockBinding blockBinding)
         {
-            return GetEndLocationCross(blockItem.GridRange, IsHead(blockItem) ? 0 : BlockDimensions - 1);
+            return GetEndLocationCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : BlockDimensions - 1);
         }
 
-        private Clip GetBlockItemClipCross(BlockView block, BlockItem blockItem)
+        private Clip GetClipCross(BlockView blockView, BlockBinding blockBinding)
         {
-            var startLocation = GetBlockItemStartLocationCross(block, blockItem);
-            var endLocation = GetBlockItemEndLocationCross(block, blockItem);
-            return GetClipCross(startLocation, endLocation, blockItem, GetBlockClipCross());
+            var startLocation = GetStartLocationCross(blockView, blockBinding);
+            var endLocation = GetEndLocationCross(blockView, blockBinding);
+            return GetClipCross(startLocation, endLocation, blockBinding, GetBlockClipCross());
         }
 
-        protected override Point GetRowLocation(BlockView block, int blockDimension)
+        protected override Point GetLocation(BlockView blockView, int blockDimension)
         {
-            var valueCross = GetRowStartLocationCross(blockDimension) - GetBlockStartLocationCross();
+            var valueCross = GetStartLocationCross(blockDimension) - GetBlockStartLocationCross();
             return ToPoint(0, valueCross);
         }
 
-        protected override Size GetRowSize(BlockView block, int blockDimension)
+        protected override Size GetSize(BlockView blockView, int blockDimension)
         {
-            var valueMain = GetMeasuredLengthMain(block, Template.RowRange);
-            var valueCross = GetRowEndLocationCross(blockDimension) - GetRowStartLocationCross(blockDimension);
+            var valueMain = GetMeasuredLengthMain(blockView, Template.RowRange);
+            var valueCross = GetEndLocationCross(blockDimension) - GetStartLocationCross(blockDimension);
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetRowClip(int blockDimension)
+        internal override Thickness GetClip(int blockDimension)
         {
             var clipMain = new Clip();
-            var clipCross = GetRowClipCross(blockDimension);
+            var clipCross = GetClipCross(blockDimension);
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetRowClipCross(int blockDimension)
+        private Clip GetClipCross(int blockDimension)
         {
-            var startLocation = GetRowStartLocationCross(blockDimension);
-            var endLocation = GetRowEndLocationCross(blockDimension);
+            var startLocation = GetStartLocationCross(blockDimension);
+            var endLocation = GetEndLocationCross(blockDimension);
             return GetClipCross(startLocation, endLocation, Template.RowRange, GetBlockClipCross(), blockDimension);
         }
 
-        private double GetRowStartLocationCross(int blockDimension)
+        private double GetStartLocationCross(int blockDimension)
         {
             var rowRange = Template.RowRange;
             var result = GetStartLocationCross(rowRange, blockDimension);
@@ -1032,55 +1032,55 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private double GetRowEndLocationCross(int blockDimension)
+        private double GetEndLocationCross(int blockDimension)
         {
             return GetEndLocationCross(Template.RowRange, blockDimension);
         }
 
-        protected override Point GetRowItemLocation(RowView rowView, RowItem rowItem)
+        protected override Point GetLocation(RowView rowView, RowBinding rowBinding)
         {
-            var valueMain = GetRowItemStartLocationMain(rowView, rowItem);
-            var valueCross = GetRowItemStartLocationCross(rowView, rowItem) - GetRowStartLocationCross(rowView.BlockDimension);
+            var valueMain = GetStartLocationMain(rowView, rowBinding);
+            var valueCross = GetStartLocationCross(rowView, rowBinding) - GetStartLocationCross(rowView.BlockDimension);
             return ToPoint(valueMain, valueCross);
         }
 
-        private double GetRowItemStartLocationMain(RowView rowView, RowItem rowItem)
+        private double GetStartLocationMain(RowView rowView, RowBinding rowBinding)
         {
             var block = this[rowView];
-            var startGridTrack = GridTracksMain.GetGridSpan(rowItem.GridRange).StartTrack;
-            return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetBlockStartLocationMain(block);
+            var startGridTrack = GridTracksMain.GetGridSpan(rowBinding.GridRange).StartTrack;
+            return GetStartLocationMain(new GridOffset(startGridTrack, block)) - GetStartLocationMain(block);
         }
 
-        protected override Size GetRowItemSize(RowView rowView, RowItem rowItem)
+        protected override Size GetSize(RowView rowView, RowBinding rowBinding)
         {
-            var valueMain = GetMeasuredLengthMain(this[rowView], rowItem.GridRange);
-            var valueCross = GetRowItemEndLocationCross(rowView, rowItem) - GetRowItemStartLocationCross(rowView, rowItem);
+            var valueMain = GetMeasuredLengthMain(this[rowView], rowBinding.GridRange);
+            var valueCross = GetEndLocationCross(rowView, rowBinding) - GetStartLocationCross(rowView, rowBinding);
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetRowItemClip(RowView rowView, RowItem rowItem)
+        internal override Thickness GetClip(RowView rowView, RowBinding rowBinding)
         {
             var clipMain = new Clip();
-            var clipCross = GetRowItemClipCross(rowView, rowItem);
+            var clipCross = GetClipCross(rowView, rowBinding);
             return ToThickness(clipMain, clipCross);
         }
 
-        private double GetRowItemStartLocationCross(RowView rowView, RowItem rowItem)
+        private double GetStartLocationCross(RowView rowView, RowBinding rowBinding)
         {
-            return GetStartLocationCross(rowItem.GridRange, rowView.BlockDimension);
+            return GetStartLocationCross(rowBinding.GridRange, rowView.BlockDimension);
         }
 
-        private double GetRowItemEndLocationCross(RowView rowView, RowItem rowItem)
+        private double GetEndLocationCross(RowView rowView, RowBinding rowBinding)
         {
-            return GetEndLocationCross(rowItem.GridRange, rowView.BlockDimension);
+            return GetEndLocationCross(rowBinding.GridRange, rowView.BlockDimension);
         }
 
-        private Clip GetRowItemClipCross(RowView rowView, RowItem rowItem)
+        private Clip GetClipCross(RowView rowView, RowBinding rowBinding)
         {
-            var startLocation = GetRowItemStartLocationCross(rowView, rowItem);
-            var endLocation = GetRowItemEndLocationCross(rowView, rowItem);
-            var containerClip = GetBlockClipCross().Merge(GetRowClipCross(rowView.BlockDimension));
-            return GetClipCross(startLocation, endLocation, rowItem, containerClip);
+            var startLocation = GetStartLocationCross(rowView, rowBinding);
+            var endLocation = GetEndLocationCross(rowView, rowBinding);
+            var containerClip = GetBlockClipCross().Merge(GetClipCross(rowView.BlockDimension));
+            return GetClipCross(startLocation, endLocation, rowBinding, containerClip);
         }
 
         protected sealed override Size MeasuredSize

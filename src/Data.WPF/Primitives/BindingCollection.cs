@@ -5,10 +5,10 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class TemplateItemCollection<T> : ReadOnlyCollection<T>
-        where T : TemplateItem, IConcatList<T>
+    internal abstract class BindingCollection<T> : ReadOnlyCollection<T>
+        where T : Binding, IConcatList<T>
     {
-        internal TemplateItemCollection()
+        internal BindingCollection()
             : base(new List<T>())
         {
         }
@@ -22,13 +22,13 @@ namespace DevZest.Data.Windows.Primitives
             Range = Range.Union(gridRange);
         }
 
-        internal virtual void InvalidateAutoWidthItems()
+        internal virtual void InvalidateAutoWidthBindings()
         {
             ReadOnlyCollection<T> collection = this;
             collection.ForEach(x => x.InvalidateAutoWidthGridColumns());
         }
 
-        internal virtual void InvalidateAutoHeightItems()
+        internal virtual void InvalidateAutoHeightBindings()
         {
             ReadOnlyCollection<T> collection = this;
             collection.ForEach(x => x.InvalidateAutoHeightGridRows());
@@ -40,7 +40,7 @@ namespace DevZest.Data.Windows.Primitives
             return x.AutoSizeOrder.CompareTo(y.AutoSizeOrder);
         }
 
-        protected IConcatList<T> FilterAutoSizeItems(Func<T, bool> predict)
+        protected IConcatList<T> FilterAutoSizeBindings(Func<T, bool> predict)
         {
             var result = ConcatList<T>.Empty;
             foreach (var templateItem in this)

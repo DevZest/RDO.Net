@@ -91,7 +91,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\TemplateItemTests.cs" />
+    <Compile Include="Primitives\BindingTests.cs" />
     <Compile Include="Primitives\GridLengthParserTests.cs" />
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

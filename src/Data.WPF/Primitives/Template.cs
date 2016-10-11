@@ -65,23 +65,23 @@ namespace DevZest.Data.Windows.Primitives
             get { return InternalGridRows; }
         }
 
-        internal readonly RecapItemCollection<ScalarItem> InternalScalarItems = new RecapItemCollection<ScalarItem>();
+        internal readonly RecapBindingCollection<ScalarBinding> InternalScalarBindings = new RecapBindingCollection<ScalarBinding>();
 
-        public IReadOnlyList<ScalarItem> ScalarItems
+        public IReadOnlyList<ScalarBinding> ScalarBindings
         {
-            get { return InternalScalarItems; }
+            get { return InternalScalarBindings; }
         }
 
-        internal readonly RecapItemCollection<BlockItem> InternalBlockItems = new RecapItemCollection<BlockItem>();
-        public IReadOnlyList<BlockItem> BlockItems
+        internal readonly RecapBindingCollection<BlockBinding> InternalBlockBindings = new RecapBindingCollection<BlockBinding>();
+        public IReadOnlyList<BlockBinding> BlockBindings
         {
-            get { return InternalBlockItems; }
+            get { return InternalBlockBindings; }
         }
 
-        internal RowItemCollection InternalRowItems = new RowItemCollection();
-        public IReadOnlyList<RowItem> RowItems
+        internal RowBindingCollection InternalRowBindings = new RowBindingCollection();
+        public IReadOnlyList<RowBinding> RowBindings
         {
-            get { return InternalRowItems; }
+            get { return InternalRowBindings; }
         }
 
         private GridRange? _rowRange;
@@ -99,14 +99,14 @@ namespace DevZest.Data.Windows.Primitives
         private GridRange CalcRowRange()
         {
             var result = new GridRange();
-            foreach (var rowItem in InternalRowItems)
-                result = result.Union(rowItem.GridRange);
+            foreach (var rowBinding in InternalRowBindings)
+                result = result.Union(rowBinding.GridRange);
             return result;
         }
 
         public GridRange BlockRange
         {
-            get { return RowRange.Union(InternalBlockItems.Range); }
+            get { return RowRange.Union(InternalBlockBindings.Range); }
         }
 
         internal void VerifyLayout()
@@ -127,17 +127,17 @@ namespace DevZest.Data.Windows.Primitives
             if (RowRange.IsEmpty)
                 throw new InvalidOperationException(Strings.Template_EmptyRowRange);
 
-            for (int i = 0; i < RowItems.Count; i++)
+            for (int i = 0; i < RowBindings.Count; i++)
             {
-                var rowItem = RowItems[i];
-                    rowItem.VerifyRowRange();
+                var rowBinding = RowBindings[i];
+                    rowBinding.VerifyRowRange();
             }
 
-            for (int i = 0; i < ScalarItems.Count; i++)
-                ScalarItems[i].VerifyRowRange();
+            for (int i = 0; i < ScalarBindings.Count; i++)
+                ScalarBindings[i].VerifyRowRange();
 
-            for (int i = 0; i < BlockItems.Count; i++)
-                BlockItems[i].VerifyRowRange();
+            for (int i = 0; i < BlockBindings.Count; i++)
+                BlockBindings[i].VerifyRowRange();
         }
 
         private void VerifyFrozenMargins()
@@ -151,12 +151,12 @@ namespace DevZest.Data.Windows.Primitives
             else
                 InternalGridRows.VerifyFrozenMargins();
 
-            ScalarItems.ForEach(x => x.VerifyFrozenMargins(nameof(ScalarItems)));
-            BlockItems.ForEach(x => x.VerifyFrozenMargins(nameof(BlockItems)));
-            for (int i = 0; i < RowItems.Count; i++)
+            ScalarBindings.ForEach(x => x.VerifyFrozenMargins(nameof(ScalarBindings)));
+            BlockBindings.ForEach(x => x.VerifyFrozenMargins(nameof(BlockBindings)));
+            for (int i = 0; i < RowBindings.Count; i++)
             {
-                var rowItems = RowItems[i];
-                rowItems.ForEach(x => x.VerifyFrozenMargins(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(RowItems), i)));
+                var rowBindings = RowBindings[i];
+                rowBindings.ForEach(x => x.VerifyFrozenMargins(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(RowBindings), i)));
             }
         }
 
@@ -195,38 +195,38 @@ namespace DevZest.Data.Windows.Primitives
             return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && BlockDimensions != 1;
         }
 
-        internal int ScalarItemsSplit { get; private set; }
+        internal int ScalarBindingsSplit { get; private set; }
 
-        internal int BlockItemsSplit { get; private set; }
+        internal int BlockBindingsSplit { get; private set; }
 
-        private bool HasRowItem
+        private bool HasRowBinding
         {
-            get { return RowItems.Count > 0; }
+            get { return RowBindings.Count > 0; }
         }
 
-        internal void AddScalarItem(GridRange gridRange, ScalarItem scalarItem)
+        internal void AddBinding(GridRange gridRange, ScalarBinding scalarBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            scalarItem.Construct(this, gridRange, InternalScalarItems.Count);
-            InternalScalarItems.Add(gridRange, scalarItem);
-            if (!HasRowItem)
-                ScalarItemsSplit = InternalScalarItems.Count;
+            scalarBinding.Construct(this, gridRange, InternalScalarBindings.Count);
+            InternalScalarBindings.Add(gridRange, scalarBinding);
+            if (!HasRowBinding)
+                ScalarBindingsSplit = InternalScalarBindings.Count;
         }
 
-        internal void AddBlockItem(GridRange gridRange, BlockItem blockItem)
+        internal void AddBinding(GridRange gridRange, BlockBinding blockBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            blockItem.Construct(this, gridRange, InternalBlockItems.Count);
-            InternalBlockItems.Add(gridRange, blockItem);
-            if (!HasRowItem)
-                BlockItemsSplit = InternalBlockItems.Count;
+            blockBinding.Construct(this, gridRange, InternalBlockBindings.Count);
+            InternalBlockBindings.Add(gridRange, blockBinding);
+            if (!HasRowBinding)
+                BlockBindingsSplit = InternalBlockBindings.Count;
         }
 
-        internal void AddRowItem(GridRange gridRange, RowItem rowItem)
+        internal void AddBinding(GridRange gridRange, RowBinding rowBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            rowItem.Construct(this, gridRange, InternalRowItems.Count);
-            InternalRowItems.Add(gridRange, rowItem);
+            rowBinding.Construct(this, gridRange, InternalRowBindings.Count);
+            InternalRowBindings.Add(gridRange, rowBinding);
         }
 
         internal bool IsValid(GridRange gridRange)
@@ -356,9 +356,9 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 InternalGridColumns.InvalidateStarLengthTracks();
-                InternalScalarItems.InvalidateAutoWidthItems();
-                InternalBlockItems.InvalidateAutoWidthItems();
-                InternalRowItems.InvalidateAutoHeightItems();
+                InternalScalarBindings.InvalidateAutoWidthBindings();
+                InternalBlockBindings.InvalidateAutoWidthBindings();
+                InternalRowBindings.InvalidateAutoHeightBindings();
             }
         }
 
@@ -377,9 +377,9 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 InternalGridRows.InvalidateStarLengthTracks();
-                InternalScalarItems.InvalidateAutoHeightItems();
-                InternalBlockItems.InvalidateAutoHeightItems();
-                InternalRowItems.InvalidateAutoHeightItems();
+                InternalScalarBindings.InvalidateAutoHeightBindings();
+                InternalBlockBindings.InvalidateAutoHeightBindings();
+                InternalRowBindings.InvalidateAutoHeightBindings();
             }
         }
 

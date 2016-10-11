@@ -7,16 +7,16 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class ScalarItem : TemplateItem, IConcatList<ScalarItem>
+    public sealed class ScalarBinding : Binding, IConcatList<ScalarBinding>
     {
-        #region IConcatList<ScalarItem>
+        #region IConcatList<ScalarBinding>
 
-        int IReadOnlyCollection<ScalarItem>.Count
+        int IReadOnlyCollection<ScalarBinding>.Count
         {
             get { return 1; }
         }
 
-        ScalarItem IReadOnlyList<ScalarItem>.this[int index]
+        ScalarBinding IReadOnlyList<ScalarBinding>.this[int index]
         {
             get
             {
@@ -26,11 +26,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        void IConcatList<ScalarItem>.Sort(Comparison<ScalarItem> comparision)
+        void IConcatList<ScalarBinding>.Sort(Comparison<ScalarBinding> comparision)
         {
         }
 
-        IEnumerator<ScalarItem> IEnumerable<ScalarItem>.GetEnumerator()
+        IEnumerator<ScalarBinding> IEnumerable<ScalarBinding>.GetEnumerator()
         {
             yield return this;
         }
@@ -42,11 +42,11 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, ScalarItem, Builder<T>>
+        public sealed class Builder<T> : Binding.Builder<T, ScalarBinding, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(TemplateBuilder templateBuilder, bool isMultidimensional = false)
-                : base(templateBuilder, ScalarItem.Create<T>())
+                : base(templateBuilder, ScalarBinding.Create<T>())
             {
                 TemplateItem.IsMultidimensional = isMultidimensional;
             }
@@ -56,9 +56,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override void AddItem(Template template, GridRange gridRange, ScalarItem item)
+            internal override void AddItem(Template template, GridRange gridRange, ScalarBinding item)
             {
-                template.AddScalarItem(gridRange, item);
+                template.AddBinding(gridRange, item);
             }
 
             public Builder<T> OnSetup(Action<T> onSetup)
@@ -86,13 +86,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static ScalarItem Create<T>()
+        internal static ScalarBinding Create<T>()
             where T : UIElement, new()
         {
-            return new ScalarItem(() => new T());
+            return new ScalarBinding(() => new T());
         }
 
-        private ScalarItem(Func<UIElement> constructor)
+        private ScalarBinding(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -151,7 +151,7 @@ namespace DevZest.Data.Windows.Primitives
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.ScalarItem_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_IntersectsWithRowRange(Ordinal));
 
             if (!IsMultidimensional)
                 return;
@@ -159,15 +159,15 @@ namespace DevZest.Data.Windows.Primitives
             if (Template.IsMultidimensional(Orientation.Horizontal))
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.ScalarItem_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.ScalarBinding_OutOfHorizontalRowRange(Ordinal));
             }
             else if (Template.IsMultidimensional(Orientation.Vertical))
             {
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.ScalarItem_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.ScalarBinding_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.ScalarItem_OneDimensionalTemplate(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_OneDimensionalTemplate(Ordinal));
         }
 
         private ElementManager ElementManager
@@ -188,9 +188,9 @@ namespace DevZest.Data.Windows.Primitives
                     throw new ArgumentOutOfRangeException(nameof(blockDimension));
 
                 var ordinal = Ordinal;
-                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.ScalarItems[ordinal - 1].CumulativeBlockDimensionsDelta;
+                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.ScalarBindings[ordinal - 1].CumulativeBlockDimensionsDelta;
                 var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
-                if (ordinal >= Template.ScalarItemsSplit)
+                if (ordinal >= Template.ScalarBindingsSplit)
                 {
                     elementIndex += ElementManager.BlockViewList.Count;
                     if (ElementManager.IsCurrentBlockViewIsolated)
@@ -217,13 +217,13 @@ namespace DevZest.Data.Windows.Primitives
         private void VerifyHorizontalStretches()
         {
             if (GridRange.HorizontallyIntersectsWith(Template.GridColumns.Count - Template.Stretches))
-                throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_InvalidStretches(Ordinal));
         }
 
         private void VerifyVerticalStretches()
         {
             if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.Stretches))
-                throw new InvalidOperationException(Strings.ScalarItem_InvalidStretches(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_InvalidStretches(Ordinal));
         }
 
         internal override AutoSizeWaiver CoercedAutoSizeWaiver

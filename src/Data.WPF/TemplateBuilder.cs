@@ -153,22 +153,22 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public ScalarItem.Builder<T> ScalarItem<T>(bool isMultidimensional = false)
+        public ScalarBinding.Builder<T> ScalarBinding<T>(bool isMultidimensional = false)
             where T : UIElement, new()
         {
-            return new ScalarItem.Builder<T>(this, isMultidimensional);
+            return new ScalarBinding.Builder<T>(this, isMultidimensional);
         }
 
-        public BlockItem.Builder<T> BlockItem<T>()
+        public BlockBinding.Builder<T> BlockBinding<T>()
             where T : UIElement, new()
         {
-            return new BlockItem.Builder<T>(this);
+            return new BlockBinding.Builder<T>(this);
         }
 
-        public RowItem.Builder<T> RowItem<T>()
+        public RowBinding.Builder<T> RowBinding<T>()
             where T : UIElement, new()
         {
-            return new RowItem.Builder<T>(this);
+            return new RowBinding.Builder<T>(this);
         }
 
         public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)

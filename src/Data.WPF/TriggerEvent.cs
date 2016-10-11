@@ -98,9 +98,9 @@ namespace DevZest.Data.Windows
 
         protected void Execute(UIElement element)
         {
-            var rowItem = element.GetTemplateItem() as RowItem;
-            if (rowItem != null)
-                rowItem.ExecuteTrigger(element, this);
+            var rowBinding = element.GetBinding() as RowBinding;
+            if (rowBinding != null)
+                rowBinding.ExecuteTrigger(element, this);
         }
     }
 }

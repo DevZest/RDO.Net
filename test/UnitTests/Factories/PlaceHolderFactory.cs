@@ -4,9 +4,9 @@ namespace DevZest.Data.Windows.Factories
 {
     public static class PlaceHolderFactory
     {
-        public static ScalarItem.Builder<PlaceHolder> ScalarItem(this TemplateBuilder templateBuilder, bool isMultidimensional = false, double desiredWidth = 0, double desiredHeight = 0)
+        public static ScalarBinding.Builder<PlaceHolder> ScalarBinding(this TemplateBuilder templateBuilder, bool isMultidimensional = false, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return templateBuilder.ScalarItem<PlaceHolder>(isMultidimensional)
+            return templateBuilder.ScalarBinding<PlaceHolder>(isMultidimensional)
                 .OnSetup((x) =>
                 {
                     x.DesiredWidth = desiredWidth;
@@ -14,9 +14,9 @@ namespace DevZest.Data.Windows.Factories
                 });
         }
 
-        public static BlockItem.Builder<PlaceHolder> BlockItem(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
+        public static BlockBinding.Builder<PlaceHolder> BlockBinding(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return templateBuilder.BlockItem<PlaceHolder>()
+            return templateBuilder.BlockBinding<PlaceHolder>()
                 .OnSetup((x, ordinal, rows) =>
                 {
                     x.DesiredWidth = desiredWidth;
@@ -24,9 +24,9 @@ namespace DevZest.Data.Windows.Factories
                 });
         }
 
-        public static RowItem.Builder<PlaceHolder> RowItem(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
+        public static RowBinding.Builder<PlaceHolder> RowBinding(this TemplateBuilder templateBuilder, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return templateBuilder.RowItem<PlaceHolder>()
+            return templateBuilder.RowBinding<PlaceHolder>()
                 .OnSetup((x, data) =>
                 {
                     x.DesiredWidth = desiredWidth;

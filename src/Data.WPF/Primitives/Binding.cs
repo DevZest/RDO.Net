@@ -8,11 +8,11 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract partial class TemplateItem
+    public abstract partial class Binding
     {
         public abstract class Builder<TElement, TItem, TBuilder> : IDisposable
             where TElement : UIElement, new()
-            where TItem : TemplateItem
+            where TItem : Binding
             where TBuilder : Builder<TElement, TItem, TBuilder>
         {
             internal Builder(TemplateBuilder templateBuilder, TItem item)
@@ -85,7 +85,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal TemplateItem(Func<UIElement> constructor)
+        internal Binding(Func<UIElement> constructor)
         {
             Debug.Assert(constructor != null);
             _constructor = constructor;
@@ -112,7 +112,7 @@ namespace DevZest.Data.Windows.Primitives
         private UIElement Create()
         {
             var result = _constructor();
-            result.SetTemplateItem(this);
+            result.SetBinding(this);
             return result;
         }
 
@@ -128,7 +128,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Cleanup(UIElement element)
         {
-            Debug.Assert(element != null && element.GetTemplateItem() == this);
+            Debug.Assert(element != null && element.GetBinding() == this);
             OnCleanup(element);
             CachedList.Recycle(ref _cachedUIElements, element);
         }

@@ -374,9 +374,9 @@ namespace DevZest.Data.Windows
 
         internal RowView View { get; set; }
 
-        internal RowItemCollection RowItems
+        internal RowBindingCollection RowBindings
         {
-            get { return Template.InternalRowItems; }
+            get { return Template.InternalRowBindings; }
         }
     }
 }

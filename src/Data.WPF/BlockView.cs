@@ -149,14 +149,14 @@ namespace DevZest.Data.Windows
             return GetEnumerator();
         }
 
-        private RecapItemCollection<BlockItem> BlockItems
+        private RecapBindingCollection<BlockBinding> BlockBindings
         {
-            get { return ElementManager.Template.InternalBlockItems; }
+            get { return ElementManager.Template.InternalBlockBindings; }
         }
 
-        private int BlockItemsSplit
+        private int BlockBindingsSplit
         {
-            get { return ElementManager.Template.BlockItemsSplit; }
+            get { return ElementManager.Template.BlockBindingsSplit; }
         }
 
         private IElementCollection ElementCollection { get; set; }
@@ -168,9 +168,9 @@ namespace DevZest.Data.Windows
 
         private void AddElements()
         {
-            var blockItems = BlockItems;
-            for (int i = 0; i < BlockItemsSplit; i++)
-                AddElement(blockItems[i]);
+            var blockBindings = BlockBindings;
+            for (int i = 0; i < BlockBindingsSplit; i++)
+                AddElement(blockBindings[i]);
 
             for (int i = 0; i < ElementManager.BlockDimensions; i++)
             {
@@ -179,13 +179,13 @@ namespace DevZest.Data.Windows
                     break;
             }
 
-            for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
-                AddElement(blockItems[i]);
+            for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
+                AddElement(blockBindings[i]);
         }
 
-        private void AddElement(BlockItem blockItem)
+        private void AddElement(BlockBinding blockBinding)
         {
-            var element = blockItem.Setup(this);
+            var element = blockBinding.Setup(this);
             ElementCollection.Add(element);
         }
 
@@ -197,7 +197,7 @@ namespace DevZest.Data.Windows
                 return false;
             var row = rows[rowIndex];
             var rowView = ElementManager.Setup(row);
-            ElementCollection.Insert(BlockItemsSplit + offset, rowView);
+            ElementCollection.Insert(BlockBindingsSplit + offset, rowView);
             return true;
         }
 
@@ -206,24 +206,24 @@ namespace DevZest.Data.Windows
             if (ElementCollection == null)
                 return;
 
-            int blockDimensions = Elements.Count - BlockItems.Count;
+            int blockDimensions = Elements.Count - BlockBindings.Count;
 
-            var blockItems = BlockItems;
-            for (int i = BlockItems.Count - 1; i >= BlockItemsSplit; i--)
-                RemoveLastElement(blockItems[i]);
+            var blockBindings = BlockBindings;
+            for (int i = BlockBindings.Count - 1; i >= BlockBindingsSplit; i--)
+                RemoveLastElement(blockBindings[i]);
 
             for (int i = blockDimensions - 1; i >= 0; i--)
                 RemoveRowViewAt(Elements.Count - 1);
 
-            for (int i = BlockItemsSplit - 1; i >= 0 ; i--)
-                RemoveLastElement(blockItems[i]);
+            for (int i = BlockBindingsSplit - 1; i >= 0 ; i--)
+                RemoveLastElement(blockBindings[i]);
         }
 
-        private void RemoveLastElement(BlockItem blockItem)
+        private void RemoveLastElement(BlockBinding blockBinding)
         {
             var lastIndex = Elements.Count - 1;
             var element = Elements[lastIndex];
-            blockItem.Cleanup(element);
+            blockBinding.Cleanup(element);
             RemoveAt(lastIndex);
         }
 
@@ -244,24 +244,24 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            var blockItems = BlockItems;
-            int blockDimensions = Elements.Count - blockItems.Count;
+            var blockBindings = BlockBindings;
+            int blockDimensions = Elements.Count - blockBindings.Count;
             var index = 0;
 
-            for (int i = 0; i < BlockItemsSplit; i++)
-                Refresh(blockItems[i], index++);
+            for (int i = 0; i < BlockBindingsSplit; i++)
+                Refresh(blockBindings[i], index++);
 
             for (int i = 0; i < blockDimensions; i++)
                 ((RowView)Elements[index++]).Refresh();
 
-            for (int i = BlockItemsSplit; i < BlockItems.Count; i++)
-                Refresh(blockItems[i], index++);
+            for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
+                Refresh(blockBindings[i], index++);
         }
 
-        private void Refresh(BlockItem blockItem, int index)
+        private void Refresh(BlockBinding blockBinding, int index)
         {
             var element = Elements[index];
-            blockItem.Refresh(element);
+            blockBinding.Refresh(element);
         }
 
         internal void Reload()
@@ -292,8 +292,8 @@ namespace DevZest.Data.Windows
             get
             {
                 var startRowIndex = Ordinal * ElementManager.BlockDimensions;
-                var startIndex = BlockItemsSplit;
-                int blockDimensions = Elements.Count - BlockItems.Count;
+                var startIndex = BlockBindingsSplit;
+                int blockDimensions = Elements.Count - BlockBindings.Count;
                 for (int i = 0; i < blockDimensions; i++)
                 {
                     var index = startIndex + i;
@@ -310,8 +310,8 @@ namespace DevZest.Data.Windows
             OnCleanup();
 
             RowView result = null;
-            var startIndex = BlockItemsSplit;
-            int blockDimensions = Elements.Count - BlockItems.Count;
+            var startIndex = BlockBindingsSplit;
+            int blockDimensions = Elements.Count - BlockBindings.Count;
             for (int i = blockDimensions - 1; i >= 0; i--)
             {
                 var index = startIndex + i;
@@ -457,12 +457,12 @@ namespace DevZest.Data.Windows
             get { return StartOffset + MeasuredLength; }
         }
 
-        internal UIElement this[BlockItem blockItem]
+        internal UIElement this[BlockBinding blockBinding]
         {
             get
             {
-                var index = blockItem.Ordinal;
-                if (index >= BlockItemsSplit)
+                var index = blockBinding.Ordinal;
+                if (index >= BlockBindingsSplit)
                     index += Count;
                 return Elements[index];
             }

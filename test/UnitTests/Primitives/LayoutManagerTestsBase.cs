@@ -25,26 +25,26 @@ namespace DevZest.Data.Windows.Primitives
         internal static void VerifyBlockViewRect(LayoutManager layoutManager, int blockViewIndex, Rect expectedRect)
         {
             var blockView = blockViewIndex == -1 ? layoutManager.CurrentBlockView : layoutManager.BlockViewList[blockViewIndex];
-            var rect = layoutManager.GetBlockRect(blockView);
+            var rect = layoutManager.GetRect(blockView);
             Assert.AreEqual(expectedRect, rect);
         }
 
         internal static void VerifyRowRect(LayoutManager layoutManager, int blockViewIndex, int blockDimension, Rect expectedRect)
         {
             var blockView = blockViewIndex == -1 ? layoutManager.CurrentBlockView : layoutManager.BlockViewList[blockViewIndex];
-            var rect = layoutManager.GetRowRect(blockView, blockDimension);
+            var rect = layoutManager.GetRect(blockView, blockDimension);
             Assert.AreEqual(expectedRect, rect);
         }
 
-        internal static void VerifyRowItemRect(LayoutManager layoutManager, RowPresenter row, int rowItemIndex, Rect expectedRect)
+        internal static void VerifyRowBindingRect(LayoutManager layoutManager, RowPresenter row, int rowBindingIndex, Rect expectedRect)
         {
-            VerifyRowItemRect(layoutManager, row.View, rowItemIndex, expectedRect);
+            VerifyRowBindingRect(layoutManager, row.View, rowBindingIndex, expectedRect);
         }
 
-        private static void VerifyRowItemRect(LayoutManager layoutManager, RowView rowView, int rowItemIndex, Rect expectedRect)
+        private static void VerifyRowBindingRect(LayoutManager layoutManager, RowView rowView, int rowBindingIndex, Rect expectedRect)
         {
-            var rowItems = rowView.RowItems;
-            var rect = layoutManager.GetRowItemRect(rowView, rowItems[rowItemIndex]);
+            var rowBindings = rowView.RowBindings;
+            var rect = layoutManager.GetRect(rowView, rowBindings[rowBindingIndex]);
             Assert.AreEqual(expectedRect, rect);
         }
     }

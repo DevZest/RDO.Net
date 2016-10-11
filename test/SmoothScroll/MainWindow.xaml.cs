@@ -19,7 +19,7 @@ namespace SmoothScroll
                 builder.GridColumns("*")
                 .GridRows("Auto")
                 .Layout(Orientation.Vertical)
-                .RowItem<TextBlock>()
+                .RowBinding<TextBlock>()
                     .OnRefresh((v, p) =>
                     {
                         v.Text = p.GetValue(_.Text);

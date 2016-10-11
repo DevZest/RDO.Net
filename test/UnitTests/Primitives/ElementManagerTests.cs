@@ -34,16 +34,16 @@ namespace DevZest.Data.Windows.Primitives
                 .Layout(Orientation.Vertical, 0)
                 .BlockView<AutoInitBlockView>()
                 .RowView<AutoInitRowView>()
-                .ScalarItem<TextBlock>()
+                .ScalarBinding<TextBlock>()
                     .OnSetup(v => v.Text = _.Name.DisplayName)
                 .At(1, 0)
-                .BlockItem<TextBlock>()
+                .BlockBinding<TextBlock>()
                     .OnRefresh((v, ordinal, rows) => v.Text = ordinal.ToString())
                 .At(0, 1)
-                .RowItem<TextBlock>()
+                .RowBinding<TextBlock>()
                     .OnRefresh((v, p) => v.Text = p.GetValue(_.Name))
                 .At(1, 1)
-                .ScalarItem<TextBlock>(true)
+                .ScalarBinding<TextBlock>(true)
                     .OnSetup(v => v.Text = _.Name.DisplayName)
                 .At(1, 2);
         }
@@ -61,9 +61,9 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private static void Verify(TextBlock textBlock, TemplateItem templateItem, string text)
+        private static void Verify(TextBlock textBlock, Binding binding, string text)
         {
-            Assert.AreEqual(templateItem, textBlock.GetTemplateItem());
+            Assert.AreEqual(binding, textBlock.GetBinding());
             Assert.AreEqual(text, textBlock.Text);
         }
 
@@ -79,255 +79,255 @@ namespace DevZest.Data.Windows.Primitives
             var rows = elementManager.Rows;
 
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockDimensions = 3;
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizeFirst(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizePrev();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizeNext();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "2"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "2"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[6].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[6].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[7].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[7].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockDimensions = 2;
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizeFirst(1);
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizePrev();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.RealizeNext();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[2].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[3].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "2"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "2"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[4].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[5].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.BlockViewList.VirtualizeAll();
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[1].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
             elementManager.ClearElements();
@@ -346,20 +346,20 @@ namespace DevZest.Data.Windows.Primitives
             elementManager.BlockViewList.RealizeFirst(1);
             dataSet._.Name[1] = "CHANGED NAME";
             elementManager.Elements
-                .Verify((TextBlock t) => Verify(t, template.ScalarItems[0], _.Name.DisplayName))
+                .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "0"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], rows[0].GetValue(_.Name)))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((BlockView b) => b.Elements
-                    .Verify((TextBlock y) => Verify(y, template.BlockItems[0], "1"))
+                    .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
                     .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowItems[0], "CHANGED NAME"))
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], "CHANGED NAME"))
                         .VerifyEof())
                     .VerifyEof())
-                .Verify((TextBlock x) => Verify(x, template.ScalarItems[1], _.Name.DisplayName))
+                .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
         }
     }

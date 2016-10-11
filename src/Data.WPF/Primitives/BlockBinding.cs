@@ -7,16 +7,16 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class BlockItem : TemplateItem, IConcatList<BlockItem>
+    public sealed class BlockBinding : Binding, IConcatList<BlockBinding>
     {
-        #region IConcatList<BlockItem>
+        #region IConcatList<BlockBinding>
 
-        int IReadOnlyCollection<BlockItem>.Count
+        int IReadOnlyCollection<BlockBinding>.Count
         {
             get { return 1; }
         }
 
-        BlockItem IReadOnlyList<BlockItem>.this[int index]
+        BlockBinding IReadOnlyList<BlockBinding>.this[int index]
         {
             get
             {
@@ -26,11 +26,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        void IConcatList<BlockItem>.Sort(Comparison<BlockItem> comparision)
+        void IConcatList<BlockBinding>.Sort(Comparison<BlockBinding> comparision)
         {
         }
 
-        IEnumerator<BlockItem> IEnumerable<BlockItem>.GetEnumerator()
+        IEnumerator<BlockBinding> IEnumerable<BlockBinding>.GetEnumerator()
         {
             yield return this;
         }
@@ -42,11 +42,11 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, BlockItem, Builder<T>>
+        public sealed class Builder<T> : Binding.Builder<T, BlockBinding, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(TemplateBuilder templateBuilder)
-                : base(templateBuilder, BlockItem.Create<T>())
+                : base(templateBuilder, BlockBinding.Create<T>())
             {
             }
 
@@ -55,9 +55,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override void AddItem(Template template, GridRange gridRange, BlockItem item)
+            internal override void AddItem(Template template, GridRange gridRange, BlockBinding item)
             {
-                template.AddBlockItem(gridRange, item);
+                template.AddBinding(gridRange, item);
             }
 
             public Builder<T> OnSetup(Action<T, int, IReadOnlyList<RowPresenter>> onSetup)
@@ -85,13 +85,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static BlockItem Create<T>()
+        internal static BlockBinding Create<T>()
             where T : UIElement, new()
         {
-            return new BlockItem(() => new T());
+            return new BlockBinding(() => new T());
         }
 
-        private BlockItem(Func<UIElement> constructor)
+        private BlockBinding(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -155,22 +155,22 @@ namespace DevZest.Data.Windows.Primitives
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
-                throw new InvalidOperationException(Strings.BlockItem_IntersectsWithRowRange(Ordinal));
+                throw new InvalidOperationException(Strings.BlockBinding_IntersectsWithRowRange(Ordinal));
 
             if (!Template.Orientation.HasValue)
-                throw new InvalidOperationException(Strings.BlockItem_NullOrientation);
+                throw new InvalidOperationException(Strings.BlockBinding_NullOrientation);
 
             var orientation = Template.Orientation.GetValueOrDefault();
             if (orientation == Orientation.Horizontal)
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
-                    throw new InvalidOperationException(Strings.BlockItem_OutOfHorizontalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.BlockBinding_OutOfHorizontalRowRange(Ordinal));
             }
             else
             {
                 Debug.Assert(orientation == Orientation.Vertical);
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
-                    throw new InvalidOperationException(Strings.ScalarItem_OutOfVerticalRowRange(Ordinal));
+                    throw new InvalidOperationException(Strings.BlockBinding_OutOfVerticalRowRange(Ordinal));
             }
         }
     }

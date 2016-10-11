@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows.Helpers
 
         protected override Size MeasureOverride(Size constraint)
         {
-            return RowPresenter.LayoutManager.MeasureRow(this, constraint);
+            return RowPresenter.LayoutManager.Measure(this, constraint);
         }
     }
 }

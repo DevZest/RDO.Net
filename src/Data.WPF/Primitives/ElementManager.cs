@@ -202,10 +202,10 @@ namespace DevZest.Data.Windows.Primitives
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
-                InsertScalarElementsAfter(scalarItems[i], Elements.Count - 1, 1);
-            HeadScalarElementsCount = Template.ScalarItemsSplit;
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+                InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
+            HeadScalarElementsCount = Template.ScalarBindingsSplit;
             CoerceCurrentBlockView(null);
         }
 
@@ -222,13 +222,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScalarElements()
         {
-            var scalarItems = Template.ScalarItems;
-            foreach (var scalarItem in scalarItems)
+            var scalarBindings = Template.ScalarBindings;
+            foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
                 {
-                    var element = scalarItem[i];
-                    scalarItem.Refresh(element);
+                    var element = scalarBinding[i];
+                    scalarBinding.Refresh(element);
                 }
             }
         }
@@ -250,36 +250,36 @@ namespace DevZest.Data.Windows.Primitives
             if (CurrentBlockView != null)
                 ClearCurrentBlockView();
 
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
             {
-                var scalarItem = scalarItems[i];
-                scalarItem.CumulativeBlockDimensionsDelta = 0;
-                int count = scalarItem.IsMultidimensional ? BlockDimensions : 1;
-                RemoveScalarElementsAfter(scalarItem, -1, count);
+                var scalarBinding = scalarBindings[i];
+                scalarBinding.CumulativeBlockDimensionsDelta = 0;
+                int count = scalarBinding.IsMultidimensional ? BlockDimensions : 1;
+                RemoveScalarElementsAfter(scalarBinding, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
             _blockDimensions = 1;
             ElementCollection = null;
         }
 
-        private int InsertScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        private int InsertScalarElementsAfter(ScalarBinding scalarBinding, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
-                var element = scalarItem.Setup();
+                var element = scalarBinding.Setup();
                 ElementCollection.Insert(index + i + 1, element);
             }
             return index + count;
         }
 
-        private void RemoveScalarElementsAfter(ScalarItem scalarItem, int index, int count)
+        private void RemoveScalarElementsAfter(ScalarBinding scalarBinding, int index, int count)
         {
             for (int i = 0; i < count; i++)
             {
                 var element = Elements[index + 1];
-                Debug.Assert(element.GetTemplateItem() == scalarItem);
-                scalarItem.Cleanup(element);
+                Debug.Assert(element.GetBinding() == scalarBinding);
+                scalarBinding.Cleanup(element);
                 ElementCollection.RemoveAt(index + 1);
             }
         }
@@ -309,29 +309,29 @@ namespace DevZest.Data.Windows.Primitives
 
             var index = -1;
             var delta = 0;
-            var scalarItems = Template.ScalarItems;
-            for (int i = 0; i < scalarItems.Count; i++)
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
-                if (i == Template.ScalarItemsSplit && CurrentBlockView != null)
+                if (i == Template.ScalarBindingsSplit && CurrentBlockView != null)
                     index += 1;
-                var scalarItem = scalarItems[i];
+                var scalarBinding = scalarBindings[i];
 
-                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : scalarItems[i - 1].CumulativeBlockDimensionsDelta;
-                if (!scalarItem.IsMultidimensional)
+                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeBlockDimensionsDelta;
+                if (!scalarBinding.IsMultidimensional)
                 {
-                    scalarItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
+                    scalarBinding.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
                     continue;
                 }
-                scalarItem.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
+                scalarBinding.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
 
-                if (i < Template.ScalarItemsSplit)
+                if (i < Template.ScalarBindingsSplit)
                     delta += blockDimensionsDelta;
 
                 if (blockDimensionsDelta > 0)
-                    index = InsertScalarElementsAfter(scalarItem, index, blockDimensionsDelta);
+                    index = InsertScalarElementsAfter(scalarBinding, index, blockDimensionsDelta);
                 else
-                    RemoveScalarElementsAfter(scalarItem, index, -blockDimensionsDelta);
+                    RemoveScalarElementsAfter(scalarBinding, index, -blockDimensionsDelta);
             }
 
             HeadScalarElementsCount += delta;

@@ -18,79 +18,79 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentBlockView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension)
+        protected override Point GetLocation(ScalarBinding scalarBinding, int blockDimension)
         {
             Debug.Assert(blockDimension == 0);
-            return scalarItem.GridRange.MeasuredLocation;
+            return scalarBinding.GridRange.MeasuredLocation;
         }
 
-        protected override Size GetScalarItemSize(ScalarItem scalarItem)
+        protected override Size GetSize(ScalarBinding scalarBinding)
         {
-            return scalarItem.GridRange.MeasuredSize;
+            return scalarBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension)
+        internal override Thickness GetClip(ScalarBinding scalarBinding, int blockDimension)
         {
             return new Thickness();
         }
 
-        protected override Point GetBlockLocation(BlockView block)
+        protected override Point GetLocation(BlockView blockView)
         {
             return Template.Range().GetLocation(Template.BlockRange);
         }
 
-        protected override Size GetBlockSize(BlockView block)
+        protected override Size GetSize(BlockView blockView)
         {
             return Template.BlockRange.MeasuredSize;
         }
 
-        internal override Thickness GetBlockClip(BlockView block)
+        internal override Thickness GetClip(BlockView blockView)
         {
             return new Thickness();
         }
 
-        protected override Point GetBlockItemLocation(BlockView blockView, BlockItem blockItem)
+        protected override Point GetLocation(BlockView blockView, BlockBinding blockBinding)
         {
-            return Template.BlockRange.GetLocation(blockItem.GridRange);
+            return Template.BlockRange.GetLocation(blockBinding.GridRange);
         }
 
-        protected override Size GetBlockItemSize(BlockView block, BlockItem blockItem)
+        protected override Size GetSize(BlockView blockView, BlockBinding blockBinding)
         {
-            return blockItem.GridRange.MeasuredSize;
+            return blockBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetBlockItemClip(BlockView block, BlockItem blockItem)
+        internal override Thickness GetClip(BlockView blockView, BlockBinding blockBinding)
         {
             return new Thickness();
         }
 
-        protected override Point GetRowLocation(BlockView blockView, int blockDimension)
+        protected override Point GetLocation(BlockView blockView, int blockDimension)
         {
             Debug.Assert(blockDimension == 0);
             return Template.BlockRange.GetLocation(Template.RowRange);
         }
 
-        protected override Size GetRowSize(BlockView block, int blockDimension)
+        protected override Size GetSize(BlockView blockView, int blockDimension)
         {
             return Template.RowRange.MeasuredSize;
         }
 
-        internal override Thickness GetRowClip(int blockDimension)
+        internal override Thickness GetClip(int blockDimension)
         {
             return new Thickness();
         }
 
-        protected override Point GetRowItemLocation(RowView rowView, RowItem rowItem)
+        protected override Point GetLocation(RowView rowView, RowBinding rowBinding)
         {
-            return Template.RowRange.GetLocation(rowItem.GridRange);
+            return Template.RowRange.GetLocation(rowBinding.GridRange);
         }
 
-        protected override Size GetRowItemSize(RowView rowView, RowItem rowItem)
+        protected override Size GetSize(RowView rowView, RowBinding rowBinding)
         {
-            return rowItem.GridRange.MeasuredSize;
+            return rowBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetRowItemClip(RowView rowView, RowItem rowItem)
+        internal override Thickness GetClip(RowView rowView, RowBinding rowBinding)
         {
             return new Thickness();
         }

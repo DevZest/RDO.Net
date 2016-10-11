@@ -28,9 +28,9 @@ namespace DevZest.Data.Windows
             private set { SetValue(RowPresenterPropertyKey, value); }
         }
 
-        internal RowItemCollection RowItems
+        internal RowBindingCollection RowBindings
         {
-            get { return RowPresenter.RowItems; }
+            get { return RowPresenter.RowBindings; }
         }
 
         private IElementCollection ElementCollection { get; set; }
@@ -117,24 +117,24 @@ namespace DevZest.Data.Windows
 
         private void AddElements()
         {
-            var rowItems = RowItems;
-            for (int i = 0; i < rowItems.Count; i++)
+            var rowBindings = RowBindings;
+            for (int i = 0; i < rowBindings.Count; i++)
             {
-                var rowItem = rowItems[i];
-                var element = rowItem.Setup(RowPresenter);
+                var rowBinding = rowBindings[i];
+                var element = rowBinding.Setup(RowPresenter);
                 ElementCollection.Add(element);
             }
         }
 
         private void ClearElements()
         {
-            var rowItems = RowItems;
-            Debug.Assert(Elements.Count == rowItems.Count);
-            for (int i = 0; i < rowItems.Count; i++)
+            var rowBindings = RowBindings;
+            Debug.Assert(Elements.Count == rowBindings.Count);
+            for (int i = 0; i < rowBindings.Count; i++)
             {
-                var rowItem = rowItems[i];
+                var rowBinding = rowBindings[i];
                 var element = Elements[i];
-                rowItem.Cleanup(element);
+                rowBinding.Cleanup(element);
             }
             ElementCollection.RemoveRange(0, Elements.Count);
         }
@@ -143,13 +143,13 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter != null || Elements != null);
 
-            var rowItems = RowItems;
-            Debug.Assert(Elements.Count == rowItems.Count);
-            for (int i = 0; i < rowItems.Count; i++)
+            var rowBindings = RowBindings;
+            Debug.Assert(Elements.Count == rowBindings.Count);
+            for (int i = 0; i < rowBindings.Count; i++)
             {
-                var rowItem = rowItems[i];
+                var rowBinding = rowBindings[i];
                 var element = Elements[i];
-                rowItem.Refresh(element);
+                rowBinding.Refresh(element);
             }
         }
 

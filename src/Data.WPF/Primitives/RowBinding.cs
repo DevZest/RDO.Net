@@ -6,16 +6,16 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class RowItem : TemplateItem, IConcatList<RowItem>
+    public sealed class RowBinding : Binding, IConcatList<RowBinding>
     {
-        #region IConcatList<RowItem>
+        #region IConcatList<RowBinding>
 
-        int IReadOnlyCollection<RowItem>.Count
+        int IReadOnlyCollection<RowBinding>.Count
         {
             get { return 1; }
         }
 
-        RowItem IReadOnlyList<RowItem>.this[int index]
+        RowBinding IReadOnlyList<RowBinding>.this[int index]
         {
             get
             {
@@ -25,11 +25,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        void IConcatList<RowItem>.Sort(Comparison<RowItem> comparision)
+        void IConcatList<RowBinding>.Sort(Comparison<RowBinding> comparision)
         {
         }
 
-        IEnumerator<RowItem> IEnumerable<RowItem>.GetEnumerator()
+        IEnumerator<RowBinding> IEnumerable<RowBinding>.GetEnumerator()
         {
             yield return this;
         }
@@ -59,11 +59,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public sealed class Builder<T> : TemplateItem.Builder<T, RowItem, Builder<T>>
+        public sealed class Builder<T> : Binding.Builder<T, RowBinding, Builder<T>>
             where T : UIElement, new()
         {
             internal Builder(TemplateBuilder templateBuilder)
-                : base(templateBuilder, RowItem.Create<T>())
+                : base(templateBuilder, RowBinding.Create<T>())
             {
             }
 
@@ -72,9 +72,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return this; }
             }
 
-            internal override void AddItem(Template template, GridRange gridRange, RowItem item)
+            internal override void AddItem(Template template, GridRange gridRange, RowBinding item)
             {
-                template.AddRowItem(gridRange, item);
+                template.AddBinding(gridRange, item);
             }
 
             public Builder<T> OnSetup(Action<T, RowPresenter> onSetup)
@@ -112,13 +112,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal static RowItem Create<T>()
+        internal static RowBinding Create<T>()
             where T : UIElement, new()
         {
-            return new RowItem(() => new T());
+            return new RowBinding(() => new T());
         }
 
-        internal RowItem(Func<UIElement> constructor)
+        internal RowBinding(Func<UIElement> constructor)
             : base(constructor)
         {
         }
@@ -200,7 +200,7 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void VerifyRowRange(GridRange rowRange)
         {
             if (!rowRange.Contains(GridRange))
-                throw new InvalidOperationException(Strings.RowItem_OutOfRowRange(Ordinal));
+                throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
         }
     }
 }

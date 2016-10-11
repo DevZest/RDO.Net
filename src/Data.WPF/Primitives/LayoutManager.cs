@@ -33,37 +33,37 @@ namespace DevZest.Data.Windows.Primitives
 
         internal DataPresenter DataPresenter { get; private set; }
 
-        private RecapItemCollection<ScalarItem> ScalarItems
+        private RecapBindingCollection<ScalarBinding> ScalarBindings
         {
-            get { return Template.InternalScalarItems; }
+            get { return Template.InternalScalarBindings; }
         }
 
-        private RecapItemCollection<BlockItem> BlockItems
+        private RecapBindingCollection<BlockBinding> BlockBindings
         {
-            get { return Template.InternalBlockItems; }
+            get { return Template.InternalBlockBindings; }
         }
 
-        private void UpdateAutoSize(BlockView blockView, TemplateItem templateItem, Size measuredSize)
+        private void UpdateAutoSize(BlockView blockView, Binding binding, Size measuredSize)
         {
-            Debug.Assert(templateItem.IsAutoSize);
+            Debug.Assert(binding.IsAutoSize);
 
-            var gridRange = templateItem.GridRange;
-            if (templateItem.AutoWidthGridColumns.Count > 0)
+            var gridRange = binding.GridRange;
+            if (binding.AutoWidthGridColumns.Count > 0)
             {
                 double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
                 if (totalAutoWidth > 0)
                 {
-                    DistributeAutoLength(blockView, templateItem.AutoWidthGridColumns, totalAutoWidth);
+                    DistributeAutoLength(blockView, binding.AutoWidthGridColumns, totalAutoWidth);
                     Template.DistributeStarWidths();
                 }
             }
 
-            if (templateItem.AutoHeightGridRows.Count > 0)
+            if (binding.AutoHeightGridRows.Count > 0)
             {
                 double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
                 if (totalAutoHeight > 0)
                 {
-                    DistributeAutoLength(blockView, templateItem.AutoHeightGridRows, totalAutoHeight);
+                    DistributeAutoLength(blockView, binding.AutoHeightGridRows, totalAutoHeight);
                     Template.DistributeStarHeights();
                 }
             }
@@ -107,14 +107,14 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private bool IsVariantLength(BlockView block, GridTrack gridTrack)
+        private bool IsVariantLength(BlockView blockView, GridTrack gridTrack)
         {
-            return block != null && gridTrack.VariantByBlock;
+            return blockView != null && gridTrack.VariantByBlock;
         }
 
-        protected double GetMeasuredLength(BlockView block, GridTrack gridTrack)
+        protected double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
         {
-            return IsVariantLength(block, gridTrack) ? block.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
+            return IsVariantLength(blockView, gridTrack) ? blockView.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
         }
 
         private void SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
@@ -130,7 +130,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract Size GetScalarItemSize(ScalarItem scalarItem);
+        protected abstract Size GetSize(ScalarBinding scalarBinding);
 
         internal virtual Size Measure(Size availableSize)
         {
@@ -146,20 +146,20 @@ namespace DevZest.Data.Windows.Primitives
         private void PrepareMeasure()
         {
             IsPreparingMeasure = true;
-            PrepareMeasure(ScalarItems.PreAutoSizeItems);
+            PrepareMeasure(ScalarBindings.PreAutoSizeBindings);
             PrepareMeasureBlocks();
-            PrepareMeasure(ScalarItems.PostAutoSizeItems);
+            PrepareMeasure(ScalarBindings.PostAutoSizeBindings);
             IsPreparingMeasure = false;
         }
 
-        private void PrepareMeasure(IEnumerable<ScalarItem> scalarItems)
+        private void PrepareMeasure(IEnumerable<ScalarBinding> scalarBindings)
         {
-            foreach (var scalarItem in scalarItems)
+            foreach (var scalarBinding in scalarBindings)
             {
-                Debug.Assert(scalarItem.BlockDimensions == 1, "Auto size is not allowed with multidimensional ScalarItem.");
-                var element = scalarItem[0];
-                element.Measure(scalarItem.AvailableAutoSize);
-                UpdateAutoSize(null, scalarItem, element.DesiredSize);
+                Debug.Assert(scalarBinding.BlockDimensions == 1, "Auto size is not allowed with multidimensional ScalarBinding.");
+                var element = scalarBinding[0];
+                element.Measure(scalarBinding.AvailableAutoSize);
+                UpdateAutoSize(null, scalarBinding, element.DesiredSize);
             }
         }
 
@@ -167,138 +167,140 @@ namespace DevZest.Data.Windows.Primitives
 
         private Size FinalizeMeasure()
         {
-            foreach (var scalarItem in ScalarItems)
+            foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
                 {
-                    var element = scalarItem[i];
-                    element.Measure(GetScalarItemSize(scalarItem));
+                    var element = scalarBinding[i];
+                    element.Measure(GetSize(scalarBinding));
                 }
             }
 
             if (IsCurrentBlockViewIsolated)
-                CurrentBlockView.Measure(GetBlockSize(CurrentBlockView));
+                CurrentBlockView.Measure(GetSize(CurrentBlockView));
 
             for (int i = 0; i < BlockViewList.Count; i++)
             {
                 var block = BlockViewList[i];
-                block.Measure(GetBlockSize(block));
+                block.Measure(GetSize(block));
             }
 
             return MeasuredSize;
         }
 
-        protected abstract Size GetBlockSize(BlockView block);
+        protected abstract Size GetSize(BlockView blockView);
 
         protected abstract Size MeasuredSize { get; }
 
-        internal Size MeasureBlock(BlockView blockView, Size constraintSize)
+        internal Size Measure(BlockView blockView, Size constraintSize)
         {
             if (IsPreparingMeasure)
-                PrepareMeasureBlock(blockView);
+                PrepareMeasure(blockView);
             else
-                FinalizeMeasureBlock(blockView);
+                FinalizeMeasure(blockView);
             return constraintSize;
         }
 
-        private void PrepareMeasureBlock(BlockView block)
+        private void PrepareMeasure(BlockView blockView)
         {
             Debug.Assert(IsPreparingMeasure);
 
-            PrepareMeasureBlockItems(block, BlockItems.PreAutoSizeItems);
+            PrepareMeasure(blockView, BlockBindings.PreAutoSizeBindings);
 
-            for (int i = 0; i < block.Count; i++)
-                block[i].View.Measure(Size.Empty);
+            for (int i = 0; i < blockView.Count; i++)
+                blockView[i].View.Measure(Size.Empty);
 
-            PrepareMeasureBlockItems(block, BlockItems.PostAutoSizeItems);
+            PrepareMeasure(blockView, BlockBindings.PostAutoSizeBindings);
         }
 
-        private void PrepareMeasureBlockItems(BlockView blockView, IEnumerable<BlockItem> blockItems)
+        private void PrepareMeasure(BlockView blockView, IEnumerable<BlockBinding> blockBindings)
         {
-            foreach (var blockItem in blockItems)
+            foreach (var blockBinding in blockBindings)
             {
-                Debug.Assert(blockItem.IsAutoSize);
-                var element = blockView[blockItem];
-                element.Measure(blockItem.AvailableAutoSize);
-                UpdateAutoSize(blockView, blockItem, element.DesiredSize);
+                Debug.Assert(blockBinding.IsAutoSize);
+                var element = blockView[blockBinding];
+                element.Measure(blockBinding.AvailableAutoSize);
+                UpdateAutoSize(blockView, blockBinding, element.DesiredSize);
             }
         }
 
-        private void FinalizeMeasureBlock(BlockView block)
+        private void FinalizeMeasure(BlockView blockView)
         {
             Debug.Assert(!IsPreparingMeasure);
 
-            foreach (var blockItem in BlockItems)
+            foreach (var blockBinding in BlockBindings)
             {
-                var element = block[blockItem];
-                element.Measure(GetBlockItemSize(block, blockItem));
+                var element = blockView[blockBinding];
+                element.Measure(GetSize(blockView, blockBinding));
             }
 
-            if (block.Count > 0)
+            if (blockView.Count > 0)
             {
-                var size = GetBlockSize(block);
-                for (int i = 0; i < block.Count; i++)
-                    block[i].View.Measure(size);
+                for (int i = 0; i < blockView.Count; i++)
+                {
+                    var size = GetSize(blockView, i);
+                    blockView[i].View.Measure(size);
+                }
             }
         }
 
-        internal Size MeasureRow(RowView rowView, Size constraintSize)
+        internal Size Measure(RowView rowView, Size constraintSize)
         {
             if (IsPreparingMeasure)
-                PrepareMeasureRow(rowView);
+                PrepareMeasure(rowView);
             else
-                FinalizeMeasureRow(rowView);
+                FinalizeMeasure(rowView);
             return constraintSize;
         }
 
-        private void PrepareMeasureRow(RowView rowView)
+        private void PrepareMeasure(RowView rowView)
         {
-            var rowItems = rowView.RowItems;
-            if (rowItems.AutoSizeItems.Count == 0)
+            var rowBindings = rowView.RowBindings;
+            if (rowBindings.AutoSizeItems.Count == 0)
                 return;
 
             var blockView = this[rowView];
-            foreach (var rowItem in rowItems.AutoSizeItems)
+            foreach (var rowBinding in rowBindings.AutoSizeItems)
             {
-                var element = rowView.Elements[rowItem.Ordinal];
-                element.Measure(rowItem.AvailableAutoSize);
-                UpdateAutoSize(blockView, rowItem, element.DesiredSize);
+                var element = rowView.Elements[rowBinding.Ordinal];
+                element.Measure(rowBinding.AvailableAutoSize);
+                UpdateAutoSize(blockView, rowBinding, element.DesiredSize);
             }
         }
 
-        private void FinalizeMeasureRow(RowView rowView)
+        private void FinalizeMeasure(RowView rowView)
         {
-            var rowItems = rowView.RowItems;
-            if (rowItems.Count == 0)
+            var rowBindings = rowView.RowBindings;
+            if (rowBindings.Count == 0)
                 return;
 
-            foreach (var rowItem in rowItems)
+            foreach (var rowBinding in rowBindings)
             {
-                var element = rowView.Elements[rowItem.Ordinal];
-                element.Measure(GetRowItemSize(rowView, rowItem));
+                var element = rowView.Elements[rowBinding.Ordinal];
+                element.Measure(GetSize(rowView, rowBinding));
             }
         }
 
-        internal Rect GetScalarItemRect(ScalarItem scalarItem, int blockDimension)
+        internal Rect GetRect(ScalarBinding scalarBinding, int blockDimension)
         {
-            var point = GetScalarItemLocation(scalarItem, blockDimension);
-            var size = GetScalarItemSize(scalarItem);
+            var point = GetLocation(scalarBinding, blockDimension);
+            var size = GetSize(scalarBinding);
             return new Rect(point, size);
         }
 
-        internal abstract Thickness GetScalarItemClip(ScalarItem scalarItem, int blockDimension);
+        internal abstract Thickness GetClip(ScalarBinding scalarBinding, int blockDimension);
 
-        protected abstract Point GetScalarItemLocation(ScalarItem scalarItem, int blockDimension);
+        protected abstract Point GetLocation(ScalarBinding scalarBinding, int blockDimension);
 
         internal Size Arrange(Size finalSize)
         {
-            foreach (var scalarItem in ScalarItems)
+            foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarItem.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
                 {
-                    var element = scalarItem[i];
-                    var rect = GetScalarItemRect(scalarItem, i);
-                    var clip = GetScalarItemClip(scalarItem, i);
+                    var element = scalarBinding[i];
+                    var rect = GetRect(scalarBinding, i);
+                    var clip = GetClip(scalarBinding, i);
                     Arrange(element, rect, clip);
                 }
             }
@@ -319,16 +321,16 @@ namespace DevZest.Data.Windows.Primitives
                 element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, rect.Width - clip.Left - clip.Right, rect.Height - clip.Top - clip.Bottom));
         }
 
-        internal Rect GetBlockRect(BlockView blockView)
+        internal Rect GetRect(BlockView blockView)
         {
-            var offset = GetBlockLocation(blockView);
-            var size = GetBlockSize(blockView);
+            var offset = GetLocation(blockView);
+            var size = GetSize(blockView);
             return new Rect(offset, size);
         }
 
-        protected abstract Point GetBlockLocation(BlockView block);
+        protected abstract Point GetLocation(BlockView blockView);
 
-        internal abstract Thickness GetBlockClip(BlockView block);
+        internal abstract Thickness GetClip(BlockView blockView);
 
         private void ArrangeBlocks()
         {
@@ -341,80 +343,80 @@ namespace DevZest.Data.Windows.Primitives
 
         private void Arrange(BlockView blockView)
         {
-            var rect = GetBlockRect(blockView);
-            var clip = GetBlockClip(blockView);
+            var rect = GetRect(blockView);
+            var clip = GetClip(blockView);
             Arrange(blockView, rect, clip);
         }
 
-        internal Rect GetBlockItemRect(BlockView block, BlockItem blockItem)
+        internal Rect GetRect(BlockView blockView, BlockBinding blockBinding)
         {
-            var location = GetBlockItemLocation(block, blockItem);
-            var size = GetBlockItemSize(block, blockItem);
+            var location = GetLocation(blockView, blockBinding);
+            var size = GetSize(blockView, blockBinding);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetBlockItemLocation(BlockView block, BlockItem blockItem);
+        protected abstract Point GetLocation(BlockView blockView, BlockBinding blockBinding);
 
-        protected abstract Size GetBlockItemSize(BlockView block, BlockItem blockItem);
+        protected abstract Size GetSize(BlockView blockView, BlockBinding blockBinding);
 
-        internal abstract Thickness GetBlockItemClip(BlockView block, BlockItem blockItem);
+        internal abstract Thickness GetClip(BlockView blockView, BlockBinding blockBinding);
 
-        internal Rect GetRowRect(BlockView block, int blockDimension)
+        internal Rect GetRect(BlockView block, int blockDimension)
         {
-            var location = GetRowLocation(block, blockDimension);
-            var size = GetRowSize(block, blockDimension);
+            var location = GetLocation(block, blockDimension);
+            var size = GetSize(block, blockDimension);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetRowLocation(BlockView block, int blockDimension);
+        protected abstract Point GetLocation(BlockView block, int blockDimension);
 
-        protected abstract Size GetRowSize(BlockView block, int blockDimension);
+        protected abstract Size GetSize(BlockView blockView, int blockDimension);
 
-        internal abstract Thickness GetRowClip(int blockDimension);
+        internal abstract Thickness GetClip(int blockDimension);
 
-        internal void ArrangeBlock(BlockView block)
+        internal void ArrangeChildren(BlockView blockView)
         {
-            foreach (var blockItem in BlockItems)
+            foreach (var blockBinding in BlockBindings)
             {
-                var element = block[blockItem];
-                var rect = GetBlockItemRect(block, blockItem);
-                var clip = GetBlockItemClip(block, blockItem);
+                var element = blockView[blockBinding];
+                var rect = GetRect(blockView, blockBinding);
+                var clip = GetClip(blockView, blockBinding);
                 Arrange(element, rect, clip);
             }
 
-            for (int i = 0; i < block.Count; i++)
+            for (int i = 0; i < blockView.Count; i++)
             {
-                var row = block[i];
-                var rect = GetRowRect(block, i);
-                var clip = GetRowClip(i);
+                var row = blockView[i];
+                var rect = GetRect(blockView, i);
+                var clip = GetClip(i);
                 Arrange(row.View, rect, clip);
             }
         }
 
-        internal Rect GetRowItemRect(RowView rowView, RowItem rowItem)
+        internal Rect GetRect(RowView rowView, RowBinding rowBinding)
         {
-            var location = GetRowItemLocation(rowView, rowItem);
-            var size = GetRowItemSize(rowView, rowItem);
+            var location = GetLocation(rowView, rowBinding);
+            var size = GetSize(rowView, rowBinding);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetRowItemLocation(RowView rowView, RowItem rowItem);
+        protected abstract Point GetLocation(RowView rowView, RowBinding rowBinding);
 
-        protected abstract Size GetRowItemSize(RowView rowView, RowItem rowItem);
+        protected abstract Size GetSize(RowView rowView, RowBinding rowBinding);
 
-        internal abstract Thickness GetRowItemClip(RowView rowView, RowItem rowItem);
+        internal abstract Thickness GetClip(RowView rowView, RowBinding rowBinding);
 
-        internal void ArrangeRow(RowView rowView)
+        internal void ArrangeChildren(RowView rowView)
         {
-            var rowItems = rowView.RowItems;
-            if (rowItems.Count == 0)
+            var rowBindings = rowView.RowBindings;
+            if (rowBindings.Count == 0)
                 return;
 
-            foreach (var rowItem in rowItems)
+            foreach (var rowBinding in rowBindings)
             {
-                var element = rowView.Elements[rowItem.Ordinal];
-                var rect = GetRowItemRect(rowView, rowItem);
-                var clip = GetRowItemClip(rowView, rowItem);
+                var element = rowView.Elements[rowBinding.Ordinal];
+                var rect = GetRect(rowView, rowBinding);
+                var clip = GetClip(rowView, rowBinding);
                 Arrange(element, rect, clip);
             }
         }
