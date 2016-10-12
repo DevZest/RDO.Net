@@ -5,10 +5,19 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Windows
 {
-    public class BlockBinding<T> : BlockBindingBase<T>
+    public sealed class BlockBinding<T> : BlockBindingBase<T>
         where T : UIElement, new()
     {
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnSetup { get; set; }
+        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onSetup;
+        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnSetup
+        {
+            get { return _onSetup; }
+            set
+            {
+                VerifyNotSealed();
+                _onSetup = value;
+            }
+        }
 
         protected sealed override void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
@@ -16,7 +25,16 @@ namespace DevZest.Data.Windows
                 OnSetup(element, blockOrdinal, rows);
         }
 
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnRefresh { get; set; }
+        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onRefresh;
+        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnRefresh
+        {
+            get { return _onRefresh; }
+            set
+            {
+                VerifyNotSealed();
+                _onRefresh = value;
+            }
+        }
 
         protected sealed override void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
@@ -24,7 +42,16 @@ namespace DevZest.Data.Windows
                 OnRefresh(element, blockOrdinal, rows);
         }
 
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnCleanup { get; set; }
+        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onCleanup;
+        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnCleanup
+        {
+            get { return _onCleanup; }
+            set
+            {
+                VerifyNotSealed();
+                _onCleanup = value;
+            }
+        }
 
         protected sealed override void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {

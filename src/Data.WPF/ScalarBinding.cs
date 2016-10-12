@@ -4,10 +4,19 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public class ScalarBinding<T> : ScalarBindingBase<T>
+    public sealed class ScalarBinding<T> : ScalarBindingBase<T>
         where T : UIElement, new()
     {
-        public Action<T> OnSetup { get; set; }
+        private Action<T> _onSetup;
+        public Action<T> OnSetup
+        {
+            get { return _onSetup; }
+            set
+            {
+                VerifyNotSealed();
+                _onSetup = value;
+            }
+        }
 
         protected sealed override void Setup(T element)
         {
@@ -15,7 +24,16 @@ namespace DevZest.Data.Windows
                 OnSetup(element);
         }
 
-        public Action<T> OnRefresh { get; set; }
+        private Action<T> _onRefresh;
+        public Action<T> OnRefresh
+        {
+            get { return _onRefresh; }
+            set
+            {
+                VerifyNotSealed();
+                _onRefresh = value;
+            }
+        }
 
         protected sealed override void Refresh(T element)
         {
@@ -23,7 +41,16 @@ namespace DevZest.Data.Windows
                 OnRefresh(element);
         }
 
-        public Action<T> OnCleanup { get; set; }
+        private Action<T> _onCleanup;
+        public Action<T> OnCleanup
+        {
+            get { return _onCleanup; }
+            set
+            {
+                VerifyNotSealed();
+                _onCleanup = value;
+            }
+        }
 
         protected sealed override void Cleanup(T element)
         {

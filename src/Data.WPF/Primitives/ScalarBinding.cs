@@ -44,7 +44,16 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract UIElement Setup();
 
-        public bool IsMultidimensional { get; set; }
+        private bool _isMultidimensional;
+        public bool IsMultidimensional
+        {
+            get { return _isMultidimensional; }
+            set
+            {
+                VerifyNotSealed();
+                _isMultidimensional = value;
+            }
+        }
 
         internal int CumulativeBlockDimensionsDelta { get; set; }
 

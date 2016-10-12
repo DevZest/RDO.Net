@@ -12,6 +12,22 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].
+        /// </summary>
+        public static string Binding_InvalidFrozenMargin(object frozen, object bindings, object ordinal)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Binding_InvalidFrozenMargin", "frozen", "bindings", "ordinal"), frozen, bindings, ordinal);
+        }
+
+        /// <summary>
+        /// The Binding is sealed and allows no modification.
+        /// </summary>
+        public static string Binding_VerifyNotSealed
+        {
+            get { return GetString("Binding_VerifyNotSealed"); }
+        }
+
+        /// <summary>
         /// BlockBindings[{index}] intersects with RowRange.
         /// </summary>
         public static string BlockBinding_IntersectsWithRowRange(object index)
@@ -233,14 +249,6 @@ namespace DevZest.Data.Windows
         public static string TemplateBuilder_InvalidRecursiveChildModel
         {
             get { return GetString("TemplateBuilder_InvalidRecursiveChildModel"); }
-        }
-
-        /// <summary>
-        /// The {frozen} value is invalid. It cuts across {templateItems}[{ordinal}].
-        /// </summary>
-        public static string TemplateItem_InvalidFrozenMargin(object frozen, object templateItems, object ordinal)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("TemplateItem_InvalidFrozenMargin", "frozen", "templateItems", "ordinal"), frozen, templateItems, ordinal);
         }
 
         /// <summary>

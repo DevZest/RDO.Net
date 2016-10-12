@@ -7,6 +7,40 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
+        private struct Trigger
+        {
+            public Trigger(TriggerEvent triggerEvent, Action<RowPresenter, T> action)
+            {
+                Event = triggerEvent;
+                Action = action;
+            }
+
+            public readonly TriggerEvent Event;
+            public readonly Action<RowPresenter, T> Action;
+
+            public void Execute(T element, TriggerEvent triggerEvent)
+            {
+                if (triggerEvent == Event)
+                    Action(element.GetRowPresenter(), element);
+            }
+        }
+
+        private IList<Trigger> _triggers = Array<Trigger>.Empty;
+        public void AddTrigger(TriggerEvent trigger, Action<RowPresenter, T> action)
+        {
+            VerifyNotSealed();
+            if (_triggers == Array<Trigger>.Empty)
+                _triggers = new List<Trigger>();
+
+            _triggers.Add(new Trigger(trigger, action));
+        }
+
+        internal sealed override void ExecuteTrigger(UIElement element, TriggerEvent triggerEvent)
+        {
+            foreach (var trigger in _triggers)
+                trigger.Execute((T)element, triggerEvent);
+        }
+
         List<T> _cachedElements;
 
         private T Create()

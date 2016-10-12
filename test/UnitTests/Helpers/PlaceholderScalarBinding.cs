@@ -3,7 +3,7 @@ using DevZest.Data.Windows.Primitives;
 
 namespace DevZest.Data.Windows.Helpers
 {
-    public class PlaceholderScalarBinding : ScalarBindingBase<Placeholder>
+    public sealed class PlaceholderScalarBinding : ScalarBindingBase<Placeholder>
     {
         public PlaceholderScalarBinding()
         {
@@ -25,7 +25,16 @@ namespace DevZest.Data.Windows.Helpers
             element.DesiredHeight = DesiredHeight;
         }
 
-        public Action<Placeholder> OnRefresh { get; set; }
+        private Action<Placeholder> _onRefresh;
+        public Action<Placeholder> OnRefresh
+        {
+            get { return _onRefresh; }
+            set
+            {
+                VerifyNotSealed();
+                _onRefresh = value;
+            }
+        }
 
         protected override void Refresh(Placeholder element)
         {
@@ -33,7 +42,16 @@ namespace DevZest.Data.Windows.Helpers
                 OnRefresh(element);
         }
 
-        public Action<Placeholder> OnCleanup { get; set; }
+        private Action<Placeholder> _onCleanup;
+        public Action<Placeholder> OnCleanup
+        {
+            get { return _onCleanup; }
+            set
+            {
+                VerifyNotSealed();
+                _onCleanup = value;
+            }
+        }
 
         protected override void Cleanup(Placeholder element)
         {

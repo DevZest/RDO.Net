@@ -26,15 +26,33 @@ namespace DevZest.Data.Windows.Helpers
             element.DesiredHeight = DesiredHeight;
         }
 
-        public Action<Placeholder, int, IReadOnlyList<RowPresenter>> OnRefresh { get; set; }
+        private Action<Placeholder, int, IReadOnlyList<RowPresenter>> _onRefresh;
+        public Action<Placeholder, int, IReadOnlyList<RowPresenter>> OnRefresh
+        {
+            get { return _onRefresh; }
+            set
+            {
+                VerifyNotSealed();
+                _onRefresh = value;
+            }
+        }
 
-        protected override void Refresh(Placeholder element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        protected sealed override void Refresh(Placeholder element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
             if (OnRefresh != null)
                 OnRefresh(element, blockOrdinal, rows);
         }
 
-        public Action<Placeholder, int, IReadOnlyList<RowPresenter>> OnCleanup { get; set; }
+        Action<Placeholder, int, IReadOnlyList<RowPresenter>> _onCleanup;
+        public Action<Placeholder, int, IReadOnlyList<RowPresenter>> OnCleanup
+        {
+            get { return _onCleanup; }
+            set
+            {
+                VerifyNotSealed();
+                _onCleanup = value;
+            }
+        }
 
         protected override void Cleanup(Placeholder element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {

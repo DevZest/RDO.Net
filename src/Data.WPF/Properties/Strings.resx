@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Binding_InvalidFrozenMargin" xml:space="preserve">
+    <value>The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].</value>
+  </data>
+  <data name="Binding_VerifyNotSealed" xml:space="preserve">
+    <value>The Binding is sealed and allows no modification.</value>
+  </data>
   <data name="BlockBinding_IntersectsWithRowRange" xml:space="preserve">
     <value>BlockBindings[{index}] intersects with RowRange.</value>
   </data>
@@ -200,9 +206,6 @@
   </data>
   <data name="TemplateBuilder_InvalidRecursiveChildModel" xml:space="preserve">
     <value>The child model is invalid. It must be direct child model and has the same type.</value>
-  </data>
-  <data name="TemplateItem_InvalidFrozenMargin" xml:space="preserve">
-    <value>The {frozen} value is invalid. It cuts across {templateItems}[{ordinal}].</value>
   </data>
   <data name="Template_EmptyRowRange" xml:space="preserve">
     <value>The RowRange cannot be empty.</value>
