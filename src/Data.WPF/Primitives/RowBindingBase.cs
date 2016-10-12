@@ -56,6 +56,8 @@ namespace DevZest.Data.Windows.Primitives
             element.SetRowPresenter(rowPresenter);
             Setup(element, rowPresenter);
             Refresh(element, rowPresenter);
+            foreach (var trigger in _triggers)
+                trigger.Event.Attach(element);
             return element;
         }
 
@@ -75,6 +77,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
+            foreach (var trigger in _triggers)
+                trigger.Event.Detach(e);
             Cleanup(e, rowPresenter);
             e.SetRowPresenter(null);
             CachedList.Recycle(ref _cachedElements, e);
