@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class RowBinding : Binding, IConcatList<RowBinding>
+    public abstract class RowBinding : Binding, IConcatList<RowBinding>
     {
         #region IConcatList<RowBinding>
 
@@ -59,127 +59,60 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public sealed class Builder<T> : Binding.Builder<T, RowBinding, Builder<T>>
-            where T : UIElement, new()
-        {
-            internal Builder(TemplateBuilder templateBuilder)
-                : base(templateBuilder, RowBinding.Create<T>())
-            {
-            }
+        //private Action<UIElement, RowPresenter> _onSetup;
+        //private void InitOnSetup<T>(Action<T, RowPresenter> onSetup)
+        //    where T : UIElement
+        //{
+        //    Debug.Assert(onSetup != null);
+        //    _onSetup = (element, rowPresenter) => onSetup((T)element, rowPresenter);
+        //}
 
-            internal override Builder<T> This
-            {
-                get { return this; }
-            }
+        //private void OnSetup(UIElement element, RowPresenter rowPresenter)
+        //{
+        //    Debug.Assert(rowPresenter != null);
+        //    element.SetRowPresenter(rowPresenter);
+        //    if (_onSetup != null)
+        //        _onSetup(element, rowPresenter);
+        //    foreach (var trigger in _triggers)
+        //        trigger.Event.Attach(element);
+        //}
 
-            internal override void AddItem(Template template, GridRange gridRange, RowBinding item)
-            {
-                template.AddBinding(gridRange, item);
-            }
+        internal abstract UIElement Setup(RowPresenter rowPresenter);
 
-            public Builder<T> OnSetup(Action<T, RowPresenter> onSetup)
-            {
-                if (onSetup == null)
-                    throw new ArgumentNullException(nameof(onSetup));
-                TemplateItem.InitOnSetup(onSetup);
-                return This;
-            }
+        //private Action<UIElement, RowPresenter> _onCleanup;
+        //private void InitOnCleanup<T>(Action<T, RowPresenter> onCleanup)
+        //    where T : UIElement
+        //{
+        //    Debug.Assert(onCleanup != null);
+        //    _onCleanup = (element, rowPresenter) => onCleanup((T)element, rowPresenter);
+        //}
 
-            public Builder<T> OnCleanup(Action<T, RowPresenter> onCleanup)
-            {
-                if (onCleanup == null)
-                    throw new ArgumentNullException(nameof(onCleanup));
-                TemplateItem.InitOnCleanup(onCleanup);
-                return This;
-            }
+        //protected override void OnCleanup(UIElement element)
+        //{
+        //    foreach (var trigger in _triggers)
+        //        trigger.Event.Detach(element);
+        //    if (_onCleanup != null)
+        //        _onCleanup(element, element.GetRowPresenter());
+        //    element.SetRowPresenter(null);
+        //}
 
-            public Builder<T> OnRefresh(Action<T, RowPresenter> onRefresh)
-            {
-                if (onRefresh == null)
-                    throw new ArgumentNullException(nameof(onRefresh));
-                TemplateItem.InitOnRefresh(onRefresh);
-                return This;
-            }
+        //internal sealed override void Refresh(UIElement element)
+        //{
+        //    if (_onRefresh != null)
+        //    {
+        //        var rowPresenter = element.GetRowPresenter();
+        //        if (!rowPresenter.IsEditing)
+        //            _onRefresh(element, rowPresenter);
+        //    }
+        //}
 
-            public Builder<T> AddTrigger(TriggerEvent triggerEvent, Action<RowPresenter, T> triggerAction)
-            {
-                if (triggerEvent == null)
-                    throw new ArgumentNullException(nameof(triggerEvent));
-                if (triggerAction == null)
-                    throw new ArgumentNullException(nameof(triggerAction));
-                TemplateItem.AddTrigger(triggerEvent, triggerAction);
-                return This;
-            }
-        }
-
-        internal static RowBinding Create<T>()
-            where T : UIElement, new()
-        {
-            return new RowBinding(() => new T());
-        }
-
-        internal RowBinding(Func<UIElement> constructor)
-            : base(constructor)
-        {
-        }
-
-        private Action<UIElement, RowPresenter> _onSetup;
-        private void InitOnSetup<T>(Action<T, RowPresenter> onSetup)
-            where T : UIElement
-        {
-            Debug.Assert(onSetup != null);
-            _onSetup = (element, rowPresenter) => onSetup((T)element, rowPresenter);
-        }
-
-        private void OnSetup(UIElement element, RowPresenter rowPresenter)
-        {
-            Debug.Assert(rowPresenter != null);
-            element.SetRowPresenter(rowPresenter);
-            if (_onSetup != null)
-                _onSetup(element, rowPresenter);
-            foreach (var trigger in _triggers)
-                trigger.Event.Attach(element);
-        }
-
-        internal UIElement Setup(RowPresenter rowPresenter)
-        {
-            return Setup(x => OnSetup(x, rowPresenter));
-        }
-
-        private Action<UIElement, RowPresenter> _onCleanup;
-        private void InitOnCleanup<T>(Action<T, RowPresenter> onCleanup)
-            where T : UIElement
-        {
-            Debug.Assert(onCleanup != null);
-            _onCleanup = (element, rowPresenter) => onCleanup((T)element, rowPresenter);
-        }
-
-        protected override void OnCleanup(UIElement element)
-        {
-            foreach (var trigger in _triggers)
-                trigger.Event.Detach(element);
-            if (_onCleanup != null)
-                _onCleanup(element, element.GetRowPresenter());
-            element.SetRowPresenter(null);
-        }
-
-        internal sealed override void Refresh(UIElement element)
-        {
-            if (_onRefresh != null)
-            {
-                var rowPresenter = element.GetRowPresenter();
-                if (!rowPresenter.IsEditing)
-                    _onRefresh(element, rowPresenter);
-            }
-        }
-
-        private Action<UIElement, RowPresenter> _onRefresh;
-        private void InitOnRefresh<T>(Action<T, RowPresenter> onRefresh)
-            where T : UIElement
-        {
-            Debug.Assert(onRefresh != null);
-            _onRefresh = (element, rowPresenter) => onRefresh((T)element, rowPresenter);
-        }
+        //private Action<UIElement, RowPresenter> _onRefresh;
+        //private void InitOnRefresh<T>(Action<T, RowPresenter> onRefresh)
+        //    where T : UIElement
+        //{
+        //    Debug.Assert(onRefresh != null);
+        //    _onRefresh = (element, rowPresenter) => onRefresh((T)element, rowPresenter);
+        //}
 
         private IList<Trigger> _triggers = Array<Trigger>.Empty;
         private void AddTrigger<T>(TriggerEvent trigger, Action<RowPresenter, T> action)

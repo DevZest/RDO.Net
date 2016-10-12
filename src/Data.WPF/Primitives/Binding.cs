@@ -10,85 +10,8 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract partial class Binding
     {
-        public abstract class Builder<TElement, TItem, TBuilder> : IDisposable
-            where TElement : UIElement, new()
-            where TItem : Binding
-            where TBuilder : Builder<TElement, TItem, TBuilder>
+        protected Binding()
         {
-            internal Builder(TemplateBuilder templateBuilder, TItem item)
-            {
-                _templateBuilder = templateBuilder;
-                _templateItem = item;
-            }
-
-            public void Dispose()
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-
-            protected virtual void Dispose(bool disposing)
-            {
-                _templateItem = null;
-            }
-
-            private TemplateBuilder _templateBuilder;
-            private Template Template
-            {
-                get { return _templateBuilder.Template; }
-            }
-
-            public TemplateBuilder At(int column, int row)
-            {
-                return At(column, row, column, row);
-            }
-
-            public TemplateBuilder At(int left, int top, int right, int bottom)
-            {
-                AddItem(Template, Template.Range(left, top, right, bottom), TemplateItem);
-                return _templateBuilder;
-            }
-
-            internal abstract void AddItem(Template template, GridRange gridRange, TItem item);
-
-            internal abstract TBuilder This { get; }
-
-            private TItem _templateItem;
-            internal TItem TemplateItem
-            {
-                get
-                {
-                    if (_templateItem == null)
-                        throw new ObjectDisposedException(GetType().FullName);
-
-                    return _templateItem;
-                }
-            }
-
-            public TBuilder AutoSize(int autoSizeOrder)
-            {
-                TemplateItem.AutoSizeOrder = autoSizeOrder;
-                return This;
-            }
-
-            public TBuilder AutoSize(AutoSizeWaiver autoSizeWaiver)
-            {
-                TemplateItem.AutoSizeWaiver = autoSizeWaiver;
-                return This;
-            }
-
-            public TBuilder AutoSize(int autoSizeOrder, AutoSizeWaiver autoSizeWaiver)
-            {
-                TemplateItem.AutoSizeOrder = autoSizeOrder;
-                TemplateItem.AutoSizeWaiver = autoSizeWaiver;
-                return This;
-            }
-        }
-
-        internal Binding(Func<UIElement> constructor)
-        {
-            Debug.Assert(constructor != null);
-            _constructor = constructor;
         }
 
         public Template Template { get; private set; }
@@ -97,7 +20,12 @@ namespace DevZest.Data.Windows.Primitives
 
         public int Ordinal { get; private set; }
 
-        internal void Construct(Template template, GridRange gridRange, int ordinal)
+        public bool IsSealed
+        {
+            get { return Template != null; }
+        }
+
+        internal void Seal(Template template, GridRange gridRange, int ordinal)
         {
             Debug.Assert(template != null && Template == null);
 
@@ -106,36 +34,9 @@ namespace DevZest.Data.Windows.Primitives
             Ordinal = ordinal;
         }
 
-        Func<UIElement> _constructor;
-        List<UIElement> _cachedUIElements;
+        internal abstract void Refresh(UIElement element);
 
-        private UIElement Create()
-        {
-            var result = _constructor();
-            result.SetBinding(this);
-            return result;
-        }
-
-        protected virtual UIElement Setup(Action<UIElement> onSetup)
-        {
-            Debug.Assert(onSetup != null);
-            var element = CachedList.GetOrCreate(ref _cachedUIElements, Create);
-            if (onSetup != null)
-                onSetup(element);
-            Refresh(element);
-            return element;
-        }
-
-        internal void Cleanup(UIElement element)
-        {
-            Debug.Assert(element != null && element.GetBinding() == this);
-            OnCleanup(element);
-            CachedList.Recycle(ref _cachedUIElements, element);
-        }
-
-        protected abstract void OnCleanup(UIElement element);
-
-        internal abstract void Refresh(UIElement elment);
+        internal abstract void Cleanup(UIElement element);
 
         internal void VerifyRowRange()
         {
@@ -143,16 +44,6 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract void VerifyRowRange(GridRange rowRange);
-
-        private bool SizeToContentX
-        {
-            get { return Template.SizeToContentX; }
-        }
-
-        private bool SizeToContentY
-        {
-            get { return Template.SizeToContentY; }
-        }
 
         public int AutoSizeOrder { get; internal set; }
 

@@ -45,7 +45,12 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="AutoSizeWaiver.cs" />
+    <Compile Include="BlockBinding.cs" />
     <Compile Include="DataPresenter_T.cs" />
+    <Compile Include="Primitives\BlockBindingBase.cs" />
+    <Compile Include="Primitives\RowBindingBase.cs" />
+    <Compile Include="Primitives\ScalarBindingBase.cs" />
+    <Compile Include="RowBinding.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\CurrentBlockViewPosition.cs" />
@@ -83,6 +88,7 @@
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
+    <Compile Include="ScalarBinding.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="TriggerEvent.cs" />
     <Compile Include="Primitives\RowBinding.cs" />

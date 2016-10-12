@@ -78,6 +78,9 @@
     <Compile Include="Factories\PlaceHolderFactory.cs" />
     <Compile Include="Helpers\AutoInitBlockView.cs" />
     <Compile Include="Helpers\AutoInitRowView.cs" />
+    <Compile Include="Helpers\PlaceholderBlockBinding.cs" />
+    <Compile Include="Helpers\PlaceholderRowBinding.cs" />
+    <Compile Include="Helpers\PlaceholderScalarBinding.cs" />
     <Compile Include="Helpers\ProductCategoryDataSet.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
@@ -96,7 +99,7 @@
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\IReadOnlyListVerifier.cs" />
-    <Compile Include="Factories\PlaceHolder.cs" />
+    <Compile Include="Helpers\Placeholder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">

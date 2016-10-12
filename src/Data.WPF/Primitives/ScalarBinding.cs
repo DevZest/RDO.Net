@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class ScalarBinding : Binding, IConcatList<ScalarBinding>
+    public abstract class ScalarBinding : Binding, IConcatList<ScalarBinding>
     {
         #region IConcatList<ScalarBinding>
 
@@ -42,109 +42,9 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public sealed class Builder<T> : Binding.Builder<T, ScalarBinding, Builder<T>>
-            where T : UIElement, new()
-        {
-            internal Builder(TemplateBuilder templateBuilder, bool isMultidimensional = false)
-                : base(templateBuilder, ScalarBinding.Create<T>())
-            {
-                TemplateItem.IsMultidimensional = isMultidimensional;
-            }
+        internal abstract UIElement Setup();
 
-            internal override Builder<T> This
-            {
-                get { return this; }
-            }
-
-            internal override void AddItem(Template template, GridRange gridRange, ScalarBinding item)
-            {
-                template.AddBinding(gridRange, item);
-            }
-
-            public Builder<T> OnSetup(Action<T> onSetup)
-            {
-                if (onSetup == null)
-                    throw new ArgumentNullException(nameof(onSetup));
-                TemplateItem.InitOnSetup(onSetup);
-                return This;
-            }
-
-            public Builder<T> OnCleanup(Action<T> onCleanup)
-            {
-                if (onCleanup == null)
-                    throw new ArgumentNullException(nameof(onCleanup));
-                TemplateItem.InitOnCleanup(onCleanup);
-                return This;
-            }
-
-            public Builder<T> OnRefresh(Action<T> onRefresh)
-            {
-                if (onRefresh == null)
-                    throw new ArgumentNullException(nameof(onRefresh));
-                TemplateItem.InitOnRefresh(onRefresh);
-                return This;
-            }
-        }
-
-        internal static ScalarBinding Create<T>()
-            where T : UIElement, new()
-        {
-            return new ScalarBinding(() => new T());
-        }
-
-        private ScalarBinding(Func<UIElement> constructor)
-            : base(constructor)
-        {
-        }
-
-        private Action<UIElement> _onSetup;
-        private void InitOnSetup<T>(Action<T> onSetup)
-            where T : UIElement
-        {
-            Debug.Assert(onSetup != null);
-            _onSetup = element => onSetup((T)element);
-        }
-
-        private void OnSetup(UIElement element)
-        {
-            if (_onSetup != null)
-                _onSetup(element);
-        }
-
-        internal UIElement Setup()
-        {
-            return Setup(x => OnSetup(x));
-        }
-
-        private Action<UIElement> _onCleanup;
-        private void InitOnCleanup<T>(Action<T> onCleanup)
-            where T : UIElement
-        {
-            Debug.Assert(onCleanup != null);
-            _onCleanup = element => onCleanup((T)element);
-        }
-
-        protected override void OnCleanup(UIElement element)
-        {
-            if (_onCleanup != null)
-                _onCleanup(element);
-        }
-
-        private Action<UIElement> _onRefresh;
-        private void InitOnRefresh<T>(Action<T> onRefresh)
-            where T : UIElement
-        {
-            Debug.Assert(onRefresh != null);
-            _onRefresh = element => onRefresh((T)element);
-        }
-
-        internal sealed override void Refresh(UIElement element)
-        {
-            if (_onRefresh != null)
-                _onRefresh(element);
-        }
-
-        public bool IsMultidimensional { get; private set; }
+        public bool IsMultidimensional { get; set; }
 
         internal int CumulativeBlockDimensionsDelta { get; set; }
 

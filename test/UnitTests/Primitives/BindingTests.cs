@@ -12,25 +12,25 @@ namespace DevZest.Data.Windows.Primitives
         const string SOURCE_CHANGED = "Source changed";
 
         [TestMethod]
-        public void ScalarBindingBuilder_OnRefresh()
+        public void ScalarBinding_OnRefresh()
         {
             string source = SOURCE;
 
-            var builder = new ScalarBinding.Builder<TextBlock>(null);
-            builder.OnSetup(v => v.Text = INITIALIZED)
-                .OnRefresh(v => v.Text = source)
-                .OnCleanup(v => v.Text = CLEANUP);
-
-            var item = builder.TemplateItem;
-            var element = (TextBlock)item.Setup();
-            Assert.IsTrue(element.GetBinding() == item);
+            var scalarBinding = new ScalarBinding<TextBlock>()
+            {
+                OnSetup = x => x.Text = INITIALIZED,
+                OnRefresh = x => x.Text = source,
+                OnCleanup = x => x.Text = CLEANUP
+            };
+            var element = (TextBlock)scalarBinding.Setup();
+            Assert.IsTrue(element.GetBinding() == scalarBinding);
             Assert.AreEqual(SOURCE, element.Text);
 
             source = SOURCE_CHANGED;
-            item.Refresh(element);
+            scalarBinding.Refresh(element);
             Assert.AreEqual(SOURCE_CHANGED, element.Text);
 
-            item.Cleanup(element);
+            scalarBinding.Cleanup(element);
             Assert.AreEqual(CLEANUP, element.Text);
         }
     }

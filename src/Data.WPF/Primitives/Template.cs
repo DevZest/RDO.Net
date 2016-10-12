@@ -207,7 +207,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void AddBinding(GridRange gridRange, ScalarBinding scalarBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            scalarBinding.Construct(this, gridRange, InternalScalarBindings.Count);
+            scalarBinding.Seal(this, gridRange, InternalScalarBindings.Count);
             InternalScalarBindings.Add(gridRange, scalarBinding);
             if (!HasRowBinding)
                 ScalarBindingsSplit = InternalScalarBindings.Count;
@@ -216,7 +216,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void AddBinding(GridRange gridRange, BlockBinding blockBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            blockBinding.Construct(this, gridRange, InternalBlockBindings.Count);
+            blockBinding.Seal(this, gridRange, InternalBlockBindings.Count);
             InternalBlockBindings.Add(gridRange, blockBinding);
             if (!HasRowBinding)
                 BlockBindingsSplit = InternalBlockBindings.Count;
@@ -225,7 +225,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void AddBinding(GridRange gridRange, RowBinding rowBinding)
         {
             Debug.Assert(IsValid(gridRange));
-            rowBinding.Construct(this, gridRange, InternalRowBindings.Count);
+            rowBinding.Seal(this, gridRange, InternalRowBindings.Count);
             InternalRowBindings.Add(gridRange, rowBinding);
         }
 

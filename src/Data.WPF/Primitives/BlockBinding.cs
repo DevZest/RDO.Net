@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class BlockBinding : Binding, IConcatList<BlockBinding>
+    public abstract class BlockBinding : Binding, IConcatList<BlockBinding>
     {
         #region IConcatList<BlockBinding>
 
@@ -42,115 +42,7 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public sealed class Builder<T> : Binding.Builder<T, BlockBinding, Builder<T>>
-            where T : UIElement, new()
-        {
-            internal Builder(TemplateBuilder templateBuilder)
-                : base(templateBuilder, BlockBinding.Create<T>())
-            {
-            }
-
-            internal override Builder<T> This
-            {
-                get { return this; }
-            }
-
-            internal override void AddItem(Template template, GridRange gridRange, BlockBinding item)
-            {
-                template.AddBinding(gridRange, item);
-            }
-
-            public Builder<T> OnSetup(Action<T, int, IReadOnlyList<RowPresenter>> onSetup)
-            {
-                if (onSetup == null)
-                    throw new ArgumentNullException(nameof(onSetup));
-                TemplateItem.InitOnSetup(onSetup);
-                return This;
-            }
-
-            public Builder<T> OnCleanup(Action<T, int, IReadOnlyList<RowPresenter>> onCleanup)
-            {
-                if (onCleanup == null)
-                    throw new ArgumentNullException(nameof(onCleanup));
-                TemplateItem.InitOnCleanup(onCleanup);
-                return This;
-            }
-
-            public Builder<T> OnRefresh(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
-            {
-                if (onRefresh == null)
-                    throw new ArgumentNullException(nameof(onRefresh));
-                TemplateItem.InitOnRefresh(onRefresh);
-                return This;
-            }
-        }
-
-        internal static BlockBinding Create<T>()
-            where T : UIElement, new()
-        {
-            return new BlockBinding(() => new T());
-        }
-
-        private BlockBinding(Func<UIElement> constructor)
-            : base(constructor)
-        {
-        }
-
-        internal UIElement Setup(BlockView blockView)
-        {
-            Debug.Assert(blockView != null);
-            return Setup(x => OnSetup(x, blockView));
-        }
-
-        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onSetup;
-        private void InitOnSetup<T>(Action<T, int, IReadOnlyList<RowPresenter>> onSetup)
-            where T : UIElement
-        {
-            Debug.Assert(onSetup != null);
-            _onSetup = (element, ordinal, rows) => onSetup((T)element, ordinal, rows);
-        }
-
-        private void OnSetup(UIElement element, BlockView blockView)
-        {
-            element.SetBlockView(blockView);
-            if (_onSetup != null)
-                _onSetup(element, blockView.Ordinal, blockView);
-        }
-
-        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onCleanup;
-        private void InitOnCleanup<T>(Action<T, int, IReadOnlyList<RowPresenter>> onCleanup)
-            where T : UIElement
-        {
-            Debug.Assert(onCleanup != null);
-            _onCleanup = (element, ordinal, rows) => onCleanup((T)element, ordinal, rows);
-        }
-
-        protected override void OnCleanup(UIElement element)
-        {
-            if (_onCleanup != null)
-            {
-                var blockView = element.GetBlockView();
-                _onCleanup(element, blockView.Ordinal, blockView);
-            }
-            element.SetBlockView(null);
-        }
-
-        private Action<UIElement, int, IReadOnlyList<RowPresenter>> _onRefresh;
-        private void InitOnRefresh<T>(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
-            where T : UIElement
-        {
-            Debug.Assert(onRefresh != null);
-            _onRefresh = (element, ordinal, rows) => onRefresh((T)element, ordinal, rows);
-        }
-
-        internal sealed override void Refresh(UIElement element)
-        {
-            if (_onRefresh != null)
-            {
-                var blockView = element.GetBlockView();
-                _onRefresh(element, blockView.Ordinal, blockView);
-            }
-        }
+        internal abstract UIElement Setup(BlockView blockView);
 
         internal override void VerifyRowRange(GridRange rowRange)
         {

@@ -1,9 +1,7 @@
-﻿using DevZest.Data.Windows.Factories;
-using DevZest.Data.Windows.Helpers;
+﻿using DevZest.Data.Windows.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
@@ -19,12 +17,12 @@ namespace DevZest.Data.Windows.Primitives
             {
                 builder.GridColumns("20", "Auto", "*")
                     .GridRows("25", "*", "Auto")
-                    .RowBinding(100, 20).At(1, 0)
-                    .RowBinding(200, 20).At(2, 0)
-                    .RowBinding(110, 20).At(1, 1)
-                    .RowBinding(200, 20).At(2, 1)
-                    .RowBinding(100, 20).At(1, 2)
-                    .RowBinding(200, 20).At(2, 2);
+                    .AddBinding(1, 0, new PlaceholderRowBinding(100, 20))
+                    .AddBinding(2, 0, new PlaceholderRowBinding(200, 20))
+                    .AddBinding(1, 1, new PlaceholderRowBinding(110, 20))
+                    .AddBinding(2, 1, new PlaceholderRowBinding(200, 20))
+                    .AddBinding(1, 2, new PlaceholderRowBinding(100, 20))
+                    .AddBinding(2, 2, new PlaceholderRowBinding(200, 20));
             });
             Assert.IsInstanceOfType(layoutManager, typeof(LayoutZManager));
 
@@ -62,7 +60,7 @@ namespace DevZest.Data.Windows.Primitives
                     .GridRows("30", "30")
                     .GridLineX(new GridPoint(0, 1), 2, pen)
                     .GridLineY(new GridPoint(1, 0), 2, pen)
-                    .RowBinding().At(0, 0, 1, 1);
+                    .AddBinding(0, 0, 1, 1, new PlaceholderRowBinding());
             });
 
             layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));

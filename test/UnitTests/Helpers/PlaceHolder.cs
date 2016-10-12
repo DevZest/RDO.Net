@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace DevZest.Data.Windows.Factories
+namespace DevZest.Data.Windows.Helpers
 {
-    public sealed class PlaceHolder : UIElement
+    public sealed class Placeholder : UIElement
     {
         public double DesiredWidth { get; set; }
 

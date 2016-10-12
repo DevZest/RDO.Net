@@ -153,22 +153,37 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public ScalarBinding.Builder<T> ScalarBinding<T>(bool isMultidimensional = false)
-            where T : UIElement, new()
+        public TemplateBuilder AddBinding(int column, int row, ScalarBinding scalarBinding)
         {
-            return new ScalarBinding.Builder<T>(this, isMultidimensional);
+            return AddBinding(column, row, column, row, scalarBinding);
         }
 
-        public BlockBinding.Builder<T> BlockBinding<T>()
-            where T : UIElement, new()
+        public TemplateBuilder AddBinding(int left, int top, int right, int bottom, ScalarBinding scalarBinding)
         {
-            return new BlockBinding.Builder<T>(this);
+            Template.AddBinding(Template.Range(left, top, right, bottom), scalarBinding);
+            return this;
         }
 
-        public RowBinding.Builder<T> RowBinding<T>()
-            where T : UIElement, new()
+        public TemplateBuilder AddBinding(int column, int row, BlockBinding blockBinding)
         {
-            return new RowBinding.Builder<T>(this);
+            return AddBinding(column, row, column, row, blockBinding);
+        }
+
+        public TemplateBuilder AddBinding(int left, int top, int right, int bottom, BlockBinding blockBinding)
+        {
+            Template.AddBinding(Template.Range(left, top, right, bottom), blockBinding);
+            return this;
+        }
+
+        public TemplateBuilder AddBinding(int column, int row, RowBinding rowBinding)
+        {
+            return AddBinding(column, row, column, row, rowBinding);
+        }
+
+        public TemplateBuilder AddBinding(int left, int top, int right, int bottom, RowBinding rowBinding)
+        {
+            Template.AddBinding(Template.Range(left, top, right, bottom), rowBinding);
+            return this;
         }
 
         public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)

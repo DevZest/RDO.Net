@@ -34,18 +34,10 @@ namespace DevZest.Data.Windows.Primitives
                 .Layout(Orientation.Vertical, 0)
                 .BlockView<AutoInitBlockView>()
                 .RowView<AutoInitRowView>()
-                .ScalarBinding<TextBlock>()
-                    .OnSetup(v => v.Text = _.Name.DisplayName)
-                .At(1, 0)
-                .BlockBinding<TextBlock>()
-                    .OnRefresh((v, ordinal, rows) => v.Text = ordinal.ToString())
-                .At(0, 1)
-                .RowBinding<TextBlock>()
-                    .OnRefresh((v, p) => v.Text = p.GetValue(_.Name))
-                .At(1, 1)
-                .ScalarBinding<TextBlock>(true)
-                    .OnSetup(v => v.Text = _.Name.DisplayName)
-                .At(1, 2);
+                .AddBinding(1, 0, new ScalarBinding<TextBlock>() { OnSetup = v => v.Text = _.Name.DisplayName })
+                .AddBinding(0, 1, new BlockBinding<TextBlock>() { OnRefresh = (v, ordinal, rows) => v.Text = ordinal.ToString() })
+                .AddBinding(1, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.Name) })
+                .AddBinding(1, 2, new ScalarBinding<TextBlock> { IsMultidimensional = true, OnSetup = v => v.Text = _.Name.DisplayName });
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
