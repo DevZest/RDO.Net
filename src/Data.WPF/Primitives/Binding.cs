@@ -40,6 +40,28 @@ namespace DevZest.Data.Windows.Primitives
             Ordinal = ordinal;
         }
 
+        private Style _style;
+        public Style Style
+        {
+            get { return _style; }
+            set
+            {
+                VerifyNotSealed();
+                _style = value;
+            }
+        }
+
+        internal void OnCreated(UIElement element)
+        {
+            element.SetBinding(this);
+            if (Style != null)
+            {
+                var frameworkElement = element as FrameworkElement;
+                if (frameworkElement != null)
+                    frameworkElement.Style = Style;
+            }
+        }
+
         internal abstract void Refresh(UIElement element);
 
         internal abstract void Cleanup(UIElement element);

@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
         private T Create()
         {
             var result = new T();
-            result.SetBinding(this);
+            OnCreated(result);
             return result;
         }
 
