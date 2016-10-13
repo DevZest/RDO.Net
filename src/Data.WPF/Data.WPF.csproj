@@ -47,7 +47,6 @@
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="BlockBinding.cs" />
     <Compile Include="DataPresenter_T.cs" />
-    <Compile Include="Editability.cs" />
     <Compile Include="Primitives\BlockBindingBase.cs" />
     <Compile Include="Primitives\RowBindingBase.cs" />
     <Compile Include="Primitives\ScalarBindingBase.cs" />

@@ -107,9 +107,9 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder With(Editability value)
+        public TemplateBuilder WithTransactionalEdit(bool value)
         {
-            Template.Editability = value;
+            Template.TransactionalEdit = value;
             return this;
         }
 

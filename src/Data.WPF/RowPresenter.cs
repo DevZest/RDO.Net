@@ -292,19 +292,16 @@ namespace DevZest.Data.Windows
 
         private void CoerceEditMode()
         {
-            var editability = Template.Editability;
-            if (editability == Editability.Transactional)
+            var transactionalEdit = CoerceTransactionalEdit();
+            if (transactionalEdit)
                 BeginEdit();
-            else if (editability == Editability.Direct)
-            {
-                if (!IsCurrent)
-                    throw new InvalidOperationException();
-            }
             else
-            {
-                Debug.Assert(editability == Editability.ReadOnly);
-                throw new InvalidOperationException();
-            }
+                VerifyIsCurrent();
+        }
+
+        private bool CoerceTransactionalEdit()
+        {
+            return IsPlaceholder ? true : Template.TransactionalEdit;
         }
 
         private bool HasPendingEdit
@@ -324,7 +321,7 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyIsCurrent);
         }
 
-        private void BeginEdit()
+        public void BeginEdit()
         {
             if (IsEditing)
                 return;
@@ -411,16 +408,8 @@ namespace DevZest.Data.Windows
             if (isReload)
                 return true;
 
-            var editability = Template.Editability;
-            if (editability == Editability.ReadOnly)
-                return true;
-            else if (editability == Editability.Direct)
-                return !IsCurrent;
-            else
-            {
-                Debug.Assert(editability == Editability.Transactional);
-                return !IsEditing;
-            }
+            var transactionalEdit = CoerceTransactionalEdit();
+            return transactionalEdit ? !IsEditing : !IsCurrent;
         }
     }
 }
