@@ -40,6 +40,8 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
+        internal abstract bool HasTrigger { get; }
+
         internal abstract UIElement Setup(RowPresenter rowPresenter);
 
         internal abstract void ExecuteTrigger(UIElement element, TriggerEvent triggerEvent);

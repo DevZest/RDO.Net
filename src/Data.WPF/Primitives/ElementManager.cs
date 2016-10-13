@@ -374,6 +374,12 @@ namespace DevZest.Data.Windows.Primitives
                 InvalidateElements();
         }
 
+        protected override void OnIsEditingChanged()
+        {
+            base.OnIsEditingChanged();
+            InvalidateElements();
+        }
+
         private bool _isDirty;
         internal void InvalidateElements()
         {

@@ -393,10 +393,18 @@ namespace DevZest.Data.Windows.Primitives
             set
             {
                 Debug.Assert(_editHandler != value);
+                var oldIsEditing = IsEditing;
                 _editHandler = value;
                 if (_editHandler == null)
                     CoercePlaceholder();
+                var newIsEditing = IsEditing;
+                if (oldIsEditing != newIsEditing)
+                    OnIsEditingChanged();
             }
+        }
+
+        protected virtual void OnIsEditingChanged()
+        {
         }
 
         public bool IsEditing

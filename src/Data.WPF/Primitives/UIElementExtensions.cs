@@ -58,15 +58,9 @@ namespace DevZest.Data.Windows.Primitives
         internal static void SetRowPresenter(this UIElement element, RowPresenter value)
         {
             if (value == null)
-            {
-                Debug.Assert(element.GetRowPresenter() != null);
                 element.ClearValue(RowPresenterProperty);
-            }
             else
-            {
-                Debug.Assert(element.GetRowPresenter() == null);
                 element.SetValue(RowPresenterProperty, value);
-            }
         }
     }
 }

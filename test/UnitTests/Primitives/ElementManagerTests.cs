@@ -32,8 +32,6 @@ namespace DevZest.Data.Windows.Primitives
             builder.GridColumns("100", "100")
                 .GridRows("100", "100", "100")
                 .Layout(Orientation.Vertical, 0)
-                .BlockView<AutoInitBlockView>()
-                .RowView<AutoInitRowView>()
                 .AddBinding(1, 0, new ScalarBinding<TextBlock>() { OnSetup = v => v.Text = _.Name.DisplayName })
                 .AddBinding(0, 1, new BlockBinding<TextBlock>() { OnRefresh = (v, ordinal, rows) => v.Text = ordinal.ToString() })
                 .AddBinding(1, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.Name) })
@@ -47,6 +45,8 @@ namespace DevZest.Data.Windows.Primitives
             using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
             {
                 buildTemplateAction(templateBuilder, dataSet._);
+                templateBuilder.BlockView<AutoInitBlockView>()
+                    .RowView<AutoInitRowView>();
             }
             var result = new ConcreteElementManager(template, dataSet);
             result.InitializeElements(null);
@@ -352,6 +352,74 @@ namespace DevZest.Data.Windows.Primitives
                         .VerifyEof())
                     .VerifyEof())
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
+                .VerifyEof();
+        }
+
+        [TestMethod]
+        public void ElementManager_RefreshElements_IsCurrent()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("100")
+                .Layout(Orientation.Vertical, 0)
+                .AddBinding(0, 0, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.IsCurrent.ToString() });
+            });
+            var template = elementManager.Template;
+            var rows = elementManager.Rows;
+
+            Assert.IsTrue(rows[0].IsCurrent);
+            elementManager.Elements
+                .Verify((BlockView b) => b.Elements
+                    .Verify((RowView r) => r.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsCurrent.ToString()))
+                        .VerifyEof())
+                    .VerifyEof())
+                .VerifyEof();
+
+            elementManager.CurrentRow = rows[1];
+            Assert.IsTrue(rows[1].IsCurrent);
+            elementManager.Elements
+                .Verify((BlockView b) => b.Elements
+                    .Verify((RowView r) => r.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].IsCurrent.ToString()))
+                        .VerifyEof())
+                    .VerifyEof())
+                .VerifyEof();
+        }
+
+        [TestMethod]
+        public void ElementManager_RefreshElements_IsEditing()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            {
+                builder.GridColumns("100")
+                    .GridRows("100")
+                .Layout(Orientation.Vertical, 0)
+                .AddBinding(0, 0, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.IsEditing.ToString() });
+            });
+            var template = elementManager.Template;
+            var rows = elementManager.Rows;
+
+            Assert.IsFalse(rows[0].IsEditing);
+            elementManager.Elements
+                .Verify((BlockView b) => b.Elements
+                    .Verify((RowView r) => r.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsEditing.ToString()))
+                        .VerifyEof())
+                    .VerifyEof())
+                .VerifyEof();
+
+            rows[0].BeginEdit();
+            Assert.IsTrue(rows[0].IsEditing);
+            elementManager.Elements
+                .Verify((BlockView b) => b.Elements
+                    .Verify((RowView r) => r.Elements
+                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsEditing.ToString()))
+                        .VerifyEof())
+                    .VerifyEof())
                 .VerifyEof();
         }
     }

@@ -49,6 +49,12 @@ namespace DevZest.Data.Windows
 
             RowPresenter = rowPresenter;
             rowPresenter.View = this;
+            if (Elements != null)
+            {
+                foreach (var element in Elements)
+                    element.SetRowPresenter(rowPresenter);
+            }
+
             if (RowPresenter.Template.OnSetupRowView != null)
                 RowPresenter.Template.OnSetupRowView(this);
         }
@@ -142,16 +148,17 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter != null || Elements != null);
 
-            if (!RowPresenter.ShouldRefresh(isReload))
-                return;
-
+            var shouldRefresh = RowPresenter.ShouldRefresh(isReload);
             var rowBindings = RowBindings;
             Debug.Assert(Elements.Count == rowBindings.Count);
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
-                var element = Elements[i];
-                rowBinding.Refresh(element);
+                if (shouldRefresh || !rowBinding.HasTrigger)
+                {
+                    var element = Elements[i];
+                    rowBinding.Refresh(element);
+                }
             }
         }
 

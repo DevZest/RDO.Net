@@ -35,6 +35,11 @@ namespace DevZest.Data.Windows.Primitives
             _triggers.Add(new Trigger(trigger, action));
         }
 
+        internal sealed override bool HasTrigger
+        {
+            get { return _triggers.Count > 0; }
+        }
+
         internal sealed override void ExecuteTrigger(UIElement element, TriggerEvent triggerEvent)
         {
             foreach (var trigger in _triggers)
