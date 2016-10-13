@@ -236,9 +236,9 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshBlockViews()
         {
             if (CurrentBlockView != null && CurrentBlockViewPosition != CurrentBlockViewPosition.WithinList)
-                CurrentBlockView.Refresh();
+                CurrentBlockView.Refresh(false);
             foreach (var blockView in BlockViewList)
-                blockView.Refresh();
+                blockView.Refresh(false);
         }
 
         internal void ClearElements()
@@ -370,7 +370,8 @@ namespace DevZest.Data.Windows.Primitives
         protected override void OnRowUpdated(RowPresenter row)
         {
             base.OnRowUpdated(row);
-            InvalidateElements();
+            if (row.ShouldRefresh(false))
+                InvalidateElements();
         }
 
         private bool _isDirty;

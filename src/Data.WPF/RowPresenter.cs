@@ -285,23 +285,52 @@ namespace DevZest.Data.Windows
                 if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
-                BeginEdit();
+                CoerceEditMode();
                 column.SetValue(DataRow, value);
             }
         }
 
-        public bool CanEdit
+        private void CoerceEditMode()
         {
-            get { return !RowManager.IsEditing && DataSet.EditingRow == null; }
+            var editability = Template.Editability;
+            if (editability == Editability.Transactional)
+                BeginEdit();
+            else if (editability == Editability.Direct)
+            {
+                if (!IsCurrent)
+                    throw new InvalidOperationException();
+            }
+            else
+            {
+                Debug.Assert(editability == Editability.ReadOnly);
+                throw new InvalidOperationException();
+            }
         }
 
-        public void BeginEdit()
+        private bool HasPendingEdit
+        {
+            get { return RowManager.IsEditing || DataSet.EditingRow != null; }
+        }
+
+        private void VerifyNoPendingEdit()
+        {
+            if (HasPendingEdit)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyNoPendingEdit);
+        }
+
+        private void VerifyIsCurrent()
+        {
+            if (!IsCurrent)
+                throw new InvalidOperationException(Strings.RowPresenter_VerifyIsCurrent);
+        }
+
+        private void BeginEdit()
         {
             if (IsEditing)
                 return;
 
-            if (!CanEdit)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyCanEdit);
+            VerifyIsCurrent();
+            VerifyNoPendingEdit();
             RowManager.BeginEdit(this);
         }
 
@@ -312,7 +341,7 @@ namespace DevZest.Data.Windows
             if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
-            BeginEdit();
+            CoerceEditMode();
             column[DataRow] = value;
         }
 
@@ -332,11 +361,6 @@ namespace DevZest.Data.Windows
             RowManager.CommitEdit();
         }
 
-        public bool CanInsert
-        {
-            get { return IsRecursive && CanEdit; }
-        }
-
         public void BeginInsertBefore(RowPresenter child = null)
         {
             VerifyInsert(child);
@@ -351,11 +375,14 @@ namespace DevZest.Data.Windows
 
         private void VerifyInsert(RowPresenter child)
         {
-            VerifyRecursive();
-            if (child != null && child.Parent != this)
-                throw new ArgumentException(Strings.RowPresenter_InvalidChildRow, nameof(child));
-            if (!CanInsert)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyCanInsert);
+            if (child == null)
+                VerifyNoPendingEdit();
+            else
+            {
+                if (child.Parent != this)
+                    throw new ArgumentException(Strings.RowPresenter_InvalidChildRow, nameof(child));
+                child.VerifyNoPendingEdit();
+            }
         }
 
         public DataSet DataSet
@@ -377,6 +404,23 @@ namespace DevZest.Data.Windows
         internal RowBindingCollection RowBindings
         {
             get { return Template.InternalRowBindings; }
+        }
+
+        internal bool ShouldRefresh(bool isReload)
+        {
+            if (isReload)
+                return true;
+
+            var editability = Template.Editability;
+            if (editability == Editability.ReadOnly)
+                return true;
+            else if (editability == Editability.Direct)
+                return !IsCurrent;
+            else
+            {
+                Debug.Assert(editability == Editability.Transactional);
+                return !IsEditing;
+            }
         }
     }
 }

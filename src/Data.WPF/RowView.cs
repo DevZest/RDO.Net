@@ -51,7 +51,6 @@ namespace DevZest.Data.Windows
             rowPresenter.View = this;
             if (RowPresenter.Template.OnSetupRowView != null)
                 RowPresenter.Template.OnSetupRowView(this);
-            Refresh();
         }
 
         internal virtual void Setup(RowPresenter rowPresenter)
@@ -139,9 +138,12 @@ namespace DevZest.Data.Windows
             ElementCollection.RemoveRange(0, Elements.Count);
         }
 
-        internal void Refresh()
+        internal void Refresh(bool isReload)
         {
             Debug.Assert(RowPresenter != null || Elements != null);
+
+            if (!RowPresenter.ShouldRefresh(isReload))
+                return;
 
             var rowBindings = RowBindings;
             Debug.Assert(Elements.Count == rowBindings.Count);

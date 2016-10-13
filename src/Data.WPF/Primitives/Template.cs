@@ -433,5 +433,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(gridLine != null);
             _gridLines.Add(gridLine);
         }
+
+        public Editability Editability { get; internal set; } = Editability.Transactional;
     }
 }

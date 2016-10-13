@@ -96,6 +96,7 @@ namespace DevZest.Data.Windows.Primitives
 
             rows[0].EditValue(dataSet._.Name, "NewName-1");
             rowManager.CommitEdit();
+            rowManager.CurrentRow = rows[1];
             rows[1].EditValue(dataSet._.Name, "NewName-1-1");
             rowManager.CommitEdit();
             Assert.AreEqual("NewName-1", rows[0].GetValue(dataSet._.Name));
@@ -115,6 +116,7 @@ namespace DevZest.Data.Windows.Primitives
 
             rows[0][dataSet._.Name] = "NewName-1";
             rowManager.CommitEdit();
+            rowManager.CurrentRow = rows[1];
             rows[1][dataSet._.Name] = "NewName-1-1";
             rowManager.CommitEdit();
             Assert.AreEqual("NewName-1", rows[0][dataSet._.Name]);

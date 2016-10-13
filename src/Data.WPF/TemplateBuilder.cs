@@ -107,6 +107,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        public TemplateBuilder With(Editability value)
+        {
+            Template.Editability = value;
+            return this;
+        }
+
         public TemplateBuilder Recurse(Model childModel)
         {
             if (childModel == null)

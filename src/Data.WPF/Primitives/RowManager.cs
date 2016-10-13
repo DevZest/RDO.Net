@@ -11,7 +11,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             public static void EnterEditMode(RowManager rowManager)
             {
-                Debug.Assert(rowManager.CurrentRow.CanEdit);
                 var currentRow = rowManager.CurrentRow;
                 if (currentRow.IsPlaceholder)
                     InsertHandler.EnterEditMode(rowManager);
@@ -87,7 +86,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             public static new void EnterEditMode(RowManager rowManager)
             {
-                Debug.Assert(rowManager.CurrentRow.CanEdit);
                 GetEditCommand(rowManager.PlaceholderMode).OpenEdit(rowManager);
             }
 
@@ -377,7 +375,7 @@ namespace DevZest.Data.Windows.Primitives
         public RowPresenter CurrentRow
         {
             get { return _currentRow; }
-            private set
+            internal set
             {
                 Debug.Assert(value == null || value.RowManager == this);
                 if (value == _currentRow)
@@ -420,9 +418,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void BeginEdit(RowPresenter row)
         {
-            Debug.Assert(row.CanEdit);
-            if (CurrentRow != row)
-                CurrentRow = row;
             _EditHandler.EnterEditMode(this);
         }
 

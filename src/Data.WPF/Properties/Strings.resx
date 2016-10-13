@@ -174,17 +174,17 @@
   <data name="RowPresenter_InvalidChildRow" xml:space="preserve">
     <value>The child row is invalid.</value>
   </data>
-  <data name="RowPresenter_VerifyCanEdit" xml:space="preserve">
-    <value>The CanEdit property must be true.</value>
-  </data>
-  <data name="RowPresenter_VerifyCanInsert" xml:space="preserve">
-    <value>The CanInsert property must be true.</value>
-  </data>
   <data name="RowPresenter_VerifyColumn" xml:space="preserve">
     <value>The column is invalid. It does not belong to the DataSet.</value>
   </data>
+  <data name="RowPresenter_VerifyIsCurrent" xml:space="preserve">
+    <value>RowPresenter.IsCurrent must be true to allow this operation.</value>
+  </data>
   <data name="RowPresenter_VerifyIsEditing" xml:space="preserve">
     <value>The IsEditing property must be true.</value>
+  </data>
+  <data name="RowPresenter_VerifyNoPendingEdit" xml:space="preserve">
+    <value>There is pending edit not completed.</value>
   </data>
   <data name="RowPresenter_VerifyRecursive" xml:space="preserve">
     <value>The row must be recursive.</value>

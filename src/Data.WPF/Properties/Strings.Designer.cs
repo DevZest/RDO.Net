@@ -164,22 +164,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The CanEdit property must be true.
-        /// </summary>
-        public static string RowPresenter_VerifyCanEdit
-        {
-            get { return GetString("RowPresenter_VerifyCanEdit"); }
-        }
-
-        /// <summary>
-        /// The CanInsert property must be true.
-        /// </summary>
-        public static string RowPresenter_VerifyCanInsert
-        {
-            get { return GetString("RowPresenter_VerifyCanInsert"); }
-        }
-
-        /// <summary>
         /// The column is invalid. It does not belong to the DataSet.
         /// </summary>
         public static string RowPresenter_VerifyColumn
@@ -188,11 +172,27 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// RowPresenter.IsCurrent must be true to allow this operation.
+        /// </summary>
+        public static string RowPresenter_VerifyIsCurrent
+        {
+            get { return GetString("RowPresenter_VerifyIsCurrent"); }
+        }
+
+        /// <summary>
         /// The IsEditing property must be true.
         /// </summary>
         public static string RowPresenter_VerifyIsEditing
         {
             get { return GetString("RowPresenter_VerifyIsEditing"); }
+        }
+
+        /// <summary>
+        /// There is pending edit not completed.
+        /// </summary>
+        public static string RowPresenter_VerifyNoPendingEdit
+        {
+            get { return GetString("RowPresenter_VerifyNoPendingEdit"); }
         }
 
         /// <summary>

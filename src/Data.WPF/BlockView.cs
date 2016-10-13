@@ -239,7 +239,7 @@ namespace DevZest.Data.Windows
             ElementCollection.RemoveAt(index);
         }
 
-        internal void Refresh()
+        internal void Refresh(bool isReload)
         {
             if (Elements == null)
                 return;
@@ -252,7 +252,7 @@ namespace DevZest.Data.Windows
                 Refresh(blockBindings[i], index++);
 
             for (int i = 0; i < blockDimensions; i++)
-                ((RowView)Elements[index++]).Refresh();
+                ((RowView)Elements[index++]).Refresh(isReload);
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
                 Refresh(blockBindings[i], index++);
@@ -279,6 +279,7 @@ namespace DevZest.Data.Windows
                 currentRowView.Reload(currentRow);
             FillMissingRowViews(currentRowView);
             Ordinal = currentRow.Index / ElementManager.BlockDimensions;
+            Refresh(true);
         }
 
         internal void ReloadIfInvalid()
