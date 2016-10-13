@@ -370,8 +370,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override void OnRowUpdated(RowPresenter row)
         {
             base.OnRowUpdated(row);
-            if (row.ShouldRefresh(false))
-                InvalidateElements();
+            InvalidateElements();
         }
 
         protected override void OnIsEditingChanged()
