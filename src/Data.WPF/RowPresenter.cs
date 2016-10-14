@@ -3,6 +3,7 @@ using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -403,13 +404,13 @@ namespace DevZest.Data.Windows
             get { return Template.InternalRowBindings; }
         }
 
-        internal bool ShouldRefresh(bool isReload)
+        internal bool ShouldRefresh(bool isReload, UIElement element)
         {
             if (isReload)
                 return true;
 
-            var transactionalEdit = CoerceTransactionalEdit();
-            return transactionalEdit ? !IsEditing : !IsCurrent;
+            var isEditing = CoerceTransactionalEdit() ? IsEditing : IsCurrent;
+            return !(isEditing && element.IsKeyboardFocusWithin);
         }
     }
 }

@@ -148,17 +148,14 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter != null || Elements != null);
 
-            var shouldRefresh = RowPresenter.ShouldRefresh(isReload);
             var rowBindings = RowBindings;
             Debug.Assert(Elements.Count == rowBindings.Count);
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
-                if (shouldRefresh || !rowBinding.HasTrigger)
-                {
-                    var element = Elements[i];
+                var element = Elements[i];
+                if (!rowBinding.HasTrigger || RowPresenter.ShouldRefresh(isReload, element))
                     rowBinding.Refresh(element);
-                }
             }
         }
 
