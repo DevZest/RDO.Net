@@ -287,9 +287,7 @@ namespace DevZest.Data.Windows.Primitives
             set { _blockViewConstructor = value; }
         }
 
-        internal Action<BlockView> OnSetupBlockView { get; set; }
-
-        internal Action<BlockView> OnCleanupBlockView { get; set; }
+        internal Style BlockViewStyle { get; set; }
 
         private Func<RowView> _rowViewConstructor;
         internal Func<RowView> RowViewConstructor

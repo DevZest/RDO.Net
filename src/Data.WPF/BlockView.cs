@@ -11,6 +11,18 @@ namespace DevZest.Data.Windows
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
     public class BlockView : Control, IReadOnlyList<RowPresenter>
     {
+        private static readonly DependencyPropertyKey OrdinalPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Ordinal),
+            typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(-1));
+        public static readonly DependencyProperty OrdinalProperty = OrdinalPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey DimensionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Dimensions),
+            typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(1));
+        public static readonly DependencyProperty DimensionsProperty = DimensionsPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey CountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Count),
+             typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(0));
+        public static readonly DependencyProperty CountProperty = CountPropertyKey.DependencyProperty;
+
         static BlockView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(typeof(BlockView)));
@@ -18,14 +30,27 @@ namespace DevZest.Data.Windows
 
         public BlockView()
         {
-            Ordinal = -1;
         }
 
         internal void Setup(ElementManager elementManager, int ordinal)
         {
             ElementManager = elementManager;
-            Ordinal = ordinal;
+            RefreshDependencyProperties(ordinal);
             SetupElements();
+        }
+
+        private void RefreshDependencyProperties(int ordinal)
+        {
+            SetValue(OrdinalPropertyKey, ordinal);
+            SetValue(CountPropertyKey, GetCount());
+            SetValue(DimensionsPropertyKey, GetDimensions());
+        }
+
+        private void ClearDependencyProperties()
+        {
+            ClearValue(OrdinalPropertyKey);
+            ClearValue(CountPropertyKey);
+            ClearValue(DimensionsPropertyKey);
         }
 
         public override void OnApplyTemplate()
@@ -63,30 +88,31 @@ namespace DevZest.Data.Windows
             OnSetup();
         }
 
-        private void OnSetup()
+        protected virtual void OnSetup()
         {
-            if (ElementManager.Template.OnSetupBlockView != null)
-                ElementManager.Template.OnSetupBlockView(this);
         }
 
         internal void Cleanup()
         {
             CleanupElements();
-            Ordinal = -1;
+            ClearDependencyProperties();
             ElementManager = null;
         }
 
         private void CleanupElements()
         {
-            OnCleanup();
+            InternalCleanup();
             ClearElements();
         }
 
-        private void OnCleanup()
+        private void InternalCleanup()
         {
-            if (ElementManager.Template.OnCleanupBlockView != null)
-                ElementManager.Template.OnCleanupBlockView(this);
+            OnCleanup();
             ClearMeasuredLengths();
+        }
+
+        protected virtual void OnCleanup()
+        {
         }
 
         internal ElementManager ElementManager { get; private set; }
@@ -101,30 +127,40 @@ namespace DevZest.Data.Windows
             get { return LayoutManager as LayoutXYManager; }
         }
 
-        public DataPresenter DataPresenter
+        protected DataPresenter DataPresenter
         {
             get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }
         }
 
         public int Dimensions
         {
-            get { return ElementManager == null ? 1 : ElementManager.BlockDimensions; }
+            get { return (int)GetValue(DimensionsProperty); }
         }
 
-        public int Ordinal { get; private set; }
+        private int GetDimensions()
+        {
+            return ElementManager == null ? 1 : ElementManager.BlockDimensions;
+        }
+
+        public int Ordinal
+        {
+            get { return (int)GetValue(OrdinalProperty); }
+        }
 
         public int Count
         {
-            get
-            {
-                if (ElementManager == null)
-                    return 0;
+            get { return (int)GetValue(CountProperty); }
+        }
 
-                var blockDimensions = ElementManager.BlockDimensions;
-                var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
-                var rowCount = ElementManager.Rows.Count;
-                return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
-            }
+        private int GetCount()
+        {
+            if (ElementManager == null)
+                return 0;
+
+            var blockDimensions = ElementManager.BlockDimensions;
+            var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
+            var rowCount = ElementManager.Rows.Count;
+            return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
         }
 
         public RowPresenter this[int index]
@@ -278,7 +314,7 @@ namespace DevZest.Data.Windows
             if (oldCurrentRow != currentRow)
                 currentRowView.Reload(currentRow);
             FillMissingRowViews(currentRowView);
-            Ordinal = currentRow.Index / ElementManager.BlockDimensions;
+            RefreshDependencyProperties(currentRow.Index / ElementManager.BlockDimensions);
             Refresh(true);
         }
 
@@ -308,7 +344,7 @@ namespace DevZest.Data.Windows
 
         private RowView RemoveAllRowViewsExcept(RowPresenter row)
         {
-            OnCleanup();
+            InternalCleanup();
 
             RowView result = null;
             var startIndex = BlockBindingsSplit;
@@ -330,7 +366,6 @@ namespace DevZest.Data.Windows
         {
             var currentRowIndex = currentRowView.RowPresenter.Index;
             var blockDimensions = ElementManager.BlockDimensions;
-            Ordinal = currentRowIndex / blockDimensions;
             var offset = currentRowIndex % blockDimensions;
 
             for (int i = 0; i < offset; i++)

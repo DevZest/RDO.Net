@@ -142,20 +142,11 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder BlockView<T>(Action<T> onSetup = null, Action<T> onCleanup = null)
+        public TemplateBuilder BlockView<T>(Style style = null)
             where T : BlockView, new()
         {
             Template.BlockViewConstructor = () => new T();
-
-            if (onSetup == null)
-                Template.OnSetupBlockView = null;
-            else
-                Template.OnSetupBlockView = blockView => onSetup((T)blockView);
-
-            if (onCleanup == null)
-                Template.OnCleanupBlockView = null;
-            else
-                Template.OnCleanupBlockView = blockView => onCleanup((T)blockView);
+            Template.BlockViewStyle = style;
             return this;
         }
 
