@@ -27,6 +27,10 @@ namespace DevZest.Data.Windows
             typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsInsertingProperty = IsInsertingPropertyKey.DependencyProperty;
 
+        private static readonly DependencyPropertyKey IndexPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Index),
+            typeof(int), typeof(RowView), new FrameworkPropertyMetadata(-1));
+        public static readonly DependencyProperty IndexProperty = IndexPropertyKey.DependencyProperty;
+
         static RowView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
@@ -53,11 +57,17 @@ namespace DevZest.Data.Windows
             get { return (bool)GetValue(IsInsertingProperty); }
         }
 
+        public int Index
+        {
+            get { return (int)GetValue(IndexProperty); }
+        }
+
         private void RefreshDependencyProperties()
         {
             SetValue(IsCurrentPropertyKey, BooleanBoxes.Box(RowPresenter.IsCurrent));
             SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsEditing));
             SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsInserting));
+            SetValue(IndexPropertyKey, RowPresenter.Index);
         }
 
         private void ClearDependencyPoperties()
@@ -65,6 +75,7 @@ namespace DevZest.Data.Windows
             ClearValue(IsCurrentPropertyKey);
             ClearValue(IsEditingPropertyKey);
             ClearValue(IsInsertingPropertyKey);
+            ClearValue(IndexPropertyKey);
         }
 
         internal RowBindingCollection RowBindings
