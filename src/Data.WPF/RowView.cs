@@ -38,12 +38,19 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
+        protected virtual void OnSetup()
+        {
+        }
+
+        protected virtual void OnCleanup()
+        {
+        }
+
         internal void Reload(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
 
-            if (RowPresenter.Template.OnCleanupRowView != null)
-                RowPresenter.Template.OnCleanupRowView(this);
+            OnCleanup();
             RowPresenter.View = null;
 
             RowPresenter = rowPresenter;
@@ -54,8 +61,7 @@ namespace DevZest.Data.Windows
                     element.SetRowPresenter(rowPresenter);
             }
 
-            if (RowPresenter.Template.OnSetupRowView != null)
-                RowPresenter.Template.OnSetupRowView(this);
+            OnSetup();
         }
 
         internal virtual void Setup(RowPresenter rowPresenter)
@@ -78,8 +84,7 @@ namespace DevZest.Data.Windows
 
         private void CleanupElements()
         {
-            if (RowPresenter.Template.OnCleanupRowView != null)
-                RowPresenter.Template.OnCleanupRowView(this);
+            OnCleanup();
             ClearElements();
         }
 
@@ -115,8 +120,7 @@ namespace DevZest.Data.Windows
                 return;
 
             AddElements();
-            if (RowPresenter.Template.OnSetupRowView != null)
-                RowPresenter.Template.OnSetupRowView(this);
+            OnSetup();
         }
 
         private void AddElements()

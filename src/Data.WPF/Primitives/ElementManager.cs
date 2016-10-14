@@ -165,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(row != null && row.View == null);
 
-            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.RowViewConstructor);
+            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
             rowView.Setup(row);
             return rowView;
         }

@@ -299,15 +299,22 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private Func<RowView> _rowViewConstructor;
-        internal Func<RowView> RowViewConstructor
+        private Style _rowViewStyle;
+
+        internal void RowView<T>(Style style)
+            where T : RowView, new()
         {
-            get { return _rowViewConstructor ?? (() => new RowView()); }
-            set { _rowViewConstructor = value; }
+            _rowViewConstructor = () => new T();
+            _rowViewStyle = style;
         }
 
-        internal Action<RowView> OnSetupRowView { get; set; }
-
-        internal Action<RowView> OnCleanupRowView { get; set; }
+        internal RowView CreateRowView()
+        {
+            var result = _rowViewConstructor == null ? new RowView() : _rowViewConstructor();
+            if (_rowViewStyle != null)
+                result.Style = _rowViewStyle;
+            return result;
+        }
 
         internal void InitMeasure(Size availableSize)
         {
