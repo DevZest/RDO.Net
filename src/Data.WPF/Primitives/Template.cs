@@ -281,13 +281,22 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private Func<BlockView> _blockViewConstructor;
-        internal Func<BlockView> BlockViewConstructor
+        private Style _blockViewStyle;
+
+        internal void BlockView<T>(Style style)
+            where T : BlockView, new()
         {
-            get { return _blockViewConstructor ?? (() => new BlockView()); }
-            set { _blockViewConstructor = value; }
+            _blockViewConstructor = () => new T();
+            _blockViewStyle = style;
         }
 
-        internal Style BlockViewStyle { get; set; }
+        internal BlockView CreateBlockView()
+        {
+            var result = _blockViewConstructor == null ? new BlockView() : _blockViewConstructor();
+            if (_blockViewStyle != null)
+                result.Style = _blockViewStyle;
+            return result;
+        }
 
         private Func<RowView> _rowViewConstructor;
         internal Func<RowView> RowViewConstructor

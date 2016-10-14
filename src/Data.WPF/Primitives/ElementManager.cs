@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private BlockView Setup(int blockOrdinal)
         {
-            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.BlockViewConstructor);
+            var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.CreateBlockView);
             blockView.Setup(this, blockOrdinal);
             return blockView;
         }

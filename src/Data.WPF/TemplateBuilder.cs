@@ -145,8 +145,7 @@ namespace DevZest.Data.Windows
         public TemplateBuilder BlockView<T>(Style style = null)
             where T : BlockView, new()
         {
-            Template.BlockViewConstructor = () => new T();
-            Template.BlockViewStyle = style;
+            Template.BlockView<T>(style);
             return this;
         }
 
