@@ -160,6 +160,12 @@ namespace DevZest.Data.Windows
                 if (!rowBinding.HasTrigger || RowPresenter.ShouldRefresh(isReload, element))
                     rowBinding.Refresh(element);
             }
+
+            OnRefresh();
+        }
+
+        protected virtual void OnRefresh()
+        {
         }
 
         private static RowView Focused { get; set; }

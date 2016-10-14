@@ -292,12 +292,18 @@ namespace DevZest.Data.Windows
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
                 Refresh(blockBindings[i], index++);
+
+            OnRefresh();
         }
 
         private void Refresh(BlockBinding blockBinding, int index)
         {
             var element = Elements[index];
             blockBinding.Refresh(element);
+        }
+
+        protected virtual void OnRefresh()
+        {
         }
 
         internal void Reload()
