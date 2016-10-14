@@ -13,8 +13,19 @@ namespace DevZest.Data.Windows
     {
         private static readonly DependencyPropertyKey RowPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RowPresenter),
             typeof(RowPresenter), typeof(RowView), new FrameworkPropertyMetadata(null));
-
         public static readonly DependencyProperty RowPresenterProperty = RowPresenterPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCurrent),
+            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing),
+            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
+
+        private static readonly DependencyPropertyKey IsInsertingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsInserting),
+            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty IsInsertingProperty = IsInsertingPropertyKey.DependencyProperty;
 
         static RowView()
         {
@@ -25,6 +36,35 @@ namespace DevZest.Data.Windows
         {
             get { return (RowPresenter)GetValue(RowPresenterProperty); }
             private set { SetValue(RowPresenterPropertyKey, value); }
+        }
+
+        public bool IsCurrent
+        {
+            get { return (bool)GetValue(IsCurrentProperty); }
+        }
+
+        public bool IsEditing
+        {
+            get { return (bool)GetValue(IsEditingProperty); }
+        }
+
+        public bool IsInserting
+        {
+            get { return (bool)GetValue(IsInsertingProperty); }
+        }
+
+        private void RefreshDependencyProperties()
+        {
+            SetValue(IsCurrentPropertyKey, BooleanBoxes.Box(RowPresenter.IsCurrent));
+            SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsEditing));
+            SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsInserting));
+        }
+
+        private void ClearDependencyPoperties()
+        {
+            ClearValue(IsCurrentPropertyKey);
+            ClearValue(IsEditingPropertyKey);
+            ClearValue(IsInsertingPropertyKey);
         }
 
         internal RowBindingCollection RowBindings
@@ -42,6 +82,12 @@ namespace DevZest.Data.Windows
         {
         }
 
+        private void InternalCleanup()
+        {
+            OnCleanup();
+            ClearDependencyPoperties();
+        }
+
         protected virtual void OnCleanup()
         {
         }
@@ -50,7 +96,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
 
-            OnCleanup();
+            InternalCleanup();
             RowPresenter.View = null;
 
             RowPresenter = rowPresenter;
@@ -84,7 +130,7 @@ namespace DevZest.Data.Windows
 
         private void CleanupElements()
         {
-            OnCleanup();
+            InternalCleanup();
             ClearElements();
         }
 
@@ -161,6 +207,7 @@ namespace DevZest.Data.Windows
                     rowBinding.Refresh(element);
             }
 
+            RefreshDependencyProperties();
             OnRefresh();
         }
 
