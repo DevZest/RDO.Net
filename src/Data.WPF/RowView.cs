@@ -11,72 +11,12 @@ namespace DevZest.Data.Windows
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowElementPanel))]
     public class RowView : Control
     {
-        private static readonly DependencyPropertyKey RowPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RowPresenter),
-            typeof(RowPresenter), typeof(RowView), new FrameworkPropertyMetadata(null));
-        public static readonly DependencyProperty RowPresenterProperty = RowPresenterPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey IsCurrentPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsCurrent),
-            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing),
-            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey IsInsertingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsInserting),
-            typeof(bool), typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
-        public static readonly DependencyProperty IsInsertingProperty = IsInsertingPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey IndexPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Index),
-            typeof(int), typeof(RowView), new FrameworkPropertyMetadata(-1));
-        public static readonly DependencyProperty IndexProperty = IndexPropertyKey.DependencyProperty;
-
         static RowView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
         }
 
-        public RowPresenter RowPresenter
-        {
-            get { return (RowPresenter)GetValue(RowPresenterProperty); }
-            private set { SetValue(RowPresenterPropertyKey, value); }
-        }
-
-        public bool IsCurrent
-        {
-            get { return (bool)GetValue(IsCurrentProperty); }
-        }
-
-        public bool IsEditing
-        {
-            get { return (bool)GetValue(IsEditingProperty); }
-        }
-
-        public bool IsInserting
-        {
-            get { return (bool)GetValue(IsInsertingProperty); }
-        }
-
-        public int Index
-        {
-            get { return (int)GetValue(IndexProperty); }
-        }
-
-        private void RefreshDependencyProperties()
-        {
-            SetValue(IsCurrentPropertyKey, BooleanBoxes.Box(RowPresenter.IsCurrent));
-            SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsEditing));
-            SetValue(IsEditingPropertyKey, BooleanBoxes.Box(RowPresenter.IsInserting));
-            SetValue(IndexPropertyKey, RowPresenter.Index);
-        }
-
-        private void ClearDependencyPoperties()
-        {
-            ClearValue(IsCurrentPropertyKey);
-            ClearValue(IsEditingPropertyKey);
-            ClearValue(IsInsertingPropertyKey);
-            ClearValue(IndexPropertyKey);
-        }
+        public RowPresenter RowPresenter { get; private set; }
 
         internal RowBindingCollection RowBindings
         {
@@ -96,7 +36,6 @@ namespace DevZest.Data.Windows
         private void InternalCleanup()
         {
             OnCleanup();
-            ClearDependencyPoperties();
         }
 
         protected virtual void OnCleanup()
@@ -217,8 +156,6 @@ namespace DevZest.Data.Windows
                 if (!rowBinding.HasTrigger || RowPresenter.ShouldRefresh(isReload, element))
                     rowBinding.Refresh(element);
             }
-
-            RefreshDependencyProperties();
             OnRefresh();
         }
 

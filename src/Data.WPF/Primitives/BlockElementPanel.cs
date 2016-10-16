@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 
@@ -16,15 +15,6 @@ namespace DevZest.Data.Windows.Primitives
         private LayoutManager LayoutManager
         {
             get { return BlockView == null ? null : BlockView.LayoutManager; }
-        }
-
-        private Template Template
-        {
-            get
-            {
-                Debug.Assert(LayoutManager != null);
-                return LayoutManager.Template;
-            }
         }
 
         private IReadOnlyList<UIElement> Elements

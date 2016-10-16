@@ -11,18 +11,6 @@ namespace DevZest.Data.Windows
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
     public class BlockView : Control, IReadOnlyList<RowPresenter>
     {
-        private static readonly DependencyPropertyKey OrdinalPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Ordinal),
-            typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(-1));
-        public static readonly DependencyProperty OrdinalProperty = OrdinalPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey DimensionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Dimensions),
-            typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(1));
-        public static readonly DependencyProperty DimensionsProperty = DimensionsPropertyKey.DependencyProperty;
-
-        private static readonly DependencyPropertyKey CountPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Count),
-             typeof(int), typeof(BlockView), new FrameworkPropertyMetadata(0));
-        public static readonly DependencyProperty CountProperty = CountPropertyKey.DependencyProperty;
-
         static BlockView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(typeof(BlockView)));
@@ -35,22 +23,8 @@ namespace DevZest.Data.Windows
         internal void Setup(ElementManager elementManager, int ordinal)
         {
             ElementManager = elementManager;
-            RefreshDependencyProperties(ordinal);
+            Ordinal = ordinal;
             SetupElements();
-        }
-
-        private void RefreshDependencyProperties(int ordinal)
-        {
-            SetValue(OrdinalPropertyKey, ordinal);
-            SetValue(CountPropertyKey, GetCount());
-            SetValue(DimensionsPropertyKey, GetDimensions());
-        }
-
-        private void ClearDependencyProperties()
-        {
-            ClearValue(OrdinalPropertyKey);
-            ClearValue(CountPropertyKey);
-            ClearValue(DimensionsPropertyKey);
         }
 
         public override void OnApplyTemplate()
@@ -95,7 +69,6 @@ namespace DevZest.Data.Windows
         internal void Cleanup()
         {
             CleanupElements();
-            ClearDependencyProperties();
             ElementManager = null;
         }
 
@@ -134,7 +107,7 @@ namespace DevZest.Data.Windows
 
         public int Dimensions
         {
-            get { return (int)GetValue(DimensionsProperty); }
+            get { return ElementManager == null ? 1 : ElementManager.BlockDimensions; }
         }
 
         private int GetDimensions()
@@ -142,25 +115,20 @@ namespace DevZest.Data.Windows
             return ElementManager == null ? 1 : ElementManager.BlockDimensions;
         }
 
-        public int Ordinal
-        {
-            get { return (int)GetValue(OrdinalProperty); }
-        }
+        public int Ordinal { get; private set; }
 
         public int Count
         {
-            get { return (int)GetValue(CountProperty); }
-        }
+            get
+            {
+                if (ElementManager == null)
+                    return 0;
 
-        private int GetCount()
-        {
-            if (ElementManager == null)
-                return 0;
-
-            var blockDimensions = ElementManager.BlockDimensions;
-            var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
-            var rowCount = ElementManager.Rows.Count;
-            return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
+                var blockDimensions = ElementManager.BlockDimensions;
+                var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
+                var rowCount = ElementManager.Rows.Count;
+                return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
+            }
         }
 
         public RowPresenter this[int index]
@@ -320,7 +288,7 @@ namespace DevZest.Data.Windows
             if (oldCurrentRow != currentRow)
                 currentRowView.Reload(currentRow);
             FillMissingRowViews(currentRowView);
-            RefreshDependencyProperties(currentRow.Index / ElementManager.BlockDimensions);
+            Ordinal = currentRow.Index / ElementManager.BlockDimensions;
             Refresh(true);
         }
 
