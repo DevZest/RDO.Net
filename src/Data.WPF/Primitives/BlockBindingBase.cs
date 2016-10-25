@@ -7,6 +7,18 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class BlockBindingBase<T> : BlockBinding
         where T : UIElement, new()
     {
+        private IList<Trigger<T>> _triggers = Array<Trigger<T>>.Empty;
+        public void AddTrigger(TriggerEvent<T> triggerEvent, Action<T> triggerAction)
+        {
+            if (triggerAction == null)
+                throw new ArgumentNullException(nameof(triggerAction));
+            VerifyNotSealed();
+
+            if (_triggers == Array<Trigger<T>>.Empty)
+                _triggers = new List<Trigger<T>>();
+            _triggers.Add(new Trigger<T>(triggerEvent, triggerAction));
+        }
+
         List<T> _cachedElements;
 
         private T Create()
@@ -22,6 +34,8 @@ namespace DevZest.Data.Windows.Primitives
             element.SetBlockView(blockView);
             Setup(element, blockView.Ordinal, blockView);
             Refresh(element, blockView.Ordinal, blockView);
+            foreach (var trigger in _triggers)
+                trigger.Attach(element);
             return element;
         }
 
@@ -41,6 +55,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var blockView = element.GetBlockView();
             var e = (T)element;
+            foreach (var trigger in _triggers)
+                trigger.Detach(e);
             Cleanup(e, blockView.Ordinal, blockView);
             e.SetBlockView(null);
             CachedList.Recycle(ref _cachedElements, e);

@@ -92,6 +92,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The event has already been initialized with trigger.
+        /// </summary>
+        public static string Event_AlreadyInitializedWithTrigger
+        {
+            get { return GetString("Event_AlreadyInitializedWithTrigger"); }
+        }
+
+        /// <summary>
         /// Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.
         /// </summary>
         public static string GridColumn_InvalidAutoWidth(object ordinal)

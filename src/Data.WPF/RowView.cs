@@ -153,7 +153,7 @@ namespace DevZest.Data.Windows
             {
                 var rowBinding = rowBindings[i];
                 var element = Elements[i];
-                if (!rowBinding.HasTrigger || RowPresenter.ShouldRefresh(isReload, element))
+                if (RowPresenter.ShouldRefresh(isReload, element))
                     rowBinding.Refresh(element);
             }
             OnRefresh();

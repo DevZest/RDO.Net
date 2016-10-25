@@ -7,43 +7,16 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        private struct Trigger
+        private IList<Trigger<T>> _triggers = Array<Trigger<T>>.Empty;
+        public void AddTrigger(TriggerEvent<T> triggerEvent, Action<T, RowPresenter> triggerAction)
         {
-            public Trigger(TriggerEvent triggerEvent, Action<RowPresenter, T> action)
-            {
-                Event = triggerEvent;
-                Action = action;
-            }
-
-            public readonly TriggerEvent Event;
-            public readonly Action<RowPresenter, T> Action;
-
-            public void Execute(T element, TriggerEvent triggerEvent)
-            {
-                if (triggerEvent == Event)
-                    Action(element.GetRowPresenter(), element);
-            }
-        }
-
-        private IList<Trigger> _triggers = Array<Trigger>.Empty;
-        public void AddTrigger(TriggerEvent trigger, Action<RowPresenter, T> action)
-        {
+            if (triggerAction == null)
+                throw new ArgumentNullException(nameof(triggerAction));
             VerifyNotSealed();
-            if (_triggers == Array<Trigger>.Empty)
-                _triggers = new List<Trigger>();
 
-            _triggers.Add(new Trigger(trigger, action));
-        }
-
-        internal sealed override bool HasTrigger
-        {
-            get { return _triggers.Count > 0; }
-        }
-
-        internal sealed override void ExecuteTrigger(UIElement element, TriggerEvent triggerEvent)
-        {
-            foreach (var trigger in _triggers)
-                trigger.Execute((T)element, triggerEvent);
+            if (_triggers == Array<Trigger<T>>.Empty)
+                _triggers = new List<Trigger<T>>();
+            _triggers.Add(new Trigger<T>(triggerEvent, triggerAction));
         }
 
         List<T> _cachedElements;
@@ -62,7 +35,7 @@ namespace DevZest.Data.Windows.Primitives
             Setup(element, rowPresenter);
             Refresh(element, rowPresenter);
             foreach (var trigger in _triggers)
-                trigger.Event.Attach(element);
+                trigger.Attach(element);
             return element;
         }
 
@@ -83,7 +56,7 @@ namespace DevZest.Data.Windows.Primitives
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
             foreach (var trigger in _triggers)
-                trigger.Event.Detach(e);
+                trigger.Detach(e);
             Cleanup(e, rowPresenter);
             e.SetRowPresenter(null);
             CachedList.Recycle(ref _cachedElements, e);
