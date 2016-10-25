@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows.Primitives
         where T : UIElement, new()
     {
         private IList<Trigger<T>> _triggers = Array<Trigger<T>>.Empty;
-        public void AddTrigger(TriggerEvent<T> triggerEvent, Action<T> triggerAction)
+        public void AddTrigger(TriggerEvent<T> triggerEvent, Action<T, int, IReadOnlyList<RowPresenter>> triggerAction)
         {
             if (triggerAction == null)
                 throw new ArgumentNullException(nameof(triggerAction));
