@@ -55,15 +55,15 @@ namespace DevZest.Data.Windows.Primitives
                 _action(element);
             else
             {
-                Debug.Assert(dataPresenter.ExecutingEvent == null);
-                dataPresenter.ExecutingEvent = _event;
+                Debug.Assert(dataPresenter.ExecutingTriggerEvent == null);
+                dataPresenter.ExecutingTriggerEvent = _event;
                 try
                 {
                     _action(element);
                 }
                 finally
                 {
-                    dataPresenter.ExecutingEvent = null;
+                    dataPresenter.ExecutingTriggerEvent = null;
                 }
             }
         }
