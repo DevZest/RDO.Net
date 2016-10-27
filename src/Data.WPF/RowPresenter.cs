@@ -403,14 +403,5 @@ namespace DevZest.Data.Windows
         {
             get { return Template.InternalRowBindings; }
         }
-
-        internal bool ShouldRefresh(bool isReload, UIElement element)
-        {
-            if (isReload)
-                return true;
-
-            var isEditing = CoerceTransactionalEdit() ? IsEditing : IsCurrent;
-            return !(isEditing && element.IsKeyboardFocusWithin);
-        }
     }
 }

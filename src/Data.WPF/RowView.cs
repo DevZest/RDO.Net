@@ -152,9 +152,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
-                var element = Elements[i];
-                if (RowPresenter.ShouldRefresh(isReload, element))
-                    rowBinding.Refresh(element);
+                rowBinding.Refresh(Elements[i]);
             }
             OnRefresh();
         }

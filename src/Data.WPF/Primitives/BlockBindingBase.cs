@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (_triggers == Array<Trigger<T>>.Empty)
                 _triggers = new List<Trigger<T>>();
-            _triggers.Add(new Trigger<T>(triggerEvent, triggerAction));
+            _triggers.Add(new Trigger<T>(this, triggerEvent, triggerAction));
         }
 
         List<T> _cachedElements;

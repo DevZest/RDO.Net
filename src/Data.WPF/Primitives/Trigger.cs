@@ -5,10 +5,29 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal class Trigger<T>
+    internal abstract class Trigger
+    {
+        protected Trigger(Binding binding)
+        {
+            Debug.Assert(binding != null);
+            Binding = binding;
+        }
+
+        public Binding Binding { get; private set; }
+
+        public Template Template
+        {
+            get { return Binding.Template; }
+        }
+
+        public abstract TriggerEvent Event { get; }
+    }
+
+    internal sealed class Trigger<T> : Trigger
         where T : UIElement, new()
     {
-        public Trigger(TriggerEvent<T> triggerEvent, Action<T> triggerAction)
+        public Trigger(Binding binding, TriggerEvent<T> triggerEvent, Action<T> triggerAction)
+            : base(binding)
         {
             Debug.Assert(triggerEvent != null && triggerAction != null);
             triggerEvent.Trigger = this;
@@ -16,8 +35,8 @@ namespace DevZest.Data.Windows.Primitives
             _action = triggerAction;
         }
 
-        public Trigger(TriggerEvent<T> triggerEvent, Action<T, int, IReadOnlyList<RowPresenter>> triggerAction)
-            : this(triggerEvent, x =>
+        public Trigger(Binding binding, TriggerEvent<T> triggerEvent, Action<T, int, IReadOnlyList<RowPresenter>> triggerAction)
+            : this(binding, triggerEvent, x =>
             {
                 var blockView = x.GetBlockView();
                 triggerAction(x, blockView.Ordinal, blockView);
@@ -25,8 +44,8 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public Trigger(TriggerEvent<T> triggerEvent, Action<T, RowPresenter> triggerAction)
-            : this(triggerEvent, x =>
+        public Trigger(Binding binding, TriggerEvent<T> triggerEvent, Action<T, RowPresenter> triggerAction)
+            : this(binding, triggerEvent, x =>
             {
                 var rowPresenter = x.GetRowPresenter();
                 triggerAction(x, rowPresenter);
@@ -36,6 +55,11 @@ namespace DevZest.Data.Windows.Primitives
 
         private readonly TriggerEvent<T> _event;
         private readonly Action<T> _action;
+
+        public override TriggerEvent Event
+        {
+            get { return _event; }
+        }
 
         public void Attach(T element)
         {
@@ -49,22 +73,14 @@ namespace DevZest.Data.Windows.Primitives
 
         public void ExecuteAction(T element)
         {
-            var binding = element.GetBinding();
-            var dataPresenter = binding.Template.DataPresenter;
-            if (dataPresenter == null)
-                _action(element);
-            else
+            Template.ExecutingTrigger = this;
+            try
             {
-                Debug.Assert(dataPresenter.ExecutingTriggerEvent == null);
-                dataPresenter.ExecutingTriggerEvent = _event;
-                try
-                {
-                    _action(element);
-                }
-                finally
-                {
-                    dataPresenter.ExecutingTriggerEvent = null;
-                }
+                _action(element);
+            }
+            finally
+            {
+                Template.ExecutingTrigger = null;
             }
         }
     }

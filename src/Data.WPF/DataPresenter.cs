@@ -113,6 +113,13 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
-        protected internal TriggerEvent ExecutingTriggerEvent { get; internal set; }
+        protected TriggerEvent ExecutingTriggerEvent
+        {
+            get
+            {
+                var executingTrigger = Template.ExecutingTrigger;
+                return executingTrigger == null ? null : executingTrigger.Event;
+            }
+        }
     }
 }

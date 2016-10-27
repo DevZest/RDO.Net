@@ -449,5 +449,12 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public bool TransactionalEdit { get; internal set; } = true;
+
+        internal Trigger ExecutingTrigger { get; set; }
+
+        internal Binding ExecutingTriggerBinding
+        {
+            get { return ExecutingTrigger == null ? null : ExecutingTrigger.Binding; }
+        }
     }
 }
