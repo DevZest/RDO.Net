@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
 
         private void OnLostFocus(object sender, RoutedEventArgs e)
         {
-            ExecuteAction((T)sender);
+            Flush((T)sender);
         }
     }
 }

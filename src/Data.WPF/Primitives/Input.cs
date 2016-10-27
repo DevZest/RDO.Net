@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -22,30 +20,30 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class Input<T> : Input
         where T : UIElement, new()
     {
-        protected Input(Action<RowPresenter, T> action)
+        protected Input(Action<RowPresenter, T> flushAction)
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-            _action = action;
+            if (flushAction == null)
+                throw new ArgumentNullException(nameof(flushAction));
+            _flushAction = flushAction;
         }
 
-        private readonly Action<RowPresenter, T> _action;
+        private readonly Action<RowPresenter, T> _flushAction;
 
         protected internal abstract void Attach(T element);
 
         protected internal abstract void Detach(T element);
 
-        protected internal void ExecuteAction(T element)
+        protected internal void Flush(T element)
         {
-            Template.ExecutingInput = this;
+            Template.FlushingInput = this;
             try
             {
                 var rowPresenter = element.GetRowPresenter();
-                _action(rowPresenter, element);
+                _flushAction(rowPresenter, element);
             }
             finally
             {
-                Template.ExecutingInput = null;
+                Template.FlushingInput = null;
             }
         }
     }

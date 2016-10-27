@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows
 
         private void OnPropertyChanged(object sender, EventArgs e)
         {
-            ExecuteAction((T)sender);
+            Flush((T)sender);
         }
     }
 }

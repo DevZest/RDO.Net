@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void FlushInput(UIElement element)
         {
             if (Input != null)
-                Input.ExecuteAction((T)element);
+                Input.Flush((T)element);
         }
 
         List<T> _cachedElements;
