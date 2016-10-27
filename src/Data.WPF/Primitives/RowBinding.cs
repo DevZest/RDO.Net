@@ -47,5 +47,7 @@ namespace DevZest.Data.Windows.Primitives
             if (!rowRange.Contains(GridRange))
                 throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
         }
+
+        internal abstract void FlushInput(UIElement element);
     }
 }

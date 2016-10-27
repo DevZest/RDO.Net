@@ -47,10 +47,12 @@
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
+    <Compile Include="ExplicitInput.cs" />
+    <Compile Include="PropertyChangedInput.cs" />
     <Compile Include="Primitives\BlockBindingBase.cs" />
     <Compile Include="Primitives\RowBindingBase.cs" />
     <Compile Include="Primitives\ScalarBindingBase.cs" />
-    <Compile Include="Primitives\Trigger.cs" />
+    <Compile Include="Primitives\Input.cs" />
     <Compile Include="RowBinding_T.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -91,7 +93,7 @@
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="ScalarBinding_T.cs" />
     <Compile Include="TemplateBuilder.cs" />
-    <Compile Include="TriggerEvent.cs" />
+    <Compile Include="LostFocusInput.cs" />
     <Compile Include="Primitives\RowBinding.cs" />
     <Compile Include="Primitives\UIElementExtensions.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />

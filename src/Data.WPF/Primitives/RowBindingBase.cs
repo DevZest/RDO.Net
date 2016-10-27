@@ -7,16 +7,24 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        private IList<Trigger<T>> _triggers = Array<Trigger<T>>.Empty;
-        public void AddTrigger(TriggerEvent<T> triggerEvent, Action<T, RowPresenter> triggerAction)
+        private Input<T> _input;
+        public Input<T> Input
         {
-            if (triggerAction == null)
-                throw new ArgumentNullException(nameof(triggerAction));
-            VerifyNotSealed();
+            get { return _input; }
+            set
+            {
+                VerifyNotSealed();
+                if (value.RowBinding != null)
+                    throw new ArgumentException(Strings.RowBindingBase_InputAlreadyAssigned, nameof(value));
+                value.RowBinding = this;
+                _input = value;
+            }
+        }
 
-            if (_triggers == Array<Trigger<T>>.Empty)
-                _triggers = new List<Trigger<T>>();
-            _triggers.Add(new Trigger<T>(this, triggerEvent, triggerAction));
+        internal sealed override void FlushInput(UIElement element)
+        {
+            if (Input != null)
+                Input.ExecuteAction((T)element);
         }
 
         List<T> _cachedElements;
@@ -34,8 +42,8 @@ namespace DevZest.Data.Windows.Primitives
             element.SetRowPresenter(rowPresenter);
             Setup(element, rowPresenter);
             Refresh(element, rowPresenter);
-            foreach (var trigger in _triggers)
-                trigger.Attach(element);
+            if (Input != null)
+                Input.Attach(element);
             return element;
         }
 
@@ -55,8 +63,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
-            foreach (var trigger in _triggers)
-                trigger.Detach(e);
+            if (Input != null)
+                Input.Detach(e);
             Cleanup(e, rowPresenter);
             e.SetRowPresenter(null);
             CachedList.Recycle(ref _cachedElements, e);

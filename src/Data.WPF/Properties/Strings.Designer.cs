@@ -92,14 +92,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The event has already been initialized with trigger.
-        /// </summary>
-        public static string Event_AlreadyInitializedWithTrigger
-        {
-            get { return GetString("Event_AlreadyInitializedWithTrigger"); }
-        }
-
-        /// <summary>
         /// Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.
         /// </summary>
         public static string GridColumn_InvalidAutoWidth(object ordinal)
@@ -145,6 +137,14 @@ namespace DevZest.Data.Windows
         public static string GridRow_InvalidStarHeight(object ordinal)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("GridRow_InvalidStarHeight", "ordinal"), ordinal);
+        }
+
+        /// <summary>
+        /// The Input has already been assigned to RowBinding.
+        /// </summary>
+        public static string RowBindingBase_InputAlreadyAssigned
+        {
+            get { return GetString("RowBindingBase_InputAlreadyAssigned"); }
         }
 
         /// <summary>

@@ -147,9 +147,6 @@
   <data name="DataPresenter_VerifyCanInsert" xml:space="preserve">
     <value>The CanInsert property must be true.</value>
   </data>
-  <data name="Event_AlreadyInitializedWithTrigger" xml:space="preserve">
-    <value>The event has already been initialized with trigger.</value>
-  </data>
   <data name="GridColumn_InvalidAutoWidth" xml:space="preserve">
     <value>Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.</value>
   </data>
@@ -167,6 +164,9 @@
   </data>
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
     <value>Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.</value>
+  </data>
+  <data name="RowBindingBase_InputAlreadyAssigned" xml:space="preserve">
+    <value>The Input has already been assigned to RowBinding.</value>
   </data>
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>
