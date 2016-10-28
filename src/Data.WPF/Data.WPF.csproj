@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20160902\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161028\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
