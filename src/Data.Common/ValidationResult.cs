@@ -2,13 +2,31 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 namespace DevZest.Data
 {
     public struct ValidationResult
     {
+        private sealed class ResultModel : Model
+        {
+            public static readonly Accessor<ResultModel, _String> DataRowAccessor = RegisterColumn((ResultModel x) => x.DataRow);
+            public static readonly Accessor<ResultModel, _String> ValidatorIdAccessor = RegisterColumn((ResultModel x) => x.ValidatorId);
+            public static readonly Accessor<ResultModel, _Int32> ValidationLevelAccessor = RegisterColumn((ResultModel x) => x.ValidationLevel);
+            public static readonly Accessor<ResultModel, _String> ColumnsAccessor = RegisterColumn((ResultModel x) => x.Columns);
+            public static readonly Accessor<ResultModel, _String> DescriptionAccessor = RegisterColumn((ResultModel x) => x.Description);
+
+            public _String DataRow { get; private set; }
+
+            public _String ValidatorId { get; private set; }
+
+            public _Int32 ValidationLevel { get; private set; }
+
+            public new _String Columns { get; private set; }
+
+            public _String Description { get; private set; }
+        }
+
         internal static ValidationResult New(IEnumerable<ValidationEntry> entries)
         {
             var array = entries == null ? null : entries.ToArray();
@@ -17,11 +35,11 @@ namespace DevZest.Data
 
         public static ValidationResult ParseJson(DataSet dataSet, string json)
         {
-            var validationMessages = DataSet<_ValidationMessage>.ParseJson(json);
+            var validationMessages = DataSet<ResultModel>.ParseJson(json);
             return Deserialize(dataSet, validationMessages);
         }
 
-        public static ValidationResult Deserialize(DataSet dataSet, DataSet<_ValidationMessage> validationMessages)
+        private static ValidationResult Deserialize(DataSet dataSet, DataSet<ResultModel> validationMessages)
         {
             Check.NotNull(dataSet, nameof(dataSet));
 
@@ -81,12 +99,12 @@ namespace DevZest.Data
             return DataSet.ToJsonString(ToDataSet(), isPretty);
         }
 
-        public DataSet<_ValidationMessage> ToDataSet()
+        private DataSet<ResultModel> ToDataSet()
         {
             if (_entries == null)
                 return null;
 
-            var result = DataSet<_ValidationMessage>.New();
+            var result = DataSet<ResultModel>.New();
             foreach (var entry in _entries)
             {
                 var dataRow = entry.DataRow;
@@ -99,11 +117,6 @@ namespace DevZest.Data
                 result._.Description[index] = validationMessage.Description;
             }
             return result;
-        }
-
-        internal DataSet NewDataSet()
-        {
-            return DataSet<_ValidationMessage>.New();
         }
 
         public int Count

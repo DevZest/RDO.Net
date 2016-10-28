@@ -265,7 +265,6 @@
     <Compile Include="_Int64.cs" />
     <Compile Include="_Single.cs" />
     <Compile Include="_String.cs" />
-    <Compile Include="_ValidationMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Strings.resx">
