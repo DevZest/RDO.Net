@@ -7,8 +7,7 @@ namespace DevZest.Data.Windows
     public sealed class LostFocusInput<T> : Input<T>
         where T : UIElement, new()
     {
-        public LostFocusInput(Action<RowPresenter, T> action)
-            : base(action)
+        public LostFocusInput()
         {
         }
 

@@ -9,8 +9,7 @@ namespace DevZest.Data.Windows
     public sealed class PropertyChangedInput<T> : Input<T>
         where T : UIElement, new()
     {
-        public PropertyChangedInput(DependencyProperty property, Action<RowPresenter, T> action)
-            : base(action)
+        public PropertyChangedInput(DependencyProperty property)
         {
             _property = property;
         }

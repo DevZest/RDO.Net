@@ -7,8 +7,7 @@ namespace DevZest.Data.Windows
     public sealed class ExplicitInput<T> : Input<T>
         where T : UIElement, new()
     {
-        public ExplicitInput(Action<RowPresenter, T> action)
-            : base(action)
+        public ExplicitInput()
         {
         }
 

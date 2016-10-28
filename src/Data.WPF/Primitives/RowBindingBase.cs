@@ -7,18 +7,19 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        private Input<T> _input;
-        public Input<T> Input
+        public Input<T> Input { get; private set; }
+
+        public void SetInput(Input<T> input, Action<RowPresenter, T> flushAction)
         {
-            get { return _input; }
-            set
-            {
-                VerifyNotSealed();
-                if (value.RowBinding != null)
-                    throw new ArgumentException(Strings.RowBindingBase_InputAlreadyAssigned, nameof(value));
-                value.RowBinding = this;
-                _input = value;
-            }
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+            if (input.Binding != null)
+                throw new ArgumentException(Strings.Binding_InputAlreadyInitialized, nameof(input));
+            if (flushAction == null)
+                throw new ArgumentNullException(nameof(flushAction));
+            VerifyNotSealed();
+            input.Initialize(this, flushAction);
+            Input = input;
         }
 
         internal sealed override void FlushInput(UIElement element)

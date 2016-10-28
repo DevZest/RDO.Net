@@ -157,5 +157,7 @@ namespace DevZest.Data.Windows.Primitives
                 return result;
             }
         }
+
+        internal abstract void FlushInput(UIElement element);
     }
 }

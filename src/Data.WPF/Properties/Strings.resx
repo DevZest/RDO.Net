@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Binding_InputAlreadyInitialized" xml:space="preserve">
+    <value>The Input has already been initialized with another Binding.</value>
+  </data>
   <data name="Binding_InvalidFrozenMargin" xml:space="preserve">
     <value>The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].</value>
   </data>
@@ -164,9 +167,6 @@
   </data>
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
     <value>Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.</value>
-  </data>
-  <data name="RowBindingBase_InputAlreadyAssigned" xml:space="preserve">
-    <value>The Input has already been assigned to RowBinding.</value>
   </data>
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>

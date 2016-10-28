@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -9,25 +10,34 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public RowBinding RowBinding { get; internal set; }
+        public Binding Binding { get; internal set; }
 
         public Template Template
         {
-            get { return RowBinding.Template; }
+            get { return Binding.Template; }
         }
     }
 
     public abstract class Input<T> : Input
         where T : UIElement, new()
     {
-        protected Input(Action<RowPresenter, T> flushAction)
+        protected Input()
         {
-            if (flushAction == null)
-                throw new ArgumentNullException(nameof(flushAction));
+        }
+
+        private Action<T> _flushAction;
+
+        internal void Initialize(Binding binding, Action<T> flushAction)
+        {
+            Debug.Assert(Binding == null && _flushAction == null && binding != null && flushAction != null);
+            Binding = binding;
             _flushAction = flushAction;
         }
 
-        private readonly Action<RowPresenter, T> _flushAction;
+        internal void Initialize(Binding binding, Action<RowPresenter, T> flushAction)
+        {
+            Initialize(binding, x => flushAction(x.GetRowPresenter(), x));
+        }
 
         protected internal abstract void Attach(T element);
 
@@ -38,8 +48,7 @@ namespace DevZest.Data.Windows.Primitives
             Template.FlushingInput = this;
             try
             {
-                var rowPresenter = element.GetRowPresenter();
-                _flushAction(rowPresenter, element);
+                _flushAction(element);
             }
             finally
             {
