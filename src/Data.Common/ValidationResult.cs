@@ -27,7 +27,7 @@ namespace DevZest.Data
             public _String Description { get; private set; }
         }
 
-        internal static ValidationResult New(IEnumerable<ValidationEntry> entries)
+        public static ValidationResult New(IEnumerable<ValidationEntry> entries)
         {
             var array = entries == null ? null : entries.ToArray();
             return array == null || array.Length == 0 ? new ValidationResult() : new ValidationResult(array);
