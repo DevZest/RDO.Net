@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -37,15 +38,27 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
+        public T SettingUpElement { get; private set; }
+
+        internal sealed override void BeginSetup()
+        {
+            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
+        }
+
         internal sealed override UIElement Setup(RowPresenter rowPresenter)
         {
-            var element = CachedList.GetOrCreate(ref _cachedElements, Create);
-            element.SetRowPresenter(rowPresenter);
-            Setup(element, rowPresenter);
-            Refresh(element, rowPresenter);
+            Debug.Assert(SettingUpElement != null);
+            SettingUpElement.SetRowPresenter(rowPresenter);
+            Setup(SettingUpElement, rowPresenter);
+            Refresh(SettingUpElement, rowPresenter);
             if (Input != null)
-                Input.Attach(element);
-            return element;
+                Input.Attach(SettingUpElement);
+            return SettingUpElement;
+        }
+
+        internal sealed override void EndSetup()
+        {
+            SettingUpElement = null;
         }
 
         protected abstract void Setup(T element, RowPresenter rowPresenter);

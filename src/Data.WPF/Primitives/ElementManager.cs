@@ -202,9 +202,11 @@ namespace DevZest.Data.Windows.Primitives
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
-            var scalarBindings = Template.ScalarBindings;
+            var scalarBindings = Template.InternalScalarBindings;
+            scalarBindings.BeginSetup();
             for (int i = 0; i < scalarBindings.Count; i++)
                 InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
+            scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
             CoerceCurrentBlockView(null);
         }
@@ -309,7 +311,9 @@ namespace DevZest.Data.Windows.Primitives
 
             var index = -1;
             var delta = 0;
-            var scalarBindings = Template.ScalarBindings;
+            var scalarBindings = Template.InternalScalarBindings;
+            if (blockDimensionsDelta > 0)
+                scalarBindings.BeginSetup();
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -333,6 +337,9 @@ namespace DevZest.Data.Windows.Primitives
                 else
                     RemoveScalarElementsAfter(scalarBinding, index, -blockDimensionsDelta);
             }
+
+            if (blockDimensionsDelta > 0)
+                scalarBindings.EndSetup();
 
             HeadScalarElementsCount += delta;
 

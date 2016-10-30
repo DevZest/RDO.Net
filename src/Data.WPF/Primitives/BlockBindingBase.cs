@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -16,13 +17,25 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
+        public T SettingUpElement { get; private set; }
+
+        internal sealed override void BeginSetup()
+        {
+            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
+        }
+
         internal sealed override UIElement Setup(BlockView blockView)
         {
-            var element = CachedList.GetOrCreate(ref _cachedElements, Create);
-            element.SetBlockView(blockView);
-            Setup(element, blockView.Ordinal, blockView);
-            Refresh(element, blockView.Ordinal, blockView);
-            return element;
+            Debug.Assert(SettingUpElement != null);
+            SettingUpElement.SetBlockView(blockView);
+            Setup(SettingUpElement, blockView.Ordinal, blockView);
+            Refresh(SettingUpElement, blockView.Ordinal, blockView);
+            return SettingUpElement;
+        }
+
+        internal sealed override void EndSetup()
+        {
+            SettingUpElement = null;
         }
 
         protected abstract void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows);

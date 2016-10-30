@@ -52,5 +52,17 @@ namespace DevZest.Data.Windows.Primitives
             result.Sort(CompareByAutoSizeOrder);
             return result;
         }
+
+        internal void BeginSetup()
+        {
+            foreach (var binding in this)
+                binding.BeginSetup();
+        }
+
+        internal void EndSetup()
+        {
+            foreach (var binding in this)
+                binding.EndSetup();
+        }
     }
 }

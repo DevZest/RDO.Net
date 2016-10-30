@@ -22,7 +22,9 @@ namespace DevZest.Data.Windows.Primitives
                 OnRefresh = x => x.Text = source,
                 OnCleanup = x => x.Text = CLEANUP
             };
+            scalarBinding.BeginSetup();
             var element = (TextBlock)scalarBinding.Setup();
+            scalarBinding.EndSetup();
             Assert.IsTrue(element.GetBinding() == scalarBinding);
             Assert.AreEqual(SOURCE, element.Text);
 

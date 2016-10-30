@@ -173,6 +173,9 @@ namespace DevZest.Data.Windows
         private void AddElements()
         {
             var blockBindings = BlockBindings;
+
+            blockBindings.BeginSetup();
+
             for (int i = 0; i < BlockBindingsSplit; i++)
                 AddElement(blockBindings[i]);
 
@@ -185,6 +188,8 @@ namespace DevZest.Data.Windows
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
                 AddElement(blockBindings[i]);
+
+            blockBindings.EndSetup();
         }
 
         private void AddElement(BlockBinding blockBinding)

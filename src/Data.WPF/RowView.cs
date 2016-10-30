@@ -122,12 +122,14 @@ namespace DevZest.Data.Windows
         private void AddElements()
         {
             var rowBindings = RowBindings;
+            rowBindings.BeginSetup();
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
                 var element = rowBinding.Setup(RowPresenter);
                 ElementCollection.Add(element);
             }
+            rowBindings.EndSetup();
         }
 
         private void ClearElements()

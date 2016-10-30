@@ -157,5 +157,9 @@ namespace DevZest.Data.Windows.Primitives
             if (GridRange.VerticallyIntersectsWith(Template.GridRows.Count - Template.FrozenBottom))
                 throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenBottom), bindingsName, Ordinal));
         }
+
+        internal abstract void BeginSetup();
+
+        internal abstract void EndSetup();
     }
 }
