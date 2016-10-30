@@ -209,20 +209,21 @@ namespace DevZest.Data.Windows.Primitives
             scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
             CoerceCurrentBlockView(null);
+            RefreshElements(true);
         }
 
-        private void RefreshElements()
+        private void RefreshElements(bool isReload)
         {
             if (Elements == null || Elements.Count == 0)
                 return;
 
-            RefreshScalarElements();
+            RefreshScalarElements(isReload);
             RefreshBlockViews();
 
             _isDirty = false;
         }
 
-        private void RefreshScalarElements()
+        private void RefreshScalarElements(bool isReload)
         {
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
@@ -230,7 +231,8 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarBinding.BlockDimensions; i++)
                 {
                     var element = scalarBinding[i];
-                    scalarBinding.Refresh(element);
+                    if (scalarBinding.ShouldRefresh(isReload, element))
+                        scalarBinding.Refresh(element);
                 }
             }
         }
@@ -402,12 +404,12 @@ namespace DevZest.Data.Windows.Primitives
 
             var panel = ElementCollection.Parent;
             if (panel == null)
-                RefreshElements();
+                RefreshElements(false);
             else
             {
                 panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
-                    RefreshElements();
+                    RefreshElements(false);
                 }));
             }
         }

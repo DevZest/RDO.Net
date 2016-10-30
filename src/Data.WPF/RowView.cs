@@ -154,13 +154,10 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
-                rowBinding.Refresh(Elements[i]);
+                var element = Elements[i];
+                if (rowBinding.ShouldRefresh(isReload, element))
+                    rowBinding.Refresh(element);
             }
-            OnRefresh();
-        }
-
-        protected virtual void OnRefresh()
-        {
         }
 
         private static RowView Focused { get; set; }

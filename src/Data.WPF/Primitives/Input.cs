@@ -55,5 +55,10 @@ namespace DevZest.Data.Windows.Primitives
                 Template.FlushingInput = null;
             }
         }
+
+        protected internal virtual bool ShouldRefresh(T element)
+        {
+            return false;
+        }
     }
 }

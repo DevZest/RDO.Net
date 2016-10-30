@@ -83,5 +83,10 @@ namespace DevZest.Data.Windows.Primitives
             e.SetRowPresenter(null);
             CachedList.Recycle(ref _cachedElements, e);
         }
+
+        internal sealed override bool ShouldRefresh(bool isReload, UIElement element)
+        {
+            return isReload || Input == null ? true : Input.ShouldRefresh((T)element);
+        }
     }
 }

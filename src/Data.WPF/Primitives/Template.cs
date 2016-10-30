@@ -450,6 +450,6 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool TransactionalEdit { get; internal set; } = true;
 
-        internal Input FlushingInput { get; set; }
+        public Input FlushingInput { get; set; }
     }
 }

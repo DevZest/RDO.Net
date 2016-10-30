@@ -112,10 +112,5 @@ namespace DevZest.Data.Windows
         {
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
-
-        protected Input FlushingInput
-        {
-            get { return Template.FlushingInput; }
-        }
     }
 }
