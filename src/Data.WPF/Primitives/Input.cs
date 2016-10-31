@@ -60,5 +60,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             return false;
         }
+
+        protected bool IsFlushing
+        {
+            get { return Template.FlushingInput == this; }
+        }
     }
 }
