@@ -7,7 +7,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract partial class LayoutManager : ElementManager
+    internal abstract partial class LayoutManager : ValidationManager
     {
         internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
         {
