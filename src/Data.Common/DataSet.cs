@@ -238,18 +238,18 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public ValidationResult Validate(ValidationLevel validationLevel = ValidationLevel.Error, bool recursive = true)
+        public ValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true)
         {
-            return ValidationResult.New(Validate(this, validationLevel, recursive));
+            return ValidationResult.New(Validate(this, severity, recursive));
         }
 
-        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationLevel validationLevel, bool recursive)
+        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationSeverity severity, bool recursive)
         {
             foreach (var dataRow in dataSet)
             {
                 foreach (var message in dataRow.Validate())
                 {
-                    if (message.Level >= validationLevel)
+                    if (message.Severity >= severity)
                         yield return new ValidationEntry(dataRow, message);
                 }
 
@@ -259,7 +259,7 @@ namespace DevZest.Data
                     foreach (var childModel in childModels)
                     {
                         var childDataSet = dataRow[childModel];
-                        foreach (var entry in Validate(childDataSet, validationLevel, recursive))
+                        foreach (var entry in Validate(childDataSet, severity, recursive))
                             yield return entry;
                     }
                 }

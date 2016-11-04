@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data
 {
-    public enum ValidationLevel
+    public enum ValidationSeverity
     {
         Warning = 1,
         Error = 2

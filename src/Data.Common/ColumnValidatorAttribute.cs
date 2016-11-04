@@ -26,9 +26,9 @@ namespace DevZest.Data
                 get { return _owner.Id; }
             }
 
-            public ValidationLevel Level
+            public ValidationSeverity Severity
             {
-                get { return _owner.ValidationLevel; }
+                get { return _owner.ValidationSeverity; }
             }
 
             public IColumnSet Columns
@@ -54,7 +54,7 @@ namespace DevZest.Data
 
         public abstract ValidatorId Id { get; }
 
-        protected abstract ValidationLevel ValidationLevel { get; }
+        protected abstract ValidationSeverity ValidationSeverity { get; }
 
         protected abstract _Boolean GetIsValidCondition(Column column);
 

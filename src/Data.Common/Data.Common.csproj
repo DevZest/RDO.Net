@@ -135,7 +135,7 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
-    <Compile Include="ValidationLevel.cs" />
+    <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="ColumnValidatorAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />

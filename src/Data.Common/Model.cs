@@ -353,7 +353,7 @@ namespace DevZest.Data
                 if (result == ValidationMessageCollection.Empty)
                     result = new ValidationMessageCollection();
                 var message = validator.Message[dataRow];
-                result.Add(new ValidationMessage(validator.Id, validator.Level, validator.Columns, message));
+                result.Add(new ValidationMessage(validator.Id, validator.Severity, validator.Columns, message));
             }
 
             return result;

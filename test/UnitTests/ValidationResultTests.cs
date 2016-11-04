@@ -29,22 +29,22 @@ namespace DevZest.Data
                 var validatorId = new ValidatorId(this.GetType(), "ValidatorId");
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ValidationMessage(validatorId, ValidationLevel.Error, dataSet._.Id, "This is an error message")),
-                    new ValidationEntry(dataSet[1], new ValidationMessage(validatorId, ValidationLevel.Warning,  null, "This is a warning message"))
+                    new ValidationEntry(dataSet[0], new ValidationMessage(validatorId, ValidationSeverity.Error, dataSet._.Id, "This is an error message")),
+                    new ValidationEntry(dataSet[1], new ValidationMessage(validatorId, ValidationSeverity.Warning,  null, "This is a warning message"))
                 });
                 var expectedJson =
 @"[
    {
       ""DataRow"" : ""/[0]"",
       ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""This is an error message""
    },
    {
       ""DataRow"" : ""/[1]"",
       ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""ValidationLevel"" : 1,
+      ""Severity"" : 1,
       ""Columns"" : """",
       ""Description"" : ""This is a warning message""
    }
@@ -69,14 +69,14 @@ namespace DevZest.Data
    {
       ""DataRow"" : ""/[0]"",
       ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""This is an error message""
    },
    {
       ""DataRow"" : ""/[1]"",
       ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""ValidationLevel"" : 1,
+      ""Severity"" : 1,
       ""Columns"" : """",
       ""Description"" : ""This is a warning message""
    }

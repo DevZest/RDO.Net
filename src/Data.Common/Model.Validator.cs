@@ -10,10 +10,10 @@ namespace DevZest.Data
         {
             private sealed class ValidatorImpl : Validator
             {
-                internal ValidatorImpl(ValidatorId id, ValidationLevel level, Column[] columns, _Boolean isValidCondition, _String message)
+                internal ValidatorImpl(ValidatorId id, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
                     : base(id)
                 {
-                    _level = level;
+                    _severity = severity;
                     _columns = ColumnSet.Create(columns);
                     _isValidCondition = isValidCondition;
                     _message = message;
@@ -21,10 +21,10 @@ namespace DevZest.Data
 
                 _String _message;
 
-                ValidationLevel _level;
-                public override ValidationLevel Level
+                ValidationSeverity _severity;
+                public override ValidationSeverity Severity
                 {
-                    get { return _level; }
+                    get { return _severity; }
                 }
 
                 IColumnSet _columns;
@@ -45,12 +45,12 @@ namespace DevZest.Data
                 }
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationLevel level, _Boolean isValidCondition, _String message, params Column[] columns)
+            public static Validator Create(ValidatorId validatorId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
             {
                 Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 
-                return new ValidatorImpl(validatorId, level, columns, isValidCondition, message);
+                return new ValidatorImpl(validatorId, severity, columns, isValidCondition, message);
             }
 
             protected Validator(ValidatorId id)
@@ -60,7 +60,7 @@ namespace DevZest.Data
 
             public ValidatorId Id { get; private set; }
 
-            public abstract ValidationLevel Level { get; }
+            public abstract ValidationSeverity Severity { get; }
 
             public abstract IColumnSet Columns { get; }
 

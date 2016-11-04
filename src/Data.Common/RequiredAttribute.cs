@@ -20,9 +20,9 @@ namespace DevZest.Data
             get { return ValidatorId; }
         }
 
-        protected override ValidationLevel ValidationLevel
+        protected override ValidationSeverity ValidationSeverity
         {
-            get { return ValidationLevel.Error; }
+            get { return ValidationSeverity.Error; }
         }
 
         protected override _Boolean GetIsValidCondition(Column column)

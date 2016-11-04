@@ -5,24 +5,24 @@ namespace DevZest.Data
 {
     public class ValidationMessage
     {
-        public ValidationMessage(ValidatorId validatorId, ValidationLevel level, string description, params Column[] columns)
-            : this(validatorId, level, ColumnSet.Create(columns), description)
+        public ValidationMessage(ValidatorId validatorId, ValidationSeverity severity, string description, params Column[] columns)
+            : this(validatorId, severity, ColumnSet.Create(columns), description)
         {
         }
 
-        public ValidationMessage(ValidatorId validatorId, ValidationLevel level, IColumnSet columns, string description)
+        public ValidationMessage(ValidatorId validatorId, ValidationSeverity severity, IColumnSet columns, string description)
         {
             Check.NotEmpty(description, nameof(description));
 
             ValidatorId = validatorId;
-            Level = level;
+            Severity = severity;
             Columns = columns ?? ColumnSet.Empty;
             Description = description;
         }
 
         public readonly ValidatorId ValidatorId;
 
-        public readonly ValidationLevel Level;
+        public readonly ValidationSeverity Severity;
 
         public readonly string Description;
 

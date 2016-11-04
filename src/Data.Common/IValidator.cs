@@ -7,7 +7,7 @@ namespace DevZest.Data
     {
         ValidatorId Id { get; }
 
-        ValidationLevel Level { get; }
+        ValidationSeverity Severity { get; }
 
         IColumnSet Columns { get; }
 

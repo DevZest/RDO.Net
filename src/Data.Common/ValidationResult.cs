@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             public static readonly Accessor<ResultModel, _String> DataRowAccessor = RegisterColumn((ResultModel x) => x.DataRow);
             public static readonly Accessor<ResultModel, _String> ValidatorIdAccessor = RegisterColumn((ResultModel x) => x.ValidatorId);
-            public static readonly Accessor<ResultModel, _Int32> ValidationLevelAccessor = RegisterColumn((ResultModel x) => x.ValidationLevel);
+            public static readonly Accessor<ResultModel, _Int32> SeverityAccessor = RegisterColumn((ResultModel x) => x.Severity);
             public static readonly Accessor<ResultModel, _String> ColumnsAccessor = RegisterColumn((ResultModel x) => x.Columns);
             public static readonly Accessor<ResultModel, _String> DescriptionAccessor = RegisterColumn((ResultModel x) => x.Description);
 
@@ -20,7 +20,7 @@ namespace DevZest.Data
 
             public _String ValidatorId { get; private set; }
 
-            public _Int32 ValidationLevel { get; private set; }
+            public _Int32 Severity { get; private set; }
 
             public new _String Columns { get; private set; }
 
@@ -51,10 +51,10 @@ namespace DevZest.Data
             {
                 var dataRow = DataRow.FromString(dataSet, validationMessages._.DataRow[i]);
                 var validatorId = ValidatorId.Deserialize(validationMessages._.ValidatorId[i]);
-                var validationLevel = (ValidationLevel)validationMessages._.ValidationLevel[i];
+                var validationSeverity = (ValidationSeverity)validationMessages._.Severity[i];
                 var columns = DeserializeColumns(dataRow, validationMessages._.Columns[i]);
                 var description = validationMessages._.Description[i];
-                entries[i] = new ValidationEntry(dataRow, new ValidationMessage(validatorId, validationLevel, columns, description));
+                entries[i] = new ValidationEntry(dataRow, new ValidationMessage(validatorId, validationSeverity, columns, description));
             }
 
             return new ValidationResult(entries);
@@ -112,7 +112,7 @@ namespace DevZest.Data
                 var index = result.AddRow().Ordinal;
                 result._.DataRow[index] = dataRow.ToString();
                 result._.ValidatorId[index] = validationMessage.ValidatorId.ToString();
-                result._.ValidationLevel[index] = (int)validationMessage.Level;
+                result._.Severity[index] = (int)validationMessage.Severity;
                 result._.Columns[index] = SerializeColumns(validationMessage.Columns);
                 result._.Description[index] = validationMessage.Description;
             }

@@ -169,91 +169,91 @@ namespace DevZest.Data
    {
       ""DataRow"" : ""/[0]/Child[0]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[0]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[0]/Child[1]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[0]/Child[2]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[1]/Child[0]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[1]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[1]/Child[1]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[1]/Child[2]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[2]/Child[0]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[2]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[2]/Child[1]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    },
    {
       ""DataRow"" : ""/[2]/Child[2]/Child[1]"",
       ""ValidatorId"" : ""DevZest.Data.Helpers.SimpleModel.IdMustBeEven"",
-      ""ValidationLevel"" : 2,
+      ""Severity"" : 2,
       ""Columns"" : ""Id"",
       ""Description"" : ""The Id must be even.""
    }
