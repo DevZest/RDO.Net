@@ -266,26 +266,6 @@ namespace DevZest.Data
             }
         }
 
-        public void Merge(ValidationResult result)
-        {
-            MergeRecursively(this, result);
-        }
-
-        private static void MergeRecursively(DataSet dataSet, ValidationResult result)
-        {
-            foreach (var dataRow in dataSet)
-            {
-                dataRow.Merge(result);
-
-                var childModels = dataSet.Model.ChildModels;
-                foreach (var childModel in childModels)
-                {
-                    var childDataSet = dataRow[childModel];
-                    MergeRecursively(childDataSet, result);
-                }
-            }
-        }
-
         public DataRow EditingRow
         {
             get { return Model.EditingRow; }

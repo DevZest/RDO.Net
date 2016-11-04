@@ -323,44 +323,12 @@ namespace DevZest.Data
                     return true;
             }
 
-            foreach (var validator in Model.Validators)
-            {
-                var condition = validator.IsValidCondition;
-                if (condition.AggregateModelSet.ContainsAny(modelSet))
-                    return true;
-            }
-
             return false;
         }
 
-        public ReadOnlyCollection<ValidationMessage> Validate()
+        public IReadOnlyList<ValidationMessage> Validate()
         {
             return Model.Validate(this);
-        }
-
-        private ValidationMessageCollection _mergedValidationMessages = ValidationMessageCollection.Empty;
-        public ReadOnlyCollection<ValidationMessage> MergedValidationMessages
-        {
-            get { return _mergedValidationMessages; }
-        }
-
-        internal void Merge(ValidationResult result)
-        {
-            var oldValue = _mergedValidationMessages;
-            _mergedValidationMessages = ValidationMessageCollection.Empty;
-            for (int i = 0; i < result.Count; i++)
-            {
-                var entry = result[i];
-                if (entry.DataRow != this)
-                    continue;
-
-                if (_mergedValidationMessages == ValidationMessageCollection.Empty)
-                    _mergedValidationMessages = new ValidationMessageCollection();
-                _mergedValidationMessages.Add(entry.Message);
-            }
-
-            if (_mergedValidationMessages != oldValue)
-                OnUpdated();
         }
 
         private int _updateLevel;
