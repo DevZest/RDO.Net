@@ -39,6 +39,11 @@ namespace DevZest.Data.Windows.Primitives
             Initialize(binding, x => flushAction(x.GetRowPresenter(), x));
         }
 
+        private ValidationManager ValidationManager
+        {
+            get { return Template.ValidationManager; }
+        }
+
         protected internal abstract void Attach(T element);
 
         protected internal abstract void Detach(T element);

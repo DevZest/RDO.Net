@@ -113,6 +113,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        public TemplateBuilder WithValidationMode(ValidationMode value)
+        {
+            Template.ValidationMode = value;
+            return this;
+        }
+
         public TemplateBuilder Recurse(Model childModel)
         {
             if (childModel == null)
