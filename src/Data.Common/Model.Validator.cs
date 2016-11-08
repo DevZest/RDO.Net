@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ namespace DevZest.Data
                     : base(id)
                 {
                     _severity = severity;
-                    _columns = ColumnSet.Create(columns);
+                    _columns = ColumnSet.New(columns);
                     _isValidCondition = isValidCondition;
                     _message = message;
                 }

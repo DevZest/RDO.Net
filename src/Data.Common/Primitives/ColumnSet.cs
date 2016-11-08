@@ -1,12 +1,12 @@
-﻿using DevZest.Data.Primitives;
+﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
-    internal class ColumnSet : List<Column>, IColumnSet
+    public static class ColumnSet
     {
         private class EmptyColumnSet : IColumnSet
         {
@@ -36,14 +36,22 @@ namespace DevZest.Data
             }
         }
 
-        public static readonly IColumnSet Empty = new EmptyColumnSet();
-
-        public static IColumnSet Create(params Column[] columns)
+        private class ListColumnSet : List<Column>, IColumnSet
         {
-            return Create(columns, false);
+            public ListColumnSet(IList<Column> columns)
+                : base(columns)
+            {
+            }
         }
 
-        private static IColumnSet Create(IList<Column> columns, bool isNormalized)
+        public static readonly IColumnSet Empty = new EmptyColumnSet();
+
+        public static IColumnSet New(params Column[] columns)
+        {
+            return New(columns, false);
+        }
+
+        private static IColumnSet New(IList<Column> columns, bool isNormalized)
         {
             if (columns == null || columns.Count == 0)
                 return Empty;
@@ -55,9 +63,9 @@ namespace DevZest.Data
             }
 
             if (isNormalized)
-                return new ColumnSet(columns);
+                return new ListColumnSet(columns);
 
-            return Create(Normalize(columns), true);
+            return New(Normalize(columns), true);
         }
 
         private static IList<Column> Normalize(IList<Column> columns)
@@ -103,9 +111,43 @@ namespace DevZest.Data
             return result;
         }
 
-        private ColumnSet(IList<Column> columns)
-            : base(columns)
+        public static IColumnSet Merge(this IColumnSet columnSet, IColumnSet value)
         {
+            Check.NotNull(columnSet, nameof(columnSet));
+            Check.NotNull(value, nameof(value));
+
+            var count1 = columnSet.Count;
+            if (count1 == 0)
+                return value;
+            var count2 = value.Count;
+            if (count2 == 0)
+                return columnSet;
+
+            return count1 >= count2 ? DoMerge(columnSet, value) : DoMerge(value, columnSet);
+        }
+
+        private static IColumnSet DoMerge(IColumnSet x, IColumnSet y)
+        {
+            Debug.Assert(x.Count >= y.Count);
+
+            for (int i = 0; i < y.Count; i++)
+            {
+                if (!x.Contains(y[i]))
+                    return DoMerge(x, y, i);
+            }
+            return x;
+        }
+
+        private static IColumnSet DoMerge(IColumnSet x, IColumnSet y, int startYIndex)
+        {
+            var result = new List<Column>(x);
+            result.Add(y[startYIndex]);
+            for (int i = startYIndex + 1; i < y.Count; i++)
+            {
+                if (!result.Contains(y[i]))
+                    result.Add(y[i]);
+            }
+            return new ListColumnSet(result);
         }
     }
 }

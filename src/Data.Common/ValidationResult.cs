@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,7 +87,7 @@ namespace DevZest.Data
             for (int i = 0; i < result.Length; i++)
                 result[i] = dataRow.DeserializeColumn(columnNames[i]);
 
-            return ColumnSet.Create(result);
+            return ColumnSet.New(result);
         }
 
         public override string ToString()

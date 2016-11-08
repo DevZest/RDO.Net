@@ -90,6 +90,7 @@
     <Compile Include="OrderByJsonTests.cs" />
     <Compile Include="PagedDataSetTests.cs" />
     <Compile Include="ColumnConverterTestsBase.cs" />
+    <Compile Include="Primitives\ColumnSetTests.cs" />
     <Compile Include="SqlServer\_SqlXmlTests.cs" />
     <Compile Include="Utilities\TypeExtensionsTests.cs" />
     <Compile Include="ValidationResultTests.cs" />

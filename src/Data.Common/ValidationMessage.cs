@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System.Collections.Generic;
 
 namespace DevZest.Data
@@ -6,7 +7,7 @@ namespace DevZest.Data
     public class ValidationMessage
     {
         public ValidationMessage(ValidatorId validatorId, ValidationSeverity severity, string description, params Column[] columns)
-            : this(validatorId, severity, ColumnSet.Create(columns), description)
+            : this(validatorId, severity, ColumnSet.New(columns), description)
         {
         }
 
