@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace DevZest.Data.Windows.Primitives
@@ -8,6 +10,20 @@ namespace DevZest.Data.Windows.Primitives
         protected ValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
             : base(template, dataSet, where, orderBy, emptyBlockViewList)
         {
+        }
+
+        private Dictionary<Input, ValidationMessage> _inputErrors = new Dictionary<Input, ValidationMessage>();
+        private List<ValidationMessage> _validationMessages = new List<ValidationMessage>();
+        private ValidationResult _mergedValidationResult;
+
+        internal bool HasErrors(Input input)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal IEnumerable<ValidationMessage> GetValidationMessages(Input input)
+        {
+            throw new NotImplementedException();
         }
 
         public bool IsValidated { get; private set; }

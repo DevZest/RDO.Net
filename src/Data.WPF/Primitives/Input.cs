@@ -1,20 +1,49 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class Input
+    public abstract class Input : INotifyDataErrorInfo
     {
+        private const string BINDING_PROPERTY = "BindingProperty";
+        private static readonly DataErrorsChangedEventArgs SingletonDataErrorsChangedEventArgs = new DataErrorsChangedEventArgs(BINDING_PROPERTY);
+
         protected Input()
         {
         }
 
         public Binding Binding { get; internal set; }
 
+        private ValidationManager ValidationManager
+        {
+            get { return Template.ValidationManager; }
+        }
+
+        public bool HasErrors
+        {
+            get { return ValidationManager.HasErrors(this); }
+        }
+
         public Template Template
         {
             get { return Binding.Template; }
+        }
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            return ValidationManager.GetValidationMessages(this);
+        }
+
+        internal void RefreshValidation()
+        {
+            var errorsChanged = ErrorsChanged;
+            if (errorsChanged != null)
+                errorsChanged(this, SingletonDataErrorsChangedEventArgs);
         }
     }
 
@@ -37,11 +66,6 @@ namespace DevZest.Data.Windows.Primitives
         internal void Initialize(Binding binding, Action<RowPresenter, T> flushAction)
         {
             Initialize(binding, x => flushAction(x.GetRowPresenter(), x));
-        }
-
-        private ValidationManager ValidationManager
-        {
-            get { return Template.ValidationManager; }
         }
 
         protected internal abstract void Attach(T element);
