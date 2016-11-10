@@ -12,35 +12,57 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private Dictionary<Input, ValidationMessage> _inputErrors = new Dictionary<Input, ValidationMessage>();
-        private List<ValidationMessage> _validationMessages = new List<ValidationMessage>();
-        private ValidationResult _mergedValidationResult;
+        internal Input FlushingInput { get; set; }
+
+        private Dictionary<Input, ValidationMessage> _flushingErrors = new Dictionary<Input, ValidationMessage>();
+        private IReadOnlyList<ValidationMessage> _validationSummary = Array<ValidationMessage>.Empty;
+        private Dictionary<Input, IReadOnlyList<ValidationMessage>> _validationMessages = new Dictionary<Input, IReadOnlyList<ValidationMessage>>();
+        private IReadOnlyList<ValidationMessage> _mergedValidaitonSummary = Array<ValidationMessage>.Empty;
+        private Dictionary<Input, IReadOnlyList<ValidationMessage>> _mergedValidationMessages = new Dictionary<Input, IReadOnlyList<ValidationMessage>>();
 
         internal bool HasErrors(Input input)
         {
-            throw new NotImplementedException();
+            return _flushingErrors.ContainsKey(input) || _validationMessages.ContainsKey(input) || _mergedValidationMessages.ContainsKey(input);
         }
 
-        internal IEnumerable<ValidationMessage> GetValidationMessages(Input input)
+        internal IEnumerable<ValidationMessage> GetErrors(Input input)
         {
-            throw new NotImplementedException();
+            {
+                ValidationMessage flushingError;
+                if (_flushingErrors.TryGetValue(input, out flushingError))
+                    yield return flushingError;
+            }
+
+            {
+                IReadOnlyList<ValidationMessage> validationMessages;
+                if (_validationMessages.TryGetValue(input, out validationMessages))
+                {
+                    foreach (var validationMessage in validationMessages)
+                        yield return validationMessage;
+                }
+            }
+
+            {
+                IReadOnlyList<ValidationMessage> mergedValidationMessages;
+                if (_mergedValidationMessages.TryGetValue(input, out mergedValidationMessages))
+                {
+                    foreach (var validationMessage in mergedValidationMessages)
+                        yield return validationMessage;
+                }
+            }
         }
 
         public bool IsValidated { get; private set; }
 
-        private bool _isValid;
-        public bool IsValid
+        public bool IsValid(bool ignoreMergedResult = true)
         {
-            get
-            {
-                if (IsValidated)
-                    return _isValid;
-                Validate();
-                return _isValid;
-            }
+            if (_flushingErrors.Count > 0)
+                return false;
+
+            throw new NotImplementedException();
         }
 
-        public bool Validate()
+        public bool Validate(bool ignoreMergedResult = true)
         {
             IsValidated = true;
             throw new NotImplementedException();

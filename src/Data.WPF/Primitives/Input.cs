@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -8,8 +9,7 @@ namespace DevZest.Data.Windows.Primitives
 {
     public abstract class Input : INotifyDataErrorInfo
     {
-        private const string BINDING_PROPERTY = "BindingProperty";
-        private static readonly DataErrorsChangedEventArgs SingletonDataErrorsChangedEventArgs = new DataErrorsChangedEventArgs(BINDING_PROPERTY);
+        private static readonly DataErrorsChangedEventArgs SingletonDataErrorsChangedEventArgs = new DataErrorsChangedEventArgs(string.Empty);
 
         protected Input()
         {
@@ -20,6 +20,38 @@ namespace DevZest.Data.Windows.Primitives
         private ValidationManager ValidationManager
         {
             get { return Template.ValidationManager; }
+        }
+
+        private Input FlushingInput
+        {
+            get { return ValidationManager.FlushingInput; }
+            set { ValidationManager.FlushingInput = value; }
+        }
+
+        protected bool IsFlushing
+        {
+            get { return FlushingInput == this; }
+        }
+
+        internal void ExecFlush<T>(T element, Action<T> flushAction)
+        {
+            FlushingInput = this;
+            Columns = ColumnSet.Empty;
+            try
+            {
+                flushAction(element);
+            }
+            finally
+            {
+                FlushingInput = null;
+            }
+        }
+
+        internal IColumnSet Columns { get; private set; }
+
+        internal void MergeColumn(Column column)
+        {
+            Columns = Columns.Merge(column);
         }
 
         public bool HasErrors
@@ -36,7 +68,10 @@ namespace DevZest.Data.Windows.Primitives
 
         public IEnumerable GetErrors(string propertyName)
         {
-            return ValidationManager.GetValidationMessages(this);
+            /// When using with <see cref="ValidationListener"/>, <param name="propertyName"/> will be passed in twice,
+            /// as null and <see cref="string.Empty"/> respectively.
+            /// We need to ignore one of them, otherwise duplicated results will be returned.
+            return propertyName == null ? null : ValidationManager.GetErrors(this);
         }
 
         internal void RefreshValidation()
@@ -74,25 +109,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected internal void Flush(T element)
         {
-            Template.FlushingInput = this;
-            try
-            {
-                _flushAction(element);
-            }
-            finally
-            {
-                Template.FlushingInput = null;
-            }
+            ExecFlush(element, _flushAction);
         }
 
         protected internal virtual bool ShouldRefresh(T element)
         {
             return false;
-        }
-
-        protected bool IsFlushing
-        {
-            get { return Template.FlushingInput == this; }
         }
     }
 }

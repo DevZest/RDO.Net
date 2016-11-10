@@ -455,8 +455,6 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool TransactionalEdit { get; internal set; } = true;
 
-        internal Input FlushingInput { get; set; }
-
         public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Explicit;
     }
 }
