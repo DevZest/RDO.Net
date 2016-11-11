@@ -280,11 +280,6 @@ namespace DevZest.Data
             }
         }
 
-        public ReadOnlyCollection<ValidationMessage> ValidateEditingRow()
-        {
-            return EditingRow == null ? ValidationMessageCollection.Empty : Model.Validate(EditingRow);
-        }
-
         public DataRow BeginAdd()
         {
             if (IsReadOnly)
