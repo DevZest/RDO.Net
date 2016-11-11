@@ -67,6 +67,10 @@ namespace DevZest.Data
         }
 
         private readonly IReadOnlyList<ValidationEntry> _entries;
+        public IReadOnlyList<ValidationEntry> Entries
+        {
+            get { return _entries == null ? Array<ValidationEntry>.Empty : _entries; }
+        }
 
         private ValidationResult(IReadOnlyList<ValidationEntry> entries)
         {
