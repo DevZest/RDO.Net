@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevZest.Data.Windows
 {
@@ -61,7 +62,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FrozenLeft(int tracks)
+        [DefaultValue(0)]
+        public TemplateBuilder WithFrozenLeft(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -69,7 +71,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FrozenTop(int tracks)
+        [DefaultValue(0)]
+        public TemplateBuilder WithFrozenTop(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -77,7 +80,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FrozenRight(int tracks)
+        [DefaultValue(0)]
+        public TemplateBuilder WithFrozenRight(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -85,7 +89,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder FrozenBottom(int tracks)
+        [DefaultValue(0)]
+        public TemplateBuilder WithFrozenBottom(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -93,7 +98,8 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Stretch(int tracks)
+        [DefaultValue(0)]
+        public TemplateBuilder WithStretches(int tracks)
         {
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
@@ -101,18 +107,28 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder With(RowPlaceholderMode value)
+        [DefaultValue(RowPlaceholderMode.Explicit)]
+        public TemplateBuilder WithRowPlaceholderMode(RowPlaceholderMode value)
         {
             Template.RowPlaceholderMode = value;
             return this;
         }
 
+        [DefaultValue(true)]
         public TemplateBuilder WithTransactionalEdit(bool value)
         {
             Template.TransactionalEdit = value;
             return this;
         }
 
+        [DefaultValue(ValidationScope.CurrentRow)]
+        public TemplateBuilder WithValidationScope(ValidationScope value)
+        {
+            Template.ValidationScope = value;
+            return this;
+        }
+
+        [DefaultValue(ValidationMode.Explicit)]
         public TemplateBuilder WithValidationMode(ValidationMode value)
         {
             Template.ValidationMode = value;

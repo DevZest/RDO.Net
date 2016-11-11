@@ -2,7 +2,6 @@
 {
     public enum ValidationMode
     {
-        None,
         Implicit,
         Explicit
     }

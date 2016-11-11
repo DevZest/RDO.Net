@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
@@ -14,8 +15,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             InternalGridColumns = new GridColumnCollection(this);
             InternalGridRows = new GridRowCollection(this);
-            BlockDimensions = 1;
-            RecursiveModelOrdinal = -1;
         }
 
         internal RowManager RowManager { get; set; }
@@ -47,7 +46,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public Orientation? Orientation { get; private set; }
 
-        public int BlockDimensions { get; private set; }
+        public int BlockDimensions { get; private set; } = 1;
 
         internal void Layout(Orientation orientation, int blockDimensions = 1)
         {
@@ -276,9 +275,10 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        public RowPlaceholderMode RowPlaceholderMode { get; internal set; }
+        [DefaultValue(RowPlaceholderMode.Explicit)]
+        public RowPlaceholderMode RowPlaceholderMode { get; internal set; } = RowPlaceholderMode.Explicit;
 
-        public int RecursiveModelOrdinal { get; internal set; }
+        public int RecursiveModelOrdinal { get; internal set; } = -1;
 
         public bool IsRecursive
         {
@@ -431,14 +431,19 @@ namespace DevZest.Data.Windows.Primitives
             return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
         }
 
+        [DefaultValue(0)]
         public int FrozenLeft { get; internal set; }
 
+        [DefaultValue(0)]
         public int FrozenTop { get; internal set; }
 
+        [DefaultValue(0)]
         public int FrozenRight { get; internal set; }
 
+        [DefaultValue(0)]
         public int FrozenBottom { get; internal set; }
 
+        [DefaultValue(0)]
         public int Stretches { get; internal set; }
 
         private readonly List<GridLine> _gridLines = new List<GridLine>();
@@ -453,8 +458,13 @@ namespace DevZest.Data.Windows.Primitives
             _gridLines.Add(gridLine);
         }
 
+        [DefaultValue(true)]
         public bool TransactionalEdit { get; internal set; } = true;
 
+        [DefaultValue(ValidationScope.CurrentRow)]
+        public ValidationScope ValidationScope { get; internal set; } = ValidationScope.CurrentRow;
+
+        [DefaultValue(ValidationMode.Explicit)]
         public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Explicit;
     }
 }
