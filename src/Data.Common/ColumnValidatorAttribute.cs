@@ -21,29 +21,34 @@ namespace DevZest.Data
             private ColumnValidatorAttribute _owner;
             private Column _column;
 
-            public ValidatorId Id
+            private ValidatorId Id
             {
                 get { return _owner.Id; }
             }
 
-            public ValidationSeverity Severity
+            private ValidationSeverity Severity
             {
                 get { return _owner.ValidationSeverity; }
             }
 
-            public IColumnSet Columns
+            private IColumnSet Columns
             {
                 get { return _column; }
             }
 
-            public _Boolean IsValidCondition
+            private _Boolean IsValidCondition
             {
                 get { return _owner.GetIsValidCondition(_column); }
             }
 
-            public _String Message
+            private _String Message
             {
                 get { return _owner.GetMessage(_column); }
+            }
+
+            public IEnumerable<ValidationMessage> Validate(DataRow dataRow)
+            {
+                return IsValidCondition[dataRow] == true ? null : new ValidationMessage(Id, Severity, Columns, Message[dataRow]);
             }
         }
 

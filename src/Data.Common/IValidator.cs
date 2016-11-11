@@ -5,14 +5,6 @@ namespace DevZest.Data
 {
     public interface IValidator
     {
-        ValidatorId Id { get; }
-
-        ValidationSeverity Severity { get; }
-
-        IColumnSet Columns { get; }
-
-        _Boolean IsValidCondition { get; }
-
-        _String Message { get; }
+        IEnumerable<ValidationMessage> Validate(DataRow dataRow);
     }
 }

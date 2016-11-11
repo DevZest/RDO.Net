@@ -346,14 +346,19 @@ namespace DevZest.Data
             var result = ValidationMessageCollection.Empty;
             foreach (var validator in Validators)
             {
-                var isValid = validator.IsValidCondition[dataRow];
-                if (isValid == true)
+                var validationMessages = validator.Validate(dataRow);
+                if (validationMessages == null)
                     continue;
 
-                if (result == ValidationMessageCollection.Empty)
-                    result = new ValidationMessageCollection();
-                var message = validator.Message[dataRow];
-                result.Add(new ValidationMessage(validator.Id, validator.Severity, validator.Columns, message));
+                foreach (var validationMessage in validationMessages)
+                {
+                    if (validationMessage == null)
+                        continue;
+
+                    if (result == ValidationMessageCollection.Empty)
+                        result = new ValidationMessageCollection();
+                    result.Add(validationMessage);
+                }
             }
 
             return result;

@@ -2,72 +2,66 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DevZest.Data
 {
     partial class Model
     {
-        protected abstract class Validator : IValidator
+        protected static class Validator
         {
-            private sealed class ValidatorImpl : Validator
+            private sealed class SimpleValidator : IValidator
             {
-                internal ValidatorImpl(ValidatorId id, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
-                    : base(id)
+                public SimpleValidator(ValidatorId id, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
                 {
+                    _id = id;
                     _severity = severity;
                     _columns = ColumnSet.New(columns);
                     _isValidCondition = isValidCondition;
                     _message = message;
                 }
 
+                ValidatorId _id;
+                ValidationSeverity _severity;
+                IColumnSet _columns;
+                _Boolean _isValidCondition;
                 _String _message;
 
-                ValidationSeverity _severity;
-                public override ValidationSeverity Severity
+                public IEnumerable<ValidationMessage> Validate(DataRow dataRow)
                 {
-                    get { return _severity; }
-                }
-
-                IColumnSet _columns;
-                public override IColumnSet Columns
-                {
-                    get { return _columns; }
-                }
-
-                _Boolean _isValidCondition;
-                public override _Boolean IsValidCondition
-                {
-                    get { return _isValidCondition; }
-                }
-
-                public override _String Message
-                {
-                    get { return _message; }
+                    return _isValidCondition[dataRow] == true ? null : new ValidationMessage(_id, _severity, _columns, _message[dataRow]);
                 }
             }
 
-            public static Validator Create(ValidatorId validatorId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
+            public static IValidator Create(ValidatorId validatorId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
             {
                 Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 
-                return new ValidatorImpl(validatorId, severity, columns, isValidCondition, message);
+                return new SimpleValidator(validatorId, severity, columns, isValidCondition, message);
             }
 
-            protected Validator(ValidatorId id)
+            private sealed class DelegateValidator : IValidator
             {
-                Id = id;
+                public DelegateValidator(Func<DataRow, IEnumerable<ValidationMessage>> func)
+                {
+                    Debug.Assert(func != null);
+                    _func = func;
+                }
+
+                Func<DataRow, IEnumerable<ValidationMessage>> _func;
+
+                public IEnumerable<ValidationMessage> Validate(DataRow dataRow)
+                {
+                    return _func(dataRow);
+                }
             }
 
-            public ValidatorId Id { get; private set; }
-
-            public abstract ValidationSeverity Severity { get; }
-
-            public abstract IColumnSet Columns { get; }
-
-            public abstract _Boolean IsValidCondition { get; }
-
-            public abstract _String Message { get; }
+            public static IValidator Create(Func<DataRow, IEnumerable<ValidationMessage>> func)
+            {
+                Utilities.Check.NotNull(func, nameof(func));
+                return new DelegateValidator(func);
+            }
         }
     }
 }
