@@ -393,7 +393,7 @@ namespace DevZest.Data
             }
         }
 
-        internal DataSet DataSet { get; private set; }
+        public DataSet DataSet { get; private set; }
 
         private int _ordinal = -1;
         internal int Ordinal
