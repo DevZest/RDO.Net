@@ -9,6 +9,11 @@ namespace DevZest.Data
 {
     public struct ValidationResult
     {
+        public static ValidationResult Empty
+        {
+            get { return new ValidationResult(); }
+        }
+
         private sealed class ResultModel : Model
         {
             public static readonly Accessor<ResultModel, _String> DataRowAccessor = RegisterColumn((ResultModel x) => x.DataRow);
