@@ -7,7 +7,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public class ValidationMessage : IReadOnlyList<ValidationMessage>
+    public class ValidationMessage
     {
         public ValidationMessage(ValidatorId validatorId, ValidationSeverity severity, IColumnSet columns, string description)
         {
@@ -31,35 +31,6 @@ namespace DevZest.Data
         {
             return Description;
         }
-
-        #region IReadOnlyList<ValidationMessage>
-
-        int IReadOnlyCollection<ValidationMessage>.Count
-        {
-            get { return 1; }
-        }
-
-        ValidationMessage IReadOnlyList<ValidationMessage>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        IEnumerator<ValidationMessage> IEnumerable<ValidationMessage>.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        #endregion
 
         internal void WriteJson(JsonWriter jsonWriter)
         {

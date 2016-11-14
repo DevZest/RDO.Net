@@ -244,7 +244,7 @@ namespace DevZest.Data
         {
             foreach (var dataRow in dataSet)
             {
-                var validationMessages = dataRow.Validate();
+                var validationMessages = dataRow.Validate(severity);
                 if (validationMessages.Count == 0)
                     continue;
                 maxEntries--;

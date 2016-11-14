@@ -5,6 +5,6 @@ namespace DevZest.Data
 {
     public interface IValidator
     {
-        IEnumerable<ValidationMessage> Validate(DataRow dataRow);
+        ValidationMessage Validate(DataRow dataRow);
     }
 }
