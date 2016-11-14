@@ -4,8 +4,7 @@
     {
         public static JsonWriter Write(this JsonWriter jsonWriter, ValidationResult validationResult)
         {
-            validationResult.WriteJson(jsonWriter);
-            return jsonWriter;
+            return jsonWriter.WriteArray(validationResult.Entries, (writer, entry) => writer.Write(entry));
         }
     }
 }

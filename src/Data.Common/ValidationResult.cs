@@ -1,10 +1,8 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -41,11 +39,6 @@ namespace DevZest.Data
         public override string ToString()
         {
             return ToJsonString(true);
-        }
-
-        internal void WriteJson(JsonWriter jsonWriter)
-        {
-            jsonWriter.WriteArray(Entries, (writer, entry) => writer.Write(entry));
         }
 
         public string ToJsonString(bool isPretty)
