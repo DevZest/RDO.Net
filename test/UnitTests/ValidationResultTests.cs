@@ -11,17 +11,17 @@ namespace DevZest.Data
         {
             {
                 var result = new ValidationResult();
-                Assert.AreEqual("null", result.ToJsonString(true));
+                Assert.AreEqual("[]", result.ToJsonString(true));
             }
 
             {
                 var result = ValidationResult.New(null);
-                Assert.AreEqual("null", result.ToJsonString(true));
+                Assert.AreEqual("[]", result.ToJsonString(true));
             }
 
             {
                 var result = ValidationResult.New(new ValidationEntry[0]);
-                Assert.AreEqual("null", result.ToJsonString(true));
+                Assert.AreEqual("[]", result.ToJsonString(true));
             }
 
             {
@@ -36,17 +36,25 @@ namespace DevZest.Data
 @"[
    {
       ""DataRow"" : ""/[0]"",
-      ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""Severity"" : 2,
-      ""Columns"" : ""Id"",
-      ""Description"" : ""This is an error message""
+      ""Messages"" : [
+         {
+            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Severity"" : ""Error"",
+            ""Columns"" : ""Id"",
+            ""Description"" : ""This is an error message""
+         }
+      ]
    },
    {
       ""DataRow"" : ""/[1]"",
-      ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""Severity"" : 1,
-      ""Columns"" : """",
-      ""Description"" : ""This is a warning message""
+      ""Messages"" : [
+         {
+            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Severity"" : ""Warning"",
+            ""Columns"" : """",
+            ""Description"" : ""This is a warning message""
+         }
+      ]
    }
 ]";
                 Assert.AreEqual(expectedJson, result.ToJsonString(true));
@@ -82,7 +90,7 @@ namespace DevZest.Data
    }
 ]";
                 var result = ValidationResult.ParseJson(dataSet, json);
-                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(2, result.Entries.Count);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -54,6 +56,28 @@ namespace DevZest.Data.Primitives
         {
             value.Write(stringBuilder);
             return stringBuilder;
+        }
+
+        internal static StringBuilder WriteArray<T>(this StringBuilder stringBuilder, IEnumerable<T> array, Action<StringBuilder, T> writeItemAction)
+        {
+            int count = 0;
+            stringBuilder.WriteStartArray();
+            foreach (var item in array)
+            {
+                if (count > 0)
+                    stringBuilder.WriteComma();
+                writeItemAction(stringBuilder, item);
+                count++;
+            }
+            stringBuilder.WriteEndArray();
+            return stringBuilder;
+        }
+
+        internal static StringBuilder WriteNameArrayPair<T>(this StringBuilder stringBuilder, string name, IEnumerable<T> array, Action<StringBuilder, T> writeItemAction)
+        {
+            return stringBuilder
+                .WriteObjectName(name)
+                .WriteArray<T>(array, writeItemAction);
         }
     }
 }

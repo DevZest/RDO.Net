@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using System.Text;
+using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
@@ -24,6 +26,11 @@ namespace DevZest.Data
         public readonly string Description;
 
         public readonly IColumnSet Columns;
+
+        public override string ToString()
+        {
+            return Description;
+        }
 
         #region IReadOnlyList<ValidationMessage>
 
@@ -53,5 +60,25 @@ namespace DevZest.Data
         }
 
         #endregion
+
+        internal void WriteJson(StringBuilder stringBuilder)
+        {
+            stringBuilder
+                .WriteStartObject()
+                .WriteNameStringPair(nameof(ValidatorId), ValidatorId.ToString()).WriteComma()
+                .WriteNameStringPair(nameof(Severity), Severity.ToString()).WriteComma()
+                .WriteNameStringPair(nameof(Columns), Columns.Serialize()).WriteComma()
+                .WriteNameStringPair(nameof(Description), Description)
+                .WriteEndObject();
+        }
+    }
+
+    internal static class ValidationMessageJsonWriter
+    {
+        public static StringBuilder WriteValidationMessageJson(this StringBuilder stringBuilder, ValidationMessage validationMessage)
+        {
+            validationMessage.WriteJson(stringBuilder);
+            return stringBuilder;
+        }
     }
 }

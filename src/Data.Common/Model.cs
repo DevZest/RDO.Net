@@ -341,7 +341,7 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal ValidationMessageCollection Validate(DataRow dataRow)
+        internal ValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity severity)
         {
             var result = ValidationMessageCollection.Empty;
             foreach (var validator in Validators)
@@ -352,7 +352,7 @@ namespace DevZest.Data
 
                 foreach (var validationMessage in validationMessages)
                 {
-                    if (validationMessage == null)
+                    if (validationMessage == null || validationMessage.Severity < severity)
                         continue;
 
                     if (result == ValidationMessageCollection.Empty)

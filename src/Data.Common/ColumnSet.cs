@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DevZest.Data
 {
@@ -148,6 +149,27 @@ namespace DevZest.Data
                     result.Add(y[i]);
             }
             return new ListColumnSet(result);
+        }
+
+        internal static string Serialize(this IColumnSet columns)
+        {
+            return columns == null || columns.Count == 0 ? string.Empty : string.Join(",", columns.Select(x => x.Name));
+        }
+
+        internal static IColumnSet Deserialize(DataRow dataRow, string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return ColumnSet.Empty;
+
+            var columnNames = input.Split(',');
+            if (columnNames == null || columnNames.Length == 0)
+                return ColumnSet.Empty;
+
+            var result = new Column[columnNames.Length];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = dataRow.DeserializeColumn(columnNames[i]);
+
+            return ColumnSet.New(result);
         }
     }
 }

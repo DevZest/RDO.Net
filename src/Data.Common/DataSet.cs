@@ -243,20 +243,17 @@ namespace DevZest.Data
             return ValidationResult.New(Validate(this, severity, recursive, maxMessages));
         }
 
-        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationSeverity severity, bool recursive, int maxMessages)
+        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationSeverity severity, bool recursive, int maxEntries)
         {
             foreach (var dataRow in dataSet)
             {
-                foreach (var message in dataRow.Validate())
-                {
-                    if (message.Severity >= severity)
-                    {
-                        maxMessages--;
-                        if (maxMessages < 0)
-                            yield break;
-                        yield return new ValidationEntry(dataRow, message);
-                    }
-                }
+                var validationMessages = dataRow.Validate();
+                if (validationMessages.Count == 0)
+                    continue;
+                maxEntries--;
+                if (maxEntries < 0)
+                    yield break;
+                yield return new ValidationEntry(dataRow, validationMessages);
 
                 if (recursive)
                 {
@@ -264,10 +261,10 @@ namespace DevZest.Data
                     foreach (var childModel in childModels)
                     {
                         var childDataSet = dataRow[childModel];
-                        foreach (var entry in Validate(childDataSet, severity, recursive, maxMessages))
+                        foreach (var entry in Validate(childDataSet, severity, recursive, maxEntries))
                         {
-                            maxMessages--;
-                            if (maxMessages < 0)
+                            maxEntries--;
+                            if (maxEntries < 0)
                                 yield break;
                             yield return entry;
                         }
