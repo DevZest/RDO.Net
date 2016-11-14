@@ -1,43 +1,39 @@
 ﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DevZest.Data
 {
-    public static class OrderBy
+    public static class OrderByJson
     {
         private const string COLUMN = nameof(ColumnSort.Column);
         private const string DIRECTION = nameof(ColumnSort.Direction);
 
-        public static string ToJson(this IReadOnlyList<ColumnSort> orderBy, bool isPretty)
+        public static string ToJson(this IEnumerable<ColumnSort> orderBy, bool isPretty)
         {
             if (orderBy == null)
                 return null;
 
-            var result = new StringBuilder().WriteOrderByList(orderBy).ToString();
-            if (isPretty)
-                result = JsonFormatter.PrettyPrint(result);
-            return result;
+            return JsonWriter.New().Write(orderBy).ToString(isPretty);
         }
 
-        private static StringBuilder WriteOrderByList(this StringBuilder stringBuilder, IReadOnlyList<ColumnSort> orderByList)
+        public static JsonWriter Write(this JsonWriter jsonWriter, IEnumerable<ColumnSort> orderByList)
         {
-            stringBuilder.WriteStartArray();
-            for (int i = 0; i < orderByList.Count; i++)
+            jsonWriter.WriteStartArray();
+            var count = 0;
+            foreach (var orderBy in orderByList)
             {
-                stringBuilder.WriteOrderBy(orderByList[i]);
-                if (i < orderByList.Count - 1)
-                    stringBuilder.WriteComma();
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.Write(orderBy);
+                count++;
             }
-            stringBuilder.WriteEndArray();
-            return stringBuilder;
+            return jsonWriter.WriteEndArray();
         }
 
-        private static StringBuilder WriteOrderBy(this StringBuilder stringBuilder, ColumnSort orderBy)
+        public static JsonWriter Write(this JsonWriter jsonWriter, ColumnSort orderBy)
         {
-            return stringBuilder.WriteStartObject()
+            return jsonWriter.WriteStartObject()
                 .WriteNameColumnPair(COLUMN, orderBy.Column).WriteComma()
                 .WriteNameValuePair(DIRECTION, JsonValue.FastString(orderBy.Direction.ToString()))
                 .WriteEndObject();

@@ -16,22 +16,13 @@ namespace DevZest.Data
 
         public readonly IReadOnlyList<ValidationMessage> Messages;
 
-        internal void WriteJson(StringBuilder stringBuilder)
+        internal void WriteJson(JsonWriter jsonWriter)
         {
-            stringBuilder
+            jsonWriter
                 .WriteStartObject()
                 .WriteNameStringPair(nameof(DataRow), DataRow.ToString()).WriteComma()
-                .WriteNameArrayPair(nameof(Messages), Messages, (sb, validationMessage) => sb.WriteValidationMessageJson(validationMessage))
+                .WriteNameArrayPair(nameof(Messages), Messages, (writer, validationMessage) => writer.Write(validationMessage))
                 .WriteEndObject();
-        }
-    }
-
-    internal static class ValidationEntryJson
-    {
-        internal static StringBuilder WriteValidationEntryJson(this StringBuilder stringBuilder, ValidationEntry validationEntry)
-        {
-            validationEntry.WriteJson(stringBuilder);
-            return stringBuilder;
         }
     }
 }

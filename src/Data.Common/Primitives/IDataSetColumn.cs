@@ -4,7 +4,7 @@ namespace DevZest.Data.Primitives
 {
     internal interface IDataSetColumn
     {
-        void Serialize(int rowOrdinal, StringBuilder stringBuilder);
+        void Serialize(int rowOrdinal, JsonWriter jsonWriter);
 
         DataSet NewValue(int rowOrdinal);
 

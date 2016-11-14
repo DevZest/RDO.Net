@@ -4,80 +4,192 @@ using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    internal static class JsonWriter
+    public struct JsonWriter
     {
-        internal static StringBuilder WriteStartObject(this StringBuilder stringBuilder)
+        public static JsonWriter New()
         {
-            stringBuilder.Append('{');
-            return stringBuilder;
+            return new JsonWriter(new StringBuilder());
         }
 
-        internal static StringBuilder WriteEndObject(this StringBuilder stringBuilder)
+        private JsonWriter(StringBuilder stringBuilder)
         {
-            stringBuilder.Append('}');
-            return stringBuilder;
+            _stringBuilder = stringBuilder;
         }
 
-        internal static StringBuilder WriteStartArray(this StringBuilder stringBuilder)
+        private StringBuilder _stringBuilder;
+        public StringBuilder StringBuilder
         {
-            stringBuilder.Append('[');
-            return stringBuilder;
+            get { return _stringBuilder; }
         }
 
-        internal static StringBuilder WriteEndArray(this StringBuilder stringBuilder)
+        private StringBuilder RequireStringBuilder()
         {
-            stringBuilder.Append(']');
-            return stringBuilder;
+            if (_stringBuilder == null)
+                throw new InvalidOperationException();
+            return _stringBuilder;
         }
 
-        internal static StringBuilder WriteNameStringPair(this StringBuilder stringBuilder, string name, string value)
+        public JsonWriter WriteStartObject()
         {
-            return stringBuilder.WriteNameValuePair(name, JsonValue.String(value));
+            RequireStringBuilder().Append('{');
+            return this;
         }
 
-        internal static StringBuilder WriteNameValuePair(this StringBuilder stringBuilder, string name, JsonValue value)
+        public JsonWriter WriteEndObject()
         {
-            return stringBuilder.WriteObjectName(name).WriteValue(value);
+            RequireStringBuilder().Append('}');
+            return this;
         }
 
-        internal static StringBuilder WriteComma(this StringBuilder stringBuilder)
+        public JsonWriter WriteStartArray()
         {
-            return stringBuilder.Append(',');
+            RequireStringBuilder().Append('[');
+            return this;
         }
 
-        internal static StringBuilder WriteObjectName(this StringBuilder stringBuilder, string name)
+        public JsonWriter WriteEndArray()
         {
-            JsonValue.FastString(name).Write(stringBuilder);
-            stringBuilder.Append(":");
-            return stringBuilder;
+            RequireStringBuilder().Append(']');
+            return this;
         }
 
-        internal static StringBuilder WriteValue(this StringBuilder stringBuilder, JsonValue value)
+        public JsonWriter WriteNameStringPair(string name, string value)
         {
-            value.Write(stringBuilder);
-            return stringBuilder;
+            return WriteNameValuePair(name, JsonValue.String(value));
         }
 
-        internal static StringBuilder WriteArray<T>(this StringBuilder stringBuilder, IEnumerable<T> array, Action<StringBuilder, T> writeItemAction)
+        public JsonWriter WriteNameValuePair(string name, JsonValue value)
+        {
+            return WriteObjectName(name).WriteValue(value);
+        }
+
+        public JsonWriter WriteComma()
+        {
+            RequireStringBuilder().Append(',');
+            return this;
+        }
+
+        public JsonWriter WriteObjectName(string name)
+        {
+            JsonValue.FastString(name).Write(RequireStringBuilder());
+            RequireStringBuilder().Append(":");
+            return this;
+        }
+
+        public JsonWriter WriteValue(JsonValue value)
+        {
+            value.Write(RequireStringBuilder());
+            return this;
+        }
+
+        public JsonWriter WriteArray<T>(IEnumerable<T> array, Action<JsonWriter, T> writeItemAction)
         {
             int count = 0;
-            stringBuilder.WriteStartArray();
+            WriteStartArray();
             foreach (var item in array)
             {
                 if (count > 0)
-                    stringBuilder.WriteComma();
-                writeItemAction(stringBuilder, item);
+                    WriteComma();
+                writeItemAction(this, item);
                 count++;
             }
-            stringBuilder.WriteEndArray();
-            return stringBuilder;
+            WriteEndArray();
+            return this;
         }
 
-        internal static StringBuilder WriteNameArrayPair<T>(this StringBuilder stringBuilder, string name, IEnumerable<T> array, Action<StringBuilder, T> writeItemAction)
+        public JsonWriter WriteNameArrayPair<T>(string name, IEnumerable<T> array, Action<JsonWriter, T> writeItemAction)
         {
-            return stringBuilder
-                .WriteObjectName(name)
-                .WriteArray<T>(array, writeItemAction);
+            return WriteObjectName(name).WriteArray<T>(array, writeItemAction);
+        }
+
+        private const string INDENT = "   ";
+
+        private static void AppendIndent(StringBuilder stringBuilder, int count)
+        {
+            for (; count > 0; --count)
+                stringBuilder.Append(INDENT);
+        }
+
+        private static string PrettyPrint(string input)
+        {
+            var output = new StringBuilder();
+            int depth = 0;
+            int len = input.Length;
+            char[] chars = input.ToCharArray();
+            for (int i = 0; i < len; ++i)
+            {
+                char ch = chars[i];
+
+                if (ch == '\"') // found string span
+                {
+                    bool str = true;
+                    while (str)
+                    {
+                        output.Append(ch);
+                        ch = chars[++i];
+                        if (ch == '\\')
+                        {
+                            output.Append(ch);
+                            ch = chars[++i];
+                        }
+                        else if (ch == '\"')
+                            str = false;
+                    }
+                }
+
+                if (ch == '[' && chars[i + 1] == ']')
+                {
+                    output.Append(ch);
+                    output.Append(chars[++i]);
+                    continue;
+                }
+
+                switch (ch)
+                {
+                    case '{':
+                    case '[':
+                        output.Append(ch);
+                        output.AppendLine();
+                        AppendIndent(output, ++depth);
+                        break;
+                    case '}':
+                    case ']':
+                        output.AppendLine();
+                        AppendIndent(output, --depth);
+                        output.Append(ch);
+                        break;
+                    case ',':
+                        output.Append(ch);
+                        output.AppendLine();
+                        AppendIndent(output, depth);
+                        break;
+                    case ':':
+                        output.Append(" : ");
+                        break;
+                    default:
+                        if (!char.IsWhiteSpace(ch))
+                            output.Append(ch);
+                        break;
+                }
+            }
+
+            return output.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToString(true);
+        }
+
+        public string ToString(bool isPretty)
+        {
+            if (_stringBuilder == null)
+                return null;
+
+            var result = _stringBuilder.ToString();
+            if (isPretty)
+                result = PrettyPrint(result);
+            return result;
         }
     }
 }

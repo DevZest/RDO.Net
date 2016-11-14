@@ -108,16 +108,16 @@ namespace DevZest.Data.Primitives
 
         internal abstract Column MakeColumn(ColumnExpression expression);
 
-        internal void WriteJson(StringBuilder stringBuilder, Column column)
+        internal void WriteJson(JsonWriter jsonWriter, Column column)
         {
-            stringBuilder.WriteStartObject().WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma();
+            jsonWriter.WriteStartObject().WriteNameStringPair(ColumnJsonParser.TYPE_ID, TypeId).WriteComma();
             if (column.IsExpression)
-                WriteExpressionJson(stringBuilder, column);
+                WriteExpressionJson(jsonWriter, column);
             else
-                stringBuilder.WriteNameStringPair(ColumnJsonParser.NAME, column.Name);
-            stringBuilder.WriteEndObject();
+                jsonWriter.WriteNameStringPair(ColumnJsonParser.NAME, column.Name);
+            jsonWriter.WriteEndObject();
         }
 
-        internal abstract void WriteExpressionJson(StringBuilder stringBuilder, Column column);
+        internal abstract void WriteExpressionJson(JsonWriter jsonWriter, Column column);
     }
 }

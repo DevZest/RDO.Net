@@ -26,9 +26,9 @@ namespace DevZest.Data
                 return result;
             }
 
-            internal sealed override void WriteExpressionJson(StringBuilder stringBuilder, Column column)
+            internal sealed override void WriteExpressionJson(JsonWriter jsonWriter, Column column)
             {
-                stringBuilder.WriteObjectName(ColumnJsonParser.EXPRESSION).WriteExpression(((Column<T>)column).Expression);
+                jsonWriter.WriteObjectName(ColumnJsonParser.EXPRESSION).WriteExpression(((Column<T>)column).Expression);
             }
         }
     }

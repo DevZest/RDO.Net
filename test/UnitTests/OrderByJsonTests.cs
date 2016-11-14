@@ -21,7 +21,7 @@ namespace DevZest.Data
             Assert.AreEqual(Json.OrderByJson_ToJson_Parse, json);
 
             var _ = new SalesOrder();
-            var fromJsonOrderBy = OrderBy.ParseJson(_, json);
+            var fromJsonOrderBy = OrderByJson.ParseJson(_, json);
             Assert.AreEqual(2, fromJsonOrderBy.Length);
             Assert.AreEqual(_.CustomerID, fromJsonOrderBy[0].Column);
             Assert.AreEqual(SortDirection.Ascending, fromJsonOrderBy[0].Direction);

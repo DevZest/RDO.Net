@@ -11,15 +11,15 @@ namespace DevZest.Data.Primitives
         private sealed class Converter<TColumn> : ConverterBase<TColumn>
             where TColumn : Column<T>, new()
         {
-            internal override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
-                base.WriteJson(stringBuilder, expression);
-                stringBuilder.WriteComma().WriteObjectName(SOURCE_COLUMN);
+                base.WriteJson(jsonWriter, expression);
+                jsonWriter.WriteComma().WriteObjectName(SOURCE_COLUMN);
                 var sourceColumn = ((ParamExpression<T>)expression).SourceColumn;
                 if (sourceColumn == null)
-                    stringBuilder.WriteValue(JsonValue.Null);
+                    jsonWriter.WriteValue(JsonValue.Null);
                 else
-                    stringBuilder.WriteColumn(sourceColumn);
+                    jsonWriter.Write(sourceColumn);
             }
 
             internal override ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value)

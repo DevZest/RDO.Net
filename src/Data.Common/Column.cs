@@ -390,10 +390,7 @@ namespace DevZest.Data
 
         public string ToJson(bool isPretty)
         {
-            var result = new StringBuilder().WriteColumn(this).ToString();
-            if (isPretty)
-                result = JsonFormatter.PrettyPrint(result);
-            return result;
+            return ColumnJson.Write(JsonWriter.New(), this).ToString(isPretty);
         }
 
         public static T ParseJson<T>(Model model, string jsonString)

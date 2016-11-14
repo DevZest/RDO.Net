@@ -19,10 +19,10 @@ namespace DevZest.Data.Primitives
             private const string THEN = "Then";
             private const string ELSE = "Else";
 
-            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
                 var caseOnExpression = (CaseOnExpression<TOn, TResult>)expression;
-                stringBuilder.WriteNameColumnPair(On, caseOnExpression._on).WriteComma()
+                jsonWriter.WriteNameColumnPair(On, caseOnExpression._on).WriteComma()
                     .WriteNameColumnsPair(WHEN, caseOnExpression._when).WriteComma()
                     .WriteNameColumnsPair(THEN, caseOnExpression._then).WriteComma()
                     .WriteNameColumnPair(ELSE, caseOnExpression._else);

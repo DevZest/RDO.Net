@@ -59,7 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
-    <Compile Include="OrderBy.cs" />
+    <Compile Include="OrderByJson.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />
@@ -81,9 +81,9 @@
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\ColumnJsonParser.cs" />
-    <Compile Include="Primitives\ColumnJsonWriter.cs" />
+    <Compile Include="Primitives\ColumnJson.cs" />
     <Compile Include="Primitives\DataSetJsonParser.cs" />
-    <Compile Include="Primitives\DataSetJsonWriter.cs" />
+    <Compile Include="Primitives\DataRowJson.cs" />
     <Compile Include="Primitives\ExpressionConverter.cs" />
     <Compile Include="Primitives\ExpressionConverterAttribute.cs" />
     <Compile Include="Primitives\ExpressionConverterGenericsAttribute.cs" />
@@ -91,6 +91,9 @@
     <Compile Include="Primitives\IDataSetColumn.cs" />
     <Compile Include="Primitives\JsonWriter.cs" />
     <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
+    <Compile Include="Primitives\ValidationEntryJson.cs" />
+    <Compile Include="Primitives\ValidationMessageJson.cs" />
+    <Compile Include="Primitives\ValidationResultJson.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
@@ -244,7 +247,6 @@
     <Compile Include="Utilities\GenericInvoker_T.cs" />
     <Compile Include="Utilities\GenericInvoker_T_T1.cs" />
     <Compile Include="Utilities\GenericInvoker_T_T1_T2.cs" />
-    <Compile Include="Utilities\JsonFormatter.cs" />
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />

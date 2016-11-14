@@ -13,10 +13,10 @@ namespace DevZest.Data.Primitives
         {
             private const string PARAMS = "Params";
 
-            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
                 var functionExpression = (FunctionExpression<T>)expression;
-                stringBuilder.WriteNameColumnsPair<Column>(PARAMS, functionExpression.Parameters);
+                jsonWriter.WriteNameColumnsPair<Column>(PARAMS, functionExpression.Parameters);
             }
 
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)

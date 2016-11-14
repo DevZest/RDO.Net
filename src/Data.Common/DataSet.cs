@@ -227,10 +227,7 @@ namespace DevZest.Data
 
         public string ToJsonString(bool isPretty)
         {
-            var result = new StringBuilder().WriteDataSet(this).ToString();
-            if (isPretty)
-                result = JsonFormatter.PrettyPrint(result);
-            return result;
+            return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
         public bool AllowsKeyUpdate(bool value)

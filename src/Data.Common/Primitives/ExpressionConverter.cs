@@ -83,7 +83,7 @@ namespace DevZest.Data.Primitives
             return s_attributesByTypeId.TryGetValue(typeId, out attribute) ? attribute.GetConverter(argColumnTypeIds) : null;
         }
 
-        internal abstract void WriteJson(StringBuilder stringBuilder, ColumnExpression expression);
+        internal abstract void WriteJson(JsonWriter jsonWriter, ColumnExpression expression);
 
         internal abstract ColumnExpression ParseJson(Model model, ColumnJsonParser parser);
     }

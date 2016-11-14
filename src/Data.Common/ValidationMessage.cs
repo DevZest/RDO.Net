@@ -61,24 +61,15 @@ namespace DevZest.Data
 
         #endregion
 
-        internal void WriteJson(StringBuilder stringBuilder)
+        internal void WriteJson(JsonWriter jsonWriter)
         {
-            stringBuilder
+            jsonWriter
                 .WriteStartObject()
                 .WriteNameStringPair(nameof(ValidatorId), ValidatorId.ToString()).WriteComma()
                 .WriteNameStringPair(nameof(Severity), Severity.ToString()).WriteComma()
                 .WriteNameStringPair(nameof(Columns), Columns.Serialize()).WriteComma()
                 .WriteNameStringPair(nameof(Description), Description)
                 .WriteEndObject();
-        }
-    }
-
-    internal static class ValidationMessageJsonWriter
-    {
-        public static StringBuilder WriteValidationMessageJson(this StringBuilder stringBuilder, ValidationMessage validationMessage)
-        {
-            validationMessage.WriteJson(stringBuilder);
-            return stringBuilder;
         }
     }
 }

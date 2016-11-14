@@ -43,17 +43,14 @@ namespace DevZest.Data
             return ToJsonString(true);
         }
 
-        internal void WriteJson(StringBuilder stringBuilder)
+        internal void WriteJson(JsonWriter jsonWriter)
         {
-            stringBuilder.WriteArray(Entries, (sb, entry) => sb.WriteValidationEntryJson(entry));
+            jsonWriter.WriteArray(Entries, (writer, entry) => writer.Write(entry));
         }
 
         public string ToJsonString(bool isPretty)
         {
-            var stringBuilder = new StringBuilder();
-            WriteJson(stringBuilder);
-            var result = stringBuilder.ToString();
-            return isPretty ? JsonFormatter.PrettyPrint(result) : result;
+            return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
         public bool IsValid

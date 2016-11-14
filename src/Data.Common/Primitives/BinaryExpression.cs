@@ -27,10 +27,10 @@ namespace DevZest.Data.Primitives
 
         protected abstract class ConverterBase : ExpressionConverter
         {
-            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
                 var binaryExpression = (BinaryExpression<T, TResult>)expression;
-                stringBuilder.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);
+                jsonWriter.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);
             }
 
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)

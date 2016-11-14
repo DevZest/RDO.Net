@@ -12,9 +12,9 @@ namespace DevZest.Data.Primitives
         {
             private const string OPERAND = nameof(Operand);
 
-            internal sealed override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal sealed override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
-                stringBuilder.WriteNameColumnPair(OPERAND, ((UnaryExpression<T>)expression).Operand);
+                jsonWriter.WriteNameColumnPair(OPERAND, ((UnaryExpression<T>)expression).Operand);
             }
 
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)

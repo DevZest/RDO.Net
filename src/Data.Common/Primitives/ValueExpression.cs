@@ -13,10 +13,10 @@ namespace DevZest.Data.Primitives
         {
             private static readonly TColumn s_column = new TColumn();
 
-            internal override void WriteJson(StringBuilder stringBuilder, ColumnExpression expression)
+            internal override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
             {
                 var valueExpression = (ValueExpression<T>)expression;
-                stringBuilder.WriteNameValuePair(VALUE, s_column.SerializeValue(valueExpression.Value));
+                jsonWriter.WriteNameValuePair(VALUE, s_column.SerializeValue(valueExpression.Value));
             }
 
             internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)

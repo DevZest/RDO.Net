@@ -27,13 +27,13 @@ namespace DevZest.Data
             throw new NotSupportedException();
         }
 
-        void IDataSetColumn.Serialize(int rowOrdinal, StringBuilder stringBuilder)
+        void IDataSetColumn.Serialize(int rowOrdinal, JsonWriter jsonWriter)
         {
             var dataSet = this[rowOrdinal];
             if (dataSet == null)
-                stringBuilder.WriteValue(JsonValue.Null);
+                jsonWriter.WriteValue(JsonValue.Null);
             else
-                stringBuilder.WriteDataSet(dataSet);
+                jsonWriter.Write(dataSet);
         }
 
         DataSet IDataSetColumn.NewValue(int ordinal)
