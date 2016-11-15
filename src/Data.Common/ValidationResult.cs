@@ -21,7 +21,10 @@ namespace DevZest.Data
 
         public static ValidationResult ParseJson(DataSet dataSet, string json)
         {
-            throw new NotImplementedException();
+            var jsonParser = new JsonParser(json);
+            var result = jsonParser.ParseValidationResult(dataSet);
+            jsonParser.ExpectToken(JsonTokenKind.Eof);
+            return result;
         }
 
         private readonly IReadOnlyList<ValidationEntry> _entries;

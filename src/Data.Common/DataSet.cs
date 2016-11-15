@@ -235,9 +235,9 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public ValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxMessages = 200)
+        public ValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 200)
         {
-            return ValidationResult.New(Validate(this, severity, recursive, maxMessages));
+            return ValidationResult.New(Validate(this, severity, recursive, maxEntries));
         }
 
         private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationSeverity severity, bool recursive, int maxEntries)
@@ -245,12 +245,13 @@ namespace DevZest.Data
             foreach (var dataRow in dataSet)
             {
                 var validationMessages = dataRow.Validate(severity);
-                if (validationMessages.Count == 0)
-                    continue;
-                maxEntries--;
-                if (maxEntries < 0)
-                    yield break;
-                yield return new ValidationEntry(dataRow, validationMessages);
+                if (validationMessages.Count > 0)
+                {
+                    maxEntries--;
+                    if (maxEntries < 0)
+                        yield break;
+                    yield return new ValidationEntry(dataRow, validationMessages);
+                }
 
                 if (recursive)
                 {

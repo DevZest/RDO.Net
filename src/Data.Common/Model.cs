@@ -805,5 +805,16 @@ namespace DevZest.Data
             action();
             EditingRow = editingRow;
         }
+
+        internal Column DeserializeColumn(string columnName)
+        {
+            if (string.IsNullOrWhiteSpace(columnName))
+                return null;
+
+            var result = Columns[columnName];
+            if (result == null)
+                throw new FormatException();
+            return result;
+        }
     }
 }

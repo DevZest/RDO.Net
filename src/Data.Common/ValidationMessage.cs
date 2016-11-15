@@ -31,16 +31,5 @@ namespace DevZest.Data
         {
             return Description;
         }
-
-        internal void WriteJson(JsonWriter jsonWriter)
-        {
-            jsonWriter
-                .WriteStartObject()
-                .WriteNameStringPair(nameof(ValidatorId), ValidatorId.ToString()).WriteComma()
-                .WriteNameStringPair(nameof(Severity), Severity.ToString()).WriteComma()
-                .WriteNameStringPair(nameof(Columns), Columns.Serialize()).WriteComma()
-                .WriteNameStringPair(nameof(Description), Description)
-                .WriteEndObject();
-        }
     }
 }

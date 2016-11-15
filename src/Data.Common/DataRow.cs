@@ -172,17 +172,6 @@ namespace DevZest.Data
             return inputIndex == input.Length ? dataRow : Deserialize(dataRow, input, inputIndex);
         }
 
-        internal Column DeserializeColumn(string columnName)
-        {
-            if (string.IsNullOrWhiteSpace(columnName))
-                return null;
-
-            var result = Model.Columns[columnName];
-            if (result == null)
-                throw new FormatException();
-            return result;
-        }
-
         private static DataRow GetDataRow(DataSet dataSet, int ordinal, string input, int leftSquareBracketIndex)
         {
             if (ordinal < 0 || ordinal >= dataSet.Count)

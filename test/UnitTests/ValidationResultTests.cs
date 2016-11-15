@@ -62,11 +62,11 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ValidationResult_Deserialize()
+        public void ValidationResult_ParseJson()
         {
             {
                 var dataSet = GetDataSet(3);
-                var result = ValidationResult.ParseJson(dataSet, "null");
+                var result = ValidationResult.ParseJson(dataSet, "[]");
                 Assert.IsTrue(result.IsValid);
             }
 
@@ -76,17 +76,25 @@ namespace DevZest.Data
 @"[
    {
       ""DataRow"" : ""/[0]"",
-      ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""Severity"" : 2,
-      ""Columns"" : ""Id"",
-      ""Description"" : ""This is an error message""
+      ""Messages"" : [
+         {
+            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Severity"" : ""Error"",
+            ""Columns"" : ""Id"",
+            ""Description"" : ""This is an error message""
+         }
+      ]
    },
    {
       ""DataRow"" : ""/[1]"",
-      ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
-      ""Severity"" : 1,
-      ""Columns"" : """",
-      ""Description"" : ""This is a warning message""
+      ""Messages"" : [
+         {
+            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Severity"" : ""Warning"",
+            ""Columns"" : """",
+            ""Description"" : ""This is a warning message""
+         }
+      ]
    }
 ]";
                 var result = ValidationResult.ParseJson(dataSet, json);

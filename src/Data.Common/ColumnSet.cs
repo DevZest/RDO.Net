@@ -156,7 +156,7 @@ namespace DevZest.Data
             return columns == null || columns.Count == 0 ? string.Empty : string.Join(",", columns.Select(x => x.Name));
         }
 
-        internal static IColumnSet Deserialize(DataRow dataRow, string input)
+        internal static IColumnSet Deserialize(Model model, string input)
         {
             if (string.IsNullOrEmpty(input))
                 return ColumnSet.Empty;
@@ -167,7 +167,7 @@ namespace DevZest.Data
 
             var result = new Column[columnNames.Length];
             for (int i = 0; i < result.Length; i++)
-                result[i] = dataRow.DeserializeColumn(columnNames[i]);
+                result[i] = model.DeserializeColumn(columnNames[i]);
 
             return ColumnSet.New(result);
         }

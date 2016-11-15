@@ -93,9 +93,9 @@
     <Compile Include="Primitives\JsonTokenKind.cs" />
     <Compile Include="Primitives\JsonWriter.cs" />
     <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
-    <Compile Include="Primitives\ValidationEntryJson.cs" />
-    <Compile Include="Primitives\ValidationMessageJson.cs" />
-    <Compile Include="Primitives\ValidationResultJson.cs" />
+    <Compile Include="Primitives\JsonValidationEntry.cs" />
+    <Compile Include="Primitives\JsonValidationMessage.cs" />
+    <Compile Include="Primitives\JsonValidationResult.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
