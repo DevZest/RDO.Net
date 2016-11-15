@@ -109,12 +109,12 @@ namespace DevZest.Data.Windows.Primitives
 
             protected override string Serialize(Model model, ColumnSort[] first)
             {
-                return Data.OrderBy.ToJson(first, false);
+                return first.ToJson(false);
             }
 
             protected override ColumnSort[] Deserialize(string serializedString, Model model)
             {
-                return Data.OrderBy.ParseJson(model, serializedString);
+                return model.ParseOrderBy(serializedString).ToArray();
             }
         }
 
