@@ -19,13 +19,13 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteNameValuePair(VALUE, s_column.SerializeValue(valueExpression.Value));
             }
 
-            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(JsonParser parser, Model model)
             {
                 var value = parser.ParseNameValuePair(VALUE, s_column);
-                return ParseJson(model, parser, value);
+                return ParseJson(parser, model, value);
             }
 
-            internal abstract ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value);
+            internal abstract ValueExpression<T> ParseJson(JsonParser jsonParser, Model model, T value);
         }
 
         protected ValueExpression(T value)

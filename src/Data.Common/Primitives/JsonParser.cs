@@ -1,83 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DevZest.Data.Utilities;
+using System;
 using System.Diagnostics;
 using System.Text;
 
 namespace DevZest.Data.Primitives
 {
-    internal abstract class JsonParser
+    public sealed class JsonParser
     {
-        [Flags]
-        protected enum TokenKind
-        {
-            Eof = 0,
-            String = JsonValueType.String,
-            Number = JsonValueType.Number,
-            True = JsonValueType.True,
-            False = JsonValueType.False,
-            Null = JsonValueType.Null,
-            CurlyOpen = 0x20,
-            CurlyClose = 0x40,
-            SquaredOpen = 0x80,
-            SquaredClose = 0x100,
-            Colon = 0x200,
-            Comma = 0x400,
-            ColumnValues = String | Number | True | False | Null
-        }
-
-        protected struct Token
-        {
-            public static readonly Token Eof = new Token(TokenKind.Eof, string.Empty);
-            public static readonly Token CurlyOpen = new Token(TokenKind.CurlyOpen, "{");
-            public static readonly Token CurlyClose = new Token(TokenKind.CurlyClose, "}");
-            public static readonly Token SquaredOpen = new Token(TokenKind.SquaredOpen, "[");
-            public static readonly Token SquaredClose = new Token(TokenKind.SquaredClose, "]");
-            public static readonly Token Colon = new Token(TokenKind.Colon, ":");
-            public static readonly Token Comma = new Token(TokenKind.Comma, ",");
-            public static readonly Token True = new Token(TokenKind.True, "true");
-            public static readonly Token False = new Token(TokenKind.False, "false");
-            public static readonly Token Null = new Token(TokenKind.Null, "null");
-            public static Token String(string text)
-            {
-                return new Token(TokenKind.String, text);
-            }
-
-            public static Token Number(string text)
-            {
-                return new Token(TokenKind.Number, text);
-            }
-
-            private Token(TokenKind kind, string text)
-            {
-                Kind = kind;
-                Text = text;
-            }
-
-            public readonly TokenKind Kind;
-            public readonly string Text;
-
-            public JsonValue JsonValue
-            {
-                get
-                {
-                    Debug.Assert((Kind & TokenKind.ColumnValues) == Kind);
-                    return new JsonValue(Text, false, (JsonValueType)Kind);
-                }
-            }
-        }
-
         readonly string _json;
         int _index;
-        readonly StringBuilder s = new StringBuilder();
-        Token? _lookAhead;
+        readonly StringBuilder _stringBuilder = new StringBuilder();
+        JsonToken? _lookAhead;
 
-        protected JsonParser(string json)
+        public JsonParser(string json)
         {
-            Debug.Assert(!string.IsNullOrEmpty(json));
+            Check.NotEmpty(json, nameof(json));
             _json = json;
         }
 
-        protected Token PeekToken()
+        public JsonToken PeekToken()
         {
             if (!_lookAhead.HasValue)
                 _lookAhead = NextToken();
@@ -85,13 +26,13 @@ namespace DevZest.Data.Primitives
             return _lookAhead.GetValueOrDefault();
         }
 
-        protected void ConsumeToken()
+        public void ConsumeToken()
         {
             Debug.Assert(_lookAhead.HasValue);
             _lookAhead = null;
         }
 
-        protected Token ExpectToken(TokenKind expectedTokenKind)
+        public JsonToken ExpectToken(JsonTokenKind expectedTokenKind)
         {
             var currentToken = PeekToken();
             ConsumeToken();
@@ -101,24 +42,29 @@ namespace DevZest.Data.Primitives
             return currentToken;
         }
 
-        protected string ExpectString(string expectedObjectName, bool expectComma)
+        internal void ExpectComma()
         {
-            ExpectObjectName(expectedObjectName);
-            var result = ExpectToken(TokenKind.String).Text;
+            ExpectToken(JsonTokenKind.Comma);
+        }
+
+        public void ExpectObjectName(string objectName)
+        {
+            var tokenText = ExpectToken(JsonTokenKind.String).Text;
+            if (tokenText != objectName)
+                throw new FormatException(Strings.JsonParser_InvalidObjectName(tokenText, objectName));
+            ExpectToken(JsonTokenKind.Colon);
+        }
+
+        public string ExpectNameStringPair(string objectName, bool expectComma)
+        {
+            ExpectObjectName(objectName);
+            var result = ExpectToken(JsonTokenKind.String).Text;
             if (expectComma)
-                ExpectToken(TokenKind.Comma);
+                ExpectToken(JsonTokenKind.Comma);
             return result;
         }
 
-        protected void ExpectObjectName(string expectedObjectName)
-        {
-            var objectName = ExpectToken(TokenKind.String).Text;
-            if (objectName != expectedObjectName)
-                throw new FormatException(Strings.JsonParser_InvalidObjectName(objectName, expectedObjectName));
-            ExpectToken(TokenKind.Colon);
-        }
-
-        private Token NextToken()
+        private JsonToken NextToken()
         {
             char c = new char();
 
@@ -131,27 +77,27 @@ namespace DevZest.Data.Primitives
             }
 
             if (_index == _json.Length)
-                return Token.Eof;
+                return JsonToken.Eof;
 
             switch (c)
             {
                 case '{':
-                    return Token.CurlyOpen;
+                    return JsonToken.CurlyOpen;
 
                 case '}':
-                    return Token.CurlyClose;
+                    return JsonToken.CurlyClose;
 
                 case '[':
-                    return Token.SquaredOpen;
+                    return JsonToken.SquaredOpen;
 
                 case ']':
-                    return Token.SquaredClose;
+                    return JsonToken.SquaredClose;
 
                 case ',':
-                    return Token.Comma;
+                    return JsonToken.Comma;
 
                 case '"':
-                    return Token.String(ParseStringToken());
+                    return JsonToken.String(ParseStringToken());
 
                 case '0':
                 case '1':
@@ -166,22 +112,22 @@ namespace DevZest.Data.Primitives
                 case '-':
                 case '+':
                 case '.':
-                    return Token.String(ParseNumberToken());
+                    return JsonToken.String(ParseNumberToken());
 
                 case ':':
-                    return Token.Colon;
+                    return JsonToken.Colon;
 
                 case 'f':
                     ExpectLiteral("false");
-                    return Token.False;
+                    return JsonToken.False;
 
                 case 't':
                     ExpectLiteral("true");
-                    return Token.True;
+                    return JsonToken.True;
 
                 case 'n':
                     ExpectLiteral("null");
-                    return Token.Null;
+                    return JsonToken.Null;
             }
 
             throw new FormatException(Strings.JsonParser_InvalidChar(c, _index - 1));
@@ -208,7 +154,7 @@ namespace DevZest.Data.Primitives
 
         private string ParseStringToken()
         {
-            s.Length = 0;
+            _stringBuilder.Length = 0;
 
             int runIndex = -1;
 
@@ -220,12 +166,12 @@ namespace DevZest.Data.Primitives
                 {
                     if (runIndex != -1)
                     {
-                        if (s.Length == 0)
+                        if (_stringBuilder.Length == 0)
                             return _json.Substring(runIndex, _index - runIndex - 1);
 
-                        s.Append(_json, runIndex, _index - runIndex - 1);
+                        _stringBuilder.Append(_json, runIndex, _index - runIndex - 1);
                     }
-                    return s.ToString();
+                    return _stringBuilder.ToString();
                 }
 
                 if (c != '\\')
@@ -237,7 +183,7 @@ namespace DevZest.Data.Primitives
 
                 if (runIndex != -1)
                 {
-                    s.Append(_json, runIndex, _index - runIndex - 1);
+                    _stringBuilder.Append(_json, runIndex, _index - runIndex - 1);
                     runIndex = -1;
                 }
 
@@ -258,35 +204,35 @@ namespace DevZest.Data.Primitives
             switch (c)
             {
                 case '"':
-                    s.Append('"');
+                    _stringBuilder.Append('"');
                     break;
 
                 case '\\':
-                    s.Append('\\');
+                    _stringBuilder.Append('\\');
                     break;
 
                 case '/':
-                    s.Append('/');
+                    _stringBuilder.Append('/');
                     break;
 
                 case 'b':
-                    s.Append('\b');
+                    _stringBuilder.Append('\b');
                     break;
 
                 case 'f':
-                    s.Append('\f');
+                    _stringBuilder.Append('\f');
                     break;
 
                 case 'n':
-                    s.Append('\n');
+                    _stringBuilder.Append('\n');
                     break;
 
                 case 'r':
-                    s.Append('\r');
+                    _stringBuilder.Append('\r');
                     break;
 
                 case 't':
-                    s.Append('\t');
+                    _stringBuilder.Append('\t');
                     break;
 
                 case 'u':
@@ -306,7 +252,7 @@ namespace DevZest.Data.Primitives
                 throw new FormatException(Strings.JsonParser_UnexpectedEof);
 
             uint codePoint = ParseHex(_json[_index], _json[_index + 1], _json[_index + 2], _json[_index + 3]);
-            s.Append((char)codePoint);
+            _stringBuilder.Append((char)codePoint);
 
             _index += 4;
         }

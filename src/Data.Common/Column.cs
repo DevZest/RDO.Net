@@ -390,7 +390,7 @@ namespace DevZest.Data
 
         public string ToJson(bool isPretty)
         {
-            return ColumnJson.Write(JsonWriter.New(), this).ToString(isPretty);
+            return JsonColumn.Write(JsonWriter.New(), this).ToString(isPretty);
         }
 
         public static T ParseJson<T>(Model model, string jsonString)
@@ -398,7 +398,10 @@ namespace DevZest.Data
         {
             Check.NotEmpty(jsonString, nameof(jsonString));
 
-            return new ColumnJsonParser(jsonString).ParseTopLevelColumn<T>(model);
+            var jsonParser = new JsonParser(jsonString);
+            var result = jsonParser.ParseColumn<T>(model);
+            jsonParser.ExpectToken(JsonTokenKind.Eof);
+            return result;
         }
 
         public abstract _String CastToString();

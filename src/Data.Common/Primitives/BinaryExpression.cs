@@ -33,11 +33,11 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteNameColumnPair(LEFT, binaryExpression.Left).WriteComma().WriteNameColumnPair(RIGHT, binaryExpression.Right);
             }
 
-            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
             {
-                var left = parser.ParseNameColumnPair<Column<T>>(LEFT, model);
-                parser.ExpectComma();
-                var right = parser.ParseNameColumnPair<Column<T>>(RIGHT, model);
+                var left = jsonParser.ParseNameColumnPair<Column<T>>(LEFT, model);
+                jsonParser.ExpectComma();
+                var right = jsonParser.ParseNameColumnPair<Column<T>>(RIGHT, model);
                 return MakeExpression(left, right);
             }
 

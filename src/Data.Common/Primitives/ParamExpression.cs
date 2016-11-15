@@ -22,10 +22,10 @@ namespace DevZest.Data.Primitives
                     jsonWriter.Write(sourceColumn);
             }
 
-            internal override ValueExpression<T> ParseJson(Model model, ColumnJsonParser parser, T value)
+            internal override ValueExpression<T> ParseJson(JsonParser jsonParser, Model model, T value)
             {
-                parser.ExpectComma();
-                var sourceColumn = parser.ParseNameColumnPair<Column<T>>(SOURCE_COLUMN, model, true);
+                jsonParser.ExpectComma();
+                var sourceColumn = jsonParser.ParseNameColumnPair<Column<T>>(SOURCE_COLUMN, model, true);
                 return new ParamExpression<T>(value, sourceColumn);
             }
         }

@@ -19,9 +19,9 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteNameColumnsPair<Column>(PARAMS, functionExpression.Parameters);
             }
 
-            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
             {
-                var parameters = parser.ParseNameColumnsPair<Column>(PARAMS, model);
+                var parameters = jsonParser.ParseNameColumnsPair<Column>(PARAMS, model);
                 return MakeExpression(model, parameters);
             }
 

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DevZest.Data
 {
     [TestClass]
-    public class OrderByJsonTests
+    public class JsonOrderByTests
     {
         [TestMethod]
         public void OrderByJson_ToJson_Parse()
@@ -21,8 +21,8 @@ namespace DevZest.Data
             Assert.AreEqual(Json.OrderByJson_ToJson_Parse, json);
 
             var _ = new SalesOrder();
-            var fromJsonOrderBy = OrderByJson.ParseJson(_, json);
-            Assert.AreEqual(2, fromJsonOrderBy.Length);
+            var fromJsonOrderBy = _.ParseOrderBy(json);
+            Assert.AreEqual(2, fromJsonOrderBy.Count);
             Assert.AreEqual(_.CustomerID, fromJsonOrderBy[0].Column);
             Assert.AreEqual(SortDirection.Ascending, fromJsonOrderBy[0].Direction);
             Assert.AreEqual(_.SalesOrderID, fromJsonOrderBy[1].Column);

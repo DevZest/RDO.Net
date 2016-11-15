@@ -28,17 +28,17 @@ namespace DevZest.Data.Primitives
                     .WriteNameColumnPair(ELSE, caseOnExpression._else);
             }
 
-            internal override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            internal override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
             {
-                var on = parser.ParseNameColumnPair<Column<TOn>>(On, model);
-                parser.ExpectComma();
-                var when = parser.ParseNameColumnsPair<Column<TOn>>(WHEN, model);
-                parser.ExpectComma();
-                var then = parser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
-                parser.ExpectComma();
+                var on = jsonParser.ParseNameColumnPair<Column<TOn>>(On, model);
+                jsonParser.ExpectComma();
+                var when = jsonParser.ParseNameColumnsPair<Column<TOn>>(WHEN, model);
+                jsonParser.ExpectComma();
+                var then = jsonParser.ParseNameColumnsPair<Column<TResult>>(THEN, model);
+                jsonParser.ExpectComma();
                 if (when.Count == 0 || when.Count != then.Count)
                     throw new FormatException(Strings.Case_WhenThenNotMatch);
-                var elseExpr = (Column<TResult>)parser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
+                var elseExpr = (Column<TResult>)jsonParser.ParseNameColumnPair<Column<TResult>>(ELSE, model);
                 return new CaseOnExpression<TOn, TResult>(on, when, then, elseExpr);
             }
         }

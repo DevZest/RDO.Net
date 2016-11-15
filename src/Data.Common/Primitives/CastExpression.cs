@@ -18,9 +18,9 @@ namespace DevZest.Data.Primitives
                 jsonWriter.WriteNameColumnPair(OPERAND, ((CastExpression<TSource, TTarget>)expression).Operand);
             }
 
-            internal sealed override ColumnExpression ParseJson(Model model, ColumnJsonParser parser)
+            internal sealed override ColumnExpression ParseJson(JsonParser jsonParser, Model model)
             {
-                var operand = parser.ParseNameColumnPair<Column<TSource>>(OPERAND, model);
+                var operand = jsonParser.ParseNameColumnPair<Column<TSource>>(OPERAND, model);
                 return MakeExpression(operand);
             }
 

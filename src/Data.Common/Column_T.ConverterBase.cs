@@ -28,7 +28,7 @@ namespace DevZest.Data
 
             internal sealed override void WriteExpressionJson(JsonWriter jsonWriter, Column column)
             {
-                jsonWriter.WriteObjectName(ColumnJsonParser.EXPRESSION).WriteExpression(((Column<T>)column).Expression);
+                jsonWriter.WriteObjectName(JsonColumn.EXPRESSION).WriteExpression(((Column<T>)column).Expression);
             }
         }
     }

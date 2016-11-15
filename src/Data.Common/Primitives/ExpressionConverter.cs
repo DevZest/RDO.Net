@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -85,6 +84,6 @@ namespace DevZest.Data.Primitives
 
         internal abstract void WriteJson(JsonWriter jsonWriter, ColumnExpression expression);
 
-        internal abstract ColumnExpression ParseJson(Model model, ColumnJsonParser parser);
+        internal abstract ColumnExpression ParseJson(JsonParser parser, Model model);
     }
 }
