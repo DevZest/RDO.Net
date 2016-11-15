@@ -1,10 +1,39 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class ValidationManager : ElementManager
     {
+        private sealed class X : INotifyDataErrorInfo
+        {
+            private static DataErrorsChangedEventArgs SingletonEventArgs = new DataErrorsChangedEventArgs(string.Empty);
+
+            public bool HasErrors
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+            private void OnErrorsChanged()
+            {
+                var errorsChanged = ErrorsChanged;
+                if (errorsChanged != null)
+                    errorsChanged(this, SingletonEventArgs);
+            }
+
+            public IEnumerable GetErrors(string propertyName)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         protected ValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
             : base(template, dataSet, where, orderBy, emptyBlockViewList)
         {
