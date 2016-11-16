@@ -254,7 +254,6 @@
     <Compile Include="Utilities\UniqueNameManager.cs" />
     <Compile Include="ValidationMessageCollection.cs" />
     <Compile Include="ValidationResult.cs" />
-    <Compile Include="ValidatorId.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />
     <Compile Include="_Byte.cs" />

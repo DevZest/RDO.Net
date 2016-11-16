@@ -13,11 +13,11 @@ namespace DevZest.Data.Helpers
             public static readonly Accessor<SimpleModel, SimpleModel> ChildAccessor = RegisterChildModel((SimpleModel x) => x.Child,
                 x => x.ParentKey, (ColumnMappingsBuilder builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
 
-            public static ValidatorId ValidatorId = new ValidatorId(typeof(SimpleModel), "IdMustBeEven");
+            public const string MESSAGE_ID = "IdMustBeEven";
 
             public SimpleModel()
             {
-                Validators.Add(Model.Validator.Create(ValidatorId, ValidationSeverity.Error, Id % 2 == 0, "The Id must be even.", Id));
+                Validators.Add(Model.Validator.Create(MESSAGE_ID, ValidationSeverity.Error, Id % 2 == 0, "The Id must be even.", Id));
             }
 
             protected override void OnChildModelsInitialized()

@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonValidationMessage
     {
-        private const string VALIDATOR_ID = nameof(ValidationMessage.ValidatorId);
+        private const string MESSAGE_ID = nameof(ValidationMessage.Id);
         private const string SEVERITY = nameof(ValidationMessage.Severity);
         private const string COLUMNS = nameof(ValidationMessage.Columns);
         private const string DESCRIPTION = nameof(ValidationMessage.Description);
@@ -14,7 +14,7 @@ namespace DevZest.Data.Primitives
         {
             return jsonWriter
                 .WriteStartObject()
-                .WriteNameStringPair(VALIDATOR_ID, validationMessage.ValidatorId.ToString()).WriteComma()
+                .WriteNameStringPair(MESSAGE_ID, validationMessage.Id).WriteComma()
                 .WriteNameStringPair(SEVERITY, validationMessage.Severity.ToString()).WriteComma()
                 .WriteNameStringPair(COLUMNS, validationMessage.Columns.Serialize()).WriteComma()
                 .WriteNameStringPair(DESCRIPTION, validationMessage.Description)
@@ -23,19 +23,19 @@ namespace DevZest.Data.Primitives
 
         public static ValidationMessage ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
-            ValidatorId validatorId;
+            string messageId;
             ValidationSeverity severity;
             IColumnSet columns;
             string description;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
-            validatorId = ValidatorId.Deserialize(jsonParser.ExpectNameStringPair(VALIDATOR_ID, true));
+            messageId = jsonParser.ExpectNameStringPair(MESSAGE_ID, true);
             severity = (ValidationSeverity)Enum.Parse(typeof(ValidationSeverity), jsonParser.ExpectNameStringPair(SEVERITY, true));
             columns = ColumnSet.Deserialize(dataSet.Model, jsonParser.ExpectNameStringPair(COLUMNS, true));
             description = jsonParser.ExpectNameStringPair(DESCRIPTION, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ValidationMessage(validatorId, severity, columns, description);
+            return new ValidationMessage(messageId, severity, columns, description);
         }
 
         public static IReadOnlyList<ValidationMessage> ParseValidationMessages(this JsonParser jsonParser, DataSet dataSet)

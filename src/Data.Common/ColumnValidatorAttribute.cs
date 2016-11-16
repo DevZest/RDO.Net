@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -21,9 +20,9 @@ namespace DevZest.Data
             private ColumnValidatorAttribute _owner;
             private Column _column;
 
-            private ValidatorId Id
+            private string MessageId
             {
-                get { return _owner.Id; }
+                get { return _owner.MessageId; }
             }
 
             private ValidationSeverity Severity
@@ -48,7 +47,7 @@ namespace DevZest.Data
 
             public ValidationMessage Validate(DataRow dataRow)
             {
-                return IsValidCondition[dataRow] == true ? null : new ValidationMessage(Id, Severity, Columns, Message[dataRow]);
+                return IsValidCondition[dataRow] == true ? null : new ValidationMessage(MessageId, Severity, Columns, Message[dataRow]);
             }
         }
 
@@ -57,7 +56,24 @@ namespace DevZest.Data
             return new Validator(this, column);
         }
 
-        public abstract ValidatorId Id { get; }
+        private string _messageId;
+        public string  MessageId
+        {
+            get { return string.IsNullOrEmpty(_messageId) ? DefaultMessageId : _messageId; }
+            set { _messageId = value; }
+        }
+
+        protected virtual string DefaultMessageId
+        {
+            get
+            {
+                var type = GetType();
+                var typeName = type.Name;
+                if (typeName.EndsWith("Attribute"))
+                    typeName = typeName.Substring(0, typeName.Length - "Attribute".Length);
+                return type.Namespace + "." + typeName;
+            }
+        }
 
         protected abstract ValidationSeverity ValidationSeverity { get; }
 

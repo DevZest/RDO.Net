@@ -12,16 +12,16 @@ namespace DevZest.Data
         {
             private sealed class SimpleValidator : IValidator
             {
-                public SimpleValidator(ValidatorId id, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
+                public SimpleValidator(string messageId, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
                 {
-                    _id = id;
+                    _messageId = messageId;
                     _severity = severity;
                     _columns = ColumnSet.New(columns);
                     _isValidCondition = isValidCondition;
                     _message = message;
                 }
 
-                ValidatorId _id;
+                string _messageId;
                 ValidationSeverity _severity;
                 IColumnSet _columns;
                 _Boolean _isValidCondition;
@@ -29,16 +29,16 @@ namespace DevZest.Data
 
                 public ValidationMessage Validate(DataRow dataRow)
                 {
-                    return _isValidCondition[dataRow] == true ? null : new ValidationMessage(_id, _severity, _columns, _message[dataRow]);
+                    return _isValidCondition[dataRow] == true ? null : new ValidationMessage(_messageId, _severity, _columns, _message[dataRow]);
                 }
             }
 
-            public static IValidator Create(ValidatorId validatorId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
+            public static IValidator Create(string messageId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
             {
                 Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 
-                return new SimpleValidator(validatorId, severity, columns, isValidCondition, message);
+                return new SimpleValidator(messageId, severity, columns, isValidCondition, message);
             }
 
             private sealed class DelegateValidator : IValidator

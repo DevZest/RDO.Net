@@ -8,16 +8,9 @@ namespace DevZest.Data
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredAttribute : ColumnValidatorAttribute
     {
-        public readonly static ValidatorId ValidatorId = new ValidatorId(typeof(RequiredAttribute), nameof(ValidatorId));
-
         protected internal sealed override void Initialize(Column column)
         {
             column.Nullable(false);
-        }
-
-        public override ValidatorId Id
-        {
-            get { return ValidatorId; }
         }
 
         protected override ValidationSeverity ValidationSeverity

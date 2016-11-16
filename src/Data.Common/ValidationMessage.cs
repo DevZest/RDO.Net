@@ -9,17 +9,17 @@ namespace DevZest.Data
 {
     public class ValidationMessage
     {
-        public ValidationMessage(ValidatorId validatorId, ValidationSeverity severity, IColumnSet columns, string description)
+        public ValidationMessage(string id, ValidationSeverity severity, IColumnSet columns, string description)
         {
             Check.NotEmpty(description, nameof(description));
 
-            ValidatorId = validatorId;
+            Id = id;
             Severity = severity;
             Columns = columns ?? ColumnSet.Empty;
             Description = description;
         }
 
-        public readonly ValidatorId ValidatorId;
+        public readonly string Id;
 
         public readonly ValidationSeverity Severity;
 

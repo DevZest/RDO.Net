@@ -26,11 +26,11 @@ namespace DevZest.Data
 
             {
                 var dataSet = GetDataSet(3);
-                var validatorId = new ValidatorId(this.GetType(), "ValidatorId");
+                var messageId = "MessageId";
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ValidationMessage[] { new ValidationMessage(validatorId, ValidationSeverity.Error, dataSet._.Id, "This is an error message") }),
-                    new ValidationEntry(dataSet[1], new ValidationMessage[] { new ValidationMessage(validatorId, ValidationSeverity.Warning,  null, "This is a warning message") })
+                    new ValidationEntry(dataSet[0], new ValidationMessage[] { new ValidationMessage(messageId, ValidationSeverity.Error, dataSet._.Id, "This is an error message") }),
+                    new ValidationEntry(dataSet[1], new ValidationMessage[] { new ValidationMessage(messageId, ValidationSeverity.Warning,  null, "This is a warning message") })
                 });
                 var expectedJson =
 @"[
@@ -38,7 +38,7 @@ namespace DevZest.Data
       ""DataRow"" : ""/[0]"",
       ""Messages"" : [
          {
-            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Columns"" : ""Id"",
             ""Description"" : ""This is an error message""
@@ -49,7 +49,7 @@ namespace DevZest.Data
       ""DataRow"" : ""/[1]"",
       ""Messages"" : [
          {
-            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Columns"" : """",
             ""Description"" : ""This is a warning message""
@@ -78,7 +78,7 @@ namespace DevZest.Data
       ""DataRow"" : ""/[0]"",
       ""Messages"" : [
          {
-            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Columns"" : ""Id"",
             ""Description"" : ""This is an error message""
@@ -89,7 +89,7 @@ namespace DevZest.Data
       ""DataRow"" : ""/[1]"",
       ""Messages"" : [
          {
-            ""ValidatorId"" : ""DevZest.Data.ValidationResultTests.ValidatorId"",
+            ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Columns"" : """",
             ""Description"" : ""This is a warning message""
