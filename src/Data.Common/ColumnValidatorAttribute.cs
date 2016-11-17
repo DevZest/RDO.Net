@@ -25,7 +25,7 @@ namespace DevZest.Data
                 get { return _owner.MessageId; }
             }
 
-            private ValidationSeverity Severity
+            public ValidationSeverity Severity
             {
                 get { return _owner.ValidationSeverity; }
             }

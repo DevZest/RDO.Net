@@ -27,6 +27,11 @@ namespace DevZest.Data
                 _Boolean _isValidCondition;
                 _String _message;
 
+                public ValidationSeverity Severity
+                {
+                    get { return _severity; }
+                }
+
                 public ValidationMessage Validate(DataRow dataRow)
                 {
                     return _isValidCondition[dataRow] == true ? null : new ValidationMessage(_messageId, _severity, _columns, _message[dataRow]);
@@ -43,7 +48,7 @@ namespace DevZest.Data
 
             private sealed class DelegateValidator : IValidator
             {
-                public DelegateValidator(Func<DataRow, ValidationMessage> func)
+                public DelegateValidator(ValidationSeverity severity, Func<DataRow, ValidationMessage> func)
                 {
                     Debug.Assert(func != null);
                     _func = func;
@@ -51,16 +56,18 @@ namespace DevZest.Data
 
                 Func<DataRow, ValidationMessage> _func;
 
+                public ValidationSeverity Severity { get; private set; }
+
                 public ValidationMessage Validate(DataRow dataRow)
                 {
                     return _func(dataRow);
                 }
             }
 
-            public static IValidator Create(Func<DataRow, ValidationMessage> func)
+            public static IValidator Create(ValidationSeverity severity, Func<DataRow, ValidationMessage> func)
             {
                 Utilities.Check.NotNull(func, nameof(func));
-                return new DelegateValidator(func);
+                return new DelegateValidator(severity, func);
             }
         }
     }

@@ -346,8 +346,10 @@ namespace DevZest.Data
             var result = ValidationMessageCollection.Empty;
             foreach (var validator in Validators)
             {
+                if (validator.Severity != severity)
+                    continue;
                 var validationMessage = validator.Validate(dataRow);
-                if (validationMessage == null || validationMessage.Severity < severity)
+                if (validationMessage == null)
                     continue;
 
                 if (result == ValidationMessageCollection.Empty)

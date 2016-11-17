@@ -51,7 +51,27 @@ namespace DevZest.Data
 
         public bool IsValid
         {
-            get { return Entries.Count == 0; }
+            get { return !HasError; }
+        }
+
+        public bool HasError
+        {
+            get { return Any(ValidationSeverity.Error); }
+        }
+
+        public bool HasWarning
+        {
+            get { return Any(ValidationSeverity.Warning); }
+        }
+
+        private bool Any(ValidationSeverity severity)
+        {
+            return Entries.Any(x => Any(x.Messages, severity));
+        }
+
+        private static bool Any(IEnumerable<ValidationMessage> messages, ValidationSeverity severity)
+        {
+            return messages.Any(x => x.Severity == severity);
         }
     }
 }
