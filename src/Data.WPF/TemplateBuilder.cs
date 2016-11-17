@@ -122,7 +122,8 @@ namespace DevZest.Data.Windows
         }
 
         [DefaultValue(ValidationScope.CurrentRow)]
-        public TemplateBuilder WithValidationScope(ValidationScope value)
+        public TemplateBuilder 
+            WithValidationScope(ValidationScope value)
         {
             Template.ValidationScope = value;
             return this;
@@ -132,6 +133,20 @@ namespace DevZest.Data.Windows
         public TemplateBuilder WithValidationMode(ValidationMode value)
         {
             Template.ValidationMode = value;
+            return this;
+        }
+
+        [DefaultValue(ValidationSeverity.Error)]
+        public TemplateBuilder WithValidationDisplaySeverity(ValidationSeverity value)
+        {
+            Template.ValidationDisplaySeverity = value;
+            return this;
+        }
+
+        [DefaultValue(100)]
+        public TemplateBuilder WithValidationMaxEntries(int value)
+        {
+            Template.ValidationMaxEntries = value;
             return this;
         }
 

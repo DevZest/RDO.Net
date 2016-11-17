@@ -466,5 +466,11 @@ namespace DevZest.Data.Windows.Primitives
 
         [DefaultValue(ValidationMode.Explicit)]
         public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Explicit;
+
+        [DefaultValue(ValidationSeverity.Error)]
+        public ValidationSeverity ValidationDisplaySeverity { get; internal set; } = ValidationSeverity.Error;
+
+        [DefaultValue(100)]
+        public int ValidationMaxEntries { get; internal set; } = 100;
     }
 }

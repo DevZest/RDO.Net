@@ -126,6 +126,7 @@
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
+    <Compile Include="ValidationDisplay.cs" />
     <Compile Include="ValidationMode.cs" />
     <Compile Include="ValidationScope.cs" />
   </ItemGroup>
