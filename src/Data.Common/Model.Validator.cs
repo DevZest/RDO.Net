@@ -14,28 +14,18 @@ namespace DevZest.Data
             {
                 public SimpleValidator(string messageId, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
                 {
-                    _messageId = messageId;
-                    _severity = severity;
-                    _columns = ColumnSet.New(columns);
-                    _isValidCondition = isValidCondition;
-                    _message = message;
+                    MessageId = messageId;
+                    Severity = severity;
+                    Columns = ColumnSet.New(columns);
+                    ValidCondition = isValidCondition;
+                    Message = message;
                 }
 
-                string _messageId;
-                ValidationSeverity _severity;
-                IColumnSet _columns;
-                _Boolean _isValidCondition;
-                _String _message;
-
-                public ValidationSeverity Severity
-                {
-                    get { return _severity; }
-                }
-
-                public ValidationMessage Validate(DataRow dataRow)
-                {
-                    return _isValidCondition[dataRow] == true ? null : new ValidationMessage(_messageId, _severity, _columns, _message[dataRow]);
-                }
+                public string MessageId { get; private set; }
+                public ValidationSeverity Severity { get; private set; }
+                public IColumnSet Columns { get; private set; }
+                public _Boolean ValidCondition { get; private set; }
+                public _String Message { get; private set; }
             }
 
             public static IValidator Create(string messageId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
@@ -44,30 +34,6 @@ namespace DevZest.Data
                 Utilities.Check.NotNull(message, nameof(message));
 
                 return new SimpleValidator(messageId, severity, columns, isValidCondition, message);
-            }
-
-            private sealed class DelegateValidator : IValidator
-            {
-                public DelegateValidator(ValidationSeverity severity, Func<DataRow, ValidationMessage> func)
-                {
-                    Debug.Assert(func != null);
-                    _func = func;
-                }
-
-                Func<DataRow, ValidationMessage> _func;
-
-                public ValidationSeverity Severity { get; private set; }
-
-                public ValidationMessage Validate(DataRow dataRow)
-                {
-                    return _func(dataRow);
-                }
-            }
-
-            public static IValidator Create(ValidationSeverity severity, Func<DataRow, ValidationMessage> func)
-            {
-                Utilities.Check.NotNull(func, nameof(func));
-                return new DelegateValidator(severity, func);
             }
         }
     }

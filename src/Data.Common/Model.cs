@@ -348,7 +348,7 @@ namespace DevZest.Data
             {
                 if (validator.Severity != severity)
                     continue;
-                var validationMessage = validator.Validate(dataRow);
+                var validationMessage = Validate(validator, dataRow);
                 if (validationMessage == null)
                     continue;
 
@@ -358,6 +358,11 @@ namespace DevZest.Data
             }
 
             return result;
+        }
+
+        private static ValidationMessage Validate(IValidator validator, DataRow dataRow)
+        {
+            return validator.ValidCondition[dataRow] == true ? null : new ValidationMessage(validator.MessageId, validator.Severity, validator.Columns, validator.Message[dataRow]);
         }
 
         public ModelKey PrimaryKey

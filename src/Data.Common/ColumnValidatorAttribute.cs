@@ -20,7 +20,7 @@ namespace DevZest.Data
             private ColumnValidatorAttribute _owner;
             private Column _column;
 
-            private string MessageId
+            public string MessageId
             {
                 get { return _owner.MessageId; }
             }
@@ -30,24 +30,24 @@ namespace DevZest.Data
                 get { return _owner.ValidationSeverity; }
             }
 
-            private IColumnSet Columns
+            public IColumnSet Columns
             {
                 get { return _column; }
             }
 
-            private _Boolean IsValidCondition
+            public _Boolean ValidCondition
             {
-                get { return _owner.GetIsValidCondition(_column); }
+                get { return _owner.GetValidCondition(_column); }
             }
 
-            private _String Message
+            public _String Message
             {
                 get { return _owner.GetMessage(_column); }
             }
 
             public ValidationMessage Validate(DataRow dataRow)
             {
-                return IsValidCondition[dataRow] == true ? null : new ValidationMessage(MessageId, Severity, Columns, Message[dataRow]);
+                return ValidCondition[dataRow] == true ? null : new ValidationMessage(MessageId, Severity, Columns, Message[dataRow]);
             }
         }
 
@@ -77,7 +77,7 @@ namespace DevZest.Data
 
         protected abstract ValidationSeverity ValidationSeverity { get; }
 
-        protected abstract _Boolean GetIsValidCondition(Column column);
+        protected abstract _Boolean GetValidCondition(Column column);
 
         protected abstract _String FormatMessage(Column column);
 
