@@ -12,11 +12,11 @@ namespace DevZest.Data
         {
             private sealed class SimpleValidator : IValidator
             {
-                public SimpleValidator(string messageId, ValidationSeverity severity, Column[] columns, _Boolean isValidCondition, _String message)
+                public SimpleValidator(string messageId, ValidationSeverity severity, IColumnSet columns, _Boolean isValidCondition, _String message)
                 {
                     MessageId = messageId;
                     Severity = severity;
-                    Columns = ColumnSet.New(columns);
+                    Columns = columns;
                     ValidCondition = isValidCondition;
                     Message = message;
                 }
@@ -28,12 +28,15 @@ namespace DevZest.Data
                 public _String Message { get; private set; }
             }
 
-            public static IValidator Create(string messageId, ValidationSeverity severity, _Boolean isValidCondition, _String message, params Column[] columns)
+            public static IValidator Create(string messageId, ValidationSeverity severity, IColumnSet columns, _Boolean validCondition, _String message)
             {
-                Utilities.Check.NotNull(isValidCondition, nameof(isValidCondition));
+                Utilities.Check.NotEmpty(messageId, nameof(messageId));
+                if (columns == null)
+                    columns = ColumnSet.Empty;
+                Utilities.Check.NotNull(validCondition, nameof(validCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 
-                return new SimpleValidator(messageId, severity, columns, isValidCondition, message);
+                return new SimpleValidator(messageId, severity, columns, validCondition, message);
             }
         }
     }
