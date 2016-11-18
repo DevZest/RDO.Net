@@ -464,8 +464,8 @@ namespace DevZest.Data.Windows.Primitives
         [DefaultValue(ValidationScope.CurrentRow)]
         public ValidationScope ValidationScope { get; internal set; } = ValidationScope.CurrentRow;
 
-        [DefaultValue(ValidationMode.Explicit)]
-        public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Explicit;
+        [DefaultValue(ValidationMode.Progressive)]
+        public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(ValidationSeverity.Error)]
         public ValidationSeverity ValidationDisplaySeverity { get; internal set; } = ValidationSeverity.Error;

@@ -129,7 +129,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        [DefaultValue(ValidationMode.Explicit)]
+        [DefaultValue(ValidationMode.Progressive)]
         public TemplateBuilder WithValidationMode(ValidationMode value)
         {
             Template.ValidationMode = value;

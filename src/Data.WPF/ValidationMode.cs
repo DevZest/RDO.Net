@@ -2,6 +2,7 @@
 {
     public enum ValidationMode
     {
+        Progressive,
         Implicit,
         Explicit
     }
