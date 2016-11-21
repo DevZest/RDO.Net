@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows
 {
-    public static class ValidationDisplay
+    public static class Validity
     {
         private static class SeverityBoxes
         {
@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows
         }
 
         private static readonly DependencyPropertyKey SeverityPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Severity",
-            typeof(ValidationSeverity?), typeof(ValidationDisplay), new FrameworkPropertyMetadata(SeverityBoxes.Null));
+            typeof(ValidationSeverity?), typeof(Validity), new FrameworkPropertyMetadata(SeverityBoxes.Null));
         public static readonly DependencyProperty SeverityProperty = SeverityPropertyKey.DependencyProperty;
 
         public static ValidationSeverity? GetSeverity(DependencyObject element)
