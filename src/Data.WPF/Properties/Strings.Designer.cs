@@ -12,14 +12,6 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
-        /// The Input has already been initialized with another Binding.
-        /// </summary>
-        public static string Binding_InputAlreadyInitialized
-        {
-            get { return GetString("Binding_InputAlreadyInitialized"); }
-        }
-
-        /// <summary>
         /// The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].
         /// </summary>
         public static string Binding_InvalidFrozenMargin(object frozen, object bindings, object ordinal)
@@ -145,6 +137,22 @@ namespace DevZest.Data.Windows
         public static string GridRow_InvalidStarHeight(object ordinal)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("GridRow_InvalidStarHeight", "ordinal"), ordinal);
+        }
+
+        /// <summary>
+        /// The Input is sealed and allows no modification.
+        /// </summary>
+        public static string Input_VerifyNotSealed
+        {
+            get { return GetString("Input_VerifyNotSealed"); }
+        }
+
+        /// <summary>
+        /// The ReverseBinding is sealed and allows no modification.
+        /// </summary>
+        public static string ReverseBinding_VerifyNotSealed
+        {
+            get { return GetString("ReverseBinding_VerifyNotSealed"); }
         }
 
         /// <summary>

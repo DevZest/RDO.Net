@@ -57,5 +57,11 @@ namespace DevZest.Data.Windows
             if (OnCleanup != null)
                 OnCleanup(element);
         }
+
+        public new ReverseScalarBinding<T> ReverseBinding
+        {
+            get { return base.ReverseBinding; }
+            set { base.ReverseBinding = value; }
+        }
     }
 }

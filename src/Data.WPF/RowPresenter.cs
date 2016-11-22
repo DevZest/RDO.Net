@@ -274,18 +274,6 @@ namespace DevZest.Data.Windows
             return null;
         }
 
-        private Input FlushingInput
-        {
-            get { return ValidationManager == null ? null : ValidationManager.FlushingInput; }
-        }
-
-        private void MergeFlushingColumn(Column column)
-        {
-            var flushingInput = FlushingInput;
-            if (flushingInput != null)
-                flushingInput.MergeColumn(column);
-        }
-
         public object this[Column column]
         {
             get
@@ -296,7 +284,7 @@ namespace DevZest.Data.Windows
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
             }
-            set
+            internal set
             {
                 VerifyColumn(column, nameof(column));
 
@@ -304,7 +292,6 @@ namespace DevZest.Data.Windows
                     column = DataRow.Model.GetColumns()[column.Ordinal];
 
                 CoerceEditMode();
-                MergeFlushingColumn(column);
                 column.SetValue(DataRow, value);
             }
         }
@@ -350,7 +337,7 @@ namespace DevZest.Data.Windows
             RowManager.BeginEdit(this);
         }
 
-        public void EditValue<T>(Column<T> column, T value)
+        internal void EditValue<T>(Column<T> column, T value)
         {
             VerifyColumn(column, nameof(column));
 
@@ -358,7 +345,6 @@ namespace DevZest.Data.Windows
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             CoerceEditMode();
-            MergeFlushingColumn(column);
             column[DataRow] = value;
         }
 

@@ -48,6 +48,10 @@
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitInput.cs" />
+    <Compile Include="Primitives\ReverseBinding.cs" />
+    <Compile Include="ReverseRowBinding.cs" />
+    <Compile Include="ReverseScalarBinding.cs" />
+    <Compile Include="ReverseBindingError.cs" />
     <Compile Include="Primitives\ValidationListener.cs" />
     <Compile Include="Primitives\ValidationManager.cs" />
     <Compile Include="PropertyChangedInput.cs" />

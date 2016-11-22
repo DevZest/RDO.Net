@@ -8,19 +8,23 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        public Input<T> Input { get; private set; }
-
-        public void SetInput(Input<T> input, Func<RowPresenter, T, ValidationMessage> flushFunc)
+        private ReverseRowBinding<T> _reverseBinding;
+        public ReverseRowBinding<T> ReverseBinding
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-            if (input.Binding != null)
-                throw new ArgumentException(Strings.Binding_InputAlreadyInitialized, nameof(input));
-            if (flushFunc == null)
-                throw new ArgumentNullException(nameof(flushFunc));
-            VerifyNotSealed();
-            input.Initialize(this, flushFunc);
-            Input = input;
+            get { return _reverseBinding; }
+            protected set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                VerifyNotSealed();
+                _reverseBinding = value;
+                Input.Seal(this);
+            }
+        }
+
+        public Input<T> Input
+        {
+            get { return _reverseBinding == null ? null : _reverseBinding.Input; }
         }
 
         internal sealed override void FlushInput(UIElement element)

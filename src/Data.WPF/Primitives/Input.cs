@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using System;
+﻿using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,45 +14,27 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public Binding Binding { get; internal set; }
+        public Binding Binding { get; private set; }
+
+        internal void Seal(Binding binding)
+        {
+            Debug.Assert(binding != null);
+            VerifyNotSealed();
+            Binding = binding;
+        }
+
+        internal void VerifyNotSealed()
+        {
+            if (Binding != null)
+                throw new InvalidOperationException(Strings.Input_VerifyNotSealed);
+        }
 
         private ValidationManager ValidationManager
         {
             get { return Template.ValidationManager; }
         }
 
-        private Input FlushingInput
-        {
-            get { return ValidationManager.FlushingInput; }
-            set { ValidationManager.FlushingInput = value; }
-        }
-
-        protected bool IsFlushing
-        {
-            get { return FlushingInput == this; }
-        }
-
-        internal void ExecFlush<T>(T element, Func<T, ValidationMessage> flushFunc)
-        {
-            FlushingInput = this;
-            Columns = ColumnSet.Empty;
-            ValidationMessage validationMessage;
-            try
-            {
-                validationMessage = flushFunc(element);
-            }
-            finally
-            {
-                FlushingInput = null;
-            }
-        }
-
         internal IColumnSet Columns { get; private set; }
-
-        internal void MergeColumn(Column column)
-        {
-            Columns = Columns.Merge(column);
-        }
 
         public bool HasErrors
         {
@@ -90,18 +71,12 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private Func<T, ValidationMessage> _flushFunc;
-
-        internal void Initialize(Binding binding, Func<T, ValidationMessage> flushFunc)
+        private ReverseBinding<T> _reverseBinding;
+        private TReverseBinding SetReverseBinding<TReverseBinding>(TReverseBinding value)
+            where TReverseBinding : ReverseBinding<T>
         {
-            Debug.Assert(Binding == null && _flushFunc == null && binding != null && flushFunc != null);
-            Binding = binding;
-            _flushFunc = flushFunc;
-        }
-
-        internal void Initialize(Binding binding, Func<RowPresenter, T, ValidationMessage> flushFunc)
-        {
-            Initialize(binding, x => flushFunc(x.GetRowPresenter(), x));
+            _reverseBinding = value;
+            return value;
         }
 
         protected internal abstract void Attach(T element);
@@ -110,12 +85,32 @@ namespace DevZest.Data.Windows.Primitives
 
         protected internal void Flush(T element)
         {
-            ExecFlush(element, _flushFunc);
+            Debug.Assert(_reverseBinding != null);
+            _reverseBinding.Flush(element);
         }
 
         protected internal virtual bool ShouldRefresh(T element)
         {
             return false;
+        }
+
+        public ReverseRowBinding<T> Bind<TData>(Column<TData> column, Func<T, TData> dataGetter)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+            if (dataGetter == null)
+                throw new ArgumentNullException(nameof(dataGetter));
+
+            VerifyNotSealed();
+            return SetReverseBinding(ReverseRowBinding<T>.Create(this, column, dataGetter));
+        }
+
+        public ReverseScalarBinding<T> Bind(Action<T> flushAction)
+        {
+            if (flushAction == null)
+                throw new ArgumentNullException(nameof(flushAction));
+            VerifyNotSealed();
+            return SetReverseBinding(new ReverseScalarBinding<T>(this, flushAction));
         }
     }
 }
