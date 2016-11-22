@@ -10,16 +10,16 @@ namespace DevZest.Data.Windows.Primitives
     {
         public Input<T> Input { get; private set; }
 
-        public void SetInput(Input<T> input, Action<RowPresenter, T> flushAction)
+        public void SetInput(Input<T> input, Func<RowPresenter, T, ValidationMessage> flushFunc)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
             if (input.Binding != null)
                 throw new ArgumentException(Strings.Binding_InputAlreadyInitialized, nameof(input));
-            if (flushAction == null)
-                throw new ArgumentNullException(nameof(flushAction));
+            if (flushFunc == null)
+                throw new ArgumentNullException(nameof(flushFunc));
             VerifyNotSealed();
-            input.Initialize(this, flushAction);
+            input.Initialize(this, flushFunc);
             Input = input;
         }
 

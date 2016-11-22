@@ -33,13 +33,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return FlushingInput == this; }
         }
 
-        internal void ExecFlush<T>(T element, Action<T> flushAction)
+        internal void ExecFlush<T>(T element, Func<T, ValidationMessage> flushFunc)
         {
             FlushingInput = this;
             Columns = ColumnSet.Empty;
+            ValidationMessage validationMessage;
             try
             {
-                flushAction(element);
+                validationMessage = flushFunc(element);
             }
             finally
             {
@@ -89,18 +90,18 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private Action<T> _flushAction;
+        private Func<T, ValidationMessage> _flushFunc;
 
-        internal void Initialize(Binding binding, Action<T> flushAction)
+        internal void Initialize(Binding binding, Func<T, ValidationMessage> flushFunc)
         {
-            Debug.Assert(Binding == null && _flushAction == null && binding != null && flushAction != null);
+            Debug.Assert(Binding == null && _flushFunc == null && binding != null && flushFunc != null);
             Binding = binding;
-            _flushAction = flushAction;
+            _flushFunc = flushFunc;
         }
 
-        internal void Initialize(Binding binding, Action<RowPresenter, T> flushAction)
+        internal void Initialize(Binding binding, Func<RowPresenter, T, ValidationMessage> flushFunc)
         {
-            Initialize(binding, x => flushAction(x.GetRowPresenter(), x));
+            Initialize(binding, x => flushFunc(x.GetRowPresenter(), x));
         }
 
         protected internal abstract void Attach(T element);
@@ -109,7 +110,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected internal void Flush(T element)
         {
-            ExecFlush(element, _flushAction);
+            ExecFlush(element, _flushFunc);
         }
 
         protected internal virtual bool ShouldRefresh(T element)
