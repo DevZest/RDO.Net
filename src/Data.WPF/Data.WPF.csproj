@@ -48,7 +48,9 @@
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitInput.cs" />
+    <Compile Include="IScalarSet.cs" />
     <Compile Include="Primitives\ReverseBinding.cs" />
+    <Compile Include="Primitives\Scalar.cs" />
     <Compile Include="ReverseRowBinding.cs" />
     <Compile Include="ReverseScalarBinding.cs" />
     <Compile Include="ReverseBindingError.cs" />
@@ -97,6 +99,8 @@
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
+    <Compile Include="ScalarSet.cs" />
+    <Compile Include="Scalar_T.cs" />
     <Compile Include="ScalarBinding_T.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="LostFocusInput.cs" />

@@ -89,6 +89,7 @@
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowMapperTests.cs" />
     <Compile Include="Primitives\RowNormalizerTests.cs" />
+    <Compile Include="ScalarSetTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
