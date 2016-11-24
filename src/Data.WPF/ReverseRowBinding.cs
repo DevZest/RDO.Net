@@ -53,5 +53,11 @@ namespace DevZest.Data.Windows
             foreach (var flushAction in _flushActions)
                 flushAction(rowPresenter, element);
         }
+
+        internal override void Verify(T element)
+        {
+            base.Verify(element);
+            element.GetRowPresenter().VerifyIsCurrent();
+        }
     }
 }

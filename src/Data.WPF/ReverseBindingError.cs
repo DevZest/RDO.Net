@@ -1,4 +1,6 @@
-﻿namespace DevZest.Data.Windows
+﻿using System;
+
+namespace DevZest.Data.Windows
 {
     public struct ReverseBindingError
     {
@@ -14,8 +16,15 @@
 
         public ReverseBindingError(string messageId, string message)
         {
+            if (string.IsNullOrEmpty(message))
+                throw new ArgumentNullException(nameof(message));
             MessageId = messageId;
             Message = message;
+        }
+
+        public bool IsEmpty
+        {
+            get { return Message == null; }
         }
     }
 }

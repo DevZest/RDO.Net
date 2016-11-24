@@ -15,6 +15,16 @@ namespace DevZest.Data.Windows.Primitives
 
         public Input<T> Input { get; private set; }
 
+        public Binding Binding
+        {
+            get { return Input == null ? null : Input.Binding; }
+        }
+
+        internal virtual void Verify(T element)
+        {
+            Debug.Assert(Binding != null && element.GetBinding() == Binding);
+        }
+
         internal Func<T, ReverseBindingError> _onGetError;
 
         internal ReverseBindingError GetError(T element)

@@ -321,7 +321,7 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyNoPendingEdit);
         }
 
-        private void VerifyIsCurrent()
+        internal void VerifyIsCurrent()
         {
             if (!IsCurrent)
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyIsCurrent);

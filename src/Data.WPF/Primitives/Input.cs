@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -29,16 +31,16 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.Input_VerifyNotSealed);
         }
 
-        private ValidationManager ValidationManager
+        internal ValidationManager ValidationManager
         {
             get { return Template.ValidationManager; }
         }
 
-        internal IColumnSet Columns { get; private set; }
+        internal abstract IColumnSet Columns { get; }
 
         public bool HasErrors
         {
-            get { return ValidationManager.HasErrors(this); }
+            get { return Errors.Count > 0; }
         }
 
         public Template Template
@@ -46,21 +48,32 @@ namespace DevZest.Data.Windows.Primitives
             get { return Binding.Template; }
         }
 
+        private IReadOnlyList<ValidationMessage> _errors = Array<ValidationMessage>.Empty;
+        private IReadOnlyList<ValidationMessage> Errors
+        {
+            get
+            {
+                if (_errors == null)
+                    _errors = ValidationManager.GetErrors(this);
+                return _errors;
+            }
+        }
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public IEnumerable GetErrors(string propertyName)
+        internal void OnErrorsChanged()
         {
-            /// When using with <see cref="ValidationListener"/>, <param name="propertyName"/> will be passed in twice,
-            /// as null and <see cref="string.Empty"/> respectively.
-            /// We need to ignore one of them, otherwise duplicated results will be returned.
-            return propertyName == null ? null : ValidationManager.GetErrors(this);
-        }
-
-        internal void RefreshValidation()
-        {
+            _errors = null;
             var errorsChanged = ErrorsChanged;
             if (errorsChanged != null)
                 errorsChanged(this, SingletonDataErrorsChangedEventArgs);
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            /// Workaround: when using with <see cref="ValidationListener"/>, <param name="propertyName"/> will be passed in twice,
+            /// as null and <see cref="string.Empty"/> respectively.
+            /// We need to ignore one of them, otherwise duplicated results will be returned.
+            return propertyName == null ? null : Errors;
         }
     }
 
@@ -79,6 +92,11 @@ namespace DevZest.Data.Windows.Primitives
             return value;
         }
 
+        internal sealed override IColumnSet Columns
+        {
+            get { return _reverseBinding == null ? null : _reverseBinding.Columns; }
+        }
+
         protected internal abstract void Attach(T element);
 
         protected internal abstract void Detach(T element);
@@ -86,7 +104,12 @@ namespace DevZest.Data.Windows.Primitives
         protected internal void Flush(T element)
         {
             Debug.Assert(_reverseBinding != null);
+            _reverseBinding.Verify(element);
+            var error = _reverseBinding.GetError(element);
+            bool flushingErrorChanged = ValidationManager.UpdateFlushingError(this, error);
             _reverseBinding.Flush(element);
+            if (flushingErrorChanged)
+                OnErrorsChanged();
         }
 
         protected internal virtual bool ShouldRefresh(T element)
