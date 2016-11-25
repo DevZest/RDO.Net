@@ -1,50 +1,75 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class ReverseBinding<T>
-        where T : UIElement, new()
+    public abstract class ReverseBinding : INotifyDataErrorInfo
     {
-        internal ReverseBinding(Input<T> input)
+        private static readonly DataErrorsChangedEventArgs SingletonDataErrorsChangedEventArgs = new DataErrorsChangedEventArgs(string.Empty);
+
+        public Binding Binding { get; private set; }
+
+        internal void Seal(Binding binding)
         {
-            Debug.Assert(input != null);
-            Input = input;
-        }
-
-        public Input<T> Input { get; private set; }
-
-        public Binding Binding
-        {
-            get { return Input == null ? null : Input.Binding; }
-        }
-
-        internal virtual void Verify(T element)
-        {
-            Debug.Assert(Binding != null && element.GetBinding() == Binding);
-        }
-
-        internal Func<T, ReverseBindingError> _onGetError;
-
-        internal ReverseBindingError GetError(T element)
-        {
-            return _onGetError == null ? ReverseBindingError.Empty : _onGetError(element);
-        }
-
-        internal abstract IColumnSet Columns { get; }
-
-        internal abstract void Flush(T element);
-
-        private bool IsSealed
-        {
-            get { return Input.Binding != null; }
+            Debug.Assert(binding != null);
+            VerifyNotSealed();
+            Binding = binding;
         }
 
         internal void VerifyNotSealed()
         {
-            if (IsSealed)
+            if (Binding != null)
                 throw new InvalidOperationException(Strings.ReverseBinding_VerifyNotSealed);
+        }
+
+        internal ValidationManager ValidationManager
+        {
+            get { return Template.ValidationManager; }
+        }
+
+        public bool HasErrors
+        {
+            get { return Errors.Count > 0; }
+        }
+
+        public Template Template
+        {
+            get { return Binding.Template; }
+        }
+
+        private IReadOnlyList<object> _errors = Array<ValidationMessage>.Empty;
+        private IReadOnlyList<object> Errors
+        {
+            get
+            {
+                if (_errors == null)
+                    _errors = GetErrors();
+                return _errors;
+            }
+        }
+
+        internal abstract IReadOnlyList<object> GetErrors();
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        internal void OnErrorsChanged()
+        {
+            _errors = null;
+            var errorsChanged = ErrorsChanged;
+            if (errorsChanged != null)
+                errorsChanged(this, SingletonDataErrorsChangedEventArgs);
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            /// Workaround: when using with <see cref="ValidationListener"/>, <param name="propertyName"/> will be passed in twice,
+            /// as null and <see cref="string.Empty"/> respectively.
+            /// We need to ignore one of them, otherwise duplicated results will be returned.
+            return propertyName == null ? null : Errors;
         }
     }
 }

@@ -165,9 +165,6 @@
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
     <value>Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.</value>
   </data>
-  <data name="Input_VerifyNotSealed" xml:space="preserve">
-    <value>The Input is sealed and allows no modification.</value>
-  </data>
   <data name="ReverseBinding_VerifyNotSealed" xml:space="preserve">
     <value>The ReverseBinding is sealed and allows no modification.</value>
   </data>
@@ -221,5 +218,8 @@
   </data>
   <data name="Template_InvalidStretches" xml:space="preserve">
     <value>The Stretches value must be less or equal to {frozen}.</value>
+  </data>
+  <data name="Trigger_AlreadyInitialized" xml:space="preserve">
+    <value>The trigger has already been initialized with another ReverseBinding.</value>
   </data>
 </root>

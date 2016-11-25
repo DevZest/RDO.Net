@@ -8,8 +8,8 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class RowBindingBase<T> : RowBinding
         where T : UIElement, new()
     {
-        private ReverseRowBinding<T> _reverseBinding;
-        public ReverseRowBinding<T> ReverseBinding
+        private RowReverseBinding<T> _reverseBinding;
+        public RowReverseBinding<T> ReverseBinding
         {
             get { return _reverseBinding; }
             protected set
@@ -17,20 +17,15 @@ namespace DevZest.Data.Windows.Primitives
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
                 VerifyNotSealed();
+                value.Seal(this);
                 _reverseBinding = value;
-                Input.Seal(this);
             }
         }
 
-        public Input<T> Input
+        internal sealed override void FlushReverseBinding(UIElement element)
         {
-            get { return _reverseBinding == null ? null : _reverseBinding.Input; }
-        }
-
-        internal sealed override void FlushInput(UIElement element)
-        {
-            if (Input != null)
-                Input.Flush((T)element);
+            if (ReverseBinding != null)
+                ReverseBinding.Flush((T)element);
         }
 
         List<T> _cachedElements;
@@ -55,8 +50,8 @@ namespace DevZest.Data.Windows.Primitives
             SettingUpElement.SetRowPresenter(rowPresenter);
             Setup(SettingUpElement, rowPresenter);
             Refresh(SettingUpElement, rowPresenter);
-            if (Input != null)
-                Input.Attach(SettingUpElement);
+            if (ReverseBinding != null)
+                ReverseBinding.Attach(SettingUpElement);
             return SettingUpElement;
         }
 
@@ -81,16 +76,21 @@ namespace DevZest.Data.Windows.Primitives
         {
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
-            if (Input != null)
-                Input.Detach(e);
+            if (ReverseBinding != null)
+                ReverseBinding.Detach(e);
             Cleanup(e, rowPresenter);
             e.SetRowPresenter(null);
             CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool ShouldRefresh(bool isReload, UIElement element)
+        internal sealed override bool ShouldRefresh(UIElement element)
         {
-            return isReload || Input == null ? true : Input.ShouldRefresh((T)element);
+            if (_reverseBinding == null)
+                return true;
+
+            var rowPresenter = element.GetRowPresenter();
+            Debug.Assert(rowPresenter != null);
+            return rowPresenter != Template.ElementManager.CurrentRow;
         }
     }
 }

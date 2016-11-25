@@ -58,7 +58,7 @@ namespace DevZest.Data.Windows
                 OnCleanup(element, rowPresenter);
         }
 
-        public new ReverseRowBinding<T> ReverseBinding
+        public new RowReverseBinding<T> ReverseBinding
         {
             get { return base.ReverseBinding; }
             set { base.ReverseBinding = value; }

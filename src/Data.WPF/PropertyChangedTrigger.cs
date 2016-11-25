@@ -6,10 +6,10 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class PropertyChangedInput<T> : Input<T>
+    public sealed class PropertyChangedTrigger<T> : Trigger<T>
         where T : UIElement, new()
     {
-        public PropertyChangedInput(DependencyProperty property)
+        public PropertyChangedTrigger(DependencyProperty property)
         {
             _property = property;
         }
@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
 
         private void OnPropertyChanged(object sender, EventArgs e)
         {
-            Flush((T)sender);
+            Execute((T)sender);
         }
     }
 }

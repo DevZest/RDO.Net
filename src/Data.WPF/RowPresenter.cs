@@ -408,11 +408,5 @@ namespace DevZest.Data.Windows
         {
             get { return Template.InternalRowBindings; }
         }
-
-        public void FlushInput()
-        {
-            if (View != null)
-                View.FlushInput();
-        }
     }
 }

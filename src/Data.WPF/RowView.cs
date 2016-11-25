@@ -215,16 +215,5 @@ namespace DevZest.Data.Windows
         {
             get { return RowPresenter.Index % RowPresenter.ElementManager.BlockDimensions; }
         }
-
-        internal void FlushInput()
-        {
-            var rowBindings = RowBindings;
-            Debug.Assert(Elements.Count == rowBindings.Count);
-            for (int i = 0; i < rowBindings.Count; i++)
-            {
-                var rowBinding = rowBindings[i];
-                rowBinding.FlushInput(Elements[i]);
-            }
-        }
     }
 }

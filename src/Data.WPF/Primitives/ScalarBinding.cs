@@ -158,8 +158,13 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal abstract void FlushInput(UIElement element);
+        internal abstract void FlushReverseBinding(UIElement element);
 
-        internal abstract bool ShouldRefresh(bool isReload, UIElement element);
+        internal bool ShouldRefresh(bool isReload, UIElement element)
+        {
+            return isReload ? true : ShouldRefresh(element);
+        }
+
+        internal abstract bool ShouldRefresh(UIElement element);
     }
 }

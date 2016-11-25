@@ -1,13 +1,12 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using System;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ExplicitInput<T> : Input<T>
+    public sealed class ExplicitTrigger<T> : Trigger<T>
         where T : UIElement, new()
     {
-        public ExplicitInput()
+        public ExplicitTrigger()
         {
         }
 

@@ -4,10 +4,10 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class LostFocusInput<T> : Input<T>
+    public sealed class LostFocusTrigger<T> : Trigger<T>
         where T : UIElement, new()
     {
-        public LostFocusInput()
+        public LostFocusTrigger()
         {
         }
 
@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
 
         private void OnLostFocus(object sender, RoutedEventArgs e)
         {
-            Flush((T)sender);
+            Execute((T)sender);
         }
     }
 }

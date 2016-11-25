@@ -68,31 +68,36 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private Dictionary<Input, ValidationMessage> _flushingErrors = new Dictionary<Input, ValidationMessage>();
-        internal bool UpdateFlushingError(Input input, ReverseBindingError error)
+        private Dictionary<RowReverseBinding, ValidationMessage> _currentRowflushingErrors = new Dictionary<RowReverseBinding, ValidationMessage>();
+        internal bool UpdateFlushingError(RowReverseBinding reverseBinding, ReverseBindingError error)
         {
-            bool containsInput = _flushingErrors.ContainsKey(input);
+            bool containsReverseBinding = _currentRowflushingErrors.ContainsKey(reverseBinding);
             bool hasError = !error.IsEmpty;
 
-            if (containsInput != hasError)
+            if (containsReverseBinding != hasError)
             {
                 if (hasError)
-                    _flushingErrors.Add(input, NewValidationMessage(error));
+                    _currentRowflushingErrors.Add(reverseBinding, NewValidationMessage(error));
                 else
-                    _flushingErrors.Remove(input);
+                    _currentRowflushingErrors.Remove(reverseBinding);
                 return true;
             }
             else if (hasError)
             {
-                var validationMessage = _flushingErrors[input];
+                var validationMessage = _currentRowflushingErrors[reverseBinding];
                 if (validationMessage.Id != error.MessageId || validationMessage.Description != error.Message)
                 {
-                    _flushingErrors[input] = NewValidationMessage(error);
+                    _currentRowflushingErrors[reverseBinding] = NewValidationMessage(error);
                     return true;
                 }
             }
 
             return false;
+        }
+
+        internal bool UpdateFlushingError(ScalarReverseBinding reverseBinding, ReverseBindingError error)
+        {
+            throw new NotImplementedException();
         }
 
         private ValidationMessage NewValidationMessage(ReverseBindingError error)
@@ -104,20 +109,25 @@ namespace DevZest.Data.Windows.Primitives
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _validationMessages = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _mergedValidationMessages = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
 
-        internal IReadOnlyList<ValidationMessage> GetErrors(Input input)
+        internal IReadOnlyList<ScalarValidationMessage> GetErrors(ScalarReverseBinding reverseBinding)
         {
-            ValidationMessageCollection result = GetFlushingErrors(null, input);
+            throw new NotImplementedException();
+        }
 
-            if (input.Binding is RowBinding && CurrentRow != null)
+        internal IReadOnlyList<ValidationMessage> GetErrors(RowReverseBinding reverseBinding)
+        {
+            ValidationMessageCollection result = GetFlushingErrors(null, reverseBinding);
+
+            if (reverseBinding.Binding is RowBinding && CurrentRow != null)
             {
                 var currentRowValidationMessages = GetCurrentRowValidationMessages(_validationMessages);
                 var currentRowMergedValidationMessages = GetCurrentRowValidationMessages(_mergedValidationMessages);
-                result = GetValidationMessages(result, currentRowValidationMessages, ValidationSeverity.Error, input);
-                result = GetValidationMessages(result, currentRowMergedValidationMessages, ValidationSeverity.Error, input);
+                result = GetValidationMessages(result, currentRowValidationMessages, ValidationSeverity.Error, reverseBinding);
+                result = GetValidationMessages(result, currentRowMergedValidationMessages, ValidationSeverity.Error, reverseBinding);
                 if (Template.ValiditySeverity == ValidationSeverity.Warning)
                 {
-                    result = GetValidationMessages(result, currentRowValidationMessages, ValidationSeverity.Warning, input);
-                    result = GetValidationMessages(result, currentRowMergedValidationMessages, ValidationSeverity.Warning, input);
+                    result = GetValidationMessages(result, currentRowValidationMessages, ValidationSeverity.Warning, reverseBinding);
+                    result = GetValidationMessages(result, currentRowMergedValidationMessages, ValidationSeverity.Warning, reverseBinding);
                 }
             }
 
@@ -127,10 +137,10 @@ namespace DevZest.Data.Windows.Primitives
                 return result;
         }
 
-        private ValidationMessageCollection GetFlushingErrors(ValidationMessageCollection result, Input input)
+        private ValidationMessageCollection GetFlushingErrors(ValidationMessageCollection result, RowReverseBinding reverseBinding)
         {
             ValidationMessage flushingError;
-            if (_flushingErrors.TryGetValue(input, out flushingError))
+            if (_currentRowflushingErrors.TryGetValue(reverseBinding, out flushingError))
                 result = AddValidationMessage(result, flushingError);
             return result;
         }
@@ -146,24 +156,24 @@ namespace DevZest.Data.Windows.Primitives
                 return Array<ValidationMessage>.Empty;
         }
 
-        private ValidationMessageCollection GetValidationMessages(ValidationMessageCollection result, IReadOnlyList<ValidationMessage> validationMessages, ValidationSeverity severity, Input input)
+        private ValidationMessageCollection GetValidationMessages(ValidationMessageCollection result, IReadOnlyList<ValidationMessage> validationMessages, ValidationSeverity severity, RowReverseBinding reverseBinding)
         {
             foreach (var validationMessage in validationMessages)
             {
-                if (IsVisible(validationMessage, severity, input))
+                if (IsVisible(validationMessage, severity, reverseBinding))
                     result = AddValidationMessage(result, validationMessage);
             }
             return result;
         }
 
-        private static bool IsVisible(ValidationMessage validationMessage, ValidationSeverity severity, Input input)
+        private static bool IsVisible(ValidationMessage validationMessage, ValidationSeverity severity, RowReverseBinding reverseBinding)
         {
             if (validationMessage.Severity != severity)
                 return false;
 
-            foreach (var inputColumn in input.Columns)
+            foreach (var column in reverseBinding.Columns)
             {
-                if (validationMessage.Columns.Contains(inputColumn))
+                if (validationMessage.Columns.Contains(column))
                     return true;
             }
 
@@ -183,7 +193,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool IsValid(bool ignoreMergedResult = true)
         {
-            if (_flushingErrors.Count > 0)
+            if (_currentRowflushingErrors.Count > 0)
                 return false;
 
             throw new NotImplementedException();

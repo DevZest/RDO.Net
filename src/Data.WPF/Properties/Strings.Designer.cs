@@ -140,14 +140,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The Input is sealed and allows no modification.
-        /// </summary>
-        public static string Input_VerifyNotSealed
-        {
-            get { return GetString("Input_VerifyNotSealed"); }
-        }
-
-        /// <summary>
         /// The ReverseBinding is sealed and allows no modification.
         /// </summary>
         public static string ReverseBinding_VerifyNotSealed
@@ -289,6 +281,14 @@ namespace DevZest.Data.Windows
         public static string Template_InvalidStretches(object frozen)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStretches", "frozen"), frozen);
+        }
+
+        /// <summary>
+        /// The trigger has already been initialized with another ReverseBinding.
+        /// </summary>
+        public static string Trigger_AlreadyInitialized
+        {
+            get { return GetString("Trigger_AlreadyInitialized"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

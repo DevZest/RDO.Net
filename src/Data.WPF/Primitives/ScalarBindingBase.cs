@@ -8,8 +8,8 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class ScalarBindingBase<T> : ScalarBinding
         where T : UIElement, new()
     {
-        private ReverseScalarBinding<T> _reverseBinding;
-        public ReverseScalarBinding<T> ReverseBinding
+        private ScalarReverseBinding<T> _reverseBinding;
+        public ScalarReverseBinding<T> ReverseBinding
         {
             get { return _reverseBinding; }
             protected set
@@ -17,20 +17,15 @@ namespace DevZest.Data.Windows.Primitives
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
                 VerifyNotSealed();
+                value.Seal(this);
                 _reverseBinding = value;
-                Input.Seal(this);
             }
         }
 
-        public Input<T> Input
+        internal sealed override void FlushReverseBinding(UIElement element)
         {
-            get { return _reverseBinding == null ? null : _reverseBinding.Input; }
-        }
-
-        internal sealed override void FlushInput(UIElement element)
-        {
-            if (Input != null)
-                Input.Flush((T)element);
+            if (ReverseBinding != null)
+                ReverseBinding.Flush((T)element);
         }
 
         List<T> _cachedElements;
@@ -54,6 +49,8 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(SettingUpElement != null);
             Setup(SettingUpElement);
             Refresh(SettingUpElement);
+            if (ReverseBinding != null)
+                ReverseBinding.Attach(SettingUpElement);
             return SettingUpElement;
         }
 
@@ -76,13 +73,15 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void Cleanup(UIElement element)
         {
             var e = (T)element;
+            if (ReverseBinding != null)
+                ReverseBinding.Detach(e);
             Cleanup(e);
             CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool ShouldRefresh(bool isReload, UIElement element)
+        internal sealed override bool ShouldRefresh(UIElement element)
         {
-            return isReload || Input == null ? true : Input.ShouldRefresh((T)element);
+            return _reverseBinding == null;
         }
     }
 }
