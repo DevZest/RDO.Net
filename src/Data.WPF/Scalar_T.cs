@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace DevZest.Data.Windows
@@ -10,29 +11,22 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public Scalar(ICommand command)
-        {
-            if (command == null)
-                throw new ArgumentNullException(nameof(command));
-            _command = command;
-        }
-
-        private readonly ICommand _command;
-        public ICommand Command
-        {
-            get { return _command; }
-        }
+        public ICommand Command { get; set; }
 
         private T _value;
         public T Value
         {
             get { return _value; }
-            set
-            {
-                _value = value;
-                if (_command != null && _command.CanExecute(null))
-                    _command.Execute(null);
-            }
+        }
+
+        public bool SetValue(T value)
+        {
+            if (EqualityComparer<T>.Default.Equals(_value, value))
+                return false;
+            _value = value;
+            if (Command != null && Command.CanExecute(null))
+                Command.Execute(null);
+            return true;
         }
     }
 }

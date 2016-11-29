@@ -20,52 +20,42 @@ namespace DevZest.Data.Windows
         }
 
         private Trigger<T> _flushTrigger;
-        private Trigger<T> _flushErrorTrigger;
         private IScalarSet _scalars = ScalarSet.Empty;
-        private List<Action<T>> _flushActions = new List<Action<T>>();
-        private Func<T, ReverseBindingError> _flushErrorFunc;
+        private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
+        private Func<T, ReverseBindingMessage> _getFlushingMessage;
 
         internal void Attach(T element)
         {
             _flushTrigger.Attach(element);
-            if (_flushErrorTrigger != null)
-                _flushErrorTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
             _flushTrigger.Detach(element);
-            if (_flushErrorTrigger != null)
-                _flushErrorTrigger.Detach(element);
         }
 
         internal override IReadOnlyList<object> GetErrors()
         {
-            return ValidationManager.GetErrors(this);
+            return ValidationManager.GetMessages(this);
         }
 
-        public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> dataGetter)
+        public ScalarReverseBinding<T> ProvideFlushingMessage(Func<T, ReverseBindingMessage> getFlushingMessage)
         {
-            if (scalar == null)
-                throw new ArgumentNullException(nameof(scalar));
-            if (dataGetter == null)
-                throw new ArgumentNullException(nameof(dataGetter));
-
             VerifyNotSealed();
-            _scalars = _scalars.Merge(scalar);
-            _flushActions.Add((element) => scalar.Value = dataGetter(element));
+            _getFlushingMessage = getFlushingMessage;
             return this;
         }
 
-        public ScalarReverseBinding<T> FlushError(Func<T, ReverseBindingError> flushErrorFunc, Trigger<T> flushErrorTrigger = null)
+        public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
+            if (scalar == null)
+                throw new ArgumentNullException(nameof(scalar));
+            if (getValue == null)
+                throw new ArgumentNullException(nameof(getValue));
+
             VerifyNotSealed();
-            _flushErrorFunc = flushErrorFunc;
-            if (flushErrorTrigger != null)
-            {
-                flushErrorTrigger.Initialize(this.FlushError);
-                _flushErrorTrigger = flushErrorTrigger;
-            }
+            _scalars = _scalars.Merge(scalar);
+            _flushFuncs.Add((element) => scalar.SetValue(getValue(element)));
             return this;
         }
 
@@ -74,29 +64,27 @@ namespace DevZest.Data.Windows
             get { return _scalars; }
         }
 
-        private ReverseBindingError GetError(T element)
+        private ReverseBindingMessage GetFlushingMessage(T element)
         {
             Debug.Assert(Binding != null && element.GetBinding() == Binding);
-            return _flushErrorFunc == null ? ReverseBindingError.Empty : _flushErrorFunc(element);
+            return _getFlushingMessage == null ? ReverseBindingMessage.Empty : _getFlushingMessage(element);
         }
+
+        internal bool IsDirty { get; private set; }
 
         internal void Flush(T element)
         {
-            var error = GetError(element);
-            var flushingErrorChanged = ValidationManager.UpdateFlushingError(this, error);
-            if (error.IsEmpty)
+            var message = GetFlushingMessage(element);
+            var flushingErrorChanged = ValidationManager.UpdateFlushingMessage(this, message);
+            if (message.IsEmpty || message.Severity == ValidationSeverity.Warning)
             {
-                foreach (var flushAction in _flushActions)
-                    flushAction(element);
+                foreach (var flush in _flushFuncs)
+                {
+                    var flushed = flush(element);
+                    if (flushed)
+                        IsDirty = true;
+                }
             }
-            if (flushingErrorChanged)
-                OnErrorsChanged();
-        }
-
-        private void FlushError(T element)
-        {
-            var error = GetError(element);
-            var flushingErrorChanged = ValidationManager.UpdateFlushingError(this, error);
             if (flushingErrorChanged)
                 OnErrorsChanged();
         }

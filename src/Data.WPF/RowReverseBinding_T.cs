@@ -21,23 +21,18 @@ namespace DevZest.Data.Windows
         }
 
         private Trigger<T> _flushTrigger;
-        private Trigger<T> _flushErrorTrigger;
         private IColumnSet _columns = ColumnSet.Empty;
-        private List<Action<RowPresenter, T>> _flushActions = new List<Action<RowPresenter, T>>();
-        private Func<T, ReverseBindingError> _flushErrorFunc;
+        private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
+        private Func<T, ReverseBindingMessage> _getFlushingMessage;
 
         internal void Attach(T element)
         {
             _flushTrigger.Attach(element);
-            if (_flushErrorTrigger != null)
-                _flushErrorTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
             _flushTrigger.Detach(element);
-            if (_flushErrorTrigger != null)
-                _flushErrorTrigger.Detach(element);
         }
 
         internal override IReadOnlyList<object> GetErrors()
@@ -54,19 +49,20 @@ namespace DevZest.Data.Windows
 
             VerifyNotSealed();
             _columns = _columns.Merge(column);
-            _flushActions.Add((rowPresenter, element) => rowPresenter.EditValue(column, dataGetter(element)));
+            _flushFuncs.Add((rowPresenter, element) => {
+                var value = dataGetter(element);
+                if (column.AreEqual(rowPresenter.GetValue(column), value))
+                    return false;
+                rowPresenter.EditValue(column, dataGetter(element));
+                return true;
+                });
             return this;
         }
 
-        public RowReverseBinding<T> FlushError(Func<T, ReverseBindingError> flushErrorFunc, Trigger<T> flushErrorTrigger = null)
+        public RowReverseBinding<T> ProvideFlushingMessage(Func<T, ReverseBindingMessage> getFlushingMessage)
         {
             VerifyNotSealed();
-            _flushErrorFunc = flushErrorFunc;
-            if (flushErrorTrigger != null)
-            {
-                flushErrorTrigger.Initialize(this.FlushError);
-                _flushErrorTrigger = flushErrorTrigger;
-            }
+            _getFlushingMessage = getFlushingMessage;
             return this;
         }
 
@@ -75,32 +71,30 @@ namespace DevZest.Data.Windows
             get { return _columns; }
         }
 
-        private ReverseBindingError GetError(T element)
+        private ReverseBindingMessage GetFlushMessage(T element)
         {
             Debug.Assert(Binding != null && element.GetBinding() == Binding);
             element.GetRowPresenter().VerifyIsCurrent();
-            return _flushErrorFunc == null ? ReverseBindingError.Empty : _flushErrorFunc(element);
+            return _getFlushingMessage == null ? ReverseBindingMessage.Empty : _getFlushingMessage(element);
         }
+
+        internal bool IsDirty { get; private set; }
 
         internal void Flush(T element)
         {
-            var error = GetError(element);
-            bool flushingErrorChanged = ValidationManager.UpdateFlushingError(this, error);
-            if (error.IsEmpty)
+            var message = GetFlushMessage(element);
+            bool flushingMessageChanged = ValidationManager.UpdateFlushingMessage(this, message);
+            if (message.IsEmpty || message.Severity == ValidationSeverity.Warning)
             {
                 var rowPresenter = element.GetRowPresenter();
-                foreach (var flushAction in _flushActions)
-                    flushAction(rowPresenter, element);
+                foreach (var flush in _flushFuncs)
+                {
+                    var flushed = flush(rowPresenter, element);
+                    if (flushed)
+                        IsDirty = true;
+                }
             }
-            if (flushingErrorChanged)
-                OnErrorsChanged();
-        }
-
-        private void FlushError(T element)
-        {
-            var error = GetError(element);
-            var flushingErrorChanged = ValidationManager.UpdateFlushingError(this, error);
-            if (flushingErrorChanged)
+            if (flushingMessageChanged)
                 OnErrorsChanged();
         }
     }
