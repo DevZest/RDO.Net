@@ -50,7 +50,7 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
-        protected override bool AreEqual(TimeSpan? x, TimeSpan? y)
+        public override bool AreEqual(TimeSpan? x, TimeSpan? y)
         {
             return x == y;
         }

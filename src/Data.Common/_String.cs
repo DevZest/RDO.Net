@@ -16,7 +16,7 @@ namespace DevZest.Data
         {
         }
 
-        protected override bool AreEqual(string x, string y)
+        public override bool AreEqual(string x, string y)
         {
             return x == y;
         }

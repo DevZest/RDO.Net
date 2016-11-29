@@ -51,7 +51,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        protected override bool AreEqual(short? x, short? y)
+        public override bool AreEqual(short? x, short? y)
         {
             return x == y;
         }

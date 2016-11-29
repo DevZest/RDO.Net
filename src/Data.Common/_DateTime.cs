@@ -42,7 +42,7 @@ namespace DevZest.Data
             return new CastToStringExpression(this).MakeColumn<_String>();
         }
 
-        protected override bool AreEqual(DateTime? x, DateTime? y)
+        public override bool AreEqual(DateTime? x, DateTime? y)
         {
             return x == y;
         }

@@ -8,7 +8,7 @@ namespace DevZest.Data
     /// <typeparam name="T">The type of the enumerations value.</typeparam>
     public abstract class ByteEnum<T> : Column<T>, IColumn<DbReader, T>
     {
-        protected sealed override bool AreEqual(T x, T y)
+        public sealed override bool AreEqual(T x, T y)
         {
             return ConvertToByte(x) == ConvertToByte(y);
         }

@@ -12,7 +12,7 @@ namespace DevZest.Data
             return null;
         }
 
-        protected override bool AreEqual(DataSet<T> x, DataSet<T> y)
+        public override bool AreEqual(DataSet<T> x, DataSet<T> y)
         {
             return x == y;
         }

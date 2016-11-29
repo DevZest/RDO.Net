@@ -81,7 +81,7 @@ namespace DevZest.Data.SqlServer
             return new FromStringCast(x).MakeColumn<_SqlXml>();
         }
 
-        protected override bool AreEqual(SqlXml x, SqlXml y)
+        public override bool AreEqual(SqlXml x, SqlXml y)
         {
             return x == y;
         }

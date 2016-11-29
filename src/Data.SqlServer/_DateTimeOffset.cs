@@ -50,7 +50,7 @@ namespace DevZest.Data.SqlServer
             return x.CastToString();
         }
 
-        protected override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
+        public override bool AreEqual(DateTimeOffset? x, DateTimeOffset? y)
         {
             return x == y;
         }

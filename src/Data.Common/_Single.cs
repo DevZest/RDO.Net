@@ -52,7 +52,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        protected override bool AreEqual(float? x, float? y)
+        public override bool AreEqual(float? x, float? y)
         {
             return x == y;
         }

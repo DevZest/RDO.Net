@@ -83,7 +83,7 @@ namespace DevZest.Data
             return new FromStringExpression(x).MakeColumn<_Binary>();
         }
 
-        protected override bool AreEqual(Binary x, Binary y)
+        public override bool AreEqual(Binary x, Binary y)
         {
             return x.Equals(y);
         }

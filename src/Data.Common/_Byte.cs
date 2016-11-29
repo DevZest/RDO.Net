@@ -57,7 +57,7 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
-        protected override bool AreEqual(byte? x, byte? y)
+        public override bool AreEqual(byte? x, byte? y)
         {
             return x == y;
         }

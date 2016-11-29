@@ -51,7 +51,7 @@ namespace DevZest.Data
             return x.CastToString();
         }
 
-        protected override bool AreEqual(decimal? x, decimal? y)
+        public override bool AreEqual(decimal? x, decimal? y)
         {
             return x == y;
         }

@@ -548,7 +548,7 @@ namespace DevZest.Data
             this[dataRow] = (T)value;
         }
 
-        protected abstract bool AreEqual(T x, T y);
+        public abstract bool AreEqual(T x, T y);
 
         internal sealed override void CopyValue(DataRow sourceDataRow, Column targetColumn, DataRow targetDataRow)
         {

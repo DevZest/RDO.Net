@@ -20,7 +20,7 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
-        protected override bool AreEqual(bool? x, bool? y)
+        public override bool AreEqual(bool? x, bool? y)
         {
             return x == y;
         }

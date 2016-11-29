@@ -56,7 +56,7 @@ namespace DevZest.Data
             return Param(value, this);
         }
 
-        protected override bool AreEqual(char? x, char? y)
+        public override bool AreEqual(char? x, char? y)
         {
             return x == y;
         }
