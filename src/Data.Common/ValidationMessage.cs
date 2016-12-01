@@ -2,15 +2,15 @@
 
 namespace DevZest.Data
 {
-    public class ValidationMessage
+    public struct ValidationMessage<T>
     {
-        public ValidationMessage(string id, ValidationSeverity severity, IColumnSet columns, string description)
+        public ValidationMessage(string id, ValidationSeverity severity, string description, T source)
         {
             Check.NotEmpty(description, nameof(description));
 
             Id = id;
             Severity = severity;
-            Columns = columns ?? ColumnSet.Empty;
+            Source = source;
             Description = description;
         }
 
@@ -20,7 +20,7 @@ namespace DevZest.Data
 
         public readonly string Description;
 
-        public readonly IColumnSet Columns;
+        public readonly T Source;
 
         public override string ToString()
         {

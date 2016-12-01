@@ -29,8 +29,12 @@ namespace DevZest.Data
                 var messageId = "MessageId";
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ValidationMessage[] { new ValidationMessage(messageId, ValidationSeverity.Error, dataSet._.Id, "This is an error message") }),
-                    new ValidationEntry(dataSet[1], new ValidationMessage[] { new ValidationMessage(messageId, ValidationSeverity.Warning,  null, "This is a warning message") })
+                    new ValidationEntry(dataSet[0], new ValidationMessage<IColumnSet>[]
+                        { new ValidationMessage<IColumnSet>(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id) }),
+                    new ValidationEntry(dataSet[1], new ValidationMessage<IColumnSet>[]
+                        { new ValidationMessage<IColumnSet>(messageId, ValidationSeverity.Warning, "This is a warning message", ColumnSet.Empty) }),
+                    new ValidationEntry(dataSet[2], new ValidationMessage<IColumnSet>[]
+                        { new ValidationMessage<IColumnSet>(messageId, ValidationSeverity.Warning, "This is a warning message", null) })
                 });
                 var expectedJson =
 @"[
@@ -40,8 +44,8 @@ namespace DevZest.Data
          {
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
-            ""Columns"" : ""Id"",
-            ""Description"" : ""This is an error message""
+            ""Description"" : ""This is an error message"",
+            ""Source"" : ""Id""
          }
       ]
    },
@@ -51,8 +55,19 @@ namespace DevZest.Data
          {
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
-            ""Columns"" : """",
-            ""Description"" : ""This is a warning message""
+            ""Description"" : ""This is a warning message"",
+            ""Source"" : """"
+         }
+      ]
+   },
+   {
+      ""DataRow"" : ""/[2]"",
+      ""Messages"" : [
+         {
+            ""Id"" : ""MessageId"",
+            ""Severity"" : ""Warning"",
+            ""Description"" : ""This is a warning message"",
+            ""Source"" : null
          }
       ]
    }
@@ -80,8 +95,8 @@ namespace DevZest.Data
          {
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
-            ""Columns"" : ""Id"",
-            ""Description"" : ""This is an error message""
+            ""Description"" : ""This is an error message"",
+            ""Source"" : ""Id""
          }
       ]
    },
@@ -91,14 +106,25 @@ namespace DevZest.Data
          {
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
-            ""Columns"" : """",
-            ""Description"" : ""This is a warning message""
+            ""Description"" : ""This is a warning message"",
+            ""Source"" : """"
+         }
+      ]
+   },
+   {
+      ""DataRow"" : ""/[2]"",
+      ""Messages"" : [
+         {
+            ""Id"" : ""MessageId"",
+            ""Severity"" : ""Warning"",
+            ""Description"" : ""This is a warning message"",
+            ""Source"" : null
          }
       ]
    }
 ]";
                 var result = ValidationResult.ParseJson(dataSet, json);
-                Assert.AreEqual(2, result.Entries.Count);
+                Assert.AreEqual(3, result.Entries.Count);
             }
         }
     }

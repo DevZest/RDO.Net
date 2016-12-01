@@ -354,15 +354,18 @@ namespace DevZest.Data
 
                 if (result == ValidationMessageCollection.Empty)
                     result = new ValidationMessageCollection();
-                result.Add(validationMessage);
+                result.Add(validationMessage.GetValueOrDefault());
             }
 
             return result;
         }
 
-        private static ValidationMessage Validate(IValidator validator, DataRow dataRow)
+        private static ValidationMessage<IColumnSet>? Validate(IValidator validator, DataRow dataRow)
         {
-            return validator.ValidCondition[dataRow] == true ? null : new ValidationMessage(validator.MessageId, validator.Severity, validator.Columns, validator.Message[dataRow]);
+            if (validator.ValidCondition[dataRow] == true)
+                return null;
+            else
+                return new ValidationMessage<IColumnSet>(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
         }
 
         public ModelKey PrimaryKey

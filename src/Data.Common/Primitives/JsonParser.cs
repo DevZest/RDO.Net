@@ -55,6 +55,22 @@ namespace DevZest.Data.Primitives
             ExpectToken(JsonTokenKind.Colon);
         }
 
+        public string ExpectNameNullableStringPair(string objectName, bool expectComma)
+        {
+            string result;
+            ExpectObjectName(objectName);
+            if (PeekToken().Kind == JsonTokenKind.Null)
+            {
+                ConsumeToken();
+                result = null;
+            }
+            else
+                result = ExpectToken(JsonTokenKind.String).Text;
+            if (expectComma)
+                ExpectToken(JsonTokenKind.Comma);
+            return result;
+        }
+
         public string ExpectNameStringPair(string objectName, bool expectComma)
         {
             ExpectObjectName(objectName);

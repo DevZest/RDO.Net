@@ -44,11 +44,6 @@ namespace DevZest.Data
             {
                 get { return _owner.GetMessage(_column); }
             }
-
-            public ValidationMessage Validate(DataRow dataRow)
-            {
-                return ValidCondition[dataRow] == true ? null : new ValidationMessage(MessageId, Severity, Columns, Message[dataRow]);
-            }
         }
 
         public IValidator GetValidator(Column column)
