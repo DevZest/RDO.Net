@@ -22,7 +22,6 @@ namespace DevZest.Data.Windows
         private Trigger<T> _flushTrigger;
         private IScalarSet _scalars = ScalarSet.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
-        private Func<T, ReverseBindingMessage> _getFlushingMessage;
 
         internal void Attach(T element)
         {
@@ -39,11 +38,26 @@ namespace DevZest.Data.Windows
             return ValidationManager.GetMessages(this);
         }
 
-        public ScalarReverseBinding<T> ProvideFlushingMessage(Func<T, ReverseBindingMessage> getFlushingMessage)
+        private Func<T, ReverseBindingMessage> _preValidator;
+        public Func<T, ReverseBindingMessage> PreValidtor
         {
-            VerifyNotSealed();
-            _getFlushingMessage = getFlushingMessage;
-            return this;
+            get { return _preValidator; }
+            set
+            {
+                VerifyNotSealed();
+                _preValidator = value;
+            }
+        }
+
+        private Func<ReverseBindingMessage> _postValidator;
+        public Func<ReverseBindingMessage> PostValidator
+        {
+            get { return _postValidator; }
+            set
+            {
+                VerifyNotSealed();
+                _postValidator = value;
+            }
         }
 
         public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
@@ -67,7 +81,7 @@ namespace DevZest.Data.Windows
         private ReverseBindingMessage GetFlushingMessage(T element)
         {
             Debug.Assert(Binding != null && element.GetBinding() == Binding);
-            return _getFlushingMessage == null ? ReverseBindingMessage.Empty : _getFlushingMessage(element);
+            return _preValidator == null ? ReverseBindingMessage.Empty : _preValidator(element);
         }
 
         internal bool IsDirty { get; private set; }

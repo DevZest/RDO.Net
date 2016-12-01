@@ -23,7 +23,6 @@ namespace DevZest.Data.Windows
         private Trigger<T> _flushTrigger;
         private IColumnSet _columns = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
-        private Func<T, ReverseBindingMessage> _getFlushingMessage;
 
         internal void Attach(T element)
         {
@@ -59,11 +58,26 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public RowReverseBinding<T> ProvideFlushingMessage(Func<T, ReverseBindingMessage> getFlushingMessage)
+        private Func<T, ReverseBindingMessage> _preValidator;
+        public Func<T, ReverseBindingMessage> PreValidator
         {
-            VerifyNotSealed();
-            _getFlushingMessage = getFlushingMessage;
-            return this;
+            get { return _preValidator; }
+            set
+            {
+                VerifyNotSealed();
+                _preValidator = value;
+            }
+        }
+
+        private Func<RowPresenter, ReverseBindingMessage> _postValidator;
+        public Func<RowPresenter, ReverseBindingMessage> PostValidator
+        {
+            get { return _postValidator; }
+            set
+            {
+                VerifyNotSealed();
+                _postValidator = value;
+            }
         }
 
         internal override IColumnSet Columns
@@ -75,7 +89,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(Binding != null && element.GetBinding() == Binding);
             element.GetRowPresenter().VerifyIsCurrent();
-            return _getFlushingMessage == null ? ReverseBindingMessage.Empty : _getFlushingMessage(element);
+            return _preValidator == null ? ReverseBindingMessage.Empty : _preValidator(element);
         }
 
         internal bool IsDirty { get; private set; }
