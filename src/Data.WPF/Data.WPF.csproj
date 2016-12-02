@@ -50,12 +50,11 @@
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IScalarSet.cs" />
     <Compile Include="Primitives\ReverseBinding.cs" />
-    <Compile Include="Primitives\RowReverseBinding.cs" />
     <Compile Include="Primitives\Scalar.cs" />
-    <Compile Include="Primitives\ScalarReverseBinding.cs" />
     <Compile Include="RowReverseBinding_T.cs" />
     <Compile Include="ScalarReverseBinding_T.cs" />
-    <Compile Include="ReverseBindingMessage.cs" />
+    <Compile Include="Utilities\Singleton.cs" />
+    <Compile Include="ValidationMessage.cs" />
     <Compile Include="Primitives\ValidationListener.cs" />
     <Compile Include="Primitives\ValidationManager.cs" />
     <Compile Include="PropertyChangedTrigger.cs" />
@@ -102,7 +101,6 @@
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="ScalarSet.cs" />
-    <Compile Include="ScalarValidationMessage.cs" />
     <Compile Include="Scalar_T.cs" />
     <Compile Include="ScalarBinding_T.cs" />
     <Compile Include="TemplateBuilder.cs" />
@@ -144,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161129\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161201\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

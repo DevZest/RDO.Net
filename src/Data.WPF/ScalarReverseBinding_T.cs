@@ -1,12 +1,11 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarReverseBinding<T> : ScalarReverseBinding
+    public sealed class ScalarReverseBinding<T> : ReverseBinding<T>
         where T : UIElement, new()
     {
         internal static ScalarReverseBinding<T> Create<TData>(Trigger<T> flushTrigger, Scalar<TData> scalar, Func<T, TData> dataGetter)
@@ -15,49 +14,25 @@ namespace DevZest.Data.Windows
         }
 
         private ScalarReverseBinding(Trigger<T> flushTrigger)
+            : base(flushTrigger)
         {
-            _flushTrigger = flushTrigger;
         }
 
-        private Trigger<T> _flushTrigger;
         private IScalarSet _scalars = ScalarSet.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
+        private Func<ValidationMessage> _postValidator;
 
-        internal void Attach(T element)
+        public ScalarReverseBinding<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger = null)
         {
-            _flushTrigger.Attach(element);
+            SetPreValidator(preValidator, preValidatorTrigger);
+            return this;
         }
 
-        internal void Detach(T element)
+        public ScalarReverseBinding<T> WithPostValidator(Func<ValidationMessage> postValidator)
         {
-            _flushTrigger.Detach(element);
-        }
-
-        internal override IReadOnlyList<object> GetErrors()
-        {
-            return ValidationManager.GetMessages(this);
-        }
-
-        private Func<T, ReverseBindingMessage> _preValidator;
-        public Func<T, ReverseBindingMessage> PreValidtor
-        {
-            get { return _preValidator; }
-            set
-            {
-                VerifyNotSealed();
-                _preValidator = value;
-            }
-        }
-
-        private Func<ReverseBindingMessage> _postValidator;
-        public Func<ReverseBindingMessage> PostValidator
-        {
-            get { return _postValidator; }
-            set
-            {
-                VerifyNotSealed();
-                _postValidator = value;
-            }
+            VerifyNotSealed();
+            _postValidator = postValidator;
+            return this;
         }
 
         public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
@@ -73,34 +48,36 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        internal override IScalarSet Scalars
+        internal IScalarSet Scalars
         {
             get { return _scalars; }
         }
 
-        private ReverseBindingMessage GetFlushingMessage(T element)
+        internal override bool DoFlush(T element)
         {
-            Debug.Assert(Binding != null && element.GetBinding() == Binding);
-            return _preValidator == null ? ReverseBindingMessage.Empty : _preValidator(element);
+            bool result = false;
+            foreach (var flush in _flushFuncs)
+            {
+                var flushed = flush(element);
+                if (flushed)
+                    result = true;
+            }
+            return result;
         }
 
-        internal bool IsDirty { get; private set; }
-
-        internal void Flush(T element)
+        internal override void RefreshValidationMessages()
         {
-            var message = GetFlushingMessage(element);
-            var flushingErrorChanged = ValidationManager.UpdateFlushingMessage(this, message);
-            if (message.IsEmpty || message.Severity == ValidationSeverity.Warning)
-            {
-                foreach (var flush in _flushFuncs)
-                {
-                    var flushed = flush(element);
-                    if (flushed)
-                        IsDirty = true;
-                }
-            }
-            if (flushingErrorChanged)
-                OnErrorsChanged();
+            ValidationManager.RefreshScalarValidationMessages();
+        }
+
+        internal override IEnumerable<ValidationMessage> GetValidationMessages(ValidationSeverity severity)
+        {
+            return ValidationManager.GetValidationMessages(this, severity);
+        }
+
+        internal override IEnumerable<ValidationMessage> GetMergedValidationMessages(ValidationSeverity severity)
+        {
+            return ValidationManager.GetMergedValidationMessages(this, severity);
         }
     }
 }

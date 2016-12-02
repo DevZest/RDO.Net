@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowReverseBinding<T> : RowReverseBinding
+    public sealed class RowReverseBinding<T> : ReverseBinding<T>
         where T : UIElement, new()
     {
         internal static RowReverseBinding<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> dataGetter)
@@ -16,27 +16,25 @@ namespace DevZest.Data.Windows
             
 
         private RowReverseBinding(Trigger<T> flushTrigger)
+            : base(flushTrigger)
         {
-            _flushTrigger = flushTrigger;
         }
 
-        private Trigger<T> _flushTrigger;
         private IColumnSet _columns = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
+        private Func<RowPresenter, ValidationMessage> _postValidator;
 
-        internal void Attach(T element)
+        public RowReverseBinding<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger)
         {
-            _flushTrigger.Attach(element);
+            SetPreValidator(preValidator, preValidatorTrigger);
+            return this;
         }
 
-        internal void Detach(T element)
+        public RowReverseBinding<T> WithPostValidator(Func<RowPresenter, ValidationMessage> postValidator)
         {
-            _flushTrigger.Detach(element);
-        }
-
-        internal override IReadOnlyList<object> GetErrors()
-        {
-            return ValidationManager.GetErrors(this);
+            VerifyNotSealed();
+            _postValidator = postValidator;
+            return this;
         }
 
         public RowReverseBinding<T> Bind<TData>(Column<TData> column, Func<T, TData> dataGetter)
@@ -48,68 +46,48 @@ namespace DevZest.Data.Windows
 
             VerifyNotSealed();
             _columns = _columns.Merge(column);
-            _flushFuncs.Add((rowPresenter, element) => {
+            _flushFuncs.Add((rowPresenter, element) =>
+            {
                 var value = dataGetter(element);
                 if (column.AreEqual(rowPresenter.GetValue(column), value))
                     return false;
                 rowPresenter.EditValue(column, dataGetter(element));
                 return true;
-                });
+            });
             return this;
         }
 
-        private Func<T, ReverseBindingMessage> _preValidator;
-        public Func<T, ReverseBindingMessage> PreValidator
-        {
-            get { return _preValidator; }
-            set
-            {
-                VerifyNotSealed();
-                _preValidator = value;
-            }
-        }
-
-        private Func<RowPresenter, ReverseBindingMessage> _postValidator;
-        public Func<RowPresenter, ReverseBindingMessage> PostValidator
-        {
-            get { return _postValidator; }
-            set
-            {
-                VerifyNotSealed();
-                _postValidator = value;
-            }
-        }
-
-        internal override IColumnSet Columns
+        internal IColumnSet Columns
         {
             get { return _columns; }
         }
 
-        private ReverseBindingMessage GetFlushMessage(T element)
+        internal override bool DoFlush(T element)
         {
-            Debug.Assert(Binding != null && element.GetBinding() == Binding);
-            element.GetRowPresenter().VerifyIsCurrent();
-            return _preValidator == null ? ReverseBindingMessage.Empty : _preValidator(element);
+            bool result = false;
+            var rowPresenter = element.GetRowPresenter();
+            foreach (var flush in _flushFuncs)
+            {
+                var flushed = flush(rowPresenter, element);
+                if (flushed)
+                    result = true;
+            }
+            return result;
         }
 
-        internal bool IsDirty { get; private set; }
-
-        internal void Flush(T element)
+        internal override void RefreshValidationMessages()
         {
-            var message = GetFlushMessage(element);
-            bool flushingMessageChanged = ValidationManager.UpdateFlushingMessage(this, message);
-            if (message.IsEmpty || message.Severity == ValidationSeverity.Warning)
-            {
-                var rowPresenter = element.GetRowPresenter();
-                foreach (var flush in _flushFuncs)
-                {
-                    var flushed = flush(rowPresenter, element);
-                    if (flushed)
-                        IsDirty = true;
-                }
-            }
-            if (flushingMessageChanged)
-                OnErrorsChanged();
+            ValidationManager.RefreshCurrentRowValidationMessages();
+        }
+
+        internal override IEnumerable<ValidationMessage> GetValidationMessages(ValidationSeverity severity)
+        {
+            return ValidationManager.GetValidationMessages(this, severity);
+        }
+
+        internal override IEnumerable<ValidationMessage> GetMergedValidationMessages(ValidationSeverity severity)
+        {
+            return ValidationManager.GetMergedValidationMessages(this, severity);
         }
     }
 }
