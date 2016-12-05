@@ -58,10 +58,10 @@ namespace DevZest.Data.Windows
                 OnCleanup(element, rowPresenter);
         }
 
-        public new RowReverseBinding<T> ReverseBinding
+        public new RowInput<T> Input
         {
-            get { return base.ReverseBinding; }
-            set { base.ReverseBinding = value; }
+            get { return base.Input; }
+            set { base.Input = value; }
         }
     }
 }

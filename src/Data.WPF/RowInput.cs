@@ -6,16 +6,16 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowReverseBinding<T> : ReverseBinding<T>
+    public sealed class RowInput<T> : Input<T>
         where T : UIElement, new()
     {
-        internal static RowReverseBinding<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> dataGetter)
+        internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
         {
-            return new RowReverseBinding<T>(flushTrigger).Bind(column, dataGetter);
+            return new RowInput<T>(flushTrigger).Bind(column, getValue);
         }
             
 
-        private RowReverseBinding(Trigger<T> flushTrigger)
+        private RowInput(Trigger<T> flushTrigger)
             : base(flushTrigger)
         {
         }
@@ -24,34 +24,34 @@ namespace DevZest.Data.Windows
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
         private Func<RowPresenter, ValidationMessage> _postValidator;
 
-        public RowReverseBinding<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger)
+        public RowInput<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger)
         {
             SetPreValidator(preValidator, preValidatorTrigger);
             return this;
         }
 
-        public RowReverseBinding<T> WithPostValidator(Func<RowPresenter, ValidationMessage> postValidator)
+        public RowInput<T> WithPostValidator(Func<RowPresenter, ValidationMessage> postValidator)
         {
             VerifyNotSealed();
             _postValidator = postValidator;
             return this;
         }
 
-        public RowReverseBinding<T> Bind<TData>(Column<TData> column, Func<T, TData> dataGetter)
+        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
-            if (dataGetter == null)
-                throw new ArgumentNullException(nameof(dataGetter));
+            if (getValue == null)
+                throw new ArgumentNullException(nameof(getValue));
 
             VerifyNotSealed();
             _columns = _columns.Merge(column);
             _flushFuncs.Add((rowPresenter, element) =>
             {
-                var value = dataGetter(element);
+                var value = getValue(element);
                 if (column.AreEqual(rowPresenter.GetValue(column), value))
                     return false;
-                rowPresenter.EditValue(column, dataGetter(element));
+                rowPresenter.EditValue(column, getValue(element));
                 return true;
             });
             return this;

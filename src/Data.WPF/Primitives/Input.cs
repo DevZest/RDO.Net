@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class ReverseBinding<T> : INotifyDataErrorInfo
+    public abstract class Input<T> : INotifyDataErrorInfo
         where T : UIElement, new()
     {
         #region INotifyDataErrorInfo
@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        internal ReverseBinding(Trigger<T> flushTrigger)
+        internal Input(Trigger<T> flushTrigger)
         {
             _flushTrigger = flushTrigger;
         }
@@ -53,7 +53,7 @@ namespace DevZest.Data.Windows.Primitives
         private Trigger<T> _preValidtorTrigger;
         private Func<T, ValidationMessage> _preValidator;
         private ValidationMessage _preValidatorMessage;
-        private ValidationMessage _postValidatorMessage;
+        private ValidationMessage _asyncValidatorMessage;
 
         private int RefreshDataErrorInfo()
         {
@@ -94,8 +94,8 @@ namespace DevZest.Data.Windows.Primitives
                 result = AddValidationErrors();
             else
                 AddValidationWarnings();
-            if (_postValidatorMessage.IsSeverity(severity))
-                AddDataErrorInfo(_postValidatorMessage);
+            if (_asyncValidatorMessage.IsSeverity(severity))
+                AddDataErrorInfo(_asyncValidatorMessage);
             foreach (var message in GetMergedValidationMessages(severity))
                 AddDataErrorInfo(message);
 
@@ -194,7 +194,7 @@ namespace DevZest.Data.Windows.Primitives
                 isFlushed = DoFlush(element);
                 if (isFlushed)
                 {
-                    _postValidatorMessage = ValidationMessage.Empty;
+                    _asyncValidatorMessage = ValidationMessage.Empty;
                     RefreshValidationMessages();
                 }
             }

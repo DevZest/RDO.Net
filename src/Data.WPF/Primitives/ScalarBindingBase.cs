@@ -8,24 +8,24 @@ namespace DevZest.Data.Windows.Primitives
     public abstract class ScalarBindingBase<T> : ScalarBinding
         where T : UIElement, new()
     {
-        private ScalarReverseBinding<T> _reverseBinding;
-        public ScalarReverseBinding<T> ReverseBinding
+        private ScalarInput<T> _input;
+        public ScalarInput<T> Input
         {
-            get { return _reverseBinding; }
+            get { return _input; }
             protected set
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
                 VerifyNotSealed();
                 value.Seal(this);
-                _reverseBinding = value;
+                _input = value;
             }
         }
 
-        internal sealed override void FlushReverseBinding(UIElement element)
+        internal sealed override void FlushInput(UIElement element)
         {
-            if (ReverseBinding != null)
-                ReverseBinding.Flush((T)element);
+            if (Input != null)
+                Input.Flush((T)element);
         }
 
         List<T> _cachedElements;
@@ -49,8 +49,8 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(SettingUpElement != null);
             Setup(SettingUpElement);
             Refresh(SettingUpElement);
-            if (ReverseBinding != null)
-                ReverseBinding.Attach(SettingUpElement);
+            if (Input != null)
+                Input.Attach(SettingUpElement);
             return SettingUpElement;
         }
 
@@ -73,15 +73,15 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void Cleanup(UIElement element)
         {
             var e = (T)element;
-            if (ReverseBinding != null)
-                ReverseBinding.Detach(e);
+            if (Input != null)
+                Input.Detach(e);
             Cleanup(e);
             CachedList.Recycle(ref _cachedElements, e);
         }
 
         internal sealed override bool ShouldRefresh(UIElement element)
         {
-            return _reverseBinding == null;
+            return _input == null;
         }
     }
 }

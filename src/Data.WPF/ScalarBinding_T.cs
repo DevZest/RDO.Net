@@ -58,10 +58,10 @@ namespace DevZest.Data.Windows
                 OnCleanup(element);
         }
 
-        public new ScalarReverseBinding<T> ReverseBinding
+        public new ScalarInput<T> Input
         {
-            get { return base.ReverseBinding; }
-            set { base.ReverseBinding = value; }
+            get { return base.Input; }
+            set { base.Input = value; }
         }
     }
 }

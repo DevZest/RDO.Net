@@ -66,25 +66,25 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
-        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(RowReverseBinding<T> reverseBinding, ValidationSeverity severity)
+        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(RowInput<T> input, ValidationSeverity severity)
             where T : UIElement, new()
         {
             throw new NotImplementedException();
         }
 
-        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(ScalarReverseBinding<T> reverseBinding, ValidationSeverity severity)
+        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(ScalarInput<T> input, ValidationSeverity severity)
             where T : UIElement, new()
         {
             throw new NotImplementedException();
         }
 
-        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(RowReverseBinding<T> reverseBinding, ValidationSeverity severity)
+        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(RowInput<T> input, ValidationSeverity severity)
             where T : UIElement, new()
         {
             throw new NotImplementedException();
         }
 
-        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(ScalarReverseBinding<T> reverseBinding, ValidationSeverity severity)
+        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(ScalarInput<T> input, ValidationSeverity severity)
             where T : UIElement, new()
         {
             throw new NotImplementedException();

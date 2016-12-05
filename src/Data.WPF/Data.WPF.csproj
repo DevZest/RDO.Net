@@ -49,10 +49,10 @@
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IScalarSet.cs" />
-    <Compile Include="Primitives\ReverseBinding.cs" />
+    <Compile Include="Primitives\Input.cs" />
     <Compile Include="Primitives\Scalar.cs" />
-    <Compile Include="RowReverseBinding_T.cs" />
-    <Compile Include="ScalarReverseBinding_T.cs" />
+    <Compile Include="RowInput.cs" />
+    <Compile Include="ScalarInput.cs" />
     <Compile Include="Utilities\Singleton.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="Primitives\ValidationListener.cs" />

@@ -29,26 +29,26 @@ namespace DevZest.Data.Windows.Primitives
             _executeAction(element);
         }
 
-        public RowReverseBinding<T> Bind<TData>(Column<TData> column, Func<T, TData> dataGetter)
+        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
-            if (dataGetter == null)
-                throw new ArgumentNullException(nameof(dataGetter));
+            if (getValue == null)
+                throw new ArgumentNullException(nameof(getValue));
 
-            var result = RowReverseBinding<T>.Create(this, column, dataGetter);
+            var result = RowInput<T>.Create(this, column, getValue);
             Initialize(result.Flush);
             return result;
         }
 
-        public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> dataGetter)
+        public ScalarInput<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
             if (scalar == null)
                 throw new ArgumentNullException(nameof(scalar));
-            if (dataGetter == null)
-                throw new ArgumentNullException(nameof(dataGetter));
+            if (getValue == null)
+                throw new ArgumentNullException(nameof(getValue));
 
-            var result = ScalarReverseBinding<T>.Create(this, scalar, dataGetter);
+            var result = ScalarInput<T>.Create(this, scalar, getValue);
             Initialize(result.Flush);
             return result;
         }

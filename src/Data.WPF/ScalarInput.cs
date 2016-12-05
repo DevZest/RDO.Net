@@ -1,41 +1,42 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarReverseBinding<T> : ReverseBinding<T>
+    public sealed class ScalarInput<T> : Input<T>
         where T : UIElement, new()
     {
-        internal static ScalarReverseBinding<T> Create<TData>(Trigger<T> flushTrigger, Scalar<TData> scalar, Func<T, TData> dataGetter)
+        internal static ScalarInput<T> Create<TData>(Trigger<T> flushTrigger, Scalar<TData> scalar, Func<T, TData> getValue)
         {
-            return new ScalarReverseBinding<T>(flushTrigger).Bind(scalar, dataGetter);
+            return new ScalarInput<T>(flushTrigger).Bind(scalar, getValue);
         }
 
-        private ScalarReverseBinding(Trigger<T> flushTrigger)
+        private ScalarInput(Trigger<T> flushTrigger)
             : base(flushTrigger)
         {
         }
 
         private IScalarSet _scalars = ScalarSet.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
-        private Func<ValidationMessage> _postValidator;
+        private Func<Task<ValidationMessage>> _asyncValidator;
 
-        public ScalarReverseBinding<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger = null)
+        public ScalarInput<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger = null)
         {
             SetPreValidator(preValidator, preValidatorTrigger);
             return this;
         }
 
-        public ScalarReverseBinding<T> WithPostValidator(Func<ValidationMessage> postValidator)
+        public ScalarInput<T> WithAsyncValidator(Func<Task<ValidationMessage>> asyncValidator)
         {
             VerifyNotSealed();
-            _postValidator = postValidator;
+            _asyncValidator = asyncValidator;
             return this;
         }
 
-        public ScalarReverseBinding<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
+        public ScalarInput<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
             if (scalar == null)
                 throw new ArgumentNullException(nameof(scalar));
