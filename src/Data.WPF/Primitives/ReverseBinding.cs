@@ -55,7 +55,7 @@ namespace DevZest.Data.Windows.Primitives
         private ValidationMessage _preValidatorMessage;
         private ValidationMessage _postValidatorMessage;
 
-        internal int RefreshDataErrorInfo()
+        private int RefreshDataErrorInfo()
         {
             var wasEmpty = _dataErrorInfo.Count == 0;
 
