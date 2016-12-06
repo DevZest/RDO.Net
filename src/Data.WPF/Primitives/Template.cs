@@ -470,9 +470,6 @@ namespace DevZest.Data.Windows.Primitives
         [DefaultValue(ValidationSeverity.Error)]
         public ValidationSeverity ValiditySeverity { get; internal set; } = ValidationSeverity.Error;
 
-        [DefaultValue(ValidityLayer.Input)]
-        public ValidityLayer CurrentRowValidity { get; internal set; } = ValidityLayer.Input;
-
         [DefaultValue(100)]
         public int ValidationMaxEntries { get; internal set; } = 100;
     }

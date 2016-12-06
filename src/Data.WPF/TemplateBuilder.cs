@@ -143,13 +143,6 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        [DefaultValue(ValidityLayer.Input)]
-        public TemplateBuilder WithCurrentRowValidity(ValidityLayer value)
-        {
-            Template.CurrentRowValidity = value;
-            return this;
-        }
-
         [DefaultValue(100)]
         public TemplateBuilder WithValidationMaxEntries(int value)
         {
