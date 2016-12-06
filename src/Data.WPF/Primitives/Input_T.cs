@@ -63,7 +63,7 @@ namespace DevZest.Data.Windows.Primitives
                 _dataErrorInfo.Clear();
 
             var result = AddDataErrorInfo(ValidationSeverity.Error);
-            if (Template.ValiditySeverity == ValidationSeverity.Warning)
+            if (Template.ValidationVisibility == ValidationSeverity.Warning)
                 AddDataErrorInfo(ValidationSeverity.Warning);
 
             if (_dataErrorInfo.Count == 0)

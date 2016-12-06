@@ -137,9 +137,9 @@ namespace DevZest.Data.Windows
         }
 
         [DefaultValue(ValidationSeverity.Error)]
-        public TemplateBuilder WithValiditySeverity(ValidationSeverity value)
+        public TemplateBuilder WithValidationVisibility(ValidationSeverity value)
         {
-            Template.ValiditySeverity = value;
+            Template.ValidationVisibility = value;
             return this;
         }
 

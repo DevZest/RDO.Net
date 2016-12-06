@@ -468,7 +468,7 @@ namespace DevZest.Data.Windows.Primitives
         public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(ValidationSeverity.Error)]
-        public ValidationSeverity ValiditySeverity { get; internal set; } = ValidationSeverity.Error;
+        public ValidationSeverity ValidationVisibility { get; internal set; } = ValidationSeverity.Error;
 
         [DefaultValue(100)]
         public int ValidationMaxEntries { get; internal set; } = 100;
