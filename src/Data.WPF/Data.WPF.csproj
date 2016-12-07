@@ -48,6 +48,7 @@
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
+    <Compile Include="Validation.cs" />
     <Compile Include="IScalarSet.cs" />
     <Compile Include="Primitives\Input_T.cs" />
     <Compile Include="Primitives\Scalar.cs" />
