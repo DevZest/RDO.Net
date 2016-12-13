@@ -56,5 +56,19 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract bool ShouldRefresh(UIElement element);
+
+        internal abstract void BypassProgressiveValidationMode();
+
+        internal abstract void OnCurrentRowChanged();
+
+        internal abstract void OnRowDisposed(RowPresenter rowPresenter);
+
+        internal abstract bool HasPreValidatorError { get; }
+
+        internal abstract void SetValidationResult(RowValidationResult errors, RowValidationResult warnings);
+
+        internal abstract IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter);
+
+        internal abstract IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter);
     }
 }

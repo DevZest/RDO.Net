@@ -136,17 +136,17 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        [DefaultValue(ValidationSeverity.Error)]
-        public TemplateBuilder WithValidationVisibility(ValidationSeverity value)
+        [DefaultValue(100)]
+        public TemplateBuilder WithMaxValidationErrors(int value)
         {
-            Template.ValidationVisibility = value;
+            Template.MaxValidationErrors = value;
             return this;
         }
 
         [DefaultValue(100)]
-        public TemplateBuilder WithValidationMaxEntries(int value)
+        public TemplateBuilder WithMaxValidationWarnings(int value)
         {
-            Template.ValidationMaxEntries = value;
+            Template.MaxValidationWarnings = value;
             return this;
         }
 

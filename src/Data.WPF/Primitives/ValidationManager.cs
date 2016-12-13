@@ -1,10 +1,9 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -56,51 +55,117 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        internal void RefreshCurrentRowValidationMessages()
+        bool _progressiveModeBypassed;
+        private RowValidationResult _validationErrors;
+        private RowValidationResult _validationWarnings;
+
+        public bool HasPreValidatorError
         {
-            throw new NotImplementedException();
+            get
+            {
+                foreach (var rowBinding in Template.RowBindings)
+                {
+                    if (rowBinding.HasPreValidatorError)
+                        return true;
+                }
+                return false;
+            }
         }
 
-        internal void RefreshScalarValidationMessages()
+        public bool HasValidationError
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (!_progressiveModeBypassed)
+                    Validate(true);
+                return !_validationErrors.IsEmpty;
+            }
         }
 
-        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(RowInput<T> input, ValidationSeverity severity)
-            where T : UIElement, new()
+        public bool HasValidationWarning
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (!_progressiveModeBypassed)
+                    Validate(true);
+                return !_validationWarnings.IsEmpty;
+            }
         }
 
-        internal IEnumerable<ValidationMessage> GetValidationMessages<T>(ScalarInput<T> input, ValidationSeverity severity)
-            where T : UIElement, new()
+        private ValidationMode ValidationMode
         {
-            throw new NotImplementedException();
+            get { return Template.ValidationMode; }
         }
 
-        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(RowInput<T> input, ValidationSeverity severity)
-            where T : UIElement, new()
+        private ValidationScope ValidationScope
         {
-            throw new NotImplementedException();
+            get { return Template.ValidationScope; }
         }
 
-        internal IEnumerable<ValidationMessage> GetMergedValidationMessages<T>(ScalarInput<T> input, ValidationSeverity severity)
-            where T : UIElement, new()
+        public void Validate()
         {
-            throw new NotImplementedException();
+            Validate(true);
         }
 
-        public bool IsValidated { get; private set; }
-
-        public bool IsValid(bool ignoreMergedResult = true)
+        internal void Validate(bool bypassProgressiveMode)
         {
-            throw new NotImplementedException();
+            if (bypassProgressiveMode && _progressiveModeBypassed)
+            {
+                foreach (var rowBinding in Template.RowBindings)
+                    rowBinding.BypassProgressiveValidationMode();
+                _progressiveModeBypassed = true;
+            }
+
+            _validationErrors = Validate(ValidationSeverity.Error, Template.MaxValidationErrors);
+            _validationWarnings = Validate(ValidationSeverity.Warning, Template.MaxValidationWarnings);
+            foreach (var rowBinding in Template.RowBindings)
+                rowBinding.SetValidationResult(_validationErrors, _validationWarnings);
         }
 
-        public bool Validate(bool ignoreMergedResult = true)
+        private RowValidationResult Validate(ValidationSeverity severity, int maxEntries)
         {
-            IsValidated = true;
-            throw new NotImplementedException();
+            List<RowValidationEntry> result = null;
+            
+            if (CurrentRow != null)
+            {
+                var messages = CurrentRow.DataRow.Validate(severity);
+                if (messages.Count > 0)
+                    result = result.AddItem(new RowValidationEntry(CurrentRow, messages));
+            }
+
+            if (ValidationScope == ValidationScope.AllRows)
+            {
+                foreach (var row in Rows)
+                {
+                    if (row == CurrentRow)
+                        continue;
+
+                    var messages = row.DataRow.Validate(severity);
+                    if (messages.Count > 0)
+                        result = result.AddItem(new RowValidationEntry(row, messages));
+
+                    if (result.GetCount() == maxEntries)
+                        break;
+                }
+            }
+
+            return RowValidationResult.New(result);
+        }
+
+        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        {
+            base.OnCurrentRowChanged(oldValue);
+            foreach (var rowBinding in Template.RowBindings)
+                rowBinding.OnCurrentRowChanged();
+            if (ValidationMode == ValidationMode.Progressive)
+                _progressiveModeBypassed = false;
+        }
+
+        protected override void DisposeRow(RowPresenter row)
+        {
+            base.DisposeRow(row);
+            foreach (var rowBinding in Template.RowBindings)
+                rowBinding.OnRowDisposed(row);
         }
     }
 }

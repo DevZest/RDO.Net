@@ -48,6 +48,12 @@
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
+    <Compile Include="Primitives\RowValidationEntry.cs" />
+    <Compile Include="Primitives\RowValidationResult.cs" />
+    <Compile Include="Utilities\ListExtensions.AddItem.cs" />
+    <Compile Include="Utilities\ListExtensions.AddItems.cs" />
+    <Compile Include="Utilities\ListExtensions.GetCount.cs" />
+    <Compile Include="Utilities\ListExtensions.ToReadOnlyList.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="IScalarSet.cs" />
     <Compile Include="Primitives\Input_T.cs" />
@@ -56,7 +62,6 @@
     <Compile Include="ScalarInput.cs" />
     <Compile Include="Utilities\Singleton.cs" />
     <Compile Include="ValidationMessage.cs" />
-    <Compile Include="Primitives\ValidationListener.cs" />
     <Compile Include="Primitives\ValidationManager.cs" />
     <Compile Include="PropertyChangedTrigger.cs" />
     <Compile Include="Primitives\BlockBindingBase.cs" />
@@ -136,7 +141,7 @@
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
-    <Compile Include="Validity.cs" />
+    <Compile Include="AsyncValidationState.cs" />
     <Compile Include="ValidationMode.cs" />
     <Compile Include="ValidationScope.cs" />
   </ItemGroup>

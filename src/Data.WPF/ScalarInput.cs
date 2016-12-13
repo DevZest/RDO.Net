@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
         private Func<Task<ValidationMessage>> _asyncValidator;
 
-        public ScalarInput<T> WithPreValidator(Func<T, ValidationMessage> preValidator, Trigger<T> preValidatorTrigger = null)
+        public ScalarInput<T> WithPreValidator(Func<T, string> preValidator, Trigger<T> preValidatorTrigger = null)
         {
             SetPreValidator(preValidator, preValidatorTrigger);
             return this;
@@ -54,7 +54,13 @@ namespace DevZest.Data.Windows
             get { return _scalars; }
         }
 
-        internal override bool DoFlush(T element)
+        internal override void FlushCore(T element)
+        {
+            var flushed = DoFlush(element);
+            throw new NotImplementedException();
+        }
+
+        private bool DoFlush(T element)
         {
             bool result = false;
             foreach (var flush in _flushFuncs)
@@ -64,21 +70,6 @@ namespace DevZest.Data.Windows
                     result = true;
             }
             return result;
-        }
-
-        internal override void RefreshValidationMessages()
-        {
-            ValidationManager.RefreshScalarValidationMessages();
-        }
-
-        internal override IEnumerable<ValidationMessage> GetValidationMessages(ValidationSeverity severity)
-        {
-            return ValidationManager.GetValidationMessages(this, severity);
-        }
-
-        internal override IEnumerable<ValidationMessage> GetMergedValidationMessages(ValidationSeverity severity)
-        {
-            return ValidationManager.GetMergedValidationMessages(this, severity);
         }
     }
 }

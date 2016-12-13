@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows
         public readonly string Description;
         public readonly ValidationSeverity Severity;
 
-        private ValidationMessage(string id, string description, ValidationSeverity severity)
+        internal ValidationMessage(string id, string description, ValidationSeverity severity)
         {
             if (string.IsNullOrEmpty(description))
                 throw new ArgumentNullException(nameof(description));

@@ -92,5 +92,48 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(rowPresenter != null);
             return rowPresenter != Template.ElementManager.CurrentRow;
         }
+
+        internal sealed override void BypassProgressiveValidationMode()
+        {
+            if (Input != null)
+                Input.BypassProgressiveMode();
+        }
+
+        internal sealed override void OnCurrentRowChanged()
+        {
+            if (Input != null)
+                Input.OnCurrentRowChanged();
+        }
+
+        internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
+        {
+            if (Input != null)
+                Input.OnRowDisposed(rowPresenter);
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return Input == null ? false : Input.HasPreValidatorError; }
+        }
+
+        internal sealed override void SetValidationResult(RowValidationResult errors, RowValidationResult warnings)
+        {
+            if (Input != null)
+                Input.SetValidationResult(errors, warnings);
+        }
+
+        internal sealed override IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)
+        {
+            if (Input == null)
+                return Array<ValidationMessage>.Empty;
+            return Input.GetErrors(rowPresenter);
+        }
+
+        internal sealed override IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter)
+        {
+            if (Input == null)
+                return Array<ValidationMessage>.Empty;
+            return Input.GetWarnings(rowPresenter);
+        }
     }
 }

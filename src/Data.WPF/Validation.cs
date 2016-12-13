@@ -1,7 +1,14 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace DevZest.Data.Windows
@@ -35,7 +42,7 @@ namespace DevZest.Data.Windows
             return (ValidationSeverity?)element.GetValue(SeverityProperty);
         }
 
-        internal static void SetSeverity(this DependencyObject element, ValidationSeverity? value)
+        private static void SetSeverity(this DependencyObject element, ValidationSeverity? value)
         {
             if (!value.HasValue)
                 element.ClearValue(SeverityPropertyKey);
@@ -109,6 +116,106 @@ namespace DevZest.Data.Windows
         {
             if (d.GetValue(SeverityProperty) == SeverityBoxes.Warning)
                 System.Windows.Controls.Validation.SetErrorTemplate(d, (ControlTemplate)e.NewValue);
+        }
+
+        /// <summary>DataErrorInfo implements INotifyPropertyChanged to avoid possible memory leak:
+        /// https://blogs.msdn.microsoft.com/micmcd/2008/03/07/avoiding-a-wpf-memory-leak-with-databinding-black-magic/
+        /// </summary>
+        private sealed class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
+        {
+            public DataErrorInfo(IReadOnlyList<ValidationMessage> messages)
+            {
+                Debug.Assert(messages != null && messages.Count > 0);
+                _messages = messages;
+            }
+
+            private IReadOnlyList<ValidationMessage> _messages;
+            public IReadOnlyList<ValidationMessage> Messages
+            {
+                get { return _messages; }
+                set
+                {
+                    Debug.Assert(value != null && value.Count > 0);
+                    if (_messages == value)
+                        return;
+                    _messages = value;
+                    var errorsChanged = ErrorsChanged;
+                    if (errorsChanged != null)
+                        errorsChanged(this, Singleton.DataErrorsChangedEventArgs);
+                }
+            }
+
+            public bool HasErrors
+            {
+                get { return _messages.Count > 0; }
+            }
+
+            public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+            /// Implements INotifyPropertyChanged to avoid possible memory leak:
+            /// https://blogs.msdn.microsoft.com/micmcd/2008/03/07/avoiding-a-wpf-memory-leak-with-databinding-black-magic/
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            private void OnPropertyChanged(string propertyName)
+            {
+                var propertyChanged = PropertyChanged;
+                if (propertyChanged != null)
+                    propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            public IEnumerable GetErrors(string propertyName)
+            {
+                /// Workaround: <param name="propertyName"/> will be passed in twice, as null and <see cref="string.Empty"/> respectively.
+                /// We need to ignore one of them, otherwise duplicated results will be returned.
+                return propertyName == null ? null : _messages;
+            }
+        }
+
+        private static readonly DependencyProperty DummyProperty = DependencyProperty.RegisterAttached("DummyProperty", typeof(INotifyDataErrorInfo),
+            typeof(Validation), new PropertyMetadata(null));
+
+        private static void SetDataErrorInfoBinding(this DependencyObject element, INotifyDataErrorInfo dataErrorInfo)
+        {
+            Debug.Assert(dataErrorInfo != null);
+            var binding = new System.Windows.Data.Binding(".") { Source = dataErrorInfo, Mode = BindingMode.TwoWay, ValidatesOnNotifyDataErrors = true };
+            BindingOperations.SetBinding(element, DummyProperty, binding);
+        }
+
+        private static void ClearDataErrorInfoBinding(this DependencyObject element)
+        {
+            BindingOperations.ClearBinding(element, DummyProperty);
+        }
+
+        internal static void SetDataErrorInfo(this DependencyObject element, IReadOnlyList<ValidationMessage> errors, IReadOnlyList<ValidationMessage> warnings)
+        {
+            if (errors != null && errors.Count > 0)
+                element.SetDataErrorInfo(ValidationSeverity.Error, errors);
+            else if (warnings != null && warnings.Count > 0)
+                element.SetDataErrorInfo(ValidationSeverity.Warning, warnings);
+            else
+                element.ClearDataErrorInfo();
+        }
+
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationSeverity severity, IReadOnlyList<ValidationMessage> messages)
+        {
+            Debug.Assert(messages != null && messages.Count > 0);
+
+            element.SetSeverity(severity);
+
+            var binding = BindingOperations.GetBinding(element, DummyProperty);
+            if (binding == null)
+                element.SetDataErrorInfoBinding(new DataErrorInfo(messages));
+            else
+            {
+                var dataErrorInfo = (DataErrorInfo)binding.Source;
+                dataErrorInfo.Messages = messages;
+            }
+        }
+
+        private static void ClearDataErrorInfo(this DependencyObject element)
+        {
+            element.SetSeverity(null);
+            element.ClearDataErrorInfoBinding();
         }
     }
 }
