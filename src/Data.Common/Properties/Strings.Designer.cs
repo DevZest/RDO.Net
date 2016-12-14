@@ -803,6 +803,14 @@ namespace DevZest.Data
             get { return GetString("DataRow_VerifyPrototype"); }
         }
 
+        /// <summary>
+        /// The StringBuilder is empty.
+        /// </summary>
+        public static string JsonWriter_EmptyStringBuilder
+        {
+            get { return GetString("JsonWriter_EmptyStringBuilder"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
