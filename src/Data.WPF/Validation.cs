@@ -2,10 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -216,6 +214,13 @@ namespace DevZest.Data.Windows
         {
             element.SetSeverity(null);
             element.ClearDataErrorInfoBinding();
+        }
+
+        internal static List<ValidationMessage> AddValidationMessage(this List<ValidationMessage> list, ValidationMessage message, ValidationSeverity severity)
+        {
+            if (message.IsSeverity(severity))
+                list = list.AddItem(message);
+            return list;
         }
     }
 }

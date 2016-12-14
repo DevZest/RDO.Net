@@ -69,7 +69,10 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void Refresh(UIElement element)
         {
             var rowPresenter = element.GetRowPresenter();
-            Refresh((T)element, rowPresenter);
+            var e = (T)element;
+            if (Input != null)
+                Input.Refresh(e, rowPresenter);
+            Refresh(e, rowPresenter);
         }
 
         internal sealed override void Cleanup(UIElement element)
@@ -134,6 +137,12 @@ namespace DevZest.Data.Windows.Primitives
             if (Input == null)
                 return Array<ValidationMessage>.Empty;
             return Input.GetWarnings(rowPresenter);
+        }
+
+        internal sealed override void ResetInput(bool dataReloaded)
+        {
+            if (Input != null)
+                Input.Reset(dataReloaded);
         }
     }
 }

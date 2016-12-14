@@ -50,6 +50,7 @@
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="Primitives\RowValidationEntry.cs" />
     <Compile Include="Primitives\RowValidationResult.cs" />
+    <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\ListExtensions.AddItem.cs" />
     <Compile Include="Utilities\ListExtensions.AddItems.cs" />
     <Compile Include="Utilities\ListExtensions.GetCount.cs" />

@@ -12,9 +12,9 @@ namespace DevZest.Data.Windows
     public sealed class RowInput<T> : Input<T>
         where T : UIElement, new()
     {
-        internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
+        internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Func<Column<TData>> getColumn, Func<T, TData> getValue)
         {
-            return new RowInput<T>(flushTrigger).Bind(column, getValue);
+            return new RowInput<T>(flushTrigger).Bind(getColumn, getValue);
         }
             
 
@@ -24,13 +24,14 @@ namespace DevZest.Data.Windows
         }
 
         private IColumnSet _columns = ColumnSet.Empty;
+        private List<Func<Column>> _getColumnFuncs = new List<Func<Column>>();
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
         private HashSet<RowPresenter> _progress;
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _validationErrors = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _validationWarnings = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
         private Func<RowPresenter, Task<ValidationMessage>> _asyncValidator;
-        private Dictionary<RowPresenter, AsyncValidationState> _asyncValidatorStates;
         private HashSet<RowPresenter> _pendingAsyncValidators;
+        private Dictionary<RowPresenter, AsyncValidationState> _asyncValidationStates;
         private Dictionary<RowPresenter, ValidationMessage> _asyncValidationMessages;
 
         private ValidationMode ValidationMode
@@ -48,6 +49,37 @@ namespace DevZest.Data.Windows
             base.Seal(binding);
             if (ValidationMode == ValidationMode.Progressive)
                 _progress = new HashSet<RowPresenter>();
+            if (_asyncValidator != null)
+            {
+                _pendingAsyncValidators = new HashSet<RowPresenter>();
+                _asyncValidationStates = new Dictionary<RowPresenter, AsyncValidationState>();
+                _asyncValidationMessages = new Dictionary<RowPresenter, ValidationMessage>();
+            }
+        }
+
+        internal void Reset(bool dataReloaded)
+        {
+            if (dataReloaded)
+            {
+                _columns = ColumnSet.Empty;
+                foreach (var getColumn in _getColumnFuncs)
+                    _columns = _columns.Merge(getColumn());
+            }
+
+            _validationErrors.Clear();
+            _validationWarnings.Clear();
+
+            if (ValidationMode == ValidationMode.Progressive && _progress == null)
+                _progress = new HashSet<RowPresenter>();
+            else if (_progress != null)
+                _progress.Clear();
+
+            if (_asyncValidator != null)
+            {
+                _asyncValidationMessages.Clear();
+                _asyncValidationStates.Clear();
+                _pendingAsyncValidators.Clear();
+            }
         }
 
         private void MakeProgress()
@@ -78,6 +110,13 @@ namespace DevZest.Data.Windows
         {
             if (_progress != null && _progress.Contains(rowPresenter))
                 _progress.Remove(rowPresenter);
+
+            if (_asyncValidator != null)
+            {
+                _asyncValidationStates.Remove(rowPresenter);
+                _asyncValidationMessages.Remove(rowPresenter);
+                _pendingAsyncValidators.Remove(rowPresenter);
+            }
         }
 
         private RowPresenter CurrentRow
@@ -133,10 +172,8 @@ namespace DevZest.Data.Windows
 
             if (rowPresenter == CurrentRow && HasPreValidatorError)
                 result = result.AddItem(PreValidatorError);
-
-            IReadOnlyList<ValidationMessage> errors;
-            if (_validationErrors.TryGetValue(rowPresenter, out errors))
-                result = result.AddItems(errors);
+            result = result.AddItems(_validationErrors.GetValues(rowPresenter))
+                .AddValidationMessage(GetAsyncValidationMessage(rowPresenter), ValidationSeverity.Error);
 
             return result.ToReadOnlyList();
         }
@@ -146,10 +183,8 @@ namespace DevZest.Data.Windows
             Debug.Assert(rowPresenter != null);
 
             List<ValidationMessage> result = null;
-
-            IReadOnlyList<ValidationMessage> warnings;
-            if (_validationWarnings.TryGetValue(rowPresenter, out warnings))
-                result = result.AddItems(warnings);
+            result = result.AddItems(_validationWarnings.GetValues(rowPresenter))
+                .AddValidationMessage(GetAsyncValidationMessage(rowPresenter), ValidationSeverity.Warning);
 
             return result.ToReadOnlyList();
         }
@@ -167,17 +202,18 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
+        public RowInput<T> Bind<TData>(Func<Column<TData>> getColumn, Func<T, TData> getValue)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            if (getValue == null)
-                throw new ArgumentNullException(nameof(getValue));
+            if (getColumn == null)
+                throw new ArgumentNullException(nameof(getColumn));
 
             VerifyNotSealed();
-            _columns = _columns.Merge(column);
+            _getColumnFuncs.Add(getColumn);
             _flushFuncs.Add((rowPresenter, element) =>
             {
+                if (getValue == null)
+                    return false;
+                var column = getColumn();
                 var value = getValue(element);
                 if (column.AreEqual(rowPresenter.GetValue(column), value))
                     return false;
@@ -202,8 +238,10 @@ namespace DevZest.Data.Windows
                 MakeProgress();
                 if (ValidationMode != ValidationMode.Explicit)
                     ValidationManager.Validate(false);
+                if (_asyncValidator != null)
+                    AsyncValidate(currentRow);
+                ValidationManager.InvalidateElements();
             }
-            throw new NotImplementedException();
         }
 
         private bool DoFlush(RowPresenter rowPresenter, T element)
@@ -216,6 +254,119 @@ namespace DevZest.Data.Windows
                     result = true;
             }
             return result;
+        }
+
+        private async void AsyncValidate(RowPresenter rowPresenter)
+        {
+            Debug.Assert(_asyncValidator != null);
+
+            var state = GetAsyncValidationState(rowPresenter);
+            if (state == AsyncValidationState.Running)
+            {
+                AddPendingAsyncValidator(rowPresenter);
+                return;
+            }
+
+            ValidationMessage message;
+            do
+            {
+                var task = _asyncValidator(rowPresenter);
+                SetAsyncValidationState(rowPresenter, AsyncValidationState.Running);
+                try
+                {
+                    message = await task;
+                    state = message.IsEmpty ? AsyncValidationState.Valid : AsyncValidationState.Invalid;
+                }
+                catch (Exception ex)
+                {
+                    message = ValidationMessage.Error(ex.Message);
+                    state = AsyncValidationState.Failed;
+                }
+            }
+            while (RemovePendingAsyncValidator(rowPresenter));
+
+            if (!_asyncValidationStates.ContainsKey(rowPresenter))
+                return;
+
+            SetAsyncValidationState(rowPresenter, state);
+            SetAsyncValidationMessage(rowPresenter, message);
+            ValidationManager.InvalidateElements();
+        }
+
+        internal AsyncValidationState GetAsyncValidationState(RowPresenter rowPresenter)
+        {
+            if (_asyncValidationStates == null)
+                return AsyncValidationState.NotRunning;
+
+            AsyncValidationState result;
+            if (_asyncValidationStates.TryGetValue(rowPresenter, out result))
+                return result;
+
+            return AsyncValidationState.NotRunning;
+        }
+
+        private void SetAsyncValidationState(RowPresenter rowPresenter, AsyncValidationState state)
+        {
+            Debug.Assert(_asyncValidationStates != null);
+
+            if (state == AsyncValidationState.NotRunning)
+            {
+                if (_asyncValidationStates.ContainsKey(rowPresenter))
+                    _asyncValidationStates.Remove(rowPresenter);
+            }
+            else
+                _asyncValidationStates[rowPresenter] = state;
+        }
+
+        private ValidationMessage GetAsyncValidationMessage(RowPresenter rowPresenter)
+        {
+            Debug.Assert(_asyncValidationMessages != null);
+
+            ValidationMessage result;
+            if (_asyncValidationMessages.TryGetValue(rowPresenter, out result))
+                return result;
+            return ValidationMessage.Empty;
+        }
+
+        private void SetAsyncValidationMessage(RowPresenter rowPresenter, ValidationMessage message)
+        {
+            Debug.Assert(_asyncValidationMessages != null);
+
+            if (message.IsEmpty)
+            {
+                if (_asyncValidationMessages.ContainsKey(rowPresenter))
+                    _asyncValidationMessages.Remove(rowPresenter);
+            }
+            else
+                _asyncValidationMessages[rowPresenter] = message;
+        }
+
+        private void AddPendingAsyncValidator(RowPresenter rowPresenter)
+        {
+            Debug.Assert(_pendingAsyncValidators != null);
+            _pendingAsyncValidators.Add(rowPresenter);
+        }
+
+        private bool RemovePendingAsyncValidator(RowPresenter rowPresenter)
+        {
+            Debug.Assert(_pendingAsyncValidators != null);
+            return _pendingAsyncValidators.Remove(rowPresenter);
+        }
+
+        internal bool CanRetryAsyncValidation
+        {
+            get { return _asyncValidator != null; }
+        }
+
+        internal void RetryAsyncValidation(RowPresenter rowPresenter)
+        {
+            Debug.Assert(CanRetryAsyncValidation);
+            AsyncValidate(rowPresenter);
+        }
+
+        internal void Refresh(T element, RowPresenter rowPresenter)
+        {
+            element.SetDataErrorInfo(GetErrors(rowPresenter), GetWarnings(rowPresenter));
         }
     }
 }

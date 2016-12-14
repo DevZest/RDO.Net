@@ -29,14 +29,14 @@ namespace DevZest.Data.Windows.Primitives
             _executeAction(element);
         }
 
-        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
+        public RowInput<T> Bind<TData>(Func<Column<TData>> getColumn, Func<T, TData> getValue)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
+            if (getColumn == null)
+                throw new ArgumentNullException(nameof(getColumn));
             if (getValue == null)
                 throw new ArgumentNullException(nameof(getValue));
 
-            var result = RowInput<T>.Create(this, column, getValue);
+            var result = RowInput<T>.Create(this, getColumn, getValue);
             Initialize(result.Flush);
             return result;
         }

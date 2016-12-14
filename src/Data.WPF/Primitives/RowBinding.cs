@@ -70,5 +70,7 @@ namespace DevZest.Data.Windows.Primitives
         internal abstract IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter);
 
         internal abstract IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter);
+
+        internal abstract void ResetInput(bool dataReloaded);
     }
 }

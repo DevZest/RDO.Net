@@ -56,8 +56,21 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         bool _progressiveModeBypassed;
-        private RowValidationResult _validationErrors;
-        private RowValidationResult _validationWarnings;
+        private RowValidationResult _errorResult;
+        private RowValidationResult _warningResult;
+        private HashSet<RowPresenter> _progress;
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _rowErrors = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _rowWarnings = new Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>>();
+
+        public IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)
+        {
+            return _rowErrors.GetValues(rowPresenter);
+        }
+
+        public IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter)
+        {
+            return _rowWarnings.GetValues(rowPresenter);
+        }
 
         public bool HasPreValidatorError
         {
@@ -78,7 +91,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (!_progressiveModeBypassed)
                     Validate(true);
-                return !_validationErrors.IsEmpty;
+                return !_errorResult.IsEmpty;
             }
         }
 
@@ -88,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (!_progressiveModeBypassed)
                     Validate(true);
-                return !_validationWarnings.IsEmpty;
+                return !_warningResult.IsEmpty;
             }
         }
 
@@ -109,17 +122,26 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Validate(bool bypassProgressiveMode)
         {
-            if (bypassProgressiveMode && _progressiveModeBypassed)
-            {
-                foreach (var rowBinding in Template.RowBindings)
-                    rowBinding.BypassProgressiveValidationMode();
-                _progressiveModeBypassed = true;
-            }
+            if (bypassProgressiveMode && !_progressiveModeBypassed)
+                BypassProgressiveMode();
 
-            _validationErrors = Validate(ValidationSeverity.Error, Template.MaxValidationErrors);
-            _validationWarnings = Validate(ValidationSeverity.Warning, Template.MaxValidationWarnings);
+            SetValidationResult(Validate(ValidationSeverity.Error, Template.MaxValidationErrors), 
+                Validate(ValidationSeverity.Warning, Template.MaxValidationWarnings));
+        }
+
+        private void BypassProgressiveMode()
+        {
             foreach (var rowBinding in Template.RowBindings)
-                rowBinding.SetValidationResult(_validationErrors, _validationWarnings);
+                rowBinding.BypassProgressiveValidationMode();
+            _progressiveModeBypassed = true;
+        }
+
+        private void SetValidationResult(RowValidationResult errors, RowValidationResult warnings)
+        {
+            _errorResult = errors;
+            _warningResult = warnings;
+            foreach (var rowBinding in Template.RowBindings)
+                rowBinding.SetValidationResult(_errorResult, _warningResult);
         }
 
         private RowValidationResult Validate(ValidationSeverity severity, int maxEntries)
@@ -166,6 +188,26 @@ namespace DevZest.Data.Windows.Primitives
             base.DisposeRow(row);
             foreach (var rowBinding in Template.RowBindings)
                 rowBinding.OnRowDisposed(row);
+        }
+
+        protected override void Reload()
+        {
+            base.Reload();
+            Reset(true);
+        }
+
+        private void Reset(bool dataReloaded)
+        {
+            _progressiveModeBypassed = false;
+            _errorResult = RowValidationResult.Empty;
+            _warningResult = RowValidationResult.Empty;
+            foreach (var rowBinding in Template.RowBindings)
+                rowBinding.ResetInput(dataReloaded);
+        }
+
+        public void SetValidationResult(ValidationResult validationResult)
+        {
+
         }
     }
 }
