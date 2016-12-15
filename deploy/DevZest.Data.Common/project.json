@@ -11,12 +11,6 @@
     },
     "tags": [ "RDO.NET", "ADO.NET" ]
   },
-  "dependencies": {
-    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
-    "NETStandard.Library": "1.6.0",
-    "System.Data.Common": "4.1.0",
-    "System.Reflection.TypeExtensions": "4.1.0"
-  },
   "buildOptions": {
     "compile": {
       "include": "../../src/Data.Common/**/*.cs"
@@ -29,6 +23,18 @@
     "keyFile": "../Key.snk"
   },
   "frameworks": {
-    "netstandard1.3": {}
+    "netstandard1.3": {
+      "dependencies": {
+        "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+        "NETStandard.Library": "1.6.0",
+        "System.Data.Common": "4.1.0",
+        "System.Reflection.TypeExtensions": "4.1.0"
+      }
+    },
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
+    }
   }
 }
