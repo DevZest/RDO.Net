@@ -63,7 +63,7 @@ function getPackageVersion([string]$version, [string]$additionalLabel)
 
 function getTemplateFile([string]$dir, [string]$file)
 {
-	return (Join-Path $dir -ChildPath ('build.' + $file))
+	return (Join-Path $dir -ChildPath ($file + ".template"))
 }
 
 function generateFiles([string[]]$files, [string]$assemblyVersion, [string]$assemblyFileVersion, [string]$packageVersion)
@@ -122,7 +122,7 @@ echo "PACKAGE_VERSION=$packageVersion"
 
 generateFiles -files $files -assemblyVersion $assemblyVersion -assemblyFileVersion $assemblyFileVersion -packageVersion $packageVersion
 
-dnu restore "$projectDir"
-dnu pack "$projectDir" --configuration Release
+dotnet restore "$projectDir"
+dotnet pack "$projectDir" --configuration Release
 
 generateFiles -files $files -assemblyVersion '0.0.0.0' -assemblyFileVersion '0.0.0.0' -packageVersion '0.0.0-dev'

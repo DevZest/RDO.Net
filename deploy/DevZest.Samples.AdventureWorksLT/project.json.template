@@ -1,31 +1,31 @@
-{
-  "version": "0.0.0-dev",
-  "description": "DevZest.Data.SqlServer",
+﻿{
+  "version": "$PACKAGE_VERSION$",
+  "description": "DevZest.Samples.AdventureWorksLT",
   "authors": [ "Weifen Luo | DevZest" ],
   "packOptions": {
-    "requireLicenseAcceptance": true,
+    "requireLicenseAcceptance": false,
     "licenseUrl": "http://www.devzest.com",
     "repository": {
       "type": "git",
       "url": "http://www.devzest.com"
     },
-    "tags": [ "RDO.NET", "ADO.NET" ]
+    "tags": [ "RDO.NET", "ADO.NET", "AdventureWorks", "Sample" ]
   },
   "dependencies": {
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.0",
-    "System.Data.SqlClient": "4.1.0",
     "DevZest.Data.Common": {
       "target": "package",
-      "version": "0.0.0-dev"
+      "version": "$PACKAGE_VERSION$"
+    },
+    "DevZest.Data.SqlServer": {
+      "target": "package",
+      "version": "$PACKAGE_VERSION$"
     }
   },
   "buildOptions": {
     "compile": {
-      "include": "../../src/Data.SqlServer/**/*.cs"
-    },
-    "embed": {
-      "DevZest.Data.SqlSever.Strings": "../../src/Data.SqlServer/Properties/Strings.resx"
+      "include": "../../test/AdventureWorksLT/**/*.cs"
     },
     "warningsAsErrors": true,
     "define": [ "DEPLOY" ],

@@ -1,28 +1,31 @@
-{
-  "version": "0.0.0-dev",
-  "description": "DevZest.Data.Common",
+﻿{
+  "version": "$PACKAGE_VERSION$",
+  "description": "DevZest.Data.SqlServer",
   "authors": [ "Weifen Luo | DevZest" ],
   "packOptions": {
     "requireLicenseAcceptance": true,
     "licenseUrl": "http://www.devzest.com",
     "repository": {
       "type": "git",
-      "url" : "http://www.devzest.com"
+      "url": "http://www.devzest.com"
     },
     "tags": [ "RDO.NET", "ADO.NET" ]
   },
   "dependencies": {
     "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
     "NETStandard.Library": "1.6.0",
-    "System.Data.Common": "4.1.0",
-    "System.Reflection.TypeExtensions": "4.1.0"
+    "System.Data.SqlClient": "4.1.0",
+    "DevZest.Data.Common": {
+      "target": "package",
+      "version": "$PACKAGE_VERSION$"
+    }
   },
   "buildOptions": {
     "compile": {
-      "include": "../../src/Data.Common/**/*.cs"
+      "include": "../../src/Data.SqlServer/**/*.cs"
     },
     "embed": {
-      "DevZest.Data.Strings": "../../src/Data.Common/Properties/Strings.resx"
+      "DevZest.Data.SqlSever.Strings": "../../src/Data.SqlServer/Properties/Strings.resx"
     },
     "warningsAsErrors": true,
     "define": [ "DEPLOY" ],

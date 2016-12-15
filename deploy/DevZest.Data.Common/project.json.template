@@ -1,5 +1,5 @@
 {
-  "version": "0.0.0-dev",
+  "version": "$PACKAGE_VERSION$",
   "description": "DevZest.Data.Common",
   "authors": [ "Weifen Luo | DevZest" ],
   "packOptions": {
