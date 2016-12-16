@@ -360,12 +360,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private static ValidationMessage<IColumnSet>? Validate(IValidator validator, DataRow dataRow)
+        private static ValidationMessage<Column>? Validate(IValidator validator, DataRow dataRow)
         {
             if (validator.ValidCondition[dataRow] == true)
                 return null;
             else
-                return new ValidationMessage<IColumnSet>(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
+                return new ValidationMessage<Column>(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
         }
 
         public ModelKey PrimaryKey

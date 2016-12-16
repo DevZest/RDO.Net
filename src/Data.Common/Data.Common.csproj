@@ -73,11 +73,11 @@
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="Column_T.ConverterBase.cs" />
     <Compile Include="DataRowRemovedEventArgs.cs" />
-    <Compile Include="IColumnSet.cs" />
+    <Compile Include="IValidationSource.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="ColumnSet.cs" />
+    <Compile Include="ValidationSource.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\JsonColumn.cs" />

@@ -3,20 +3,20 @@
 namespace DevZest.Data
 {
     [TestClass]
-    public class ColumnSetTests
+    public class ValidationSourceTests
     {
         [TestMethod]
-        public void ColumnSet_New()
+        public void ValidationSource_New()
         {
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, ColumnSet.New(column1));
+                Assert.AreEqual(column1, ValidationSource<Column>.New(column1));
             }
 
             {
                 var column1 = new _Int32();
                 var column2 = new _Int32();
-                var columnSet = ColumnSet.New(column1, column2);
+                var columnSet = ValidationSource<Column>.New(column1, column2);
                 Assert.AreEqual(2, columnSet.Count);
                 Assert.IsTrue(columnSet.Contains(column1));
                 Assert.IsTrue(columnSet.Contains(column2));
@@ -24,16 +24,16 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ColumnSet_Union()
+        public void ValidationSource_Union()
         {
             {
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.Empty.Union(ColumnSet.Empty));
+                Assert.AreEqual(ValidationSource<Column>.Empty, ValidationSource<Column>.Empty.Union(ValidationSource<Column>.Empty));
             }
 
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, ColumnSet.Empty.Union(column1));
-                Assert.AreEqual(column1, column1.Union(ColumnSet.Empty));
+                Assert.AreEqual(column1, ValidationSource<Column>.Empty.Union(column1));
+                Assert.AreEqual(column1, column1.Union(ValidationSource<Column>.Empty));
             }
 
             {

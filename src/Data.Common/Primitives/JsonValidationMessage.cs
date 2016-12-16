@@ -5,12 +5,12 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonValidationMessage
     {
-        private const string MESSAGE_ID = nameof(ValidationMessage<IColumnSet>.Id);
-        private const string SEVERITY = nameof(ValidationMessage<IColumnSet>.Severity);
-        private const string DESCRIPTION = nameof(ValidationMessage<IColumnSet>.Description);
-        private const string SOURCE = nameof(ValidationMessage<IColumnSet>.Source);
+        private const string MESSAGE_ID = nameof(ValidationMessage<Column>.Id);
+        private const string SEVERITY = nameof(ValidationMessage<Column>.Severity);
+        private const string DESCRIPTION = nameof(ValidationMessage<Column>.Description);
+        private const string SOURCE = nameof(ValidationMessage<Column>.Source);
 
-        public static JsonWriter Write(this JsonWriter jsonWriter, ValidationMessage<IColumnSet> validationMessage)
+        public static JsonWriter Write(this JsonWriter jsonWriter, ValidationMessage<Column> validationMessage)
         {
             return jsonWriter
                 .WriteStartObject()
@@ -21,7 +21,7 @@ namespace DevZest.Data.Primitives
                 .WriteEndObject();
         }
 
-        private static JsonWriter WriteSource(this JsonWriter jsonWriter, IColumnSet source)
+        private static JsonWriter WriteSource(this JsonWriter jsonWriter, IValidationSource<Column> source)
         {
             if (source == null)
                 jsonWriter.WriteNameValuePair(SOURCE, JsonValue.Null);
@@ -30,12 +30,12 @@ namespace DevZest.Data.Primitives
             return jsonWriter;
         }
 
-        public static ValidationMessage<IColumnSet> ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
+        public static ValidationMessage<Column> ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
             string messageId;
             ValidationSeverity severity;
             string description;
-            IColumnSet source;
+            IValidationSource<Column> source;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             messageId = jsonParser.ExpectNameStringPair(MESSAGE_ID, true);
@@ -44,25 +44,25 @@ namespace DevZest.Data.Primitives
             source = jsonParser.ParseSource(dataSet, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ValidationMessage<IColumnSet>(messageId, severity, description, source);
+            return new ValidationMessage<Column>(messageId, severity, description, source);
         }
 
-        private static IColumnSet ParseSource(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
+        private static IValidationSource<Column> ParseSource(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
         {
             var text = jsonParser.ExpectNameNullableStringPair(SOURCE, expectComma);
-            return text == null ? null : ColumnSet.Deserialize(dataSet.Model, text);
+            return text == null ? null : ValidationSource.Deserialize(dataSet.Model, text);
         }
 
-        public static IReadOnlyList<ValidationMessage<IColumnSet>> ParseValidationMessages(this JsonParser jsonParser, DataSet dataSet)
+        public static IReadOnlyList<ValidationMessage<Column>> ParseValidationMessages(this JsonParser jsonParser, DataSet dataSet)
         {
-            List<ValidationMessage<IColumnSet>> result = null;
+            List<ValidationMessage<Column>> result = null;
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
 
             if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
                 if (result == null)
-                    result = new List<ValidationMessage<IColumnSet>>();
+                    result = new List<ValidationMessage<Column>>();
                 result.Add(jsonParser.ParseValidationMessage(dataSet));
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
@@ -75,7 +75,7 @@ namespace DevZest.Data.Primitives
             jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
 
             if (result == null)
-                return Array<ValidationMessage<IColumnSet>>.Empty;
+                return Array<ValidationMessage<Column>>.Empty;
             else
                 return result;
         }

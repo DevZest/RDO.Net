@@ -30,7 +30,7 @@ namespace DevZest.Data
                 get { return _owner.ValidationSeverity; }
             }
 
-            public IColumnSet Columns
+            public IValidationSource<Column> Columns
             {
                 get { return _column; }
             }

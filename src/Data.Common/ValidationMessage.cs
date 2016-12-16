@@ -3,8 +3,9 @@
 namespace DevZest.Data
 {
     public struct ValidationMessage<T>
+        where T : class, IValidationSource<T>
     {
-        public ValidationMessage(string id, ValidationSeverity severity, string description, T source)
+        public ValidationMessage(string id, ValidationSeverity severity, string description, IValidationSource<T> source)
         {
             Check.NotEmpty(description, nameof(description));
 
@@ -20,7 +21,7 @@ namespace DevZest.Data
 
         public readonly string Description;
 
-        public readonly T Source;
+        public readonly IValidationSource<T> Source;
 
         public override string ToString()
         {

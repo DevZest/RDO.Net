@@ -12,7 +12,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a column of <see cref="Model"/>.
     /// </summary>
-    public abstract class Column : ModelMember, IColumnSet, IComparer<DataRow>
+    public abstract class Column : ModelMember, IValidationSource<Column>, IComparer<DataRow>
     {
         protected Column()
         {
@@ -298,10 +298,10 @@ namespace DevZest.Data
 
         public abstract void SetValue(DataRow dataRow, object value);
 
-        #region IColumnSet
+        #region IValidationSource<Column>
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IColumnSet.Contains(Column column)
+        bool IValidationSource<Column>.Contains(Column column)
         {
             return column == this;
         }
@@ -325,40 +325,40 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IColumnSet.IsSealed
+        bool IValidationSource<Column>.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Seal()
+        IValidationSource<Column> IValidationSource<Column>.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Add(Column value)
+        IValidationSource<Column> IValidationSource<Column>.Add(Column value)
         {
             Check.NotNull(value, nameof(value));
             if (value == this)
                 return this;
-            return ColumnSet.New(this, value);
+            return ValidationSource<Column>.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Remove(Column value)
+        IValidationSource<Column> IValidationSource<Column>.Remove(Column value)
         {
             Check.NotNull(value, nameof(value));
             if (value == this)
-                return ColumnSet.Empty;
+                return ValidationSource<Column>.Empty;
             else
                 return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Clear()
+        IValidationSource<Column> IValidationSource<Column>.Clear()
         {
-            return ColumnSet.Empty;
+            return ValidationSource<Column>.Empty;
         }
 
         #endregion
