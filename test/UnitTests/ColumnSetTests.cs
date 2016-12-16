@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
     [TestClass]
     public class ColumnSetTests
@@ -8,21 +8,6 @@ namespace DevZest.Data.Primitives
         [TestMethod]
         public void ColumnSet_New()
         {
-            {
-                Column[] columns = null;
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.New(columns));
-            }
-
-            {
-                Column[] columns = new Column[] { null };
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.New(columns));
-            }
-
-            {
-                Column[] columns = new Column[] { null, null };
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.New(columns));
-            }
-
             {
                 var column1 = new _Int32();
                 Assert.AreEqual(column1, ColumnSet.New(column1));
@@ -39,27 +24,27 @@ namespace DevZest.Data.Primitives
         }
 
         [TestMethod]
-        public void ColumnSet_Merge()
+        public void ColumnSet_Union()
         {
             {
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.Empty.Merge(ColumnSet.Empty));
+                Assert.AreEqual(ColumnSet.Empty, ColumnSet.Empty.Union(ColumnSet.Empty));
             }
 
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, ColumnSet.Empty.Merge(column1));
-                Assert.AreEqual(column1, column1.Merge(ColumnSet.Empty));
+                Assert.AreEqual(column1, ColumnSet.Empty.Union(column1));
+                Assert.AreEqual(column1, column1.Union(ColumnSet.Empty));
             }
 
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, column1.Merge(column1));
+                Assert.AreEqual(column1, column1.Union(column1));
             }
 
             {
                 var column1 = new _Int32();
                 var column2 = new _Int32();
-                var columnSet = column1.Merge(column2);
+                var columnSet = column1.Union(column2);
                 Assert.AreEqual(2, columnSet.Count);
                 Assert.IsTrue(columnSet.Contains(column1));
                 Assert.IsTrue(columnSet.Contains(column2));

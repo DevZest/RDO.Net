@@ -313,17 +313,6 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        Column IReadOnlyList<Column>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<Column> IEnumerable<Column>.GetEnumerator()
         {
             yield return this;
@@ -333,6 +322,43 @@ namespace DevZest.Data
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        bool IColumnSet.IsSealed
+        {
+            get { return true; }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IColumnSet IColumnSet.Seal()
+        {
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IColumnSet IColumnSet.Add(Column value)
+        {
+            Check.NotNull(value, nameof(value));
+            if (value == this)
+                return this;
+            return ColumnSet.New(this, value);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IColumnSet IColumnSet.Remove(Column value)
+        {
+            Check.NotNull(value, nameof(value));
+            if (value == this)
+                return ColumnSet.Empty;
+            else
+                return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IColumnSet IColumnSet.Clear()
+        {
+            return ColumnSet.Empty;
         }
 
         #endregion

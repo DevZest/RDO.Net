@@ -2,9 +2,10 @@
 
 namespace DevZest.Data.Utilities
 {
-    internal class Check
+    internal static class Check
     {
-        public static T NotNull<T>(T value, string parameterName) where T : class
+        internal static T NotNull<T>(T value, string parameterName)
+            where T : class
         {
             if (value == null)
                 throw new ArgumentNullException(parameterName);
@@ -12,12 +13,20 @@ namespace DevZest.Data.Utilities
             return value;
         }
 
-        public static string NotEmpty(string value, string parameterName)
+        internal static string NotEmpty(string value, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException(Strings.ArgumentIsNullOrWhitespace(parameterName), parameterName);
 
             return value;
+        }
+
+        internal static T CheckNotNull<T>(this T reference)
+            where T : class
+        {
+            if (reference == null)
+                throw new NullReferenceException();
+            return reference;
         }
     }
 }

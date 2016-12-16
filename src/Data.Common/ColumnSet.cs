@@ -11,9 +11,9 @@ namespace DevZest.Data
     {
         private class EmptyColumnSet : IColumnSet
         {
-            public bool Contains(Column column)
+            public static EmptyColumnSet Singleton = new EmptyColumnSet();
+            private EmptyColumnSet()
             {
-                return false;
             }
 
             public int Count
@@ -21,9 +21,37 @@ namespace DevZest.Data
                 get { return 0; }
             }
 
-            public Column this[int index]
+            public bool IsSealed
             {
-                get { throw new ArgumentOutOfRangeException(nameof(index)); }
+                get { return true; }
+            }
+
+            public bool Contains(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+                return false;
+            }
+
+            public IColumnSet Add(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+                return value;
+            }
+
+            public IColumnSet Remove(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+                return this;
+            }
+
+            public IColumnSet Clear()
+            {
+                return this;
+            }
+
+            public IColumnSet Seal()
+            {
+                return this;
             }
 
             public IEnumerator<Column> GetEnumerator()
@@ -37,118 +65,138 @@ namespace DevZest.Data
             }
         }
 
-        private class ListColumnSet : List<Column>, IColumnSet
+        private class ColumnHashSet : IColumnSet
         {
-            public ListColumnSet(IList<Column> columns)
-                : base(columns)
+            private bool _isSealed;
+            private HashSet<Column> _hashSet = new HashSet<Column>();
+
+            public ColumnHashSet(Column value1, Column value2)
             {
+                Debug.Assert(value1 != null && value2 != null && value1 != value2);
+                Add(value1);
+                Add(value2);
+            }
+
+            private ColumnHashSet()
+            {
+            }
+
+            public bool IsSealed
+            {
+                get { return _isSealed; }
+            }
+
+            public int Count
+            {
+                get { return _hashSet.Count; }
+            }
+
+            public IColumnSet Seal()
+            {
+                _isSealed = true;
+                return this;
+            }
+
+            public IColumnSet Add(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+
+                if (Contains(value))
+                    return this;
+
+                if (!IsSealed)
+                {
+                    _hashSet.Add(value);
+                    return this;
+                }
+
+                if (Count == 0)
+                    return value;
+                else
+                {
+                    var result = new ColumnHashSet();
+                    foreach (var column in this)
+                        result.Add(column);
+                    result.Add(value);
+                    return result;
+                }
+            }
+
+            public IColumnSet Remove(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+
+                if (!Contains(value))
+                    return this;
+
+                if (!IsSealed)
+                {
+                    _hashSet.Remove(value);
+                    return this;
+                }
+
+                if (Count == 1)
+                    return Empty;
+
+                var result = new ColumnHashSet();
+                foreach (var column in this)
+                {
+                    if (column != value)
+                    result.Add(column);
+                }
+                return result;
+            }
+
+            public IColumnSet Clear()
+            {
+                if (IsSealed)
+                    return Empty;
+                else
+                {
+                    _hashSet.Clear();
+                    return this;
+                }
+            }
+
+            public bool Contains(Column value)
+            {
+                Check.NotNull(value, nameof(value));
+                return _hashSet.Contains(value);
+            }
+
+            public IEnumerator<Column> GetEnumerator()
+            {
+                return _hashSet.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _hashSet.GetEnumerator();
             }
         }
 
-        public static readonly IColumnSet Empty = new EmptyColumnSet();
+        public static IColumnSet Empty
+        {
+            get { return EmptyColumnSet.Singleton; }
+        }
+
+        internal static IColumnSet New(Column value1, Column value2)
+        {
+            Debug.Assert(value1 != null && value2 != null && value1 != value2);
+            return new ColumnHashSet(value1, value2);
+        }
 
         public static IColumnSet New(params Column[] columns)
         {
-            return New(columns, false);
-        }
+            Check.NotNull(columns, nameof(columns));
 
-        private static IColumnSet New(IList<Column> columns, bool isNormalized)
-        {
-            if (columns == null || columns.Count == 0)
+            if (columns.Length == 0)
                 return Empty;
 
-            if (columns.Count == 1)
-            {
-                var column = columns[0];
-                return column == null ? Empty : column;
-            }
-
-            if (isNormalized)
-                return new ListColumnSet(columns);
-
-            return New(Normalize(columns), true);
-        }
-
-        private static IList<Column> Normalize(IList<Column> columns)
-        {
-            Debug.Assert(columns.Count > 1);
-
-            List<Column> result = null;
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                if (column == null)
-                {
-                    result = CopyFrom(columns, i);
-                    continue;
-                }
-
-                if (result != null)
-                {
-                    if (!result.Contains(column))
-                        result.Add(column);
-                    continue;
-                }
-
-                for (int j = 0; j < i; j++)
-                {
-                    if (column == columns[j])
-                    {
-                        result = CopyFrom(columns, i);
-                        continue;
-                    }
-                }
-            }
-
-            return result == null ? columns : result;
-        }
-
-        private static List<Column> CopyFrom(IList<Column> columns, int count)
-        {
-            var result = new List<Column>();
-            for (int i = 0; i < count; i++)
-                result.Add(columns[i]);
-
+            IColumnSet result = columns[0].CheckNotNull();
+            for (int i = 1; i < columns.Length; i++)
+                result = result.Add(columns[i].CheckNotNull());
             return result;
-        }
-
-        public static IColumnSet Merge(this IColumnSet columnSet, IColumnSet value)
-        {
-            Check.NotNull(columnSet, nameof(columnSet));
-            Check.NotNull(value, nameof(value));
-
-            var count1 = columnSet.Count;
-            if (count1 == 0)
-                return value;
-            var count2 = value.Count;
-            if (count2 == 0)
-                return columnSet;
-
-            return count1 >= count2 ? DoMerge(columnSet, value) : DoMerge(value, columnSet);
-        }
-
-        private static IColumnSet DoMerge(IColumnSet x, IColumnSet y)
-        {
-            Debug.Assert(x.Count >= y.Count);
-
-            for (int i = 0; i < y.Count; i++)
-            {
-                if (!x.Contains(y[i]))
-                    return DoMerge(x, y, i);
-            }
-            return x;
-        }
-
-        private static IColumnSet DoMerge(IColumnSet x, IColumnSet y, int startYIndex)
-        {
-            var result = new List<Column>(x);
-            result.Add(y[startYIndex]);
-            for (int i = startYIndex + 1; i < y.Count; i++)
-            {
-                if (!result.Contains(y[i]))
-                    result.Add(y[i]);
-            }
-            return new ListColumnSet(result);
         }
 
         internal static string Serialize(this IColumnSet columns)
@@ -170,6 +218,168 @@ namespace DevZest.Data
                 result[i] = model.DeserializeColumn(columnNames[i]);
 
             return ColumnSet.New(result);
+        }
+
+        /// <summary>Removes the columns in the specified collection from the current set.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection of items to remove from this set.</param>
+        /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
+        public static IColumnSet Except(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(columnSet, nameof(columnSet));
+
+            foreach (var column in columnSet)
+            {
+                if (other.Contains(column))
+                    columnSet = columnSet.Remove(column);
+            }
+            return columnSet;
+        }
+
+        /// <summary>Removes the columns to ensure the set contains only columns both exist in this set and the specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
+        public static IColumnSet Intersect(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            foreach (var column in columnSet)
+            {
+                if (!other.Contains(column))
+                    columnSet = columnSet.Remove(column);
+            }
+            return columnSet;
+        }
+
+        private static bool ContainsAll(this IColumnSet columnSet, IColumnSet other)
+        {
+            foreach (var column in other)
+            {
+                if (!columnSet.Contains(column))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>Determines whether the current set is a proper (strict) subset of the specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsProperSubsetOf(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            return columnSet.Count < other.Count ? other.ContainsAll(columnSet) : false;
+        }
+
+        /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsProperSupersetOf(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            return columnSet.Count > other.Count ? columnSet.ContainsAll(other) : false;
+        }
+
+        /// <summary>Determines whether the current set is a subset of a specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsSubsetOf(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            return columnSet.Count <= other.Count ? other.ContainsAll(columnSet) : false;
+        }
+
+        /// <summary>Determines whether the current set is a superset of a specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsSupersetOf(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            return columnSet.Count >= other.Count ? columnSet.ContainsAll(other) : false;
+        }
+
+        /// <summary>Determines whether the current set overlaps with the specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool Overlaps(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            foreach (var column in columnSet)
+            {
+                if (other.Contains(column))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>Determines whether the current set and the specified collection contain the same elements.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
+        public static bool SetEquals(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            return columnSet.Count == other.Count ? columnSet.ContainsAll(other) : false;
+        }
+
+        /// <summary>Ensures set contain only elements that are present either in the current set or in the specified collection, but not both.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
+        public static IColumnSet SymmetricExcept(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            IColumnSet removedColumnSet = ColumnSet.Empty;
+            foreach (var column in columnSet)
+            {
+                if (other.Contains(column))
+                {
+                    removedColumnSet = removedColumnSet.Add(column);
+                    columnSet = columnSet.Remove(column);
+                }
+            }
+
+            foreach (var column in other)
+            {
+                if (removedColumnSet.Contains(column))
+                    columnSet = columnSet.Add(column);
+            }
+
+            return columnSet;
+        }
+
+        /// <summary>Ensures set contain all elements that are present in either the current set or in the specified collection.</summary>
+        /// <param name="columnSet">The current set.</param>
+        /// <param name="other">The collection to add elements from.</param>
+        /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
+        public static IColumnSet Union(this IColumnSet columnSet, IColumnSet other)
+        {
+            columnSet.CheckNotNull();
+            Check.NotNull(other, nameof(other));
+
+            foreach (var column in other)
+                columnSet = columnSet.Add(column);
+            return columnSet;
         }
     }
 }
