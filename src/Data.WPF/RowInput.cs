@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private IColumnSet _columns = ColumnSet.Empty;
+        private IValidationSource<Column> _columns = ValidationSource<Column>.Empty;
         private List<Func<Column>> _getColumnFuncs = new List<Func<Column>>();
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
         private HashSet<RowPresenter> _progress;
@@ -61,9 +61,9 @@ namespace DevZest.Data.Windows
         {
             if (dataReloaded)
             {
-                _columns = ColumnSet.Empty;
+                _columns = ValidationSource<Column>.Empty;
                 foreach (var getColumn in _getColumnFuncs)
-                    _columns = _columns.Merge(getColumn());
+                    _columns = _columns.Union(getColumn());
             }
 
             _validationErrors.Clear();
@@ -151,7 +151,7 @@ namespace DevZest.Data.Windows
             return !oldIsEmpty || messages.Count > 0;
         }
 
-        private IReadOnlyList<ValidationMessage> Filter(IReadOnlyList<ValidationMessage<IColumnSet>> messages)
+        private IReadOnlyList<ValidationMessage> Filter(IReadOnlyList<ValidationMessage<Column>> messages)
         {
             List<ValidationMessage> result = null;
             foreach (var message in messages)
@@ -221,11 +221,6 @@ namespace DevZest.Data.Windows
                 return true;
             });
             return this;
-        }
-
-        internal IColumnSet Columns
-        {
-            get { return _columns; }
         }
 
         internal override void FlushCore(T element)

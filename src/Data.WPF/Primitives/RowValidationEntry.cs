@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal struct RowValidationEntry
     {
-        public RowValidationEntry(RowPresenter row, IReadOnlyList<ValidationMessage<IColumnSet>> messages)
+        public RowValidationEntry(RowPresenter row, IReadOnlyList<ValidationMessage<Column>> messages)
         {
             Debug.Assert(row != null && messages != null && messages.Count > 0);
             Row = row;
@@ -13,6 +13,6 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public readonly RowPresenter Row;
-        public readonly IReadOnlyList<ValidationMessage<IColumnSet>> Messages;
+        public readonly IReadOnlyList<ValidationMessage<Column>> Messages;
     }
 }

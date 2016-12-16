@@ -56,7 +56,6 @@
     <Compile Include="Utilities\ListExtensions.GetCount.cs" />
     <Compile Include="Utilities\ListExtensions.ToReadOnlyList.cs" />
     <Compile Include="Validation.cs" />
-    <Compile Include="IScalarSet.cs" />
     <Compile Include="Primitives\Input_T.cs" />
     <Compile Include="Primitives\Scalar.cs" />
     <Compile Include="RowInput.cs" />
@@ -107,7 +106,6 @@
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\BlockViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
-    <Compile Include="ScalarSet.cs" />
     <Compile Include="Scalar_T.cs" />
     <Compile Include="ScalarBinding_T.cs" />
     <Compile Include="TemplateBuilder.cs" />
@@ -148,7 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161201\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161216\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

@@ -13,14 +13,14 @@ namespace DevZest.Data.Windows.Primitives
         {
             private static DataErrorsChangedEventArgs SingletonEventArgs = new DataErrorsChangedEventArgs(string.Empty);
 
-            public Validity(IReadOnlyList<ValidationMessage<IColumnSet>> validationMessages)
+            public Validity(IReadOnlyList<ValidationMessage<Column>> validationMessages)
             {
                 Debug.Assert(validationMessages != null);
                 _validationMessages = validationMessages;
             }
 
-            private IReadOnlyList<ValidationMessage<IColumnSet>> _validationMessages;
-            public IReadOnlyList<ValidationMessage<IColumnSet>> ValidationMessages
+            private IReadOnlyList<ValidationMessage<Column>> _validationMessages;
+            public IReadOnlyList<ValidationMessage<Column>> ValidationMessages
             {
                 get { return _validationMessages; }
                 set

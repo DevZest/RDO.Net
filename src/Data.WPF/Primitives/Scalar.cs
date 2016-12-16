@@ -4,24 +4,34 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class Scalar : IScalarSet
+    public abstract class Scalar : IValidationSource<Scalar>
     {
-        Scalar IReadOnlyList<Scalar>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
+        #region IValidationSource<Scalar>
 
         int IReadOnlyCollection<Scalar>.Count
         {
             get { return 1; }
         }
 
-        bool IScalarSet.Contains(Scalar scalar)
+        bool IValidationSource<Scalar>.IsSealed
+        {
+            get { return true; }
+        }
+
+        IValidationSource<Scalar> IValidationSource<Scalar>.Add(Scalar value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            return value == this ? this : ValidationSource<Scalar>.New(this, value);
+        }
+
+        IValidationSource<Scalar> IValidationSource<Scalar>.Clear()
+        {
+            return ValidationSource<Scalar>.Empty;
+        }
+
+        bool IValidationSource<Scalar>.Contains(Scalar scalar)
         {
             return scalar == this;
         }
@@ -35,5 +45,19 @@ namespace DevZest.Data.Windows.Primitives
         {
             yield return this;
         }
+
+        IValidationSource<Scalar> IValidationSource<Scalar>.Remove(Scalar value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            return value == this ? ValidationSource<Scalar>.Empty : this;
+        }
+
+        IValidationSource<Scalar> IValidationSource<Scalar>.Seal()
+        {
+            return this;
+        }
+
+        #endregion
     }
 }

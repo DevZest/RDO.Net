@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        private IScalarSet _scalars = ScalarSet.Empty;
+        private IValidationSource<Scalar> _scalars = ValidationSource<Scalar>.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
         private Func<Task<ValidationMessage>> _asyncValidator;
 
@@ -44,14 +44,9 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(getValue));
 
             VerifyNotSealed();
-            _scalars = _scalars.Merge(scalar);
+            _scalars = _scalars.Union(scalar);
             _flushFuncs.Add((element) => scalar.SetValue(getValue(element)));
             return this;
-        }
-
-        internal IScalarSet Scalars
-        {
-            get { return _scalars; }
         }
 
         internal override void FlushCore(T element)
