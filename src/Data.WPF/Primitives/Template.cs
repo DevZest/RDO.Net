@@ -29,6 +29,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as ValidationManager; }
         }
 
+        internal ScalarValidationManager ScalarValidationManager
+        {
+            get { return RowManager as ScalarValidationManager; }
+        }
+
         internal LayoutManager LayoutManager
         {
             get { return RowManager as LayoutManager; }
@@ -466,6 +471,9 @@ namespace DevZest.Data.Windows.Primitives
 
         [DefaultValue(ValidationMode.Progressive)]
         public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Progressive;
+
+        [DefaultValue(ValidationMode.Progressive)]
+        public ValidationMode ScalarValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(100)]
         public int MaxValidationErrors { get; internal set; } = 100;

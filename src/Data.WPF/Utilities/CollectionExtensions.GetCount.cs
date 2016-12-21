@@ -4,9 +4,9 @@ namespace DevZest.Data.Windows.Utilities
 {
     static partial class ListExtensions
     {
-        internal static int GetCount<T>(this List<T> list)
+        internal static int GetCount<T>(this ICollection<T> collection)
         {
-            return list == null ? 0 : list.Count;
+            return collection == null ? 0 : collection.Count;
         }
     }
 }

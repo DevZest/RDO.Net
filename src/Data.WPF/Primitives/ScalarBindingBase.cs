@@ -22,6 +22,12 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private IValidationSource<Scalar> _validationSource = ValidationSource<Scalar>.Empty;
+        internal sealed override IValidationSource<Scalar> ValidationSource
+        {
+            get { return Input != null ? Input.SourceScalars : _validationSource; }
+        }
+
         internal sealed override void FlushInput(UIElement element)
         {
             if (Input != null)
@@ -82,6 +88,22 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override bool ShouldRefresh(UIElement element)
         {
             return _input == null;
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return Input == null ? false : Input.HasPreValidatorError; }
+        }
+
+        internal sealed override bool HasAsyncValidator
+        {
+            get { return Input == null ? false : Input.HasAsyncValidator; }
+        }
+
+        internal sealed override void RunAsyncValidator()
+        {
+            Debug.Assert(HasAsyncValidator);
+            Input.RunAsyncValidator();
         }
     }
 }

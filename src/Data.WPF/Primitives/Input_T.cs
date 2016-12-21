@@ -31,14 +31,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public Binding Binding { get; private set; }
-
-        internal virtual void Seal(Binding binding)
-        {
-            Debug.Assert(binding != null);
-            VerifyNotSealed();
-            Binding = binding;
-        }
+        public abstract Binding Binding { get; }
 
         internal void VerifyNotSealed()
         {

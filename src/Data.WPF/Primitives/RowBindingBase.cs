@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -22,10 +23,15 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal sealed override void FlushReverseBinding(UIElement element)
+        internal sealed override void FlushInput(UIElement element)
         {
             if (Input != null)
                 Input.Flush((T)element);
+        }
+
+        internal sealed override IValidationSource<Column> ValidationSource
+        {
+            get { return Input == null ? ValidationSource<Column>.Empty : Input.SourceColumns; }
         }
 
         List<T> _cachedElements;
@@ -71,7 +77,7 @@ namespace DevZest.Data.Windows.Primitives
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
             if (Input != null)
-                Input.Refresh(e, rowPresenter);
+                Input.SetDataErrorInfo(e, rowPresenter);
             Refresh(e, rowPresenter);
         }
 
@@ -96,16 +102,14 @@ namespace DevZest.Data.Windows.Primitives
             return rowPresenter != Template.ElementManager.CurrentRow;
         }
 
-        internal sealed override void BypassProgressiveValidationMode()
+        internal sealed override bool HasPreValidatorError
         {
-            if (Input != null)
-                Input.BypassProgressiveMode();
+            get { return Input == null ? false : Input.HasPreValidatorError; }
         }
 
-        internal sealed override void OnCurrentRowChanged()
+        private ValidationManager ValidationManager
         {
-            if (Input != null)
-                Input.OnCurrentRowChanged();
+            get { return Template.ValidationManager; }
         }
 
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
@@ -114,35 +118,15 @@ namespace DevZest.Data.Windows.Primitives
                 Input.OnRowDisposed(rowPresenter);
         }
 
-        internal sealed override bool HasPreValidatorError
+        internal sealed override bool HasAsyncValidator
         {
-            get { return Input == null ? false : Input.HasPreValidatorError; }
+            get { return Input == null ? false : Input.HasAsyncValidator; }
         }
 
-        internal sealed override void SetValidationResult(RowValidationResult errors, RowValidationResult warnings)
+        internal sealed override void RunAsyncValidator(RowPresenter rowPresenter)
         {
-            if (Input != null)
-                Input.SetValidationResult(errors, warnings);
-        }
-
-        internal sealed override IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)
-        {
-            if (Input == null)
-                return Array<ValidationMessage>.Empty;
-            return Input.GetErrors(rowPresenter);
-        }
-
-        internal sealed override IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter)
-        {
-            if (Input == null)
-                return Array<ValidationMessage>.Empty;
-            return Input.GetWarnings(rowPresenter);
-        }
-
-        internal sealed override void ResetInput(bool dataReloaded)
-        {
-            if (Input != null)
-                Input.Reset(dataReloaded);
+            Debug.Assert(Input != null);
+            Input.RunAsyncValidator(rowPresenter);
         }
     }
 }

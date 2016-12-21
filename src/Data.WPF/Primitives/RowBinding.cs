@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -48,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
         }
 
-        internal abstract void FlushReverseBinding(UIElement element);
+        internal abstract void FlushInput(UIElement element);
 
         internal bool ShouldRefresh(bool isReload, UIElement element)
         {
@@ -57,20 +59,14 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract bool ShouldRefresh(UIElement element);
 
-        internal abstract void BypassProgressiveValidationMode();
+        internal abstract bool HasPreValidatorError { get; }
 
-        internal abstract void OnCurrentRowChanged();
+        internal abstract IValidationSource<Column> ValidationSource { get; }
 
         internal abstract void OnRowDisposed(RowPresenter rowPresenter);
 
-        internal abstract bool HasPreValidatorError { get; }
+        internal abstract bool HasAsyncValidator { get; }
 
-        internal abstract void SetValidationResult(RowValidationResult errors, RowValidationResult warnings);
-
-        internal abstract IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter);
-
-        internal abstract IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter);
-
-        internal abstract void ResetInput(bool dataReloaded);
+        internal abstract void RunAsyncValidator(RowPresenter rowPresenter);
     }
 }

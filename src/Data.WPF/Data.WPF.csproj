@@ -48,12 +48,14 @@
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
-    <Compile Include="Primitives\RowValidationEntry.cs" />
-    <Compile Include="Primitives\RowValidationResult.cs" />
+    <Compile Include="Primitives\ScalarValidationManager.cs" />
+    <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
+    <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />
+    <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
     <Compile Include="Utilities\ListExtensions.AddItem.cs" />
     <Compile Include="Utilities\ListExtensions.AddItems.cs" />
-    <Compile Include="Utilities\ListExtensions.GetCount.cs" />
+    <Compile Include="Utilities\CollectionExtensions.GetCount.cs" />
     <Compile Include="Utilities\ListExtensions.ToReadOnlyList.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="Primitives\Input_T.cs" />

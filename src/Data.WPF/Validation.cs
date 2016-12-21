@@ -215,12 +215,5 @@ namespace DevZest.Data.Windows
             element.SetSeverity(null);
             element.ClearDataErrorInfoBinding();
         }
-
-        internal static List<ValidationMessage> AddValidationMessage(this List<ValidationMessage> list, ValidationMessage message, ValidationSeverity severity)
-        {
-            if (message.IsSeverity(severity))
-                list = list.AddItem(message);
-            return list;
-        }
     }
 }

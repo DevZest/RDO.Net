@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -166,5 +167,13 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract bool ShouldRefresh(UIElement element);
+
+        internal abstract IValidationSource<Scalar> ValidationSource { get; }
+
+        internal abstract bool HasPreValidatorError { get; }
+
+        internal abstract bool HasAsyncValidator { get; }
+
+        internal abstract void RunAsyncValidator();
     }
 }
