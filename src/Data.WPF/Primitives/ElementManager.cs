@@ -231,8 +231,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 0; i < scalarBinding.BlockDimensions; i++)
                 {
                     var element = scalarBinding[i];
-                    if (scalarBinding.ShouldRefresh(isReload, element))
-                        scalarBinding.Refresh(element);
+                    scalarBinding.Refresh(element);
                 }
             }
         }

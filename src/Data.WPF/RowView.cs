@@ -155,8 +155,7 @@ namespace DevZest.Data.Windows
             {
                 var rowBinding = rowBindings[i];
                 var element = Elements[i];
-                if (rowBinding.ShouldRefresh(isReload, element))
-                    rowBinding.Refresh(element);
+                rowBinding.Refresh(element);
             }
         }
 

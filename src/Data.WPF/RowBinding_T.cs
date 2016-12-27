@@ -97,16 +97,6 @@ namespace DevZest.Data.Windows
             CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool ShouldRefresh(UIElement element)
-        {
-            if (_input == null)
-                return true;
-
-            var rowPresenter = element.GetRowPresenter();
-            Debug.Assert(rowPresenter != null);
-            return rowPresenter != Template.ElementManager.CurrentRow;
-        }
-
         internal sealed override bool HasPreValidatorError
         {
             get { return Input == null ? false : Input.HasPreValidatorError; }

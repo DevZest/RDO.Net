@@ -90,11 +90,6 @@ namespace DevZest.Data.Windows
             CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool ShouldRefresh(UIElement element)
-        {
-            return _input == null;
-        }
-
         internal sealed override bool HasPreValidatorError
         {
             get { return Input == null ? false : Input.HasPreValidatorError; }
