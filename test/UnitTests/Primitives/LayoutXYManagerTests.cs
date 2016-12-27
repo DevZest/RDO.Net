@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("20")
                     .Layout(Orientation.Vertical)
-                    .AddBinding(0, 0, new PlaceholderRowBinding());
+                    .AddBinding(0, 0, _.BindToRowPlaceholder());
             });
 
             {
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("Auto")
                     .Layout(Orientation.Vertical)
-                    .AddBinding(0, 0, new PlaceholderRowBinding() { OnRefresh = (v, p) => v.DesiredHeight = 10 * (p.Index + 1) });
+                    .AddBinding(0, 0, _.BindToRowPlaceholder((v, p) => v.DesiredHeight = 10 * (p.Index + 1)));
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
@@ -155,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("Auto")
                     .Layout(Orientation.Vertical, 2)
-                    .AddBinding(0, 0, new PlaceholderRowBinding() { OnRefresh = (v, p) => v.DesiredHeight = 10 * (p.Index + 1) });
+                    .AddBinding(0, 0, _.BindToRowPlaceholder((v, p) => v.DesiredHeight = 10 * (p.Index + 1)));
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
@@ -193,9 +193,9 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("20", "100", "20")
                     .GridRows("20")
                     .Layout(Orientation.Vertical, 2)
-                    .AddBinding(0, 0, new PlaceholderBlockBinding())
-                    .AddBinding(1, 0, new PlaceholderRowBinding())
-                    .AddBinding(2, 0, new PlaceholderBlockBinding());
+                    .AddBinding(0, 0, _.BindToBlockPlaceholder())
+                    .AddBinding(1, 0, _.BindToRowPlaceholder())
+                    .AddBinding(2, 0, _.BindToBlockPlaceholder());
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
@@ -241,11 +241,11 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("20", "100")
                     .GridRows("20", "20", "20")
                     .Layout(Orientation.Vertical, 2)
-                    .AddBinding(0, 0, new PlaceholderScalarBinding())
-                    .AddBinding(1, 0, new PlaceholderScalarBinding())
-                    .AddBinding(0, 1, new PlaceholderScalarBinding())
-                    .AddBinding(1, 1, new PlaceholderRowBinding())
-                    .AddBinding(1, 2, new PlaceholderScalarBinding() { IsMultidimensional = true });
+                    .AddBinding(0, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(1, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(0, 1, _.BindToScalarPlaceholder())
+                    .AddBinding(1, 1, _.BindToRowPlaceholder())
+                    .AddBinding(1, 2, _.BindToScalarPlaceholder().WithIsMultidimensional(true));
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
@@ -271,11 +271,11 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical)
                     .WithFrozenTop(1)
                     .WithFrozenBottom(1)
-                    .AddBinding(0, 0, new PlaceholderScalarBinding())
-                    .AddBinding(0, 1, new PlaceholderScalarBinding())
-                    .AddBinding(0, 2, new PlaceholderRowBinding())
-                    .AddBinding(0, 3, new PlaceholderScalarBinding())
-                    .AddBinding(0, 4, new PlaceholderScalarBinding());
+                    .AddBinding(0, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(0, 1, _.BindToScalarPlaceholder())
+                    .AddBinding(0, 2, _.BindToRowPlaceholder())
+                    .AddBinding(0, 3, _.BindToScalarPlaceholder())
+                    .AddBinding(0, 4, _.BindToScalarPlaceholder());
             });
 
             layoutManager.Measure(new Size(100, 100));
@@ -382,10 +382,10 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical)
                     .WithFrozenLeft(1)
                     .WithFrozenRight(1)
-                    .AddBinding(1, 0, new PlaceholderScalarBinding())
-                    .AddBinding(2, 0, new PlaceholderScalarBinding())
-                    .AddBinding(3, 0, new PlaceholderScalarBinding())
-                    .AddBinding(0, 1, new PlaceholderRowBinding());
+                    .AddBinding(1, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(2, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(3, 0, _.BindToScalarPlaceholder())
+                    .AddBinding(0, 1, _.BindToRowPlaceholder());
             });
 
             var scalarBindings = layoutManager.Template.ScalarBindings;
@@ -425,8 +425,8 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical)
                     .WithFrozenBottom(1)
                     .WithStretches(1)
-                    .AddBinding(0, 1, new PlaceholderRowBinding())
-                    .AddBinding(0, 2, new PlaceholderScalarBinding());
+                    .AddBinding(0, 1, _.BindToRowPlaceholder())
+                    .AddBinding(0, 2, _.BindToScalarPlaceholder());
             });
 
             var scalarBindings = layoutManager.Template.ScalarBindings;
@@ -446,9 +446,9 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 2)
                     .WithFrozenLeft(1)
                     .WithFrozenRight(1)
-                    .AddBinding(1, 0, new PlaceholderBlockBinding())
-                    .AddBinding(2, 0, new PlaceholderRowBinding())
-                    .AddBinding(3, 0, new PlaceholderBlockBinding());
+                    .AddBinding(1, 0, _.BindToBlockPlaceholder())
+                    .AddBinding(2, 0, _.BindToRowPlaceholder())
+                    .AddBinding(3, 0, _.BindToBlockPlaceholder());
             });
 
             var blocks = layoutManager.BlockViewList;
@@ -501,11 +501,11 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 2)
                     .WithFrozenLeft(1)
                     .WithFrozenRight(1)
-                    .AddBinding(0, 0, new PlaceholderBlockBinding())
-                    .AddBinding(1, 0, new PlaceholderBlockBinding())
-                    .AddBinding(2, 0, new PlaceholderRowBinding())
-                    .AddBinding(3, 0, new PlaceholderBlockBinding())
-                    .AddBinding(4, 0, new PlaceholderBlockBinding());
+                    .AddBinding(0, 0, _.BindToBlockPlaceholder())
+                    .AddBinding(1, 0, _.BindToBlockPlaceholder())
+                    .AddBinding(2, 0, _.BindToRowPlaceholder())
+                    .AddBinding(3, 0, _.BindToBlockPlaceholder())
+                    .AddBinding(4, 0, _.BindToBlockPlaceholder());
             });
 
             var blocks = layoutManager.BlockViewList;
@@ -565,11 +565,11 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 2)
                     .WithFrozenLeft(1)
                     .WithFrozenRight(1)
-                    .AddBinding(0, 0, new PlaceholderRowBinding())
-                    .AddBinding(1, 0, new PlaceholderRowBinding())
-                    .AddBinding(2, 0, new PlaceholderRowBinding())
-                    .AddBinding(3, 0, new PlaceholderRowBinding())
-                    .AddBinding(4, 0, new PlaceholderRowBinding());
+                    .AddBinding(0, 0, _.BindToRowPlaceholder())
+                    .AddBinding(1, 0, _.BindToRowPlaceholder())
+                    .AddBinding(2, 0, _.BindToRowPlaceholder())
+                    .AddBinding(3, 0, _.BindToRowPlaceholder())
+                    .AddBinding(4, 0, _.BindToRowPlaceholder());
             });
 
             var blocks = layoutManager.BlockViewList;
@@ -662,7 +662,7 @@ namespace DevZest.Data.Windows.Primitives
                     .GridRows("10", "10", "20", "10", "10")
                     .Layout(Orientation.Vertical)
                     .WithFrozenTop(1).WithFrozenBottom(1).WithStretches(1)
-                    .AddBinding(0, 2, 4, 2, new PlaceholderRowBinding())
+                    .AddBinding(0, 2, 4, 2, _.BindToRowPlaceholder())
                     .GridLineY(new GridPoint(1, 0), 5, pen)
                     .GridLineY(new GridPoint(2, 1), 3, pen)
                     .GridLineY(new GridPoint(3, 1), 2, pen)
@@ -707,7 +707,7 @@ namespace DevZest.Data.Windows.Primitives
                     .GridRows("10")
                     .Layout(Orientation.Vertical, 3)
                     .WithFrozenLeft(1)
-                    .AddBinding(1, 0, new PlaceholderRowBinding())
+                    .AddBinding(1, 0, _.BindToRowPlaceholder())
                     .GridLineY(new GridPoint(1, 0), 1, pen, GridLinePosition.PreviousTrack)
                     .GridLineY(new GridPoint(2, 0), 1, pen);
             });
@@ -752,7 +752,7 @@ namespace DevZest.Data.Windows.Primitives
                     .GridRows("10")
                     .Layout(Orientation.Vertical, 3)
                     .WithFrozenLeft(1)
-                    .AddBinding(1, 0, new PlaceholderRowBinding())
+                    .AddBinding(1, 0, _.BindToRowPlaceholder())
                     .GridLineX(new GridPoint(0, 0), 3, pen)
                     .GridLineX(new GridPoint(1, 1), 2, pen);
             });
@@ -790,7 +790,7 @@ namespace DevZest.Data.Windows.Primitives
                     .WithFrozenTop(1)
                     .WithFrozenBottom(1)
                     .WithStretches(1)
-                    .AddBinding(0, 2, new PlaceholderRowBinding())
+                    .AddBinding(0, 2, _.BindToRowPlaceholder())
                     .GridLineX(new GridPoint(0, 1), 1, pen)
                     .GridLineX(new GridPoint(0, 2), 1, pen, GridLinePosition.PreviousTrack)
                     .GridLineX(new GridPoint(0, 3), 1, pen)

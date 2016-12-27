@@ -1,62 +1,67 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using System.Windows;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class BlockBinding<T> : BlockBindingBase<T>
+    public abstract class BlockBinding<T> : BlockBinding
         where T : UIElement, new()
     {
-        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onSetup;
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnSetup
+        List<T> _cachedElements;
+
+        private T Create()
         {
-            get { return _onSetup; }
-            set
-            {
-                VerifyNotSealed();
-                _onSetup = value;
-            }
+            var result = new T();
+            OnCreated(result);
+            return result;
         }
 
-        protected sealed override void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        public T SettingUpElement { get; private set; }
+
+        internal sealed override void BeginSetup()
         {
-            if (OnSetup != null)
-                OnSetup(element, blockOrdinal, rows);
+            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
         }
 
-        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onRefresh;
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnRefresh
+        internal sealed override UIElement Setup(BlockView blockView)
         {
-            get { return _onRefresh; }
-            set
-            {
-                VerifyNotSealed();
-                _onRefresh = value;
-            }
+            Debug.Assert(SettingUpElement != null);
+            SettingUpElement.SetBlockView(blockView);
+            Setup(SettingUpElement, blockView.Ordinal, blockView);
+            Refresh(SettingUpElement, blockView.Ordinal, blockView);
+            return SettingUpElement;
         }
 
-        protected sealed override void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        internal sealed override void EndSetup()
         {
-            if (OnRefresh != null)
-                OnRefresh(element, blockOrdinal, rows);
+            SettingUpElement = null;
         }
 
-        private Action<T, int, IReadOnlyCollection<RowPresenter>> _onCleanup;
-        public Action<T, int, IReadOnlyCollection<RowPresenter>> OnCleanup
+        protected virtual void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
-            get { return _onCleanup; }
-            set
-            {
-                VerifyNotSealed();
-                _onCleanup = value;
-            }
         }
 
-        protected sealed override void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        protected abstract void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows);
+
+        protected virtual void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
-            if (OnCleanup != null)
-                OnCleanup(element, blockOrdinal, rows);
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            var blockView = element.GetBlockView();
+            Refresh((T)element, blockView.Ordinal, blockView);
+        }
+
+        internal override void Cleanup(UIElement element)
+        {
+            var blockView = element.GetBlockView();
+            var e = (T)element;
+            Cleanup(e, blockView.Ordinal, blockView);
+            e.SetBlockView(null);
+            CachedList.Recycle(ref _cachedElements, e);
         }
     }
 }

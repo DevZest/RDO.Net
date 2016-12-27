@@ -1,67 +1,114 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class ScalarBinding<T> : ScalarBindingBase<T>
+    public abstract class ScalarBinding<T> : ScalarBinding
         where T : UIElement, new()
     {
-        private Action<T> _onSetup;
-        public Action<T> OnSetup
+        private ScalarInput<T> _input;
+        public ScalarInput<T> Input
         {
-            get { return _onSetup; }
-            set
+            get { return _input; }
+            protected set
             {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
                 VerifyNotSealed();
-                _onSetup = value;
+                value.Seal(this);
+                _input = value;
             }
         }
 
-        protected sealed override void Setup(T element)
+        private IValidationSource<Scalar> _validationSource = ValidationSource<Scalar>.Empty;
+        internal sealed override IValidationSource<Scalar> ValidationSource
         {
-            if (OnSetup != null)
-                OnSetup(element);
+            get { return Input != null ? Input.SourceScalars : _validationSource; }
         }
 
-        private Action<T> _onRefresh;
-        public Action<T> OnRefresh
+        internal sealed override void FlushInput(UIElement element)
         {
-            get { return _onRefresh; }
-            set
-            {
-                VerifyNotSealed();
-                _onRefresh = value;
-            }
+            if (Input != null)
+                Input.Flush((T)element);
         }
 
-        protected sealed override void Refresh(T element)
+        List<T> _cachedElements;
+
+        private T Create()
         {
-            if (OnRefresh != null)
-                OnRefresh(element);
+            var result = new T();
+            OnCreated(result);
+            return result;
         }
 
-        private Action<T> _onCleanup;
-        public Action<T> OnCleanup
+        public T SettingUpElement { get; private set; }
+
+        internal sealed override void BeginSetup()
         {
-            get { return _onCleanup; }
-            set
-            {
-                VerifyNotSealed();
-                _onCleanup = value;
-            }
+            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
         }
 
-        protected sealed override void Cleanup(T element)
+        internal sealed override UIElement Setup()
         {
-            if (OnCleanup != null)
-                OnCleanup(element);
+            Debug.Assert(SettingUpElement != null);
+            Setup(SettingUpElement);
+            Refresh(SettingUpElement);
+            if (Input != null)
+                Input.Attach(SettingUpElement);
+            return SettingUpElement;
         }
 
-        public new ScalarInput<T> Input
+        internal sealed override void EndSetup()
         {
-            get { return base.Input; }
-            set { base.Input = value; }
+            SettingUpElement = null;
+        }
+
+        protected virtual void Setup(T element)
+        {
+        }
+
+        protected abstract void Refresh(T element);
+
+        protected virtual void Cleanup(T element)
+        {
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            Refresh((T)element);
+        }
+
+        internal sealed override void Cleanup(UIElement element)
+        {
+            var e = (T)element;
+            if (Input != null)
+                Input.Detach(e);
+            Cleanup(e);
+            CachedList.Recycle(ref _cachedElements, e);
+        }
+
+        internal sealed override bool ShouldRefresh(UIElement element)
+        {
+            return _input == null;
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return Input == null ? false : Input.HasPreValidatorError; }
+        }
+
+        internal sealed override bool HasAsyncValidator
+        {
+            get { return Input == null ? false : Input.HasAsyncValidator; }
+        }
+
+        internal sealed override void RunAsyncValidator()
+        {
+            Debug.Assert(HasAsyncValidator);
+            Input.RunAsyncValidator();
         }
     }
 }

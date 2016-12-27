@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool IsSealed
         {
-            get { return Template != null; }
+            get { return Template != null && Template.IsSealed; }
         }
 
         /// <summary>Throws an <see cref="InvalidOperationException"/> if this <see cref="Binding"/> is sealed.</summary>

@@ -1,67 +1,137 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using System.Windows;
+using DevZest.Data.Windows.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowBinding<T> : RowBindingBase<T>
+    public abstract class RowBinding<T> : RowBinding
         where T : UIElement, new()
     {
-        private Action<T, RowPresenter> _onSetup;
-        public Action<T, RowPresenter> OnSetup
+        private RowInput<T> _input;
+        public RowInput<T> Input
         {
-            get { return _onSetup; }
-            set
+            get { return _input; }
+            protected set
             {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
                 VerifyNotSealed();
-                _onSetup = value;
+                value.Seal(this);
+                _input = value;
             }
         }
 
-        protected sealed override void Setup(T element, RowPresenter rowPresenter)
+        internal sealed override void FlushInput(UIElement element)
         {
-            if (OnSetup != null)
-                OnSetup(element, rowPresenter);
+            if (Input != null)
+                Input.Flush((T)element);
         }
 
-        private Action<T, RowPresenter> _onRefresh;
-        public Action<T, RowPresenter> OnRefresh
+        internal sealed override IValidationSource<Column> ValidationSource
         {
-            get { return _onRefresh; }
-            set
-            {
-                VerifyNotSealed();
-                _onRefresh = value;
-            }
+            get { return Input == null ? ValidationSource<Column>.Empty : Input.SourceColumns; }
         }
 
-        protected sealed override void Refresh(T element, RowPresenter rowPresenter)
+        List<T> _cachedElements;
+
+        private T Create()
         {
-            if (OnRefresh != null)
-                OnRefresh(element, rowPresenter);
+            var result = new T();
+            OnCreated(result);
+            return result;
         }
 
-        private Action<T, RowPresenter> _onCleanup;
-        public Action<T, RowPresenter> OnCleanup
+        public T SettingUpElement { get; private set; }
+
+        internal sealed override void BeginSetup()
         {
-            get { return _onCleanup; }
-            set
-            {
-                VerifyNotSealed();
-                _onCleanup = value;
-            }
+            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
         }
 
-        protected sealed override void Cleanup(T element, RowPresenter rowPresenter)
+        internal sealed override UIElement Setup(RowPresenter rowPresenter)
         {
-            if (OnCleanup != null)
-                OnCleanup(element, rowPresenter);
+            Debug.Assert(SettingUpElement != null);
+            SettingUpElement.SetRowPresenter(rowPresenter);
+            Setup(SettingUpElement, rowPresenter);
+            Refresh(SettingUpElement, rowPresenter);
+            if (Input != null)
+                Input.Attach(SettingUpElement);
+            return SettingUpElement;
         }
 
-        public new RowInput<T> Input
+        internal sealed override void EndSetup()
         {
-            get { return base.Input; }
-            set { base.Input = value; }
+            SettingUpElement = null;
+        }
+
+        protected virtual void Setup(T element, RowPresenter rowPresenter)
+        {
+        }
+
+        protected abstract void Refresh(T element, RowPresenter rowPresenter);
+
+        protected virtual void Cleanup(T element, RowPresenter rowPresenter)
+        {
+        }
+
+        internal sealed override void Refresh(UIElement element)
+        {
+            var rowPresenter = element.GetRowPresenter();
+            var e = (T)element;
+            if (Input != null)
+                Input.SetDataErrorInfo(e, rowPresenter);
+            Refresh(e, rowPresenter);
+        }
+
+        internal sealed override void Cleanup(UIElement element)
+        {
+            var rowPresenter = element.GetRowPresenter();
+            var e = (T)element;
+            if (Input != null)
+                Input.Detach(e);
+            Cleanup(e, rowPresenter);
+            e.SetRowPresenter(null);
+            CachedList.Recycle(ref _cachedElements, e);
+        }
+
+        internal sealed override bool ShouldRefresh(UIElement element)
+        {
+            if (_input == null)
+                return true;
+
+            var rowPresenter = element.GetRowPresenter();
+            Debug.Assert(rowPresenter != null);
+            return rowPresenter != Template.ElementManager.CurrentRow;
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return Input == null ? false : Input.HasPreValidatorError; }
+        }
+
+        private ValidationManager ValidationManager
+        {
+            get { return Template.ValidationManager; }
+        }
+
+        internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
+        {
+            if (Input != null)
+                Input.OnRowDisposed(rowPresenter);
+        }
+
+        internal sealed override bool HasAsyncValidator
+        {
+            get { return Input == null ? false : Input.HasAsyncValidator; }
+        }
+
+        internal sealed override void RunAsyncValidator(RowPresenter rowPresenter)
+        {
+            Debug.Assert(Input != null);
+            Input.RunAsyncValidator(rowPresenter);
         }
     }
 }

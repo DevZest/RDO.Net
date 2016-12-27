@@ -20,14 +20,14 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public ScalarBindingBase<T> ScalarBinding { get; private set; }
+        public ScalarBinding<T> ScalarBinding { get; private set; }
 
         public sealed override Binding Binding
         {
             get { return ScalarBinding; }
         }
 
-        internal void Seal(ScalarBindingBase<T> scalarBinding)
+        internal void Seal(ScalarBinding<T> scalarBinding)
         {
             Debug.Assert(scalarBinding != null);
             VerifyNotSealed();

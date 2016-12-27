@@ -176,6 +176,15 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        private void VerifyBindingToAdd(Binding binding, string paramName)
+        {
+            if (binding == null)
+                throw new ArgumentNullException(paramName);
+
+            if (binding.Template != null)
+                throw new ArgumentException("", paramName);
+        }
+
         public TemplateBuilder AddBinding(int column, int row, ScalarBinding scalarBinding)
         {
             return AddBinding(column, row, column, row, scalarBinding);
@@ -183,6 +192,7 @@ namespace DevZest.Data.Windows
 
         public TemplateBuilder AddBinding(int left, int top, int right, int bottom, ScalarBinding scalarBinding)
         {
+            VerifyBindingToAdd(scalarBinding, nameof(scalarBinding));
             Template.AddBinding(Template.Range(left, top, right, bottom), scalarBinding);
             return this;
         }
@@ -194,6 +204,7 @@ namespace DevZest.Data.Windows
 
         public TemplateBuilder AddBinding(int left, int top, int right, int bottom, BlockBinding blockBinding)
         {
+            VerifyBindingToAdd(blockBinding, nameof(blockBinding));
             Template.AddBinding(Template.Range(left, top, right, bottom), blockBinding);
             return this;
         }
@@ -205,6 +216,7 @@ namespace DevZest.Data.Windows
 
         public TemplateBuilder AddBinding(int left, int top, int right, int bottom, RowBinding rowBinding)
         {
+            VerifyBindingToAdd(rowBinding, nameof(rowBinding));
             Template.AddBinding(Template.Range(left, top, right, bottom), rowBinding);
             return this;
         }

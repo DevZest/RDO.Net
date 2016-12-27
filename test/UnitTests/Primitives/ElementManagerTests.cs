@@ -32,10 +32,10 @@ namespace DevZest.Data.Windows.Primitives
             builder.GridColumns("100", "100")
                 .GridRows("100", "100", "100")
                 .Layout(Orientation.Vertical, 0)
-                .AddBinding(1, 0, new ScalarBinding<TextBlock>() { OnSetup = v => v.Text = _.Name.DisplayName })
-                .AddBinding(0, 1, new BlockBinding<TextBlock>() { OnRefresh = (v, ordinal, rows) => v.Text = ordinal.ToString() })
-                .AddBinding(1, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.Name) })
-                .AddBinding(1, 2, new ScalarBinding<TextBlock> { IsMultidimensional = true, OnSetup = v => v.Text = _.Name.DisplayName });
+                .AddBinding(1, 0, _.Name.BindDisplayNameToTextBlock())
+                .AddBinding(0, 1, _.BindBlockOrdinalToTextBlock())
+                .AddBinding(1, 1, _.Name.BindToTextBlock())
+                .AddBinding(1, 2, _.Name.BindDisplayNameToTextBlock().WithIsMultidimensional(true));
         }
 
         private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
@@ -364,7 +364,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("100")
                 .Layout(Orientation.Vertical, 0)
-                .AddBinding(0, 0, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.IsCurrent.ToString() });
+                .AddBinding(0, 0, _.BindIsCurrentToTextBlock());
             });
             var template = elementManager.Template;
             var rows = elementManager.Rows;
@@ -398,7 +398,7 @@ namespace DevZest.Data.Windows.Primitives
                 builder.GridColumns("100")
                     .GridRows("100")
                 .Layout(Orientation.Vertical, 0)
-                .AddBinding(0, 0, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.IsEditing.ToString() });
+                .AddBinding(0, 0, _.BindIsEditingToTextBlock());
             });
             var template = elementManager.Template;
             var rows = elementManager.Rows;

@@ -75,12 +75,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BindingFactory.cs" />
     <Compile Include="Factories\PlaceHolderFactory.cs" />
     <Compile Include="Helpers\AutoInitBlockView.cs" />
     <Compile Include="Helpers\AutoInitRowView.cs" />
-    <Compile Include="Helpers\PlaceholderBlockBinding.cs" />
-    <Compile Include="Helpers\PlaceholderRowBinding.cs" />
-    <Compile Include="Helpers\PlaceholderScalarBinding.cs" />
     <Compile Include="Helpers\ProductCategoryDataSet.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
@@ -94,7 +92,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\BindingTests.cs" />
     <Compile Include="Primitives\GridLengthParserTests.cs" />
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

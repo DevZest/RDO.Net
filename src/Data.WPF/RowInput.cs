@@ -22,14 +22,14 @@ namespace DevZest.Data.Windows
         {
         }
 
-        public RowBindingBase<T> RowBinding { get; private set; }
+        public RowBinding<T> RowBinding { get; private set; }
 
         public sealed override Binding Binding
         {
             get { return RowBinding; }
         }
 
-        internal void Seal(RowBindingBase<T> rowBinding)
+        internal void Seal(RowBinding<T> rowBinding)
         {
             Debug.Assert(rowBinding != null);
             VerifyNotSealed();

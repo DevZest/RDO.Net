@@ -17,6 +17,11 @@ namespace DevZest.Data.Windows.Primitives
             InternalGridRows = new GridRowCollection(this);
         }
 
+        internal bool IsSealed
+        {
+            get { return RowManager != null; }
+        }
+
         internal RowManager RowManager { get; set; }
 
         internal ElementManager ElementManager
