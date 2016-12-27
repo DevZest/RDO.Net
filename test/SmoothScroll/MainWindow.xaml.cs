@@ -1,9 +1,6 @@
 ﻿using DevZest.Data;
-using DevZest.Data.Windows;
 using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace SmoothScroll
 {
@@ -12,39 +9,6 @@ namespace SmoothScroll
     /// </summary>
     public partial class MainWindow : Window
     {
-        private class FooList : DataPresenter<Foo>
-        {
-            protected override void BuildTemplate(TemplateBuilder builder)
-            {
-                builder.GridColumns("*")
-                .GridRows("Auto")
-                .Layout(Orientation.Vertical)
-                .AddBinding(0, 0, new RowBinding<TextBlock>() { OnRefresh = Refresh });
-            }
-
-            private void Refresh(TextBlock v, RowPresenter p)
-            {
-                v.Text = p.GetValue(_.Text);
-                if (p.GetValue(_.IsSectionHeader).Value)
-                {
-                    v.Foreground = Brushes.White;
-                    v.Background = Brushes.Black;
-                    v.Padding = new Thickness(0);
-                    v.TextWrapping = TextWrapping.NoWrap;
-                }
-                else
-                {
-                    var r = p.GetValue(_.BackgroundR).Value;
-                    var g = p.GetValue(_.BackgroundG).Value;
-                    var b = p.GetValue(_.BackgroundB).Value;
-                    v.Foreground = Brushes.Black;
-                    v.Background = new SolidColorBrush(Color.FromArgb(255, r, g, b));
-                    v.Padding = new Thickness(10);
-                    v.TextWrapping = TextWrapping.Wrap;
-                }
-            }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
