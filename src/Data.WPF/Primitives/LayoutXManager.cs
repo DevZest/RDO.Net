@@ -6,8 +6,8 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal sealed class LayoutXManager : LayoutXYManager
     {
-        public LayoutXManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
-            : base(template, dataSet, where, orderBy)
+        public LayoutXManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
+            : base(template, dataSet, where, orderBy, validateScalars)
         {
         }
 

@@ -20,8 +20,8 @@ namespace DevZest.Data.Windows.Primitives
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
-        protected LayoutXYManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
-            : base(template, dataSet, where, orderBy, false)
+        protected LayoutXYManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
+            : base(template, dataSet, where, orderBy, false, validateScalars)
         {
             _scrollStartMain = ScrollOriginMain;
         }
@@ -656,13 +656,6 @@ namespace DevZest.Data.Windows.Primitives
         private double GetEndLocationMain(GridOffset gridOffset)
         {
             return gridOffset.IsEof ? GetStartLocationMain(gridOffset) : GetStartLocationMain(gridOffset) + gridOffset.Span.Length;
-        }
-
-        private double GetStartLocationMainRepeat(GridOffset gridOffset)
-        {
-            Debug.Assert(gridOffset.IsRepeat);
-
-            throw new NotImplementedException();
         }
 
         private double GetStartLocationCross(ScalarBinding scalarBinding, int blockDimension)

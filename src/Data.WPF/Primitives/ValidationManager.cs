@@ -20,6 +20,14 @@ namespace DevZest.Data.Windows.Primitives
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> _errors;
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> _warnings;
 
+        private void ClearValidationMessages()
+        {
+            if (_errors != null)
+                _errors.Clear();
+            if (_warnings != null)
+                _warnings.Clear();
+        }
+
         protected override void Reload()
         {
             base.Reload();
@@ -33,14 +41,10 @@ namespace DevZest.Data.Windows.Primitives
             if (_progress != null)
                 _progress.Clear();
 
-            if (_errors != null)
-                _errors.Clear();
-
-            if (_warnings != null)
-                _warnings.Clear();
-
             if (ValidationMode == ValidationMode.Implicit)
-                Validate();
+                Validate(true);
+            else
+                ClearValidationMessages();
         }
 
         internal bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
@@ -184,6 +188,7 @@ namespace DevZest.Data.Windows.Primitives
         public void Validate()
         {
             Validate(true);
+            InvalidateElements();
         }
 
         private void Validate(bool showAll)
@@ -191,6 +196,7 @@ namespace DevZest.Data.Windows.Primitives
             if (showAll)
                 ShowAll();
 
+            ClearValidationMessages();
             _errors = Validate(_errors, ValidationSeverity.Error, Template.MaxValidationErrors);
             _warnings = Validate(_warnings, ValidationSeverity.Warning, Template.MaxValidationWarnings);
         }
@@ -206,9 +212,6 @@ namespace DevZest.Data.Windows.Primitives
 
         private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Validate(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> result, ValidationSeverity severity, int maxEntries)
         {
-            if (result != null)
-                result.Clear();
-            
             if (CurrentRow != null)
             {
                 var messages = CurrentRow.DataRow.Validate(severity);

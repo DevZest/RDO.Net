@@ -1,20 +1,33 @@
-﻿using System;
+﻿using DevZest.Data.Windows.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class ScalarValidationManager : ValidationManager
     {
-        protected ScalarValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
+        protected ScalarValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
             : base(template, dataSet, where, orderBy, emptyBlockViewList)
         {
+            _validateScalars = validateScalars;
         }
 
+        private readonly Func<IEnumerable<ValidationMessage<Scalar>>> _validateScalars;
         private bool _showAll;
         private IValidationSource<Scalar> _progress = ValidationSource<Scalar>.Empty;
         private List<ValidationMessage<Scalar>> _errors;
         private List<ValidationMessage<Scalar>> _warnings;
+
+        private void ClearValidationMessages()
+        {
+            if (_errors != null)
+                _errors.Clear();
+
+            if (_warnings != null)
+                _warnings.Clear();
+        }
 
         protected override void Reload()
         {
@@ -27,14 +40,10 @@ namespace DevZest.Data.Windows.Primitives
             _showAll = false;
             _progress = ValidationSource<Scalar>.Empty;
 
-            if (_errors != null)
-                _errors.Clear();
-
-            if (_warnings != null)
-                _warnings.Clear();
-
             if (ScalarValidationMode == ValidationMode.Implicit)
-                ValidateScalars();
+                ValidateScalars(true);
+            else
+                ClearValidationMessages();
         }
 
         private ValidationMode ScalarValidationMode
@@ -45,6 +54,7 @@ namespace DevZest.Data.Windows.Primitives
         public void ValidateScalars()
         {
             ValidateScalars(true);
+            InvalidateElements();
         }
 
         private void ValidateScalars(bool showAll)
@@ -52,7 +62,21 @@ namespace DevZest.Data.Windows.Primitives
             if (showAll)
                 ShowAll();
 
-            throw new NotImplementedException();
+            if (_validateScalars == null)
+                return;
+
+            ClearValidationMessages();
+
+            foreach (var message in _validateScalars())
+            {
+                if (message.Severity == ValidationSeverity.Error)
+                    _errors = _errors.AddItem(message);
+                else
+                {
+                    Debug.Assert(message.Severity == ValidationSeverity.Warning);
+                    _warnings = _warnings.AddItem(message);
+                }
+            }
         }
 
         private void ShowAll()

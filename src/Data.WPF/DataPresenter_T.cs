@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevZest.Data.Windows
@@ -19,8 +20,13 @@ namespace DevZest.Data.Windows
             {
                 BuildTemplate(builder);
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy, ValidateScalars);
             AttachView(view);
+        }
+
+        protected virtual IEnumerable<ValidationMessage<Scalar>> ValidateScalars()
+        {
+            yield break;
         }
 
         private void DetachView()

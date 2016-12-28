@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -9,25 +10,25 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract partial class LayoutManager : ScalarValidationManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
         {
-            var result = LayoutManager.Create(template, dataSet, where, orderBy);
+            var result = LayoutManager.Create(template, dataSet, where, orderBy, validateScalars);
             result.DataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+        internal static LayoutManager Create(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars = null)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutZManager(template, dataSet, where, orderBy);
+                return new LayoutZManager(template, dataSet, where, orderBy, validateScalars);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutXManager(template, dataSet, where, orderBy);
+                return new LayoutXManager(template, dataSet, where, orderBy, validateScalars);
             else
-                return new LayoutYManager(template, dataSet, where, orderBy);
+                return new LayoutYManager(template, dataSet, where, orderBy, validateScalars);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
-            : base(template, dataSet, where, orderBy, emptyBlockViewList)
+        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
+            : base(template, dataSet, where, orderBy, emptyBlockViewList, validateScalars)
         {
         }
 
