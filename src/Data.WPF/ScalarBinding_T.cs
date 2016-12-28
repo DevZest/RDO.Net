@@ -88,7 +88,10 @@ namespace DevZest.Data.Windows
 
         internal sealed override void Refresh(UIElement element)
         {
-            Refresh((T)element);
+            var e = (T)element;
+            if (Input != null)
+                Input.SetDataErrorInfo(e);
+            Refresh(e);
         }
 
         internal sealed override void Cleanup(UIElement element, bool recycle)

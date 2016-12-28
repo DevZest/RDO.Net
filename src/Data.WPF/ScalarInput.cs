@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -87,6 +88,16 @@ namespace DevZest.Data.Windows
         private AsyncValidationState _asyncValidationState;
         private ValidationMessage _asyncValidationMessage;
 
+        internal ValidationMessage AsyncValidationMessage
+        {
+            get { return _asyncValidationMessage; }
+        }
+
+        internal AsyncValidationState AsyncValidationState
+        {
+            get { return _asyncValidationState; }
+        }
+
         public ScalarInput<T> WithAsyncValidator(Func<Task<ValidationMessage>> asyncValidator)
         {
             if (asyncValidator == null)
@@ -150,6 +161,45 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(HasAsyncValidator);
             AsyncValidate();
+        }
+
+        private IReadOnlyList<ValidationMessage> Errors
+        {
+            get
+            {
+                List<ValidationMessage> result = null;
+
+                if (HasPreValidatorError)
+                    result = result.AddItem(PreValidatorError);
+
+                result = result.AddItems(ScalarValidationManager.GetErrors(this));
+
+                var asyncMessage = AsyncValidationMessage;
+                if (asyncMessage.IsError)
+                    result = result.AddItem(asyncMessage);
+
+                return result.ToReadOnlyList();
+            }
+        }
+
+        private IReadOnlyList<ValidationMessage> Warnings
+        {
+            get
+            {
+                List<ValidationMessage> result = null;
+                result = result.AddItems(ScalarValidationManager.GetWarnings(this));
+
+                var asyncMessage = AsyncValidationMessage;
+                if (asyncMessage.IsWarning)
+                    result = result.AddItem(asyncMessage);
+
+                return result.ToReadOnlyList();
+            }
+        }
+
+        internal void SetDataErrorInfo(T element)
+        {
+            element.SetDataErrorInfo(Errors, Warnings);
         }
     }
 }

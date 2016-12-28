@@ -156,5 +156,38 @@ namespace DevZest.Data.Windows.Primitives
         {
             get { return Template.ScalarBindings.HasPreValidatorError(); }
         }
+
+        internal IReadOnlyList<ValidationMessage> GetErrors<T>(ScalarInput<T> scalarInput)
+            where T : UIElement, new()
+        {
+            if (!IsVisible(scalarInput.SourceScalars))
+                return Array<ValidationMessage>.Empty;
+
+            return GetValidationMessages(_errors, scalarInput.SourceScalars);
+        }
+
+        internal IReadOnlyList<ValidationMessage> GetWarnings<T>(ScalarInput<T> scalarInput)
+            where T : UIElement, new()
+        {
+            if (!IsVisible(scalarInput.SourceScalars))
+                return Array<ValidationMessage>.Empty;
+
+            return GetValidationMessages(_warnings, scalarInput.SourceScalars);
+        }
+
+        private static IReadOnlyList<ValidationMessage> GetValidationMessages(IReadOnlyList<ValidationMessage<Scalar>> messages, IValidationSource<Scalar> validationSource)
+        {
+            if (messages == null)
+                return Array<ValidationMessage>.Empty;
+
+            List<ValidationMessage> result = null;
+            foreach (var message in messages)
+            {
+                if (message.Source.SetEquals(validationSource))
+                    result = result.AddItem(new ValidationMessage(message.Id, message.Description, message.Severity));
+            }
+
+            return result.ToReadOnlyList();
+        }
     }
 }

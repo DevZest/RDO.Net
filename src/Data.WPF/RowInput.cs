@@ -248,7 +248,7 @@ namespace DevZest.Data.Windows
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
             if (asyncMessage.IsError)
-                result = result.AddItem(GetAsyncValidationMessage(rowPresenter));
+                result = result.AddItem(asyncMessage);
 
             return result.ToReadOnlyList();
         }
