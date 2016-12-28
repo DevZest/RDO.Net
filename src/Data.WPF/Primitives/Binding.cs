@@ -62,10 +62,6 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal abstract void Refresh(UIElement element);
-
-        internal abstract void Cleanup(UIElement element);
-
         internal void VerifyRowRange()
         {
             VerifyRowRange(Template.RowRange);
@@ -158,8 +154,21 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.Binding_InvalidFrozenMargin(nameof(Template.FrozenBottom), bindingsName, Ordinal));
         }
 
+        internal abstract UIElement GetSettingUpElement();
+
+        internal abstract void SetSettingUpElement(UIElement value);
+
         internal abstract void BeginSetup();
 
         internal abstract void EndSetup();
+
+        internal abstract void Refresh(UIElement element);
+
+        internal void Cleanup(UIElement element)
+        {
+            Cleanup(element, true);
+        }
+
+        internal abstract void Cleanup(UIElement element, bool recycle);
     }
 }

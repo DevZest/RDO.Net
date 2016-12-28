@@ -46,6 +46,16 @@ namespace DevZest.Data.Windows
 
         public T SettingUpElement { get; private set; }
 
+        internal sealed override UIElement GetSettingUpElement()
+        {
+            return SettingUpElement;
+        }
+
+        internal sealed override void SetSettingUpElement(UIElement value)
+        {
+            SettingUpElement = (T)value;
+        }
+
         internal sealed override void BeginSetup()
         {
             SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
@@ -81,13 +91,14 @@ namespace DevZest.Data.Windows
             Refresh((T)element);
         }
 
-        internal sealed override void Cleanup(UIElement element)
+        internal sealed override void Cleanup(UIElement element, bool recycle)
         {
             var e = (T)element;
             if (Input != null)
                 Input.Detach(e);
             Cleanup(e);
-            CachedList.Recycle(ref _cachedElements, e);
+            if (recycle)
+                CachedList.Recycle(ref _cachedElements, e);
         }
 
         internal sealed override bool HasPreValidatorError

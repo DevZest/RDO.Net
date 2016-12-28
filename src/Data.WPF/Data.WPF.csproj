@@ -49,6 +49,8 @@
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="Pane.cs" />
+    <Compile Include="PaneBlockBinding.cs" />
+    <Compile Include="PaneEntry.cs" />
     <Compile Include="PaneScalarBinding.cs" />
     <Compile Include="Primitives\ScalarValidationManager.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />

@@ -20,6 +20,16 @@ namespace DevZest.Data.Windows
 
         public T SettingUpElement { get; private set; }
 
+        internal sealed override UIElement GetSettingUpElement()
+        {
+            return SettingUpElement;
+        }
+
+        internal sealed override void SetSettingUpElement(UIElement value)
+        {
+            SettingUpElement = (T)value;
+        }
+
         internal sealed override void BeginSetup()
         {
             SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
@@ -55,13 +65,14 @@ namespace DevZest.Data.Windows
             Refresh((T)element, blockView.Ordinal, blockView);
         }
 
-        internal override void Cleanup(UIElement element)
+        internal override void Cleanup(UIElement element, bool recycle)
         {
             var blockView = element.GetBlockView();
             var e = (T)element;
             Cleanup(e, blockView.Ordinal, blockView);
             e.SetBlockView(null);
-            CachedList.Recycle(ref _cachedElements, e);
+            if (recycle)
+                CachedList.Recycle(ref _cachedElements, e);
         }
     }
 }
