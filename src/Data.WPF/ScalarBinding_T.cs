@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
         }
 
         private IValidationSource<Scalar> _validationSource = ValidationSource<Scalar>.Empty;
-        internal sealed override IValidationSource<Scalar> ValidationSource
+        private IValidationSource<Scalar> ValidationSource
         {
             get { return Input != null ? Input.SourceScalars : _validationSource; }
         }
@@ -106,15 +106,32 @@ namespace DevZest.Data.Windows
             get { return Input == null ? false : Input.HasPreValidatorError; }
         }
 
-        internal sealed override bool HasAsyncValidator
+        private bool HasAsyncValidator
         {
             get { return Input == null ? false : Input.HasAsyncValidator; }
         }
 
-        internal sealed override void RunAsyncValidator()
+        internal sealed override void RunAsyncValidatorIfNecessary()
         {
             Debug.Assert(HasAsyncValidator);
-            Input.RunAsyncValidator();
+            if (ShouldRunAsyncValidator)
+                Input.RunAsyncValidator();
+        }
+
+        private ScalarValidationManager ScalarValidationManager
+        {
+            get { return Template.ScalarValidationManager; }
+        }
+
+        private bool ShouldRunAsyncValidator
+        {
+            get
+            {
+                if (!ScalarValidationManager.IsVisible(ValidationSource))
+                    return false;
+
+                return HasAsyncValidator && !HasPreValidatorError && ScalarValidationManager.HasNoError(ValidationSource);
+            }
         }
     }
 }

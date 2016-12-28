@@ -7,20 +7,20 @@ namespace DevZest.Data.Windows
 {
     public abstract class PaneRowBinding : RowBinding
     {
-        //private sealed class ConcretePaneRowBinding<T> : PaneRowBinding
-        //    where T : Pane, new()
-        //{
-        //    internal override Pane CreatePane()
-        //    {
-        //        return new T();
-        //    }
-        //}
+        private sealed class ConcretePaneRowBinding<T> : PaneRowBinding
+            where T : Pane, new()
+        {
+            internal override Pane CreatePane()
+            {
+                return new T();
+            }
+        }
 
-        //public static PaneRowBinding Create<T>()
-        //    where T : Pane, new()
-        //{
-        //    return new ConcretePaneRowBinding<T>();
-        //}
+        public static PaneRowBinding Create<T>()
+            where T : Pane, new()
+        {
+            return new ConcretePaneRowBinding<T>();
+        }
 
         private List<RowBinding> _bindings = new List<RowBinding>();
         private List<string> _names = new List<string>();
@@ -88,6 +88,28 @@ namespace DevZest.Data.Windows
         {
             _settingUpPane.EndSetup(_bindings);
             _settingUpPane = null;
+        }
+
+        internal sealed override void FlushInput(UIElement element)
+        {
+            ((Pane)element).FlushInput(_bindings);
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return _bindings.HasPreValidatorError(); }
+        }
+
+        internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
+        {
+            for (int i = 0; i < _bindings.Count; i++)
+                _bindings[i].OnRowDisposed(rowPresenter);
+        }
+
+        internal sealed override void RunAsyncValidatorIfNecessary(RowPresenter rowPresenter)
+        {
+            for (int i = 0; i < _bindings.Count; i++)
+                _bindings[i].RunAsyncValidatorIfNecessary(rowPresenter);
         }
     }
 }

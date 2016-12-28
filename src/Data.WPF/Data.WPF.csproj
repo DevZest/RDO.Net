@@ -53,6 +53,7 @@
     <Compile Include="PaneRowBinding.cs" />
     <Compile Include="PaneScalarBinding.cs" />
     <Compile Include="Primitives\ScalarValidationManager.cs" />
+    <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />

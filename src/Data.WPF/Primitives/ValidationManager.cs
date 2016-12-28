@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows.Primitives
                 Validate();
         }
 
-        private bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> sourceColumns)
+        internal bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
         {
             if (_showAll)
                 return true;
@@ -51,9 +51,9 @@ namespace DevZest.Data.Windows.Primitives
             if (_progress == null)
                 return false;
 
-            if (sourceColumns.Count == 0)
+            if (validationSource.Count == 0)
                 return false;
-            return GetProgress(rowPresenter).IsSupersetOf(sourceColumns);
+            return GetProgress(rowPresenter).IsSupersetOf(validationSource);
         }
 
         public ICollection<KeyValuePair<RowPresenter, IReadOnlyList<ValidationMessage<Column>>>> Errors
@@ -97,13 +97,13 @@ namespace DevZest.Data.Windows.Primitives
             return result.ToReadOnlyList();
         }
 
-        private static bool IsEmpty(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> dictionary, RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        internal bool HasNoError(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
         {
-            if (dictionary == null)
+            if (_errors == null)
                 return true;
 
             IReadOnlyList<ValidationMessage<Column>> messages;
-            if (!dictionary.TryGetValue(rowPresenter, out messages))
+            if (!_errors.TryGetValue(rowPresenter, out messages))
                 return true;
 
             foreach (var message in messages)
@@ -135,15 +135,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool HasPreValidatorError
         {
-            get
-            {
-                foreach (var rowBinding in Template.RowBindings)
-                {
-                    if (rowBinding.HasPreValidatorError)
-                        return true;
-                }
-                return false;
-            }
+            get { return Template.RowBindings.HasPreValidatorError(); }
         }
 
         private IValidationSource<Column> GetProgress(RowPresenter rowPresenter)
@@ -176,20 +168,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RunAsyncValidators(RowPresenter rowPresenter)
         {
             foreach (var rowBinding in Template.RowBindings)
-            {
-                if (ShouldRunAsyncValidator(rowPresenter, rowBinding))
-                    rowBinding.RunAsyncValidator(rowPresenter);
-            }
-        }
-
-        private bool ShouldRunAsyncValidator(RowPresenter rowPresenter, RowBinding rowBinding)
-        {
-            if (!IsVisible(rowPresenter, rowBinding.ValidationSource))
-                return false;
-
-            return rowBinding.HasAsyncValidator
-                && !rowBinding.HasPreValidatorError
-                && IsEmpty(_errors, rowPresenter, rowBinding.ValidationSource);
+                rowBinding.RunAsyncValidatorIfNecessary(rowPresenter);
         }
 
         private ValidationMode ValidationMode

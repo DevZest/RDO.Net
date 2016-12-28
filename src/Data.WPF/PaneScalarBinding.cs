@@ -7,20 +7,20 @@ namespace DevZest.Data.Windows
 {
     public abstract class PaneScalarBinding : ScalarBinding
     {
-        //private sealed class ConcretePaneScalarBinding<T> : PaneScalarBinding
-        //    where T : Pane, new()
-        //{
-        //    internal override Pane CreatePane()
-        //    {
-        //        return new T();
-        //    }
-        //}
+        private sealed class ConcretePaneScalarBinding<T> : PaneScalarBinding
+            where T : Pane, new()
+        {
+            internal override Pane CreatePane()
+            {
+                return new T();
+            }
+        }
 
-        //public static PaneScalarBinding Create<T>()
-        //    where T : Pane, new()
-        //{
-        //    return new ConcretePaneScalarBinding<T>();
-        //}
+        public static PaneScalarBinding Create<T>()
+            where T : Pane, new()
+        {
+            return new ConcretePaneScalarBinding<T>();
+        }
 
         private List<ScalarBinding> _bindings = new List<ScalarBinding>();
         private List<string> _names = new List<string>();
@@ -88,6 +88,22 @@ namespace DevZest.Data.Windows
         {
             _settingUpPane.EndSetup(_bindings);
             _settingUpPane = null;
+        }
+
+        internal sealed override void FlushInput(UIElement element)
+        {
+            ((Pane)element).FlushInput(_bindings);
+        }
+
+        internal sealed override bool HasPreValidatorError
+        {
+            get { return _bindings.HasPreValidatorError(); }
+        }
+
+        internal sealed override void RunAsyncValidatorIfNecessary()
+        {
+            for (int i = 0; i < _bindings.Count; i++)
+                _bindings[i].RunAsyncValidatorIfNecessary();
         }
     }
 }

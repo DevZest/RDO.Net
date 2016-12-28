@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
                 Input.Flush((T)element);
         }
 
-        internal sealed override IValidationSource<Column> ValidationSource
+        private IValidationSource<Column> ValidationSource
         {
             get { return Input == null ? ValidationSource<Column>.Empty : Input.SourceColumns; }
         }
@@ -124,15 +124,24 @@ namespace DevZest.Data.Windows
                 Input.OnRowDisposed(rowPresenter);
         }
 
-        internal sealed override bool HasAsyncValidator
+        private bool HasAsyncValidator
         {
             get { return Input == null ? false : Input.HasAsyncValidator; }
         }
 
-        internal sealed override void RunAsyncValidator(RowPresenter rowPresenter)
+        internal sealed override void RunAsyncValidatorIfNecessary(RowPresenter rowPresenter)
         {
             Debug.Assert(Input != null);
-            Input.RunAsyncValidator(rowPresenter);
+            if (ShouldRunAsyncValidator(rowPresenter))
+                Input.RunAsyncValidator(rowPresenter);
+        }
+
+        private bool ShouldRunAsyncValidator(RowPresenter rowPresenter)
+        {
+            if (!ValidationManager.IsVisible(rowPresenter, ValidationSource))
+                return false;
+
+            return HasAsyncValidator && !HasPreValidatorError && ValidationManager.HasNoError(rowPresenter, ValidationSource);
         }
     }
 }

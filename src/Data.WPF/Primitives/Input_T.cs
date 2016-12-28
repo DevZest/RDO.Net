@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public abstract Binding Binding { get; }
+        public abstract TwoWayBinding Binding { get; }
 
         internal void VerifyNotSealed()
         {

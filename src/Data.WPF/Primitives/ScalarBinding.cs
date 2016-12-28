@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class ScalarBinding : Binding, IConcatList<ScalarBinding>
+    public abstract class ScalarBinding : TwoWayBinding, IConcatList<ScalarBinding>
     {
         #region IConcatList<ScalarBinding>
 
@@ -159,14 +159,6 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal abstract void FlushInput(UIElement element);
-
-        internal abstract IValidationSource<Scalar> ValidationSource { get; }
-
-        internal abstract bool HasPreValidatorError { get; }
-
-        internal abstract bool HasAsyncValidator { get; }
-
-        internal abstract void RunAsyncValidator();
+        internal abstract void RunAsyncValidatorIfNecessary();
     }
 }

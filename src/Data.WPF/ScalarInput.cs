@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows
 
         public ScalarBinding<T> ScalarBinding { get; private set; }
 
-        public sealed override Binding Binding
+        public sealed override TwoWayBinding Binding
         {
             get { return ScalarBinding; }
         }

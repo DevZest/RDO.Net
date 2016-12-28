@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class RowBinding : Binding, IConcatList<RowBinding>
+    public abstract class RowBinding : TwoWayBinding, IConcatList<RowBinding>
     {
         #region IConcatList<RowBinding>
 
@@ -50,16 +50,8 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.RowBinding_OutOfRowRange(Ordinal));
         }
 
-        internal abstract void FlushInput(UIElement element);
-
-        internal abstract bool HasPreValidatorError { get; }
-
-        internal abstract IValidationSource<Column> ValidationSource { get; }
-
         internal abstract void OnRowDisposed(RowPresenter rowPresenter);
 
-        internal abstract bool HasAsyncValidator { get; }
-
-        internal abstract void RunAsyncValidator(RowPresenter rowPresenter);
+        internal abstract void RunAsyncValidatorIfNecessary(RowPresenter rowPresenter);
     }
 }

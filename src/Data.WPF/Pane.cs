@@ -77,5 +77,12 @@ namespace DevZest.Data.Windows
                 bindings[i].EndSetup();
             IsNew = false;
         }
+
+        internal void FlushInput(IReadOnlyList<TwoWayBinding> bindings)
+        {
+            Debug.Assert(bindings.Count == Children.Count);
+            for (int i = 0; i < bindings.Count; i++)
+                bindings[i].FlushInput(Children[i]);
+        }
     }
 }

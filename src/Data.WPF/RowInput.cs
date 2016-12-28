@@ -24,7 +24,7 @@ namespace DevZest.Data.Windows
 
         public RowBinding<T> RowBinding { get; private set; }
 
-        public sealed override Binding Binding
+        public sealed override TwoWayBinding Binding
         {
             get { return RowBinding; }
         }

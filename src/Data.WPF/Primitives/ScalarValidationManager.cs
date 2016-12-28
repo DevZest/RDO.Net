@@ -79,31 +79,31 @@ namespace DevZest.Data.Windows.Primitives
         private void RunAsyncValidators()
         {
             foreach (var scalarBinding in Template.ScalarBindings)
-            {
-                if (ShouldRunAsyncValidator(scalarBinding))
-                    scalarBinding.RunAsyncValidator();
-            }
+                scalarBinding.RunAsyncValidatorIfNecessary();
         }
 
-        private bool IsVisible(ScalarBinding scalarBinding)
+        internal bool IsVisible(IValidationSource<Scalar> validationSource)
         {
             if (_showAll)
                 return true;
 
-            var validationSource = scalarBinding.ValidationSource;
             if (validationSource.Count == 0)
                 return false;
             return _progress.IsSupersetOf(validationSource);
         }
 
-        private bool ShouldRunAsyncValidator(ScalarBinding scalarBinding)
+        internal bool HasNoError(IValidationSource<Scalar> validationSource)
         {
-            if (!IsVisible(scalarBinding))
-                return false;
+            if (_errors == null)
+                return true;
 
-            return scalarBinding.HasAsyncValidator
-                && !scalarBinding.HasPreValidatorError;
-                //&& IsEmpty(_errors, scalarBinding.ValidationSource);
+            foreach (var error in _errors)
+            {
+                if (error.Source.SetEquals(validationSource))
+                    return false;
+            }
+
+            return true;
         }
 
         public IReadOnlyList<ValidationMessage<Scalar>> ScalarErrors
@@ -130,15 +130,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool HasScalarPreValidatorError
         {
-            get
-            {
-                foreach (var scalarBinding in Template.ScalarBindings)
-                {
-                    if (scalarBinding.HasPreValidatorError)
-                        return true;
-                }
-                return false;
-            }
+            get { return Template.ScalarBindings.HasPreValidatorError(); }
         }
     }
 }
