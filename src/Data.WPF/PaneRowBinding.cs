@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows
             return _settingUpPane;
         }
 
-        internal sealed override void SetSettingUpElement(UIElement value)
+        internal sealed override void BeginSetup(UIElement value)
         {
             _settingUpPane = (Pane)value;
         }

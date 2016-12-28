@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows
                 return this;
 
             for (int i = 0; i < bindings.Count; i++)
-                bindings[i].SetSettingUpElement(Children[i]);
+                bindings[i].BeginSetup(Children[i]);
             return this;
         }
 

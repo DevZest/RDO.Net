@@ -156,7 +156,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract UIElement GetSettingUpElement();
 
-        internal abstract void SetSettingUpElement(UIElement value);
+        internal abstract void BeginSetup(UIElement value);
 
         internal abstract void BeginSetup();
 

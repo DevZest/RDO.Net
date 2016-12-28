@@ -25,7 +25,7 @@ namespace DevZest.Data.Windows
             return SettingUpElement;
         }
 
-        internal sealed override void SetSettingUpElement(UIElement value)
+        internal sealed override void BeginSetup(UIElement value)
         {
             SettingUpElement = (T)value;
         }
