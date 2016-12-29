@@ -100,7 +100,12 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateElements();
         }
 
-        internal bool IsVisible(IValidationSource<Scalar> validationSource)
+        internal bool ShouldRunAsyncValidator(IValidationSource<Scalar> validationSource)
+        {
+            return IsVisible(validationSource) && HasNoError(validationSource);
+        }
+
+        private bool IsVisible(IValidationSource<Scalar> validationSource)
         {
             if (_showAll)
                 return true;
@@ -110,7 +115,7 @@ namespace DevZest.Data.Windows.Primitives
             return _progress.IsSupersetOf(validationSource);
         }
 
-        internal bool HasNoError(IValidationSource<Scalar> validationSource)
+        private bool HasNoError(IValidationSource<Scalar> validationSource)
         {
             if (_errors == null)
                 return true;

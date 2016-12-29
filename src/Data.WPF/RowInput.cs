@@ -238,10 +238,7 @@ namespace DevZest.Data.Windows
 
         private bool ShouldRunAsyncValidator(RowPresenter rowPresenter)
         {
-            if (!ValidationManager.IsVisible(rowPresenter, SourceColumns))
-                return false;
-
-            return HasAsyncValidator && !HasPreValidatorError && ValidationManager.HasNoError(rowPresenter, SourceColumns);
+            return HasAsyncValidator && !HasPreValidatorError && ValidationManager.ShouldRunAsyncValidator(rowPresenter, SourceColumns);
         }
 
         private IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)

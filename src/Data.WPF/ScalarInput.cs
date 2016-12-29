@@ -166,13 +166,7 @@ namespace DevZest.Data.Windows
 
         private bool ShouldRunAsyncValidator
         {
-            get
-            {
-                if (!ScalarValidationManager.IsVisible(SourceScalars))
-                    return false;
-
-                return HasAsyncValidator && !HasPreValidatorError && ScalarValidationManager.HasNoError(SourceScalars);
-            }
+            get { return HasAsyncValidator && !HasPreValidatorError && ScalarValidationManager.ShouldRunAsyncValidator(SourceScalars); }
         }
 
         private IReadOnlyList<ValidationMessage> Errors

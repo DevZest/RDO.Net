@@ -47,7 +47,12 @@ namespace DevZest.Data.Windows.Primitives
                 ClearValidationMessages();
         }
 
-        internal bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        internal bool ShouldRunAsyncValidator(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        {
+            return IsVisible(rowPresenter, validationSource) && HasNoError(rowPresenter, validationSource);
+        }
+
+        private bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
         {
             if (_showAll)
                 return true;
@@ -101,7 +106,7 @@ namespace DevZest.Data.Windows.Primitives
             return result.ToReadOnlyList();
         }
 
-        internal bool HasNoError(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        private bool HasNoError(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
         {
             if (_errors == null)
                 return true;
