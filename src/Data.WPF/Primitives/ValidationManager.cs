@@ -165,14 +165,8 @@ namespace DevZest.Data.Windows.Primitives
 
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(false);
-            RunAsyncValidators(rowPresenter);
+            rowInput.RunAsyncValidator(rowPresenter);
             InvalidateElements();
-        }
-
-        private void RunAsyncValidators(RowPresenter rowPresenter)
-        {
-            foreach (var rowBinding in Template.RowBindings)
-                rowBinding.RunAsyncValidatorIfNecessary(rowPresenter);
         }
 
         private ValidationMode ValidationMode

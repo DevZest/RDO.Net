@@ -51,7 +51,5 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract void OnRowDisposed(RowPresenter rowPresenter);
-
-        internal abstract void RunAsyncValidatorIfNecessary(RowPresenter rowPresenter);
     }
 }

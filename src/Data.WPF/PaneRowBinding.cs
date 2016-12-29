@@ -105,11 +105,5 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < _bindings.Count; i++)
                 _bindings[i].OnRowDisposed(rowPresenter);
         }
-
-        internal sealed override void RunAsyncValidatorIfNecessary(RowPresenter rowPresenter)
-        {
-            for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].RunAsyncValidatorIfNecessary(rowPresenter);
-        }
     }
 }

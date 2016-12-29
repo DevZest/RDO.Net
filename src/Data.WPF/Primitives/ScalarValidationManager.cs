@@ -96,14 +96,8 @@ namespace DevZest.Data.Windows.Primitives
 
             if (ScalarValidationMode != ValidationMode.Explicit)
                 ValidateScalars(false);
-            RunAsyncValidators();
+            scalarInput.RunAsyncValidator();
             InvalidateElements();
-        }
-
-        private void RunAsyncValidators()
-        {
-            foreach (var scalarBinding in Template.ScalarBindings)
-                scalarBinding.RunAsyncValidatorIfNecessary();
         }
 
         internal bool IsVisible(IValidationSource<Scalar> validationSource)

@@ -232,7 +232,16 @@ namespace DevZest.Data.Windows
         internal void RunAsyncValidator(RowPresenter rowPresenter)
         {
             Debug.Assert(HasAsyncValidator);
-            AsyncValidate(rowPresenter);
+            if (ShouldRunAsyncValidator(rowPresenter))
+                AsyncValidate(rowPresenter);
+        }
+
+        private bool ShouldRunAsyncValidator(RowPresenter rowPresenter)
+        {
+            if (!ValidationManager.IsVisible(rowPresenter, SourceColumns))
+                return false;
+
+            return HasAsyncValidator && !HasPreValidatorError && ValidationManager.HasNoError(rowPresenter, SourceColumns);
         }
 
         private IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)

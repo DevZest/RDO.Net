@@ -99,11 +99,5 @@ namespace DevZest.Data.Windows
         {
             get { return _bindings.HasPreValidatorError(); }
         }
-
-        internal sealed override void RunAsyncValidatorIfNecessary()
-        {
-            for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].RunAsyncValidatorIfNecessary();
-        }
     }
 }
