@@ -124,8 +124,8 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
-            _where = Normalize(where);
-            _orderBy = Normalize(orderBy);
+            _normalizedWhere = Normalize(where);
+            _normalizedOrderBy = Normalize(orderBy);
             Initialize();
             WireDataChangedEvents();
         }
@@ -170,10 +170,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return _dataSet; }
         }
 
-        private IReadOnlyList<_Boolean> _where;
+        private IReadOnlyList<_Boolean> _normalizedWhere;
         public _Boolean Where
         {
-            get { return _where == null ? null : _where[0]; }
+            get { return _normalizedWhere == null ? null : _normalizedWhere[0]; }
         }
 
         private bool SetWhere(_Boolean where)
@@ -181,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
             if (Where == where)
                 return false;
 
-            _where = Normalize(where);
+            _normalizedWhere = Normalize(where);
             return true;
         }
 
@@ -197,14 +197,14 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool IsQuery
         {
-            get { return _where != null || _orderBy != null; }
+            get { return _normalizedWhere != null || _normalizedOrderBy != null; }
         }
 
-        private IReadOnlyList<ColumnSort[]> _orderBy;
+        private IReadOnlyList<ColumnSort[]> _normalizedOrderBy;
 
         public ColumnSort[] OrderBy
         {
-            get { return _orderBy == null ? null : _orderBy[0]; }
+            get { return _normalizedOrderBy == null ? null : _normalizedOrderBy[0]; }
         }
 
         private bool SetOrderBy(ColumnSort[] orderBy)
@@ -212,7 +212,7 @@ namespace DevZest.Data.Windows.Primitives
             if (Equals(orderBy, OrderBy))
                 return false;
 
-            _orderBy = Normalize(orderBy);
+            _normalizedOrderBy = Normalize(orderBy);
             return true;
         }
 
@@ -269,7 +269,7 @@ namespace DevZest.Data.Windows.Primitives
             if (IsRecursive || IsQuery)
                 _mappings = new Dictionary<DataRow, RowPresenter>();
 
-            if (!IsRecursive || _where == null)
+            if (!IsRecursive || _normalizedWhere == null)
                 return;
 
             //If any child row fulfills the WHERE predicates, all the rows along the parent chain should be kept
@@ -343,21 +343,21 @@ namespace DevZest.Data.Windows.Primitives
 
         private IEnumerable<DataRow> Filter(IEnumerable<DataRow> dataRows)
         {
-            return _where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : ApplyWhere(x));
+            return _normalizedWhere == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : ApplyWhere(x));
         }
 
         private bool ApplyWhere(DataRow dataRow)
         {
-            var result = _where[GetDepth(dataRow)][dataRow];
+            var result = _normalizedWhere[GetDepth(dataRow)][dataRow];
             return result.HasValue && result.GetValueOrDefault();
         }
 
         private IEnumerable<DataRow> Sort(IEnumerable<DataRow> dataRows, int depth)
         {
-            if (_orderBy == null)
+            if (_normalizedOrderBy == null)
                 return dataRows;
 
-            var orderBy = _orderBy[depth];
+            var orderBy = _normalizedOrderBy[depth];
             var column = orderBy[0].Column;
             var direction = orderBy[0].Direction;
             IOrderedEnumerable<DataRow> result = direction == SortDirection.Descending ? dataRows.OrderByDescending(x => x, column) : dataRows.OrderBy(x => x, column);
@@ -429,7 +429,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool PassesFilter(DataRow dataRow)
         {
-            return _where == null || ApplyWhere(dataRow);
+            return _normalizedWhere == null || ApplyWhere(dataRow);
         }
 
         private void OnDataRowAdded(object sender, DataRow dataRow)
@@ -519,9 +519,9 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(GetDepth(x) == GetDepth(y));
 
-            if (_orderBy != null)
+            if (_normalizedOrderBy != null)
             {
-                var orderBy = _orderBy[GetDepth(x)];
+                var orderBy = _normalizedOrderBy[GetDepth(x)];
                 for (int i = 0; i < orderBy.Length; i++)
                 {
                     var columnSort = orderBy[i];

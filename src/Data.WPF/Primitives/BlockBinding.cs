@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,11 +12,13 @@ namespace DevZest.Data.Windows.Primitives
     {
         #region IConcatList<BlockBinding>
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<BlockBinding>.Count
         {
             get { return 1; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         BlockBinding IReadOnlyList<BlockBinding>.this[int index]
         {
             get
@@ -26,15 +29,18 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         void IConcatList<BlockBinding>.Sort(Comparison<BlockBinding> comparision)
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<BlockBinding> IEnumerable<BlockBinding>.GetEnumerator()
         {
             yield return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;

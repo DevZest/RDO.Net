@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,11 +13,13 @@ namespace DevZest.Data.Windows.Primitives
     {
         #region IConcatList<ScalarBinding>
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<ScalarBinding>.Count
         {
             get { return 1; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         ScalarBinding IReadOnlyList<ScalarBinding>.this[int index]
         {
             get
@@ -27,15 +30,18 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         void IConcatList<ScalarBinding>.Sort(Comparison<ScalarBinding> comparision)
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<ScalarBinding> IEnumerable<ScalarBinding>.GetEnumerator()
         {
             yield return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
