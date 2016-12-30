@@ -430,13 +430,6 @@ select @mockschema;
             return sqlCommand.ExecuteScalar();
         }
 
-        private void CreateMockSchema(string mockSchema)
-        {
-            var sqlCommandText = string.Format(@"exec tempdb..sp_executesql N'create schema {0}';", mockSchema);
-            var sqlCommand = new SqlCommand(sqlCommandText, GetConnection());
-            ExecuteNonQuery(sqlCommand);
-        }
-
         protected sealed override string GetMockTableName(string tableName, object tag)
         {
             var quotedTableName = string.Join(".", tableName.ParseIdentifier()).ToQuotedIdentifier();

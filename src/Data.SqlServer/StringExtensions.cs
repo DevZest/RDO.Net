@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace DevZest.Data.SqlServer
@@ -28,6 +29,7 @@ namespace DevZest.Data.SqlServer
             return string.Format(CultureInfo.InvariantCulture, "[{0}]", identifier.Replace("]", "]]"));
         }
 
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "This method is only called by SQL generator.")]
         public static SqlCommand CreateSqlCommand(this string commandText, SqlConnection sqlConnection, IEnumerable<SqlParameter> parameters = null)
         {
             var result = new SqlCommand();
