@@ -21,12 +21,12 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.DataSet; }
         }
 
-        public _Boolean Where
+        public virtual _Boolean Where
         {
             get { return LayoutManager == null ? null : LayoutManager.Where; }
         }
 
-        public IReadOnlyList<ColumnSort> OrderBy
+        public virtual IReadOnlyList<ColumnSort> OrderBy
         {
             get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
         }
@@ -38,19 +38,9 @@ namespace DevZest.Data.Windows
             return LayoutManager;
         }
 
-        public void Query(_Boolean where)
+        public virtual IDataCriteria Criteria
         {
-            RequireLayoutManager().Query(where);
-        }
-
-        public void Query(_Boolean where, ColumnSort[] orderBy)
-        {
-            RequireLayoutManager().Query(where, orderBy);
-        }
-
-        public void Query(ColumnSort[] orderBy)
-        {
-            RequireLayoutManager().Query(orderBy);
+            get { return LayoutManager; }
         }
 
         public IReadOnlyList<RowPresenter> Rows

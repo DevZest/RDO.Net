@@ -48,6 +48,7 @@
     <Compile Include="BindingExtensions.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
+    <Compile Include="IDataCriteria.cs" />
     <Compile Include="Pane.cs" />
     <Compile Include="PaneBlockBinding.cs" />
     <Compile Include="PaneRowBinding.cs" />

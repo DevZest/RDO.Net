@@ -8,7 +8,7 @@ using System.Linq;
 namespace DevZest.Data.Windows.Primitives
 {
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filter and sort.</summary>
-    internal abstract class RowMapper
+    internal abstract class RowMapper : IDataCriteria
     {
         private abstract class Normalized<T> : IReadOnlyList<T>
             where T : class
@@ -178,11 +178,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool SetWhere(_Boolean where)
         {
-            var value = Normalize(where);
-            if (_where == value)
+            if (Where == where)
                 return false;
 
-            _where = value;
+            _where = Normalize(where);
             return true;
         }
 
@@ -201,28 +200,31 @@ namespace DevZest.Data.Windows.Primitives
             get { return _where != null || _orderBy != null; }
         }
 
-        public void Query(_Boolean where)
-        {
-            var changed = SetWhere(where);
-            if (changed)
-                Reload();
-        }
-
         private IReadOnlyList<ColumnSort[]> _orderBy;
 
-        public IReadOnlyList<ColumnSort> OrderBy
+        public ColumnSort[] OrderBy
         {
             get { return _orderBy == null ? null : _orderBy[0]; }
         }
 
         private bool SetOrderBy(ColumnSort[] orderBy)
         {
-            var value = Normalize(orderBy);
-            if (_orderBy == value)
+            if (Equals(orderBy, OrderBy))
                 return false;
 
-            _orderBy = value;
+            _orderBy = Normalize(orderBy);
             return true;
+        }
+
+        private static bool Equals(ColumnSort[] x, ColumnSort[] y)
+        {
+            if (x == y)
+                return true;
+
+            if (x == null && y.Length == 0)
+                return true;
+
+            return false;
         }
 
         private IReadOnlyList<ColumnSort[]> Normalize(ColumnSort[] orderBy)
@@ -235,14 +237,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new ColumnSort[][] { orderBy };
         }
 
-        public void Query(ColumnSort[] orderBy)
-        {
-            var changed = SetOrderBy(orderBy);
-            if (changed)
-                Reload();
-        }
-
-        public void Query(_Boolean where, ColumnSort[] orderBy)
+        public void Apply(_Boolean where, ColumnSort[] orderBy)
         {
             var whereChanged = SetWhere(where);
             var orderByChanged = SetOrderBy(orderBy);
