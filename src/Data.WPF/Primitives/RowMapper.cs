@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filter and sort.</summary>
+    /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
     internal abstract class RowMapper : IDataCriteria
     {
         private abstract class Normalized<T> : IReadOnlyList<T>
