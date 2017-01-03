@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
-    [TemplatePart(Name = "PART_Panel", Type = typeof(DataElementPanel))]
+    [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
         private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows
         {
             if (Template == null)
                 return;
-            var panel = Template.FindName("PART_Panel", this) as DataElementPanel;
+            var panel = Template.FindName("PART_Panel", this) as DataViewPanel;
             if (panel == null)
                 return;
 

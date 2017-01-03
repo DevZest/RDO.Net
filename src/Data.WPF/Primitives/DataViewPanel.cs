@@ -8,16 +8,16 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public sealed class DataElementPanel : FrameworkElement, IScrollInfo
+    public sealed class DataViewPanel : FrameworkElement, IScrollInfo
     {
         private class GridLineLayer : UIElement
         {
-            public GridLineLayer(DataElementPanel dataElementPanel)
+            public GridLineLayer(DataViewPanel dataElementPanel)
             {
                 _dataElementPanel = dataElementPanel;
             }
 
-            private DataElementPanel _dataElementPanel;
+            private DataViewPanel _dataElementPanel;
 
             private LayoutManager LayoutManager
             {
@@ -181,12 +181,12 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        static DataElementPanel()
+        static DataViewPanel()
         {
-            ClipToBoundsProperty.OverrideMetadata(typeof(DataElementPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
+            ClipToBoundsProperty.OverrideMetadata(typeof(DataViewPanel), new FrameworkPropertyMetadata(BooleanBoxes.True));
         }
 
-        public DataElementPanel()
+        public DataViewPanel()
         {
             _gridLineLayer = new GridLineLayer(this);
             AddLogicalChild(_gridLineLayer);
