@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
-    [TemplatePart(Name = "PART_Panel", Type = typeof(RowElementPanel))]
+    [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : Control
     {
         static RowView()
@@ -91,7 +91,7 @@ namespace DevZest.Data.Windows
             if (Template == null)
                 return;
 
-            var panel = Template.FindName("PART_Panel", this) as RowElementPanel;
+            var panel = Template.FindName("PART_Panel", this) as RowViewPanel;
             if (panel != null)
                 Setup(panel);
         }

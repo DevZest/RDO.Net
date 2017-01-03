@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public class BlockElementPanel : FrameworkElement
+    public class BlockViewPanel : FrameworkElement
     {
         private BlockView BlockView
         {

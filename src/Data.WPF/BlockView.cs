@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace DevZest.Data.Windows
 {
-    [TemplatePart(Name = "PART_Panel", Type = typeof(BlockElementPanel))]
+    [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
     public class BlockView : Control, IReadOnlyList<RowPresenter>
     {
         static BlockView()
@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows
             if (Template == null)
                 return;
 
-            var panel = Template.FindName("PART_Panel", this) as BlockElementPanel;
+            var panel = Template.FindName("PART_Panel", this) as BlockViewPanel;
             if (panel != null)
                 Setup(panel);
         }

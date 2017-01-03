@@ -81,7 +81,7 @@
     <Compile Include="Primitives\CurrentBlockViewPosition.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
-    <Compile Include="Primitives\BlockElementPanel.cs" />
+    <Compile Include="Primitives\BlockViewPanel.cs" />
     <Compile Include="Primitives\BlockBinding.cs" />
     <Compile Include="Primitives\Clip.cs" />
     <Compile Include="Primitives\ElementManager.cs" />
@@ -124,7 +124,7 @@
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\DependencyObject.Contains.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
-    <Compile Include="Primitives\RowElementPanel.cs" />
+    <Compile Include="Primitives\RowViewPanel.cs" />
     <Compile Include="RowView.cs" />
     <Compile Include="RowPresenter.cs" />
     <Compile Include="Primitives\GridLengthParser.cs" />
