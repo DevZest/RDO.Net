@@ -39,8 +39,8 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(SettingUpElement != null);
             SettingUpElement.SetBlockView(blockView);
-            Setup(SettingUpElement, blockView.Ordinal, blockView);
-            Refresh(SettingUpElement, blockView.Ordinal, blockView);
+            Setup(SettingUpElement, blockView.ContainerOrdinal, blockView);
+            Refresh(SettingUpElement, blockView.ContainerOrdinal, blockView);
             return SettingUpElement;
         }
 
@@ -62,14 +62,14 @@ namespace DevZest.Data.Windows
         internal sealed override void Refresh(UIElement element)
         {
             var blockView = element.GetBlockView();
-            Refresh((T)element, blockView.Ordinal, blockView);
+            Refresh((T)element, blockView.ContainerOrdinal, blockView);
         }
 
         internal override void Cleanup(UIElement element, bool recycle)
         {
             var blockView = element.GetBlockView();
             var e = (T)element;
-            Cleanup(e, blockView.Ordinal, blockView);
+            Cleanup(e, blockView.ContainerOrdinal, blockView);
             e.SetBlockView(null);
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);

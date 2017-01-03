@@ -108,8 +108,8 @@ namespace DevZest.Data.Windows.Primitives
                 var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
                 if (ordinal >= Template.ScalarBindingsSplit)
                 {
-                    elementIndex += ElementManager.BlockViewList.Count;
-                    if (ElementManager.IsCurrentBlockViewIsolated)
+                    elementIndex += ElementManager.ContainerViewList.Count;
+                    if (ElementManager.IsCurrentContainerViewIsolated)
                         elementIndex++;
                 }
                 return ElementManager.Elements[elementIndex];

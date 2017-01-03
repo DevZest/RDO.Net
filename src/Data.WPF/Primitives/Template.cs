@@ -58,6 +58,11 @@ namespace DevZest.Data.Windows.Primitives
 
         public int BlockDimensions { get; private set; } = 1;
 
+        internal ContainerKind ContainerKind
+        {
+            get { return BlockBindings.Count > 0 || (Orientation.HasValue && BlockDimensions != 1) ? ContainerKind.Block : ContainerKind.Row; }
+        }
+
         internal void Layout(Orientation orientation, int blockDimensions = 1)
         {
             Debug.Assert(blockDimensions >= 0);

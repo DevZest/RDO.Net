@@ -9,7 +9,7 @@ using System.Collections;
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
-    public class BlockView : Control, IReadOnlyList<RowPresenter>
+    public class BlockView : ContainerView, IReadOnlyList<RowPresenter>
     {
         static BlockView()
         {
@@ -22,8 +22,8 @@ namespace DevZest.Data.Windows
 
         internal void Setup(ElementManager elementManager, int ordinal)
         {
-            ElementManager = elementManager;
-            Ordinal = ordinal;
+            _elementManager = elementManager;
+            _ordinal = ordinal;
             SetupElements();
         }
 
@@ -62,14 +62,10 @@ namespace DevZest.Data.Windows
             OnSetup();
         }
 
-        protected virtual void OnSetup()
-        {
-        }
-
-        internal void Cleanup()
+        internal sealed override void Cleanup()
         {
             CleanupElements();
-            ElementManager = null;
+            _elementManager = null;
         }
 
         private void CleanupElements()
@@ -78,31 +74,10 @@ namespace DevZest.Data.Windows
             ClearElements();
         }
 
-        private void InternalCleanup()
+        private ElementManager _elementManager;
+        internal sealed override ElementManager ElementManager
         {
-            OnCleanup();
-            ClearMeasuredLengths();
-        }
-
-        protected virtual void OnCleanup()
-        {
-        }
-
-        internal ElementManager ElementManager { get; private set; }
-
-        internal LayoutManager LayoutManager
-        {
-            get { return ElementManager as LayoutManager; }
-        }
-
-        private LayoutXYManager LayoutXYManager
-        {
-            get { return LayoutManager as LayoutXYManager; }
-        }
-
-        protected DataPresenter DataPresenter
-        {
-            get { return LayoutManager == null ? null : LayoutManager.DataPresenter; }
+            get { return _elementManager; }
         }
 
         public int Dimensions
@@ -115,7 +90,11 @@ namespace DevZest.Data.Windows
             return ElementManager == null ? 1 : ElementManager.BlockDimensions;
         }
 
-        public int Ordinal { get; private set; }
+        private int _ordinal;
+        public sealed override int ContainerOrdinal
+        {
+            get { return _ordinal; }
+        }
 
         public int Count
         {
@@ -125,7 +104,7 @@ namespace DevZest.Data.Windows
                     return 0;
 
                 var blockDimensions = ElementManager.BlockDimensions;
-                var nextBlockFirstRowOrdinal = (Ordinal + 1) * blockDimensions;
+                var nextBlockFirstRowOrdinal = (ContainerOrdinal + 1) * blockDimensions;
                 var rowCount = ElementManager.Rows.Count;
                 return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
             }
@@ -138,7 +117,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ElementManager.Rows[Ordinal * ElementManager.BlockDimensions + index];
+                return ElementManager.Rows[ContainerOrdinal * ElementManager.BlockDimensions + index];
             }
         }
 
@@ -201,7 +180,7 @@ namespace DevZest.Data.Windows
         private bool AddRowView(int offset)
         {
             var rows = ElementManager.Rows;
-            var rowIndex = Ordinal * ElementManager.BlockDimensions + offset;
+            var rowIndex = ContainerOrdinal * ElementManager.BlockDimensions + offset;
             if (rowIndex >= rows.Count)
                 return false;
             var row = rows[rowIndex];
@@ -248,7 +227,7 @@ namespace DevZest.Data.Windows
             ElementCollection.RemoveAt(index);
         }
 
-        internal void Refresh(bool isReload)
+        internal sealed override void Refresh()
         {
             if (Elements == null)
                 return;
@@ -261,7 +240,7 @@ namespace DevZest.Data.Windows
                 Refresh(blockBindings[i], index++);
 
             for (int i = 0; i < blockDimensions; i++)
-                ((RowView)Elements[index++]).Refresh(isReload);
+                ((RowView)Elements[index++]).Refresh();
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
                 Refresh(blockBindings[i], index++);
@@ -279,25 +258,20 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal void Reload()
+        internal sealed override void Reload(RowPresenter oldCurrentRow)
         {
-            Reload(ElementManager.CurrentRow);
-        }
-
-        internal void Reload(RowPresenter oldCurrentRow)
-        {
-            Debug.Assert(ElementManager.CurrentBlockView == this && ElementManager.CurrentBlockViewPosition == CurrentBlockViewPosition.Alone);
+            Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
 
             var currentRow = ElementManager.CurrentRow;
             var currentRowView = RemoveAllRowViewsExcept(oldCurrentRow);
             if (oldCurrentRow != currentRow)
                 currentRowView.Reload(currentRow);
             FillMissingRowViews(currentRowView);
-            Ordinal = currentRow.Index / ElementManager.BlockDimensions;
-            Refresh(true);
+            _ordinal = currentRow.Index / ElementManager.BlockDimensions;
+            Refresh();
         }
 
-        internal void ReloadIfInvalid()
+        internal sealed override void ReloadIfInvalid()
         {
             if (IsInvalid)
                 Reload();
@@ -307,7 +281,7 @@ namespace DevZest.Data.Windows
         {
             get
             {
-                var startRowIndex = Ordinal * ElementManager.BlockDimensions;
+                var startRowIndex = ContainerOrdinal * ElementManager.BlockDimensions;
                 var startIndex = BlockBindingsSplit;
                 int blockDimensions = Elements.Count - BlockBindings.Count;
                 for (int i = 0; i < blockDimensions; i++)
@@ -358,118 +332,6 @@ namespace DevZest.Data.Windows
             }
 
             OnSetup();
-        }
-
-        private GridSpan VariantByBlockGridSpan
-        {
-            get { return LayoutXYManager.VariantByBlockGridSpan; }
-        }
-
-        private double[] _cumulativeMeasuredLengths;
-        private double[] CumulativeMeasuredLengths
-        {
-            get
-            {
-                Debug.Assert(VariantByBlockGridSpan.Count > 0);
-                return _cumulativeMeasuredLengths ?? (_cumulativeMeasuredLengths = InitCumulativeMeasuredLengths());
-            }
-        }
-
-        private double[] InitCumulativeMeasuredLengths()
-        {
-            Debug.Assert(VariantByBlockGridSpan.Count > 0);
-            var result = new double[VariantByBlockGridSpan.Count];
-            ClearMeasuredLengths();
-            return result;
-        }
-
-        private void ClearMeasuredLengths()
-        {
-            if (_cumulativeMeasuredLengths == null)
-                return;
-
-            double totalLength = 0;
-            var gridSpan = LayoutXYManager.VariantByBlockGridSpan;
-            Debug.Assert(gridSpan.Count == _cumulativeMeasuredLengths.Length);
-            for (int i = 0; i < _cumulativeMeasuredLengths.Length; i++)
-            {
-                var gridTrack = gridSpan[i];
-                if (!gridTrack.IsAutoLength)
-                    totalLength += gridTrack.Length.Value;
-                _cumulativeMeasuredLengths[i] = totalLength;
-            }
-
-            _startOffset = 0;
-        }
-
-        internal Span GetReleativeSpan(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.VariantByBlock);
-            return new Span(GetRelativeStartOffset(gridTrack), GetRelativeEndOffset(gridTrack));
-        }
-
-        private double GetRelativeStartOffset(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.VariantByBlock);
-            return GetRelativeEndOffset(gridTrack) - GetMeasuredLength(gridTrack);
-        }
-
-        private double GetRelativeEndOffset(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.VariantByBlock);
-            return CumulativeMeasuredLengths[gridTrack.VariantByBlockIndex];
-        }
-
-        internal double GetMeasuredLength(GridTrack gridTrack)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.VariantByBlock);
-            int index = gridTrack.VariantByBlockIndex;
-            return index == 0 ? CumulativeMeasuredLengths[0] : CumulativeMeasuredLengths[index] - CumulativeMeasuredLengths[index - 1];
-        }
-
-        internal void SetMeasuredLength(GridTrack gridTrack, double value)
-        {
-            Debug.Assert(gridTrack != null && gridTrack.VariantByBlock);
-            var oldValue = GetMeasuredLength(gridTrack);
-            var delta = value - oldValue;
-            if (delta == 0)
-                return;
-
-            var index = gridTrack.VariantByBlockIndex;
-            for (int i = index; i < CumulativeMeasuredLengths.Length; i++)
-                CumulativeMeasuredLengths[i] += delta;
-            LayoutXYManager.InvalidateBlockLengths();
-        }
-
-        private double MeasuredLength
-        {
-            get
-            {
-                Debug.Assert(VariantByBlockGridSpan.Count > 0);
-                var cumulativeMeasuredLengths = CumulativeMeasuredLengths;
-                return cumulativeMeasuredLengths[cumulativeMeasuredLengths.Length - 1];
-            }
-        }
-
-        private double _startOffset;
-        internal double StartOffset
-        {
-            get
-            {
-                Debug.Assert(VariantByBlockGridSpan.Count > 0);
-                LayoutXYManager.RefreshBlockLengths();
-                return _startOffset;
-            }
-            set
-            {
-                Debug.Assert(VariantByBlockGridSpan.Count > 0);
-                _startOffset = value;
-            }
-        }
-
-        internal double EndOffset
-        {
-            get { return StartOffset + MeasuredLength; }
         }
 
         internal UIElement this[BlockBinding blockBinding]

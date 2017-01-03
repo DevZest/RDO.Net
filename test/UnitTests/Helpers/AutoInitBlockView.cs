@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows.Helpers
 
         protected override Size MeasureOverride(Size constraint)
         {
-            return LayoutManager.Measure(this, constraint);
+            return LayoutXYManager.Measure(this, constraint);
         }
     }
 }

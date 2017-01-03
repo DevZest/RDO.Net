@@ -14,14 +14,14 @@ namespace DevZest.Data.Windows.Primitives
         Vector ToVector(double valueMain, double valueCross);
         int FrozenHead { get; }
         int FrozenTail { get; }
-        GridTrack BlockStart { get; }
-        GridTrack BlockEnd { get; }
+        GridTrack ContainerStart { get; }
+        GridTrack ContainerEnd { get; }
         int MaxFrozenHead { get; }
         int MaxFrozenTail { get; }
         bool SizeToContent { get; }
         double AvailableLength { get; }
         double GetMeasuredLength(GridRange gridRange);
         GridSpan GetGridSpan(GridRange gridRange);
-        bool VariantByBlock { get; }
+        bool VariantByContainer { get; }
     }
 }

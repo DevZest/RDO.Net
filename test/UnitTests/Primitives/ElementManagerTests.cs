@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizeFirst(1);
+            elementManager.ContainerViewList.RealizeFirst(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizePrev();
+            elementManager.ContainerViewList.RealizePrev();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -165,7 +165,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizeNext();
+            elementManager.ContainerViewList.RealizeNext();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -222,7 +222,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizeFirst(1);
+            elementManager.ContainerViewList.RealizeFirst(1);
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -247,7 +247,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizePrev();
+            elementManager.ContainerViewList.RealizePrev();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -272,7 +272,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.RealizeNext();
+            elementManager.ContainerViewList.RealizeNext();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -306,7 +306,7 @@ namespace DevZest.Data.Windows.Primitives
                 .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
                 .VerifyEof();
 
-            elementManager.BlockViewList.VirtualizeAll();
+            elementManager.ContainerViewList.VirtualizeAll();
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
                 .Verify((BlockView b) => b.Elements
@@ -335,7 +335,7 @@ namespace DevZest.Data.Windows.Primitives
             var template = elementManager.Template;
             var rows = elementManager.Rows;
 
-            elementManager.BlockViewList.RealizeFirst(1);
+            elementManager.ContainerViewList.RealizeFirst(1);
             dataSet._.Name[1] = "CHANGED NAME";
             elementManager.Elements
                 .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))

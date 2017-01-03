@@ -5,11 +5,12 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System;
 
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
-    public class RowView : Control
+    public class RowView : ContainerView
     {
         static RowView()
         {
@@ -17,6 +18,16 @@ namespace DevZest.Data.Windows
         }
 
         public RowPresenter RowPresenter { get; private set; }
+
+        public sealed override int ContainerOrdinal
+        {
+            get { return RowPresenter == null ? -1 : BlockOrdinal; }
+        }
+
+        internal sealed override ElementManager ElementManager
+        {
+            get { return RowPresenter == null ? null : RowPresenter.ElementManager; }
+        }
 
         internal RowBindingCollection RowBindings
         {
@@ -29,20 +40,7 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        protected virtual void OnSetup()
-        {
-        }
-
-        private void InternalCleanup()
-        {
-            OnCleanup();
-        }
-
-        protected virtual void OnCleanup()
-        {
-        }
-
-        internal void Reload(RowPresenter rowPresenter)
+        internal sealed override void Reload(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
 
@@ -60,6 +58,10 @@ namespace DevZest.Data.Windows
             OnSetup();
         }
 
+        internal sealed override void ReloadIfInvalid()
+        {
+        }
+
         internal virtual void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
@@ -68,7 +70,7 @@ namespace DevZest.Data.Windows
             SetupElements();
         }
 
-        internal void Cleanup()
+        internal sealed override void Cleanup()
         {
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
@@ -145,9 +147,12 @@ namespace DevZest.Data.Windows
             ElementCollection.RemoveRange(0, Elements.Count);
         }
 
-        internal void Refresh(bool isReload)
+        internal sealed override void Refresh()
         {
-            Debug.Assert(RowPresenter != null || Elements != null);
+            Debug.Assert(RowPresenter != null);
+
+            if (Elements == null)
+                return;
 
             var rowBindings = RowBindings;
             Debug.Assert(Elements.Count == rowBindings.Count);

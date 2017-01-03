@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private LayoutManager LayoutManager
         {
-            get { return BlockView == null ? null : BlockView.LayoutManager; }
+            get { return BlockView == null ? null : BlockView.LayoutXYManager; }
         }
 
         private IReadOnlyList<UIElement> Elements

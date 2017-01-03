@@ -6,27 +6,27 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class BlockViewList : IReadOnlyList<BlockView>
+    internal abstract class ContainerViewList : IReadOnlyList<ContainerView>
     {
-        public static BlockViewList Empty
+        public static ContainerViewList Empty
         {
-            get { return EmptyBlockViewList.Singleton; }
+            get { return EmptyContainerViewList.Singleton; }
         }
 
-        public static BlockViewList Create(ElementManager elementManager)
+        public static ContainerViewList Create(ElementManager elementManager)
         {
             return new BlockViewListImpl(elementManager);
         }
 
-        private sealed class EmptyBlockViewList : BlockViewList
+        private sealed class EmptyContainerViewList : ContainerViewList
         {
-            public static readonly EmptyBlockViewList Singleton = new EmptyBlockViewList();
+            public static readonly EmptyContainerViewList Singleton = new EmptyContainerViewList();
 
-            private EmptyBlockViewList()
+            private EmptyContainerViewList()
             {
             }
 
-            public override BlockView this[int index]
+            public override ContainerView this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private sealed class BlockViewListImpl : BlockViewList
+        private sealed class BlockViewListImpl : ContainerViewList
         {
             internal BlockViewListImpl(ElementManager elementManager)
             {
@@ -112,13 +112,13 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _count; }
             }
 
-            public override BlockView this[int index]
+            public override ContainerView this[int index]
             {
                 get
                 {
                     if (index < 0 || index >= Count)
                         throw new ArgumentOutOfRangeException(nameof(index));
-                    return (BlockView)Elements[StartIndex + index];
+                    return (ContainerView)Elements[StartIndex + index];
                 }
             }
 
@@ -131,15 +131,15 @@ namespace DevZest.Data.Windows.Primitives
 
             public override void RealizePrev()
             {
-                Debug.Assert(First != null && First.Ordinal >= 1);
-                _elementManager.Realize(First.Ordinal - 1);
+                Debug.Assert(First != null && First.ContainerOrdinal >= 1);
+                _elementManager.Realize(First.ContainerOrdinal - 1);
                 _count += 1;
             }
 
             public override void RealizeNext()
             {
-                Debug.Assert(Last != null && Last.Ordinal + 1 < MaxCount);
-                _elementManager.Realize(Last.Ordinal + 1);
+                Debug.Assert(Last != null && Last.ContainerOrdinal + 1 < MaxCount);
+                _elementManager.Realize(Last.ContainerOrdinal + 1);
                 _count += 1;
             }
 
@@ -153,7 +153,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public abstract BlockView this[int index] { get; }
+        public abstract ContainerView this[int index] { get; }
 
         public bool Contains(RowView rowView)
         {
@@ -162,7 +162,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract int Count { get; }
 
-        public IEnumerator<BlockView> GetEnumerator()
+        public IEnumerator<ContainerView> GetEnumerator()
         {
             for (int i = 0; i < Count; i++)
                 yield return this[i];
@@ -175,7 +175,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract int MaxCount { get; }
 
-        public BlockView this[RowView rowView]
+        public ContainerView this[RowView rowView]
         {
             get
             {
@@ -195,22 +195,22 @@ namespace DevZest.Data.Windows.Primitives
             if (first == null)
                 return -1;
 
-            if (ordinal >= first.Ordinal && ordinal <= Last.Ordinal)
-                return ordinal - first.Ordinal;
+            if (ordinal >= first.ContainerOrdinal && ordinal <= Last.ContainerOrdinal)
+                return ordinal - first.ContainerOrdinal;
             return -1;
         }
 
-        public BlockView First
+        public ContainerView First
         {
             get { return Count == 0 ? null : this[0]; }
         }
 
-        public BlockView Last
+        public ContainerView Last
         {
             get { return Count == 0 ? null : this[Count - 1]; }
         }
 
-        public abstract void RealizeFirst(int blockOrdinal);
+        public abstract void RealizeFirst(int containerOrdinal);
 
         public abstract void RealizePrev();
 
@@ -218,14 +218,14 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract void VirtualizeAll();
 
-        private bool IsRealized(int blockOrdinal)
+        private bool IsRealized(int ordinal)
         {
-            return First != null && blockOrdinal >= First.Ordinal && blockOrdinal <= Last.Ordinal;
+            return First != null && ordinal >= First.ContainerOrdinal && ordinal <= Last.ContainerOrdinal;
         }
 
-        public BlockView GetBlockView(int blockOrdinal)
+        public ContainerView GetContainerView(int ordinal)
         {
-            return IsRealized(blockOrdinal) ? this[blockOrdinal - First.Ordinal] : null;
+            return IsRealized(ordinal) ? this[ordinal - First.ContainerOrdinal] : null;
         }
 
         public double AvgLength

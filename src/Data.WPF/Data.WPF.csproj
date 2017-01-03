@@ -53,6 +53,8 @@
     <Compile Include="PaneBlockBinding.cs" />
     <Compile Include="PaneRowBinding.cs" />
     <Compile Include="PaneScalarBinding.cs" />
+    <Compile Include="Primitives\ContainerKind.cs" />
+    <Compile Include="Primitives\ContainerView.cs" />
     <Compile Include="Primitives\ScalarValidationManager.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
@@ -78,7 +80,7 @@
     <Compile Include="Primitives\Trigger.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Primitives\CurrentBlockViewPosition.cs" />
+    <Compile Include="Primitives\CurrentContainerViewPosition.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="Primitives\BlockViewPanel.cs" />
@@ -111,7 +113,7 @@
     <Compile Include="Primitives\RecapBindingCollection.cs" />
     <Compile Include="Primitives\BindingCollection.cs" />
     <Compile Include="BlockView.cs" />
-    <Compile Include="Primitives\BlockViewList.cs" />
+    <Compile Include="Primitives\ContainerViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
     <Compile Include="Scalar_T.cs" />
     <Compile Include="TemplateBuilder.cs" />

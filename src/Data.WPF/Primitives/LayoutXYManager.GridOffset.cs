@@ -16,28 +16,28 @@ namespace DevZest.Data.Windows.Primitives
             {
                 Debug.Assert(!gridTrack.IsRepeat);
                 GridTrack = gridTrack;
-                _blockOrdinal = -1;
+                _ordinal = -1;
             }
 
-            public GridOffset(GridTrack gridTrack, BlockView block)
+            public GridOffset(GridTrack gridTrack, ContainerView containerView)
             {
-                Debug.Assert(gridTrack.IsRepeat && block != null);
+                Debug.Assert(gridTrack.IsRepeat && containerView != null);
                 GridTrack = gridTrack;
-                _blockOrdinal = block.Ordinal;
+                _ordinal = containerView.ContainerOrdinal;
             }
 
-            public GridOffset(GridTrack gridTrack, int blockOrdinal)
+            public GridOffset(GridTrack gridTrack, int ordinal)
             {
-                Debug.Assert(gridTrack.IsRepeat && blockOrdinal >= 0);
+                Debug.Assert(gridTrack.IsRepeat && ordinal >= 0);
                 GridTrack = gridTrack;
-                _blockOrdinal = blockOrdinal;
+                _ordinal = ordinal;
             }
 
             public readonly GridTrack GridTrack;
-            private readonly int _blockOrdinal;
-            public int BlockOrdinal
+            private readonly int _ordinal;
+            public int Ordinal
             {
-                get { return IsRepeat ? _blockOrdinal : -1; }
+                get { return IsRepeat ? _ordinal : -1; }
             }
 
             public bool IsEof
@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public static bool operator ==(GridOffset x, GridOffset y)
             {
-                return x.GridTrack == y.GridTrack && x.BlockOrdinal == y.BlockOrdinal;
+                return x.GridTrack == y.GridTrack && x.Ordinal == y.Ordinal;
             }
 
             public static bool operator !=(GridOffset x, GridOffset y)
@@ -62,7 +62,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public override int GetHashCode()
             {
-                return IsEof ? 0 : GridTrack.GetHashCode() ^ BlockOrdinal;
+                return IsEof ? 0 : GridTrack.GetHashCode() ^ Ordinal;
             }
 
             public override bool Equals(object obj)
@@ -75,7 +75,7 @@ namespace DevZest.Data.Windows.Primitives
                 get
                 {
                     Debug.Assert(!IsEof);
-                    return GridTrack.IsRepeat ? GridTrack.GetSpan(BlockOrdinal) : GridTrack.GetSpan();
+                    return GridTrack.IsRepeat ? GridTrack.GetSpan(Ordinal) : GridTrack.GetSpan();
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new GridOffset(GridTracksMain[gridOffset]);
 
             gridOffset -= MaxFrozenHeadMain;
-            var totalBlockGridTracks = TotalBlockGridTracksMain;
+            var totalBlockGridTracks = TotalContainerGridTracksMain;
             if (gridOffset < totalBlockGridTracks)
                 return new GridOffset(GridTracksMain[MaxFrozenHeadMain + gridOffset % BlockGridTracksMain], gridOffset / BlockGridTracksMain);
 

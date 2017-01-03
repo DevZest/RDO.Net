@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.InternalBlockBindings; }
         }
 
-        private void UpdateAutoSize(BlockView blockView, Binding binding, Size measuredSize)
+        private void UpdateAutoSize(ContainerView containerView, Binding binding, Size measuredSize)
         {
             Debug.Assert(binding.IsAutoSize);
 
@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoWidth = measuredSize.Width - gridRange.GetMeasuredWidth(x => !x.IsAutoLength);
                 if (totalAutoWidth > 0)
                 {
-                    DistributeAutoLength(blockView, binding.AutoWidthGridColumns, totalAutoWidth);
+                    DistributeAutoLength(containerView, binding.AutoWidthGridColumns, totalAutoWidth);
                     Template.DistributeStarWidths();
                 }
             }
@@ -64,13 +64,13 @@ namespace DevZest.Data.Windows.Primitives
                 double totalAutoHeight = measuredSize.Height - gridRange.GetMeasuredHeight(x => !x.IsAutoLength);
                 if (totalAutoHeight > 0)
                 {
-                    DistributeAutoLength(blockView, binding.AutoHeightGridRows, totalAutoHeight);
+                    DistributeAutoLength(containerView, binding.AutoHeightGridRows, totalAutoHeight);
                     Template.DistributeStarHeights();
                 }
             }
         }
 
-        private void DistributeAutoLength<T>(BlockView blockView, IReadOnlyList<T> autoLengthTracks, double totalMeasuredLength)
+        private void DistributeAutoLength<T>(ContainerView containerView, IReadOnlyList<T> autoLengthTracks, double totalMeasuredLength)
             where T : GridTrack
         {
             Debug.Assert(autoLengthTracks.Count > 0);
@@ -79,14 +79,14 @@ namespace DevZest.Data.Windows.Primitives
             if (autoLengthTracks.Count == 1)
             {
                 var track = autoLengthTracks[0];
-                if (totalMeasuredLength > GetMeasuredLength(blockView, track))
-                    SetMeasuredAutoLength(blockView, track, totalMeasuredLength);
+                if (totalMeasuredLength > GetMeasuredLength(containerView, track))
+                    SetMeasuredAutoLength(containerView, track, totalMeasuredLength);
             }
             else
-                DistributeOrderedAutoLength(blockView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
+                DistributeOrderedAutoLength(containerView, autoLengthTracks.OrderByDescending(x => x.MeasuredLength).ToArray(), totalMeasuredLength);
         }
 
-        private void DistributeOrderedAutoLength<T>(BlockView blockView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
+        private void DistributeOrderedAutoLength<T>(ContainerView containerView, IReadOnlyList<T> orderedAutoLengthTracks, double totalMeasuredLength)
             where T : GridTrack
         {
             Debug.Assert(orderedAutoLengthTracks.Count > 0);
@@ -97,31 +97,31 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < count; i++)
             {
                 var track = orderedAutoLengthTracks[i];
-                var trackMeasuredLength = GetMeasuredLength(blockView, track);
+                var trackMeasuredLength = GetMeasuredLength(containerView, track);
                 if (trackMeasuredLength >= avgLength)
                 {
                     totalMeasuredLength -= trackMeasuredLength;
                     avgLength = totalMeasuredLength / (count - i + 1);
                 }
                 else
-                    SetMeasuredAutoLength(blockView, track, avgLength);
+                    SetMeasuredAutoLength(containerView, track, avgLength);
             }
         }
 
-        private bool IsVariantLength(BlockView blockView, GridTrack gridTrack)
+        private bool IsVariantLength(ContainerView containerView, GridTrack gridTrack)
         {
-            return blockView != null && gridTrack.VariantByBlock;
+            return containerView != null && gridTrack.VariantByContainer;
         }
 
-        protected double GetMeasuredLength(BlockView blockView, GridTrack gridTrack)
+        protected double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
         {
-            return IsVariantLength(blockView, gridTrack) ? blockView.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
+            return IsVariantLength(containerView, gridTrack) ? containerView.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
         }
 
-        private void SetMeasuredAutoLength(BlockView blockView, GridTrack gridTrack, double value)
+        private void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
-            if (IsVariantLength(blockView, gridTrack))
-                blockView.SetMeasuredLength(gridTrack, value);
+            if (IsVariantLength(containerView, gridTrack))
+                containerView.SetMeasuredLength(gridTrack, value);
             else
             {
                 var delta = value - gridTrack.MeasuredLength;
@@ -148,7 +148,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             IsPreparingMeasure = true;
             PrepareMeasure(ScalarBindings.PreAutoSizeBindings);
-            PrepareMeasureBlocks();
+            PrepareMeasureContainers();
             PrepareMeasure(ScalarBindings.PostAutoSizeBindings);
             IsPreparingMeasure = false;
         }
@@ -164,7 +164,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected abstract void PrepareMeasureBlocks();
+        protected abstract void PrepareMeasureContainers();
 
         private Size FinalizeMeasure()
         {
@@ -177,19 +177,19 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            if (IsCurrentBlockViewIsolated)
-                CurrentBlockView.Measure(GetSize(CurrentBlockView));
+            if (IsCurrentContainerViewIsolated)
+                CurrentContainerView.Measure(GetSize(CurrentContainerView));
 
-            for (int i = 0; i < BlockViewList.Count; i++)
+            for (int i = 0; i < ContainerViewList.Count; i++)
             {
-                var block = BlockViewList[i];
+                var block = ContainerViewList[i];
                 block.Measure(GetSize(block));
             }
 
             return MeasuredSize;
         }
 
-        protected abstract Size GetSize(BlockView blockView);
+        protected abstract Size GetSize(ContainerView containerView);
 
         protected abstract Size MeasuredSize { get; }
 
@@ -306,7 +306,7 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            ArrangeBlocks();
+            ArrangeContainerViews();
             return finalSize;
         }
 
@@ -322,31 +322,31 @@ namespace DevZest.Data.Windows.Primitives
                 element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, rect.Width - clip.Left - clip.Right, rect.Height - clip.Top - clip.Bottom));
         }
 
-        internal Rect GetRect(BlockView blockView)
+        internal Rect GetRect(ContainerView containerView)
         {
-            var offset = GetLocation(blockView);
-            var size = GetSize(blockView);
+            var offset = GetLocation(containerView);
+            var size = GetSize(containerView);
             return new Rect(offset, size);
         }
 
-        protected abstract Point GetLocation(BlockView blockView);
+        protected abstract Point GetLocation(ContainerView containerView);
 
-        internal abstract Thickness GetClip(BlockView blockView);
+        internal abstract Thickness GetClip(ContainerView containerView);
 
-        private void ArrangeBlocks()
+        private void ArrangeContainerViews()
         {
-            if (IsCurrentBlockViewIsolated)
-                Arrange(CurrentBlockView);
+            if (IsCurrentContainerViewIsolated)
+                Arrange(CurrentContainerView);
 
-            for (int i = 0; i < BlockViewList.Count; i++)
-                Arrange(BlockViewList[i]);
+            for (int i = 0; i < ContainerViewList.Count; i++)
+                Arrange(ContainerViewList[i]);
         }
 
-        private void Arrange(BlockView blockView)
+        private void Arrange(ContainerView containerView)
         {
-            var rect = GetRect(blockView);
-            var clip = GetClip(blockView);
-            Arrange(blockView, rect, clip);
+            var rect = GetRect(containerView);
+            var clip = GetClip(containerView);
+            Arrange(containerView, rect, clip);
         }
 
         internal Rect GetRect(BlockView blockView, BlockBinding blockBinding)

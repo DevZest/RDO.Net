@@ -25,8 +25,8 @@ namespace DevZest.Data.Windows.Primitives
 
             {
                 var measuredSize = layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-                Assert.AreEqual(8, layoutManager.BlockViewList.Last.Ordinal);
+                Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+                Assert.AreEqual(8, layoutManager.ContainerViewList.Last.ContainerOrdinal);
                 Assert.AreEqual(new Size(100, 180), measuredSize);
                 Assert.AreEqual(100, layoutManager.ExtentX);
                 Assert.AreEqual(180, layoutManager.ExtentY);
@@ -38,8 +38,8 @@ namespace DevZest.Data.Windows.Primitives
 
             {
                 var measuredSize = layoutManager.Measure(new Size(50, 30));
-                Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-                Assert.AreEqual(1, layoutManager.BlockViewList.Last.Ordinal);
+                Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+                Assert.AreEqual(1, layoutManager.ContainerViewList.Last.ContainerOrdinal);
                 Assert.AreEqual(new Size(50, 30), measuredSize);
                 Assert.AreEqual(100, layoutManager.ExtentX);
                 Assert.AreEqual(180, layoutManager.ExtentY);
@@ -53,8 +53,8 @@ namespace DevZest.Data.Windows.Primitives
                 layoutManager.ScrollOffsetX = 20;
                 layoutManager.ScrollOffsetY = 30;
                 var measuredSize = layoutManager.Measure(new Size(50, 30));
-                Assert.AreEqual(1, layoutManager.BlockViewList.First.Ordinal);
-                Assert.AreEqual(2, layoutManager.BlockViewList.Last.Ordinal);
+                Assert.AreEqual(1, layoutManager.ContainerViewList.First.ContainerOrdinal);
+                Assert.AreEqual(2, layoutManager.ContainerViewList.Last.ContainerOrdinal);
                 Assert.AreEqual(new Size(50, 30), measuredSize);
                 Assert.AreEqual(100, layoutManager.ExtentX);
                 Assert.AreEqual(180, layoutManager.ExtentY);
@@ -67,8 +67,8 @@ namespace DevZest.Data.Windows.Primitives
             {
                 layoutManager.ScrollOffsetY = 0;
                 var measuredSize = layoutManager.Measure(new Size(50, 30));
-                Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-                Assert.AreEqual(1, layoutManager.BlockViewList.Last.Ordinal);
+                Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+                Assert.AreEqual(1, layoutManager.ContainerViewList.Last.ContainerOrdinal);
                 Assert.AreEqual(new Size(50, 30), measuredSize);
                 Assert.AreEqual(100, layoutManager.ExtentX);
                 Assert.AreEqual(180, layoutManager.ExtentY);
@@ -92,58 +92,50 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(3, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             var rowBinding = layoutManager.Template.RowBindings[0];
-            BlockView block;
+            ContainerView containerView;
 
-            block = layoutManager.BlockViewList[0];
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[0];
+            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[1];
-            Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[1];
+            Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[2];
-            Assert.AreEqual(new Rect(0, 30, 100, 30), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[2];
+            Assert.AreEqual(new Rect(0, 30, 100, 30), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[3];
-            Assert.AreEqual(new Rect(0, 60, 100, 40), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[3];
+            Assert.AreEqual(new Rect(0, 60, 100, 40), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect((RowView)containerView, rowBinding));
 
             // Do another measure to detect bugs related to recycled elements
             measuredSize = layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(3, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             rowBinding = layoutManager.Template.RowBindings[0];
 
-            block = layoutManager.BlockViewList[0];
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[0];
+            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[1];
-            Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[1];
+            Assert.AreEqual(new Rect(0, 10, 100, 20), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[2];
-            Assert.AreEqual(new Rect(0, 30, 100, 30), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[2];
+            Assert.AreEqual(new Rect(0, 30, 100, 30), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 30), layoutManager.GetRect((RowView)containerView, rowBinding));
 
-            block = layoutManager.BlockViewList[3];
-            Assert.AreEqual(new Rect(0, 60, 100, 40), layoutManager.GetRect(block));
-            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block, 0));
-            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block[0].View, rowBinding));
+            containerView = layoutManager.ContainerViewList[3];
+            Assert.AreEqual(new Rect(0, 60, 100, 40), layoutManager.GetRect(containerView));
+            Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect((RowView)containerView, rowBinding));
         }
 
         [TestMethod]
@@ -159,25 +151,25 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(2, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(2, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             var rowBinding = layoutManager.Template.RowBindings[0];
             BlockView block;
 
-            block = layoutManager.BlockViewList[0];
+            block = (BlockView)layoutManager.ContainerViewList[0];
             Assert.AreEqual(new Rect(0, 0, 200, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block, 0));
             Assert.AreEqual(new Rect(100, 0, 100, 20), layoutManager.GetRect(block, 1));
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(block[0].View, rowBinding));
 
-            block = layoutManager.BlockViewList[1];
+            block = (BlockView)layoutManager.ContainerViewList[1];
             Assert.AreEqual(new Rect(0, 20, 200, 40), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block, 0));
             Assert.AreEqual(new Rect(100, 0, 100, 40), layoutManager.GetRect(block, 1));
             Assert.AreEqual(new Rect(0, 0, 100, 40), layoutManager.GetRect(block[0].View, rowBinding));
 
-            block = layoutManager.BlockViewList[2];
+            block = (BlockView)layoutManager.ContainerViewList[2];
             Assert.AreEqual(new Rect(0, 60, 200, 60), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 100, 60), layoutManager.GetRect(block, 0));
             Assert.AreEqual(new Rect(100, 0, 100, 60), layoutManager.GetRect(block, 1));
@@ -199,34 +191,34 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(4, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(4, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             BlockView block;
             var blockBinding0 = layoutManager.Template.BlockBindings[0];
             var blockBinding1 = layoutManager.Template.BlockBindings[1];
 
-            block = layoutManager.BlockViewList[0];
+            block = (BlockView)layoutManager.ContainerViewList[0];
             Assert.AreEqual(new Rect(0, 0, 240, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(block, blockBinding0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetRect(block, blockBinding1));
 
-            block = layoutManager.BlockViewList[1];
+            block = (BlockView)layoutManager.ContainerViewList[1];
             Assert.AreEqual(new Rect(0, 20, 240, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(block, blockBinding0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetRect(block, blockBinding1));
 
-            block = layoutManager.BlockViewList[2];
+            block = (BlockView)layoutManager.ContainerViewList[2];
             Assert.AreEqual(new Rect(0, 40, 240, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(block, blockBinding0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetRect(block, blockBinding1));
 
-            block = layoutManager.BlockViewList[3];
+            block = (BlockView)layoutManager.ContainerViewList[3];
             Assert.AreEqual(new Rect(0, 60, 240, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(block, blockBinding0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetRect(block, blockBinding1));
 
-            block = layoutManager.BlockViewList[4];
+            block = (BlockView)layoutManager.ContainerViewList[4];
             Assert.AreEqual(new Rect(0, 80, 240, 20), layoutManager.GetRect(block));
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(block, blockBinding0));
             Assert.AreEqual(new Rect(220, 0, 20, 20), layoutManager.GetRect(block, blockBinding1));
@@ -249,8 +241,8 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(3, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             var scalarBindings = layoutManager.Template.ScalarBindings;
             Assert.AreEqual(new Rect(0, 0, 20, 20), layoutManager.GetRect(scalarBindings[0], 0));
@@ -279,11 +271,11 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(3, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             var scalarBindings = layoutManager.Template.ScalarBindings;
-            var blockViews = layoutManager.BlockViewList;
+            var blockViews = layoutManager.ContainerViewList;
 
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(scalarBindings[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[0], 0));
@@ -305,8 +297,8 @@ namespace DevZest.Data.Windows.Primitives
             //==============================
             layoutManager.ScrollOffsetY = 5;
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(3, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(scalarBindings[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[0], 0));
@@ -328,8 +320,8 @@ namespace DevZest.Data.Windows.Primitives
             //==============================
             layoutManager.ScrollOffsetY = 15;
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(4, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(4, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(scalarBindings[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[0], 0));
@@ -353,8 +345,8 @@ namespace DevZest.Data.Windows.Primitives
             //==============================
             layoutManager.ScrollOffsetY = 45;
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(1, layoutManager.BlockViewList.First.Ordinal);
-            Assert.AreEqual(5, layoutManager.BlockViewList.Last.Ordinal);
+            Assert.AreEqual(1, layoutManager.ContainerViewList.First.ContainerOrdinal);
+            Assert.AreEqual(5, layoutManager.ContainerViewList.Last.ContainerOrdinal);
 
             Assert.AreEqual(new Rect(0, 0, 100, 10), layoutManager.GetRect(scalarBindings[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[0], 0));
@@ -451,13 +443,13 @@ namespace DevZest.Data.Windows.Primitives
                     .AddBinding(3, 0, _.BindToBlockPlaceholder());
             });
 
-            var blocks = layoutManager.BlockViewList;
+            var blocks = layoutManager.ContainerViewList;
             var blockBindings = layoutManager.Template.BlockBindings;
             var rowBinding = layoutManager.Template.RowBindings[0];
 
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, blocks.First.Ordinal);
-            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(0, blocks.First.ContainerOrdinal);
+            Assert.AreEqual(0, blocks.Last.ContainerOrdinal);
             Assert.AreEqual(240, layoutManager.ExtentX);
             Assert.AreEqual(100, layoutManager.ExtentY);
             Assert.AreEqual(100, layoutManager.ViewportX);
@@ -467,27 +459,27 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(new Rect(10, 0, 220, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(0, 0, 140, 0), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[1]));
 
             layoutManager.ScrollOffsetX = 5;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(5, 0, 220, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(5, 0, 135, 0), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Rect(10, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(110, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[1]));
         }
 
         [TestMethod]
@@ -508,12 +500,12 @@ namespace DevZest.Data.Windows.Primitives
                     .AddBinding(4, 0, _.BindToBlockPlaceholder());
             });
 
-            var blocks = layoutManager.BlockViewList;
+            var blocks = layoutManager.ContainerViewList;
             var blockBindings = layoutManager.Template.BlockBindings;
 
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, blocks.First.Ordinal);
-            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(0, blocks.First.ContainerOrdinal);
+            Assert.AreEqual(0, blocks.Last.ContainerOrdinal);
             Assert.AreEqual(240, layoutManager.ExtentX);
             Assert.AreEqual(100, layoutManager.ExtentY);
             Assert.AreEqual(100, layoutManager.ViewportX);
@@ -523,35 +515,35 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Rect(10, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Rect(20, 0, 100, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Rect(10, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Rect(20, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(0, 0, 30, 0), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(120, 0, 100, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(120, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(220, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[2]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0], blockBindings[2]));
-            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[3]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[3]));
+            Assert.AreEqual(new Rect(220, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[2]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip((BlockView)blocks[0], blockBindings[2]));
+            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[3]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[3]));
 
             layoutManager.ScrollOffsetX = 5;
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[0]));
-            Assert.AreEqual(new Rect(5, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Thickness(5, 0, 0, 0), layoutManager.GetClip(blocks[0], blockBindings[1]));
-            Assert.AreEqual(new Rect(15, 0, 100, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[0]));
+            Assert.AreEqual(new Rect(5, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Thickness(5, 0, 0, 0), layoutManager.GetClip((BlockView)blocks[0], blockBindings[1]));
+            Assert.AreEqual(new Rect(15, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(0, 0, 25, 0), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(115, 0, 100, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(115, 0, 100, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(215, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[2]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0], blockBindings[2]));
-            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect(blocks[0], blockBindings[3]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0], blockBindings[3]));
+            Assert.AreEqual(new Rect(215, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[2]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip((BlockView)blocks[0], blockBindings[2]));
+            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[3]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[3]));
         }
 
         [TestMethod]
@@ -572,12 +564,12 @@ namespace DevZest.Data.Windows.Primitives
                     .AddBinding(4, 0, _.BindToRowPlaceholder());
             });
 
-            var blocks = layoutManager.BlockViewList;
+            var blocks = layoutManager.ContainerViewList;
             var rowBindings = layoutManager.Template.RowBindings;
 
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, blocks.First.Ordinal);
-            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(0, blocks.First.ContainerOrdinal);
+            Assert.AreEqual(0, blocks.Last.ContainerOrdinal);
             Assert.AreEqual(280, layoutManager.ExtentX);
             Assert.AreEqual(100, layoutManager.ExtentY);
             Assert.AreEqual(100, layoutManager.ViewportX);
@@ -587,35 +579,35 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 140, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 140, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(0, 0, 50, 0), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[0]));
-            Assert.AreEqual(new Rect(10, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[1]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[1]));
-            Assert.AreEqual(new Rect(20, 0, 100, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[2]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[2]));
-            Assert.AreEqual(new Rect(120, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[3]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[3]));
-            Assert.AreEqual(new Rect(130, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[4]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[4]));
-            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[0]));
+            Assert.AreEqual(new Rect(10, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[1]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[1]));
+            Assert.AreEqual(new Rect(20, 0, 100, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[2]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[2]));
+            Assert.AreEqual(new Rect(120, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[3]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[3]));
+            Assert.AreEqual(new Rect(130, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[4]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[4]));
+            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(0, 0, 0, 0), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(50, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[0]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[0]));
-            Assert.AreEqual(new Rect(60, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[1]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[1]));
-            Assert.AreEqual(new Rect(70, 0, 100, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[2]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[2]));
-            Assert.AreEqual(new Rect(170, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[3]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[3]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[4]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][1].View, rowBindings[4]));
+            Assert.AreEqual(new Rect(50, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[0]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[0]));
+            Assert.AreEqual(new Rect(60, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[1]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[1]));
+            Assert.AreEqual(new Rect(70, 0, 100, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[2]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[2]));
+            Assert.AreEqual(new Rect(170, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[3]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[3]));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[4]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[4]));
 
             layoutManager.ScrollOffsetX = 5;
             layoutManager.Measure(new Size(100, 100));
-            Assert.AreEqual(0, blocks.First.Ordinal);
-            Assert.AreEqual(0, blocks.Last.Ordinal);
+            Assert.AreEqual(0, blocks.First.ContainerOrdinal);
+            Assert.AreEqual(0, blocks.Last.ContainerOrdinal);
             Assert.AreEqual(280, layoutManager.ExtentX);
             Assert.AreEqual(100, layoutManager.ExtentY);
             Assert.AreEqual(100, layoutManager.ViewportX);
@@ -625,30 +617,30 @@ namespace DevZest.Data.Windows.Primitives
 
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0]));
-            Assert.AreEqual(new Rect(0, 0, 135, 20), layoutManager.GetRect(blocks[0], 0));
+            Assert.AreEqual(new Rect(0, 0, 135, 20), layoutManager.GetRect((BlockView)blocks[0], 0));
             Assert.AreEqual(new Thickness(0, 0, 45, 0), layoutManager.GetClip(0));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[0]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[0]));
-            Assert.AreEqual(new Rect(5, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[1]));
-            Assert.AreEqual(new Thickness(5, 0, 0, 0), layoutManager.GetClip(blocks[0][0].View, rowBindings[1]));
-            Assert.AreEqual(new Rect(15, 0, 100, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[2]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[2]));
-            Assert.AreEqual(new Rect(115, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[3]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[3]));
-            Assert.AreEqual(new Rect(125, 0, 10, 20), layoutManager.GetRect(blocks[0][0].View, rowBindings[4]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][0].View, rowBindings[4]));
-            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect(blocks[0], 1));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[0]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[0]));
+            Assert.AreEqual(new Rect(5, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[1]));
+            Assert.AreEqual(new Thickness(5, 0, 0, 0), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[1]));
+            Assert.AreEqual(new Rect(15, 0, 100, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[2]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[2]));
+            Assert.AreEqual(new Rect(115, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[3]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[3]));
+            Assert.AreEqual(new Rect(125, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[0].View, rowBindings[4]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[0].View, rowBindings[4]));
+            Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], 1));
             Assert.AreEqual(new Thickness(0, 0, 0, 0), layoutManager.GetClip(1));
-            Assert.AreEqual(new Rect(45, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[0]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[0]));
-            Assert.AreEqual(new Rect(55, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[1]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[1]));
-            Assert.AreEqual(new Rect(65, 0, 100, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[2]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[2]));
-            Assert.AreEqual(new Rect(165, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[3]));
-            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(blocks[0][1].View, rowBindings[3]));
-            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(blocks[0][1].View, rowBindings[4]));
-            Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0][1].View, rowBindings[4]));
+            Assert.AreEqual(new Rect(45, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[0]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[0]));
+            Assert.AreEqual(new Rect(55, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[1]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[1]));
+            Assert.AreEqual(new Rect(65, 0, 100, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[2]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[2]));
+            Assert.AreEqual(new Rect(165, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[3]));
+            Assert.AreEqual(new Thickness(0, 0, double.PositiveInfinity, 0), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[3]));
+            Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(((BlockView)blocks[0])[1].View, rowBindings[4]));
+            Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)blocks[0])[1].View, rowBindings[4]));
         }
 
         [TestMethod]
@@ -821,7 +813,7 @@ namespace DevZest.Data.Windows.Primitives
             layoutManager.ScrollOffsetY = 0;
             layoutManager.Measure(new Size(100, 300));  // Stretched
             Assert.AreEqual(0, layoutManager.ScrollOffsetY);
-            Assert.AreEqual(9, layoutManager.BlockViewList.Count);
+            Assert.AreEqual(9, layoutManager.ContainerViewList.Count);
             gridLineFigures = layoutManager.GridLineFigures.ToArray();
             Assert.AreEqual(13, gridLineFigures.Length);
             Assert.AreEqual(10, gridLineFigures[0].StartPoint.Y);

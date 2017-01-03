@@ -12,10 +12,10 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        protected override void PrepareMeasureBlocks()
+        protected override void PrepareMeasureContainers()
         {
-            if (CurrentBlockView != null)
-                CurrentBlockView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
+            if (CurrentContainerView != null)
+                CurrentContainerView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
         protected override Point GetLocation(ScalarBinding scalarBinding, int blockDimension)
@@ -34,17 +34,17 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(BlockView blockView)
+        protected override Point GetLocation(ContainerView containerView)
         {
             return Template.Range().GetLocation(Template.BlockRange);
         }
 
-        protected override Size GetSize(BlockView blockView)
+        protected override Size GetSize(ContainerView containerView)
         {
             return Template.BlockRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(BlockView blockView)
+        internal override Thickness GetClip(ContainerView containerView)
         {
             return new Thickness();
         }

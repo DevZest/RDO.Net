@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
             TotalAutoLength = 0;
             foreach (var gridTrack in this)
             {
-                if (gridTrack.VariantByBlock)
+                if (gridTrack.VariantByContainer)
                     continue;
 
                 if (gridTrack.IsAutoLength || gridTrack.IsStarLength)
@@ -138,9 +138,9 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 1; i < Count; i++)
             {
                 var current = this[i];
-                if (current.VariantByBlock)
+                if (current.VariantByContainer)
                     continue;
-                var prev = this[i - 1].VariantByBlockExcluded;
+                var prev = this[i - 1].VariantByContainerExcluded;
                 if (prev == null)
                     continue;
                 current.StartOffset = prev.EndOffset;
@@ -199,12 +199,12 @@ namespace DevZest.Data.Windows.Primitives
 
         public int MaxFrozenHead
         {
-            get { return BlockStart.Ordinal; }
+            get { return ContainerStart.Ordinal; }
         }
 
         public int MaxFrozenTail
         {
-            get { return Count - 1 - BlockEnd.Ordinal; }
+            get { return Count - 1 - ContainerEnd.Ordinal; }
         }
 
         private int Stretches
@@ -222,12 +222,12 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.Template_InvalidStretches(FrozenTailName));
         }
 
-        public GridTrack BlockStart
+        public GridTrack ContainerStart
         {
             get { return BlockSpan.StartTrack; }
         }
 
-        public GridTrack BlockEnd
+        public GridTrack ContainerEnd
         {
             get { return BlockSpan.EndTrack; }
         }
@@ -244,7 +244,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private bool? _variantByBlock;
-        public bool VariantByBlock
+        public bool VariantByContainer
         {
             get
             {
@@ -257,7 +257,7 @@ namespace DevZest.Data.Windows.Primitives
         private bool CalcVariantByBlock()
         {
             var layoutXYManager = LayoutXYManager;
-            if (layoutXYManager == null || layoutXYManager.GridTracksMain != this)
+            if (layoutXYManager == null || layoutXYManager.ContainerGridTracksMain != this)
                 return false;
 
             var gridSpan = GetGridSpan(Template.RowRange);
