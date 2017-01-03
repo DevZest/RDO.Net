@@ -6,10 +6,10 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class ValidationManager : ElementManager
+    internal abstract class ValidationManager : RowManager
     {
-        protected ValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
-            : base(template, dataSet, where, orderBy, emptyBlockViewList)
+        protected ValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            : base(template, dataSet, where, orderBy)
         {
             if (ValidationMode == ValidationMode.Progressive)
                 _progress = new Dictionary<Windows.RowPresenter, IValidationSource<Column>>();
@@ -171,7 +171,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(false);
             rowInput.RunAsyncValidator(rowPresenter);
-            InvalidateElements();
+            InvalidateView();
         }
 
         private ValidationMode ValidationMode
@@ -187,7 +187,7 @@ namespace DevZest.Data.Windows.Primitives
         public void Validate()
         {
             Validate(true);
-            InvalidateElements();
+            InvalidateView();
         }
 
         private void Validate(bool showAll)
@@ -264,9 +264,8 @@ namespace DevZest.Data.Windows.Primitives
                 rowBinding.OnRowDisposed(rowPresenter);
         }
 
-        public void SetValidationResult(ValidationResult validationResult)
+        internal virtual void InvalidateView()
         {
-
         }
     }
 }

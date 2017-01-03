@@ -89,7 +89,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void OnPreValidatorErrorChanged()
         {
-            ValidationManager.InvalidateElements();
+            ValidationManager.InvalidateView();
         }
 
         internal void Flush(T element)

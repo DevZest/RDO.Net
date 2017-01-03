@@ -6,10 +6,10 @@ using System.Windows.Threading;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class ElementManager : RowManager
+    internal abstract class ElementManager : ScalarValidationManager
     {
-        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyBlockViewList)
-            : base(template, dataSet, where, orderBy)
+        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars, bool emptyBlockViewList)
+            : base(template, dataSet, where, orderBy, validateScalars)
         {
             BlockViewList = emptyBlockViewList ? BlockViewList.Empty : BlockViewList.Create(this);
         }
@@ -411,6 +411,11 @@ namespace DevZest.Data.Windows.Primitives
                     RefreshElements(false);
                 }));
             }
+        }
+
+        internal sealed override void InvalidateView()
+        {
+            InvalidateElements();
         }
     }
 }
