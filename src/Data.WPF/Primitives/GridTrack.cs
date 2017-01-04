@@ -229,7 +229,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetSpan()
         {
-            Debug.Assert(Owner == LayoutXYManager.ContainerGridTracksMain);
+            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(!IsRepeat);
 
             if (IsHead)
@@ -244,7 +244,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Span GetSpan(int ordinal)
         {
-            Debug.Assert(Owner == LayoutXYManager.ContainerGridTracksMain);
+            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
             Debug.Assert(IsRepeat && ordinal >= 0);
 
             var relativeSpan = GetRelativeSpan(ordinal);

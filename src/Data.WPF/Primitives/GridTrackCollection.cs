@@ -257,7 +257,7 @@ namespace DevZest.Data.Windows.Primitives
         private bool CalcVariantByBlock()
         {
             var layoutXYManager = LayoutXYManager;
-            if (layoutXYManager == null || layoutXYManager.ContainerGridTracksMain != this)
+            if (layoutXYManager == null || layoutXYManager.GridTracksMain != this)
                 return false;
 
             var gridSpan = GetGridSpan(Template.RowRange);
