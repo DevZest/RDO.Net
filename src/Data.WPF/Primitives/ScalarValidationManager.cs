@@ -8,8 +8,8 @@ namespace DevZest.Data.Windows.Primitives
 {
     internal abstract class ScalarValidationManager : ValidationManager
     {
-        protected ScalarValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
-            : base(template, dataSet, where, orderBy)
+        protected ScalarValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
+            : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             _validateScalars = validateScalars;
         }
@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows.Primitives
         public void ValidateScalars()
         {
             ValidateScalars(true);
-            InvalidateView();
+            InvalidateElements();
         }
 
         private void ValidateScalars(bool showAll)
@@ -97,7 +97,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ScalarValidationMode != ValidationMode.Explicit)
                 ValidateScalars(false);
             scalarInput.RunAsyncValidator();
-            InvalidateView();
+            InvalidateElements();
         }
 
         internal bool ShouldRunAsyncValidator(IValidationSource<Scalar> validationSource)

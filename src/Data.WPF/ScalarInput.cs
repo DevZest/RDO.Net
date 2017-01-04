@@ -139,7 +139,7 @@ namespace DevZest.Data.Windows
 
             _asyncValidationState = state;
             _asyncValidationMessage = message;
-            ScalarValidationManager.InvalidateView();
+            ScalarValidationManager.InvalidateElements();
         }
 
         private bool RemovePendingAsyncValidator()

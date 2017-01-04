@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract partial class LayoutManager : ElementManager
+    internal abstract partial class LayoutManager : ScalarValidationManager
     {
         internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
         {
@@ -27,8 +27,8 @@ namespace DevZest.Data.Windows.Primitives
                 return new LayoutYManager(template, dataSet, where, orderBy, validateScalars);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars, bool emptyBlockViewList)
-            : base(template, dataSet, where, orderBy, validateScalars, emptyBlockViewList)
+        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
+            : base(template, dataSet, where, orderBy, emptyContainerViewList, validateScalars)
         {
         }
 

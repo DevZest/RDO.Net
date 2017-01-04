@@ -8,7 +8,7 @@ namespace DevZest.Data.Windows.Primitives
     internal sealed class LayoutZManager : LayoutManager
     {
         internal LayoutZManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
-            : base(template, dataSet, where, orderBy, validateScalars, true)
+            : base(template, dataSet, where, orderBy, true, validateScalars)
         {
         }
 

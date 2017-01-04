@@ -161,7 +161,7 @@ namespace DevZest.Data.Windows
 
             SetAsyncValidationState(rowPresenter, state);
             SetAsyncValidationMessage(rowPresenter, message);
-            ValidationManager.InvalidateView();
+            ValidationManager.InvalidateElements();
         }
 
         internal AsyncValidationState GetAsyncValidationState(RowPresenter rowPresenter)
