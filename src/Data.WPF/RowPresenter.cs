@@ -402,7 +402,7 @@ namespace DevZest.Data.Windows
             DataRow.DataSet.Remove(DataRow);
         }
 
-        internal RowView View { get; set; }
+        public RowView View { get; internal set; }
 
         internal RowBindingCollection RowBindings
         {

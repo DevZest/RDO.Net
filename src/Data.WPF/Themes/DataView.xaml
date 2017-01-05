@@ -12,6 +12,7 @@
                         <ControlTemplate TargetType="{x:Type local:DataView}">
                             <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
                                           VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                                          Focusable="False"
                                           CanContentScroll="True">
                                 <primitives:DataViewPanel x:Name="PART_Panel" RenderOptions.EdgeMode="Aliased" />
                             </ScrollViewer>

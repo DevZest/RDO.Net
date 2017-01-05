@@ -359,15 +359,15 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerView.Reload();
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool needReload)
         {
-            base.OnCurrentRowChanged(oldValue);
-            if (ElementCollection != null)
+            base.OnCurrentRowChanged(oldValue, needReload);
+            if (ElementCollection != null && needReload)
             {
                 ContainerViewList.VirtualizeAll();
                 CoerceCurrentContainerView(oldValue);
+                InvalidateElements();
             }
-            InvalidateElements();
         }
 
         protected override void OnSelectedRowsChanged()

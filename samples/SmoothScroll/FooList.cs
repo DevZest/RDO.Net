@@ -11,7 +11,8 @@ namespace SmoothScroll
             builder.GridColumns("*")
             .GridRows("Auto")
             .Layout(Orientation.Vertical)
-            .AddBinding(0, 0, _.BindTextBlock());
+            .AddBinding(0, 0, _.BindTextBlock())
+            .AddBinding(0, 0, _.BindBorder());
         }
     }
 }

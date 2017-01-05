@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System;
 using System.Windows.Media;
 using System.Windows;
+using DevZest.Data;
 
 namespace SmoothScroll
 {
@@ -15,10 +16,6 @@ namespace SmoothScroll
             public FooToTextBlockRowBinding(Foo _)
             {
                 this._ = _;
-            }
-
-            protected override void Setup(TextBlock element, RowPresenter rowPresenter)
-            {
             }
 
             protected override void Refresh(TextBlock element, RowPresenter rowPresenter)
@@ -52,6 +49,31 @@ namespace SmoothScroll
         public static RowBinding<TextBlock> BindTextBlock(this Foo _)
         {
             return new FooToTextBlockRowBinding(_);
+        }
+
+        private sealed class BorderRowBinding : RowBinding<Border>
+        {
+            public static readonly BorderRowBinding Singleton = new BorderRowBinding();
+
+            private BorderRowBinding()
+            {
+            }
+
+            protected override void Setup(Border element, RowPresenter rowPresenter)
+            {
+                element.BorderBrush = Brushes.White;
+            }
+
+            protected override void Refresh(Border element, RowPresenter rowPresenter)
+            {
+                var thickness = rowPresenter.View.IsKeyboardFocusWithin ? 2 : (rowPresenter.IsCurrent ? 1 : 0);
+                element.BorderThickness = new Thickness(thickness);
+            }
+        }
+
+        public static RowBinding<Border> BindBorder(this Model _)
+        {
+            return BorderRowBinding.Singleton;
         }
     }
 }

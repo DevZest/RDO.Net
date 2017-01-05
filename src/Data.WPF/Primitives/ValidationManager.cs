@@ -237,9 +237,9 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool needReload)
         {
-            base.OnCurrentRowChanged(oldValue);
+            base.OnCurrentRowChanged(oldValue, needReload);
             if (_progress != null)
             {
                 if (ValidationScope == ValidationScope.CurrentRow)

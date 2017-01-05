@@ -164,50 +164,25 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private static RowView Focused { get; set; }
-
-        internal static RowPresenter FocusedRow
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            get { return Focused == null ? null : Focused.RowPresenter; }
-        }
-
-        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        {
-            Focused = this;
-            base.OnGotKeyboardFocus(e);
-        }
-
-        protected override void OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        {
-            Debug.Assert(Focused == this);
-            if (ShouldCommitEditing(e.NewFocus))
+            base.OnMouseDown(e);
+            if (!e.Handled)
             {
-                RowPresenter.RowManager.CommitEdit();
+                MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+                e.Handled = true;
             }
-            base.OnPreviewLostKeyboardFocus(e);
         }
 
-        private bool ShouldCommitEditing(IInputElement newFocus)
+        protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (RowPresenter == null || !RowPresenter.IsEditing)
-                return false;
+            base.OnIsKeyboardFocusWithinChanged(e);
+            if (ElementManager == null || RowPresenter == null)
+                return;
 
-            var element = newFocus as DependencyObject;
-            if (element == null)
-                return true;
-
-            if (this.Contains(element))
-                return false;
-
-            var currentFocusScope = FocusManager.GetFocusScope(this);
-            var newFocusScope = FocusManager.GetFocusScope((DependencyObject)element);
-            return !currentFocusScope.Contains(newFocusScope);
-        }
-
-        protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
-        {
-            Focused = null;
-            base.OnLostKeyboardFocus(e);
+            if ((bool)e.NewValue)
+                ElementManager.SetCurrentRow(RowPresenter, false);
+            ElementManager.InvalidateElements();
         }
 
         internal int BlockOrdinal
