@@ -167,11 +167,8 @@ namespace DevZest.Data.Windows
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
-            if (!e.Handled)
-            {
-                MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                e.Handled = true;
-            }
+            if (!IsKeyboardFocusWithin)
+                e.Handled = MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
         }
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
@@ -193,6 +190,39 @@ namespace DevZest.Data.Windows
         internal int BlockDimension
         {
             get { return RowPresenter.Index % RowPresenter.ElementManager.BlockDimensions; }
+        }
+
+        private DataPresenter DataPresenter
+        {
+            get { return RowPresenter == null ? null : RowPresenter.DataPresenter; }
+        }
+
+        internal void SetupCommandBindings()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            var commandBindings = dataPresenter.RowViewCommandBindings;
+            if (commandBindings == null)
+                return;
+
+            foreach (var commandBinding in commandBindings)
+                CommandBindings.Add(commandBinding);
+        }
+
+        internal void SetupInputBindings()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            var inputBindings = dataPresenter.RowViewInputBindings;
+            if (inputBindings == null)
+                return;
+
+            foreach (var inputBinding in inputBindings)
+                InputBindings.Add(inputBinding);
         }
     }
 }

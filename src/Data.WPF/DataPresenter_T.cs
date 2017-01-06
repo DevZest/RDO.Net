@@ -8,12 +8,19 @@ namespace DevZest.Data.Windows
     public abstract class DataPresenter<T> : DataPresenter
         where T : Model, new()
     {
-        public void Show(DataView view, DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+        public void Show(DataView dataView, DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
         {
+            if (dataView == null)
+                throw new ArgumentNullException(nameof(dataView));
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
 
-            DetachView();
+            if (dataView.DataPresenter != null && dataView.DataPresenter != this)
+                throw new ArgumentException(Strings.DataPresenter_InvalidView, nameof(dataView));
+
+            var existingView = dataView.DataPresenter == this;
+            if (existingView)
+                DetachView();
             DataSet = dataSet;
             var template = new Template();
             using (var builder = new TemplateBuilder(template, DataSet.Model))
@@ -21,22 +28,20 @@ namespace DevZest.Data.Windows
                 BuildTemplate(builder);
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy, ValidateScalars);
-            AttachView(view);
-        }
-
-        protected virtual IEnumerable<ValidationMessage<Scalar>> ValidateScalars()
-        {
-            yield break;
+            AttachView(dataView);
+            if (!existingView)
+            {
+                dataView.SetupCommandBindings();
+                dataView.SetupInputBindings();
+            }
         }
 
         private void DetachView()
         {
-            if (_view != null)
-            {
-                _view.DataPresenter = null;
-                LayoutManager.ClearElements();
-                _view = null;
-            }
+            Debug.Assert(_view != null);
+            _layoutManager.ClearElements();
+            _view.DataPresenter = null;
+            _view = null;
         }
 
         private void AttachView(DataView value)

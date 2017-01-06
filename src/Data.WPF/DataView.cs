@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
@@ -108,6 +109,33 @@ namespace DevZest.Data.Windows
         {
             get { return (double)GetValue(ScrollLineWidthProperty); }
             set { SetValue(ScrollLineWidthProperty, value); }
+        }
+
+        internal void SetupCommandBindings()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            var commandBindings = dataPresenter.DataViewCommandBindings;
+            if (commandBindings == null)
+                return;
+
+            foreach (var commandBinding in commandBindings)
+                CommandBindings.Add(commandBinding);        }
+
+        internal void SetupInputBindings()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            var inputBindings = dataPresenter.DataViewInputBindings;
+            if (inputBindings == null)
+                return;
+
+            foreach (var inputBinding in inputBindings)
+                InputBindings.Add(inputBinding);
         }
     }
 }

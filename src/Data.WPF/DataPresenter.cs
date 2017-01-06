@@ -2,6 +2,7 @@
 using DevZest.Data.Windows.Primitives;
 using System.Windows;
 using System;
+using System.Windows.Input;
 
 namespace DevZest.Data.Windows
 {
@@ -101,6 +102,31 @@ namespace DevZest.Data.Windows
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
+        }
+
+        protected internal virtual IEnumerable<CommandBinding> DataViewCommandBindings
+        {
+            get { return null; }
+        }
+
+        protected internal virtual IEnumerable<InputBinding> DataViewInputBindings
+        {
+            get { return null; }
+        }
+
+        protected internal virtual IEnumerable<CommandBinding> RowViewCommandBindings
+        {
+            get { return null; }
+        }
+
+        protected internal virtual IEnumerable<InputBinding> RowViewInputBindings
+        {
+            get { return null; }
+        }
+
+        protected virtual IEnumerable<ValidationMessage<Scalar>> ValidateScalars()
+        {
+            yield break;
         }
     }
 }

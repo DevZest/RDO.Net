@@ -333,6 +333,8 @@ namespace DevZest.Data.Windows.Primitives
             var result = _rowViewConstructor == null ? new RowView() : _rowViewConstructor();
             if (_rowViewStyle != null)
                 result.Style = _rowViewStyle;
+            result.SetupCommandBindings();
+            result.SetupInputBindings();
             return result;
         }
 

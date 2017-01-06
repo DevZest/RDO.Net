@@ -76,6 +76,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The DataView is invalid. It has been associated with another DataPresenter.
+        /// </summary>
+        public static string DataPresenter_InvalidView
+        {
+            get { return GetString("DataPresenter_InvalidView"); }
+        }
+
+        /// <summary>
         /// The DataPresenter is not initialized: the DataSet property is null.
         /// </summary>
         public static string DataPresenter_NullDataSet
