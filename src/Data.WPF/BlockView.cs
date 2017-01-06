@@ -258,7 +258,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal sealed override void Reload(RowPresenter oldCurrentRow)
+        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow)
         {
             Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
 

@@ -16,10 +16,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Reload()
         {
-            Reload(ElementManager.CurrentRow);
+            OnCurrentRowChanged(ElementManager.CurrentRow);
         }
 
-        internal abstract void Reload(RowPresenter rowPresenter);
+        internal abstract void OnCurrentRowChanged(RowPresenter oldCurrentRow);
 
         private GridSpan VariantByContainerGridSpan
         {

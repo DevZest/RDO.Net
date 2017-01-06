@@ -40,7 +40,14 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal sealed override void Reload(RowPresenter rowPresenter)
+        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow)
+        {
+            var newCurrentRow = ElementManager.CurrentRow;
+            if (oldCurrentRow != newCurrentRow)
+                Reload(newCurrentRow);
+        }
+
+        internal void Reload(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
 

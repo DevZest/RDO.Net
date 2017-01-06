@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows.Primitives
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentContainerView);
                 }
                 else
-                    CurrentContainerView.Reload(oldValue);
+                    CurrentContainerView.OnCurrentRowChanged(oldValue);
             }
             else if (CurrentContainerView != null)
                 ClearCurrentContainerView();
