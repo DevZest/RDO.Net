@@ -144,7 +144,7 @@ namespace DevZest.Data.Windows.Primitives
             return CurrentContainerViewPosition;
         }
 
-        internal int BlockViewListStartIndex
+        internal int ContainerViewListStartIndex
         {
             get
             {
@@ -155,17 +155,17 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal void VirtualizeBlockViewList()
+        internal void VirtualizeContainerViewList()
         {
             Debug.Assert(ContainerViewList.Count > 0);
 
-            var startIndex = BlockViewListStartIndex;
+            var startIndex = ContainerViewListStartIndex;
             for (int i = ContainerViewList.Count - 1; i >= 0; i--)
             {
-                var blockView = ContainerViewList[i];
-                if (blockView == CurrentContainerView)
+                var containerView = ContainerViewList[i];
+                if (containerView == CurrentContainerView)
                     continue;
-                Cleanup(blockView);
+                Cleanup(containerView);
                 ElementCollection.RemoveAt(startIndex + i);
             }
 

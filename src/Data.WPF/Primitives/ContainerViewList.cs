@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private int StartIndex
             {
-                get { return _elementManager.BlockViewListStartIndex; }
+                get { return _elementManager.ContainerViewListStartIndex; }
             }
 
             private IReadOnlyList<RowPresenter> Rows
@@ -148,7 +148,7 @@ namespace DevZest.Data.Windows.Primitives
                 if (_count == 0)
                     return;
 
-                _elementManager.VirtualizeBlockViewList();
+                _elementManager.VirtualizeContainerViewList();
                 _count = 0;
             }
         }
