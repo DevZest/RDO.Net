@@ -59,9 +59,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void CoerceCurrentContainerView(RowPresenter oldValue)
+        private void CoerceCurrentContainerView(RowPresenter oldValue, bool reload)
         {
-            Debug.Assert(ContainerViewList.Count == 0);
+            Debug.Assert(ContainerViewList.Count == 0 || !reload);
 
             var newValue = CurrentRow;
             if (newValue != null)
@@ -72,7 +72,7 @@ namespace DevZest.Data.Windows.Primitives
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentContainerView);
                 }
                 else
-                    CurrentContainerView.OnCurrentRowChanged(oldValue);
+                    CurrentContainerView.OnCurrentRowChanged(oldValue, reload);
             }
             else if (CurrentContainerView != null)
                 ClearCurrentContainerView();
@@ -224,7 +224,7 @@ namespace DevZest.Data.Windows.Primitives
                 InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
             scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
-            CoerceCurrentContainerView(null);
+            CoerceCurrentContainerView(null, true);
             RefreshElements(true);
         }
 
@@ -372,19 +372,30 @@ namespace DevZest.Data.Windows.Primitives
                 return;
             }
 
-            var newCurrentContainerView = GetContainerView(rowView);
-            if (newCurrentContainerView != CurrentContainerView)
+            if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
             {
-                Debug.Assert(CurrentContainerView != null);
-                Debug.Assert(CurrentRow != rowView.RowPresenter);
-                _currentContainerView = newCurrentContainerView;
-                if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+                Cleanup(CurrentContainerView);
+                if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                    ElementCollection.RemoveAt(HeadScalarElementsCount);
+                else
                 {
-                    CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
-                    ContainerViewList.IncreaseCount();
+                    Debug.Assert(CurrentContainerViewPosition == CurrentContainerViewPosition.AfterList);
+                    ElementCollection.RemoveAt(HeadScalarElementsCount + ContainerViewList.Count);
                 }
+                CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
             }
-            CurrentRow = rowView.RowPresenter;
+            _currentContainerView = GetContainerView(rowView);
+            SetCurrentRow(rowView.RowPresenter, false);
+        }
+
+        private void PrepareReload(ContainerView newCurrentContainerView)
+        {
+            _currentContainerView = newCurrentContainerView;
+            if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+            {
+                CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
+                ContainerViewList.IncreaseCount();
+            }
         }
 
         private ContainerView GetContainerView(RowView rowView)
@@ -395,13 +406,14 @@ namespace DevZest.Data.Windows.Primitives
                 return rowView.GetBlockView();
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
         {
-            base.OnCurrentRowChanged(oldValue);
+            base.OnCurrentRowChanged(oldValue, reload);
             if (ElementCollection != null)
             {
-                ContainerViewList.VirtualizeAll();
-                CoerceCurrentContainerView(oldValue);
+                if (reload)
+                    ContainerViewList.VirtualizeAll();
+                CoerceCurrentContainerView(oldValue, reload);
                 InvalidateElements();
             }
         }
@@ -478,7 +490,7 @@ namespace DevZest.Data.Windows.Primitives
                 var result = GetContainerListDebugWriteString();
                 if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
                     result = string.Join(", ", GetDebugWriteString(CurrentContainerView), result);
-                else if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                else if (CurrentContainerViewPosition == CurrentContainerViewPosition.AfterList)
                     result = string.Join(", ", result, GetDebugWriteString(CurrentContainerView));
 
                 return result;

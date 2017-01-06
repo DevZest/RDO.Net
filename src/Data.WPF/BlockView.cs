@@ -258,7 +258,24 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow)
+        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload)
+        {
+            if (reload)
+                Reload(oldCurrentRow);
+        }
+
+        private bool Contains(RowPresenter rowPresenter)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i] == rowPresenter)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void Reload(RowPresenter oldCurrentRow)
         {
             Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
 
@@ -269,6 +286,12 @@ namespace DevZest.Data.Windows
             FillMissingRowViews(currentRowView);
             _ordinal = currentRow.Index / ElementManager.BlockDimensions;
             Refresh();
+        }
+
+        internal sealed override void Reload()
+        {
+            if (Elements != null)
+                Reload(ElementManager.CurrentRow);
         }
 
         internal sealed override void ReloadIfInvalid()

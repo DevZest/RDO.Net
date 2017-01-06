@@ -375,15 +375,17 @@ namespace DevZest.Data.Windows.Primitives
         public RowPresenter CurrentRow
         {
             get { return _currentRow; }
-            internal set
-            {
-                Debug.Assert(value == null || value.RowManager == this);
-                if (value == _currentRow)
-                    return;
-                var oldValue = _currentRow;
-                _currentRow = value;
-                OnCurrentRowChanged(oldValue);
-            }
+            internal set { SetCurrentRow(value, true); }
+        }
+
+        protected void SetCurrentRow(RowPresenter value, bool reload)
+        {
+            Debug.Assert(value == null || value.RowManager == this);
+            if (value == _currentRow)
+                return;
+            var oldValue = _currentRow;
+            _currentRow = value;
+            OnCurrentRowChanged(oldValue, reload);
         }
 
         private _EditHandler _editHandler;
@@ -441,7 +443,7 @@ namespace DevZest.Data.Windows.Primitives
             EditHandler.RollbackEdit(this);
         }
 
-        protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
+        protected virtual void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
         {
         }
 

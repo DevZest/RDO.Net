@@ -40,18 +40,19 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow)
+        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload)
         {
-            var newCurrentRow = ElementManager.CurrentRow;
-            if (RowPresenter != newCurrentRow)
-                Reload(newCurrentRow);
-            else
-                ClearMeasuredLengths();
+            if (reload)
+                Reload(ElementManager.CurrentRow);
+        }
+
+        internal sealed override void Reload()
+        {
         }
 
         internal void Reload(RowPresenter rowPresenter)
         {
-            Debug.Assert(RowPresenter != null && rowPresenter != null && RowPresenter != rowPresenter);
+            Debug.Assert(RowPresenter != null && rowPresenter != null);
 
             InternalCleanup();
             RowPresenter.View = null;

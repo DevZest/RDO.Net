@@ -14,12 +14,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return ElementManager as LayoutXYManager; }
         }
 
-        internal void Reload()
-        {
-            OnCurrentRowChanged(ElementManager.CurrentRow);
-        }
+        internal abstract void Reload();
 
-        internal abstract void OnCurrentRowChanged(RowPresenter oldCurrentRow);
+        internal abstract void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload);
 
         private GridSpan VariantByContainerGridSpan
         {
@@ -44,7 +41,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        internal void ClearMeasuredLengths()
+        protected void ClearMeasuredLengths()
         {
             if (_cumulativeMeasuredLengths == null)
                 return;
@@ -152,6 +149,5 @@ namespace DevZest.Data.Windows.Primitives
         protected virtual void OnCleanup()
         {
         }
-
     }
 }
