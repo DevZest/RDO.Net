@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -172,11 +174,13 @@ namespace DevZest.Data.Windows.Primitives
             CurrentContainerViewPosition = CurrentContainerViewPosition.Alone;
         }
 
-        internal RowView Setup(RowPresenter row)
+        internal RowView Setup(BlockView blockView, RowPresenter row)
         {
+            Debug.Assert(blockView != null);
             Debug.Assert(row != null && row.View == null);
 
             var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
+            rowView.SetBlockView(blockView);
             rowView.Setup(row);
             return rowView;
         }
@@ -186,6 +190,7 @@ namespace DevZest.Data.Windows.Primitives
             var rowView = row.View;
             Debug.Assert(rowView != null);
             rowView.Cleanup();
+            rowView.SetBlockView(null);
             CachedList.Recycle(ref _cachedRowViews, rowView);
         }
 
@@ -359,10 +364,41 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerView.Reload();
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool needReload)
+        internal void OnFocused(RowView rowView)
         {
-            base.OnCurrentRowChanged(oldValue, needReload);
-            if (ElementCollection != null && needReload)
+            if (rowView.RowPresenter == CurrentRow)
+            {
+                InvalidateElements();
+                return;
+            }
+
+            var newCurrentContainerView = GetContainerView(rowView);
+            if (newCurrentContainerView != CurrentContainerView)
+            {
+                Debug.Assert(CurrentContainerView != null);
+                Debug.Assert(CurrentRow != rowView.RowPresenter);
+                _currentContainerView = newCurrentContainerView;
+                if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+                {
+                    CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
+                    ContainerViewList.IncreaseCount();
+                }
+            }
+            CurrentRow = rowView.RowPresenter;
+        }
+
+        private ContainerView GetContainerView(RowView rowView)
+        {
+            if (Template.ContainerKind == ContainerKind.Row)
+                return rowView;
+            else
+                return rowView.GetBlockView();
+        }
+
+        protected override void OnCurrentRowChanged(RowPresenter oldValue)
+        {
+            base.OnCurrentRowChanged(oldValue);
+            if (ElementCollection != null)
             {
                 ContainerViewList.VirtualizeAll();
                 CoerceCurrentContainerView(oldValue);
@@ -422,6 +458,42 @@ namespace DevZest.Data.Windows.Primitives
                     RefreshElements(false);
                 }));
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: [{1}]", CurrentContainerViewPosition, DebugWriteElementsString);
+        }
+
+        private string DebugWriteElementsString
+        {
+            get
+            {
+                if (CurrentContainerViewPosition == CurrentContainerViewPosition.None)
+                    return string.Empty;
+
+                if (CurrentContainerViewPosition == CurrentContainerViewPosition.Alone)
+                    return GetDebugWriteString(CurrentContainerView);
+
+                var result = GetContainerListDebugWriteString();
+                if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                    result = string.Join(", ", GetDebugWriteString(CurrentContainerView), result);
+                else if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                    result = string.Join(", ", result, GetDebugWriteString(CurrentContainerView));
+
+                return result;
+            }
+        }
+
+        private string GetDebugWriteString(ContainerView containerView)
+        {
+            var ordinal = containerView.ContainerOrdinal;
+            return containerView == CurrentContainerView ? string.Format("({0})", ordinal) : ordinal.ToString();
+        }
+
+        private string GetContainerListDebugWriteString()
+        {
+            return string.Join(", ", ContainerViewList.Select(x => GetDebugWriteString(x)).ToArray());
         }
     }
 }

@@ -44,7 +44,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private void ClearMeasuredLengths()
+        internal void ClearMeasuredLengths()
         {
             if (_cumulativeMeasuredLengths == null)
                 return;

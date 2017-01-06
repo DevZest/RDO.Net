@@ -15,7 +15,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public static ContainerViewList Create(ElementManager elementManager)
         {
-            return new BlockViewListImpl(elementManager);
+            return new ContainerViewListImpl(elementManager);
         }
 
         private sealed class EmptyContainerViewList : ContainerViewList
@@ -59,11 +59,16 @@ namespace DevZest.Data.Windows.Primitives
             public override void VirtualizeAll()
             {
             }
+
+            public override void IncreaseCount()
+            {
+                throw new NotSupportedException();
+            }
         }
 
-        private sealed class BlockViewListImpl : ContainerViewList
+        private sealed class ContainerViewListImpl : ContainerViewList
         {
-            internal BlockViewListImpl(ElementManager elementManager)
+            internal ContainerViewListImpl(ElementManager elementManager)
             {
                 Debug.Assert(elementManager != null);
                 _elementManager = elementManager;
@@ -110,6 +115,11 @@ namespace DevZest.Data.Windows.Primitives
             public override int Count
             {
                 get { return _count; }
+            }
+
+            public override void IncreaseCount()
+            {
+                _count++;
             }
 
             public override ContainerView this[int index]
@@ -241,5 +251,7 @@ namespace DevZest.Data.Windows.Primitives
                 return Last.EndOffset - First.StartOffset;
             }
         }
+
+        public abstract void IncreaseCount();
     }
 }

@@ -184,7 +184,7 @@ namespace DevZest.Data.Windows
             if (rowIndex >= rows.Count)
                 return false;
             var row = rows[rowIndex];
-            var rowView = ElementManager.Setup(row);
+            var rowView = ElementManager.Setup(this, row);
             ElementCollection.Insert(BlockBindingsSplit + offset, rowView);
             return true;
         }

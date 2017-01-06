@@ -43,8 +43,10 @@ namespace DevZest.Data.Windows
         internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow)
         {
             var newCurrentRow = ElementManager.CurrentRow;
-            if (oldCurrentRow != newCurrentRow)
+            if (RowPresenter != newCurrentRow)
                 Reload(newCurrentRow);
+            else
+                ClearMeasuredLengths();
         }
 
         internal void Reload(RowPresenter rowPresenter)
@@ -185,8 +187,7 @@ namespace DevZest.Data.Windows
                 return;
 
             if ((bool)e.NewValue)
-                ElementManager.SetCurrentRow(RowPresenter, false);
-            ElementManager.InvalidateElements();
+                ElementManager.OnFocused(this);
         }
 
         internal int BlockOrdinal
