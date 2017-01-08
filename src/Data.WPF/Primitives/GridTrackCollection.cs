@@ -243,18 +243,18 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.LayoutXYManager; }
         }
 
-        private bool? _variantByBlock;
+        private bool? _variantByContainer;
         public bool VariantByContainer
         {
             get
             {
-                if (!_variantByBlock.HasValue)
-                    _variantByBlock = CalcVariantByBlock();
-                return _variantByBlock.GetValueOrDefault();
+                if (!_variantByContainer.HasValue)
+                    _variantByContainer = CalcVariantByContainer();
+                return _variantByContainer.GetValueOrDefault();
             }
         }
 
-        private bool CalcVariantByBlock()
+        private bool CalcVariantByContainer()
         {
             var layoutXYManager = LayoutXYManager;
             if (layoutXYManager == null || layoutXYManager.GridTracksMain != this)
