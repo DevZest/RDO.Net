@@ -301,43 +301,5 @@ namespace DevZest.Data.Windows.Primitives
             var originOffset = Owner.GetGridSpan(Template.RowRange).StartTrack.StartOffset;
             return new Span(StartOffset - originOffset, EndOffset - originOffset);
         }
-
-        private Dictionary<RowPresenter, double> _availableLengths;
-        internal double GetAvailableLength(RowPresenter rowPresenter)
-        {
-            Debug.Assert(VariantByContainer && rowPresenter != null);
-            if (_availableLengths == null)
-                return DefaultAvailableLength;
-            double result;
-            return _availableLengths.TryGetValue(rowPresenter, out result) ? result : DefaultAvailableLength;
-        }
-
-        private double DefaultAvailableLength
-        {
-            get
-            {
-                Debug.Assert(VariantByContainer);
-                if (Length.IsAuto)
-                    return double.PositiveInfinity;
-                Debug.Assert(Length.IsAbsolute);
-                return Length.Value;
-            }
-        }
-
-        internal void SetAvailableLength(RowPresenter row, double value)
-        {
-            Debug.Assert(VariantByContainer && row != null);
-            if (_availableLengths == null)
-                _availableLengths = new Dictionary<RowPresenter, double>();
-            _availableLengths[row] = value;
-        }
-
-        internal void ClearAvailableLength(RowPresenter row)
-        {
-            Debug.Assert(VariantByContainer && row != null);
-            if (_availableLengths == null)
-                return;
-            _availableLengths.Remove(row);
-        }
     }
 }

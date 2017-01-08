@@ -34,14 +34,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.VariantByContainer ? GridTracksMain.GetGridSpan(Template.RowRange) : new GridSpan(); }
         }
 
-        protected override void DisposeRow(RowPresenter row)
-        {
-            var gridSpan = VariantByContainerGridSpan;
-            for (int i = 0; i < gridSpan.Count; i++)
-                gridSpan[i].ClearAvailableLength(row);
-            base.DisposeRow(row);
-        }
-
         private bool _isContainerLengthsValid = true;
         internal void InvalidateContainerLengths()
         {
