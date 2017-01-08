@@ -182,8 +182,8 @@ namespace DevZest.Data.Windows.Primitives
 
             for (int i = 0; i < ContainerViewList.Count; i++)
             {
-                var block = ContainerViewList[i];
-                block.Measure(GetSize(block));
+                var containerView = ContainerViewList[i];
+                containerView.Measure(GetSize(containerView));
             }
 
             return MeasuredSize;
