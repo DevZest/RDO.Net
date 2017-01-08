@@ -260,12 +260,12 @@ namespace DevZest.Data.Windows.Primitives
             if (rowBindings.AutoSizeItems.Count == 0)
                 return;
 
-            var blockView = this[rowView];
+            var containerView = this[rowView];
             foreach (var rowBinding in rowBindings.AutoSizeItems)
             {
                 var element = rowView.Elements[rowBinding.Ordinal];
                 element.Measure(rowBinding.AvailableAutoSize);
-                UpdateAutoSize(blockView, rowBinding, element.DesiredSize);
+                UpdateAutoSize(containerView, rowBinding, element.DesiredSize);
             }
         }
 
