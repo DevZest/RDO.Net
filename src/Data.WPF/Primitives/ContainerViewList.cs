@@ -238,20 +238,6 @@ namespace DevZest.Data.Windows.Primitives
             return IsRealized(ordinal) ? this[ordinal - First.ContainerOrdinal] : null;
         }
 
-        public double AvgLength
-        {
-            get { return Count == 0 ? 1 : TotalLength / Count; }
-        }
-
-        private double TotalLength
-        {
-            get
-            {
-                Debug.Assert(Count > 0);
-                return Last.EndOffset - First.StartOffset;
-            }
-        }
-
         public abstract void IncreaseCount();
     }
 }

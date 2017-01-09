@@ -108,27 +108,17 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private bool IsVariantLength(ContainerView containerView, GridTrack gridTrack)
+        protected virtual double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
         {
-            return containerView != null && gridTrack.VariantByContainer;
+            return gridTrack.MeasuredLength;
         }
 
-        protected double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
+        protected virtual void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
         {
-            return IsVariantLength(containerView, gridTrack) ? containerView.GetMeasuredLength(gridTrack) : gridTrack.MeasuredLength;
-        }
-
-        private void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
-        {
-            if (IsVariantLength(containerView, gridTrack))
-                containerView.SetMeasuredLength(gridTrack, value);
-            else
-            {
-                var delta = value - gridTrack.MeasuredLength;
-                Debug.Assert(delta > 0);
-                gridTrack.MeasuredLength = value;
-                gridTrack.Owner.TotalAutoLength += delta;
-            }
+            var delta = value - gridTrack.MeasuredLength;
+            Debug.Assert(delta > 0);
+            gridTrack.MeasuredLength = value;
+            gridTrack.Owner.TotalAutoLength += delta;
         }
 
         protected abstract Size GetSize(ScalarBinding scalarBinding);

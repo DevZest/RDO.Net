@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,7 +70,6 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(VariantByContainer);
-                LayoutXYManager.RefreshContainerLengths();
                 return _measuredValue;
             }
             set
@@ -122,7 +120,6 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 Debug.Assert(VariantByContainer);
-                LayoutXYManager.RefreshContainerLengths();
                 return _startOffsetValue;
             }
             set
@@ -130,11 +127,6 @@ namespace DevZest.Data.Windows.Primitives
                 Debug.Assert(VariantByContainer);
                 _startOffsetValue = value;
             }
-        }
-
-        internal double VariantByContainerEndOffset
-        {
-            get { return VariantByContainerStartOffset + VariantByContainerAvgLength; }
         }
 
         internal void VerifyUnitType()
@@ -197,11 +189,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return Ordinal >= Owner.Count - Owner.FrozenTail; }
         }
 
-        private LayoutXYManager LayoutXYManager
-        {
-            get { return Template.LayoutXYManager; }
-        }
-
         internal int VariantByContainerIndex
         {
             get { return Owner.VariantByContainer && IsRepeat ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
@@ -210,96 +197,6 @@ namespace DevZest.Data.Windows.Primitives
         internal bool VariantByContainer
         {
             get { return VariantByContainerIndex >= 0; }
-        }
-
-        private ContainerViewList ContainerViewList
-        {
-            get { return LayoutXYManager.ContainerViewList; }
-        }
-
-        private int MaxContainerCount
-        {
-            get { return ContainerViewList.MaxCount; }
-        }
-
-        private int MaxFrozenHead
-        {
-            get { return Owner.MaxFrozenHead; }
-        }
-
-        internal Span GetSpan()
-        {
-            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
-            Debug.Assert(!IsRepeat);
-
-            if (IsHead)
-                return new Span(StartOffset, EndOffset);
-
-            Debug.Assert(IsTail);
-            var delta = GetContainerViewsLength(MaxContainerCount);
-            if (!Owner.VariantByContainer && MaxContainerCount > 0)
-                delta -= Owner.GetMeasuredLength(Template.BlockRange);
-            return new Span(StartOffset + delta, EndOffset + delta);
-        }
-
-        internal Span GetSpan(int ordinal)
-        {
-            Debug.Assert(Owner == LayoutXYManager.GridTracksMain);
-            Debug.Assert(IsRepeat && ordinal >= 0);
-
-            var relativeSpan = GetRelativeSpan(ordinal);
-            var startOffset = (MaxFrozenHead == 0 ? 0 : Owner[MaxFrozenHead - 1].EndOffset) + GetContainerViewsLength(ordinal);
-            return new Span(startOffset + relativeSpan.Start, startOffset + relativeSpan.End);
-        }
-
-        private double GetContainerViewsLength(int count)
-        {
-            Debug.Assert(count >= 0 && count <= MaxContainerCount);
-            if (count == 0)
-                return 0;
-
-            if (!Owner.VariantByContainer)
-                return Owner.GetGridSpan(Template.RowRange).MeasuredLength * count;
-
-            var unrealized = ContainerViewList.Count == 0 ? 0 : ContainerViewList.First.ContainerOrdinal;
-            if (count <= unrealized)
-                return count * ContainerViewList.AvgLength;
-
-            var realized = ContainerViewList.Count == 0 ? 0 : ContainerViewList.Last.ContainerOrdinal - ContainerViewList.First.ContainerOrdinal + 1;
-            if (count <= unrealized + realized)
-                return unrealized * ContainerViewList.AvgLength + GetRealizedContainersLength(count - unrealized);
-
-            return GetRealizedContainersLength(realized) + (count - realized) * ContainerViewList.AvgLength;
-        }
-
-        private double GetRealizedContainersLength(int count)
-        {
-            Debug.Assert(count >= 0 && count <= ContainerViewList.Count);
-            return count == 0 ? 0 : ContainerViewList[count - 1].EndOffset;
-        }
-
-        private Span GetRelativeSpan(ContainerView containerView)
-        {
-            Debug.Assert(containerView != null);
-            return VariantByContainer ? containerView.GetReleativeSpan(this) : GetRelativeSpan();
-        }
-
-        private Span GetRelativeSpan(int ordinal)
-        {
-            Debug.Assert(ordinal >= 0 && ordinal < MaxContainerCount);
-
-            if (!VariantByContainer)
-                return GetRelativeSpan();
-
-            var containerView = ContainerViewList.GetContainerView(ordinal);
-            return containerView != null ? GetRelativeSpan(containerView) : new Span(VariantByContainerStartOffset, VariantByContainerEndOffset);
-        }
-
-        private Span GetRelativeSpan()
-        {
-            Debug.Assert(IsRepeat && !VariantByContainer);
-            var originOffset = Owner.GetGridSpan(Template.RowRange).StartTrack.StartOffset;
-            return new Span(StartOffset - originOffset, EndOffset - originOffset);
         }
     }
 }

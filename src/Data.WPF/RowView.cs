@@ -54,7 +54,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(RowPresenter != null && rowPresenter != null);
 
-            InternalCleanup();
+            OnCleanup();
             RowPresenter.View = null;
 
             RowPresenter = rowPresenter;
@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows
 
         private void CleanupElements()
         {
-            InternalCleanup();
+            OnCleanup();
             ClearElements();
         }
 

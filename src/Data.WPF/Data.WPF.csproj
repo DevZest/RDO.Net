@@ -55,6 +55,7 @@
     <Compile Include="PaneScalarBinding.cs" />
     <Compile Include="Primitives\ContainerKind.cs" />
     <Compile Include="Primitives\ContainerView.cs" />
+    <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\ScalarValidationManager.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />

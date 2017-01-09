@@ -34,40 +34,10 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.VariantByContainer ? GridTracksMain.GetGridSpan(Template.RowRange) : new GridSpan(); }
         }
 
-        private bool _isContainerLengthsValid = true;
-        internal void InvalidateContainerLengths()
-        {
-            _isContainerLengthsValid = false;
-        }
-
-        internal void RefreshContainerLengths()
-        {
-            if (_isContainerLengthsValid)
-                return;
-
-            _isContainerLengthsValid = true; // Avoid re-entrance
-            for (int i = 1; i < ContainerViewList.Count; i++)
-                ContainerViewList[i].StartOffset = ContainerViewList[i - 1].EndOffset;
-
-            var gridSpan = VariantByContainerGridSpan;
-            if (gridSpan.IsEmpty)
-                return;
-
-            for (int i = 0; i < gridSpan.Count; i++)
-            {
-                var gridTrack = gridSpan[i];
-                double totalLength = 0;
-                for (int j = 0; j < ContainerViewList.Count; j++)
-                    totalLength += ContainerViewList[j].GetMeasuredLength(gridTrack);
-                gridTrack.VariantByContainerAvgLength = ContainerViewList.Count == 0 ? 1 : totalLength / ContainerViewList.Count;
-            }
-
-            for (int i = 1; i < gridSpan.Count; i++)
-                gridSpan[i].VariantByContainerStartOffset = gridSpan[i - 1].VariantByContainerEndOffset;
-        }
-
         private void InitContainerViews()
         {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.ClearMeasuredLengths();
             ContainerViewList.VirtualizeAll();
 
             var initialOrdinal = GetInitialOrdinal();
@@ -1346,6 +1316,35 @@ namespace DevZest.Data.Windows.Primitives
                 var gridOffset = containerView == null ? new GridOffset(gridTrack) : new GridOffset(gridTrack, containerView);
                 return GetStartLocationMain(gridOffset);
             }
+        }
+
+        private VariantLengthHandler _variantLengthHandler;
+
+        private VariantLengthHandler GetVariantLengthHandler()
+        {
+            if (_variantLengthHandler == null)
+                _variantLengthHandler = new VariantLengthHandler(this);
+            return _variantLengthHandler;
+        }
+
+        private bool IsVariantLength(ContainerView containerView, GridTrack gridTrack)
+        {
+            return containerView != null && gridTrack.VariantByContainer;
+        }
+
+        protected sealed override double GetMeasuredLength(ContainerView containerView, GridTrack gridTrack)
+        {
+            return IsVariantLength(containerView, gridTrack) 
+                ? GetVariantLengthHandler().GetMeasuredLength(containerView, gridTrack)
+                : base.GetMeasuredLength(containerView, gridTrack);
+        }
+
+        protected sealed override void SetMeasuredAutoLength(ContainerView containerView, GridTrack gridTrack, double value)
+        {
+            if (IsVariantLength(containerView, gridTrack))
+                GetVariantLengthHandler().SetMeasuredLength(containerView, gridTrack, value);
+            else
+                base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
     }
 }

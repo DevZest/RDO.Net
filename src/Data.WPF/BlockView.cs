@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows
 
         private void CleanupElements()
         {
-            InternalCleanup();
+            OnCleanup();
             ClearElements();
         }
 
@@ -320,7 +320,7 @@ namespace DevZest.Data.Windows
 
         private RowView RemoveAllRowViewsExcept(RowPresenter row)
         {
-            InternalCleanup();
+            OnCleanup();
 
             RowView result = null;
             var startIndex = BlockBindingsSplit;
