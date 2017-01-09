@@ -18,11 +18,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload);
 
-        private GridSpan VariantByContainerGridSpan
-        {
-            get { return LayoutXYManager.VariantByContainerGridSpan; }
-        }
-
         internal double[] CumulativeMeasuredLengths { get; set; }
 
         internal double StartOffset { get; set; }

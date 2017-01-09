@@ -29,11 +29,6 @@ namespace DevZest.Data.Windows.Primitives
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
 
-        internal GridSpan VariantByContainerGridSpan
-        {
-            get { return GridTracksMain.VariantByContainer ? GridTracksMain.GetGridSpan(Template.RowRange) : new GridSpan(); }
-        }
-
         private void InitContainerViews()
         {
             if (_variantLengthHandler != null)
@@ -1322,6 +1317,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private VariantLengthHandler GetVariantLengthHandler()
         {
+            Debug.Assert(GridTracksMain.VariantByContainer);
             if (_variantLengthHandler == null)
                 _variantLengthHandler = new VariantLengthHandler(this);
             return _variantLengthHandler;

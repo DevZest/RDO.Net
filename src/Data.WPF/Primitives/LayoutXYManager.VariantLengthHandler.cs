@@ -19,9 +19,9 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _layoutXYManager.ContainerViewList; }
             }
 
-            private GridSpan VariantByContainerGridSpan
+            private GridSpan GridSpan
             {
-                get { return _layoutXYManager.VariantByContainerGridSpan; }
+                get { return _layoutXYManager.GridTracksMain.GetGridSpan(_layoutXYManager.Template.RowRange); }
             }
 
             private bool _isContainerLengthsValid = true;
@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows.Primitives
                 for (int i = 1; i < ContainerViewList.Count; i++)
                     ContainerViewList[i].StartOffset = GetEndOffset(ContainerViewList[i - 1]);
 
-                var gridSpan = VariantByContainerGridSpan;
+                var gridSpan = GridSpan;
                 Debug.Assert(!gridSpan.IsEmpty);
 
                 for (int i = 0; i < gridSpan.Count; i++)
@@ -91,8 +91,8 @@ namespace DevZest.Data.Windows.Primitives
 
             private double[] InitCumulativeMeasuredLengths(ContainerView containerView)
             {
-                Debug.Assert(VariantByContainerGridSpan.Count > 0);
-                var result = new double[VariantByContainerGridSpan.Count];
+                Debug.Assert(GridSpan.Count > 0);
+                var result = new double[GridSpan.Count];
                 ClearMeasuredLengths(containerView);
                 return result;
             }
@@ -111,7 +111,7 @@ namespace DevZest.Data.Windows.Primitives
                     return;
 
                 double totalLength = 0;
-                var gridSpan = VariantByContainerGridSpan;
+                var gridSpan = GridSpan;
                 Debug.Assert(gridSpan.Count == containerView.CumulativeMeasuredLengths.Length);
                 for (int i = 0; i < containerView.CumulativeMeasuredLengths.Length; i++)
                 {
