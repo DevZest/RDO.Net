@@ -496,28 +496,18 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshViewport()
         {
-            var valueMain = CoerceViewportMain();
-            var valueCross = CoerceViewportCross();
+            var valueMain = CoerceViewport(GridTracksMain, MaxOffsetMain, FrozenHeadLengthMain, FrozenTailLengthMain);
+            var valueCross = CoerceViewport(GridTracksCross, MaxOffsetCross, FrozenHeadLengthCross, FrozenTailLengthCross);
             RefreshViewport(valueMain, valueCross);
         }
 
-        private double CoerceViewportMain()
+        private static double CoerceViewport(IGridTrackCollection gridTracks, double maxOffset, double frozenHeadLength, double frozenTailLength)
         {
-            if (GridTracksMain.SizeToContent)
-                return MaxOffsetMain;
+            if (gridTracks.SizeToContent)
+                return maxOffset;
 
-            var result = GridTracksMain.AvailableLength;
-            var frozenLength = FrozenHeadLengthMain + FrozenTailLengthMain;
-            return Math.Max(frozenLength, result);
-        }
-
-        private double CoerceViewportCross()
-        {
-            if (GridTracksCross.SizeToContent)
-                return MaxOffsetCross;
-
-            var result = GridTracksCross.AvailableLength;
-            var frozenLength = FrozenHeadLengthCross + FrozenTailLengthCross;
+            var result = gridTracks.AvailableLength;
+            var frozenLength = frozenHeadLength + frozenTailLength;
             return Math.Max(frozenLength, result);
         }
 
