@@ -13,12 +13,6 @@ namespace DevZest.Data.Windows.Primitives
             return (Binding)element.GetValue(BindingProperty);
         }
 
-        public static DataPresenter GetDataPresenter(this UIElement element)
-        {
-            var binding = element.GetBinding();
-            return binding == null || binding.Template == null ? null : binding.Template.DataPresenter;
-        }
-
         internal static void SetBinding(this UIElement element, Binding value)
         {
             Debug.Assert(value != null && element.GetBinding() == null);
