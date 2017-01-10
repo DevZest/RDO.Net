@@ -72,6 +72,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return GetOffset(_scrollStartMain); }
         }
 
+        private GridOffset ScrollEndOffsetMain
+        {
+            get { return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof; }
+        }
+
         private void AdjustScrollStartMain(double delta)
         {
             _scrollStartMain = GetLogicalOffset(ScrollStartMain + delta);
@@ -795,7 +800,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxContainerCount > 0)
                 return new GridOffset(gridTrack, 0);
             else
-                return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof;
+                return ScrollEndOffsetMain;
         }
 
         private GridOffset GetEndGridOffset(GridRange gridRange)
@@ -813,7 +818,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxContainerCount > 0)
                 return new GridOffset(gridTrack, MaxContainerCount - 1);
             else
-                return MaxFrozenTailMain > 0 ? new GridOffset(GridTracksMain.LastOf(MaxFrozenTailMain)) : GridOffset.Eof;
+                return ScrollEndOffsetMain;
         }
 
         protected override Point GetLocation(ContainerView containerView)

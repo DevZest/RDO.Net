@@ -34,7 +34,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal DataPresenter DataPresenter { get; private set; }
 
-        private RecapBindingCollection<ScalarBinding> ScalarBindings
+        protected RecapBindingCollection<ScalarBinding> ScalarBindings
         {
             get { return Template.InternalScalarBindings; }
         }
