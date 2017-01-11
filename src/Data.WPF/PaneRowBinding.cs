@@ -28,8 +28,7 @@ namespace DevZest.Data.Windows
         public void AddChild<T>(RowBinding<T> binding, string name)
             where T : UIElement, new()
         {
-            if (binding == null)
-                throw new ArgumentNullException(nameof(binding));
+            Binding.VerifyAdding(binding, nameof(binding));
 
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
@@ -37,6 +36,7 @@ namespace DevZest.Data.Windows
             VerifyNotSealed();
             _bindings.Add(binding);
             _names.Add(name);
+            binding.ParentBinding = this;
         }
 
         internal abstract Pane CreatePane();

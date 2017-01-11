@@ -1399,6 +1399,9 @@ namespace DevZest.Data.Windows.Primitives
                     continue;
                 }
 
+                if (binding.ParentBinding != null)
+                    continue;
+
                 var scalarBinding = binding as ScalarBinding;
                 if (scalarBinding != null)
                 {

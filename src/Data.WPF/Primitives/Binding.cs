@@ -14,11 +14,13 @@ namespace DevZest.Data.Windows.Primitives
 
         public GridRange GridRange { get; private set; }
 
-        public int Ordinal { get; private set; }
+        public int Ordinal { get; private set; } = -1;
+
+        public Binding ParentBinding { get; internal set; }
 
         public bool IsSealed
         {
-            get { return Template != null && Template.IsSealed; }
+            get { return (ParentBinding != null && ParentBinding.IsSealed) || (Template != null && Template.IsSealed); }
         }
 
         /// <summary>Throws an <see cref="InvalidOperationException"/> if this <see cref="Binding"/> is sealed.</summary>
@@ -29,6 +31,15 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (IsSealed)
                 throw new InvalidOperationException(Strings.Binding_VerifyNotSealed);
+        }
+
+        internal static void VerifyAdding(Binding binding, string paramName)
+        {
+            if (binding == null)
+                throw new ArgumentNullException(paramName);
+
+            if (binding.Template != null || binding.ParentBinding != null)
+                throw new ArgumentException(Strings.Binding_VerifyAdding, paramName);
         }
 
         internal void Seal(Template template, GridRange gridRange, int ordinal)

@@ -20,6 +20,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The Binding has already been added.
+        /// </summary>
+        public static string Binding_VerifyAdding
+        {
+            get { return GetString("Binding_VerifyAdding"); }
+        }
+
+        /// <summary>
         /// The Binding is sealed and allows no modification.
         /// </summary>
         public static string Binding_VerifyNotSealed

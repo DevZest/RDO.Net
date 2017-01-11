@@ -120,6 +120,9 @@
   <data name="Binding_InvalidFrozenMargin" xml:space="preserve">
     <value>The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].</value>
   </data>
+  <data name="Binding_VerifyAdding" xml:space="preserve">
+    <value>The Binding has already been added.</value>
+  </data>
   <data name="Binding_VerifyNotSealed" xml:space="preserve">
     <value>The Binding is sealed and allows no modification.</value>
   </data>
