@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -1378,46 +1379,54 @@ namespace DevZest.Data.Windows.Primitives
             return 0;
         }
 
-        public void EnsureVisible(UIElement element)
+        public void EnsureVisible(DependencyObject visual)
         {
-            var rowView = element as RowView;
-            if (rowView != null)
+            for (; visual != null; visual = VisualTreeHelper.GetParent(visual))
             {
-                EnsureVisible(rowView);
-                return;
-            }
+                var element = visual as UIElement;
+                if (element == null)
+                    continue;
 
-            var binding = element.GetBinding();
-            if (binding == null)
-                return;
-
-            var scalarBinding = binding as ScalarBinding;
-            if (scalarBinding != null)
-            {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                var binding = element.GetBinding();
+                if (binding == null)
                 {
-                    if (element == scalarBinding[i])
+                    var rowView = visual as RowView;
+                    if (rowView != null)
                     {
-                        EnsureVisible(scalarBinding, i);
+                        EnsureVisible(rowView);
                         return;
                     }
+                    continue;
                 }
-            }
 
-            var rowBinding = binding as RowBinding;
-            if (rowBinding != null)
-            {
-                rowView = element.GetRowPresenter().View;
-                EnsureVisible(rowView, rowBinding);
-                return;
-            }
+                var scalarBinding = binding as ScalarBinding;
+                if (scalarBinding != null)
+                {
+                    for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                    {
+                        if (visual == scalarBinding[i])
+                        {
+                            EnsureVisible(scalarBinding, i);
+                            return;
+                        }
+                    }
+                }
 
-            var blockBinding = binding as BlockBinding;
-            if (blockBinding != null)
-            {
-                var blockView = element.GetBlockView();
-                EnsureVisible(blockView, blockBinding);
-                return;
+                var rowBinding = binding as RowBinding;
+                if (rowBinding != null)
+                {
+                    var rowView = element.GetRowPresenter().View;
+                    EnsureVisible(rowView, rowBinding);
+                    return;
+                }
+
+                var blockBinding = binding as BlockBinding;
+                if (blockBinding != null)
+                {
+                    var blockView = element.GetBlockView();
+                    EnsureVisible(blockView, blockBinding);
+                    return;
+                }
             }
         }
 

@@ -120,10 +120,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            var element = visual as UIElement;
-            if (element != null)
-                EnsureVisible(element);
-
+            EnsureVisible(visual);
             return rectangle;
         }
     }
