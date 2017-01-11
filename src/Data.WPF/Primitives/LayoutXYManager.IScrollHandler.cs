@@ -120,87 +120,11 @@ namespace DevZest.Data.Windows.Primitives
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            foreach (var scalarBinding in ScalarBindings)
-            {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
-                {
-                    var element = scalarBinding[i];
-                    if (element == visual)
-                    {
-                        EnsureVisible(scalarBinding, i);
-                        return rectangle;
-                    }
-                }
-            }
-
-            if (CurrentContainerView == visual)
-            {
-                EnsureVisible(CurrentContainerView);
-                return rectangle;
-            }
-
-            foreach (var containerView in ContainerViewList)
-            {
-                if (containerView == visual)
-                {
-                    EnsureVisible(containerView);
-                    return rectangle;
-                }
-            }
+            var element = visual as UIElement;
+            if (element != null)
+                EnsureVisible(element);
 
             return rectangle;
-        }
-
-        private void EnsureVisible(ScalarBinding scalarBinding, int blockDimension)
-        {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(scalarBinding), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(scalarBinding, blockDimension), true);
-        }
-
-        private double GetEnsureVisibleOffsetMain(ScalarBinding scalarBinding)
-        {
-            var gridRange = scalarBinding.GridRange;
-            return GetEnsureVisibleOffsetMain(GetStartGridOffset(gridRange), GetEndGridOffset(gridRange));
-        }
-
-        private double GetEnsureVisibleOffsetCross(ScalarBinding scalarBinding, int blockDimension)
-        {
-            return 0;
-        }
-
-        private void EnsureVisible(ContainerView containerView)
-        {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(containerView), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(containerView), true);
-        }
-
-        private double GetEnsureVisibleOffsetMain(ContainerView containerView)
-        {
-            var gridSpan = GridTracksMain.GetGridSpan(Template.BlockRange);
-            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, containerView), new GridOffset(gridSpan.EndTrack, containerView));
-        }
-
-        private double GetEnsureVisibleOffsetCross(ContainerView containerView)
-        {
-            return 0;
-        }
-
-        private double GetEnsureVisibleOffsetMain(GridOffset startGridOffset, GridOffset endGridOffset)
-        {
-            if (startGridOffset.GridTrack.IsFrozenHead || endGridOffset.GridTrack.IsFrozenTail)
-                return 0;
-
-            var start = startGridOffset.Span.Start;
-            var scrollStartMain = ScrollStartMain;
-            if (start < scrollStartMain)
-                return start - scrollStartMain;
-
-            var end = endGridOffset.Span.End - ScrollOffsetMain;
-            var scrollEnd = ViewportMain - FrozenTailLengthMain;
-            if (end > scrollEnd)
-                return end - scrollEnd;
-
-            return 0;
         }
     }
 }

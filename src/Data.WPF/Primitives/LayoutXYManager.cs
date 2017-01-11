@@ -1337,5 +1337,109 @@ namespace DevZest.Data.Windows.Primitives
             else
                 base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
+
+        private double GetEnsureVisibleOffsetMain(GridOffset startGridOffset, GridOffset endGridOffset)
+        {
+            if (startGridOffset.GridTrack.IsFrozenHead || endGridOffset.GridTrack.IsFrozenTail)
+                return 0;
+
+            var start = startGridOffset.Span.Start;
+            var scrollStartMain = ScrollStartMain;
+            if (start < scrollStartMain)
+                return start - scrollStartMain;
+
+            var end = endGridOffset.Span.End - ScrollOffsetMain;
+            var scrollEnd = ViewportMain - FrozenTailLengthMain;
+            if (end > scrollEnd)
+                return end - scrollEnd;
+
+            return 0;
+        }
+
+        private double GetEnsureVisibleOffsetCross(GridTrack startGridTrack, int startBlockDimension, GridTrack endGridTrack, int endBlockDimension)
+        {
+            if (startGridTrack.IsFrozenHead || endGridTrack.IsFrozenTail)
+                return 0;
+
+            var start = startGridTrack.StartOffset;
+            if (startBlockDimension > 0)
+                start += startBlockDimension * BlockDimensionLength;
+            var scrollStart = ScrollOffsetCross + FrozenHeadLengthCross;
+            if (start < scrollStart)
+                return start - scrollStart;
+
+            var end = endGridTrack.EndOffset - ScrollOffsetCross;
+            if (endBlockDimension > 0)
+                end += endBlockDimension * BlockDimensionLength;
+            var scrollEnd = ViewportCross - FrozenTailLengthCross;
+            if (end > scrollEnd)
+                return end - scrollEnd;
+
+            return 0;
+        }
+
+        public void EnsureVisible(UIElement element)
+        {
+            var rowView = element as RowView;
+            if (rowView != null)
+            {
+                EnsureVisible(rowView);
+                return;
+            }
+
+            var binding = element.GetBinding();
+            if (binding == null)
+                return;
+
+            var scalarBinding = binding as ScalarBinding;
+            if (scalarBinding != null)
+            {
+                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                {
+                    if (element == scalarBinding[i])
+                    {
+                        EnsureVisible(scalarBinding, i);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void EnsureVisible(ScalarBinding scalarBinding, int blockDimension)
+        {
+            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(scalarBinding), true);
+            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(scalarBinding, blockDimension), true);
+        }
+
+        private double GetEnsureVisibleOffsetMain(ScalarBinding scalarBinding)
+        {
+            var gridRange = scalarBinding.GridRange;
+            return GetEnsureVisibleOffsetMain(GetStartGridOffset(gridRange), GetEndGridOffset(gridRange));
+        }
+
+        private double GetEnsureVisibleOffsetCross(ScalarBinding scalarBinding, int blockDimension)
+        {
+            var gridSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);
+            var endBlockDimension = ShouldStretchCross(scalarBinding) ? BlockDimensions - 1 : blockDimension;
+            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, blockDimension, gridSpan.EndTrack, endBlockDimension);
+        }
+
+        private void EnsureVisible(RowView rowView)
+        {
+            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(rowView), true);
+            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(rowView), true);
+        }
+
+        private double GetEnsureVisibleOffsetMain(RowView rowView)
+        {
+            var gridSpan = GridTracksMain.GetGridSpan(Template.RowRange);
+            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, rowView.BlockOrdinal), new GridOffset(gridSpan.EndTrack, rowView.ContainerOrdinal));
+        }
+
+        private double GetEnsureVisibleOffsetCross(RowView rowView)
+        {
+            var gridSpan = GridTracksCross.GetGridSpan(Template.RowRange);
+            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, rowView.BlockDimension, gridSpan.EndTrack, rowView.BlockDimension);
+        }
     }
 }
