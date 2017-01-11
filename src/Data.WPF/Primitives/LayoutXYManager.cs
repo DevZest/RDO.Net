@@ -1403,6 +1403,22 @@ namespace DevZest.Data.Windows.Primitives
                     }
                 }
             }
+
+            var rowBinding = binding as RowBinding;
+            if (rowBinding != null)
+            {
+                rowView = element.GetRowPresenter().View;
+                EnsureVisible(rowView, rowBinding);
+                return;
+            }
+
+            var blockBinding = binding as BlockBinding;
+            if (blockBinding != null)
+            {
+                var blockView = element.GetBlockView();
+                EnsureVisible(blockView, blockBinding);
+                return;
+            }
         }
 
         private void EnsureVisible(ScalarBinding scalarBinding, int blockDimension)
@@ -1433,13 +1449,55 @@ namespace DevZest.Data.Windows.Primitives
         private double GetEnsureVisibleOffsetMain(RowView rowView)
         {
             var gridSpan = GridTracksMain.GetGridSpan(Template.RowRange);
-            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, rowView.BlockOrdinal), new GridOffset(gridSpan.EndTrack, rowView.ContainerOrdinal));
+            var blockOrdinal = rowView.BlockOrdinal;
+            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, blockOrdinal), new GridOffset(gridSpan.EndTrack, blockOrdinal));
         }
 
         private double GetEnsureVisibleOffsetCross(RowView rowView)
         {
             var gridSpan = GridTracksCross.GetGridSpan(Template.RowRange);
-            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, rowView.BlockDimension, gridSpan.EndTrack, rowView.BlockDimension);
+            var blockDimension = rowView.BlockDimension;
+            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, blockDimension, gridSpan.EndTrack, blockDimension);
+        }
+
+        private void EnsureVisible(RowView rowView, RowBinding rowBinding)
+        {
+            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(rowView, rowBinding), true);
+            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(rowView, rowBinding), true);
+        }
+
+        private double GetEnsureVisibleOffsetMain(RowView rowView, RowBinding rowBinding)
+        {
+            var gridSpan = GridTracksMain.GetGridSpan(rowBinding.GridRange);
+            var blockOrdinal = rowView.BlockOrdinal;
+            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, blockOrdinal), new GridOffset(gridSpan.EndTrack, blockOrdinal));
+        }
+
+        private double GetEnsureVisibleOffsetCross(RowView rowView, RowBinding rowBinding)
+        {
+            var gridSpan = GridTracksCross.GetGridSpan(rowBinding.GridRange);
+            var blockDimension = rowView.BlockDimension;
+            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, blockDimension, gridSpan.EndTrack, blockDimension);
+        }
+
+        private void EnsureVisible(BlockView blockView, BlockBinding blockBinding)
+        {
+            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(blockView, blockBinding), true);
+            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(blockView, blockBinding), true);
+        }
+
+        private double GetEnsureVisibleOffsetMain(BlockView blockView, BlockBinding blockBinding)
+        {
+            var gridSpan = GridTracksMain.GetGridSpan(blockBinding.GridRange);
+            var blockOrdinal = blockView.ContainerOrdinal;
+            return GetEnsureVisibleOffsetMain(new GridOffset(gridSpan.StartTrack, blockOrdinal), new GridOffset(gridSpan.EndTrack, blockOrdinal));
+        }
+
+        private double GetEnsureVisibleOffsetCross(BlockView blockView, BlockBinding blockBinding)
+        {
+            var gridSpan = GridTracksCross.GetGridSpan(blockBinding.GridRange);
+            var blockDimension = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? BlockDimensions : 0;
+            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, blockDimension, gridSpan.EndTrack, blockDimension);
         }
     }
 }
