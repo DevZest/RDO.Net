@@ -214,7 +214,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal override Size Measure(Size availableSize)
         {
-            InitScroll();
+            //InitScroll();
             return base.Measure(availableSize);
         }
 
@@ -229,6 +229,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override void PrepareMeasureContainers()
         {
+            InitScroll();
             InitContainerViews();
 
             if (DeltaScrollOffset < 0 || _scrollStartMain.GridOffset >= MaxGridOffsetMain)
@@ -520,7 +521,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshScrollOffset()
         {
             var scrollOriginMain = GetOffset(ScrollOriginMain);
-            var scrollStartMain = GetOffset(_scrollStartMain);
+            var scrollStartMain = ScrollStartMain;
             Debug.Assert(scrollStartMain >= scrollOriginMain);
             var valueMain = scrollStartMain - scrollOriginMain;
             var valueCross = Math.Min(ScrollOffsetCross, ExtentCross - ViewportCross);
