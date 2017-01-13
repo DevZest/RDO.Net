@@ -121,9 +121,15 @@ namespace DevZest.Data.Windows
             return this;
         }
 
+        [DefaultValue(null)]
+        public TemplateBuilder WithSelectionMode(SelectionMode value)
+        {
+            Template.SelectionMode = value;
+            return this;
+        }
+
         [DefaultValue(ValidationScope.CurrentRow)]
-        public TemplateBuilder 
-            WithValidationScope(ValidationScope value)
+        public TemplateBuilder WithValidationScope(ValidationScope value)
         {
             Template.ValidationScope = value;
             return this;

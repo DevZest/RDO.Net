@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
             return GetProgress(rowPresenter).IsSupersetOf(validationSource);
         }
 
-        public ICollection<KeyValuePair<RowPresenter, IReadOnlyList<ValidationMessage<Column>>>> Errors
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Errors
         {
             get
             {
@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        public ICollection<KeyValuePair<RowPresenter, IReadOnlyList<ValidationMessage<Column>>>> Warnings
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Warnings
         {
             get
             {

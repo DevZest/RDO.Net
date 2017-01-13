@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(dataSet));
 
             if (dataView.DataPresenter != null && dataView.DataPresenter != this)
-                throw new ArgumentException(Strings.DataPresenter_InvalidView, nameof(dataView));
+                throw new ArgumentException(Strings.DataPresenter_InvalidDataView, nameof(dataView));
 
             var existingView = dataView.DataPresenter == this;
             if (existingView)
@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows
             {
                 BuildTemplate(builder);
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy, ValidateScalars);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy, GetScalarValidationMessages);
             AttachView(dataView);
             if (!existingView)
             {

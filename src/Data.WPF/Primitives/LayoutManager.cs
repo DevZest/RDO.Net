@@ -413,5 +413,14 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         internal abstract IEnumerable<GridLineFigure> GridLineFigures { get; }
+
+        public virtual void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible)
+        {
+            var oldValue = CurrentRow;
+            if (oldValue == value)
+                return;
+
+            SetCurrentRow(value, selectionMode);
+        }
     }
 }

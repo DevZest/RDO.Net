@@ -492,5 +492,8 @@ namespace DevZest.Data.Windows.Primitives
 
         [DefaultValue(100)]
         public int MaxValidationWarnings { get; internal set; } = 100;
+
+        [DefaultValue(null)]
+        public SelectionMode? SelectionMode { get; internal set; }
     }
 }

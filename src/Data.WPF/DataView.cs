@@ -114,6 +114,21 @@ namespace DevZest.Data.Windows
             set { SetValue(ScrollLineWidthProperty, value); }
         }
 
+        public static RoutedUICommand MoveFocusUpCommand{ get { return ComponentCommands.MoveFocusUp; } }
+        public static RoutedUICommand MoveFocusDownCommand { get { return ComponentCommands.MoveFocusDown; } }
+        public static RoutedUICommand MoveFocusBackCommand { get { return ComponentCommands.MoveFocusBack; } }
+        public static RoutedUICommand MoveFocusForwardCommand { get { return ComponentCommands.MoveFocusForward; } }
+        public static RoutedUICommand MoveFocusPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
+        public static RoutedUICommand MoveFocusPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
+        public static RoutedUICommand MoveToHomeCommand { get { return ComponentCommands.MoveToHome; } }
+        public static RoutedUICommand MoveToEndCommand { get { return ComponentCommands.MoveToEnd; } }
+        public static RoutedUICommand MoveToPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
+        public static RoutedUICommand MoveToPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
+        public static RoutedUICommand ExtendSelectionUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
+        public static RoutedUICommand ExtendSelectionDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
+        public static RoutedUICommand ExtendSelectionLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
+        public static RoutedUICommand ExtendSelectionRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
+
         internal void SetupCommandBindings()
         {
             var dataPresenter = DataPresenter;

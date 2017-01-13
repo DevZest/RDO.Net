@@ -76,19 +76,27 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The row is invalid.
+        /// The CurrentRow is editing.
         /// </summary>
-        public static string DataPresenter_InvalidRow
+        public static string DataPresenter_CurrentRowIsEditing
         {
-            get { return GetString("DataPresenter_InvalidRow"); }
+            get { return GetString("DataPresenter_CurrentRowIsEditing"); }
         }
 
         /// <summary>
         /// The DataView is invalid. It has been associated with another DataPresenter.
         /// </summary>
-        public static string DataPresenter_InvalidView
+        public static string DataPresenter_InvalidDataView
         {
-            get { return GetString("DataPresenter_InvalidView"); }
+            get { return GetString("DataPresenter_InvalidDataView"); }
+        }
+
+        /// <summary>
+        /// The RowPresenter is invalid for this DataPresenter.
+        /// </summary>
+        public static string DataPresenter_InvalidRowPresenter
+        {
+            get { return GetString("DataPresenter_InvalidRowPresenter"); }
         }
 
         /// <summary>

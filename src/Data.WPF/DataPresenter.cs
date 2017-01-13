@@ -3,6 +3,7 @@ using DevZest.Data.Windows.Primitives;
 using System.Windows;
 using System;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -95,13 +96,99 @@ namespace DevZest.Data.Windows
         {
             if (!CanInsert)
                 throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
-            if (row != null & row.RowManager != RequireLayoutManager())
-                throw new ArgumentException(Strings.DataPresenter_InvalidRow, nameof(row));
+            if (row != null && row.DataPresenter != this)
+                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(row));
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows
         {
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
+        }
+
+        public void Validate()
+        {
+            RequireLayoutManager().Validate();
+        }
+
+        public bool HasPreValidatorError
+        {
+            get { return LayoutManager == null ? false : LayoutManager.HasPreValidatorError; }
+        }
+
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> ValidationErros
+        {
+            get
+            {
+                if (LayoutManager == null)
+                    return null;
+                else
+                    return LayoutManager.Errors;
+            }
+        }
+
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> ValidationWarnings
+        {
+            get
+            {
+                if (LayoutManager == null)
+                    return null;
+                else
+                    return LayoutManager.Warnings;
+            }
+        }
+
+        protected virtual IEnumerable<ValidationMessage<Scalar>> GetScalarValidationMessages()
+        {
+            yield break;
+        }
+
+        public void ValidateScalars()
+        {
+            RequireLayoutManager().ValidateScalars();
+        }
+
+        public bool HasScalarPreValidatorError
+        {
+            get { return LayoutManager == null ? false : LayoutManager.HasScalarPreValidatorError; }
+        }
+
+        public IReadOnlyList<ValidationMessage<Scalar>> ScalarValidationErrors
+        {
+            get
+            {
+                if (LayoutManager == null)
+                    return null;
+                else
+                    return LayoutManager.ScalarErrors;
+            }
+        }
+
+        public IReadOnlyList<ValidationMessage<Scalar>> ScalarValidationWarnings
+        {
+            get
+            {
+                if (LayoutManager == null)
+                    return null;
+                else
+                    return LayoutManager.ScalarWarnings;
+            }
+        }
+
+        public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)
+        {
+            if (value == CurrentRow)
+                return;
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (value.DataPresenter != this)
+                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(value));
+
+            if (CurrentRow.IsEditing)
+                throw new InvalidOperationException(Strings.DataPresenter_CurrentRowIsEditing);
+
+            RequireLayoutManager().SetCurrentRow(value, selectionMode, ensureVisible);
         }
 
         protected internal virtual IEnumerable<CommandBinding> DataViewCommandBindings
@@ -122,11 +209,6 @@ namespace DevZest.Data.Windows
         protected internal virtual IEnumerable<InputBinding> RowViewInputBindings
         {
             get { return null; }
-        }
-
-        protected virtual IEnumerable<ValidationMessage<Scalar>> ValidateScalars()
-        {
-            yield break;
         }
     }
 }

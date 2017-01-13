@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -381,11 +382,37 @@ namespace DevZest.Data.Windows.Primitives
         protected void SetCurrentRow(RowPresenter value, bool reload)
         {
             Debug.Assert(value == null || value.RowManager == this);
-            if (value == _currentRow)
-                return;
+            Debug.Assert(value != _currentRow);
             var oldValue = _currentRow;
             _currentRow = value;
             OnCurrentRowChanged(oldValue, reload);
+        }
+
+        protected void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode)
+        {
+            var oldValue = CurrentRow;
+            Debug.Assert(oldValue != value);
+            SetCurrentRow(value, true);
+            if (!selectionMode.HasValue)
+                return;
+
+            switch (selectionMode.GetValueOrDefault())
+            {
+                case SelectionMode.Single:
+                    _selectedRows.Clear();
+                    _selectedRows.Add(value);
+                    break;
+                case SelectionMode.Multiple:
+                    value.IsSelected = !value.IsSelected;
+                    break;
+                case SelectionMode.Extended:
+                    _selectedRows.Clear();
+                    var min = Math.Min(oldValue.Index, value.Index);
+                    var max = Math.Max(oldValue.Index, value.Index);
+                    for (int i = min; i <= max; i++)
+                        _selectedRows.Add(Rows[i]);
+                    break;
+            }
         }
 
         private _EditHandler _editHandler;
