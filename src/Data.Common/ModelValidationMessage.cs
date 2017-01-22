@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 
 namespace DevZest.Data

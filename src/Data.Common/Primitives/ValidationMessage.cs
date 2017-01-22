@@ -1,6 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 
-namespace DevZest.Data
+namespace DevZest.Data.Primitives
 {
     public class ValidationMessage
     {
