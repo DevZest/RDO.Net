@@ -77,6 +77,7 @@
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
+    <Compile Include="Primitives\ValidationMessage.cs" />
     <Compile Include="ValidationSource.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
@@ -94,13 +95,13 @@
     <Compile Include="Primitives\JsonWriter.cs" />
     <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
     <Compile Include="Primitives\JsonValidationEntry.cs" />
-    <Compile Include="Primitives\JsonValidationMessage.cs" />
+    <Compile Include="Primitives\JsonModelValidationMessage.cs" />
     <Compile Include="Primitives\JsonValidationResult.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarDataExtensions.cs" />
     <Compile Include="ScalarData.cs" />
     <Compile Include="ValidationEntry.cs" />
-    <Compile Include="ValidationMessage.cs" />
+    <Compile Include="ModelValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
@@ -252,7 +253,7 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
-    <Compile Include="ValidationMessageCollection.cs" />
+    <Compile Include="ModelValidationMessageCollection.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />

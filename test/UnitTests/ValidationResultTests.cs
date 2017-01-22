@@ -29,12 +29,12 @@ namespace DevZest.Data
                 var messageId = "MessageId";
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ValidationMessage<Column>[]
-                        { new ValidationMessage<Column>(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id) }),
-                    new ValidationEntry(dataSet[1], new ValidationMessage<Column>[]
-                        { new ValidationMessage<Column>(messageId, ValidationSeverity.Warning, "This is a warning message", ValidationSource<Column>.Empty) }),
-                    new ValidationEntry(dataSet[2], new ValidationMessage<Column>[]
-                        { new ValidationMessage<Column>(messageId, ValidationSeverity.Warning, "This is a warning message", null) })
+                    new ValidationEntry(dataSet[0], new ModelValidationMessage[]
+                        { new ModelValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id) }),
+                    new ValidationEntry(dataSet[1], new ModelValidationMessage[]
+                        { new ModelValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) }),
+                    new ValidationEntry(dataSet[2], new ModelValidationMessage[]
+                        { new ModelValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) })
                 });
                 var expectedJson =
 @"[
@@ -56,7 +56,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : """"
+            ""Source"" : ""Id""
          }
       ]
    },
@@ -67,7 +67,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : null
+            ""Source"" : ""Id""
          }
       ]
    }
@@ -107,7 +107,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : """"
+            ""Source"" : ""Id""
          }
       ]
    },
@@ -118,7 +118,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : null
+            ""Source"" : ""Id""
          }
       ]
    }

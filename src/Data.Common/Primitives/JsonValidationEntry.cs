@@ -19,12 +19,12 @@ namespace DevZest.Data.Primitives
         public static ValidationEntry ParseValidationEntry(this JsonParser jsonParser, DataSet dataSet)
         {
             DataRow dataRow;
-            IReadOnlyList<ValidationMessage<Column>> validationMessages;
+            IReadOnlyList<ModelValidationMessage> validationMessages;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             dataRow = DataRow.FromString(dataSet, jsonParser.ExpectNameStringPair(DATA_ROW, true));
             jsonParser.ExpectObjectName(MESSAGES);
-            validationMessages = jsonParser.ParseValidationMessages(dataSet);
+            validationMessages = jsonParser.ParseModelValidationMessages(dataSet);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
             return new ValidationEntry(dataRow, validationMessages);

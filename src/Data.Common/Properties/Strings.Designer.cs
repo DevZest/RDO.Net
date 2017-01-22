@@ -811,6 +811,14 @@ namespace DevZest.Data
             get { return GetString("JsonWriter_EmptyStringBuilder"); }
         }
 
+        /// <summary>
+        /// The validation source is empty.
+        /// </summary>
+        public static string ModelValidationMessage_EmptySource
+        {
+            get { return GetString("ModelValidationMessage_EmptySource"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

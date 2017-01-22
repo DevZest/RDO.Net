@@ -6,7 +6,7 @@ namespace DevZest.Data
 {
     public struct ValidationEntry
     {
-        public ValidationEntry(DataRow dataRow, IReadOnlyList<ValidationMessage<Column>> messages)
+        public ValidationEntry(DataRow dataRow, IReadOnlyList<ModelValidationMessage> messages)
         {
             DataRow = dataRow;
             Messages = messages;
@@ -14,6 +14,6 @@ namespace DevZest.Data
 
         public readonly DataRow DataRow;
 
-        public readonly IReadOnlyList<ValidationMessage<Column>> Messages;
+        public readonly IReadOnlyList<ModelValidationMessage> Messages;
     }
 }
