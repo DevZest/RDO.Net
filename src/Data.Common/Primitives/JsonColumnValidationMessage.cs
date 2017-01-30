@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
-    public static class JsonModelValidationMessage
+    public static class JsonColumnValidationMessage
     {
-        private const string MESSAGE_ID = nameof(ModelValidationMessage.Id);
-        private const string SEVERITY = nameof(ModelValidationMessage.Severity);
-        private const string DESCRIPTION = nameof(ModelValidationMessage.Description);
-        private const string SOURCE = nameof(ModelValidationMessage.Source);
+        private const string MESSAGE_ID = nameof(ColumnValidationMessage.Id);
+        private const string SEVERITY = nameof(ColumnValidationMessage.Severity);
+        private const string DESCRIPTION = nameof(ColumnValidationMessage.Description);
+        private const string SOURCE = nameof(ColumnValidationMessage.Source);
 
-        public static JsonWriter Write(this JsonWriter jsonWriter, ModelValidationMessage validationMessage)
+        public static JsonWriter Write(this JsonWriter jsonWriter, ColumnValidationMessage validationMessage)
         {
             return jsonWriter
                 .WriteStartObject()
@@ -30,7 +30,7 @@ namespace DevZest.Data.Primitives
             return jsonWriter;
         }
 
-        public static ModelValidationMessage ParseModelValidationMessage(this JsonParser jsonParser, DataSet dataSet)
+        public static ColumnValidationMessage ParseColumnValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
             string messageId;
             ValidationSeverity severity;
@@ -44,7 +44,7 @@ namespace DevZest.Data.Primitives
             source = jsonParser.ParseSource(dataSet, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ModelValidationMessage(messageId, severity, description, source);
+            return new ColumnValidationMessage(messageId, severity, description, source);
         }
 
         private static IValidationSource<Column> ParseSource(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
@@ -53,29 +53,29 @@ namespace DevZest.Data.Primitives
             return text == null ? null : ValidationSource.Deserialize(dataSet.Model, text);
         }
 
-        public static IReadOnlyList<ModelValidationMessage> ParseModelValidationMessages(this JsonParser jsonParser, DataSet dataSet)
+        public static IReadOnlyList<ColumnValidationMessage> ParseColumnValidationMessages(this JsonParser jsonParser, DataSet dataSet)
         {
-            List<ModelValidationMessage> result = null;
+            List<ColumnValidationMessage> result = null;
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
 
             if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
                 if (result == null)
-                    result = new List<ModelValidationMessage>();
-                result.Add(jsonParser.ParseModelValidationMessage(dataSet));
+                    result = new List<ColumnValidationMessage>();
+                result.Add(jsonParser.ParseColumnValidationMessage(dataSet));
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonParser.ConsumeToken();
-                    result.Add(jsonParser.ParseModelValidationMessage(dataSet));
+                    result.Add(jsonParser.ParseColumnValidationMessage(dataSet));
                 }
             }
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
 
             if (result == null)
-                return Array<ModelValidationMessage>.Empty;
+                return Array<ColumnValidationMessage>.Empty;
             else
                 return result;
         }

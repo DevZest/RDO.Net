@@ -315,7 +315,7 @@ namespace DevZest.Data
             return false;
         }
 
-        public IReadOnlyList<ModelValidationMessage> Validate(ValidationSeverity severity = ValidationSeverity.Error)
+        public IReadOnlyList<ColumnValidationMessage> Validate(ValidationSeverity severity = ValidationSeverity.Error)
         {
             return Model.Validate(this, severity);
         }

@@ -417,7 +417,7 @@
   <data name="JsonWriter_EmptyStringBuilder" xml:space="preserve">
     <value>The StringBuilder is empty.</value>
   </data>
-  <data name="ModelValidationMessage_EmptySource" xml:space="preserve">
+  <data name="ColumnValidationMessage_EmptySource" xml:space="preserve">
     <value>The validation source is empty.</value>
   </data>
 </root>

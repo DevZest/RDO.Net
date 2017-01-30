@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Primitives
 {
-    public class ValidationMessage
+    public abstract class ValidationMessage
     {
-        public ValidationMessage(string id, ValidationSeverity severity, string description)
+        protected ValidationMessage(string id, ValidationSeverity severity, string description)
         {
             Check.NotEmpty(description, nameof(description));
 

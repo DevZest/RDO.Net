@@ -69,7 +69,7 @@ namespace DevZest.Data
             return Entries.Any(x => Any(x.Messages, severity));
         }
 
-        private static bool Any(IEnumerable<ModelValidationMessage> messages, ValidationSeverity severity)
+        private static bool Any(IEnumerable<ColumnValidationMessage> messages, ValidationSeverity severity)
         {
             return messages.Any(x => x.Severity == severity);
         }
