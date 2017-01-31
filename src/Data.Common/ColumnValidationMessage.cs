@@ -6,7 +6,7 @@ namespace DevZest.Data
 {
     public class ColumnValidationMessage : ValidationMessage
     {
-        public ColumnValidationMessage(string id, ValidationSeverity severity, string description, IValidationSource<Column> source)
+        public ColumnValidationMessage(string id, ValidationSeverity severity, string description, IColumnSet source)
             : base(id, severity, description)
         {
             Check.NotNull(source, nameof(source));
@@ -16,6 +16,6 @@ namespace DevZest.Data
             Source = source;
         }
 
-        public readonly IValidationSource<Column> Source;
+        public readonly IColumnSet Source;
     }
 }

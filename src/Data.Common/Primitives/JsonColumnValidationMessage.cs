@@ -21,7 +21,7 @@ namespace DevZest.Data.Primitives
                 .WriteEndObject();
         }
 
-        private static JsonWriter WriteSource(this JsonWriter jsonWriter, IValidationSource<Column> source)
+        private static JsonWriter WriteSource(this JsonWriter jsonWriter, IColumnSet source)
         {
             if (source == null)
                 jsonWriter.WriteNameValuePair(SOURCE, JsonValue.Null);
@@ -35,7 +35,7 @@ namespace DevZest.Data.Primitives
             string messageId;
             ValidationSeverity severity;
             string description;
-            IValidationSource<Column> source;
+            IColumnSet source;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             messageId = jsonParser.ExpectNameStringPair(MESSAGE_ID, true);
@@ -47,10 +47,10 @@ namespace DevZest.Data.Primitives
             return new ColumnValidationMessage(messageId, severity, description, source);
         }
 
-        private static IValidationSource<Column> ParseSource(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
+        private static IColumnSet ParseSource(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
         {
             var text = jsonParser.ExpectNameNullableStringPair(SOURCE, expectComma);
-            return text == null ? null : ValidationSource.Deserialize(dataSet.Model, text);
+            return text == null ? null : ColumnSet.Deserialize(dataSet.Model, text);
         }
 
         public static IReadOnlyList<ColumnValidationMessage> ParseColumnValidationMessages(this JsonParser jsonParser, DataSet dataSet)

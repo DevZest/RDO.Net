@@ -6,7 +6,7 @@
     {
         string MessageId { get; }
         ValidationSeverity Severity { get; }
-        IValidationSource<Column> Columns { get; }
+        IColumnSet Columns { get; }
         _Boolean ValidCondition { get; }
         _String Message { get; }
     }
