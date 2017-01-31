@@ -13,9 +13,9 @@ namespace DevZest.Data
             column.Nullable(false);
         }
 
-        protected override ValidationSeverity ValidationSeverity
+        protected override Severity ValidationSeverity
         {
-            get { return ValidationSeverity.Error; }
+            get { return Severity.Error; }
         }
 
         protected override _Boolean GetValidCondition(Column column)

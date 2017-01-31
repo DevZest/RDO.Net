@@ -56,20 +56,20 @@ namespace DevZest.Data
 
         public bool HasError
         {
-            get { return Any(ValidationSeverity.Error); }
+            get { return Any(Severity.Error); }
         }
 
         public bool HasWarning
         {
-            get { return Any(ValidationSeverity.Warning); }
+            get { return Any(Severity.Warning); }
         }
 
-        private bool Any(ValidationSeverity severity)
+        private bool Any(Severity severity)
         {
             return Entries.Any(x => Any(x.Messages, severity));
         }
 
-        private static bool Any(IEnumerable<ColumnValidationMessage> messages, ValidationSeverity severity)
+        private static bool Any(IEnumerable<ValidationMessage> messages, Severity severity)
         {
             return messages.Any(x => x.Severity == severity);
         }

@@ -29,12 +29,12 @@ namespace DevZest.Data
                 var messageId = "MessageId";
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ColumnValidationMessage[]
-                        { new ColumnValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id) }),
-                    new ValidationEntry(dataSet[1], new ColumnValidationMessage[]
-                        { new ColumnValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) }),
-                    new ValidationEntry(dataSet[2], new ColumnValidationMessage[]
-                        { new ColumnValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) })
+                    new ValidationEntry(dataSet[0], new ValidationMessage[]
+                        { new ValidationMessage(messageId, Severity.Error, "This is an error message", dataSet._.Id) }),
+                    new ValidationEntry(dataSet[1], new ValidationMessage[]
+                        { new ValidationMessage(messageId, Severity.Warning, "This is a warning message", dataSet._.Id) }),
+                    new ValidationEntry(dataSet[2], new ValidationMessage[]
+                        { new ValidationMessage(messageId, Severity.Warning, "This is a warning message", dataSet._.Id) })
                 });
                 var expectedJson =
 @"[
@@ -45,7 +45,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Description"" : ""This is an error message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    },
@@ -56,7 +56,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    },
@@ -67,7 +67,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    }
@@ -96,7 +96,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Error"",
             ""Description"" : ""This is an error message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    },
@@ -107,7 +107,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    },
@@ -118,7 +118,7 @@ namespace DevZest.Data
             ""Id"" : ""MessageId"",
             ""Severity"" : ""Warning"",
             ""Description"" : ""This is a warning message"",
-            ""Source"" : ""Id""
+            ""Columns"" : ""Id""
          }
       ]
    }

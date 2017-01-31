@@ -341,7 +341,7 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal ColumnValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity severity)
+        internal ColumnValidationMessageCollection Validate(DataRow dataRow, Severity severity)
         {
             var result = ColumnValidationMessageCollection.Empty;
             foreach (var validator in Validators)
@@ -360,12 +360,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private static ColumnValidationMessage Validate(IValidator validator, DataRow dataRow)
+        private static ValidationMessage Validate(IValidator validator, DataRow dataRow)
         {
             if (validator.ValidCondition[dataRow] == true)
                 return null;
             else
-                return new ColumnValidationMessage(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
+                return new ValidationMessage(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
         }
 
         public ModelKey PrimaryKey
