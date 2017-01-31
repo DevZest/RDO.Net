@@ -253,7 +253,7 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
-    <Compile Include="ColumnValidationMessageCollection.cs" />
+    <Compile Include="ValidationMessageCollection.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />

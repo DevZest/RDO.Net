@@ -4,11 +4,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    internal sealed class ColumnValidationMessageCollection : ReadOnlyCollection<ValidationMessage>
+    internal sealed class ValidationMessageCollection : ReadOnlyCollection<ValidationMessage>
     {
-        public static readonly ColumnValidationMessageCollection Empty = new ColumnValidationMessageCollection();
+        public static readonly ValidationMessageCollection Empty = new ValidationMessageCollection();
 
-        public ColumnValidationMessageCollection()
+        public ValidationMessageCollection()
             : base(new List<ValidationMessage>())
         {
         }
