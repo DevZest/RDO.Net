@@ -4,16 +4,16 @@ using System;
 
 namespace DevZest.Data
 {
-    public abstract class ScalarData
+    public abstract class Scalar
     {
         private sealed class _Model : Model
         {
         }
 
         private _Model _model = new _Model();
-        internal ColumnCollection Accessors
+        internal Model Model
         {
-            get { return _model.Columns; }
+            get { return _model; }
         }
 
         private DataSet<_Model> _dataSet;
@@ -73,7 +73,7 @@ namespace DevZest.Data
         }
 
         public static T ParseJson<T>(string json)
-            where T : ScalarData, new()
+            where T : Scalar, new()
         {
             Check.NotEmpty(json, nameof(json));
 

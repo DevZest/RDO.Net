@@ -98,8 +98,8 @@
     <Compile Include="Primitives\JsonColumnValidationMessage.cs" />
     <Compile Include="Primitives\JsonValidationResult.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
-    <Compile Include="Primitives\ScalarDataExtensions.cs" />
-    <Compile Include="ScalarData.cs" />
+    <Compile Include="Primitives\ScalarExtensions.cs" />
+    <Compile Include="Scalar.cs" />
     <Compile Include="ValidationEntry.cs" />
     <Compile Include="ColumnValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
