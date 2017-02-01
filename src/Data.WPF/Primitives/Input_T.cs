@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevZest.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -15,21 +16,13 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private Trigger<T> _flushTrigger;
-        private Trigger<T> _preValidtorTrigger;
-        private Func<T, string> _preValidator;
-        private string _preValidatorError;
-        internal bool HasPreValidatorError
+        private Trigger<T> _inputValidationTrigger;
+        private Func<T, InputError> _inputValidator;
+        internal bool HasInputError
         {
-            get { return !string.IsNullOrEmpty(_preValidatorError); }
+            get { return InputErrorMessage != null; }
         }
-        internal ValidationMessage PreValidatorError
-        {
-            get
-            {
-                Debug.Assert(HasPreValidatorError);
-                return ValidationMessage.Error(_preValidatorError);
-            }
-        }
+        internal abstract Message InputErrorMessage { get; }
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -49,60 +42,58 @@ namespace DevZest.Data.Windows.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetPreValidator(Func<T, string> preValidator, Trigger<T> preValidatorTrigger)
+        internal void SetInputValidator(Func<T, InputError> inputValidator, Trigger<T> inputValidationTrigger)
         {
-            _preValidator = preValidator;
-            if (preValidatorTrigger != null)
+            _inputValidator = inputValidator;
+            if (inputValidationTrigger != null)
             {
-                preValidatorTrigger.Initialize(PreValidate);
-                _preValidtorTrigger = preValidatorTrigger;
+                inputValidationTrigger.Initialize(ValidateInput);
+                _inputValidationTrigger = inputValidationTrigger;
             }
         }
 
         internal void Attach(T element)
         {
             _flushTrigger.Attach(element);
-            if (_preValidtorTrigger != null)
-                _preValidtorTrigger.Attach(element);
+            if (_inputValidationTrigger != null)
+                _inputValidationTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
-            if (_preValidtorTrigger != null)
-                _preValidtorTrigger.Detach(element);
+            if (_inputValidationTrigger != null)
+                _inputValidationTrigger.Detach(element);
             _flushTrigger.Detach(element);
         }
 
-        private string RefreshPreValidatorError(T element)
+        private void ValidateInput(T element)
         {
-            var oldValue = _preValidatorError;
-            _preValidatorError = _preValidator == null ? string.Empty : _preValidator(element);
-            return oldValue;
+            var inputError = _inputValidator(element);
+            if (IsInputErrorChanged(inputError, InputErrorMessage))
+            {
+                UpdateInputError(inputError);
+                OnInputErrorChanged();
+            }
         }
 
-        private void PreValidate(T element)
+        internal abstract void UpdateInputError(InputError inputError);
+
+        private static bool IsInputErrorChanged(InputError inputError, Message inputErrorMessage)
         {
-            var oldValue = RefreshPreValidatorError(element);
-            if (_preValidatorError != oldValue)
-                OnPreValidatorErrorChanged();
+            return inputError.IsEmpty ? inputErrorMessage != null
+                : inputErrorMessage == null || inputErrorMessage.Id != inputError.Id || inputErrorMessage.Description != inputError.Description;
         }
 
-        private void OnPreValidatorErrorChanged()
+        private void OnInputErrorChanged()
         {
             ValidationManager.InvalidateElements();
         }
 
         internal void Flush(T element)
         {
-            var oldPreValidatorError = RefreshPreValidatorError(element);
-            if (!string.IsNullOrEmpty(_preValidatorError))
-            {
-                if (oldPreValidatorError != _preValidatorError)
-                    OnPreValidatorErrorChanged();
-                return;
-            }
-
-            FlushCore(element);
+            ValidateInput(element);
+            if (!HasInputError)
+                FlushCore(element);
         }
 
         internal abstract void FlushCore(T element);

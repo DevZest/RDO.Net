@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Windows.Primitives;
 using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,11 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowInput<T> : Input<T>
+    public interface IRowInput
+    {
+    }
+
+    public sealed class RowInput<T> : Input<T>, IRowInput
         where T : UIElement, new()
     {
         internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
@@ -36,7 +41,19 @@ namespace DevZest.Data.Windows
             RowBinding = rowBinding;
         }
 
-        internal IValidationSource<Column> SourceColumns { get; private set; } = ValidationSource<Column>.Empty;
+        public RowInputError InputError { get; private set; }
+
+        internal sealed override Message InputErrorMessage
+        {
+            get { return InputError; }
+        }
+
+        internal sealed override void UpdateInputError(InputError inputError)
+        {
+            InputError = inputError.IsEmpty ? null : new RowInputError(this, inputError);
+        }
+
+        internal IColumnSet SourceColumns { get; private set; } = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private void MakeProgress()
@@ -51,9 +68,9 @@ namespace DevZest.Data.Windows
             get { return ValidationManager == null ? null : ValidationManager.CurrentRow; }
         }
 
-        public RowInput<T> WithPreValidator(Func<T, string> preValidator, Trigger<T> preValidatorTrigger)
+        public RowInput<T> WithInputValidator(Func<T, InputError> inputValidaitor, Trigger<T> inputValidationTrigger)
         {
-            SetPreValidator(preValidator, preValidatorTrigger);
+            SetInputValidator(inputValidaitor, inputValidationTrigger);
             return this;
         }
 
@@ -146,11 +163,11 @@ namespace DevZest.Data.Windows
                 try
                 {
                     message = await task;
-                    state = message.IsEmpty ? AsyncValidationState.Valid : AsyncValidationState.Invalid;
+                    state = message == null ? AsyncValidationState.Valid : AsyncValidationState.Invalid;
                 }
                 catch (Exception ex)
                 {
-                    message = ValidationMessage.Error(ex.Message);
+                    message = new ValidationMessage(null, Severity.Error, ex.Message, this.SourceColumns);
                     state = AsyncValidationState.Failed;
                 }
             }
@@ -196,14 +213,14 @@ namespace DevZest.Data.Windows
             ValidationMessage result;
             if (_asyncValidationMessages.TryGetValue(rowPresenter, out result))
                 return result;
-            return ValidationMessage.Empty;
+            return null;
         }
 
         private void SetAsyncValidationMessage(RowPresenter rowPresenter, ValidationMessage message)
         {
             Debug.Assert(_asyncValidationMessages != null);
 
-            if (message.IsEmpty)
+            if (message == null)
             {
                 if (_asyncValidationMessages.ContainsKey(rowPresenter))
                     _asyncValidationMessages.Remove(rowPresenter);
@@ -238,34 +255,34 @@ namespace DevZest.Data.Windows
 
         private bool ShouldRunAsyncValidator(RowPresenter rowPresenter)
         {
-            return HasAsyncValidator && !HasPreValidatorError && ValidationManager.ShouldRunAsyncValidator(rowPresenter, SourceColumns);
+            return HasAsyncValidator && !HasInputError && ValidationManager.ShouldRunAsyncValidator(rowPresenter, SourceColumns);
         }
 
-        private IReadOnlyList<ValidationMessage> GetErrors(RowPresenter rowPresenter)
+        private IReadOnlyList<Message> GetErrors(RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter != null);
 
-            List<ValidationMessage> result = null;
+            List<Message> result = null;
 
-            if (rowPresenter == CurrentRow && HasPreValidatorError)
-                result = result.AddItem(PreValidatorError);
+            if (rowPresenter == CurrentRow && HasInputError)
+                result = result.AddItem(InputErrorMessage);
 
             result = result.AddItems(ValidationManager.GetErrors(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            if (asyncMessage.IsError)
+            if (asyncMessage != null && asyncMessage.Severity == Severity.Error)
                 result = result.AddItem(asyncMessage);
 
             return result.ToReadOnlyList();
         }
 
-        private IReadOnlyList<ValidationMessage> GetWarnings(RowPresenter rowPresenter)
+        private IReadOnlyList<Message> GetWarnings(RowPresenter rowPresenter)
         {
-            List<ValidationMessage> result = null;
+            List<Message> result = null;
             result = result.AddItems(ValidationManager.GetWarnings(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            if (asyncMessage.IsWarning)
+            if (asyncMessage != null && asyncMessage.Severity == Severity.Warning)
                 result = result.AddItem(GetAsyncValidationMessage(rowPresenter));
 
             return result.ToReadOnlyList();

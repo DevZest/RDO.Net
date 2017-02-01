@@ -21,8 +21,8 @@ namespace DevZest.Data.Windows.Primitives
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
-        protected LayoutXYManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, Func<IEnumerable<ValidationMessage<Scalar>>> validateScalars)
-            : base(template, dataSet, where, orderBy, false, validateScalars)
+        protected LayoutXYManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            : base(template, dataSet, where, orderBy, false)
         {
             _scrollStartMain = ScrollOriginMain;
         }

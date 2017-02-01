@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? false : LayoutManager.HasPreValidatorError; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> ValidationErros
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationErros
         {
             get
             {
@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> ValidationWarnings
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationWarnings
         {
             get
             {
@@ -134,43 +134,6 @@ namespace DevZest.Data.Windows
                     return null;
                 else
                     return LayoutManager.Warnings;
-            }
-        }
-
-        protected virtual IEnumerable<ValidationMessage<Scalar>> GetScalarValidationMessages()
-        {
-            yield break;
-        }
-
-        public void ValidateScalars()
-        {
-            RequireLayoutManager().ValidateScalars();
-        }
-
-        public bool HasScalarPreValidatorError
-        {
-            get { return LayoutManager == null ? false : LayoutManager.HasScalarPreValidatorError; }
-        }
-
-        public IReadOnlyList<ValidationMessage<Scalar>> ScalarValidationErrors
-        {
-            get
-            {
-                if (LayoutManager == null)
-                    return null;
-                else
-                    return LayoutManager.ScalarErrors;
-            }
-        }
-
-        public IReadOnlyList<ValidationMessage<Scalar>> ScalarValidationWarnings
-        {
-            get
-            {
-                if (LayoutManager == null)
-                    return null;
-                else
-                    return LayoutManager.ScalarWarnings;
             }
         }
 

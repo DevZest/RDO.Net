@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows
             {
                 BuildTemplate(builder);
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy, GetScalarValidationMessages);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
             AttachView(dataView);
             if (!existingView)
             {

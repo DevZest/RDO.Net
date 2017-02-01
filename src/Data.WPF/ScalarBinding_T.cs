@@ -23,12 +23,6 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private IValidationSource<Scalar> _validationSource = ValidationSource<Scalar>.Empty;
-        private IValidationSource<Scalar> ValidationSource
-        {
-            get { return Input != null ? Input.SourceScalars : _validationSource; }
-        }
-
         internal sealed override void FlushInput(UIElement element)
         {
             if (Input != null)
@@ -89,8 +83,6 @@ namespace DevZest.Data.Windows
         internal sealed override void Refresh(UIElement element)
         {
             var e = (T)element;
-            if (Input != null)
-                Input.SetDataErrorInfo(e);
             Refresh(e);
         }
 
@@ -104,14 +96,9 @@ namespace DevZest.Data.Windows
                 CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool HasPreValidatorError
+        internal sealed override bool HasInputError
         {
-            get { return Input == null ? false : Input.HasPreValidatorError; }
-        }
-
-        private bool HasAsyncValidator
-        {
-            get { return Input == null ? false : Input.HasAsyncValidator; }
+            get { return Input == null ? false : Input.HasInputError; }
         }
     }
 }

@@ -49,6 +49,7 @@
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IDataCriteria.cs" />
+    <Compile Include="InputError.cs" />
     <Compile Include="Pane.cs" />
     <Compile Include="PaneBlockBinding.cs" />
     <Compile Include="PaneRowBinding.cs" />
@@ -56,8 +57,9 @@
     <Compile Include="Primitives\ContainerKind.cs" />
     <Compile Include="Primitives\ContainerView.cs" />
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
-    <Compile Include="Primitives\ScalarValidationManager.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
+    <Compile Include="RowInputError.cs" />
+    <Compile Include="ScalarInputError.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />
@@ -68,11 +70,9 @@
     <Compile Include="Utilities\ListExtensions.ToReadOnlyList.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="Primitives\Input_T.cs" />
-    <Compile Include="Primitives\Scalar.cs" />
     <Compile Include="RowInput.cs" />
     <Compile Include="ScalarInput.cs" />
     <Compile Include="Utilities\Singleton.cs" />
-    <Compile Include="ValidationMessage.cs" />
     <Compile Include="Primitives\ValidationManager.cs" />
     <Compile Include="PropertyChangedTrigger.cs" />
     <Compile Include="BlockBinding_T.cs" />
@@ -116,7 +116,6 @@
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\ContainerViewList.cs" />
     <Compile Include="RowPlaceholderMode.cs" />
-    <Compile Include="Scalar_T.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="LostFocusTrigger.cs" />
     <Compile Include="Primitives\RowBinding.cs" />
@@ -155,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20161216\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170201\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

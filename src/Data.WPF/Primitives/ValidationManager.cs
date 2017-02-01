@@ -12,13 +12,13 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             if (ValidationMode == ValidationMode.Progressive)
-                _progress = new Dictionary<Windows.RowPresenter, IValidationSource<Column>>();
+                _progress = new Dictionary<Windows.RowPresenter, IColumnSet>();
         }
 
         private bool _showAll;
-        private Dictionary<RowPresenter, IValidationSource<Column>> _progress;
-        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> _errors;
-        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> _warnings;
+        private Dictionary<RowPresenter, IColumnSet> _progress;
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _errors;
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> _warnings;
 
         private void ClearValidationMessages()
         {
@@ -47,12 +47,12 @@ namespace DevZest.Data.Windows.Primitives
                 ClearValidationMessages();
         }
 
-        internal bool ShouldRunAsyncValidator(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        internal bool ShouldRunAsyncValidator(RowPresenter rowPresenter, IColumnSet columns)
         {
-            return IsVisible(rowPresenter, validationSource) && HasNoError(rowPresenter, validationSource);
+            return IsVisible(rowPresenter, columns) && HasNoError(rowPresenter, columns);
         }
 
-        private bool IsVisible(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        private bool IsVisible(RowPresenter rowPresenter, IColumnSet columns)
         {
             if (_showAll)
                 return true;
@@ -60,64 +60,64 @@ namespace DevZest.Data.Windows.Primitives
             if (_progress == null)
                 return false;
 
-            if (validationSource.Count == 0)
+            if (columns.Count == 0)
                 return false;
-            return GetProgress(rowPresenter).IsSupersetOf(validationSource);
+            return GetProgress(rowPresenter).IsSupersetOf(columns);
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Errors
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> Errors
         {
             get
             {
                 if (_errors != null)
                     return _errors;
                 else
-                    return EmptyReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>>.Singleton;
+                    return EmptyReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>>.Singleton;
             }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Warnings
+        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> Warnings
         {
             get
             {
                 if (_warnings != null)
                     return _warnings;
                 else
-                    return EmptyReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>>.Singleton;
+                    return EmptyReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>>.Singleton;
             }
         }
 
-        private static IReadOnlyList<ValidationMessage> GetValidationMessages(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> dictionary, RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        private static IReadOnlyList<ValidationMessage> GetValidationMessages(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> dictionary, RowPresenter rowPresenter, IColumnSet columns)
         {
             if (dictionary == null)
                 return Array<ValidationMessage>.Empty;
 
-            IReadOnlyList<ValidationMessage<Column>> messages;
+            IReadOnlyList<ValidationMessage> messages;
             if (!dictionary.TryGetValue(rowPresenter, out messages))
                 return Array<ValidationMessage>.Empty;
 
             List<ValidationMessage> result = null;
             foreach (var message in messages)
             {
-                if (message.Source.SetEquals(validationSource))
-                    result = result.AddItem(new ValidationMessage(message.Id, message.Description, message.Severity));
+                if (message.Columns.SetEquals(columns))
+                    result = result.AddItem(message);
             }
 
             return result.ToReadOnlyList();
         }
 
-        private bool HasNoError(RowPresenter rowPresenter, IValidationSource<Column> validationSource)
+        private bool HasNoError(RowPresenter rowPresenter, IColumnSet columns)
         {
             if (_errors == null)
                 return true;
 
-            IReadOnlyList<ValidationMessage<Column>> messages;
+            IReadOnlyList<ValidationMessage> messages;
             if (!_errors.TryGetValue(rowPresenter, out messages))
                 return true;
 
             foreach (var message in messages)
             {
-                if (message.Source.SetEquals(validationSource))
+                if (message.Columns.SetEquals(columns))
                     return false;
             }
 
@@ -144,16 +144,16 @@ namespace DevZest.Data.Windows.Primitives
 
         public bool HasPreValidatorError
         {
-            get { return Template.RowBindings.HasPreValidatorError(); }
+            get { return Template.RowBindings.HasInputError(); }
         }
 
-        private IValidationSource<Column> GetProgress(RowPresenter rowPresenter)
+        private IColumnSet GetProgress(RowPresenter rowPresenter)
         {
             Debug.Assert(_progress != null);
-            IValidationSource<Column> result;
+            IColumnSet result;
             if (_progress.TryGetValue(rowPresenter, out result))
                 return result;
-            return ValidationSource<Column>.Empty;
+            return ColumnSet.Empty;
         }
 
         internal void MakeProgress<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
@@ -196,8 +196,8 @@ namespace DevZest.Data.Windows.Primitives
                 ShowAll();
 
             ClearValidationMessages();
-            _errors = Validate(_errors, ValidationSeverity.Error, Template.MaxValidationErrors);
-            _warnings = Validate(_warnings, ValidationSeverity.Warning, Template.MaxValidationWarnings);
+            _errors = Validate(_errors, Severity.Error, Template.MaxValidationErrors);
+            _warnings = Validate(_warnings, Severity.Warning, Template.MaxValidationWarnings);
         }
 
         private void ShowAll()
@@ -209,7 +209,7 @@ namespace DevZest.Data.Windows.Primitives
             _progress.Clear();
         }
 
-        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> Validate(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage<Column>>> result, ValidationSeverity severity, int maxEntries)
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> Validate(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> result, Severity severity, int maxEntries)
         {
             if (CurrentRow != null)
             {

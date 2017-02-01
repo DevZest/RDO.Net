@@ -28,29 +28,5 @@ namespace DevZest.Data.Windows.Primitives
         {
             _executeAction(element);
         }
-
-        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
-        {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            if (getValue == null)
-                throw new ArgumentNullException(nameof(getValue));
-
-            var result = RowInput<T>.Create(this, column, getValue);
-            Initialize(result.Flush);
-            return result;
-        }
-
-        public ScalarInput<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
-        {
-            if (scalar == null)
-                throw new ArgumentNullException(nameof(scalar));
-            if (getValue == null)
-                throw new ArgumentNullException(nameof(getValue));
-
-            var result = ScalarInput<T>.Create(this, scalar, getValue);
-            Initialize(result.Flush);
-            return result;
-        }
     }
 }

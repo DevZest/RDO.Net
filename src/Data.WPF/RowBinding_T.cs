@@ -30,9 +30,9 @@ namespace DevZest.Data.Windows
                 Input.Flush((T)element);
         }
 
-        private IValidationSource<Column> ValidationSource
+        private IColumnSet Columns
         {
-            get { return Input == null ? ValidationSource<Column>.Empty : Input.SourceColumns; }
+            get { return Input == null ? ColumnSet.Empty : Input.SourceColumns; }
         }
 
         List<T> _cachedElements;
@@ -108,9 +108,9 @@ namespace DevZest.Data.Windows
                 CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool HasPreValidatorError
+        internal sealed override bool HasInputError
         {
-            get { return Input == null ? false : Input.HasPreValidatorError; }
+            get { return Input == null ? false : Input.HasInputError; }
         }
 
         private ValidationManager ValidationManager

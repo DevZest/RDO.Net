@@ -95,9 +95,9 @@ namespace DevZest.Data.Windows
             ((Pane)element).FlushInput(_bindings);
         }
 
-        internal sealed override bool HasPreValidatorError
+        internal sealed override bool HasInputError
         {
-            get { return _bindings.HasPreValidatorError(); }
+            get { return _bindings.HasInputError(); }
         }
 
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)

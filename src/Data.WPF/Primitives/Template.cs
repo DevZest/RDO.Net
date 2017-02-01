@@ -34,11 +34,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as ValidationManager; }
         }
 
-        internal ScalarValidationManager ScalarValidationManager
-        {
-            get { return RowManager as ScalarValidationManager; }
-        }
-
         internal LayoutManager LayoutManager
         {
             get { return RowManager as LayoutManager; }
