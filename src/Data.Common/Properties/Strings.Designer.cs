@@ -700,11 +700,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The accessor is invalid. It must be created by calling CreateAccessor method.
+        /// The column is invalid. It must be created by calling CreateColumn method.
         /// </summary>
-        public static string ScalarData_InvalidAccessor
+        public static string Scalar_InvalidColumn
         {
-            get { return GetString("ScalarData_InvalidAccessor"); }
+            get { return GetString("Scalar_InvalidColumn"); }
         }
 
         /// <summary>

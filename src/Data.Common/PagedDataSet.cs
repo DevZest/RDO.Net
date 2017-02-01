@@ -5,10 +5,10 @@
     {
         public PagedDataSet()
         {
-            _page = CreateAccessor<_Int32>(nameof(Page));
-            _pageSize = CreateAccessor<_Int32>(nameof(PageSize));
-            _totalCount = CreateAccessor<_Int32>(nameof(TotalCount));
-            _data = CreateAccessor<_DataSet<T>>(nameof(Data));
+            _page = CreateColumn<_Int32>(nameof(Page));
+            _pageSize = CreateColumn<_Int32>(nameof(PageSize));
+            _totalCount = CreateColumn<_Int32>(nameof(TotalCount));
+            _data = CreateColumn<_DataSet<T>>(nameof(Data));
 
             Page = PageSize = TotalCount = 0;
         }

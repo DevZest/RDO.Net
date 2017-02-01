@@ -18,7 +18,7 @@ namespace DevZest.Data
 
         private DataSet<_Model> _dataSet;
 
-        protected T CreateAccessor<T>(string name, Action<T> initializer = null)
+        protected T CreateColumn<T>(string name, Action<T> initializer = null)
             where T : Column, new()
         {
             Check.NotEmpty(name, nameof(name));
@@ -39,26 +39,26 @@ namespace DevZest.Data
             }
         }
 
-        private void VerifyAccessor<T>(Column<T> accessor, string paramName)
+        private void VerifyColumn<T>(Column<T> column, string paramName)
         {
-            Check.NotNull(accessor, paramName);
+            Check.NotNull(column, paramName);
 
-            if (accessor.ParentModel == null || accessor.ParentModel != _model)
-                throw new ArgumentException(Strings.ScalarData_InvalidAccessor, paramName);
+            if (column.ParentModel == null || column.ParentModel != _model)
+                throw new ArgumentException(Strings.Scalar_InvalidColumn, paramName);
         }
 
-        protected T GetValue<T>(Column<T> accessor)
+        protected T GetValue<T>(Column<T> column)
         {
-            VerifyAccessor(accessor, nameof(accessor));
+            VerifyColumn(column, nameof(column));
             EnsureDataSetInitialized();
-            return accessor[0];
+            return column[0];
         }
 
-        protected void SetValue<T>(Column<T> accessor, T value)
+        protected void SetValue<T>(Column<T> column, T value)
         {
-            VerifyAccessor(accessor, nameof(accessor));
+            VerifyColumn(column, nameof(column));
             EnsureDataSetInitialized();
-            accessor[0] = value;
+            column[0] = value;
         }
 
         public override string ToString()
