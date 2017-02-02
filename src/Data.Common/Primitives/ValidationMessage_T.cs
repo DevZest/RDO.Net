@@ -4,7 +4,7 @@ namespace DevZest.Data.Primitives
 {
     public abstract class ValidationMessage<T> : IValidationMessage
     {
-        public ValidationMessage(string id, ValidationSeverity severity, string description, T source)
+        protected ValidationMessage(string id, ValidationSeverity severity, string description, T source)
         {
             Check.NotEmpty(description, nameof(description));
 
