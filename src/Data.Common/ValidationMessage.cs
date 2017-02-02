@@ -13,5 +13,23 @@ namespace DevZest.Data
             if (source.Count == 0)
                 throw new ArgumentException(Strings.ValidationMessage_EmptySourceColumns, nameof(source));
         }
+
+        public string ToJsonString(bool isPretty)
+        {
+            return JsonWriter.New().Write(this).ToString(isPretty);
+        }
+
+        public static ValidationMessage ParseJson(DataSet dataSet, string json)
+        {
+            var jsonParser = new JsonParser(json);
+            var result = jsonParser.ParseValidationMessage(dataSet);
+            jsonParser.ExpectToken(JsonTokenKind.Eof);
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return ToJsonString(true);
+        }
     }
 }
