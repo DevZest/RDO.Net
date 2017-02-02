@@ -812,11 +812,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The colums is empty.
+        /// The source colums cannot be empty.
         /// </summary>
-        public static string ValidationMessage_EmptyColumns
+        public static string ValidationMessage_EmptySourceColumns
         {
-            get { return GetString("ValidationMessage_EmptyColumns"); }
+            get { return GetString("ValidationMessage_EmptySourceColumns"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

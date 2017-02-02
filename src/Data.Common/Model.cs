@@ -341,7 +341,7 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal ValidationMessageCollection Validate(DataRow dataRow, Severity severity)
+        internal ValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity severity)
         {
             var result = ValidationMessageCollection.Empty;
             foreach (var validator in Validators)

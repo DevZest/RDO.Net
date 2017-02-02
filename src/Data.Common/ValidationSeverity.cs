@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data
 {
-    public enum Severity
+    public enum ValidationSeverity
     {
         Hint,
         Warning,

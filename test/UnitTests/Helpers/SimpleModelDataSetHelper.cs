@@ -17,7 +17,7 @@ namespace DevZest.Data.Helpers
 
             public SimpleModel()
             {
-                Validators.Add(Validator.Create(MESSAGE_ID, Severity.Error, Id, Id % 2 == 0, "The Id must be even."));
+                Validators.Add(Validator.Create(MESSAGE_ID, ValidationSeverity.Error, Id, Id % 2 == 0, "The Id must be even."));
             }
 
             protected override void OnChildModelsInitialized()

@@ -5,7 +5,7 @@
     public interface IValidator
     {
         string MessageId { get; }
-        Severity Severity { get; }
+        ValidationSeverity Severity { get; }
         IColumnSet Columns { get; }
         _Boolean ValidCondition { get; }
         _String Message { get; }

@@ -8,7 +8,7 @@ namespace DevZest.Data.Primitives
         private const string ID = nameof(ValidationMessage.Id);
         private const string SEVERITY = nameof(ValidationMessage.Severity);
         private const string DESCRIPTION = nameof(ValidationMessage.Description);
-        private const string COLUMNS = nameof(ValidationMessage.Columns);
+        private const string SOURCE = nameof(ValidationMessage.Source);
 
         public static JsonWriter Write(this JsonWriter jsonWriter, ValidationMessage validationMessage)
         {
@@ -17,29 +17,29 @@ namespace DevZest.Data.Primitives
                 .WriteNameStringPair(ID, validationMessage.Id).WriteComma()
                 .WriteNameStringPair(SEVERITY, validationMessage.Severity.ToString()).WriteComma()
                 .WriteNameStringPair(DESCRIPTION, validationMessage.Description).WriteComma()
-                .WriteColumns(validationMessage.Columns)
+                .WriteColumns(validationMessage.Source)
                 .WriteEndObject();
         }
 
         private static JsonWriter WriteColumns(this JsonWriter jsonWriter, IColumnSet columns)
         {
             if (columns == null)
-                jsonWriter.WriteNameValuePair(COLUMNS, JsonValue.Null);
+                jsonWriter.WriteNameValuePair(SOURCE, JsonValue.Null);
             else
-                jsonWriter.WriteNameStringPair(COLUMNS, columns.Serialize());
+                jsonWriter.WriteNameStringPair(SOURCE, columns.Serialize());
             return jsonWriter;
         }
 
         public static ValidationMessage ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
             string messageId;
-            Severity severity;
+            ValidationSeverity severity;
             string description;
             IColumnSet source;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             messageId = jsonParser.ExpectNameStringPair(ID, true);
-            severity = (Severity)Enum.Parse(typeof(Severity), jsonParser.ExpectNameStringPair(SEVERITY, true));
+            severity = (ValidationSeverity)Enum.Parse(typeof(ValidationSeverity), jsonParser.ExpectNameStringPair(SEVERITY, true));
             description = jsonParser.ExpectNameStringPair(DESCRIPTION, true);
             source = jsonParser.ParseColumns(dataSet, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
@@ -49,7 +49,7 @@ namespace DevZest.Data.Primitives
 
         private static IColumnSet ParseColumns(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
         {
-            var text = jsonParser.ExpectNameNullableStringPair(COLUMNS, expectComma);
+            var text = jsonParser.ExpectNameNullableStringPair(SOURCE, expectComma);
             return text == null ? null : ColumnSet.Deserialize(dataSet.Model, text);
         }
 

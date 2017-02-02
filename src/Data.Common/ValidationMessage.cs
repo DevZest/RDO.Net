@@ -4,25 +4,14 @@ using System;
 
 namespace DevZest.Data
 {
-    public class ValidationMessage : Message
+    public class ValidationMessage : ValidationMessage<IColumnSet>
     {
-        public ValidationMessage(string id, Severity severity, string description, IColumnSet columns)
-            : base(id, description)
+        public ValidationMessage(string id, ValidationSeverity severity, string description, IColumnSet source)
+            : base(id, severity, description, source)
         {
-            Check.NotNull(columns, nameof(columns));
-            if (columns.Count == 0)
-                throw new ArgumentException(Strings.ValidationMessage_EmptyColumns, nameof(columns));
-
-            _severity = severity;
-            Columns = columns;
+            Check.NotNull(source, nameof(source));
+            if (source.Count == 0)
+                throw new ArgumentException(Strings.ValidationMessage_EmptySourceColumns, nameof(source));
         }
-
-        private Severity _severity;
-        public sealed override Severity Severity
-        {
-            get { return _severity; }
-        }
-
-        public readonly IColumnSet Columns;
     }
 }

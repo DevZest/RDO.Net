@@ -59,6 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
+    <Compile Include="IValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="Primitives\Message.cs" />
+    <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
-    <Compile Include="Severity.cs" />
+    <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="ColumnValidatorAttribute.cs" />
     <Compile Include="Primitives\DataSourceExtensions.cs" />

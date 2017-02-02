@@ -25,7 +25,7 @@ namespace DevZest.Data
                 get { return _owner.MessageId; }
             }
 
-            public Severity Severity
+            public ValidationSeverity Severity
             {
                 get { return _owner.ValidationSeverity; }
             }
@@ -70,7 +70,7 @@ namespace DevZest.Data
             }
         }
 
-        protected abstract Severity ValidationSeverity { get; }
+        protected abstract ValidationSeverity ValidationSeverity { get; }
 
         protected abstract _Boolean GetValidCondition(Column column);
 
