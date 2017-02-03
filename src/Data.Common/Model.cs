@@ -341,12 +341,12 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal ValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity severity)
+        internal ValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity? severity)
         {
             var result = ValidationMessageCollection.Empty;
             foreach (var validator in Validators)
             {
-                if (validator.Severity != severity)
+                if (severity.HasValue && validator.Severity != severity.GetValueOrDefault())
                     continue;
                 var validationMessage = Validate(validator, dataRow);
                 if (validationMessage == null)
