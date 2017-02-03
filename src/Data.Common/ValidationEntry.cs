@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +10,10 @@ namespace DevZest.Data
     {
         public ValidationEntry(DataRow dataRow, IReadOnlyList<ValidationMessage> messages)
         {
+            Check.NotNull(dataRow, nameof(dataRow));
+            Check.NotNull(messages, nameof(messages));
+            if (messages.Count == 0)
+                throw new ArgumentException(Strings.ValidationEntry_EmptyMessages, nameof(messages));
             DataRow = dataRow;
             Messages = messages;
         }
@@ -15,6 +21,11 @@ namespace DevZest.Data
         public readonly DataRow DataRow;
 
         public readonly IReadOnlyList<ValidationMessage> Messages;
+
+        public bool IsEmpty
+        {
+            get { return DataRow == null; }
+        }
 
         public string ToJsonString(bool isPretty)
         {

@@ -235,37 +235,155 @@ namespace DevZest.Data
             return Model.AllowsKeyUpdate(value);
         }
 
-        public ValidationResult Validate(ValidationSeverity? severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 200)
+        private abstract class ValidationEntriesCounter
         {
-            return ValidationResult.New(Validate(this, severity, recursive, maxEntries));
+            public static ValidationEntriesCounter Create(ValidationSeverity? severity, int maxEntries)
+            {
+                if (severity.HasValue)
+                    return new SingleSeverityCounter(severity.GetValueOrDefault(), maxEntries);
+                else
+                    return new AllSeverityCounter(maxEntries);
+            }
+
+            protected ValidationEntriesCounter(int maxEntries)
+            {
+                MaxEntries = maxEntries;
+            }
+
+            protected int MaxEntries { get; private set; }
+
+            public abstract bool HasNext { get; }
+
+            public abstract ValidationEntry? Next(DataRow dataRow);
+
+            private sealed class SingleSeverityCounter : ValidationEntriesCounter
+            {
+                public SingleSeverityCounter(ValidationSeverity severity, int maxEntries)
+                    : base(maxEntries)
+                {
+                    _severity = severity;
+                }
+
+                private ValidationSeverity _severity;
+                private int _count;
+
+                public override bool HasNext
+                {
+                    get { return _count < MaxEntries; }
+                }
+
+                public override ValidationEntry? Next(DataRow dataRow)
+                {
+                    if (!HasNext)
+                        return null;
+                    var validationMessages = dataRow.Validate(_severity);
+                    if (validationMessages.Count > 0)
+                    {
+                        _count++;
+                        return new ValidationEntry(dataRow, validationMessages);
+                    }
+                    else
+                        return new ValidationEntry();
+                }
+            }
+
+            private sealed class AllSeverityCounter : ValidationEntriesCounter
+            {
+                public AllSeverityCounter(int maxEntries)
+                    : base(maxEntries)
+                {
+                }
+
+                private int _countError, _countWarning, _countHint;
+
+                public override bool HasNext
+                {
+                    get { return _countError < MaxEntries || _countWarning < MaxEntries || _countHint < MaxEntries; }
+                }
+
+                public override ValidationEntry? Next(DataRow dataRow)
+                {
+                    if (!HasNext)
+                        return null;
+
+                    var validationMessages = dataRow.Validate(null);
+                    if (validationMessages.Count == 0)
+                        return new ValidationEntry();
+
+                    bool hasError = false;
+                    bool hasWarning = false;
+                    bool hasHint = false;
+                    for (int i = 0; i < validationMessages.Count; i++)
+                    {
+                        var severity = validationMessages[i].Severity;
+                        switch (severity)
+                        {
+                            case ValidationSeverity.Error:
+                                hasError = true;
+                                break;
+                            case ValidationSeverity.Warning:
+                                hasWarning = true;
+                                break;
+                            case ValidationSeverity.Hint:
+                                hasHint = true;
+                                break;
+                        }
+
+                        if (hasError && hasWarning && hasHint)
+                            break;
+                    }
+
+                    bool shouldYield = false;
+                    if (hasError)
+                    {
+                        if (_countError < MaxEntries)
+                            shouldYield = true;
+                        _countError++;
+                    }
+                    if (hasWarning)
+                    {
+                        if (_countWarning < MaxEntries)
+                            shouldYield = true;
+                        _countWarning++;
+                    }
+                    if (hasHint)
+                    {
+                        if (_countHint < MaxEntries)
+                            shouldYield = true;
+                        _countHint++;
+                    }
+                    return shouldYield ? new ValidationEntry(dataRow, validationMessages) : new ValidationEntry();
+                }
+            }
         }
 
-        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationSeverity? severity, bool recursive, int maxEntries)
+        public ValidationResult Validate(ValidationSeverity? severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)
+        {
+            return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(severity, maxEntries), recursive));
+        }
+
+        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationEntriesCounter entriesCounter, bool recursive)
         {
             foreach (var dataRow in dataSet)
             {
-                var validationMessages = dataRow.Validate(severity);
-                if (validationMessages.Count > 0)
-                {
-                    maxEntries--;
-                    if (maxEntries < 0)
-                        yield break;
-                    yield return new ValidationEntry(dataRow, validationMessages);
-                }
+                var entry = entriesCounter.Next(dataRow);
+                if (!entry.HasValue)
+                    yield break;
+
+                var entryValue = entry.GetValueOrDefault();
+                if (!entryValue.IsEmpty)
+                    yield return entryValue;
 
                 if (recursive)
                 {
                     var childModels = dataSet.Model.ChildModels;
                     foreach (var childModel in childModels)
                     {
+                        if (!entriesCounter.HasNext)
+                            break;
                         var childDataSet = dataRow[childModel];
-                        foreach (var entry in Validate(childDataSet, severity, recursive, maxEntries))
-                        {
-                            maxEntries--;
-                            if (maxEntries < 0)
-                                yield break;
-                            yield return entry;
-                        }
+                        foreach (var childEntry in Validate(childDataSet, entriesCounter, recursive))
+                            yield return childEntry;
                     }
                 }
             }

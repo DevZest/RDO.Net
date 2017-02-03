@@ -819,6 +819,14 @@ namespace DevZest.Data
             get { return GetString("ValidationMessage_EmptySourceColumns"); }
         }
 
+        /// <summary>
+        /// The messages cannot be empty.
+        /// </summary>
+        public static string ValidationEntry_EmptyMessages
+        {
+            get { return GetString("ValidationEntry_EmptyMessages"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
