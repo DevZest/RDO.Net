@@ -359,6 +359,8 @@ namespace DevZest.Data
 
         public ValidationResult Validate(ValidationSeverity? severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)
         {
+            if (maxEntries <= 0)
+                throw new ArgumentOutOfRangeException(nameof(maxEntries));
             return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(severity, maxEntries), recursive));
         }
 
