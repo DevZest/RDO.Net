@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Windows.Primitives;
 using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public interface IRowInput
-    {
-    }
-
-    public sealed class RowInput<T> : Input<T>, IRowInput
+    public sealed class RowInput<T> : Input<T>
         where T : UIElement, new()
     {
         internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
@@ -276,9 +271,9 @@ namespace DevZest.Data.Windows
             return result.ToReadOnlyList();
         }
 
-        internal void SetDataErrorInfo(T element, RowPresenter rowPresenter)
+        internal void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.SetDataErrorInfo(GetErrors(rowPresenter), GetWarnings(rowPresenter));
+            element.RefreshValidation(GetErrors(rowPresenter), GetWarnings(rowPresenter));
         }
     }
 }

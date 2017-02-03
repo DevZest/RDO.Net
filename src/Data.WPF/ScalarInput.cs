@@ -9,11 +9,7 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data.Windows
 {
-    public interface IScalarInput
-    {
-    }
-
-    public sealed class ScalarInput<T> : Input<T>, IScalarInput
+    public sealed class ScalarInput<T> : Input<T>
         where T : UIElement, new()
     {
         public ScalarInput(Trigger<T> flushTrigger, Action<T> flushAction)
@@ -49,6 +45,12 @@ namespace DevZest.Data.Windows
         internal override void FlushCore(T element)
         {
             _flushAction(element);
+        }
+
+        internal void RefreshValidation(T element)
+        {
+            //element.SetDataErrorInfo(GetErrors(rowPresenter), GetWarnings(rowPresenter));
+            throw new NotImplementedException();
         }
     }
 }

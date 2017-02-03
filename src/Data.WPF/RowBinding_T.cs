@@ -92,8 +92,9 @@ namespace DevZest.Data.Windows
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
             if (Input != null)
-                Input.SetDataErrorInfo(e, rowPresenter);
-            Refresh(e, rowPresenter);
+                Input.RefreshValidation(e, rowPresenter);
+            if (!HasInputError)
+                Refresh(e, rowPresenter);
         }
 
         internal sealed override void Cleanup(UIElement element, bool recycle)

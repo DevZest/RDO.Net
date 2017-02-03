@@ -184,7 +184,7 @@ namespace DevZest.Data.Windows
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void SetDataErrorInfo(this DependencyObject element, IReadOnlyList<IValidationMessage> errors, IReadOnlyList<IValidationMessage> warnings)
+        internal static void RefreshValidation(this DependencyObject element, IReadOnlyList<IValidationMessage> errors, IReadOnlyList<IValidationMessage> warnings)
         {
             if (errors != null && errors.Count > 0)
                 element.SetDataErrorInfo(ValidationSeverity.Error, errors);
