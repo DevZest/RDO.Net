@@ -16,18 +16,18 @@ namespace DevZest.Data.Windows
     {
         private static class SeverityBoxes
         {
-            public static readonly object Null = new Severity?();
-            public static readonly object Error = new Severity?(Severity.Error);
-            public static readonly object Warning = new Severity?(Severity.Warning);
+            public static readonly object Null = new ValidationSeverity?();
+            public static readonly object Error = new ValidationSeverity?(ValidationSeverity.Error);
+            public static readonly object Warning = new ValidationSeverity?(ValidationSeverity.Warning);
 
-            public static object Box(Severity value)
+            public static object Box(ValidationSeverity value)
             {
-                return value == Severity.Error ? Error : Warning;
+                return value == ValidationSeverity.Error ? Error : Warning;
             }
         }
 
         private static readonly DependencyPropertyKey SeverityPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Severity",
-            typeof(Severity?), typeof(Validation), new FrameworkPropertyMetadata(SeverityBoxes.Null, new PropertyChangedCallback(OnSeverityChanged)));
+            typeof(ValidationSeverity?), typeof(Validation), new FrameworkPropertyMetadata(SeverityBoxes.Null, new PropertyChangedCallback(OnSeverityChanged)));
         public static readonly DependencyProperty SeverityProperty = SeverityPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty ErrorTemplateProperty = DependencyProperty.RegisterAttached("ErrorTemplate",
@@ -36,12 +36,12 @@ namespace DevZest.Data.Windows
         public static readonly DependencyProperty WarningTemplateProperty = DependencyProperty.RegisterAttached("WarningTemplate",
             typeof(ControlTemplate), typeof(Validation), new FrameworkPropertyMetadata(CreateDefaultWarningTemplate(), FrameworkPropertyMetadataOptions.NotDataBindable, new PropertyChangedCallback(OnWarningTemplateChanged)));
 
-        public static Severity? GetSeverity(this DependencyObject element)
+        public static ValidationSeverity? GetSeverity(this DependencyObject element)
         {
-            return (Severity?)element.GetValue(SeverityProperty);
+            return (ValidationSeverity?)element.GetValue(SeverityProperty);
         }
 
-        private static void SetSeverity(this DependencyObject element, Severity? value)
+        private static void SetSeverity(this DependencyObject element, ValidationSeverity? value)
         {
             if (!value.HasValue)
                 element.ClearValue(SeverityPropertyKey);
@@ -122,14 +122,14 @@ namespace DevZest.Data.Windows
         /// </summary>
         private sealed class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
         {
-            public DataErrorInfo(IReadOnlyList<Message> messages)
+            public DataErrorInfo(IReadOnlyList<IValidationMessage> messages)
             {
                 Debug.Assert(messages != null && messages.Count > 0);
                 _messages = messages;
             }
 
-            private IReadOnlyList<Message> _messages;
-            public IReadOnlyList<Message> Messages
+            private IReadOnlyList<IValidationMessage> _messages;
+            public IReadOnlyList<IValidationMessage> Messages
             {
                 get { return _messages; }
                 set
@@ -185,17 +185,17 @@ namespace DevZest.Data.Windows
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void SetDataErrorInfo(this DependencyObject element, IReadOnlyList<Message> errors, IReadOnlyList<Message> warnings)
+        internal static void SetDataErrorInfo(this DependencyObject element, IReadOnlyList<IValidationMessage> errors, IReadOnlyList<IValidationMessage> warnings)
         {
             if (errors != null && errors.Count > 0)
-                element.SetDataErrorInfo(Severity.Error, errors);
+                element.SetDataErrorInfo(ValidationSeverity.Error, errors);
             else if (warnings != null && warnings.Count > 0)
-                element.SetDataErrorInfo(Severity.Warning, warnings);
+                element.SetDataErrorInfo(ValidationSeverity.Warning, warnings);
             else
                 element.ClearDataErrorInfo();
         }
 
-        private static void SetDataErrorInfo(this DependencyObject element, Severity severity, IReadOnlyList<Message> messages)
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationSeverity severity, IReadOnlyList<IValidationMessage> messages)
         {
             Debug.Assert(messages != null && messages.Count > 0);
 

@@ -31,18 +31,6 @@ namespace DevZest.Data.Windows
             get { return ScalarBinding; }
         }
 
-        public ScalarInputError InputError { get; private set; }
-
-        internal sealed override Message InputErrorMessage
-        {
-            get { return InputError; }
-        }
-
-        internal sealed override void UpdateInputError(InputError inputError)
-        {
-            InputError = inputError.IsEmpty ? null : new ScalarInputError(this, inputError);
-        }
-
         internal void Seal(ScalarBinding<T> scalarBinding)
         {
             Debug.Assert(scalarBinding != null);

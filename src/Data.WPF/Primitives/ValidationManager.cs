@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
             List<ValidationMessage> result = null;
             foreach (var message in messages)
             {
-                if (message.Columns.SetEquals(columns))
+                if (message.Source.SetEquals(columns))
                     result = result.AddItem(message);
             }
 
@@ -117,7 +117,7 @@ namespace DevZest.Data.Windows.Primitives
 
             foreach (var message in messages)
             {
-                if (message.Columns.SetEquals(columns))
+                if (message.Source.SetEquals(columns))
                     return false;
             }
 
@@ -196,8 +196,8 @@ namespace DevZest.Data.Windows.Primitives
                 ShowAll();
 
             ClearValidationMessages();
-            _errors = Validate(_errors, Severity.Error, Template.MaxValidationErrors);
-            _warnings = Validate(_warnings, Severity.Warning, Template.MaxValidationWarnings);
+            _errors = Validate(_errors, ValidationSeverity.Error, Template.MaxValidationErrors);
+            _warnings = Validate(_warnings, ValidationSeverity.Warning, Template.MaxValidationWarnings);
         }
 
         private void ShowAll()
@@ -209,7 +209,7 @@ namespace DevZest.Data.Windows.Primitives
             _progress.Clear();
         }
 
-        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> Validate(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> result, Severity severity, int maxEntries)
+        private Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> Validate(Dictionary<RowPresenter, IReadOnlyList<ValidationMessage>> result, ValidationSeverity severity, int maxEntries)
         {
             if (CurrentRow != null)
             {

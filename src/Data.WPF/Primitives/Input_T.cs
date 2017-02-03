@@ -20,9 +20,9 @@ namespace DevZest.Data.Windows.Primitives
         private Func<T, InputError> _inputValidator;
         internal bool HasInputError
         {
-            get { return InputErrorMessage != null; }
+            get { return InputError != null; }
         }
-        internal abstract Message InputErrorMessage { get; }
+        internal ViewInputError InputError { get; private set; }
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -69,19 +69,17 @@ namespace DevZest.Data.Windows.Primitives
         private void ValidateInput(T element)
         {
             var inputError = _inputValidator(element);
-            if (IsInputErrorChanged(inputError, InputErrorMessage))
+            if (IsInputErrorChanged(inputError, InputError))
             {
-                UpdateInputError(inputError);
+                InputError = inputError.IsEmpty ? null : new ViewInputError(inputError, element);
                 OnInputErrorChanged();
             }
         }
 
-        internal abstract void UpdateInputError(InputError inputError);
-
-        private static bool IsInputErrorChanged(InputError inputError, Message inputErrorMessage)
+        private static bool IsInputErrorChanged(InputError inputError, ViewInputError viewInputError)
         {
-            return inputError.IsEmpty ? inputErrorMessage != null
-                : inputErrorMessage == null || inputErrorMessage.Id != inputError.Id || inputErrorMessage.Description != inputError.Description;
+            return inputError.IsEmpty ? viewInputError != null
+                : viewInputError == null || viewInputError.Id != inputError.Id || viewInputError.Description != inputError.Description;
         }
 
         private void OnInputErrorChanged()

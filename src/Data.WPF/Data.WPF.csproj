@@ -58,8 +58,6 @@
     <Compile Include="Primitives\ContainerView.cs" />
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
-    <Compile Include="RowInputError.cs" />
-    <Compile Include="ScalarInputError.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />
@@ -151,10 +149,11 @@
     <Compile Include="AsyncValidationState.cs" />
     <Compile Include="ValidationMode.cs" />
     <Compile Include="ValidationScope.cs" />
+    <Compile Include="ViewInputError.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170201\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170203\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

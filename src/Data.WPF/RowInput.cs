@@ -41,18 +41,6 @@ namespace DevZest.Data.Windows
             RowBinding = rowBinding;
         }
 
-        public RowInputError InputError { get; private set; }
-
-        internal sealed override Message InputErrorMessage
-        {
-            get { return InputError; }
-        }
-
-        internal sealed override void UpdateInputError(InputError inputError)
-        {
-            InputError = inputError.IsEmpty ? null : new RowInputError(this, inputError);
-        }
-
         internal IColumnSet SourceColumns { get; private set; } = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
@@ -167,7 +155,7 @@ namespace DevZest.Data.Windows
                 }
                 catch (Exception ex)
                 {
-                    message = new ValidationMessage(null, Severity.Error, ex.Message, this.SourceColumns);
+                    message = new ValidationMessage(null, ValidationSeverity.Error, ex.Message, this.SourceColumns);
                     state = AsyncValidationState.Failed;
                 }
             }
@@ -258,31 +246,31 @@ namespace DevZest.Data.Windows
             return HasAsyncValidator && !HasInputError && ValidationManager.ShouldRunAsyncValidator(rowPresenter, SourceColumns);
         }
 
-        private IReadOnlyList<Message> GetErrors(RowPresenter rowPresenter)
+        private IReadOnlyList<IValidationMessage> GetErrors(RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter != null);
 
-            List<Message> result = null;
+            List<IValidationMessage> result = null;
 
             if (rowPresenter == CurrentRow && HasInputError)
-                result = result.AddItem(InputErrorMessage);
+                result = result.AddItem(InputError);
 
             result = result.AddItems(ValidationManager.GetErrors(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            if (asyncMessage != null && asyncMessage.Severity == Severity.Error)
+            if (asyncMessage != null && asyncMessage.Severity == ValidationSeverity.Error)
                 result = result.AddItem(asyncMessage);
 
             return result.ToReadOnlyList();
         }
 
-        private IReadOnlyList<Message> GetWarnings(RowPresenter rowPresenter)
+        private IReadOnlyList<IValidationMessage> GetWarnings(RowPresenter rowPresenter)
         {
-            List<Message> result = null;
+            List<IValidationMessage> result = null;
             result = result.AddItems(ValidationManager.GetWarnings(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            if (asyncMessage != null && asyncMessage.Severity == Severity.Warning)
+            if (asyncMessage != null && asyncMessage.Severity == ValidationSeverity.Warning)
                 result = result.AddItem(GetAsyncValidationMessage(rowPresenter));
 
             return result.ToReadOnlyList();
