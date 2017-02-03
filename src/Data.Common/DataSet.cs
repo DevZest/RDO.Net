@@ -242,9 +242,9 @@ namespace DevZest.Data
                 return new SingleSeverityCounter(severity, maxEntries);
             }
 
-            public static ValidationEntriesCounter Create(int maxErrors, int maxWarnings, int maxHints)
+            public static ValidationEntriesCounter Create(int maxErrors, int maxWarnings)
             {
-                return new AllSeverityCounter(maxErrors, maxWarnings, maxHints);
+                return new AllSeverityCounter(maxErrors, maxWarnings);
             }
 
             protected ValidationEntriesCounter()
@@ -289,25 +289,23 @@ namespace DevZest.Data
 
             private sealed class AllSeverityCounter : ValidationEntriesCounter
             {
-                public AllSeverityCounter(int maxErrors, int maxWarnings, int maxHints)
+                public AllSeverityCounter(int maxErrors, int maxWarnings)
                 {
                     _maxErrors = maxErrors;
                     _maxWarnings = maxWarnings;
-                    _maxHints = maxHints;
                 }
 
-                private int _countError, _countWarning, _countHint, _maxErrors, _maxWarnings, _maxHints;
+                private int _countError, _countWarning, _maxErrors, _maxWarnings;
 
                 public override bool HasNext
                 {
-                    get { return _countError < _maxErrors || _countWarning < _maxWarnings || _countHint < _maxHints; }
+                    get { return _countError < _maxErrors || _countWarning < _maxWarnings; }
                 }
 
                 private bool HasValidator(Model model)
                 {
                     bool nextError = _countError < _maxErrors;
                     bool nextWarning = _countWarning < _maxWarnings;
-                    bool nextHint = _countHint < _maxHints;
 
                     foreach (var validator in model.Validators)
                     {
@@ -316,25 +314,13 @@ namespace DevZest.Data
 
                         if (nextWarning && validator.Severity == ValidationSeverity.Warning)
                             return true;
-
-                        if (nextHint && validator.Severity == ValidationSeverity.Hint)
-                            return true;
                     }
                     return false;
                 }
 
-                public override ValidationEntry? Next(DataRow dataRow)
+                private static void Check(IReadOnlyList<ValidationMessage> validationMessages, out bool hasError, out bool hasWarning)
                 {
-                    if (!HasNext || !HasValidator(dataRow.Model))
-                        return null;
-
-                    var validationMessages = dataRow.Validate(null);
-                    if (validationMessages.Count == 0)
-                        return new ValidationEntry();
-
-                    bool hasError = false;
-                    bool hasWarning = false;
-                    bool hasHint = false;
+                    hasError = hasWarning = false;
                     for (int i = 0; i < validationMessages.Count; i++)
                     {
                         var severity = validationMessages[i].Severity;
@@ -346,42 +332,46 @@ namespace DevZest.Data
                             case ValidationSeverity.Warning:
                                 hasWarning = true;
                                 break;
-                            case ValidationSeverity.Hint:
-                                hasHint = true;
-                                break;
                         }
 
-                        if (hasError && hasWarning && hasHint)
-                            break;
+                        if (hasError && hasWarning)
+                            return;
                     }
+                }
 
-                    bool shouldYield = false;
+                public override ValidationEntry? Next(DataRow dataRow)
+                {
+                    if (!HasNext || !HasValidator(dataRow.Model))
+                        return null;
+
+                    var validationMessages = dataRow.Validate(null);
+                    if (validationMessages.Count == 0)
+                        return new ValidationEntry();
+
+                    bool hasError, hasWarning;
+                    Check(validationMessages, out hasError, out hasWarning);
+
+                    bool emptyEntry = true;
                     if (hasError)
                     {
                         if (_countError < _maxErrors)
-                            shouldYield = true;
+                            emptyEntry = false;
                         _countError++;
                     }
                     if (hasWarning)
                     {
                         if (_countWarning < _maxWarnings)
-                            shouldYield = true;
+                            emptyEntry = false;
                         _countWarning++;
                     }
-                    if (hasHint)
-                    {
-                        if (_countHint < _maxHints)
-                            shouldYield = true;
-                        _countHint++;
-                    }
-                    return shouldYield ? new ValidationEntry(dataRow, validationMessages) : new ValidationEntry();
+                    return emptyEntry ? new ValidationEntry() : new ValidationEntry(dataRow, validationMessages);
                 }
             }
         }
 
-        public ValidationResult Validate(bool recursive = true, int maxErrors = 100, int maxWarnings = 100, int maxHints = 100)
+        public ValidationResult Validate(bool recursive = true, int maxErrorEntries = 100, int maxWarningEntries = 100)
         {
-            return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(maxErrors, maxWarnings, maxHints), recursive));
+            return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(maxErrorEntries, maxWarningEntries), recursive));
         }
 
         public ValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)

@@ -2,7 +2,6 @@
 {
     public enum ValidationSeverity
     {
-        Hint,
         Warning,
         Error
     }
