@@ -341,9 +341,9 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal ValidationMessageCollection Validate(DataRow dataRow, ValidationSeverity? severity)
+        internal IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
         {
-            var result = ValidationMessageCollection.Empty;
+            var result = ValidationMessageGroup.Empty;
             foreach (var validator in Validators)
             {
                 if (severity.HasValue && validator.Severity != severity.GetValueOrDefault())
@@ -352,9 +352,7 @@ namespace DevZest.Data
                 if (validationMessage == null)
                     continue;
 
-                if (result == ValidationMessageCollection.Empty)
-                    result = new ValidationMessageCollection();
-                result.Add(validationMessage);
+                result = result.Add(validationMessage);
             }
 
             return result;

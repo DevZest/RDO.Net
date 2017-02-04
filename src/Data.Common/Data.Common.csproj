@@ -59,6 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
+    <Compile Include="IValidationMessageGroup.cs" />
     <Compile Include="Primitives\AbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
     <Compile Include="IModelSetExtensions.cs" />
+    <Compile Include="ValidationMessageGroup.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="ColumnValidatorAttribute.cs" />
@@ -256,7 +258,6 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
-    <Compile Include="ValidationMessageCollection.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />

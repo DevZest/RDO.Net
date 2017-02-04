@@ -29,12 +29,9 @@ namespace DevZest.Data
                 var messageId = "MessageId";
                 var result = ValidationResult.New(new ValidationEntry[]
                 {
-                    new ValidationEntry(dataSet[0], new ValidationMessage[]
-                        { new ValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id) }),
-                    new ValidationEntry(dataSet[1], new ValidationMessage[]
-                        { new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) }),
-                    new ValidationEntry(dataSet[2], new ValidationMessage[]
-                        { new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id) })
+                    new ValidationEntry(dataSet[0], new ValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id)),
+                    new ValidationEntry(dataSet[1], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)),
+                    new ValidationEntry(dataSet[2], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id))
                 });
                 var expectedJson =
 @"[

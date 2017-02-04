@@ -8,7 +8,7 @@ namespace DevZest.Data
 {
     public struct ValidationEntry
     {
-        public ValidationEntry(DataRow dataRow, IReadOnlyList<ValidationMessage> messages)
+        public ValidationEntry(DataRow dataRow, IValidationMessageGroup messages)
         {
             Check.NotNull(dataRow, nameof(dataRow));
             Check.NotNull(messages, nameof(messages));
@@ -20,7 +20,7 @@ namespace DevZest.Data
 
         public readonly DataRow DataRow;
 
-        public readonly IReadOnlyList<ValidationMessage> Messages;
+        public readonly IValidationMessageGroup Messages;
 
         public bool IsEmpty
         {

@@ -53,17 +53,15 @@ namespace DevZest.Data.Primitives
             return text == null ? null : ColumnSet.Deserialize(dataSet.Model, text);
         }
 
-        public static IReadOnlyList<ValidationMessage> ParseValidationMessages(this JsonParser jsonParser, DataSet dataSet)
+        public static IValidationMessageGroup ParseValidationMessageGroup(this JsonParser jsonParser, DataSet dataSet)
         {
-            List<ValidationMessage> result = null;
+            IValidationMessageGroup result = ValidationMessageGroup.Empty;
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
 
             if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
-                if (result == null)
-                    result = new List<ValidationMessage>();
-                result.Add(jsonParser.ParseValidationMessage(dataSet));
+                result = result.Add(jsonParser.ParseValidationMessage(dataSet));
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
@@ -74,10 +72,7 @@ namespace DevZest.Data.Primitives
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
 
-            if (result == null)
-                return Array<ValidationMessage>.Empty;
-            else
-                return result;
+            return result;
         }
     }
 }

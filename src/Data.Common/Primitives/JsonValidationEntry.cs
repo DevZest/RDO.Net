@@ -12,19 +12,19 @@ namespace DevZest.Data.Primitives
             return jsonWriter
                 .WriteStartObject()
                 .WriteNameStringPair(DATA_ROW, validationEntry.DataRow.ToString()).WriteComma()
-                .WriteNameArrayPair(MESSAGES, validationEntry.Messages, (writer, validationMessage) => writer.Write(validationMessage))
+                .WriteNameArrayPair<ValidationMessage>(MESSAGES, validationEntry.Messages, (writer, validationMessage) => writer.Write(validationMessage))
                 .WriteEndObject();
         }
 
         public static ValidationEntry ParseValidationEntry(this JsonParser jsonParser, DataSet dataSet)
         {
             DataRow dataRow;
-            IReadOnlyList<ValidationMessage> validationMessages;
+            IValidationMessageGroup validationMessages;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             dataRow = DataRow.FromString(dataSet, jsonParser.ExpectNameStringPair(DATA_ROW, true));
             jsonParser.ExpectObjectName(MESSAGES);
-            validationMessages = jsonParser.ParseValidationMessages(dataSet);
+            validationMessages = jsonParser.ParseValidationMessageGroup(dataSet);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
             return new ValidationEntry(dataRow, validationMessages);

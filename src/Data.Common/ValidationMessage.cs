@@ -1,10 +1,12 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    public class ValidationMessage : ValidationMessage<IColumnSet>
+    public class ValidationMessage : ValidationMessage<IColumnSet>, IValidationMessageGroup
     {
         public ValidationMessage(string id, ValidationSeverity severity, string description, IColumnSet source)
             : base(id, severity, description, source)
@@ -31,5 +33,50 @@ namespace DevZest.Data
         {
             return ToJsonString(true);
         }
+
+        #region IValidationMessageGroup
+
+        int IValidationMessageGroup.Count
+        {
+            get { return 1; }
+        }
+
+        int IReadOnlyCollection<ValidationMessage>.Count
+        {
+            get { return 1; }
+        }
+
+        ValidationMessage IReadOnlyList<ValidationMessage>.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
+        IValidationMessageGroup IValidationMessageGroup.Seal()
+        {
+            return this;
+        }
+
+        IValidationMessageGroup IValidationMessageGroup.Add(ValidationMessage value)
+        {
+            Check.NotNull(value, nameof(value));
+            return ValidationMessageGroup.New(this, value);
+        }
+
+        IEnumerator<ValidationMessage> IEnumerable<ValidationMessage>.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            yield return this;
+        }
+
+        #endregion
     }
 }
