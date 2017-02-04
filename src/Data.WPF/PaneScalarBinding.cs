@@ -94,10 +94,5 @@ namespace DevZest.Data.Windows
         {
             ((Pane)element).FlushInput(_bindings);
         }
-
-        internal sealed override bool HasInputError
-        {
-            get { return _bindings.HasInputError(); }
-        }
     }
 }

@@ -18,11 +18,6 @@ namespace DevZest.Data.Windows.Primitives
         private Trigger<T> _flushTrigger;
         private Trigger<T> _inputValidationTrigger;
         private Func<T, InputError> _inputValidator;
-        internal bool HasInputError
-        {
-            get { return InputError != null; }
-        }
-        internal ViewInputError InputError { get; private set; }
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -66,14 +61,21 @@ namespace DevZest.Data.Windows.Primitives
             _flushTrigger.Detach(element);
         }
 
+        internal abstract ViewInputError GetInputError(UIElement element);
+
+        internal abstract void SetInputError(UIElement element, ViewInputError inputError);
+
+        internal bool HasInputError(UIElement element)
+        {
+            return GetInputError(element) != null;
+        }
+
         private void ValidateInput(T element)
         {
+            var oldInputError = GetInputError(element);
             var inputError = _inputValidator(element);
-            if (IsInputErrorChanged(inputError, InputError))
-            {
-                InputError = inputError.IsEmpty ? null : new ViewInputError(inputError, element);
-                OnInputErrorChanged();
-            }
+            if (IsInputErrorChanged(inputError, oldInputError))
+                SetInputError(element, inputError.IsEmpty ? null : new ViewInputError(inputError, element));
         }
 
         private static bool IsInputErrorChanged(InputError inputError, ViewInputError viewInputError)
@@ -82,15 +84,10 @@ namespace DevZest.Data.Windows.Primitives
                 : viewInputError == null || viewInputError.Id != inputError.Id || viewInputError.Description != inputError.Description;
         }
 
-        private void OnInputErrorChanged()
-        {
-            ValidationManager.InvalidateElements();
-        }
-
         internal void Flush(T element)
         {
             ValidateInput(element);
-            if (!HasInputError)
+            if (!HasInputError(element))
                 FlushCore(element);
         }
 

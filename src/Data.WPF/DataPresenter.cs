@@ -110,31 +110,29 @@ namespace DevZest.Data.Windows
             RequireLayoutManager().Validate();
         }
 
-        public bool HasPreValidatorError
+        public IReadOnlyList<ViewInputError> ScalarInputErrors
         {
-            get { return LayoutManager == null ? false : LayoutManager.HasPreValidatorError; }
+            get { return LayoutManager == null ? null : LayoutManager.ScalarInputErrors; }
+        }
+
+        public IReadOnlyList<ViewInputError> RowInputErrors
+        {
+            get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationErros
         {
-            get
-            {
-                if (LayoutManager == null)
-                    return null;
-                else
-                    return LayoutManager.Errors;
-            }
+            get { return LayoutManager == null ? null : LayoutManager.Errors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationWarnings
         {
-            get
-            {
-                if (LayoutManager == null)
-                    return null;
-                else
-                    return LayoutManager.Warnings;
-            }
+            get { return LayoutManager == null ? null : LayoutManager.Warnings; }
+        }
+
+        public ValidationProgress ValidationProgress
+        {
+            get { return LayoutManager == null ? null : LayoutManager.Progress; }
         }
 
         public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)

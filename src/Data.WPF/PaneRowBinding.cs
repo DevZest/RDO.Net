@@ -95,11 +95,6 @@ namespace DevZest.Data.Windows
             ((Pane)element).FlushInput(_bindings);
         }
 
-        internal sealed override bool HasInputError
-        {
-            get { return _bindings.HasInputError(); }
-        }
-
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
         {
             for (int i = 0; i < _bindings.Count; i++)

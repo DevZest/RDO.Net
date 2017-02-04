@@ -34,6 +34,16 @@ namespace DevZest.Data.Windows
             ScalarBinding = scalarBinding;
         }
 
+        internal sealed override ViewInputError GetInputError(UIElement element)
+        {
+            return ValidationManager.GetScalarInputError(element);
+        }
+
+        internal sealed override void SetInputError(UIElement element, ViewInputError inputError)
+        {
+            ValidationManager.SetScalarInputError(element, inputError);
+        }
+
         private readonly Action<T> _flushAction;
 
         public ScalarInput<T> WithInputValidator(Func<T, InputError> inputValidator, Trigger<T> inputValidationTrigger = null)

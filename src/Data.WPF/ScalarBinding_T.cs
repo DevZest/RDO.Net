@@ -85,7 +85,7 @@ namespace DevZest.Data.Windows
             var e = (T)element;
             if (Input != null)
                 Input.RefreshValidation(e);
-            if (!HasInputError)
+            if (!HasInputError(element))
                 Refresh(e);
         }
 
@@ -99,9 +99,9 @@ namespace DevZest.Data.Windows
                 CachedList.Recycle(ref _cachedElements, e);
         }
 
-        internal sealed override bool HasInputError
+        private bool HasInputError(UIElement element)
         {
-            get { return Input == null ? false : Input.HasInputError; }
+            return Input == null ? false : Input.HasInputError(element);
         }
     }
 }
