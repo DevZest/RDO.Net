@@ -1,6 +1,6 @@
-﻿namespace DevZest.Data
+﻿namespace DevZest.Data.Primitives
 {
-    public interface IValidationMessage
+    public interface IAbstractValidationMessage
     {
         string Id { get; }
         string Description { get; }

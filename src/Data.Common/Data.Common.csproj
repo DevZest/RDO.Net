@@ -59,7 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
-    <Compile Include="IValidationMessage.cs" />
+    <Compile Include="Primitives\IAbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />

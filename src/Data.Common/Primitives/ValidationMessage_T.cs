@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ValidationMessage<T> : IValidationMessage
+    public abstract class ValidationMessage<T> : IAbstractValidationMessage
     {
         protected ValidationMessage(string id, ValidationSeverity severity, string description, T source)
         {
