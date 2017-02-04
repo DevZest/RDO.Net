@@ -355,7 +355,7 @@ namespace DevZest.Data
                 result = result.Add(validationMessage);
             }
 
-            return result;
+            return result.Seal();
         }
 
         private static ValidationMessage Validate(IValidator validator, DataRow dataRow)

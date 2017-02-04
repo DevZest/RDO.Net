@@ -1,8 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -15,7 +13,7 @@ namespace DevZest.Data
             if (messages.Count == 0)
                 throw new ArgumentException(Strings.ValidationEntry_EmptyMessages, nameof(messages));
             DataRow = dataRow;
-            Messages = messages;
+            Messages = messages.Seal();
         }
 
         public readonly DataRow DataRow;
