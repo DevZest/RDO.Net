@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Windows.Primitives;
 using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
@@ -251,7 +252,7 @@ namespace DevZest.Data.Windows
             throw new NotImplementedException();
         }
 
-        private IReadOnlyList<IValidationMessage> GetErrors(RowPresenter rowPresenter)
+        private IReadOnlyList<AbstractValidationMessage> GetErrors(RowPresenter rowPresenter)
         {
             throw new NotImplementedException();
             //Debug.Assert(rowPresenter != null);
@@ -270,9 +271,9 @@ namespace DevZest.Data.Windows
             //return result.ToReadOnlyList();
         }
 
-        private IReadOnlyList<IValidationMessage> GetWarnings(RowPresenter rowPresenter)
+        private IReadOnlyList<AbstractValidationMessage> GetWarnings(RowPresenter rowPresenter)
         {
-            List<IValidationMessage> result = null;
+            List<AbstractValidationMessage> result = null;
             result = result.AddItems(ValidationManager.GetWarnings(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);

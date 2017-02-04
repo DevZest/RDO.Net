@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Windows.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -121,14 +122,14 @@ namespace DevZest.Data.Windows
         /// </summary>
         private sealed class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
         {
-            public DataErrorInfo(IReadOnlyList<IValidationMessage> messages)
+            public DataErrorInfo(IReadOnlyList<AbstractValidationMessage> messages)
             {
                 Debug.Assert(messages != null && messages.Count > 0);
                 _messages = messages;
             }
 
-            private IReadOnlyList<IValidationMessage> _messages;
-            public IReadOnlyList<IValidationMessage> Messages
+            private IReadOnlyList<AbstractValidationMessage> _messages;
+            public IReadOnlyList<AbstractValidationMessage> Messages
             {
                 get { return _messages; }
                 set
@@ -184,7 +185,7 @@ namespace DevZest.Data.Windows
             BindingOperations.ClearBinding(element, DummyProperty);
         }
 
-        internal static void RefreshValidation(this DependencyObject element, IReadOnlyList<IValidationMessage> errors, IReadOnlyList<IValidationMessage> warnings)
+        internal static void RefreshValidation(this DependencyObject element, IReadOnlyList<AbstractValidationMessage> errors, IReadOnlyList<AbstractValidationMessage> warnings)
         {
             if (errors != null && errors.Count > 0)
                 element.SetDataErrorInfo(ValidationSeverity.Error, errors);
@@ -194,7 +195,7 @@ namespace DevZest.Data.Windows
                 element.ClearDataErrorInfo();
         }
 
-        private static void SetDataErrorInfo(this DependencyObject element, ValidationSeverity severity, IReadOnlyList<IValidationMessage> messages)
+        private static void SetDataErrorInfo(this DependencyObject element, ValidationSeverity severity, IReadOnlyList<AbstractValidationMessage> messages)
         {
             Debug.Assert(messages != null && messages.Count > 0);
 
