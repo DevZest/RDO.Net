@@ -1,25 +1,146 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Collections;
+using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
-    public struct ValidationResult
+    public static class ValidationResult
     {
-        public static ValidationResult Empty
+        private sealed class EmptyResult : IValidationResult
         {
-            get { return new ValidationResult(); }
+            public static EmptyResult Singleton = new EmptyResult();
+            private EmptyResult()
+            {
+            }
+
+            public ValidationEntry this[int index]
+            {
+                get { throw new ArgumentOutOfRangeException(nameof(index)); }
+            }
+
+            public IValidationMessageGroup this[DataRow key]
+            {
+                get { throw new ArgumentOutOfRangeException(nameof(key)); }
+            }
+
+            public int Count
+            {
+                get { return 0; }
+            }
+
+            public bool IsSealed
+            {
+                get { return true; }
+            }
+
+            public IValidationResult Seal()
+            {
+                return this;
+            }
+
+            public IValidationResult Add(ValidationEntry validationEntry)
+            {
+                IValidationResult result = new KeyedCollection();
+                return result.Add(validationEntry);
+            }
+
+            public bool Contains(DataRow dataRow)
+            {
+                Check.NotNull(dataRow, nameof(dataRow));
+                return false;
+            }
+
+            public bool TryGetValue(DataRow key, out IValidationMessageGroup value)
+            {
+                value = null;
+                return false;
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                yield break;
+            }
+
+            IEnumerator<ValidationEntry> IEnumerable<ValidationEntry>.GetEnumerator()
+            {
+                yield break;
+            }
+
+            public override string ToString()
+            {
+                return this.ToJsonString(true);
+            }
         }
 
-        public static ValidationResult New(IEnumerable<ValidationEntry> entries)
+        private sealed class KeyedCollection : KeyedCollection<DataRow, ValidationEntry>, IValidationResult
         {
-            var array = entries == null ? null : entries.ToArray();
-            return array == null || array.Length == 0 ? new ValidationResult() : new ValidationResult(array);
+            protected override DataRow GetKeyForItem(ValidationEntry item)
+            {
+                return item.DataRow;
+            }
+
+            public bool IsSealed { get; private set; }
+
+            IValidationMessageGroup IValidationResult.this[DataRow dataRow]
+            {
+                get { return base[dataRow].Messages; }
+            }
+
+            public IValidationResult Seal()
+            {
+                IsSealed = true;
+                return this;
+            }
+
+            public override string ToString()
+            {
+                return this.ToJsonString(true);
+            }
+
+            IValidationResult IValidationResult.Add(ValidationEntry value)
+            {
+                if (value.IsEmpty)
+                    throw new ArgumentException("", nameof(value));
+
+                if (!IsSealed)
+                {
+                    base.Add(value);
+                    return this;
+                }
+
+                var result = new KeyedCollection();
+                foreach (var entry in this)
+                    result.Add(entry);
+                result.Add(value);
+                return result;
+            }
+
+            public bool TryGetValue(DataRow dataRow, out IValidationMessageGroup value)
+            {
+                if (Contains(dataRow))
+                {
+                    value = this[dataRow].Messages;
+                    return true;
+                }
+                else
+                {
+                    value = null;
+                    return false;
+                }
+            }
         }
 
-        public static ValidationResult ParseJson(DataSet dataSet, string json)
+        public static IValidationResult Empty
+        {
+            get { return EmptyResult.Singleton; }
+        }
+
+        public static IValidationResult ParseJson(DataSet dataSet, string json)
         {
             var jsonParser = new JsonParser(json);
             var result = jsonParser.ParseValidationResult(dataSet);
@@ -27,51 +148,38 @@ namespace DevZest.Data
             return result;
         }
 
-        private readonly IReadOnlyList<ValidationEntry> _entries;
-        public IReadOnlyList<ValidationEntry> Entries
+        public static string ToJsonString(this IValidationResult validationResult, bool isPretty)
         {
-            get { return _entries == null ? Array<ValidationEntry>.Empty : _entries; }
+            return JsonWriter.New().Write(validationResult).ToString(isPretty);
         }
 
-        private ValidationResult(IReadOnlyList<ValidationEntry> entries)
+        public static bool IsValid(this IValidationResult validationResult)
         {
-            Debug.Assert(entries != null && entries.Count > 0);
-            _entries = entries;
+            return !validationResult.HasError();
         }
 
-        public override string ToString()
+        public static bool HasError(this IValidationResult validationResult)
         {
-            return ToJsonString(true);
+            return validationResult.Any(ValidationSeverity.Error);
         }
 
-        public string ToJsonString(bool isPretty)
+        public static bool HasWarning(this IValidationResult validationResult)
         {
-            return JsonWriter.New().Write(this).ToString(isPretty);
+            return validationResult.Any(ValidationSeverity.Warning);
         }
 
-        public bool IsValid
+        private static bool Any(this IValidationResult validationResult, ValidationSeverity severity)
         {
-            get { return !HasError; }
-        }
-
-        public bool HasError
-        {
-            get { return Any(ValidationSeverity.Error); }
-        }
-
-        public bool HasWarning
-        {
-            get { return Any(ValidationSeverity.Warning); }
-        }
-
-        private bool Any(ValidationSeverity severity)
-        {
-            return Entries.Any(x => Any(x.Messages, severity));
-        }
-
-        private static bool Any(IEnumerable<ValidationMessage<IColumnSet>> messages, ValidationSeverity severity)
-        {
-            return messages.Any(x => x.Severity == severity);
+            for (int i = 0; i < validationResult.Count; i++)
+            {
+                var messages = validationResult[i].Messages;
+                for (int j = 0; j < messages.Count; j++)
+                {
+                    if (messages[j].Severity == severity)
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }

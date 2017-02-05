@@ -29,32 +29,5 @@ namespace DevZest.Data.Primitives
 
             return new ValidationEntry(dataRow, validationMessages);
         }
-
-        public static IReadOnlyList<ValidationEntry> ParseValidationEntries(this JsonParser jsonParser, DataSet dataSet)
-        {
-            List<ValidationEntry> result = null;
-
-            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
-
-            if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
-            {
-                if (result == null)
-                    result = new List<ValidationEntry>();
-                result.Add(jsonParser.ParseValidationEntry(dataSet));
-
-                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
-                {
-                    jsonParser.ConsumeToken();
-                    result.Add(jsonParser.ParseValidationEntry(dataSet));
-                }
-            }
-
-            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
-
-            if (result == null)
-                return Array<ValidationEntry>.Empty;
-            else
-                return result;
-        }
     }
 }

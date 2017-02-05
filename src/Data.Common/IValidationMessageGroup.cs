@@ -9,6 +9,8 @@ namespace DevZest.Data
 
         new int Count { get; }
 
+        new ValidationMessage this[int index] { get; }
+
         IValidationMessageGroup Add(ValidationMessage value);
     }
 }

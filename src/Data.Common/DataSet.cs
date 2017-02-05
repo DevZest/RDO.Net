@@ -369,27 +369,27 @@ namespace DevZest.Data
             }
         }
 
-        public ValidationResult Validate(bool recursive = true, int maxErrorEntries = 100, int maxWarningEntries = 100)
+        public IValidationResult Validate(bool recursive = true, int maxErrorEntries = 100, int maxWarningEntries = 100)
         {
-            return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(maxErrorEntries, maxWarningEntries), recursive));
+            return Validate(ValidationResult.Empty, this, ValidationEntriesCounter.Create(maxErrorEntries, maxWarningEntries), recursive);
         }
 
-        public ValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)
+        public IValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)
         {
-            return ValidationResult.New(Validate(this, ValidationEntriesCounter.Create(severity, maxEntries), recursive));
+            return Validate(ValidationResult.Empty, this, ValidationEntriesCounter.Create(severity, maxEntries), recursive);
         }
 
-        private static IEnumerable<ValidationEntry> Validate(DataSet dataSet, ValidationEntriesCounter entriesCounter, bool recursive)
+        private static IValidationResult Validate(IValidationResult result, DataSet dataSet, ValidationEntriesCounter entriesCounter, bool recursive)
         {
             foreach (var dataRow in dataSet)
             {
                 var entry = entriesCounter.Next(dataRow);
                 if (!entry.HasValue)
-                    yield break;
+                    return result;
 
                 var entryValue = entry.GetValueOrDefault();
                 if (!entryValue.IsEmpty)
-                    yield return entryValue;
+                    result = result.Add(entryValue);
 
                 if (recursive)
                 {
@@ -399,11 +399,12 @@ namespace DevZest.Data
                         if (!entriesCounter.HasNext)
                             break;
                         var childDataSet = dataRow[childModel];
-                        foreach (var childEntry in Validate(childDataSet, entriesCounter, recursive))
-                            yield return childEntry;
+                        result = Validate(result, childDataSet, entriesCounter, recursive);
                     }
                 }
             }
+
+            return result;
         }
 
         public DataRow EditingRow

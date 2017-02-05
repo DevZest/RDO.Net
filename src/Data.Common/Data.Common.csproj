@@ -60,6 +60,7 @@
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="IValidationMessageGroup.cs" />
+    <Compile Include="IValidationResult.cs" />
     <Compile Include="Primitives\AbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />

@@ -10,29 +10,17 @@ namespace DevZest.Data
         public void ValidationResult_ToJsonString()
         {
             {
-                var result = new ValidationResult();
-                Assert.AreEqual("[]", result.ToJsonString(true));
-            }
-
-            {
-                var result = ValidationResult.New(null);
-                Assert.AreEqual("[]", result.ToJsonString(true));
-            }
-
-            {
-                var result = ValidationResult.New(new ValidationEntry[0]);
+                var result = ValidationResult.Empty;
                 Assert.AreEqual("[]", result.ToJsonString(true));
             }
 
             {
                 var dataSet = GetDataSet(3);
                 var messageId = "MessageId";
-                var result = ValidationResult.New(new ValidationEntry[]
-                {
-                    new ValidationEntry(dataSet[0], new ValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id)),
-                    new ValidationEntry(dataSet[1], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)),
-                    new ValidationEntry(dataSet[2], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id))
-                });
+                var result = ValidationResult.Empty
+                    .Add(new ValidationEntry(dataSet[0], new ValidationMessage(messageId, ValidationSeverity.Error, "This is an error message", dataSet._.Id)))
+                    .Add(new ValidationEntry(dataSet[1], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)))
+                    .Add(new ValidationEntry(dataSet[2], new ValidationMessage(messageId, ValidationSeverity.Warning, "This is a warning message", dataSet._.Id)));
                 var expectedJson =
 @"[
    {
@@ -79,7 +67,7 @@ namespace DevZest.Data
             {
                 var dataSet = GetDataSet(3);
                 var result = ValidationResult.ParseJson(dataSet, "[]");
-                Assert.IsTrue(result.IsValid);
+                Assert.AreEqual(result, ValidationResult.Empty);
             }
 
             {
@@ -121,7 +109,7 @@ namespace DevZest.Data
    }
 ]";
                 var result = ValidationResult.ParseJson(dataSet, json);
-                Assert.AreEqual(3, result.Entries.Count);
+                Assert.AreEqual(3, result.Count);
             }
         }
     }

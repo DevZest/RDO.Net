@@ -56,6 +56,16 @@ namespace DevZest.Data
             }
         }
 
+        ValidationMessage IValidationMessageGroup.this[int index]
+        {
+            get
+            {
+                if (index != 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return this;
+            }
+        }
+
         IValidationMessageGroup IValidationMessageGroup.Seal()
         {
             return this;
