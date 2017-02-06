@@ -180,6 +180,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Flush operation can only be performed on CurrentRow.
+        /// </summary>
+        public static string RowInput_FlushCurrentRowOnly
+        {
+            get { return GetString("RowInput_FlushCurrentRowOnly"); }
+        }
+
+        /// <summary>
         /// The placeholder row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeletePlaceholder

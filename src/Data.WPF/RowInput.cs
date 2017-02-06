@@ -87,8 +87,10 @@ namespace DevZest.Data.Windows
 
         internal override void FlushCore(T element)
         {
-            Debug.Assert(CurrentRow != null && CurrentRow == element.GetRowPresenter());
+            Debug.Assert(CurrentRow != null);
             var currentRow = CurrentRow;
+            if (currentRow != element.GetRowPresenter())
+                throw new InvalidOperationException(Strings.RowInput_FlushCurrentRowOnly);
             var flushed = DoFlush(currentRow, element);
             if (flushed)
                 MakeProgress();
@@ -97,10 +99,11 @@ namespace DevZest.Data.Windows
         private bool DoFlush(RowPresenter rowPresenter, T element)
         {
             bool result = false;
-            foreach (var flush in _flushFuncs)
+            for (int i = 0; i < _flushFuncs.Count; i++)
             {
+                var flush = _flushFuncs[i];
                 if (flush == null)
-                    return true;
+                    continue;
 
                 var flushed = flush(rowPresenter, element);
                 if (flushed)

@@ -180,6 +180,9 @@
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>
   </data>
+  <data name="RowInput_FlushCurrentRowOnly" xml:space="preserve">
+    <value>Flush operation can only be performed on CurrentRow.</value>
+  </data>
   <data name="RowPresenter_DeletePlaceholder" xml:space="preserve">
     <value>The placeholder row cannot be deleted.</value>
   </data>
