@@ -23,6 +23,25 @@ namespace DevZest.Data.Windows.Primitives
             Progress = new ValidationProgress(this);
         }
 
+        public void FlushScalars()
+        {
+            var scalarBindings = Template.ScalarBindings;
+            foreach (var scalarBinding in scalarBindings)
+            {
+                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                {
+                    var element = scalarBinding[i];
+                    scalarBinding.FlushInput(element);
+                }
+            }
+        }
+
+        public void FlushCurrentRow()
+        {
+            if (CurrentRow != null && CurrentRow.View != null)
+                CurrentRow.View.Flush();
+        }
+
         private InputErrorCollection _scalarInputErrors;
         private InputErrorCollection InternalScalarInputErrors
         {

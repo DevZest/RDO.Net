@@ -174,6 +174,23 @@ namespace DevZest.Data.Windows
             }
         }
 
+        internal void Flush()
+        {
+            Debug.Assert(RowPresenter != null && RowPresenter == ElementManager.CurrentRow);
+
+            if (Elements == null)
+                return;
+
+            var rowBindings = RowBindings;
+            Debug.Assert(Elements.Count == rowBindings.Count);
+            for (int i = 0; i < rowBindings.Count; i++)
+            {
+                var rowBinding = rowBindings[i];
+                var element = Elements[i];
+                rowBinding.FlushInput(element);
+            }
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
