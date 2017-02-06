@@ -56,12 +56,12 @@ namespace DevZest.Data
 
             public IEnumerator<Column> GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<Column>.Singleton;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<Column>.Singleton;
             }
         }
 

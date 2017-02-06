@@ -43,12 +43,12 @@ namespace DevZest.Data.Primitives
 
             public IEnumerator<AbstractValidationMessage> GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<ValidationMessage>.Singleton;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<ValidationMessage>.Singleton;
             }
         }
 

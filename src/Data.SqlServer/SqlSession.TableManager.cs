@@ -51,41 +51,6 @@ namespace DevZest.Data.SqlServer
                     return _tempTableNamesByModel.GetValue(model, GetUniqueTempTableName);
                 }
             }
-
-            private sealed class DebugMode : TableManager
-            {
-                public DebugMode(SqlConnection sqlConnection)
-                    : base(sqlConnection)
-                {
-                    InitSessionId();
-                }
-
-                private string _sessionId;
-                private HashSet<string> _tables = new HashSet<string>();
-
-                private void InitSessionId()
-                {
-                    var outputParam = new SqlParameter("@output", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    var command = new SqlCommand("SET @output = @@SPID", SqlConnection);
-                    command.Parameters.Add(outputParam);
-                    command.ExecuteNonQuery();
-                    _sessionId = outputParam.Value.ToString();
-                }
-
-                public override string GetTableName(string name)
-                {
-                    throw new NotImplementedException();
-                }
-
-                public override string AssignTempTableName(Model model)
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
         }
     }
 }

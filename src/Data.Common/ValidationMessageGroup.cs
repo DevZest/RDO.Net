@@ -49,12 +49,12 @@ namespace DevZest.Data
 
             public IEnumerator<ValidationMessage> GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<ValidationMessage>.Singleton;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                yield break;
+                return EmptyEnumerator<ValidationMessage>.Singleton;
             }
 
             IAbstractValidationMessageGroup IAbstractValidationMessageGroup.Seal()
@@ -64,12 +64,13 @@ namespace DevZest.Data
 
             public IAbstractValidationMessageGroup Add(AbstractValidationMessage value)
             {
-                throw new NotImplementedException();
+                Check.NotNull(value, nameof(value));
+                return value;
             }
 
             IEnumerator<AbstractValidationMessage> IEnumerable<AbstractValidationMessage>.GetEnumerator()
             {
-                throw new NotImplementedException();
+                return EmptyEnumerator<ValidationMessage>.Singleton;
             }
         }
 
@@ -101,10 +102,7 @@ namespace DevZest.Data
 
             AbstractValidationMessage IReadOnlyList<AbstractValidationMessage>.this[int index]
             {
-                get
-                {
-                    throw new NotImplementedException();
-                }
+                get { return _list[index]; }
             }
 
             public ValidationMessage this[int index]
@@ -157,7 +155,15 @@ namespace DevZest.Data
 
             public IAbstractValidationMessageGroup Add(AbstractValidationMessage value)
             {
-                throw new NotImplementedException();
+                Check.NotNull(value, nameof(value));
+
+                if (!IsSealed && value is ValidationMessage)
+                    return Add((ValidationMessage)value);
+
+                var result = AbstractValidationMessageGroup.Empty;
+                for (int i = 0; i < Count; i++)
+                    result = result.Add(this[i]);
+                return result.Add(value);
             }
 
             IEnumerator<AbstractValidationMessage> IEnumerable<AbstractValidationMessage>.GetEnumerator()

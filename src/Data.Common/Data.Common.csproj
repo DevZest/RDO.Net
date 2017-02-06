@@ -105,6 +105,7 @@
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarExtensions.cs" />
     <Compile Include="Scalar.cs" />
+    <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="ValidationEntry.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />

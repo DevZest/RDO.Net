@@ -11,6 +11,8 @@ namespace DevZest.Data
 
         new ValidationMessage this[int index] { get; }
 
+        new IEnumerator<ValidationMessage> GetEnumerator();
+
         IValidationMessageGroup Add(ValidationMessage value);
     }
 }

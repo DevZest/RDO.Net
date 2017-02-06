@@ -87,6 +87,11 @@ namespace DevZest.Data
             yield return this;
         }
 
+        IEnumerator<ValidationMessage> IValidationMessageGroup.GetEnumerator()
+        {
+            yield return this;
+        }
+
         #endregion
     }
 }
