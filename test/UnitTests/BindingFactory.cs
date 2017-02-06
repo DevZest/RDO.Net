@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows
     {
         private sealed class IsEditingToTextBlockBinding : RowBinding<TextBlock>
         {
-            protected override void Refresh(TextBlock element, RowPresenter rowPresenter)
+            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
             {
                 element.Text = rowPresenter.IsEditing.ToString();
             }
@@ -22,7 +22,7 @@ namespace DevZest.Data.Windows
 
         private sealed class IsCurrentTextBlockBinding : RowBinding<TextBlock>
         {
-            protected override void Refresh(TextBlock element, RowPresenter rowPresenter)
+            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
             {
                 element.Text = rowPresenter.IsCurrent.ToString();
             }
@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
                 _column = column;
             }
 
-            protected override void Refresh(TextBlock element)
+            protected internal override void Refresh(TextBlock element)
             {
                 element.Text = _column.DisplayName;
             }
@@ -62,7 +62,7 @@ namespace DevZest.Data.Windows
                 _stringColumn = stringColumn;
             }
 
-            protected override void Refresh(TextBlock element, RowPresenter rowPresenter)
+            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
             {
                 element.Text = rowPresenter.GetValue(_stringColumn);
             }
@@ -130,7 +130,7 @@ namespace DevZest.Data.Windows
                 element.DesiredHeight = _desiredHeight;
             }
 
-            protected override void Refresh(Placeholder element)
+            protected internal override void Refresh(Placeholder element)
             {
             }
         }
@@ -178,7 +178,7 @@ namespace DevZest.Data.Windows
                 return this;
             }
 
-            protected override void Refresh(Placeholder element, RowPresenter rowPresenter)
+            protected internal override void Refresh(Placeholder element, RowPresenter rowPresenter)
             {
                 if (OnRefresh != null)
                     OnRefresh(element, rowPresenter);

@@ -74,7 +74,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        protected abstract void Refresh(T element);
+        protected internal abstract void Refresh(T element);
 
         protected virtual void Cleanup(T element)
         {
@@ -84,8 +84,8 @@ namespace DevZest.Data.Windows
         {
             var e = (T)element;
             if (Input != null)
-                Input.RefreshValidation(e);
-            if (!HasInputError(element))
+                Input.Refresh(e);
+            else
                 Refresh(e);
         }
 
@@ -97,11 +97,6 @@ namespace DevZest.Data.Windows
             Cleanup(e);
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);
-        }
-
-        private bool HasInputError(UIElement element)
-        {
-            return Input == null ? false : Input.HasInputError(element);
         }
     }
 }

@@ -57,10 +57,11 @@ namespace DevZest.Data.Windows
             _flushAction(element);
         }
 
-        internal void RefreshValidation(T element)
+        internal void Refresh(T element)
         {
-            //element.SetDataErrorInfo(GetErrors(rowPresenter), GetWarnings(rowPresenter));
-            throw new NotImplementedException();
+            if (GetInputError(element) == null)
+                ScalarBinding.Refresh(element);
+            element.RefreshValidation(GetInputError(element), AbstractValidationMessageGroup.Empty);
         }
     }
 }

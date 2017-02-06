@@ -65,11 +65,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void SetInputError(UIElement element, ViewInputError inputError);
 
-        internal bool HasInputError(UIElement element)
-        {
-            return GetInputError(element) != null;
-        }
-
         private void ValidateInput(T element)
         {
             var oldInputError = GetInputError(element);
@@ -87,7 +82,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void Flush(T element)
         {
             ValidateInput(element);
-            if (!HasInputError(element))
+            if (GetInputError(element) == null)
                 FlushCore(element);
         }
 

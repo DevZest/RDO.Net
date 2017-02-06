@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        protected abstract void Refresh(T element, RowPresenter rowPresenter);
+        protected internal abstract void Refresh(T element, RowPresenter rowPresenter);
 
         protected virtual void Cleanup(T element, RowPresenter rowPresenter)
         {
@@ -92,8 +92,8 @@ namespace DevZest.Data.Windows
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
             if (Input != null)
-                Input.RefreshValidation(e, rowPresenter);
-            if (!HasInputError(element))
+                Input.Refresh(e, rowPresenter);
+            else
                 Refresh(e, rowPresenter);
         }
 
@@ -107,11 +107,6 @@ namespace DevZest.Data.Windows
             e.SetRowPresenter(null);
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);
-        }
-
-        private bool HasInputError(UIElement element)
-        {
-            return Input == null ? false : Input.HasInputError(element);
         }
 
         private ValidationManager ValidationManager

@@ -283,9 +283,16 @@ namespace DevZest.Data.Windows
             return result.ToReadOnlyList();
         }
 
-        internal void RefreshValidation(T element, RowPresenter rowPresenter)
+        private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
             element.RefreshValidation(GetErrors(rowPresenter), GetWarnings(rowPresenter));
+        }
+
+        internal void Refresh(T element, RowPresenter rowPresenter)
+        {
+            if (GetInputError(element) == null)
+                RowBinding.Refresh(element, rowPresenter);
+            RefreshValidation(element, rowPresenter);
         }
     }
 }
