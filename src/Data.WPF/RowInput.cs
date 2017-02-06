@@ -283,9 +283,31 @@ namespace DevZest.Data.Windows
             return result.ToReadOnlyList();
         }
 
+        private void GetValidationMessages(T element, RowPresenter rowPresenter, out IAbstractValidationMessageGroup errors, out IAbstractValidationMessageGroup warnings)
+        {
+            errors = GetInputError(element);
+            if (errors != null)
+            {
+                warnings = ValidationMessageGroup.Empty;
+                return;
+            }
+
+            IValidationMessageGroup resultErrors, resultWarnings;
+            GetValidationMessages(rowPresenter, out resultErrors, out resultWarnings);
+            errors = resultErrors;
+            warnings = resultWarnings;
+        }
+
+        private void GetValidationMessages(RowPresenter rowPresenter, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
+        {
+            errors = warnings = ValidationMessageGroup.Empty;
+        }
+
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(GetErrors(rowPresenter), GetWarnings(rowPresenter));
+            IAbstractValidationMessageGroup errors, warnings;
+            GetValidationMessages(element, rowPresenter, out errors, out warnings);
+            element.RefreshValidation(errors, warnings);
         }
 
         internal void Refresh(T element, RowPresenter rowPresenter)
