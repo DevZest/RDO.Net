@@ -212,42 +212,90 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateElements();
         }
 
+        private int ErrorMaxEntries
+        {
+            get { return Template.ValidationErrorMaxEntries; }
+        }
+
+        private int WarningMaxEntries
+        {
+            get { return Template.ValidationWarningMaxEntries; }
+        }
+
         private void Validate(bool showAll)
         {
             if (showAll)
                 Progress.ShowAll();
 
             ClearValidationMessages();
-            Errors = Validate(Errors, ValidationSeverity.Error, Template.MaxValidationErrors);
-            Warnings = Validate(Warnings, ValidationSeverity.Warning, Template.MaxValidationWarnings);
+            DoValidate();
+            Errors.Seal();
+            Warnings.Seal();
         }
 
-        private IValidationDictionary Validate(IValidationDictionary result, ValidationSeverity severity, int maxEntries)
+        private bool MoreErrorsToValidate
         {
-            if (CurrentRow != null)
-            {
-                var messages = CurrentRow.DataRow.Validate(severity);
-                if (messages.Count > 0)
-                    result = result.Add(CurrentRow, messages);
-            }
+            get { return Errors.Count < ErrorMaxEntries; }
+        }
+
+        private bool MoreWarningsToValidate
+        {
+            get { return Warnings.Count < WarningMaxEntries; }
+        }
+
+        private bool MoreToValidate
+        {
+            get { return MoreErrorsToValidate || MoreWarningsToValidate; }
+        }
+
+        private void DoValidate()
+        {
+            if (CurrentRow == null)
+                return;
+
+            Validate(CurrentRow);
+            if (!MoreToValidate)
+                return;
 
             if (ValidationScope == ValidationScope.AllRows)
             {
-                foreach (var row in Rows)
+                for (int i = 0; i < Rows.Count; i++)
                 {
+                    var row = Rows[i];
                     if (row == CurrentRow)
                         continue;
-
-                    var messages = row.DataRow.Validate(severity);
-                    if (messages.Count > 0)
-                        result = result.Add(row, messages);
-
-                    if (result.Count == maxEntries)
-                        break;
+                    Validate(Rows[i]);
+                    if (!MoreToValidate)
+                        return;
                 }
             }
+        }
 
-            return result;
+        private void Validate(RowPresenter rowPresenter)
+        {
+            Debug.Assert(MoreToValidate);
+
+            IValidationMessageGroup errors, warnings;
+            Validate(rowPresenter.DataRow, out errors, out warnings);
+            Errors = Errors.Add(rowPresenter, errors);
+            Warnings = Warnings.Add(rowPresenter, warnings);
+       }
+
+        private void Validate(DataRow dataRow, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
+        {
+            Debug.Assert(MoreToValidate);
+
+            if (MoreErrorsToValidate)
+            {
+                errors = dataRow.Validate(ValidationSeverity.Error);
+                warnings = errors.Count > 0 || MoreWarningsToValidate ? dataRow.Validate(ValidationSeverity.Warning) : ValidationMessageGroup.Empty;
+            }
+            else
+            {
+                Debug.Assert(MoreWarningsToValidate);
+                warnings = dataRow.Validate(ValidationSeverity.Warning);
+                errors = warnings.Count > 0 || MoreErrorsToValidate ? dataRow.Validate(ValidationSeverity.Error) : ValidationMessageGroup.Empty;
+            }
         }
 
         protected override void OnCurrentRowChanged(RowPresenter oldValue, bool reload)

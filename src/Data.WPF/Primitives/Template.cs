@@ -483,10 +483,10 @@ namespace DevZest.Data.Windows.Primitives
         public ValidationMode ScalarValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(100)]
-        public int MaxValidationErrors { get; internal set; } = 100;
+        public int ValidationErrorMaxEntries { get; internal set; } = 100;
 
         [DefaultValue(100)]
-        public int MaxValidationWarnings { get; internal set; } = 100;
+        public int ValidationWarningMaxEntries { get; internal set; } = 100;
 
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }

@@ -143,16 +143,20 @@ namespace DevZest.Data.Windows
         }
 
         [DefaultValue(100)]
-        public TemplateBuilder WithMaxValidationErrors(int value)
+        public TemplateBuilder WithValidationErrorMaxEntries(int value)
         {
-            Template.MaxValidationErrors = value;
+            if (value < 1)
+                throw new ArgumentOutOfRangeException(nameof(value));
+            Template.ValidationErrorMaxEntries = value;
             return this;
         }
 
         [DefaultValue(100)]
-        public TemplateBuilder WithMaxValidationWarnings(int value)
+        public TemplateBuilder WithValidationWarningMaxEntries(int value)
         {
-            Template.MaxValidationWarnings = value;
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value));
+            Template.ValidationWarningMaxEntries = value;
             return this;
         }
 
