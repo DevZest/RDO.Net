@@ -70,12 +70,13 @@ namespace DevZest.Data.Windows.Primitives
             SetInputError(InternalScalarInputErrors, element, inputError);
         }
 
-        private static void SetInputError(InputErrorCollection inputErrors, UIElement element, ViewInputError inputError)
+        private void SetInputError(InputErrorCollection inputErrors, UIElement element, ViewInputError inputError)
         {
             Debug.Assert(inputErrors != null);
             inputErrors.Remove(element);
             if (inputError != null)
                 inputErrors.Add(inputError);
+            InvalidateElements();
         }
 
         public IReadOnlyList<ViewInputError> ScalarInputErrors
