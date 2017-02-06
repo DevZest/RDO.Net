@@ -120,12 +120,12 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationErros
+        public IValidationDictionary ValidationErros
         {
             get { return LayoutManager == null ? null : LayoutManager.Errors; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IReadOnlyList<ValidationMessage>> ValidationWarnings
+        public IValidationDictionary ValidationWarnings
         {
             get { return LayoutManager == null ? null : LayoutManager.Warnings; }
         }
