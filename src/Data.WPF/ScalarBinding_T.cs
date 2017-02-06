@@ -23,12 +23,6 @@ namespace DevZest.Data.Windows
             }
         }
 
-        internal sealed override void FlushInput(UIElement element)
-        {
-            if (Input != null)
-                Input.Flush((T)element);
-        }
-
         List<T> _cachedElements;
 
         private T Create()

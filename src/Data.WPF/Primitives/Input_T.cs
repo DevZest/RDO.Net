@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows.Primitives
         private Trigger<T> _inputValidationTrigger;
         private Func<T, InputError> _inputValidator;
 
-        public abstract TwoWayBinding Binding { get; }
+        public abstract Binding Binding { get; }
 
         internal void VerifyNotSealed()
         {

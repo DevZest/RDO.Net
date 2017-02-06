@@ -89,10 +89,5 @@ namespace DevZest.Data.Windows
             _settingUpPane.EndSetup(_bindings);
             _settingUpPane = null;
         }
-
-        internal sealed override void FlushInput(UIElement element)
-        {
-            ((Pane)element).FlushInput(_bindings);
-        }
     }
 }
