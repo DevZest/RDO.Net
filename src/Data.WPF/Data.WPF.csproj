@@ -50,6 +50,7 @@
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
+    <Compile Include="IValidationDictionary.cs" />
     <Compile Include="Pane.cs" />
     <Compile Include="PaneBlockBinding.cs" />
     <Compile Include="PaneRowBinding.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
     <Compile Include="AsyncValidationState.cs" />
+    <Compile Include="ValidationDictionary.cs" />
     <Compile Include="ValidationMode.cs" />
     <Compile Include="ValidationProgress.cs" />
     <Compile Include="ValidationScope.cs" />
