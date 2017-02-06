@@ -109,9 +109,9 @@ namespace DevZest.Data.Windows
                 CachedList.Recycle(ref _cachedElements, e);
         }
 
-        private ValidationManager ValidationManager
+        private InputManager InputManager
         {
-            get { return Template.ValidationManager; }
+            get { return Template.InputManager; }
         }
 
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)

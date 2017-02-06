@@ -72,7 +72,7 @@
     <Compile Include="RowInput.cs" />
     <Compile Include="ScalarInput.cs" />
     <Compile Include="Utilities\Singleton.cs" />
-    <Compile Include="Primitives\ValidationManager.cs" />
+    <Compile Include="Primitives\InputManager.cs" />
     <Compile Include="PropertyChangedTrigger.cs" />
     <Compile Include="BlockBinding_T.cs" />
     <Compile Include="RowBinding_T.cs" />

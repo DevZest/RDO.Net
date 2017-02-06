@@ -7,14 +7,14 @@ namespace DevZest.Data.Windows
 {
     public sealed class ValidationProgress
     {
-        internal ValidationProgress(ValidationManager validationManager)
+        internal ValidationProgress(InputManager inputManager)
         {
-            _validationManager = validationManager;
+            _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)
                 _progress = new Dictionary<Windows.RowPresenter, IColumnSet>();
         }
 
-        private ValidationManager _validationManager;
+        private InputManager _inputManager;
         private bool _showAll;
         private Dictionary<RowPresenter, IColumnSet> _progress;
 
@@ -66,12 +66,12 @@ namespace DevZest.Data.Windows
 
         public ValidationMode Mode
         {
-            get { return _validationManager.ValidationMode; }
+            get { return _inputManager.ValidationMode; }
         }
 
         public ValidationScope Scope
         {
-            get { return _validationManager.ValidationScope; }
+            get { return _inputManager.ValidationScope; }
         }
 
         public bool IsVisible(RowPresenter rowPresenter, IColumnSet columns)

@@ -38,12 +38,12 @@ namespace DevZest.Data.Windows
 
         internal sealed override ViewInputError GetInputError(UIElement element)
         {
-            return ValidationManager.GetRowInputError(element);
+            return InputManager.GetRowInputError(element);
         }
 
         internal sealed override void SetInputError(UIElement element, ViewInputError inputError)
         {
-            ValidationManager.SetRowInputError(element, inputError);
+            InputManager.SetRowInputError(element, inputError);
         }
 
         internal IColumnSet SourceColumns { get; private set; } = ColumnSet.Empty;
@@ -53,12 +53,12 @@ namespace DevZest.Data.Windows
         {
             var currentRow = CurrentRow;
             Debug.Assert(currentRow != null);
-            ValidationManager.MakeProgress(currentRow, this);
+            InputManager.MakeProgress(currentRow, this);
         }
 
         private RowPresenter CurrentRow
         {
-            get { return ValidationManager == null ? null : ValidationManager.CurrentRow; }
+            get { return InputManager == null ? null : InputManager.CurrentRow; }
         }
 
         public RowInput<T> WithInputValidator(Func<T, InputError> inputValidaitor, Trigger<T> inputValidationTrigger)
@@ -171,7 +171,7 @@ namespace DevZest.Data.Windows
 
             SetAsyncValidationState(rowPresenter, state);
             SetAsyncValidationMessage(rowPresenter, message);
-            ValidationManager.InvalidateElements();
+            InputManager.InvalidateElements();
         }
 
         internal AsyncValidationState GetAsyncValidationState(RowPresenter rowPresenter)
@@ -274,7 +274,7 @@ namespace DevZest.Data.Windows
         private IReadOnlyList<AbstractValidationMessage> GetWarnings(RowPresenter rowPresenter)
         {
             List<AbstractValidationMessage> result = null;
-            result = result.AddItems(ValidationManager.GetWarnings(rowPresenter, this));
+            result = result.AddItems(InputManager.GetWarnings(rowPresenter, this));
 
             var asyncMessage = GetAsyncValidationMessage(rowPresenter);
             if (asyncMessage != null && asyncMessage.Severity == ValidationSeverity.Warning)

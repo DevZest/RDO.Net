@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class ValidationManager : ElementManager
+    internal abstract class InputManager : ElementManager
     {
         private sealed class InputErrorCollection : KeyedCollection<UIElement, ViewInputError>
         {
@@ -17,7 +17,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected ValidationManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
+        protected InputManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             Progress = new ValidationProgress(this);

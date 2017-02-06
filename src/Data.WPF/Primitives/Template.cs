@@ -29,9 +29,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as ElementManager; }
         }
 
-        internal ValidationManager ValidationManager
+        internal InputManager InputManager
         {
-            get { return RowManager as ValidationManager; }
+            get { return RowManager as InputManager; }
         }
 
         internal LayoutManager LayoutManager

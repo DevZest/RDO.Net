@@ -36,12 +36,12 @@ namespace DevZest.Data.Windows
 
         internal sealed override ViewInputError GetInputError(UIElement element)
         {
-            return ValidationManager.GetScalarInputError(element);
+            return InputManager.GetScalarInputError(element);
         }
 
         internal sealed override void SetInputError(UIElement element, ViewInputError inputError)
         {
-            ValidationManager.SetScalarInputError(element, inputError);
+            InputManager.SetScalarInputError(element, inputError);
         }
 
         private readonly Action<T> _flushAction;

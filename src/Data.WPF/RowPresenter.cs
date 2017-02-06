@@ -65,9 +65,9 @@ namespace DevZest.Data.Windows
             get { return RowMapper as RowManager; }
         }
 
-        internal ValidationManager ValidationManager
+        internal InputManager InputManager
         {
-            get { return RowMapper as ValidationManager; }
+            get { return RowMapper as InputManager; }
         }
 
         internal ElementManager ElementManager

@@ -27,9 +27,9 @@ namespace DevZest.Data.Windows.Primitives
                 throw new InvalidOperationException(Strings.ReverseBinding_VerifyNotSealed);
         }
 
-        internal ValidationManager ValidationManager
+        internal InputManager InputManager
         {
-            get { return Template.ValidationManager; }
+            get { return Template.InputManager; }
         }
 
         internal Template Template
