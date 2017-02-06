@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class ScalarBinding : Binding, IConcatList<ScalarBinding>
+    public abstract class ScalarBinding : TwoWayBinding, IConcatList<ScalarBinding>
     {
         #region IConcatList<ScalarBinding>
 

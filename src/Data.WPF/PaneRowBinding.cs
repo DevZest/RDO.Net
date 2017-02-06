@@ -90,6 +90,11 @@ namespace DevZest.Data.Windows
             _settingUpPane = null;
         }
 
+        internal sealed override void FlushInput(UIElement element)
+        {
+            ((Pane)element).FlushInput(_bindings);
+        }
+
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
         {
             for (int i = 0; i < _bindings.Count; i++)

@@ -1,6 +1,9 @@
 ﻿using DevZest.Data.Windows.Primitives;
+using DevZest.Data.Windows.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using DevZest.Data.Primitives;
 
@@ -19,7 +22,7 @@ namespace DevZest.Data.Windows
 
         public ScalarBinding<T> ScalarBinding { get; private set; }
 
-        public sealed override Binding Binding
+        public sealed override TwoWayBinding Binding
         {
             get { return ScalarBinding; }
         }

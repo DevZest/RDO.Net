@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class RowBinding : Binding, IConcatList<RowBinding>
+    public abstract class RowBinding : TwoWayBinding, IConcatList<RowBinding>
     {
         #region IConcatList<RowBinding>
 
