@@ -315,6 +315,14 @@ namespace DevZest.Data.Windows
             return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStretches", "frozen"), frozen);
         }
 
+        /// <summary>
+        /// Input already exists.
+        /// </summary>
+        public static string TwoWayBinding_InputAlreadyExists
+        {
+            get { return GetString("TwoWayBinding_InputAlreadyExists"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

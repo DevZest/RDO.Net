@@ -231,4 +231,7 @@
   <data name="Template_InvalidStretches" xml:space="preserve">
     <value>The Stretches value must be less or equal to {frozen}.</value>
   </data>
+  <data name="TwoWayBinding_InputAlreadyExists" xml:space="preserve">
+    <value>Input already exists.</value>
+  </data>
 </root>

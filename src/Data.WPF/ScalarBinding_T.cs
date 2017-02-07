@@ -119,8 +119,9 @@ namespace DevZest.Data.Windows
 
         public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)
         {
+            VerifyNotSealed();
             if (Input != null)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException(Strings.TwoWayBinding_InputAlreadyExists);
 
             return Input = new Windows.ScalarInput<T>(this, flushTrigger);
         }
