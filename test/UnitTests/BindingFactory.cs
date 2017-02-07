@@ -7,30 +7,29 @@ namespace DevZest.Data.Windows
 {
     internal static class BindingFactory
     {
-        private sealed class IsEditingToTextBlockBinding : RowBinding<TextBlock>
+        private static void RefreshIsEditing(TextBlock element, RowPresenter rowPresenter)
         {
-            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
-            {
-                element.Text = rowPresenter.IsEditing.ToString();
-            }
+            element.Text = rowPresenter.IsEditing.ToString();
         }
 
         public static RowBinding<TextBlock> BindIsEditingToTextBlock(this Model _)
         {
-            return new IsEditingToTextBlockBinding();
+            return new RowBinding<TextBlock>(RefreshIsEditing);
         }
 
-        private sealed class IsCurrentTextBlockBinding : RowBinding<TextBlock>
+        private static void RefreshIsCurrent(TextBlock element, RowPresenter rowPresenter)
         {
-            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
-            {
-                element.Text = rowPresenter.IsCurrent.ToString();
-            }
+            element.Text = rowPresenter.IsCurrent.ToString();
         }
 
         public static RowBinding<TextBlock> BindIsCurrentToTextBlock(this Model _)
         {
-            return new IsCurrentTextBlockBinding();
+            return new RowBinding<TextBlock>(RefreshIsCurrent);
+        }
+
+        private static void RefreshDisplayName(TextBlock element, Column column)
+        {
+            element.Text = column.DisplayName;
         }
 
         private sealed class DisplayNameToTextBlockBinding : ScalarBinding<TextBlock>
@@ -53,24 +52,14 @@ namespace DevZest.Data.Windows
             return new DisplayNameToTextBlockBinding(column);
         }
 
-        private sealed class StringToTextBlockBinding : RowBinding<TextBlock>
+        private static void Refresh(TextBlock element, _String column, RowPresenter rowPresenter)
         {
-            private _String _stringColumn;
-
-            public StringToTextBlockBinding(_String stringColumn)
-            {
-                _stringColumn = stringColumn;
-            }
-
-            protected internal override void Refresh(TextBlock element, RowPresenter rowPresenter)
-            {
-                element.Text = rowPresenter.GetValue(_stringColumn);
-            }
+            element.Text = rowPresenter.GetValue(column);
         }
 
-        public static RowBinding<TextBlock> BindToTextBlock(this _String stringColumn)
+        public static RowBinding<TextBlock> BindToTextBlock(this _String column)
         {
-            return new StringToTextBlockBinding(stringColumn);
+            return new RowBinding<TextBlock>((e, r) => Refresh(e, column, r));
         }
 
         private sealed class BlockOrdinalToTextBlockBinding : BlockBinding<TextBlock>
@@ -140,59 +129,22 @@ namespace DevZest.Data.Windows
             return new PlaceholderScalarBinding(desiredWidth, desiredHeight);
         }
 
-        private sealed class PlaceholderRowBinding : RowBinding<Placeholder>
-        {
-            public PlaceholderRowBinding()
-            {
-            }
-
-            public PlaceholderRowBinding(double desiredWidth, double desiredHeight)
-            {
-                _desiredWidth = desiredWidth;
-                _desiredHeight = desiredHeight;
-            }
-
-            private double _desiredWidth;
-            private double _desiredHeight;
-
-            protected override void Setup(Placeholder element, RowPresenter rowPresenter)
-            {
-                element.DesiredWidth = _desiredWidth;
-                element.DesiredHeight = _desiredHeight;
-            }
-
-            private Action<Placeholder, RowPresenter> _onRefresh;
-            public Action<Placeholder, RowPresenter> OnRefresh
-            {
-                get { return _onRefresh; }
-                set
-                {
-                    VerifyNotSealed();
-                    _onRefresh = value;
-                }
-            }
-
-            public PlaceholderRowBinding WithOnRefresh(Action<Placeholder, RowPresenter> onRefresh)
-            {
-                OnRefresh = onRefresh;
-                return this;
-            }
-
-            protected internal override void Refresh(Placeholder element, RowPresenter rowPresenter)
-            {
-                if (OnRefresh != null)
-                    OnRefresh(element, rowPresenter);
-            }
-        }
-
         public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, Action<Placeholder, RowPresenter> onRefresh = null)
         {
-            return new PlaceholderRowBinding().WithOnRefresh(onRefresh);
+            return new RowBinding<Placeholder>(onRefresh);
+        }
+
+        private static void Refresh(Placeholder element, RowPresenter rowPresenter, double desiredWidth, double desiredHeight, Action<Placeholder, RowPresenter> onRefresh)
+        {
+            element.DesiredWidth = desiredWidth;
+            element.DesiredHeight = desiredHeight;
+            if (onRefresh != null)
+                onRefresh(element, rowPresenter);
         }
 
         public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, double desiredWidth, double desiredHeight, Action<Placeholder, RowPresenter> onRefresh = null)
         {
-            return new PlaceholderRowBinding(desiredWidth, desiredHeight).WithOnRefresh(onRefresh);
+            return new RowBinding<Placeholder>((e, r) => Refresh(e, r, desiredWidth, desiredHeight, onRefresh));
         }
     }
 }

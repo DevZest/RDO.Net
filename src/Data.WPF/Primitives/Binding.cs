@@ -27,7 +27,7 @@ namespace DevZest.Data.Windows.Primitives
         /// <remarks>
         /// <see cref="Binding"/> objects will be sealed when added to template. Drived class should call this method before making modification to this object.
         /// </remarks>
-        protected void VerifyNotSealed()
+        internal void VerifyNotSealed()
         {
             if (IsSealed)
                 throw new InvalidOperationException(Strings.Binding_VerifyNotSealed);
@@ -51,16 +51,7 @@ namespace DevZest.Data.Windows.Primitives
             Ordinal = ordinal;
         }
 
-        private Style _style;
-        public Style Style
-        {
-            get { return _style; }
-            set
-            {
-                VerifyNotSealed();
-                _style = value;
-            }
-        }
+        public Style Style { get; internal set; }
 
         internal void OnCreated(UIElement element)
         {
@@ -82,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public int AutoSizeOrder { get; internal set; }
 
-        public AutoSizeWaiver AutoSizeWaiver { get; private set; }
+        public AutoSizeWaiver AutoSizeWaiver { get; internal set; }
 
         internal virtual AutoSizeWaiver CoercedAutoSizeWaiver
         {

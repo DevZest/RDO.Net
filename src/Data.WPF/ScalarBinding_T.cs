@@ -98,5 +98,12 @@ namespace DevZest.Data.Windows
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);
         }
+
+        public ScalarBinding<T> WithIsMultidimensional(bool value)
+        {
+            VerifyNotSealed();
+            IsMultidimensional = value;
+            return this;
+        }
     }
 }

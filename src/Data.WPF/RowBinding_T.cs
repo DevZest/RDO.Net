@@ -1,5 +1,4 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,14 +6,26 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class RowBinding<T> : RowBinding
+    public sealed class RowBinding<T> : RowBinding
         where T : UIElement, new()
     {
+        public RowBinding(Action<T, RowPresenter> onRefresh)
+        {
+            _onRefresh = onRefresh;
+        }
+
+        public RowBinding(Action<T, RowPresenter> onRefresh, Action<T, RowPresenter> onSetup, Action<T, RowPresenter> onCleanup)
+            : this(onRefresh)
+        {
+            _onSetup = onSetup;
+            _onCleanup = onCleanup;
+        }
+
         private RowInput<T> _input;
         public RowInput<T> Input
         {
             get { return _input; }
-            protected set
+            private set
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -77,14 +88,25 @@ namespace DevZest.Data.Windows
             SettingUpElement = null;
         }
 
-        protected virtual void Setup(T element, RowPresenter rowPresenter)
+        private Action<T, RowPresenter> _onSetup;
+        private void Setup(T element, RowPresenter rowPresenter)
         {
+            if (_onSetup != null)
+                _onSetup(element, rowPresenter);
         }
 
-        protected internal abstract void Refresh(T element, RowPresenter rowPresenter);
-
-        protected virtual void Cleanup(T element, RowPresenter rowPresenter)
+        private Action<T, RowPresenter> _onRefresh;
+        internal void Refresh(T element, RowPresenter rowPresenter)
         {
+            if (_onRefresh != null)
+                _onRefresh(element, rowPresenter);
+        }
+
+        private Action<T, RowPresenter> _onCleanup;
+        private void Cleanup(T element, RowPresenter rowPresenter)
+        {
+            if (_onCleanup != null)
+                _onCleanup(element, rowPresenter);
         }
 
         internal sealed override void Refresh(UIElement element)
@@ -109,21 +131,10 @@ namespace DevZest.Data.Windows
                 CachedList.Recycle(ref _cachedElements, e);
         }
 
-        private InputManager InputManager
-        {
-            get { return Template.InputManager; }
-        }
-
         internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
         {
             if (Input != null)
                 Input.OnRowDisposed(rowPresenter);
         }
-
-        private bool HasAsyncValidator
-        {
-            get { return Input == null ? false : Input.HasAsyncValidator; }
-        }
-
     }
 }
