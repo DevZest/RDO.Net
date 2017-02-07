@@ -124,5 +124,18 @@ namespace DevZest.Data.Windows
             if (Input != null)
                 Input.OnRowDisposed(rowPresenter);
         }
+
+        public RowInput<T> BeginInput(Trigger<T> flushTrigger)
+        {
+            if (Input != null)
+                throw new InvalidOperationException();
+
+            return Input = new RowInput<T>(this, flushTrigger);
+        }
+
+        public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
+        {
+            return BeginInput(flushTrigger).Flush(column, getValue).EndInput();
+        }
     }
 }

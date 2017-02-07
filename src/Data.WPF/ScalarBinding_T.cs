@@ -116,5 +116,18 @@ namespace DevZest.Data.Windows
             IsMultidimensional = value;
             return this;
         }
+
+        public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)
+        {
+            if (Input != null)
+                throw new InvalidOperationException();
+
+            return Input = new Windows.ScalarInput<T>(this, flushTrigger);
+        }
+
+        public ScalarBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Scalar<TData> data, Func<T, TData> getValue)
+        {
+            return BeginInput(flushTrigger).Flush(data, getValue).EndInput();
+        }
     }
 }

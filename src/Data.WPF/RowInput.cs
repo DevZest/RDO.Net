@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public RowInput<T> Bind<TData>(Column<TData> column, Func<T, TData> getValue)
+        public RowInput<T> Flush<TData>(Column<TData> column, Func<T, TData> getValue)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
@@ -316,6 +316,11 @@ namespace DevZest.Data.Windows
             VerifyNotSealed();
             _onRefresh = onRefresh;
             return this;
+        }
+
+        public RowBinding<T> EndInput()
+        {
+            return RowBinding;
         }
     }
 }

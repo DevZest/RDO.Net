@@ -1,9 +1,7 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using DevZest.Data.Windows.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using DevZest.Data.Primitives;
 
@@ -44,7 +42,7 @@ namespace DevZest.Data.Windows
 
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
-        public ScalarInput<T> Bind<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
+        public ScalarInput<T> Flush<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
             if (scalar == null)
                 throw new ArgumentNullException(nameof(scalar));
@@ -98,6 +96,11 @@ namespace DevZest.Data.Windows
             VerifyNotSealed();
             _onRefresh = onRefresh;
             return this;
+        }
+
+        public ScalarBinding<T> EndInput()
+        {
+            return ScalarBinding;
         }
     }
 }
