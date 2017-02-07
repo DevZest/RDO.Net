@@ -42,7 +42,7 @@ namespace DevZest.Data.Windows
 
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
-        public ScalarInput<T> Flush<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
+        public ScalarInput<T> WithFlush<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
         {
             if (scalar == null)
                 throw new ArgumentNullException(nameof(scalar));

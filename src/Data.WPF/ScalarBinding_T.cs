@@ -127,7 +127,7 @@ namespace DevZest.Data.Windows
 
         public ScalarBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Scalar<TData> data, Func<T, TData> getValue)
         {
-            return BeginInput(flushTrigger).Flush(data, getValue).EndInput();
+            return BeginInput(flushTrigger).WithFlush(data, getValue).EndInput();
         }
     }
 }

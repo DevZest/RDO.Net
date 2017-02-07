@@ -135,7 +135,7 @@ namespace DevZest.Data.Windows
 
         public RowBinding<T> WithInput<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
         {
-            return BeginInput(flushTrigger).Flush(column, getValue).EndInput();
+            return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
         }
     }
 }

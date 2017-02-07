@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public RowInput<T> Flush<TData>(Column<TData> column, Func<T, TData> getValue)
+        public RowInput<T> WithFlush<TData>(Column<TData> column, Func<T, TData> getValue)
         {
             if (column == null)
                 throw new ArgumentNullException(nameof(column));
