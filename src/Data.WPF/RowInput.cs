@@ -47,7 +47,7 @@ namespace DevZest.Data.Windows
 
         private RowPresenter CurrentRow
         {
-            get { return InputManager == null ? null : InputManager.CurrentRow; }
+            get { return InputManager.CurrentRow; }
         }
 
         public RowInput<T> WithInputValidator(Func<T, InputError> inputValidaitor, Trigger<T> inputValidationTrigger)
@@ -304,10 +304,9 @@ namespace DevZest.Data.Windows
         private Action<T, RowPresenter, ViewInputError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            var inputError = GetInputError(element);
             if (_onRefresh != null)
-                _onRefresh(element, rowPresenter, inputError);
-            else if (inputError == null)
+                _onRefresh(element, rowPresenter, GetInputError(element));
+            else if (rowPresenter != CurrentRow)
                 RowBinding.Refresh(element, rowPresenter);
             RefreshValidation(element, rowPresenter);
         }

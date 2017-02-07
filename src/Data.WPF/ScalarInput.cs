@@ -90,8 +90,6 @@ namespace DevZest.Data.Windows
             var inputError = GetInputError(element);
             if (_onRefresh != null)
                 _onRefresh(element, inputError);
-            else if (inputError == null)
-                ScalarBinding.Refresh(element);
             element.RefreshValidation(inputError, AbstractValidationMessageGroup.Empty);
         }
 
