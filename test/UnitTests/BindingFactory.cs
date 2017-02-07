@@ -32,24 +32,9 @@ namespace DevZest.Data.Windows
             element.Text = column.DisplayName;
         }
 
-        private sealed class DisplayNameToTextBlockBinding : ScalarBinding<TextBlock>
-        {
-            private Column _column;
-
-            public DisplayNameToTextBlockBinding(Column column)
-            {
-                _column = column;
-            }
-
-            protected internal override void Refresh(TextBlock element)
-            {
-                element.Text = _column.DisplayName;
-            }
-        }
-
         public static ScalarBinding<TextBlock> BindDisplayNameToTextBlock(this Column column)
         {
-            return new DisplayNameToTextBlockBinding(column);
+            return new ScalarBinding<TextBlock>(e => RefreshDisplayName(e, column));
         }
 
         private static void Refresh(TextBlock element, _String column, RowPresenter rowPresenter)
@@ -102,31 +87,15 @@ namespace DevZest.Data.Windows
             return new PlaceholderBlockBinding(desiredWidth, desiredHeight);
         }
 
-        private class PlaceholderScalarBinding : ScalarBinding<Placeholder>
+        private static void Refresh(Placeholder element, double desiredWidth, double desiredHeight)
         {
-            public PlaceholderScalarBinding(double desiredWidth, double desiredHeight)
-            {
-                _desiredWidth = desiredWidth;
-                _desiredHeight = desiredHeight;
-            }
-
-            private double _desiredWidth;
-            private double _desiredHeight;
-
-            protected override void Setup(Placeholder element)
-            {
-                element.DesiredWidth = _desiredWidth;
-                element.DesiredHeight = _desiredHeight;
-            }
-
-            protected internal override void Refresh(Placeholder element)
-            {
-            }
+            element.DesiredWidth = desiredWidth;
+            element.DesiredHeight = desiredHeight;
         }
 
         public static ScalarBinding<Placeholder> BindToScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return new PlaceholderScalarBinding(desiredWidth, desiredHeight);
+            return new ScalarBinding<Placeholder>(null, e => Refresh(e, desiredWidth, desiredHeight), null);
         }
 
         public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, Action<Placeholder, RowPresenter> onRefresh = null)

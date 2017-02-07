@@ -6,14 +6,26 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class ScalarBinding<T> : ScalarBinding
+    public sealed class ScalarBinding<T> : ScalarBinding
         where T : UIElement, new()
     {
+        public ScalarBinding(Action<T> onRefresh)
+        {
+            _onRefresh = onRefresh;
+        }
+
+        public ScalarBinding(Action<T> onRefresh, Action<T> onSetup, Action<T> onCleanup)
+            : this(onRefresh)
+        {
+            _onSetup = onSetup;
+            _onCleanup = onCleanup;
+        }
+
         private ScalarInput<T> _input;
         public ScalarInput<T> Input
         {
             get { return _input; }
-            protected set
+            private set
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -70,14 +82,25 @@ namespace DevZest.Data.Windows
             SettingUpElement = null;
         }
 
-        protected virtual void Setup(T element)
+        private Action<T> _onSetup;
+        private void Setup(T element)
         {
+            if (_onSetup != null)
+                _onSetup(element);
         }
 
-        protected internal abstract void Refresh(T element);
-
-        protected virtual void Cleanup(T element)
+        private Action<T> _onRefresh;
+        private void Refresh(T element)
         {
+            if (_onRefresh != null)
+                _onRefresh(element);
+        }
+
+        private Action<T> _onCleanup;
+        private void Cleanup(T element)
+        {
+            if (_onCleanup != null)
+                _onCleanup(element);
         }
 
         internal sealed override void Refresh(UIElement element)
