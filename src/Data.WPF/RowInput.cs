@@ -12,14 +12,10 @@ namespace DevZest.Data.Windows
     public sealed class RowInput<T> : Input<T>
         where T : UIElement, new()
     {
-        internal static RowInput<T> Create<TData>(Trigger<T> flushTrigger, Column<TData> column, Func<T, TData> getValue)
-        {
-            return new RowInput<T>(flushTrigger).Bind(column, getValue);
-        }
-
-        private RowInput(Trigger<T> flushTrigger)
+        internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger)
             : base(flushTrigger)
         {
+            RowBinding = rowBinding;
         }
 
         public RowBinding<T> RowBinding { get; private set; }
@@ -27,13 +23,6 @@ namespace DevZest.Data.Windows
         public sealed override TwoWayBinding Binding
         {
             get { return RowBinding; }
-        }
-
-        internal void Seal(RowBinding<T> rowBinding)
-        {
-            Debug.Assert(rowBinding != null);
-            VerifyNotSealed();
-            RowBinding = rowBinding;
         }
 
         internal sealed override ViewInputError GetInputError(UIElement element)
@@ -46,7 +35,7 @@ namespace DevZest.Data.Windows
             InputManager.SetRowInputError(element, inputError);
         }
 
-        internal IColumnSet SourceColumns { get; private set; } = ColumnSet.Empty;
+        internal IColumnSet Columns { get; private set; } = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private void MakeProgress()
@@ -73,7 +62,7 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(column));
 
             VerifyNotSealed();
-            SourceColumns = SourceColumns.Union(column);
+            Columns = Columns.Union(column);
             _flushFuncs.Add((Func<RowPresenter, T, bool>)((rowPresenter, element) =>
             {
                 var value = getValue(element);
@@ -163,7 +152,7 @@ namespace DevZest.Data.Windows
                 }
                 catch (Exception ex)
                 {
-                    message = new ValidationMessage(null, ValidationSeverity.Error, ex.Message, this.SourceColumns);
+                    message = new ValidationMessage(null, ValidationSeverity.Error, ex.Message, this.Columns);
                     state = AsyncValidationState.Failed;
                 }
             }
@@ -313,11 +302,22 @@ namespace DevZest.Data.Windows
             element.RefreshValidation(errors, warnings);
         }
 
+        private Action<T, RowPresenter, ViewInputError> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
-            if (GetInputError(element) == null)
+            var inputError = GetInputError(element);
+            if (_onRefresh != null)
+                _onRefresh(element, rowPresenter, inputError);
+            else if (inputError == null)
                 RowBinding.Refresh(element, rowPresenter);
             RefreshValidation(element, rowPresenter);
+        }
+
+        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, ViewInputError> onRefresh)
+        {
+            VerifyNotSealed();
+            _onRefresh = onRefresh;
+            return this;
         }
     }
 }

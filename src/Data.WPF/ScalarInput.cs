@@ -12,9 +12,12 @@ namespace DevZest.Data.Windows
     public sealed class ScalarInput<T> : Input<T>
         where T : UIElement, new()
     {
-        public ScalarInput(Trigger<T> flushTrigger, Action<T> flushAction)
+        internal  ScalarInput(ScalarBinding<T> scalarBinding, Trigger<T> flushTrigger, Action<T> flushAction)
             : base(flushTrigger)
         {
+            Debug.Assert(scalarBinding != null);
+            ScalarBinding = scalarBinding;
+
             if (flushAction == null)
                 throw new ArgumentNullException(nameof(flushAction));
             _flushAction = flushAction;
@@ -25,13 +28,6 @@ namespace DevZest.Data.Windows
         public sealed override TwoWayBinding Binding
         {
             get { return ScalarBinding; }
-        }
-
-        internal void Seal(ScalarBinding<T> scalarBinding)
-        {
-            Debug.Assert(scalarBinding != null);
-            VerifyNotSealed();
-            ScalarBinding = scalarBinding;
         }
 
         internal sealed override ViewInputError GetInputError(UIElement element)
@@ -57,11 +53,22 @@ namespace DevZest.Data.Windows
             _flushAction(element);
         }
 
+        private Action<T, ViewInputError> _onRefresh;
         internal void Refresh(T element)
         {
-            if (GetInputError(element) == null)
+            var inputError = GetInputError(element);
+            if (_onRefresh != null)
+                _onRefresh(element, inputError);
+            else if (inputError == null)
                 ScalarBinding.Refresh(element);
-            element.RefreshValidation(GetInputError(element), AbstractValidationMessageGroup.Empty);
+            element.RefreshValidation(inputError, AbstractValidationMessageGroup.Empty);
+        }
+
+        public ScalarInput<T> WithRefreshAction(Action<T, ViewInputError> onRefresh)
+        {
+            VerifyNotSealed();
+            _onRefresh = onRefresh;
+            return this;
         }
     }
 }

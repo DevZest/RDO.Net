@@ -23,8 +23,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void VerifyNotSealed()
         {
-            if (Binding != null)
-                throw new InvalidOperationException(Strings.ReverseBinding_VerifyNotSealed);
+            Binding.VerifyNotSealed();
         }
 
         internal InputManager InputManager

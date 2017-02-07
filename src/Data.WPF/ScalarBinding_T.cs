@@ -21,19 +21,7 @@ namespace DevZest.Data.Windows
             _onCleanup = onCleanup;
         }
 
-        private ScalarInput<T> _input;
-        public ScalarInput<T> Input
-        {
-            get { return _input; }
-            private set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                VerifyNotSealed();
-                value.Seal(this);
-                _input = value;
-            }
-        }
+        public ScalarInput<T> Input { get; private set; }
 
         internal sealed override void FlushInput(UIElement element)
         {

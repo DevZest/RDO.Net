@@ -164,14 +164,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The ReverseBinding is sealed and allows no modification.
-        /// </summary>
-        public static string ReverseBinding_VerifyNotSealed
-        {
-            get { return GetString("ReverseBinding_VerifyNotSealed"); }
-        }
-
-        /// <summary>
         /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
         public static string RowBinding_OutOfRowRange(object index)

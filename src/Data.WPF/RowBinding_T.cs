@@ -21,19 +21,7 @@ namespace DevZest.Data.Windows
             _onCleanup = onCleanup;
         }
 
-        private RowInput<T> _input;
-        public RowInput<T> Input
-        {
-            get { return _input; }
-            private set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                VerifyNotSealed();
-                value.Seal(this);
-                _input = value;
-            }
-        }
+        public RowInput<T> Input { get; private set; }
 
         internal sealed override void FlushInput(UIElement element)
         {
@@ -43,7 +31,7 @@ namespace DevZest.Data.Windows
 
         private IColumnSet Columns
         {
-            get { return Input == null ? ColumnSet.Empty : Input.SourceColumns; }
+            get { return Input == null ? ColumnSet.Empty : Input.Columns; }
         }
 
         List<T> _cachedElements;

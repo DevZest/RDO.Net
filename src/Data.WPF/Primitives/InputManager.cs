@@ -191,19 +191,19 @@ namespace DevZest.Data.Windows.Primitives
         internal IValidationMessageGroup GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.SourceColumns))
+            if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
                 return ValidationMessageGroup.Empty;
 
-            return GetValidationMessages(Errors, rowPresenter, rowInput.SourceColumns);
+            return GetValidationMessages(Errors, rowPresenter, rowInput.Columns);
         }
 
         internal IValidationMessageGroup GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.SourceColumns))
+            if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
                 return ValidationMessageGroup.Empty;
 
-            return GetValidationMessages(Warnings, rowPresenter, rowInput.SourceColumns);
+            return GetValidationMessages(Warnings, rowPresenter, rowInput.Columns);
         }
 
         internal void MakeProgress<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
