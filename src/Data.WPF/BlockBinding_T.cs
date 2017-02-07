@@ -6,9 +6,23 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class BlockBinding<T> : BlockBinding
+    public sealed class BlockBinding<T> : BlockBinding
         where T : UIElement, new()
     {
+        public BlockBinding(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
+        {
+            _onRefresh = onRefresh;
+        }
+
+        public BlockBinding(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh,
+            Action<T, int, IReadOnlyList<RowPresenter>> onSetup,
+            Action<T, int, IReadOnlyList<RowPresenter>> onCleanup)
+            : this(onRefresh)
+        {
+            _onSetup = onSetup;
+            _onCleanup = onCleanup;
+        }
+
         List<T> _cachedElements;
 
         private T Create()
@@ -49,14 +63,25 @@ namespace DevZest.Data.Windows
             SettingUpElement = null;
         }
 
-        protected virtual void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        private Action<T, int, IReadOnlyList<RowPresenter>> _onSetup;
+        private void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
+            if (_onSetup != null)
+                _onSetup(element, blockOrdinal, rows);
         }
 
-        protected abstract void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows);
-
-        protected virtual void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        private Action<T, int, IReadOnlyList<RowPresenter>> _onRefresh;
+        private void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
+            if (_onRefresh != null)
+                _onRefresh(element, blockOrdinal, rows);
+        }
+
+        private Action<T, int, IReadOnlyList<RowPresenter>> _onCleanup;
+        private void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        {
+            if (_onCleanup != null)
+                _onCleanup(element, blockOrdinal, rows);
         }
 
         internal sealed override void Refresh(UIElement element)

@@ -47,47 +47,22 @@ namespace DevZest.Data.Windows
             return new RowBinding<TextBlock>((e, r) => Refresh(e, column, r));
         }
 
-        private sealed class BlockOrdinalToTextBlockBinding : BlockBinding<TextBlock>
+        private static void Refresh(TextBlock element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
         {
-            protected override void Refresh(TextBlock element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
-            {
-                element.Text = blockOrdinal.ToString();
-            }
+            element.Text = blockOrdinal.ToString();
         }
 
         public static BlockBinding<TextBlock> BindBlockOrdinalToTextBlock(this Model _)
         {
-            return new BlockOrdinalToTextBlockBinding();
-        }
-
-        private class PlaceholderBlockBinding : BlockBinding<Placeholder>
-        {
-            public PlaceholderBlockBinding(double desiredWidth, double desiredHeight)
-            {
-                _desiredWidth = desiredWidth;
-                _desiredHeight = desiredHeight;
-            }
-
-            private double _desiredWidth;
-            private double _desiredHeight;
-
-            protected override void Setup(Placeholder element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
-            {
-                element.DesiredWidth = _desiredWidth;
-                element.DesiredHeight = _desiredHeight;
-            }
-
-            protected sealed override void Refresh(Placeholder element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
-            {
-            }
+            return new BlockBinding<TextBlock>(Refresh);
         }
 
         public static BlockBinding<Placeholder> BindToBlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return new PlaceholderBlockBinding(desiredWidth, desiredHeight);
+            return new BlockBinding<Placeholder>(null, (e, o, r) => Setup(e, desiredWidth, desiredHeight), null);
         }
 
-        private static void Refresh(Placeholder element, double desiredWidth, double desiredHeight)
+        private static void Setup(Placeholder element, double desiredWidth, double desiredHeight)
         {
             element.DesiredWidth = desiredWidth;
             element.DesiredHeight = desiredHeight;
@@ -95,7 +70,7 @@ namespace DevZest.Data.Windows
 
         public static ScalarBinding<Placeholder> BindToScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return new ScalarBinding<Placeholder>(null, e => Refresh(e, desiredWidth, desiredHeight), null);
+            return new ScalarBinding<Placeholder>(null, e => Setup(e, desiredWidth, desiredHeight), null);
         }
 
         public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, Action<Placeholder, RowPresenter> onRefresh = null)
