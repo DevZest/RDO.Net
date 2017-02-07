@@ -59,6 +59,7 @@
     <Compile Include="Primitives\ContainerView.cs" />
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
+    <Compile Include="Scalar_T.cs" />
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />

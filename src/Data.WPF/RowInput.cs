@@ -63,14 +63,16 @@ namespace DevZest.Data.Windows
 
             VerifyNotSealed();
             Columns = Columns.Union(column);
-            _flushFuncs.Add((Func<RowPresenter, T, bool>)((rowPresenter, element) =>
+            _flushFuncs.Add((rowPresenter, element) =>
             {
-                var value = getValue(element);
-                if (column.AreEqual(rowPresenter.GetValue((Column<TData>)column), value))
+                if (getValue == null)
                     return false;
-                rowPresenter.EditValue((Column<TData>)column, getValue(element));
+                var value = getValue(element);
+                if (column.AreEqual(rowPresenter.GetValue(column), value))
+                    return false;
+                rowPresenter.EditValue(column, getValue(element));
                 return true;
-            }));
+            });
             return this;
         }
 
@@ -91,9 +93,6 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < _flushFuncs.Count; i++)
             {
                 var flush = _flushFuncs[i];
-                if (flush == null)
-                    continue;
-
                 var flushed = flush(rowPresenter, element);
                 if (flushed)
                     result = true;

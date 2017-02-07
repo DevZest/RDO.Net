@@ -11,8 +11,17 @@ namespace DevZest.Data.Windows.Primitives
     {
         internal Input(Trigger<T> flushTrigger)
         {
+            if (flushTrigger == null)
+                throw new ArgumentNullException(nameof(flushTrigger));
+            VerifyNotInitialized(flushTrigger, nameof(flushTrigger));
             _flushTrigger = flushTrigger;
-            _flushTrigger.Initialize(Flush);
+            _flushTrigger.ExecuteAction = Flush;
+        }
+
+        private void VerifyNotInitialized(Trigger<T> trigger, string paramName)
+        {
+            if (trigger.ExecuteAction != null)
+                throw new ArgumentException(Strings.Input_TriggerAlreadyInitialized, paramName);
         }
 
         private Trigger<T> _flushTrigger;
@@ -38,11 +47,16 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void SetInputValidator(Func<T, InputError> inputValidator, Trigger<T> inputValidationTrigger)
         {
+            if (inputValidator == null)
+                throw new ArgumentNullException(nameof(inputValidator));
+            if (inputValidationTrigger != null)
+                VerifyNotInitialized(inputValidationTrigger, nameof(inputValidationTrigger));
+
             _inputValidator = inputValidator;
             if (inputValidationTrigger != null)
             {
-                inputValidationTrigger.Initialize(ValidateInput);
                 _inputValidationTrigger = inputValidationTrigger;
+                _inputValidationTrigger.ExecuteAction = ValidateInput;
             }
         }
 

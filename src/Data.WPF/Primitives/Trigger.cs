@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
@@ -11,14 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        private Action<T> _executeAction;
-        internal void Initialize(Action<T> executeAction)
-        {
-            Debug.Assert(executeAction != null);
-            if (_executeAction != null)
-                throw new InvalidOperationException(Strings.Trigger_AlreadyInitialized);
-            _executeAction = executeAction;
-        }
+        internal Action<T> ExecuteAction { get; set; }
 
         protected internal abstract void Attach(T element);
 
@@ -26,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected void Execute(T element)
         {
-            _executeAction(element);
+            ExecuteAction(element);
         }
     }
 }

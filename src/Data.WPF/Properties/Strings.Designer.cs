@@ -164,6 +164,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The trigger has already been initialized with another Input.
+        /// </summary>
+        public static string Input_TriggerAlreadyInitialized
+        {
+            get { return GetString("Input_TriggerAlreadyInitialized"); }
+        }
+
+        /// <summary>
         /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
         public static string RowBinding_OutOfRowRange(object index)
@@ -305,14 +313,6 @@ namespace DevZest.Data.Windows
         public static string Template_InvalidStretches(object frozen)
         {
             return string.Format(CultureInfo.CurrentCulture, GetString("Template_InvalidStretches", "frozen"), frozen);
-        }
-
-        /// <summary>
-        /// The trigger has already been initialized with another ReverseBinding.
-        /// </summary>
-        public static string Trigger_AlreadyInitialized
-        {
-            get { return GetString("Trigger_AlreadyInitialized"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)
