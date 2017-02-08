@@ -155,6 +155,18 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.Progress; }
         }
 
+        public IValidationDictionary ValidationResult
+        {
+            get { return LayoutManager == null ? null : LayoutManager.ValidationResult; }
+        }
+
+        public void Show(IValidationResult validationResult)
+        {
+            if (validationResult == null)
+                throw new ArgumentNullException(nameof(validationResult));
+            RequireLayoutManager().Show(validationResult);
+        }
+
         public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)
         {
             if (value == CurrentRow)

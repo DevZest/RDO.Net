@@ -552,7 +552,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return _mappings == null ? _rows[e.Index] : this[e.DataRow]; }
         }
 
-        private RowPresenter this[DataRow dataRow]
+        protected RowPresenter this[DataRow dataRow]
         {
             get
             {

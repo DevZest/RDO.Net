@@ -142,13 +142,8 @@ namespace DevZest.Data.Windows.Primitives
         protected override void Reload()
         {
             base.Reload();
-            Reset();
-        }
 
-        private void Reset()
-        {
             Progress.Reset();
-
             if (ValidationMode == ValidationMode.Implicit)
                 Validate(true);
             else
@@ -221,7 +216,8 @@ namespace DevZest.Data.Windows.Primitives
         {
             Progress.MakeProgress(rowPresenter, rowInput);
             if (ValidationMode != ValidationMode.Explicit)
-                Validate(false);
+                Validate(_pendingShowAll);
+            _pendingShowAll = false;
             rowInput.RunAsyncValidator(rowPresenter);
             InvalidateElements();
         }
@@ -348,6 +344,33 @@ namespace DevZest.Data.Windows.Primitives
 
             foreach (var rowBinding in Template.RowBindings)
                 rowBinding.OnRowDisposed(rowPresenter);
+        }
+
+        public IValidationDictionary ValidationResult { get; private set; } = ValidationDictionary.Empty;
+
+        private bool _pendingShowAll;
+        public void Show(IValidationResult validationResult)
+        {
+            Debug.Assert(validationResult != null);
+            ValidationResult = ToValidationDictionary(validationResult);
+            Progress.Reset();
+            ClearValidationMessages();
+            if (ValidationMode == ValidationMode.Implicit)
+                _pendingShowAll = true;
+            InvalidateElements();
+        }
+
+        private IValidationDictionary ToValidationDictionary(IValidationResult validationResult)
+        {
+            var result = ValidationDictionary.Empty;
+            for (int i = 0; i < validationResult.Count; i++)
+            {
+                var entry = validationResult[i];
+                var rowPresenter = this[entry.DataRow];
+                if (rowPresenter != null)
+                    result = result.Add(rowPresenter, entry.Messages);
+            }
+            return result;
         }
     }
 }
