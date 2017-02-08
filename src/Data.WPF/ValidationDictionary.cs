@@ -137,5 +137,12 @@ namespace DevZest.Data.Windows
         {
             get { return EmptyDictionary.Singleton; }
         }
+
+        public static IValidationMessageGroup GetValidationMessages(this IValidationDictionary directory, RowPresenter rowPresenter)
+        {
+            if (rowPresenter == null)
+                return null;
+            return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ValidationMessageGroup.Empty;
+        }
     }
 }

@@ -124,6 +124,16 @@ namespace DevZest.Data.Windows.Primitives
         public IValidationDictionary Errors { get; private set; } = ValidationDictionary.Empty;
         public IValidationDictionary Warnings { get; private set; } = ValidationDictionary.Empty;
 
+        public IValidationMessageGroup CurrentRowErrors
+        {
+            get { return Errors.GetValidationMessages(CurrentRow); }
+        }
+
+        public IValidationMessageGroup CurrentRowWarnings
+        {
+            get { return Warnings.GetValidationMessages(CurrentRow); }
+        }
+
         private void ClearValidationMessages()
         {
             Errors = Warnings = ValidationDictionary.Empty;

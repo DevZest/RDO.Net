@@ -130,7 +130,7 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
         }
 
-        public IValidationDictionary ValidationErros
+        public IValidationDictionary ValidationErrors
         {
             get { return LayoutManager == null ? null : LayoutManager.Errors; }
         }
@@ -138,6 +138,16 @@ namespace DevZest.Data.Windows
         public IValidationDictionary ValidationWarnings
         {
             get { return LayoutManager == null ? null : LayoutManager.Warnings; }
+        }
+
+        public IValidationMessageGroup CurrentRowErrors
+        {
+            get { return LayoutManager == null ? null : LayoutManager.CurrentRowErrors; }
+        }
+
+        public IValidationMessageGroup CurrentRowWarnings
+        {
+            get { return LayoutManager == null ? null : LayoutManager.CurrentRowWarnings; }
         }
 
         public ValidationProgress ValidationProgress
