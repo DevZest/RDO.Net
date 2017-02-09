@@ -490,5 +490,7 @@ namespace DevZest.Data.Windows.Primitives
 
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }
+
+        public IAsyncValidatorGroup AsyncValidators { get; internal set; } = AsyncValidatorGroup.Empty;
     }
 }

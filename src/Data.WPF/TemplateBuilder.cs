@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace DevZest.Data.Windows
 {
@@ -131,7 +133,27 @@ namespace DevZest.Data.Windows
         [DefaultValue(ValidationScope.CurrentRow)]
         public TemplateBuilder WithValidationScope(ValidationScope value)
         {
+            if (Template.ValidationScope == ValidationScope.AllRows && Template.AsyncValidators.Any(x => x.Scope == ValidationScope.AllRows))
+                throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.ValidationScope = value;
+            return this;
+        }
+
+        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationMessageGroup>> action, Action postAction = null, IColumnSet sourceColumns = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            Template.AsyncValidators = Template.AsyncValidators.Add(AsyncValidator.Create(Template, sourceColumns, action, postAction));
+            return this;
+        }
+
+        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationResult>> action, Action postAction = null, IColumnSet sourceColumns = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            if (Template.ValidationScope == ValidationScope.CurrentRow)
+                throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
+            Template.AsyncValidators = Template.AsyncValidators.Add(AsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
 

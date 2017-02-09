@@ -10,20 +10,20 @@ namespace DevZest.Data.Windows
 {
     public abstract class AsyncValidator : IAsyncValidatorGroup
     {
-        internal AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action)
+        internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action, Action postAction)
             where T : UIElement, new()
         {
-            return new RowInputAsyncValidator<T>(rowInput, action);
+            return new RowInputAsyncValidator<T>(rowInput, action, postAction);
         }
 
-        internal AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action)
+        internal static AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action, Action postAction)
         {
-            return new CurrentRowAsyncValidator(template, sourceColumns, action);
+            return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        internal AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action)
+        internal static AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
         {
-            return new AllRowAsyncValidator(template, sourceColumns, action);
+            return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
         private static async Task<IValidationDictionary> Validate(Func<Task<IValidationMessageGroup>> action, RowPresenter currentRow)
@@ -36,7 +36,8 @@ namespace DevZest.Data.Windows
         private sealed class RowInputAsyncValidator<T> : AsyncValidator
             where T : UIElement, new()
         {
-            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action)
+            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action, Action postAction)
+                : base(postAction)
             {
                 Debug.Assert(rowInput != null);
                 Debug.Assert(action != null);
@@ -75,7 +76,8 @@ namespace DevZest.Data.Windows
 
         private abstract class RowAsyncValidator : AsyncValidator
         {
-            protected RowAsyncValidator(Template template, IColumnSet sourceColumns)
+            protected RowAsyncValidator(Template template, IColumnSet sourceColumns, Action postAction)
+                : base(postAction)
             {
                 Debug.Assert(template != null);
                 _template = template;
@@ -98,8 +100,8 @@ namespace DevZest.Data.Windows
 
         private sealed class CurrentRowAsyncValidator : RowAsyncValidator
         {
-            public CurrentRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action)
-                : base(template, sourceColumns)
+            public CurrentRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action, Action postAction)
+                : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
                 _action = action;
@@ -125,8 +127,8 @@ namespace DevZest.Data.Windows
 
         private sealed class AllRowAsyncValidator : RowAsyncValidator
         {
-            public AllRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action)
-                : base(template, sourceColumns)
+            public AllRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
+                : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
                 _action = action;
@@ -146,8 +148,9 @@ namespace DevZest.Data.Windows
             }
         }
 
-        private AsyncValidator()
+        private AsyncValidator(Action postAction)
         {
+            _postAction = postAction;
         }
 
         internal abstract InputManager InputManager { get; }
@@ -167,7 +170,8 @@ namespace DevZest.Data.Windows
         public Exception Exception { get; private set; }
 
         private bool _pendingValidationRequest;
-        public async void Run()
+        private readonly Action _postAction;
+        public async Task Run()
         {
             if (State == AsyncValidatorState.Running)
             {
@@ -201,6 +205,9 @@ namespace DevZest.Data.Windows
                 Errors = result.Where(ValidationSeverity.Error);
                 Warnings = result.Where(ValidationSeverity.Warning);
             }
+
+            if (_postAction != null)
+                _postAction();
         }
 
         #region IAsyncValidatorGroup

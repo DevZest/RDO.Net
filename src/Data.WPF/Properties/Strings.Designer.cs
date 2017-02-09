@@ -284,6 +284,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Conflict between Template.ValidationScope and AsyncValidation.Scope detected.
+        /// </summary>
+        public static string TemplateBuilder_AsyncValidatorScopeConflict
+        {
+            get { return GetString("TemplateBuilder_AsyncValidatorScopeConflict"); }
+        }
+
+        /// <summary>
         /// The child model is invalid. It must be direct child model and has the same type.
         /// </summary>
         public static string TemplateBuilder_InvalidRecursiveChildModel
