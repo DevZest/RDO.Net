@@ -44,10 +44,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="AsyncValidator.cs" />
+    <Compile Include="AsyncValidatorGroup.cs" />
+    <Compile Include="AsyncValidatorState.cs" />
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="BindingExtensions.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
+    <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IValidationDictionary.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
     <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
     <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />
+    <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
     <Compile Include="Utilities\ListExtensions.AddItem.cs" />
     <Compile Include="Utilities\ListExtensions.AddItems.cs" />

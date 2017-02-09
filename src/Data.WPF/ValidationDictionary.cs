@@ -144,5 +144,24 @@ namespace DevZest.Data.Windows
                 return null;
             return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ValidationMessageGroup.Empty;
         }
+
+        internal static IValidationDictionary Where(this IValidationDictionary directory, ValidationSeverity severity)
+        {
+            var result = ValidationDictionary.Empty;
+            foreach (var rowPresenter in directory.Keys)
+            {
+                var messages = directory[rowPresenter];
+                var filteredMessages = ValidationMessageGroup.Empty;
+                for (int i = 0; i < messages.Count; i++)
+                {
+                    var message = messages[i];
+                    if (message.Severity == severity)
+                        filteredMessages = filteredMessages.Add(message);
+                }
+                if (filteredMessages.Count > 0)
+                    result = result.Add(rowPresenter, filteredMessages);
+            }
+            return result;
+        }
     }
 }
