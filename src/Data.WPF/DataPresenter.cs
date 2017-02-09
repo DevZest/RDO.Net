@@ -155,6 +155,11 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.Progress; }
         }
 
+        public IAsyncValidatorGroup AsyncValidators
+        {
+            get { return LayoutManager == null ? null : LayoutManager.AsyncValidators; }
+        }
+
         public IValidationDictionary ValidationResult
         {
             get { return LayoutManager == null ? null : LayoutManager.ValidationResult; }

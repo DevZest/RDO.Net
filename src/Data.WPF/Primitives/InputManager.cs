@@ -372,5 +372,10 @@ namespace DevZest.Data.Windows.Primitives
             }
             return result;
         }
+
+        public IAsyncValidatorGroup AsyncValidators
+        {
+            get { return Template.AsyncValidators; }
+        }
     }
 }
