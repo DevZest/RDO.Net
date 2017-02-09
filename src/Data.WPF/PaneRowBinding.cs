@@ -94,11 +94,5 @@ namespace DevZest.Data.Windows
         {
             ((Pane)element).FlushInput(_bindings);
         }
-
-        internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
-        {
-            for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].OnRowDisposed(rowPresenter);
-        }
     }
 }

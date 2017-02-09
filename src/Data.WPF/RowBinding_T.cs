@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -117,12 +118,6 @@ namespace DevZest.Data.Windows
             e.SetRowPresenter(null);
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);
-        }
-
-        internal sealed override void OnRowDisposed(RowPresenter rowPresenter)
-        {
-            if (Input != null)
-                Input.OnRowDisposed(rowPresenter);
         }
 
         public RowInput<T> BeginInput(Trigger<T> flushTrigger)

@@ -100,180 +100,6 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private Func<RowPresenter, Task<ValidationMessage>> _asyncValidator;
-        private HashSet<RowPresenter> _pendingAsyncValidators;
-        private Dictionary<RowPresenter, AsyncValidationState> _asyncValidationStates;
-        private Dictionary<RowPresenter, ValidationMessage> _asyncValidationMessages;
-
-        public RowInput<T> WithAsyncValidator(Func<RowPresenter, Task<ValidationMessage>> asyncValidator)
-        {
-            if (asyncValidator == null)
-                throw new ArgumentNullException(nameof(asyncValidator));
-
-            VerifyNotSealed();
-            _asyncValidator = asyncValidator;
-            _pendingAsyncValidators = new HashSet<RowPresenter>();
-            _asyncValidationStates = new Dictionary<RowPresenter, AsyncValidationState>();
-            _asyncValidationMessages = new Dictionary<RowPresenter, ValidationMessage>();
-            return this;
-        }
-
-        internal void OnRowDisposed(RowPresenter rowPresenter)
-        {
-            if (_asyncValidator != null)
-            {
-                _asyncValidationStates.Remove(rowPresenter);
-                _asyncValidationMessages.Remove(rowPresenter);
-                _pendingAsyncValidators.Remove(rowPresenter);
-            }
-        }
-
-        private async void AsyncValidate(RowPresenter rowPresenter)
-        {
-            Debug.Assert(_asyncValidator != null);
-
-            var state = GetAsyncValidationState(rowPresenter);
-            if (state == AsyncValidationState.Running)
-            {
-                AddPendingAsyncValidator(rowPresenter);
-                return;
-            }
-
-            ValidationMessage message;
-            do
-            {
-                var task = _asyncValidator(rowPresenter);
-                SetAsyncValidationState(rowPresenter, AsyncValidationState.Running);
-                try
-                {
-                    message = await task;
-                    state = message == null ? AsyncValidationState.Valid : AsyncValidationState.Invalid;
-                }
-                catch (Exception ex)
-                {
-                    message = new ValidationMessage(null, ValidationSeverity.Error, ex.Message, this.Columns);
-                    state = AsyncValidationState.Failed;
-                }
-            }
-            while (RemovePendingAsyncValidator(rowPresenter));
-
-            if (!_asyncValidationStates.ContainsKey(rowPresenter))
-                return;
-
-            SetAsyncValidationState(rowPresenter, state);
-            SetAsyncValidationMessage(rowPresenter, message);
-            InputManager.InvalidateElements();
-        }
-
-        internal AsyncValidationState GetAsyncValidationState(RowPresenter rowPresenter)
-        {
-            if (_asyncValidationStates == null)
-                return AsyncValidationState.NotRunning;
-
-            AsyncValidationState result;
-            if (_asyncValidationStates.TryGetValue(rowPresenter, out result))
-                return result;
-
-            return AsyncValidationState.NotRunning;
-        }
-
-        private void SetAsyncValidationState(RowPresenter rowPresenter, AsyncValidationState state)
-        {
-            Debug.Assert(_asyncValidationStates != null);
-
-            if (state == AsyncValidationState.NotRunning)
-            {
-                if (_asyncValidationStates.ContainsKey(rowPresenter))
-                    _asyncValidationStates.Remove(rowPresenter);
-            }
-            else
-                _asyncValidationStates[rowPresenter] = state;
-        }
-
-        internal ValidationMessage GetAsyncValidationMessage(RowPresenter rowPresenter)
-        {
-            Debug.Assert(_asyncValidationMessages != null);
-
-            ValidationMessage result;
-            if (_asyncValidationMessages.TryGetValue(rowPresenter, out result))
-                return result;
-            return null;
-        }
-
-        private void SetAsyncValidationMessage(RowPresenter rowPresenter, ValidationMessage message)
-        {
-            Debug.Assert(_asyncValidationMessages != null);
-
-            if (message == null)
-            {
-                if (_asyncValidationMessages.ContainsKey(rowPresenter))
-                    _asyncValidationMessages.Remove(rowPresenter);
-            }
-            else
-                _asyncValidationMessages[rowPresenter] = message;
-        }
-
-        private void AddPendingAsyncValidator(RowPresenter rowPresenter)
-        {
-            Debug.Assert(_pendingAsyncValidators != null);
-            _pendingAsyncValidators.Add(rowPresenter);
-        }
-
-        private bool RemovePendingAsyncValidator(RowPresenter rowPresenter)
-        {
-            Debug.Assert(_pendingAsyncValidators != null);
-            return _pendingAsyncValidators.Remove(rowPresenter);
-        }
-
-        internal bool HasAsyncValidator
-        {
-            get { return _asyncValidator != null; }
-        }
-
-        internal void RunAsyncValidator(RowPresenter rowPresenter)
-        {
-            Debug.Assert(HasAsyncValidator);
-            if (ShouldRunAsyncValidator(rowPresenter))
-                AsyncValidate(rowPresenter);
-        }
-
-        private bool ShouldRunAsyncValidator(RowPresenter rowPresenter)
-        {
-            //return HasAsyncValidator && !HasInputError && ValidationManager.ShouldRunAsyncValidator(rowPresenter, SourceColumns);
-            throw new NotImplementedException();
-        }
-
-        private IReadOnlyList<AbstractValidationMessage> GetErrors(RowPresenter rowPresenter)
-        {
-            throw new NotImplementedException();
-            //Debug.Assert(rowPresenter != null);
-
-            //List<IValidationMessage> result = null;
-
-            //if (rowPresenter == CurrentRow && HasInputError)
-            //    result = result.AddItem(InputError);
-
-            //result = result.AddItems(ValidationManager.GetErrors(rowPresenter, this));
-
-            //var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            //if (asyncMessage != null && asyncMessage.Severity == ValidationSeverity.Error)
-            //    result = result.AddItem(asyncMessage);
-
-            //return result.ToReadOnlyList();
-        }
-
-        private IReadOnlyList<AbstractValidationMessage> GetWarnings(RowPresenter rowPresenter)
-        {
-            List<AbstractValidationMessage> result = null;
-            result = result.AddItems(InputManager.GetWarnings(rowPresenter, this));
-
-            var asyncMessage = GetAsyncValidationMessage(rowPresenter);
-            if (asyncMessage != null && asyncMessage.Severity == ValidationSeverity.Warning)
-                result = result.AddItem(GetAsyncValidationMessage(rowPresenter));
-
-            return result.ToReadOnlyList();
-        }
-
         private void GetValidationMessages(T element, RowPresenter rowPresenter, out IAbstractValidationMessageGroup errors, out IAbstractValidationMessageGroup warnings)
         {
             errors = GetInputError(element);
@@ -315,6 +141,17 @@ namespace DevZest.Data.Windows
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;
+            return this;
+        }
+
+        public RowInput<T> AddAsyncValidator(Func<Task<IValidationMessageGroup>> action, Action postAction = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            VerifyNotSealed();
+
+            var asyncValidator = AsyncValidator.Create<T>(this, action, postAction);
+            Template.AsyncValidators = Template.AsyncValidators.Add(asyncValidator);
             return this;
         }
 

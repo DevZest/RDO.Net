@@ -218,7 +218,6 @@ namespace DevZest.Data.Windows.Primitives
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
-            rowInput.RunAsyncValidator(rowPresenter);
             InvalidateElements();
         }
 
@@ -341,9 +340,6 @@ namespace DevZest.Data.Windows.Primitives
 
             if (Warnings.ContainsKey(rowPresenter))
                 Warnings = Warnings.Remove(rowPresenter);
-
-            foreach (var rowBinding in Template.RowBindings)
-                rowBinding.OnRowDisposed(rowPresenter);
         }
 
         public IValidationDictionary ValidationResult { get; private set; } = ValidationDictionary.Empty;
