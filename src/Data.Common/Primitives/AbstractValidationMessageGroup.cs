@@ -140,9 +140,9 @@ namespace DevZest.Data.Primitives
             if (values.Length == 0)
                 return Empty;
 
-            IAbstractValidationMessageGroup result = values[0].CheckNotNull();
+            IAbstractValidationMessageGroup result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull());
+                result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
     }

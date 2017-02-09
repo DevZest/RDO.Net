@@ -190,9 +190,9 @@ namespace DevZest.Data
             if (values.Length == 0)
                 return Empty;
 
-            IValidationMessageGroup result = values[0].CheckNotNull();
+            IValidationMessageGroup result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull());
+                result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
     }

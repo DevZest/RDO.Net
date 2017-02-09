@@ -193,9 +193,9 @@ namespace DevZest.Data
             if (values.Length == 0)
                 return Empty;
 
-            IColumnSet result = values[0].CheckNotNull();
+            IColumnSet result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
-                result = result.Add(values[i].CheckNotNull());
+                result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
 
@@ -226,8 +226,8 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumnSet Except(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
             Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
 
             foreach (var column in source)
             {
@@ -243,7 +243,7 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IColumnSet Intersect(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             foreach (var column in source)
@@ -270,7 +270,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSubsetOf(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             return source.Count < other.Count ? other.ContainsAll(source) : false;
@@ -281,7 +281,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsProperSupersetOf(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             return source.Count > other.Count ? source.ContainsAll(other) : false;
@@ -293,7 +293,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSubsetOf(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             return source.Count <= other.Count ? other.ContainsAll(source) : false;
@@ -305,7 +305,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool IsSupersetOf(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             return source.Count >= other.Count ? source.ContainsAll(other) : false;
@@ -317,7 +317,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
         public static bool Overlaps(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             foreach (var column in source)
@@ -334,7 +334,7 @@ namespace DevZest.Data
         /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
         public static bool SetEquals(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             return source.Count == other.Count ? source.ContainsAll(other) : false;
@@ -346,7 +346,7 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
         public static IColumnSet SymmetricExcept(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             IColumnSet removedColumnSet = ColumnSet.Empty;
@@ -374,7 +374,7 @@ namespace DevZest.Data
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
         public static IColumnSet Union(this IColumnSet source, IColumnSet other)
         {
-            source.CheckNotNull();
+            Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
             foreach (var column in other)

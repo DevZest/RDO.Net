@@ -21,11 +21,11 @@ namespace DevZest.Data.Utilities
             return value;
         }
 
-        internal static T CheckNotNull<T>(this T reference)
+        internal static T CheckNotNull<T>(this T reference, string paramName, int index)
             where T : class
         {
             if (reference == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException(String.Format("{0}[{1}]", paramName, index));
             return reference;
         }
     }
