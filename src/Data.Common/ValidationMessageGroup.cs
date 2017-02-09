@@ -131,8 +131,8 @@ namespace DevZest.Data
                 else
                 {
                     var result = new ListGroup();
-                    foreach (var column in this)
-                        result.Add(column);
+                    for (int i = 0; i < Count; i++)
+                        result.Add(this[i]);
                     result.Add(value);
                     return result;
                 }
