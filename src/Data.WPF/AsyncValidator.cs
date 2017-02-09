@@ -10,6 +10,29 @@ namespace DevZest.Data.Windows
 {
     public abstract class AsyncValidator : IAsyncValidatorGroup
     {
+        internal AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action)
+            where T : UIElement, new()
+        {
+            return new RowInputAsyncValidator<T>(rowInput, action);
+        }
+
+        internal AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action)
+        {
+            return new CurrentRowAsyncValidator(template, sourceColumns, action);
+        }
+
+        internal AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action)
+        {
+            return new AllRowAsyncValidator(template, sourceColumns, action);
+        }
+
+        private static async Task<IValidationDictionary> Validate(Func<Task<IValidationMessageGroup>> action, RowPresenter currentRow)
+        {
+            var messages = await action();
+            return messages == null || messages.Count == 0 || currentRow == null
+                ? ValidationDictionary.Empty : ValidationDictionary.Empty.Add(currentRow, messages);
+        }
+
         private sealed class RowInputAsyncValidator<T> : AsyncValidator
             where T : UIElement, new()
         {
@@ -24,6 +47,11 @@ namespace DevZest.Data.Windows
             private readonly RowInput<T> _rowInput;
             private readonly Func<Task<IValidationMessageGroup>> _action;
 
+            public override IColumnSet SourceColumns
+            {
+                get { return _rowInput.Columns; }
+            }
+
             internal override InputManager InputManager
             {
                 get { return _rowInput.InputManager; }
@@ -34,9 +62,54 @@ namespace DevZest.Data.Windows
                 get { return InputManager.CurrentRow; }
             }
 
+            public override ValidationScope Scope
+            {
+                get { return ValidationScope.CurrentRow; }
+            }
+
+            protected override async Task<IValidationDictionary> Validate()
+            {
+                return await Validate(_action, CurrentRow);
+            }
+        }
+
+        private abstract class RowAsyncValidator : AsyncValidator
+        {
+            protected RowAsyncValidator(Template template, IColumnSet sourceColumns)
+            {
+                Debug.Assert(template != null);
+                _template = template;
+                _sourceColumns = sourceColumns;
+            }
+
+            private readonly Template _template;
+            private readonly IColumnSet _sourceColumns;
+
+            internal override InputManager InputManager
+            {
+                get { return _template.InputManager; }
+            }
+
             public override IColumnSet SourceColumns
             {
-                get { return _rowInput.Columns; }
+                get { return _sourceColumns; }
+            }
+        }
+
+        private sealed class CurrentRowAsyncValidator : RowAsyncValidator
+        {
+            public CurrentRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action)
+                : base(template, sourceColumns)
+            {
+                Debug.Assert(action != null);
+                _action = action;
+            }
+
+            private readonly Func<Task<IValidationMessageGroup>> _action;
+
+            private RowPresenter CurrentRow
+            {
+                get { return InputManager.CurrentRow; }
             }
 
             public override ValidationScope Scope
@@ -46,10 +119,30 @@ namespace DevZest.Data.Windows
 
             protected override async Task<IValidationDictionary> Validate()
             {
-                var messages = await _action();
-                if (messages == null || messages.Count == 0 || CurrentRow == null)
-                    return ValidationDictionary.Empty;
-                return ValidationDictionary.Empty.Add(CurrentRow, messages);
+                return await Validate(_action, CurrentRow);
+            }
+        }
+
+        private sealed class AllRowAsyncValidator : RowAsyncValidator
+        {
+            public AllRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action)
+                : base(template, sourceColumns)
+            {
+                Debug.Assert(action != null);
+                _action = action;
+            }
+
+            private readonly Func<Task<IValidationResult>> _action;
+
+            public override ValidationScope Scope
+            {
+                get { return ValidationScope.AllRows; }
+            }
+
+            protected override async Task<IValidationDictionary> Validate()
+            {
+                var result = await _action();
+                return result == null ? ValidationDictionary.Empty : InputManager.ToValidationDictionary(result);
             }
         }
 

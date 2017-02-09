@@ -360,7 +360,7 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateElements();
         }
 
-        private IValidationDictionary ToValidationDictionary(IValidationResult validationResult)
+        internal IValidationDictionary ToValidationDictionary(IValidationResult validationResult)
         {
             var result = ValidationDictionary.Empty;
             for (int i = 0; i < validationResult.Count; i++)
