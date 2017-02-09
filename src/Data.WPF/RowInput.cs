@@ -99,31 +99,70 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private void GetValidationMessages(T element, RowPresenter rowPresenter, out IAbstractValidationMessageGroup errors, out IAbstractValidationMessageGroup warnings)
+        private IAbstractValidationMessageGroup GetErrors(T element, RowPresenter rowPresenter)
         {
-            errors = GetInputError(element);
-            if (errors != null)
-            {
-                warnings = ValidationMessageGroup.Empty;
-                return;
-            }
-
-            IValidationMessageGroup resultErrors, resultWarnings;
-            GetValidationMessages(rowPresenter, out resultErrors, out resultWarnings);
-            errors = resultErrors;
-            warnings = resultWarnings;
+            var inputError = GetInputError(element);
+            if (inputError != null)
+                return inputError;
+            return GetErrors(rowPresenter);
         }
 
-        private void GetValidationMessages(RowPresenter rowPresenter, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
+        private IValidationMessageGroup GetErrors(RowPresenter rowPresenter)
         {
-            errors = warnings = ValidationMessageGroup.Empty;
+            var result = ValidationMessageGroup.Empty;
+            result = AddValidationMessages(result, InputManager.Errors, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
+            result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
+            return result;
+        }
+
+        private IValidationMessageGroup GetWarnings(RowPresenter rowPresenter)
+        {
+            var result = ValidationMessageGroup.Empty;
+            result = AddValidationMessages(result, InputManager.Warnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
+            result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
+            return result;
+        }
+
+        private bool IsVisible(ValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
+        {
+            var source = validationMessage.Source;
+            return source.SetEquals(Columns) && InputManager.Progress.IsVisible(rowPresenter, source) == progressVisible;
+        }
+
+        private static IValidationMessageGroup AddValidationMessages(IValidationMessageGroup result, IValidationDictionary dictionary, RowPresenter rowPresenter, Func<ValidationMessage, bool> predict)
+        {
+            if (dictionary.ContainsKey(rowPresenter))
+            {
+                var messages = dictionary[rowPresenter];
+                for (int i = 0; i < messages.Count; i++)
+                {
+                    var message = messages[i];
+                    if (predict(message))
+                        result = result.Add(message);
+                }
+            }
+
+            return result;
+        }
+
+        private IValidationMessageGroup AddAsyncValidationMessages(IValidationMessageGroup result, RowPresenter rowPresenter, ValidationSeverity severity)
+        {
+            var asyncValidators = InputManager.AsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                var dictionary = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
+                result = AddValidationMessages(result, dictionary, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            }
+
+            return result;
         }
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            IAbstractValidationMessageGroup errors, warnings;
-            GetValidationMessages(element, rowPresenter, out errors, out warnings);
-            element.RefreshValidation(errors, warnings);
+            element.RefreshValidation(GetErrors(element, rowPresenter), GetWarnings(rowPresenter));
         }
 
         private Action<T, RowPresenter, ViewInputError> _onRefresh;
