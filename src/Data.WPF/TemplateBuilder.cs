@@ -133,7 +133,7 @@ namespace DevZest.Data.Windows
         [DefaultValue(ValidationScope.CurrentRow)]
         public TemplateBuilder WithValidationScope(ValidationScope value)
         {
-            if (Template.ValidationScope == ValidationScope.AllRows && Template.AsyncValidators.Any(x => x.Scope == ValidationScope.AllRows))
+            if (Template.ValidationScope == ValidationScope.AllRows && Template.AsyncValidators.Any(x => x.ValidationScope == ValidationScope.AllRows))
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.ValidationScope = value;
             return this;

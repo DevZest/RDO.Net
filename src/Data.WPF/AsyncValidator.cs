@@ -64,7 +64,7 @@ namespace DevZest.Data.Windows
                 get { return InputManager.CurrentRow; }
             }
 
-            public override ValidationScope Scope
+            public override ValidationScope ValidationScope
             {
                 get { return ValidationScope.CurrentRow; }
             }
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows
                 get { return InputManager.CurrentRow; }
             }
 
-            public override ValidationScope Scope
+            public override ValidationScope ValidationScope
             {
                 get { return ValidationScope.CurrentRow; }
             }
@@ -137,7 +137,7 @@ namespace DevZest.Data.Windows
 
             private readonly Func<Task<IValidationResult>> _action;
 
-            public override ValidationScope Scope
+            public override ValidationScope ValidationScope
             {
                 get { return ValidationScope.AllRows; }
             }
@@ -186,7 +186,7 @@ namespace DevZest.Data.Windows
             }
         }
 
-        public abstract ValidationScope Scope { get; }
+        public abstract ValidationScope ValidationScope { get; }
 
         protected abstract Task<IValidationDictionary> Validate();
 
