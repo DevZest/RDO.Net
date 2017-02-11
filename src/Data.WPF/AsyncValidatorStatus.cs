@@ -1,10 +1,10 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum AsyncValidatorState
+    public enum AsyncValidatorStatus
     {
-        Idle,
+        Created,
         Running,
         Completed,
-        Failed
+        Faulted
     }
 }

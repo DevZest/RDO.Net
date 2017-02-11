@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace DevZest.Data.Windows
 {
-    public abstract class AsyncValidator : IAsyncValidatorGroup
+    public abstract class AsyncValidator : IAsyncValidatorGroup, INotifyPropertyChanged
     {
         internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action, Action postAction)
             where T : UIElement, new()
@@ -157,23 +158,79 @@ namespace DevZest.Data.Windows
 
         public abstract IColumnSet SourceColumns { get; }
 
-        public IValidationDictionary Errors { get; private set; } = ValidationDictionary.Empty;
+        private IValidationDictionary _errors = ValidationDictionary.Empty;
+        public IValidationDictionary Errors
+        {
+            get { return _errors; }
+            private set
+            {
+                Debug.Assert(value != null && value.IsSealed);
+                if (_errors == value)
+                    return;
+                _errors = value;
+                OnPropertyChanged(nameof(Errors));
+            }
+        }
 
-        public IValidationDictionary Warnings { get; private set; } = ValidationDictionary.Empty;
+        private IValidationDictionary _warnings = ValidationDictionary.Empty;
+        public IValidationDictionary Warnings
+        {
+            get { return _warnings; }
+            private set
+            {
+                Debug.Assert(value != null && value.IsSealed);
+                if (_warnings == value)
+                    return;
+                _warnings = value;
+                OnPropertyChanged(nameof(Warnings));
+            }
+        }
 
         public abstract ValidationScope Scope { get; }
 
         protected abstract Task<IValidationDictionary> Validate();
 
-        public AsyncValidatorState State { get; private set; } = AsyncValidatorState.Idle;
+        private AsyncValidatorStatus _status = AsyncValidatorStatus.Created;
+        public AsyncValidatorStatus Status
+        {
+            get { return _status; }
+            private set
+            {
+                if (_status == value)
+                    return;
+                _status = value;
+                OnPropertyChanged(nameof(Status));
+            }
+        }
 
-        public Exception Exception { get; private set; }
+        private Exception _exception;
+        public Exception Exception
+        {
+            get { return _exception; }
+            private set
+            {
+                if (_exception == value)
+                    return;
+                _exception = value;
+                OnPropertyChanged(nameof(Exception));
+            }
+        }
 
         private bool _pendingValidationRequest;
         private readonly Action _postAction;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var propertyChanged = PropertyChanged;
+            if (propertyChanged != null)
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public async Task Run()
         {
-            if (State == AsyncValidatorState.Running)
+            if (Status == AsyncValidatorStatus.Running)
             {
                 _pendingValidationRequest = true;
                 return;
@@ -185,7 +242,7 @@ namespace DevZest.Data.Windows
             {
                 _pendingValidationRequest = false;
                 var task = Validate();
-                State = AsyncValidatorState.Running;
+                Status = AsyncValidatorStatus.Running;
                 try
                 {
                     result = await task;
@@ -193,15 +250,15 @@ namespace DevZest.Data.Windows
                 catch (Exception ex)
                 {
                     Exception = ex;
-                    State = AsyncValidatorState.Failed;
+                    Status = AsyncValidatorStatus.Faulted;
                 }
             }
             while (_pendingValidationRequest);
 
-            if (State != AsyncValidatorState.Failed)
+            if (Status != AsyncValidatorStatus.Faulted)
             {
                 Exception = null;
-                State = AsyncValidatorState.Completed;
+                Status = AsyncValidatorStatus.Completed;
                 Errors = result.Where(ValidationSeverity.Error);
                 Warnings = result.Where(ValidationSeverity.Warning);
             }

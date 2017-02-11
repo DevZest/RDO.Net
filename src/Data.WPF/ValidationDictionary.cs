@@ -161,7 +161,7 @@ namespace DevZest.Data.Windows
                 if (filteredMessages.Count > 0)
                     result = result.Add(rowPresenter, filteredMessages);
             }
-            return result;
+            return result.Seal();
         }
     }
 }
