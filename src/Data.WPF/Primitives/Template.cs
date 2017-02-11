@@ -123,11 +123,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowRange.Union(InternalBlockBindings.Range); }
         }
 
-        internal void VerifyLayout()
+        internal void Seal()
         {
             VerifyGridUnitType();
             VerifyRowRange();
             VerifyFrozenMargins();
+            AsyncValidators.Seal();
         }
 
         internal void VerifyGridUnitType()

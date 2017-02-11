@@ -23,7 +23,7 @@ namespace DevZest.Data.Windows
 
         public void Dispose()
         {
-            Template.VerifyLayout();
+            Template.Seal();
             Template = null;
         }
 
