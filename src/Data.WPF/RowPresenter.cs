@@ -408,5 +408,10 @@ namespace DevZest.Data.Windows
         {
             get { return Template.InternalRowBindings; }
         }
+
+        public IAsyncValidatorGroup AsyncValidators
+        {
+            get { return IsCurrent ? InputManager.CurrentRowAsyncValidators : AsyncValidatorGroup.Empty; }
+        }
     }
 }

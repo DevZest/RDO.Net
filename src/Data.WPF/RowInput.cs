@@ -149,7 +149,7 @@ namespace DevZest.Data.Windows
 
         private IValidationMessageGroup AddAsyncValidationMessages(IValidationMessageGroup result, RowPresenter rowPresenter, ValidationSeverity severity)
         {
-            var asyncValidators = InputManager.AsyncValidators;
+            var asyncValidators = Template.AsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
@@ -189,13 +189,27 @@ namespace DevZest.Data.Windows
             VerifyNotSealed();
 
             var asyncValidator = AsyncValidator.Create<T>(this, action, postAction);
-            Template.AsyncValidators = Template.AsyncValidators.Add(asyncValidator);
+            Template.InternalAsyncValidators = Template.InternalAsyncValidators.Add(asyncValidator);
             return this;
         }
 
         public RowBinding<T> EndInput()
         {
             return RowBinding;
+        }
+
+        private IAsyncValidatorGroup _asyncValidators;
+        public IAsyncValidatorGroup AsyncValidators
+        {
+            get
+            {
+                if (InputManager == null)
+                    return null;
+
+                if (_asyncValidators == null)
+                    _asyncValidators = Template.AsyncValidators.Where(x => x.RowInput == this);
+                return _asyncValidators;
+            }
         }
     }
 }

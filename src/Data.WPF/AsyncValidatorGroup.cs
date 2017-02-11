@@ -154,5 +154,17 @@ namespace DevZest.Data.Windows
                 throw new NullReferenceException(String.Format("{0}[{1}]", paramName, index));
             return reference;
         }
+
+        internal static IAsyncValidatorGroup Where(this IAsyncValidatorGroup asyncValidators, Func<AsyncValidator, bool> predict)
+        {
+            var result = AsyncValidatorGroup.Empty;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                if (predict(asyncValidator))
+                    result = result.Add(asyncValidator);
+            }
+            return result.Seal();
+        }
     }
 }

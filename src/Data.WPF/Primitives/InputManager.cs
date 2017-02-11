@@ -369,9 +369,26 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        public IAsyncValidatorGroup AsyncValidators
+        private IAsyncValidatorGroup _allRowsAsyncValidators;
+        public IAsyncValidatorGroup AllRowsAsyncValidators
         {
-            get { return Template.AsyncValidators; }
+            get
+            {
+                if (_allRowsAsyncValidators == null)
+                    _allRowsAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == ValidationScope.AllRows);
+                return _allRowsAsyncValidators;
+            }
+        }
+
+        private IAsyncValidatorGroup _currentRowAsyncValidators;
+        public IAsyncValidatorGroup CurrentRowAsyncValidators
+        {
+            get
+            {
+                if (_currentRowAsyncValidators == null)
+                    _currentRowAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == ValidationScope.CurrentRow && x.RowInput == null);
+                return _currentRowAsyncValidators;
+            }
         }
     }
 }
