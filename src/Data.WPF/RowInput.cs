@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace DevZest.Data.Windows
 {
-    public sealed class RowInput<T> : Input<T>
+    public sealed class RowInput<T> : Input<T>, IRowInput
         where T : UIElement, new()
     {
         internal RowInput(RowBinding<T> rowBinding, Trigger<T> flushTrigger)

@@ -64,6 +64,11 @@ namespace DevZest.Data.Windows
                 get { return InputManager.CurrentRow; }
             }
 
+            public override IRowInput RowInput
+            {
+                get { return _rowInput; }
+            }
+
             public override ValidationScope ValidationScope
             {
                 get { return ValidationScope.CurrentRow; }
@@ -115,6 +120,11 @@ namespace DevZest.Data.Windows
                 get { return InputManager.CurrentRow; }
             }
 
+            public override IRowInput RowInput
+            {
+                get { return null; }
+            }
+
             public override ValidationScope ValidationScope
             {
                 get { return ValidationScope.CurrentRow; }
@@ -136,6 +146,11 @@ namespace DevZest.Data.Windows
             }
 
             private readonly Func<Task<IValidationResult>> _action;
+
+            public override IRowInput RowInput
+            {
+                get { return null; }
+            }
 
             public override ValidationScope ValidationScope
             {
@@ -185,6 +200,8 @@ namespace DevZest.Data.Windows
                 OnPropertyChanged(nameof(Warnings));
             }
         }
+
+        public abstract IRowInput RowInput { get; }
 
         public abstract ValidationScope ValidationScope { get; }
 
