@@ -105,6 +105,11 @@ namespace DevZest.Data.Windows
             get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
+        public void InvalidateView()
+        {
+            RequireLayoutManager().InvalidateView();
+        }
+
         public void FlushScalars()
         {
             RequireLayoutManager().FlushScalars();

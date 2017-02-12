@@ -225,21 +225,21 @@ namespace DevZest.Data.Windows.Primitives
             scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
             CoerceCurrentContainerView(null, true);
-            RefreshElements(true);
+            RefreshView();
         }
 
-        private void RefreshElements(bool isReload)
+        private void RefreshView()
         {
             if (Elements == null || Elements.Count == 0)
                 return;
 
-            RefreshScalarElements(isReload);
+            RefreshScalarElements();
             RefreshContainerViews();
 
             _isDirty = false;
         }
 
-        private void RefreshScalarElements(bool isReload)
+        private void RefreshScalarElements()
         {
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
@@ -368,7 +368,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (rowView.RowPresenter == CurrentRow)
             {
-                InvalidateElements();
+                InvalidateView();
                 return;
             }
 
@@ -414,14 +414,14 @@ namespace DevZest.Data.Windows.Primitives
                 if (reload)
                     ContainerViewList.VirtualizeAll();
                 CoerceCurrentContainerView(oldValue, reload);
-                InvalidateElements();
+                InvalidateView();
             }
         }
 
         protected override void OnSelectedRowsChanged()
         {
             base.OnSelectedRowsChanged();
-            InvalidateElements();
+            InvalidateView();
         }
 
         protected override void OnRowsChanged()
@@ -437,37 +437,37 @@ namespace DevZest.Data.Windows.Primitives
         protected override void OnRowUpdated(RowPresenter row)
         {
             base.OnRowUpdated(row);
-            InvalidateElements();
+            InvalidateView();
         }
 
         protected override void OnIsEditingChanged()
         {
             base.OnIsEditingChanged();
-            InvalidateElements();
+            InvalidateView();
         }
 
         private bool _isDirty;
-        internal void InvalidateElements()
+        public void InvalidateView()
         {
             if (_isDirty || ElementCollection == null)
                 return;
 
             _isDirty = true;
-            BeginRefreshElements();
+            BeginRefreshView();
         }
 
-        private void BeginRefreshElements()
+        private void BeginRefreshView()
         {
             Debug.Assert(ElementCollection != null && _isDirty);
 
             var panel = ElementCollection.Parent;
             if (panel == null)
-                RefreshElements(false);
+                RefreshView();
             else
             {
                 panel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                 {
-                    RefreshElements(false);
+                    RefreshView();
                 }));
             }
         }

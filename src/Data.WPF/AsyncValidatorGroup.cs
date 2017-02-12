@@ -155,8 +155,11 @@ namespace DevZest.Data.Windows
             return reference;
         }
 
-        internal static IAsyncValidatorGroup Where(this IAsyncValidatorGroup asyncValidators, Func<AsyncValidator, bool> predict)
+        public static IAsyncValidatorGroup Where(this IAsyncValidatorGroup asyncValidators, Func<AsyncValidator, bool> predict)
         {
+            if (asyncValidators == null)
+                throw new ArgumentNullException(nameof(asyncValidators));
+
             var result = AsyncValidatorGroup.Empty;
             for (int i = 0; i < asyncValidators.Count; i++)
             {

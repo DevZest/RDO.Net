@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
             inputErrors.Remove(element);
             if (inputError != null)
                 inputErrors.Add(inputError);
-            InvalidateElements();
+            InvalidateView();
         }
 
         public IReadOnlyList<ViewInputError> ScalarInputErrors
@@ -218,7 +218,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
-            InvalidateElements();
+            InvalidateView();
         }
 
         internal ValidationMode ValidationMode
@@ -234,7 +234,7 @@ namespace DevZest.Data.Windows.Primitives
         public void Validate()
         {
             Validate(true);
-            InvalidateElements();
+            InvalidateView();
         }
 
         private int ErrorMaxEntries
@@ -353,7 +353,7 @@ namespace DevZest.Data.Windows.Primitives
             ClearValidationMessages();
             if (ValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
-            InvalidateElements();
+            InvalidateView();
         }
 
         internal IValidationDictionary ToValidationDictionary(IValidationResult validationResult)

@@ -159,7 +159,7 @@ namespace DevZest.Data.Windows
         {
             var elementManager = ElementManager;
             if (elementManager != null)
-                elementManager.InvalidateElements();
+                elementManager.InvalidateView();
         }
 
         internal int RawIndex { get; set; }

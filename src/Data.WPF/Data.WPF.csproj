@@ -158,6 +158,7 @@
     <Compile Include="ValidationMode.cs" />
     <Compile Include="ValidationProgress.cs" />
     <Compile Include="ValidationScope.cs" />
+    <Compile Include="ValidationView.cs" />
     <Compile Include="ViewInputError.cs" />
   </ItemGroup>
   <ItemGroup>
