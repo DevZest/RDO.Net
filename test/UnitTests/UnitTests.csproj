@@ -76,7 +76,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BindingFactory.cs" />
-    <Compile Include="Factories\PlaceHolderFactory.cs" />
     <Compile Include="Helpers\AutoInitBlockView.cs" />
     <Compile Include="Helpers\AutoInitRowView.cs" />
     <Compile Include="Helpers\ProductCategoryDataSet.cs" />
