@@ -1,10 +1,95 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
     public static class BindingFactory
     {
+        public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<TextBlock>(
+                onRefresh: e =>
+                {
+                    e.Text = source.Value.ToString();
+                });
+        }
+
+        public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source, string format)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            return new ScalarBinding<TextBlock>(
+                onRefresh: e =>
+                {
+                    e.Text = string.Format(format, source.Value);
+                });
+        }
+
+        public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source, IFormatProvider formatProvider, string format)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (formatProvider == null)
+                throw new ArgumentNullException(nameof(formatProvider));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            return new ScalarBinding<TextBlock>(
+                onRefresh: e =>
+                {
+                    e.Text = string.Format(formatProvider, format, source.Value);
+                });
+        }
+
+        public static RowBinding<TextBlock> TextBlock<T>(this Column<T> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new RowBinding<TextBlock>(
+                onRefresh: (e, r) =>
+                {
+                    e.Text = r.GetValue(source).ToString();
+                });
+        }
+
+        public static RowBinding<TextBlock> TextBlock<T>(this Column<T> source, string format)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            return new RowBinding<TextBlock>(
+                onRefresh: (e, r) =>
+                {
+                    e.Text = string.Format(format, r.GetValue(source));
+                });
+        }
+
+        public static RowBinding<TextBlock> TextBlock<T>(this Column<T> source, IFormatProvider formatProvider, string format)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (formatProvider == null)
+                throw new ArgumentNullException(nameof(formatProvider));
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            return new RowBinding<TextBlock>(
+                onRefresh: (e, r) =>
+                {
+                    e.Text = string.Format(formatProvider, format, r.GetValue(source));
+                });
+        }
+
         public static RowBinding<ValidationView> ValidationView<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
