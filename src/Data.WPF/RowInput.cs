@@ -1,5 +1,4 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -99,16 +98,17 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        public IAbstractValidationMessageGroup GetErrors(T element, RowPresenter rowPresenter)
+        public IAbstractValidationMessageGroup GetErrors(RowPresenter rowPresenter)
         {
-            var inputError = GetInputError(element);
-            if (inputError != null)
-                return inputError;
-            return GetErrors(rowPresenter);
-        }
+            RowBinding rowBinding = RowBinding;
+            var element = rowBinding[rowPresenter];
+            if (element != null)
+            {
+                var inputError = GetInputError(RowBinding[rowPresenter]);
+                if (inputError != null)
+                    return inputError;
+            }
 
-        private IValidationMessageGroup GetErrors(RowPresenter rowPresenter)
-        {
             var result = ValidationMessageGroup.Empty;
             result = AddValidationMessages(result, InputManager.Errors, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
@@ -162,7 +162,7 @@ namespace DevZest.Data.Windows
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(GetErrors(element, rowPresenter), GetWarnings(rowPresenter));
+            element.RefreshValidation(GetErrors(rowPresenter), GetWarnings(rowPresenter));
         }
 
         private Action<T, RowPresenter, ViewInputError> _onRefresh;
