@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private IAbstractValidationMessageGroup GetErrors(T element, RowPresenter rowPresenter)
+        public IAbstractValidationMessageGroup GetErrors(T element, RowPresenter rowPresenter)
         {
             var inputError = GetInputError(element);
             if (inputError != null)
@@ -116,7 +116,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private IValidationMessageGroup GetWarnings(RowPresenter rowPresenter)
+        public IValidationMessageGroup GetWarnings(RowPresenter rowPresenter)
         {
             var result = ValidationMessageGroup.Empty;
             result = AddValidationMessages(result, InputManager.Warnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
