@@ -292,6 +292,15 @@ namespace DevZest.Data.Windows
             InputManager.InvalidateView();
         }
 
+        public void CancelRunning()
+        {
+            if (Status == AsyncValidatorStatus.Running)
+            {
+                Status = AsyncValidatorStatus.Created;
+                InputManager.InvalidateView();
+            }
+        }
+
         internal void Reset()
         {
             if (Status == AsyncValidatorStatus.Running)
