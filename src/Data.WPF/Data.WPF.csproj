@@ -49,6 +49,7 @@
     <Compile Include="AsyncValidatorStatus.cs" />
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="BindingExtensions.cs" />
+    <Compile Include="BindingFactory.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />

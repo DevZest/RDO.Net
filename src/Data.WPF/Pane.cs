@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows
     public class Pane : ContentPresenter
     {
         private List<UIElement> _children = new List<UIElement>();
-        private IReadOnlyList<UIElement> Children
+        public IReadOnlyList<UIElement> Children
         {
             get { return _children; }
         }

@@ -48,6 +48,19 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
+        public PaneBlockBinding Parent { get; private set; }
+
+        public sealed override Binding ParentBinding
+        {
+            get { return Parent; }
+        }
+
+        internal void Seal(PaneBlockBinding parent, int ordinal)
+        {
+            Parent = parent;
+            Ordinal = ordinal;
+        }
+
         internal abstract UIElement Setup(BlockView blockView);
 
         internal override void VerifyRowRange(GridRange rowRange)

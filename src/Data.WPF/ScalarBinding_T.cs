@@ -130,5 +130,10 @@ namespace DevZest.Data.Windows
         {
             return BeginInput(flushTrigger).WithFlush(data, getValue).EndInput();
         }
+
+        public new T this[int blockDimension]
+        {
+            get { return (T)base[blockDimension]; }
+        }
     }
 }

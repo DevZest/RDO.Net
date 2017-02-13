@@ -14,9 +14,9 @@ namespace DevZest.Data.Windows.Primitives
 
         public GridRange GridRange { get; private set; }
 
-        public int Ordinal { get; private set; } = -1;
+        public int Ordinal { get; internal set; } = -1;
 
-        public Binding ParentBinding { get; internal set; }
+        public abstract Binding ParentBinding { get; }
 
         public bool IsSealed
         {

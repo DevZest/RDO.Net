@@ -133,5 +133,10 @@ namespace DevZest.Data.Windows
         {
             return BeginInput(flushTrigger).WithFlush(column, getValue).EndInput();
         }
+
+        public new T this[RowPresenter rowPresenter]
+        {
+            get { return (T)base[rowPresenter]; }
+        }
     }
 }

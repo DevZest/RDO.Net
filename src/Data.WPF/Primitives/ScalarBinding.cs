@@ -49,6 +49,19 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
+        public PaneScalarBinding Parent { get; private set; }
+
+        public sealed override Binding ParentBinding
+        {
+            get { return Parent; }
+        }
+
+        internal void Seal(PaneScalarBinding parent, int ordinal)
+        {
+            Parent = parent;
+            Ordinal = ordinal;
+        }
+
         internal abstract UIElement Setup();
 
         private bool _isMultidimensional;
@@ -100,6 +113,12 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
+                if (Ordinal == -1)
+                    return null;
+
+                if (Parent != null)
+                    return ((Pane)Parent[blockDimension]).Children[Ordinal];
+
                 if (blockDimension < 0 || blockDimension >= BlockDimensions)
                     throw new ArgumentOutOfRangeException(nameof(blockDimension));
 

@@ -36,7 +36,7 @@ namespace DevZest.Data.Windows
             VerifyNotSealed();
             _bindings.Add(binding);
             _names.Add(name);
-            binding.ParentBinding = this;
+            binding.Seal(this, _bindings.Count - 1);
         }
 
         internal abstract Pane CreatePane();
