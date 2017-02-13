@@ -169,5 +169,17 @@ namespace DevZest.Data.Windows
             }
             return result.Seal();
         }
+
+        public static void Each(this IAsyncValidatorGroup asyncValidators, Action<AsyncValidator> action)
+        {
+            if (asyncValidators == null)
+                throw new ArgumentNullException(nameof(asyncValidators));
+
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            for (int i = 0; i < asyncValidators.Count; i++)
+                action(asyncValidators[i]);
+        }
     }
 }

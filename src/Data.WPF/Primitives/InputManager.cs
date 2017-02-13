@@ -325,8 +325,9 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
         {
-            base.OnCurrentRowChanged(oldValue, reload);
             Progress.OnCurrentRowChanged();
+            Template.AsyncValidators.Each(x => x.OnCurrentRowChanged());
+            base.OnCurrentRowChanged(oldValue, reload);
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
@@ -340,6 +341,8 @@ namespace DevZest.Data.Windows.Primitives
 
             if (Warnings.ContainsKey(rowPresenter))
                 Warnings = Warnings.Remove(rowPresenter);
+
+            Template.AsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
 
         public IValidationDictionary ValidationResult { get; private set; } = ValidationDictionary.Empty;
@@ -353,6 +356,7 @@ namespace DevZest.Data.Windows.Primitives
             ClearValidationMessages();
             if (ValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
+            Template.AsyncValidators.Each(x => x.Reset());
             InvalidateView();
         }
 

@@ -245,6 +245,7 @@ namespace DevZest.Data.Windows
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private Task<IValidationDictionary> _runningTask;
         public async Task Run()
         {
             if (Status == AsyncValidatorStatus.Running)
@@ -255,33 +256,64 @@ namespace DevZest.Data.Windows
 
             Errors = Warnings = ValidationDictionary.Empty;
             IValidationDictionary result = ValidationDictionary.Empty;
+            var status = Status = AsyncValidatorStatus.Running;
+            Exception exception = null;
+            InputManager.InvalidateView();
             do
             {
                 _pendingValidationRequest = false;
-                var task = Validate();
-                Status = AsyncValidatorStatus.Running;
+                var task = _runningTask = Validate();
                 try
                 {
                     result = await task;
+                    if (task != _runningTask)   // Cancelled
+                        return;
+                    status = AsyncValidatorStatus.Completed;
+                    exception = null;
                 }
                 catch (Exception ex)
                 {
-                    Exception = ex;
-                    Status = AsyncValidatorStatus.Faulted;
+                    exception = ex;
+                    status = AsyncValidatorStatus.Faulted;
+                    result = ValidationDictionary.Empty;
                 }
             }
             while (_pendingValidationRequest);
 
-            if (Status != AsyncValidatorStatus.Faulted)
-            {
-                Exception = null;
-                Status = AsyncValidatorStatus.Completed;
-                Errors = result.Where(ValidationSeverity.Error);
-                Warnings = result.Where(ValidationSeverity.Warning);
-            }
+            _runningTask = null;
+            Exception = exception;
+            Status = status;
+            Errors = result.Where(ValidationSeverity.Error);
+            Warnings = result.Where(ValidationSeverity.Warning);
 
             if (_postAction != null)
                 _postAction();
+
+            InputManager.InvalidateView();
+        }
+
+        internal void Reset()
+        {
+            if (Status == AsyncValidatorStatus.Running)
+                _runningTask = null;
+
+            Status = AsyncValidatorStatus.Created;
+            Exception = null;
+            Errors = Warnings = ValidationDictionary.Empty;
+        }
+
+        internal void OnRowDisposed(RowPresenter rowPresenter)
+        {
+            if (Errors.ContainsKey(rowPresenter))
+                Errors = Errors.Remove(rowPresenter);
+            if (Warnings.ContainsKey(rowPresenter))
+                Warnings = Warnings.Remove(rowPresenter);
+        }
+
+        internal void OnCurrentRowChanged()
+        {
+            if (ValidationScope == ValidationScope.CurrentRow)
+                Reset();
         }
 
         #region IAsyncValidatorGroup
