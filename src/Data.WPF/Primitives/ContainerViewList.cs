@@ -165,11 +165,6 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract ContainerView this[int index] { get; }
 
-        public bool Contains(RowView rowView)
-        {
-            return this[rowView] != null;
-        }
-
         public abstract int Count { get; }
 
         public IEnumerator<ContainerView> GetEnumerator()
@@ -184,20 +179,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         public abstract int MaxCount { get; }
-
-        public ContainerView this[RowView rowView]
-        {
-            get
-            {
-                if (Count == 0)
-                    return null;
-
-                var index = IndexOf(rowView.BlockOrdinal);
-                return index == -1 ? null : this[index];
-            }
-        }
-
-        private int IndexOf(int ordinal)
+        public int IndexOf(int ordinal)
         {
             Debug.Assert(ordinal >= 0 && ordinal < MaxCount);
 

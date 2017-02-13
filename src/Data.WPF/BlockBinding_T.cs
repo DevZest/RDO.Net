@@ -99,5 +99,10 @@ namespace DevZest.Data.Windows
             if (recycle)
                 CachedList.Recycle(ref _cachedElements, e);
         }
+
+        public new T this[int blockOrdinal]
+        {
+            get { return (T)base[blockOrdinal]; }
+        }
     }
 }

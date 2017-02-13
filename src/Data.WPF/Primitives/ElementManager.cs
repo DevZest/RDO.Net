@@ -100,11 +100,17 @@ namespace DevZest.Data.Windows.Primitives
 
         protected ContainerView this[RowView rowView]
         {
+            get { return this[rowView.BlockOrdinal]; }
+        }
+
+        public ContainerView this[int blockOrdinal]
+        {
             get
             {
-                if (CurrentContainerView != null && rowView.BlockOrdinal == CurrentContainerView.ContainerOrdinal)
+                if (CurrentContainerView != null && blockOrdinal == CurrentContainerView.ContainerOrdinal)
                     return CurrentContainerView;
-                return ContainerViewList[rowView];
+                var index = ContainerViewList.IndexOf(blockOrdinal);
+                return index == -1 ? null : ContainerViewList[index];
             }
         }
 

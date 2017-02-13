@@ -84,5 +84,27 @@ namespace DevZest.Data.Windows.Primitives
                     throw new InvalidOperationException(Strings.BlockBinding_OutOfVerticalRowRange(Ordinal));
             }
         }
+
+        private ElementManager ElementManager
+        {
+            get { return Template.ElementManager; }
+        }
+
+        public UIElement this[int blockOrdinal]
+        {
+            get
+            {
+                if (Ordinal == -1 || ElementManager == null)
+                    return null;
+
+                if (Parent != null)
+                {
+                    var pane = (Pane)Parent[blockOrdinal];
+                    return pane == null ? null : pane.Children[Ordinal];
+                }
+
+                return ElementManager[blockOrdinal];
+            }
+        }
     }
 }
