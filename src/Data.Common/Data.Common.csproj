@@ -61,8 +61,8 @@
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="IValidationMessageGroup.cs" />
     <Compile Include="IValidationResult.cs" />
-    <Compile Include="Primitives\AbstractValidationMessageGroup.cs" />
-    <Compile Include="Primitives\AbstractValidationMessage.cs" />
+    <Compile Include="AbstractValidationMessageGroup.cs" />
+    <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
@@ -81,7 +81,7 @@
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="Primitives\IAbstractValidationMessageGroup.cs" />
+    <Compile Include="IAbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />

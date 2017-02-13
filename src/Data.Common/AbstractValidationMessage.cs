@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
     public abstract class AbstractValidationMessage : IAbstractValidationMessageGroup
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DevZest.Data.Primitives
+namespace DevZest.Data
 {
     public interface IAbstractValidationMessageGroup : IReadOnlyList<AbstractValidationMessage>
     {
