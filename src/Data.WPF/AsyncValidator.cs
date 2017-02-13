@@ -255,9 +255,11 @@ namespace DevZest.Data.Windows
             }
 
             Errors = Warnings = ValidationDictionary.Empty;
-            IValidationDictionary result = ValidationDictionary.Empty;
-            var status = Status = AsyncValidatorStatus.Running;
-            Exception exception = null;
+            Exception = null;
+            Status = AsyncValidatorStatus.Running;
+            IValidationDictionary result;
+            AsyncValidatorStatus status;
+            Exception exception;
             InputManager.InvalidateView();
             do
             {
@@ -273,9 +275,9 @@ namespace DevZest.Data.Windows
                 }
                 catch (Exception ex)
                 {
-                    exception = ex;
-                    status = AsyncValidatorStatus.Faulted;
                     result = ValidationDictionary.Empty;
+                    status = AsyncValidatorStatus.Faulted;
+                    exception = ex;
                 }
             }
             while (_pendingValidationRequest);
