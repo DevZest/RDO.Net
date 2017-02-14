@@ -37,24 +37,12 @@ namespace DevZest.Data.Windows
             return new ScalarBinding<TextBlock>(e => RefreshDisplayName(e, column));
         }
 
-        private static void Refresh(TextBlock element, _String column, RowPresenter rowPresenter)
+        public static BlockBinding<BlockHeader> BindBlockOrdinalToTextBlock(this Model _)
         {
-            element.Text = rowPresenter.GetValue(column);
-        }
-
-        public static RowBinding<TextBlock> BindToTextBlock(this _String column)
-        {
-            return new RowBinding<TextBlock>((e, r) => Refresh(e, column, r));
-        }
-
-        private static void Refresh(TextBlock element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
-        {
-            element.Text = blockOrdinal.ToString();
-        }
-
-        public static BlockBinding<TextBlock> BindBlockOrdinalToTextBlock(this Model _)
-        {
-            return new BlockBinding<TextBlock>(Refresh);
+            return new BlockBinding<BlockHeader>(onRefresh: (element, blockOrdinal, rows) =>
+            {
+                element.Text = blockOrdinal.ToString();
+            });
         }
 
         public static BlockBinding<Placeholder> BindToBlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)

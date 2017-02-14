@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 0)
                     .AddBinding(1, 0, _.Name.BindDisplayNameToTextBlock())
                     .AddBinding(0, 1, _.BindBlockOrdinalToTextBlock())
-                    .AddBinding(1, 1, _.Name.BindToTextBlock())
+                    .AddBinding(1, 1, _.Name.TextBlock())
                     .AddBinding(1, 2, _.Name.BindDisplayNameToTextBlock().WithIsMultidimensional(true));
             });
 
@@ -333,7 +333,7 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 0)
                     .AddBinding(1, 0, _.Name.BindDisplayNameToTextBlock())
                     .AddBinding(0, 1, _.BindBlockOrdinalToTextBlock())
-                    .AddBinding(1, 1, _.Name.BindToTextBlock())
+                    .AddBinding(1, 1, _.Name.TextBlock())
                     .AddBinding(1, 2, _.Name.BindDisplayNameToTextBlock().WithIsMultidimensional(true));
             });
 
