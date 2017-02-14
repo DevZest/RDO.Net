@@ -50,6 +50,7 @@
     <Compile Include="AutoSizeWaiver.cs" />
     <Compile Include="BindingExtensions.cs" />
     <Compile Include="BindingFactory.cs" />
+    <Compile Include="BindingFactory.TextBox.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
@@ -66,7 +67,6 @@
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="Scalar_T.cs" />
-    <Compile Include="Utilities\DependencyProperty.GetUpdateSourceTrigger.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
     <Compile Include="Validation.cs" />
