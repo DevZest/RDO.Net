@@ -53,12 +53,18 @@ namespace DevZest.Data.Windows
                 if (getValue == null)
                     return false;
                 var value = getValue(element);
-                if (Comparer<TData>.Default.Compare(scalar.Value, value) == 0)
+
+                ValidateInput(element);
+                if (GetInputError(element) != null)
                     return false;
+
+                var inputError = scalar.Validate(value);
+                if (inputError.IsEmpty)
+                    return scalar.ChangeValue(value);
                 else
                 {
-                    scalar.Value = value;
-                    return true;
+                    SetInputError(element, new ViewInputError(inputError, element));
+                    return false;
                 }
             });
             return this;

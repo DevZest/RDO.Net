@@ -1,16 +1,47 @@
-﻿namespace DevZest.Data.Windows
+﻿using System;
+using System.Collections.Generic;
+
+namespace DevZest.Data.Windows
 {
     public sealed class Scalar<T>
     {
-        public Scalar()
+        public Scalar(T value = default(T), Action onValueChanged = null, Func<T, InputError> valueValidator = null)
         {
+            _value = value;
+            _onValueChanged = onValueChanged;
+            _valueValidator = valueValidator;
         }
 
-        public Scalar(T value)
+        private Func<T, InputError> _valueValidator;
+
+        public InputError Validate(T value)
         {
-            Value = value;
+            return _valueValidator != null ? _valueValidator(value) : InputError.Empty;
         }
 
-        public T Value { get; set; }
+        private T _value;
+        private Action _onValueChanged;
+        public T Value
+        {
+            get { return _value; }
+            set
+            {
+                var inputError = Validate(value);
+                if (!inputError.IsEmpty)
+                    throw new ArgumentException(inputError.Description, nameof(value));
+                ChangeValue(value);
+            }
+        }
+
+        internal bool ChangeValue(T value)
+        {
+            if (Comparer<T>.Default.Compare(_value, value) == 0)
+                return false;
+
+            _value = value;
+            if (_onValueChanged != null)
+                _onValueChanged();
+            return true;
+        }
     }
 }
