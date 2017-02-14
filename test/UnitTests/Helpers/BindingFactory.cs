@@ -15,25 +15,7 @@ namespace DevZest.Data.Windows.Helpers
             });
         }
 
-        private static void RefreshDisplayName(TextBlock element, Column column)
-        {
-            element.Text = column.DisplayName;
-        }
-
-        public static ScalarBinding<TextBlock> BindDisplayNameToTextBlock(this Column column)
-        {
-            return new ScalarBinding<TextBlock>(e => RefreshDisplayName(e, column));
-        }
-
-        public static BlockBinding<BlockHeader> BindBlockOrdinalToTextBlock(this Model _)
-        {
-            return new BlockBinding<BlockHeader>(onRefresh: (element, blockOrdinal, rows) =>
-            {
-                element.Text = blockOrdinal.ToString();
-            });
-        }
-
-        public static BlockBinding<Placeholder> BindToBlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
+        public static BlockBinding<Placeholder> BlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
             return new BlockBinding<Placeholder>(null, (e, o, r) => Setup(e, desiredWidth, desiredHeight), null);
         }
@@ -44,12 +26,12 @@ namespace DevZest.Data.Windows.Helpers
             element.DesiredHeight = desiredHeight;
         }
 
-        public static ScalarBinding<Placeholder> BindToScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
+        public static ScalarBinding<Placeholder> ScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
             return new ScalarBinding<Placeholder>(null, e => Setup(e, desiredWidth, desiredHeight), null);
         }
 
-        public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, Action<Placeholder, RowPresenter> onRefresh = null)
+        public static RowBinding<Placeholder> RowPlaceholder(this Model _, Action<Placeholder, RowPresenter> onRefresh = null)
         {
             return new RowBinding<Placeholder>(onRefresh);
         }
@@ -62,7 +44,7 @@ namespace DevZest.Data.Windows.Helpers
                 onRefresh(element, rowPresenter);
         }
 
-        public static RowBinding<Placeholder> BindToRowPlaceholder(this Model _, double desiredWidth, double desiredHeight, Action<Placeholder, RowPresenter> onRefresh = null)
+        public static RowBinding<Placeholder> RowPlaceholder(this Model _, double desiredWidth, double desiredHeight, Action<Placeholder, RowPresenter> onRefresh = null)
         {
             return new RowBinding<Placeholder>((e, r) => Refresh(e, r, desiredWidth, desiredHeight, onRefresh));
         }

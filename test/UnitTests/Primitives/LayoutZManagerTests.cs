@@ -17,12 +17,12 @@ namespace DevZest.Data.Windows.Primitives
             {
                 builder.GridColumns("20", "Auto", "*")
                     .GridRows("25", "*", "Auto")
-                    .AddBinding(1, 0, _.BindToRowPlaceholder(100, 20))
-                    .AddBinding(2, 0, _.BindToRowPlaceholder(200, 20))
-                    .AddBinding(1, 1, _.BindToRowPlaceholder(110, 20))
-                    .AddBinding(2, 1, _.BindToRowPlaceholder(200, 20))
-                    .AddBinding(1, 2, _.BindToRowPlaceholder(100, 20))
-                    .AddBinding(2, 2, _.BindToRowPlaceholder(200, 20));
+                    .AddBinding(1, 0, _.RowPlaceholder(100, 20))
+                    .AddBinding(2, 0, _.RowPlaceholder(200, 20))
+                    .AddBinding(1, 1, _.RowPlaceholder(110, 20))
+                    .AddBinding(2, 1, _.RowPlaceholder(200, 20))
+                    .AddBinding(1, 2, _.RowPlaceholder(100, 20))
+                    .AddBinding(2, 2, _.RowPlaceholder(200, 20));
             });
             Assert.IsInstanceOfType(layoutManager, typeof(LayoutZManager));
 
@@ -58,7 +58,7 @@ namespace DevZest.Data.Windows.Primitives
                     .GridRows("30", "30")
                     .GridLineX(new GridPoint(0, 1), 2, pen)
                     .GridLineY(new GridPoint(1, 0), 2, pen)
-                    .AddBinding(0, 0, 1, 1, _.BindToRowPlaceholder());
+                    .AddBinding(0, 0, 1, 1, _.RowPlaceholder());
             });
 
             layoutManager.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));

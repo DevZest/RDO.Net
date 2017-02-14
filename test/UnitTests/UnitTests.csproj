@@ -95,7 +95,6 @@
     <Compile Include="Primitives\GridLengthParserTests.cs" />
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\IReadOnlyListVerifier.cs" />
     <Compile Include="Helpers\Placeholder.cs" />
   </ItemGroup>
   <ItemGroup>

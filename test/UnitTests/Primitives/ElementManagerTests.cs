@@ -37,12 +37,6 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        private static void Verify(TextBlock textBlock, Binding binding, string text)
-        {
-            Assert.AreEqual(binding, textBlock.GetBinding());
-            Assert.AreEqual(text, textBlock.Text);
-        }
-
         #endregion
 
         [TestMethod]
@@ -464,15 +458,11 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            RowBinding<TextBlock> textBlock = null;
             var elementManager = CreateElementManager(dataSet, (builder, _) =>
             {
-                builder.GridColumns("100", "100")
-                    .GridRows("100", "100", "100")
-                    .Layout(Orientation.Vertical, 0)
-                    .AddBinding(1, 0, _.Name.BindDisplayNameToTextBlock())
-                    .AddBinding(0, 1, _.BindBlockOrdinalToTextBlock())
-                    .AddBinding(1, 1, _.Name.TextBlock())
-                    .AddBinding(1, 2, _.Name.BindDisplayNameToTextBlock().WithIsMultidimensional(true));
+                textBlock = _.Name.TextBlock();
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
             {
@@ -482,22 +472,7 @@ namespace DevZest.Data.Windows.Primitives
 
                 elementManager.ContainerViewList.RealizeFirst(1);
                 dataSet._.Name[1] = "CHANGED NAME";
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], "CHANGED NAME"))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                Assert.AreEqual(dataSet._.Name[1], textBlock[rows[1]].Text);
             }
         }
 
