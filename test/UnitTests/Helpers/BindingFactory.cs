@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Helpers
 {
     internal static class BindingFactory
     {
