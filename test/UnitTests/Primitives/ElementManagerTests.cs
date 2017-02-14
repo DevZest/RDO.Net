@@ -49,15 +49,23 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_Elements()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            ScalarBinding<ColumnHeader> columnHeader1 = null;
+            BlockBinding<BlockHeader> blockHeader = null;
+            RowBinding<TextBlock> textBlock = null;
+            ScalarBinding<ColumnHeader> columnHeader2 = null;
             var elementManager = CreateElementManager(dataSet, (builder, _) =>
             {
+                columnHeader1 = _.Name.ColumnHeader();
+                blockHeader = _.BlockHeader();
+                textBlock = _.Name.TextBlock();
+                columnHeader2 = _.Name.ColumnHeader().WithIsMultidimensional(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)
-                    .AddBinding(1, 0, _.Name.BindDisplayNameToTextBlock())
-                    .AddBinding(0, 1, _.BindBlockOrdinalToTextBlock())
-                    .AddBinding(1, 1, _.Name.TextBlock())
-                    .AddBinding(1, 2, _.Name.BindDisplayNameToTextBlock().WithIsMultidimensional(true));
+                    .AddBinding(1, 0, columnHeader1)
+                    .AddBinding(0, 1, blockHeader)
+                    .AddBinding(1, 1, textBlock)
+                    .AddBinding(1, 2, columnHeader2);
             });
 
             {
@@ -65,257 +73,387 @@ namespace DevZest.Data.Windows.Primitives
                 var template = elementManager.Template;
                 var rows = elementManager.Rows;
 
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(3, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    var blockView = (BlockView)elements[1];
+                    Assert.AreEqual(2, blockView.Elements.Count);
+                    Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                    var rowView = (RowView)blockView.Elements[1];
+                    Assert.AreEqual(1, rowView.Elements.Count);
+                    Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                    Assert.AreEqual(columnHeader2[0], elements[2]);
+                }
 
                 elementManager.BlockDimensions = 3;
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(5, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    var blockView = (BlockView)elements[1];
+                    Assert.AreEqual(4, blockView.Elements.Count);
+                    Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                    {
+                        var rowView = (RowView)blockView.Elements[1];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                    }
+                    {
+                        var rowView = (RowView)blockView.Elements[2];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                    }
+                    {
+                        var rowView = (RowView)blockView.Elements[3];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[2]);
+                    Assert.AreEqual(columnHeader2[1], elements[3]);
+                    Assert.AreEqual(columnHeader2[2], elements[4]);
+                }
 
                 elementManager.ContainerViewList.RealizeFirst(1);
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(6, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[4]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[5]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[3]);
+                    Assert.AreEqual(columnHeader2[1], elements[4]);
+                    Assert.AreEqual(columnHeader2[2], elements[5]);
+                }
 
                 elementManager.ContainerViewList.RealizePrev();
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(6, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[4]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[5]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[3]);
+                    Assert.AreEqual(columnHeader2[1], elements[4]);
+                    Assert.AreEqual(columnHeader2[2], elements[5]);
+                }
 
                 elementManager.ContainerViewList.RealizeNext();
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "2"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[6].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[7].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(7, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(4, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[4]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[3];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[5]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[3];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[2], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[6]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[7]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[4]);
+                    Assert.AreEqual(columnHeader2[1], elements[5]);
+                    Assert.AreEqual(columnHeader2[2], elements[6]);
+                }
 
                 elementManager.BlockDimensions = 2;
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(4, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    var blockView = (BlockView)elements[1];
+                    Assert.AreEqual(3, blockView.Elements.Count);
+                    Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                    {
+                        var rowView = (RowView)blockView.Elements[1];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                    }
+                    {
+                        var rowView = (RowView)blockView.Elements[2];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[2]);
+                    Assert.AreEqual(columnHeader2[1], elements[3]);
+                }
 
                 elementManager.ContainerViewList.RealizeFirst(1);
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(5, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[3]);
+                    Assert.AreEqual(columnHeader2[1], elements[4]);
+                }
 
                 elementManager.ContainerViewList.RealizePrev();
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(5, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[3]);
+                    Assert.AreEqual(columnHeader2[1], elements[4]);
+                }
 
                 elementManager.ContainerViewList.RealizeNext();
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "1"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[2].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[3].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "2"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[4].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[5].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(6, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    {
+                        var blockView = (BlockView)elements[1];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[2];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[1], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[2]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[3]], rowView.Elements[0]);
+                        }
+                    }
+                    {
+                        var blockView = (BlockView)elements[3];
+                        Assert.AreEqual(3, blockView.Elements.Count);
+                        Assert.AreEqual(blockHeader[2], blockView.Elements[0]);
+                        {
+                            var rowView = (RowView)blockView.Elements[1];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[4]], rowView.Elements[0]);
+                        }
+                        {
+                            var rowView = (RowView)blockView.Elements[2];
+                            Assert.AreEqual(1, rowView.Elements.Count);
+                            Assert.AreEqual(textBlock[rows[5]], rowView.Elements[0]);
+                        }
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[4]);
+                    Assert.AreEqual(columnHeader2[1], elements[5]);
+                }
 
                 elementManager.ContainerViewList.VirtualizeAll();
-                elementManager.Elements
-                    .Verify((TextBlock t) => Verify(t, template.ScalarBindings[0], _.Name.DisplayName))
-                    .Verify((BlockView b) => b.Elements
-                        .Verify((TextBlock y) => Verify(y, template.BlockBindings[0], "0"))
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].GetValue(_.Name)))
-                            .VerifyEof())
-                        .Verify((RowView r) => r.Elements
-                            .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].GetValue(_.Name)))
-                            .VerifyEof())
-                        .VerifyEof())
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .Verify((TextBlock x) => Verify(x, template.ScalarBindings[1], _.Name.DisplayName))
-                    .VerifyEof();
+                {
+                    var elements = elementManager.Elements;
+                    Assert.AreEqual(4, elements.Count);
+                    Assert.AreEqual(columnHeader1[0], elements[0]);
+                    var blockView = (BlockView)elements[1];
+                    Assert.AreEqual(3, blockView.Elements.Count);
+                    Assert.AreEqual(blockHeader[0], blockView.Elements[0]);
+                    {
+                        var rowView = (RowView)blockView.Elements[1];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[0]], rowView.Elements[0]);
+                    }
+                    {
+                        var rowView = (RowView)blockView.Elements[2];
+                        Assert.AreEqual(1, rowView.Elements.Count);
+                        Assert.AreEqual(textBlock[rows[1]], rowView.Elements[0]);
+                    }
+                    Assert.AreEqual(columnHeader2[0], elements[2]);
+                    Assert.AreEqual(columnHeader2[1], elements[3]);
+                }
 
                 elementManager.ClearElements();
                 Assert.IsNull(elementManager.Elements);

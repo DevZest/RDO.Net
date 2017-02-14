@@ -7,6 +7,14 @@ namespace DevZest.Data.Windows.Helpers
 {
     internal static class BindingFactory
     {
+        public static BlockBinding<BlockHeader> BlockHeader(this Model _)
+        {
+            return new BlockBinding<BlockHeader>(onRefresh: (element, blockOrdinal, rows) =>
+            {
+                element.Text = blockOrdinal.ToString();
+            });
+        }
+
         private static void RefreshDisplayName(TextBlock element, Column column)
         {
             element.Text = column.DisplayName;

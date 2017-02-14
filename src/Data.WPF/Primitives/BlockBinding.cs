@@ -103,7 +103,8 @@ namespace DevZest.Data.Windows.Primitives
                     return pane == null ? null : pane.Children[Ordinal];
                 }
 
-                return ElementManager[blockOrdinal];
+                var blockView = (BlockView)ElementManager[blockOrdinal];
+                return blockView == null || blockView.Elements == null ? null : blockView[this];
             }
         }
     }
