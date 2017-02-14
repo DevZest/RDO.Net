@@ -12,6 +12,14 @@ namespace DevZest.Data.Windows
             = new ResourceManager("DevZest.Data.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// Invalid input for type {type}.
+        /// </summary>
+        public static string BindingFactory_InvalidInput(object type)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("BindingFactory_InvalidInput", "type"), type);
+        }
+
+        /// <summary>
         /// The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].
         /// </summary>
         public static string Binding_InvalidFrozenMargin(object frozen, object bindings, object ordinal)

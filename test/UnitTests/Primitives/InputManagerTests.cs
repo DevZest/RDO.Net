@@ -1,6 +1,9 @@
 ﻿using DevZest.Data.Windows.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -33,6 +36,5 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         #endregion
-
     }
 }
