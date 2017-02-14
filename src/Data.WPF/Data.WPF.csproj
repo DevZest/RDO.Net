@@ -66,12 +66,8 @@
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="Scalar_T.cs" />
-    <Compile Include="Utilities\DictionaryExtensions.AddEntry.cs" />
-    <Compile Include="Utilities\DictionaryExtensions.GetValues.cs" />
-    <Compile Include="Utilities\DictionaryExtensions.ToReadOnlyDictionary.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
-    <Compile Include="Utilities\CollectionExtensions.GetCount.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="Primitives\Input_T.cs" />
     <Compile Include="RowInput.cs" />
@@ -128,7 +124,6 @@
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
-    <Compile Include="Utilities\DependencyObject.Contains.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowViewPanel.cs" />
     <Compile Include="RowView.cs" />
