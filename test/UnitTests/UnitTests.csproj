@@ -81,6 +81,7 @@
     <Compile Include="Helpers\BlockHeader.cs" />
     <Compile Include="Helpers\ProductCategoryDataSet.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
+    <Compile Include="Primitives\InputManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
     <Compile Include="Primitives\LayoutXYManagerTests.cs" />
     <Compile Include="Primitives\LayoutZManagerTests.cs" />
