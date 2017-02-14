@@ -367,34 +367,37 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements_IsCurrent()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            RowBinding<RowHeader> rowHeader = null;
             var elementManager = CreateElementManager(dataSet, (builder, _) =>
             {
-                builder.GridColumns("100")
-                    .GridRows("100")
-                .Layout(Orientation.Vertical, 0)
-                .AddBinding(0, 0, _.BindIsCurrentToTextBlock());
+                rowHeader = _.RowHeader();
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, rowHeader);
             });
+
+
             var template = elementManager.Template;
             var rows = elementManager.Rows;
 
             Assert.IsTrue(rows[0].IsCurrent);
-            elementManager.Elements
-                .Verify((BlockView b) => b.Elements
-                    .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsCurrent.ToString()))
-                        .VerifyEof())
-                    .VerifyEof())
-                .VerifyEof();
+            {
+                var elements = elementManager.Elements;
+                Assert.AreEqual(1, elements.Count);
+                var rowView = (RowView)elements[0];
+                Assert.AreEqual(1, rowView.Elements.Count);
+                Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
+                Assert.IsTrue(rowHeader[rows[0]].IsCurrent);
+            }
 
             elementManager.CurrentRow = rows[1];
             Assert.IsTrue(rows[1].IsCurrent);
-            elementManager.Elements
-                .Verify((BlockView b) => b.Elements
-                    .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[1].IsCurrent.ToString()))
-                        .VerifyEof())
-                    .VerifyEof())
-                .VerifyEof();
+            {
+                var elements = elementManager.Elements;
+                Assert.AreEqual(1, elements.Count);
+                var rowView = (RowView)elements[0];
+                Assert.AreEqual(1, rowView.Elements.Count);
+                Assert.AreEqual(rowHeader[rows[1]], rowView.Elements[0]);
+                Assert.IsTrue(rowHeader[rows[1]].IsCurrent);
+            }
         }
 
         [TestMethod]
