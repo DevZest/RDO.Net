@@ -7,16 +7,6 @@ namespace DevZest.Data.Windows
 {
     internal static class BindingFactory
     {
-        private static void RefreshIsEditing(TextBlock element, RowPresenter rowPresenter)
-        {
-            element.Text = rowPresenter.IsEditing.ToString();
-        }
-
-        public static RowBinding<TextBlock> BindIsEditingToTextBlock(this Model _)
-        {
-            return new RowBinding<TextBlock>(RefreshIsEditing);
-        }
-
         private static void RefreshIsCurrent(TextBlock element, RowPresenter rowPresenter)
         {
             element.Text = rowPresenter.IsCurrent.ToString();

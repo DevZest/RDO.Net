@@ -401,34 +401,31 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements_IsEditing()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            RowBinding<RowHeader> rowHeader = null;
             var elementManager = CreateElementManager(dataSet, (builder, _) =>
             {
-                builder.GridColumns("100")
-                    .GridRows("100")
-                .Layout(Orientation.Vertical, 0)
-                .AddBinding(0, 0, _.BindIsEditingToTextBlock());
+                rowHeader = _.RowHeader();
+                builder.GridColumns("100").GridRows("100")
+                    .AddBinding(0, 0, rowHeader);
             });
+
             var template = elementManager.Template;
             var rows = elementManager.Rows;
 
             Assert.IsFalse(rows[0].IsEditing);
-            elementManager.Elements
-                .Verify((BlockView b) => b.Elements
-                    .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsEditing.ToString()))
-                        .VerifyEof())
-                    .VerifyEof())
-                .VerifyEof();
+
+            {
+                var elements = elementManager.Elements;
+                Assert.AreEqual(1, elements.Count);
+                var rowView = (RowView)elements[0];
+                Assert.AreEqual(1, rowView.Elements.Count);
+                Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
+                Assert.IsFalse(rowHeader[rows[0]].IsEditing);
+            }
 
             rows[0].BeginEdit();
             Assert.IsTrue(rows[0].IsEditing);
-            elementManager.Elements
-                .Verify((BlockView b) => b.Elements
-                    .Verify((RowView r) => r.Elements
-                        .Verify((TextBlock t) => Verify(t, template.RowBindings[0], rows[0].IsEditing.ToString()))
-                        .VerifyEof())
-                    .VerifyEof())
-                .VerifyEof();
+            Assert.IsTrue(rowHeader[rows[0]].IsEditing);
         }
     }
 }
