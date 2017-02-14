@@ -6,6 +6,15 @@ namespace DevZest.Data.Windows
 {
     public static class BindingFactory
     {
+        public static ScalarBinding<ColumnHeader> ColumnHeader(this Column source)
+        {
+            return new ScalarBinding<ColumnHeader>(
+                onRefresh: e =>
+                {
+                    e.Column = source;
+                });
+        }
+
         public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source)
         {
             if (source == null)
