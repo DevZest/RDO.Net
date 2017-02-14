@@ -78,8 +78,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void SetInputError(UIElement element, ViewInputError inputError);
 
-        private void ValidateInput(T element)
+        internal void ValidateInput(T element)
         {
+            if (_inputValidator == null)
+                return;
             var oldInputError = GetInputError(element);
             var inputError = _inputValidator(element);
             if (IsInputErrorChanged(inputError, oldInputError))

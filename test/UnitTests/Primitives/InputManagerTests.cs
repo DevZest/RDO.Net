@@ -36,5 +36,27 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         #endregion
+
+        [TestMethod]
+        public void InputManager_RowInput()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            RowBinding<TextBox> textBox = null;
+            var inputManager = CreateInputManager(dataSet, (builder, _) =>
+            {
+                textBox = _.ParentProductCategoryID.TextBox(UpdateSourceTrigger.PropertyChanged);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
+            });
+
+            Assert.IsTrue(string.IsNullOrEmpty(textBox[inputManager.CurrentRow].Text));
+            Assert.IsNull(inputManager.GetRowInputError(textBox[inputManager.CurrentRow]));
+
+            textBox[inputManager.CurrentRow].Text = "A";
+            Assert.IsNotNull(inputManager.GetRowInputError(textBox[inputManager.CurrentRow]));
+
+            textBox[inputManager.CurrentRow].Text = "100";
+            Assert.IsNull(inputManager.GetRowInputError(textBox[inputManager.CurrentRow]));
+            Assert.AreEqual(100, dataSet._.ParentProductCategoryID[inputManager.CurrentRow.DataRow]);
+        }
     }
 }

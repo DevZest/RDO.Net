@@ -65,6 +65,9 @@ namespace DevZest.Data.Windows
             {
                 if (getValue == null)
                     return false;
+                ValidateInput(element);
+                if (GetInputError(element) != null)
+                    return false;
                 var value = getValue(element);
                 if (column.AreEqual(rowPresenter.GetValue(column), value))
                     return false;

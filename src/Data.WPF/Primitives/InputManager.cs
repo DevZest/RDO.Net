@@ -107,7 +107,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void SetRowInputError(UIElement element, ViewInputError inputError)
         {
-            SetInputError(InternalScalarInputErrors, element, inputError);
+            SetInputError(InternalRowInputErrors, element, inputError);
         }
 
         public IReadOnlyList<ViewInputError> RowInputErrors
