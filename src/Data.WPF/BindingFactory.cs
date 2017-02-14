@@ -15,6 +15,17 @@ namespace DevZest.Data.Windows
                 });
         }
 
+        public static RowBinding<RowHeader> RowHeader(this Model source)
+        {
+            return new RowBinding<RowHeader>(
+                onRefresh: (e, r) =>
+                {
+                    e.IsCurrent = r.IsCurrent;
+                    e.IsSelected = r.IsSelected;
+                    e.IsEditing = r.IsEditing;
+                });
+        }
+
         public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source)
         {
             if (source == null)
