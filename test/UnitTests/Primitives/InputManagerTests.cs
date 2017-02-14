@@ -58,5 +58,31 @@ namespace DevZest.Data.Windows.Primitives
             Assert.IsNull(inputManager.GetRowInputError(textBox[inputManager.CurrentRow]));
             Assert.AreEqual(100, dataSet._.ParentProductCategoryID[inputManager.CurrentRow.DataRow]);
         }
+
+        [TestMethod]
+        public void InputManager_ScalarInput()
+        {
+            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            Scalar<Int32> scalar = new Scalar<int>();
+            ScalarBinding<TextBox> textBox = null;
+            RowBinding<TextBlock> textBlock = null;
+            var inputManager = CreateInputManager(dataSet, (builder, _) =>
+            {
+                textBox = scalar.TextBox(UpdateSourceTrigger.PropertyChanged);
+                textBlock = _.Name.TextBlock(); // to avoid empty RowRange
+                builder.GridColumns("100").GridRows("100", "100").AddBinding(0, 0, textBox).AddBinding(0, 1, textBlock);
+            });
+
+            Assert.AreEqual("0", textBox[0].Text);
+            Assert.IsNull(inputManager.GetScalarInputError(textBox[0]));
+
+            textBox[0].Text = "A";
+            Assert.IsNotNull(inputManager.GetScalarInputError(textBox[0]));
+
+            textBox[0].Text = "100";
+            Assert.IsNull(inputManager.GetScalarInputError(textBox[0]));
+            Assert.AreEqual(100, scalar.Value);
+
+        }
     }
 }
