@@ -282,6 +282,7 @@ namespace DevZest.Data.Windows.Primitives
             return value == BAD_NAME ? new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
         }
 
+        // http://stackoverflow.com/questions/14087257/how-to-add-synchronization-context-to-async-test-method
         private static void RunInWpfSyncContext(Func<Task> func)
         {
             if (func == null)
