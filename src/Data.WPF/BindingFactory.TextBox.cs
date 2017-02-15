@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source);
-            }).WithInput(trigger, source, e => e.Text);
+            }).WithInput(trigger, source, e => string.IsNullOrEmpty(e.Text) ? null : e.Text);
         }
 
         public static RowBinding<TextBox> TextBox(this _Int16 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -126,6 +127,80 @@ namespace DevZest.Data.Windows.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);
                 Assert.AreEqual(inputManager.GetScalarValueError(textBox[0]), errors[0].ErrorContent);
+            }
+        }
+
+        [TestMethod]
+        public void InputManager_Validate_Progress()
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var _ = dataSet._;
+            dataSet.Add(new DataRow());
+
+            RowBinding<TextBox> textBox = null;
+            var inputManager = dataSet.CreateInputManager(builder =>
+            {
+                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
+            });
+
+            var currentRow = inputManager.CurrentRow;
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(0, errors.Count);
+            }
+
+            textBox[currentRow].Text = "some name";
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(0, errors.Count);
+            }
+
+            textBox[currentRow].Text = null;
+            Assert.AreEqual(string.Empty, textBox[currentRow].Text);
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(1, errors.Count);
+                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
+                Assert.AreEqual(_.Name, errorMessage.Source);
+            }
+
+            textBox[currentRow].Text = "some other name";
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(0, errors.Count);
+            }
+        }
+
+        [TestMethod]
+        public void InputManager_Validate_Implicit()
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var _ = dataSet._;
+            dataSet.Add(new DataRow());
+
+            RowBinding<TextBox> textBox = null;
+            var inputManager = dataSet.CreateInputManager(builder =>
+            {
+                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
+            });
+
+            var currentRow = inputManager.CurrentRow;
+            Assert.IsNull(_.Name[0]);
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(1, errors.Count);
+                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
+                Assert.AreEqual(_.Name, errorMessage.Source);
+            }
+
+            textBox[currentRow].Text = "some name";
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(0, errors.Count);
             }
         }
     }

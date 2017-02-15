@@ -21,6 +21,8 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             Progress = new ValidationProgress(this);
+            if (ValidationMode == ValidationMode.Implicit)
+                Validate();
         }
 
         public void FlushScalars()
