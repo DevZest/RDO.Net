@@ -16,7 +16,10 @@
       "include": "../../src/Data.Common/**/*.cs"
     },
     "embed": {
-      "DevZest.Data.Strings": "../../src/Data.Common/Properties/Strings.resx"
+      "include": [ "../../src/Data.Common/Properties/*.resx" ],
+      "mappings": {
+        "DevZest.Data": "../../src/Data.Common/Properties"
+      }
     },
     "warningsAsErrors": true,
     "define": [ "DEPLOY" ],

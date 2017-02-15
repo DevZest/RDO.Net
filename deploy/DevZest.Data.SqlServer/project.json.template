@@ -16,7 +16,10 @@
       "include": "../../src/Data.SqlServer/**/*.cs"
     },
     "embed": {
-      "DevZest.Data.SqlSever.Strings": "../../src/Data.SqlServer/Properties/Strings.resx"
+      "include": [ "../../src/Data.SqlServer/Properties/*.resx" ],
+      "mappings": {
+        "DevZest.Data.SqlServer": "../../src/Data.SqlServer/Properties"
+      }
     },
     "warningsAsErrors": true,
     "define": [ "DEPLOY" ],
