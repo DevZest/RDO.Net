@@ -46,6 +46,7 @@ namespace DevZest.Samples.AdventureWorksLT
         public Key ParentProductCategory { get; private set; }
 
         [UdtName]
+        [Required]
         public _String Name { get; private set; }
     }
 }
