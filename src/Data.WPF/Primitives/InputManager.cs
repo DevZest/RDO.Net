@@ -241,6 +241,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
+
             InvalidateView();
         }
 

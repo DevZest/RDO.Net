@@ -1,6 +1,7 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -202,6 +203,56 @@ namespace DevZest.Data.Windows.Primitives
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(0, errors.Count);
             }
+        }
+
+        private const string BAD_NAME = "Bad Name";
+
+        [TestMethod]
+        public void InputManager_AsyncValidators()
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var _ = dataSet._;
+            dataSet.Add(new DataRow());
+
+            RowBinding<TextBox> textBox = null;
+            RowBinding<ValidationView> validationView = null;
+            var inputManager = dataSet.CreateInputManager(builder =>
+            {
+                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                validationView = textBox.Input.ValidationView();
+
+                builder.GridColumns("100").GridRows("100")
+                    .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
+                    .AddBinding(0, 0, validationView);
+
+                textBox.Input.AddAsyncValidator(() => AsyncValidate(_.Name, 0));
+            });
+
+            var currentRow = inputManager.CurrentRow;
+
+            Assert.AreEqual(1, validationView[currentRow].AsyncValidators.Count);
+            Assert.AreEqual(AsyncValidatorStatus.Created, validationView[currentRow].AsyncValidators[0].Status);
+            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+
+            textBox[currentRow].Text = BAD_NAME;
+            Assert.AreEqual(1, validationView[currentRow].AsyncValidators.Count);
+            Assert.AreEqual(AsyncValidatorStatus.Running, validationView[currentRow].AsyncValidators[0].Status);
+            Assert.AreEqual(1, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+
+        }
+
+        private static async Task<IValidationMessageGroup> AsyncValidate(_String nameColumn, int index)
+        {
+            await Task.Delay(1000);
+            var value = nameColumn[index];
+            if (value == BAD_NAME)
+                return new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn);
+            else
+                return null;
         }
     }
 }

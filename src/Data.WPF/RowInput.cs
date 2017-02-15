@@ -186,6 +186,8 @@ namespace DevZest.Data.Windows
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
+            if (Template == null)
+                throw new InvalidOperationException(Strings.RowInput_NullTemplateWhenAddAsyncValidator);
             VerifyNotSealed();
 
             var asyncValidator = AsyncValidator.Create<T>(this, action, postAction);

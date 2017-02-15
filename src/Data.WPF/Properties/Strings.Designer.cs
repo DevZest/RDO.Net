@@ -196,6 +196,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The RowBinding must be added into Template before adding async validator.
+        /// </summary>
+        public static string RowInput_NullTemplateWhenAddAsyncValidator
+        {
+            get { return GetString("RowInput_NullTemplateWhenAddAsyncValidator"); }
+        }
+
+        /// <summary>
         /// The virtual row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteVirtualRow
