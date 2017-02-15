@@ -35,11 +35,11 @@ namespace DevZest.Data.Windows
                 throw new ArgumentNullException(nameof(source));
 
             return new RowBinding<ValidationView>(
-                onRefresh: (e, r) =>
+                onSetup: (e, r) =>
                 {
                     e.AsyncValidators = source.AsyncValidators;
                 },
-                onSetup: (e, r) =>
+                onRefresh: (e, r) =>
                 {
                     e.Errors = source.GetErrors(r);
                     e.Warnings = source.GetErrors(r);

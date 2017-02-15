@@ -173,11 +173,6 @@ namespace DevZest.Data.Windows.Primitives
                 ClearValidationMessages();
         }
 
-        internal bool ShouldRunAsyncValidator(RowPresenter rowPresenter, IColumnSet columns)
-        {
-            return Progress.IsVisible(rowPresenter, columns) && HasNoError(rowPresenter, columns);
-        }
-
         private static IValidationMessageGroup GetValidationMessages(IValidationDictionary dictionary, RowPresenter rowPresenter, IColumnSet columns)
         {
             Debug.Assert(dictionary != null);
@@ -195,25 +190,6 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             return result;
-        }
-
-        private bool HasNoError(RowPresenter rowPresenter, IColumnSet columns)
-        {
-            if (Errors.Count == 0)
-                return true;
-
-            IValidationMessageGroup messages;
-            if (!Errors.TryGetValue(rowPresenter, out messages))
-                return true;
-
-            for (int i = 0; i < messages.Count; i++)
-            {
-                var message = messages[i];
-                if (message.Source.SetEquals(columns))
-                    return false;
-            }
-
-            return true;
         }
 
         internal IValidationMessageGroup GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
@@ -242,7 +218,45 @@ namespace DevZest.Data.Windows.Primitives
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
 
+            OnProgress(rowInput);
             InvalidateView();
+        }
+
+        private void OnProgress<T>(RowInput<T> rowInput)
+            where T : UIElement, new()
+        {
+            if (ValidationMode == ValidationMode.Explicit)
+                return;
+
+            if (HasError(CurrentRow, rowInput.Columns))
+                return;
+
+            var asyncValidators = Template.AsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                if (asyncValidator.SourceColumns.Intersect(rowInput.Columns).Count > 0)
+                    asyncValidator.Run();
+            }
+        }
+
+        private bool HasError(RowPresenter rowPresenter, IColumnSet columns)
+        {
+            if (Errors.Count == 0)
+                return false;
+
+            IValidationMessageGroup messages;
+            if (!Errors.TryGetValue(rowPresenter, out messages))
+                return false;
+
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (message.Source.SetEquals(columns))
+                    return true;
+            }
+
+            return false;
         }
 
         internal ValidationMode ValidationMode

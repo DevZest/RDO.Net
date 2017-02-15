@@ -1,9 +1,11 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -208,7 +210,12 @@ namespace DevZest.Data.Windows.Primitives
         private const string BAD_NAME = "Bad Name";
 
         [TestMethod]
-        public void InputManager_AsyncValidators()
+        public void InputManager_AsyncValidators_InputError_to_Invalid_to_Valid()
+        {
+            RunInWpfSyncContext(InputManager_AsyncValidatorsAsync);
+        }
+
+        private async Task InputManager_AsyncValidatorsAsync()
         {
             var dataSet = DataSet<ProductCategory>.New();
             var _ = dataSet._;
@@ -229,19 +236,42 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             var currentRow = inputManager.CurrentRow;
+            var asyncValidator = validationView[currentRow].AsyncValidators[0];
+            Assert.AreEqual(asyncValidator, validationView[currentRow].AsyncValidators);
 
-            Assert.AreEqual(1, validationView[currentRow].AsyncValidators.Count);
-            Assert.AreEqual(AsyncValidatorStatus.Created, validationView[currentRow].AsyncValidators[0].Status);
+            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
             Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+            Assert.AreEqual(1, validationView[currentRow].Errors.Count);
 
             textBox[currentRow].Text = BAD_NAME;
-            Assert.AreEqual(1, validationView[currentRow].AsyncValidators.Count);
-            Assert.AreEqual(AsyncValidatorStatus.Running, validationView[currentRow].AsyncValidators[0].Status);
-            Assert.AreEqual(1, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
+            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
             Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
+
+            await asyncValidator.RunningTask;
+            Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
+            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+            Assert.AreEqual(1, validationView[currentRow].Errors.Count);
+
+            textBox[currentRow].Text = "Good Name";
+            Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
+            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
+
+            await asyncValidator.RunningTask;
+            Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
+            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].Errors.Count);
 
         }
 
@@ -251,5 +281,33 @@ namespace DevZest.Data.Windows.Primitives
             var value = nameColumn[index];
             return value == BAD_NAME ? new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
         }
+
+        private static void RunInWpfSyncContext(Func<Task> func)
+        {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+
+            var prevCtx = SynchronizationContext.Current;
+            try
+            {
+                var syncCtx = new DispatcherSynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(syncCtx);
+
+                var task = func();
+                if (task == null)
+                    throw new InvalidOperationException();
+
+                var frame = new DispatcherFrame();
+                var t2 = task.ContinueWith(x => { frame.Continue = false; }, TaskScheduler.Default);
+                Dispatcher.PushFrame(frame);   // execute all tasks until frame.Continue == false
+
+                task.GetAwaiter().GetResult(); // rethrow exception when task has failed 
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(prevCtx);
+            }
+        }
+
     }
 }

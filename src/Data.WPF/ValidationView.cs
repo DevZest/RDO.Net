@@ -76,7 +76,7 @@ namespace DevZest.Data.Windows
                 if (value == null || value.Count == 0)
                     ClearValue(RunningAsyncValidatorsPropertyKey);
                 else
-                    SetValue(RunningAsyncValidatorsProperty, value);
+                    SetValue(RunningAsyncValidatorsPropertyKey, value);
             }
         }
 
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows
                 if (value == null || value.Count == 0)
                     ClearValue(CompletedAsyncValidatorsPropertyKey);
                 else
-                    SetValue(CompletedAsyncValidatorsProperty, value);
+                    SetValue(CompletedAsyncValidatorsPropertyKey, value);
             }
         }
 
@@ -100,18 +100,18 @@ namespace DevZest.Data.Windows
                 if (value == null || value.Count == 0)
                     ClearValue(FaultedAsyncValidatorsPropertyKey);
                 else
-                    SetValue(FaultedAsyncValidatorsProperty, value);
+                    SetValue(FaultedAsyncValidatorsPropertyKey, value);
             }
         }
 
         public void RefreshStatus()
         {
             if (AnyStatusChange(AsyncValidatorStatus.Running, RunningAsyncValidators))
-                RunningAsyncValidators = AsyncValidatorGroup.Empty.Where(x => x.Status == AsyncValidatorStatus.Running);
+                RunningAsyncValidators = AsyncValidators.Where(x => x.Status == AsyncValidatorStatus.Running);
             if (AnyStatusChange(AsyncValidatorStatus.Completed, CompletedAsyncValidators))
-                CompletedAsyncValidators = AsyncValidatorGroup.Empty.Where(x => x.Status == AsyncValidatorStatus.Completed);
+                CompletedAsyncValidators = AsyncValidators.Where(x => x.Status == AsyncValidatorStatus.Completed);
             if (AnyStatusChange(AsyncValidatorStatus.Faulted, FaultedAsyncValidators))
-                FaultedAsyncValidators = AsyncValidatorGroup.Empty.Where(x => x.Status == AsyncValidatorStatus.Faulted);
+                FaultedAsyncValidators = AsyncValidators.Where(x => x.Status == AsyncValidatorStatus.Faulted);
         }
 
         private bool AnyStatusChange(AsyncValidatorStatus status, IAsyncValidatorGroup statusAsyncValidators)
@@ -134,7 +134,7 @@ namespace DevZest.Data.Windows
                     return true;
             }
 
-            return statusAsyncValidators.Count == count;
+            return statusAsyncValidators.Count != count;
         }
     }
 }

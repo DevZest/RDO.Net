@@ -74,7 +74,7 @@ namespace DevZest.Data.Windows
                 get { return ValidationScope.CurrentRow; }
             }
 
-            protected override async Task<IValidationDictionary> Validate()
+            protected override async Task<IValidationDictionary> ValidateCoreAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -130,7 +130,7 @@ namespace DevZest.Data.Windows
                 get { return ValidationScope.CurrentRow; }
             }
 
-            protected override async Task<IValidationDictionary> Validate()
+            protected override async Task<IValidationDictionary> ValidateCoreAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -157,7 +157,7 @@ namespace DevZest.Data.Windows
                 get { return ValidationScope.AllRows; }
             }
 
-            protected override async Task<IValidationDictionary> Validate()
+            protected override async Task<IValidationDictionary> ValidateCoreAsync()
             {
                 var result = await _action();
                 return result == null ? ValidationDictionary.Empty : InputManager.ToValidationDictionary(result);
@@ -205,7 +205,7 @@ namespace DevZest.Data.Windows
 
         public abstract ValidationScope ValidationScope { get; }
 
-        protected abstract Task<IValidationDictionary> Validate();
+        protected abstract Task<IValidationDictionary> ValidateCoreAsync();
 
         private AsyncValidatorStatus _status = AsyncValidatorStatus.Created;
         public AsyncValidatorStatus Status
@@ -245,8 +245,22 @@ namespace DevZest.Data.Windows
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private Task<IValidationDictionary> _runningTask;
-        public async Task Run()
+#if DEBUG
+        internal Task RunningTask { get; private set; }
+#endif
+        private Task<IValidationDictionary> _awaitingTask;
+
+        public async void Run()
+        {
+#if DEBUG
+            var runningTask = RunningTask = ValidateAsync();
+#else
+            var runningTask = ValidateAsync();
+#endif
+            await runningTask;
+        }
+
+        private async Task ValidateAsync()
         {
             if (Status == AsyncValidatorStatus.Running)
             {
@@ -257,18 +271,19 @@ namespace DevZest.Data.Windows
             Errors = Warnings = ValidationDictionary.Empty;
             Exception = null;
             Status = AsyncValidatorStatus.Running;
+            InputManager.InvalidateView();
+
             IValidationDictionary result;
             AsyncValidatorStatus status;
             Exception exception;
-            InputManager.InvalidateView();
             do
             {
                 _pendingValidationRequest = false;
-                var task = _runningTask = Validate();
+                var task = _awaitingTask = ValidateCoreAsync();
                 try
                 {
                     result = await task;
-                    if (task != _runningTask)   // Cancelled
+                    if (task != _awaitingTask)   // Cancelled
                         return;
                     status = AsyncValidatorStatus.Completed;
                     exception = null;
@@ -282,7 +297,7 @@ namespace DevZest.Data.Windows
             }
             while (_pendingValidationRequest);
 
-            _runningTask = null;
+            _awaitingTask = null;
             Exception = exception;
             Status = status;
             Errors = result.Where(ValidationSeverity.Error);
@@ -306,7 +321,7 @@ namespace DevZest.Data.Windows
         internal void Reset()
         {
             if (Status == AsyncValidatorStatus.Running)
-                _runningTask = null;
+                _awaitingTask = null;
 
             Status = AsyncValidatorStatus.Created;
             Exception = null;
@@ -327,7 +342,7 @@ namespace DevZest.Data.Windows
                 Reset();
         }
 
-        #region IAsyncValidatorGroup
+#region IAsyncValidatorGroup
         bool IAsyncValidatorGroup.IsSealed
         {
             get { return true; }
@@ -371,6 +386,6 @@ namespace DevZest.Data.Windows
             yield return this;
         }
 
-        #endregion
+#endregion
     }
 }
