@@ -234,10 +234,10 @@ namespace DevZest.Data.Windows.Primitives
             return GetValidationMessages(Warnings, rowPresenter, rowInput.Columns);
         }
 
-        internal void MakeProgress<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
+        internal void MakeProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            Progress.MakeProgress(rowPresenter, rowInput);
+            Progress.MakeProgress(CurrentRow, rowInput);
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;

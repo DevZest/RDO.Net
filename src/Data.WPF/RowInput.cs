@@ -36,13 +36,6 @@ namespace DevZest.Data.Windows
         internal IColumnSet Columns { get; private set; } = ColumnSet.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
-        private void MakeProgress()
-        {
-            var currentRow = CurrentRow;
-            Debug.Assert(currentRow != null);
-            InputManager.MakeProgress(currentRow, this);
-        }
-
         private RowPresenter CurrentRow
         {
             get { return InputManager.CurrentRow; }
@@ -82,7 +75,7 @@ namespace DevZest.Data.Windows
                 throw new InvalidOperationException(Strings.RowInput_FlushCurrentRowOnly);
             var flushed = DoFlush(currentRow, element);
             if (flushed)
-                MakeProgress();
+                InputManager.MakeProgress(this);
         }
 
         private bool DoFlush(RowPresenter rowPresenter, T element)
