@@ -54,16 +54,12 @@ namespace DevZest.Data.Windows
                     return false;
                 var value = getValue(element);
 
-                ValidateInput(element);
-                if (GetInputError(element) != null)
-                    return false;
-
                 var inputError = scalar.Validate(value);
                 if (inputError.IsEmpty)
                     return scalar.ChangeValue(value);
                 else
                 {
-                    SetInputError(element, new ViewInputError(inputError, element));
+                    InputManager.SetScalarValueError(element, new ViewInputError(inputError, element));
                     return false;
                 }
             });
@@ -88,16 +84,17 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private Action<T, ViewInputError> _onRefresh;
+        private Action<T, ViewInputError, ViewInputError> _onRefresh;
         internal void Refresh(T element)
         {
             var inputError = GetInputError(element);
+            var valueError = InputManager.GetScalarValueError(element);
             if (_onRefresh != null)
-                _onRefresh(element, inputError);
-            element.RefreshValidation(inputError, AbstractValidationMessageGroup.Empty);
+                _onRefresh(element, inputError, valueError);
+            element.RefreshValidation(inputError ?? valueError, AbstractValidationMessageGroup.Empty);
         }
 
-        public ScalarInput<T> WithRefreshAction(Action<T, ViewInputError> onRefresh)
+        public ScalarInput<T> WithRefreshAction(Action<T, ViewInputError, ViewInputError> onRefresh)
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;

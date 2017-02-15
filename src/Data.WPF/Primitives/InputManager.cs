@@ -53,9 +53,25 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
+        private InputErrorCollection _scalarValueErrors;
+        private InputErrorCollection InternalScalarValueErrors
+        {
+            get
+            {
+                if (_scalarValueErrors == null)
+                    _scalarValueErrors = new InputErrorCollection();
+                return _scalarValueErrors;
+            }
+        }
+
         internal ViewInputError GetScalarInputError(UIElement element)
         {
             return GetInputError(_scalarInputErrors, element);
+        }
+
+        internal ViewInputError GetScalarValueError(UIElement element)
+        {
+            return GetInputError(_scalarValueErrors, element);
         }
 
         private static ViewInputError GetInputError(InputErrorCollection inputErrors, UIElement element)
@@ -68,6 +84,11 @@ namespace DevZest.Data.Windows.Primitives
         internal void SetScalarInputError(UIElement element, ViewInputError inputError)
         {
             SetInputError(InternalScalarInputErrors, element, inputError);
+        }
+
+        internal void SetScalarValueError(UIElement element, ViewInputError inputError)
+        {
+            SetInputError(InternalScalarValueErrors, element, inputError);
         }
 
         private void SetInputError(InputErrorCollection inputErrors, UIElement element, ViewInputError inputError)
