@@ -1,7 +1,5 @@
-﻿using DevZest.Data.Windows.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -10,39 +8,13 @@ namespace DevZest.Data.Windows.Primitives
     [TestClass]
     public class InputManagerTests
     {
-        #region Helpers
-
-        private sealed class ConcreteInputManager : InputManager
-        {
-            public ConcreteInputManager(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
-            {
-            }
-        }
-
-        private static InputManager CreateInputManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
-            where T : Model, new()
-        {
-            var template = new Template();
-            using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
-            {
-                buildTemplateAction(templateBuilder, dataSet._);
-                templateBuilder.BlockView<AutoInitBlockView>()
-                    .RowView<AutoInitRowView>();
-            }
-            var result = new ConcreteInputManager(template, dataSet);
-            result.InitializeElements(null);
-            return result;
-        }
-
-        #endregion
-
         [TestMethod]
         public void InputManager_RowInput()
         {
             var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var _ = dataSet._;
             RowBinding<TextBox> textBox = null;
-            var inputManager = CreateInputManager(dataSet, (builder, _) =>
+            var inputManager = dataSet.CreateInputManager((builder) =>
             {
                 textBox = _.ParentProductCategoryID.TextBox(UpdateSourceTrigger.PropertyChanged);
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
@@ -109,13 +81,14 @@ namespace DevZest.Data.Windows.Primitives
         public void InputManager_ScalarInput()
         {
             var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var _ = dataSet._;
             Scalar<Int32> scalar = new Scalar<int>(valueValidator: x =>
             {
                 return x > 5 ? new InputError("ERR-01", "Value cannot be greater than 5.") : InputError.Empty;
             });
             ScalarBinding<TextBox> textBox = null;
             RowBinding<TextBlock> textBlock = null;
-            var inputManager = CreateInputManager(dataSet, (builder, _) =>
+            var inputManager = dataSet.CreateInputManager((builder) =>
             {
                 textBox = scalar.TextBox(UpdateSourceTrigger.PropertyChanged);
                 textBlock = _.Name.TextBlock(); // to avoid empty RowRange

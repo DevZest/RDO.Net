@@ -1,8 +1,5 @@
-﻿using DevZest.Data.Windows.Helpers;
-using DevZest.Samples.AdventureWorksLT;
+﻿using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 
 namespace DevZest.Data.Windows.Primitives
 {

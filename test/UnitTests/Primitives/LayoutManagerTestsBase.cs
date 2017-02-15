@@ -1,27 +1,10 @@
-﻿using DevZest.Data.Windows.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
     public abstract class LayoutManagerTestsBase
     {
-        internal static LayoutManager CreateLayoutManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
-            where T : Model, new()
-        {
-            var template = new Template();
-            using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
-            {
-                buildTemplateAction(templateBuilder, dataSet._);
-                templateBuilder.RowView<AutoInitRowView>()
-                    .BlockView<AutoInitBlockView>();
-            }
-            var result = LayoutManager.Create(template, dataSet);
-            result.InitializeElements(null);
-            return result;
-        }
-
         internal static void VerifyContainerViewRect(LayoutManager layoutManager, int blockViewIndex, Rect expectedRect)
         {
             var blockView = blockViewIndex == -1 ? layoutManager.CurrentContainerView : layoutManager.ContainerViewList[blockViewIndex];

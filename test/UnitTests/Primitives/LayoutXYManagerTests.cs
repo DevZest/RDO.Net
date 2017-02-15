@@ -1,6 +1,4 @@
-﻿using DevZest.Data.Windows.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +13,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_ScrollInfo()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("20")
@@ -83,7 +82,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_RowBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("Auto")
@@ -142,7 +142,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_RowBinding_multidimensional()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("Auto")
@@ -180,7 +181,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_BlockBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("20", "100", "20")
                     .GridRows("20")
@@ -228,7 +230,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_ScalarBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("20", "100")
                     .GridRows("20", "20", "20")
@@ -256,7 +259,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_FrozenMain()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "10", "20", "10", "10")
@@ -367,7 +371,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_FrozenCross_ScalarBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(0, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "50", "50", "10")
                     .GridRows("10", "20")
@@ -410,7 +415,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_Stretches()
         {
             var dataSet = ProductCategoryDataSet.Mock(0, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "20", "10")
@@ -431,7 +437,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_FrozenCross_Block()
         {
             var dataSet = ProductCategoryDataSet.Mock(2, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -486,7 +493,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_FrozenCross_BlockBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(2, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -550,7 +558,8 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_FrozenCross_RowBinding()
         {
             var dataSet = ProductCategoryDataSet.Mock(2, false);
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var _ = dataSet._;
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -647,8 +656,9 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_GetLineFiguresMain_Spans()
         {
             var dataSet = ProductCategoryDataSet.Mock(6, false);
+            var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "10", "10", "10")
                     .GridRows("10", "10", "20", "10", "10")
@@ -692,8 +702,9 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_GetLineFiguresMain_Locations()
         {
             var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "20", "10")
                     .GridRows("10")
@@ -737,8 +748,9 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_GetLineFiguresCross_Span()
         {
             var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "20", "10")
                     .GridRows("10")
@@ -773,8 +785,9 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutXYManager_GetLineFiguresCross_Locations()
         {
             var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutXYManager)CreateLayoutManager(dataSet, (builder, _) =>
+            var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "10", "20", "10", "10")

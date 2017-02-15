@@ -1,10 +1,4 @@
-﻿using DevZest.Data.Windows.Helpers;
-using DevZest.Samples.AdventureWorksLT;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Windows;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
@@ -12,42 +6,16 @@ namespace DevZest.Data.Windows.Primitives
     [TestClass]
     public class ElementManagerTests
     {
-        #region Helpers
-
-        private sealed class ConcreteElementManager : ElementManager
-        {
-            public ConcreteElementManager(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
-            {
-            }
-        }
-
-        private static ElementManager CreateElementManager<T>(DataSet<T> dataSet, Action<TemplateBuilder, T> buildTemplateAction)
-            where T : Model, new()
-        {
-            var template = new Template();
-            using (var templateBuilder = new TemplateBuilder(template, dataSet.Model))
-            {
-                buildTemplateAction(templateBuilder, dataSet._);
-                templateBuilder.BlockView<AutoInitBlockView>()
-                    .RowView<AutoInitRowView>();
-            }
-            var result = new ConcreteElementManager(template, dataSet);
-            result.InitializeElements(null);
-            return result;
-        }
-
-        #endregion
-
         [TestMethod]
         public void ElementManager_Elements()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var _ = dataSet._;
             ScalarBinding<ColumnHeader> columnHeader1 = null;
             BlockBinding<BlockHeader> blockHeader = null;
             RowBinding<TextBlock> textBlock = null;
             ScalarBinding<ColumnHeader> columnHeader2 = null;
-            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            var elementManager = dataSet.CreateElementManager((builder) =>
             {
                 columnHeader1 = _.Name.ColumnHeader();
                 blockHeader = _.BlockHeader();
@@ -63,7 +31,6 @@ namespace DevZest.Data.Windows.Primitives
             });
 
             {
-                var _ = dataSet._;
                 var template = elementManager.Template;
                 var rows = elementManager.Rows;
 
@@ -458,15 +425,15 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var _ = dataSet._;
             RowBinding<TextBlock> textBlock = null;
-            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            var elementManager = dataSet.CreateElementManager((builder) =>
             {
                 textBlock = _.Name.TextBlock();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
             {
-                var _ = dataSet._;
                 var template = elementManager.Template;
                 var rows = elementManager.Rows;
 
@@ -480,8 +447,9 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements_IsCurrent()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var _ = dataSet._;
             RowBinding<RowHeader> rowHeader = null;
-            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            var elementManager = dataSet.CreateElementManager((builder) =>
             {
                 rowHeader = _.RowHeader();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, rowHeader);
@@ -517,8 +485,9 @@ namespace DevZest.Data.Windows.Primitives
         public void ElementManager_RefreshElements_IsEditing()
         {
             var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var _ = dataSet._;
             RowBinding<RowHeader> rowHeader = null;
-            var elementManager = CreateElementManager(dataSet, (builder, _) =>
+            var elementManager = dataSet.CreateElementManager((builder) =>
             {
                 rowHeader = _.RowHeader();
                 builder.GridColumns("100").GridRows("100")

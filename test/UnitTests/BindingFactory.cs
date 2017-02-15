@@ -1,9 +1,6 @@
-﻿using DevZest.Data.Windows.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System;
 
-namespace DevZest.Data.Windows.Helpers
+namespace DevZest.Data.Windows
 {
     internal static class BindingFactory
     {

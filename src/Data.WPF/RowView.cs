@@ -1,11 +1,8 @@
 ﻿using DevZest.Data.Windows.Primitives;
-using DevZest.Data.Windows.Utilities;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System;
 
 namespace DevZest.Data.Windows
 {

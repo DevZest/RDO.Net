@@ -1,7 +1,7 @@
 ﻿using DevZest.Samples.AdventureWorksLT;
 using System.Globalization;
 
-namespace DevZest.Data.Windows.Helpers
+namespace DevZest.Data.Windows
 {
     internal static class ProductCategoryDataSet
     {

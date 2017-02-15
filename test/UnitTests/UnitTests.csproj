@@ -75,11 +75,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Helpers\BindingFactory.cs" />
-    <Compile Include="Helpers\AutoInitBlockView.cs" />
-    <Compile Include="Helpers\AutoInitRowView.cs" />
-    <Compile Include="Helpers\BlockHeader.cs" />
-    <Compile Include="Helpers\ProductCategoryDataSet.cs" />
+    <Compile Include="DataSetExtensions.cs" />
+    <Compile Include="BindingFactory.cs" />
+    <Compile Include="BlockHeader.cs" />
+    <Compile Include="ProductCategoryDataSet.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\InputManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
@@ -96,7 +95,7 @@
     <Compile Include="Primitives\GridLengthParserTests.cs" />
     <Compile Include="Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\Placeholder.cs" />
+    <Compile Include="Placeholder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
