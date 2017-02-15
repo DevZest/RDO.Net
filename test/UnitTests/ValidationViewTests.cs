@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DevZest.Data.Windows.Primitives;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace DevZest.Data.Windows
@@ -9,50 +6,10 @@ namespace DevZest.Data.Windows
     [TestClass]
     public class ValidationViewTests
     {
-        private sealed class MockAsyncValidator : AsyncValidator
-        {
-            public override IRowInput RowInput
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            public override IColumnSet SourceColumns
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            public override ValidationScope ValidationScope
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            internal override InputManager InputManager
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            protected override Task<IValidationDictionary> ValidateCoreAsync()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         [TestMethod]
         public void ValidationView_RefreshStatus()
         {
-            AsyncValidator asyncValidator = new MockAsyncValidator();
+            var asyncValidator = (new Mock<AsyncValidator>() { CallBase = true }).Object;
             Assert.AreEqual(1, ((IAsyncValidatorGroup)asyncValidator).Count);
             var validationView = new ValidationView();
 
