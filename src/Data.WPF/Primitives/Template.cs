@@ -286,8 +286,8 @@ namespace DevZest.Data.Windows.Primitives
             return new GridRange(GridColumns[left], GridRows[top], GridColumns[right], GridRows[bottom]);
         }
 
-        [DefaultValue(RowPlaceholderMode.Explicit)]
-        public RowPlaceholderMode RowPlaceholderMode { get; internal set; } = RowPlaceholderMode.Explicit;
+        [DefaultValue(VirtualRowPlacement.Explicit)]
+        public VirtualRowPlacement VirtualRowPlacement { get; internal set; } = VirtualRowPlacement.Explicit;
 
         public int RecursiveModelOrdinal { get; internal set; } = -1;
 

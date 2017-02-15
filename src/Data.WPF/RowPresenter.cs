@@ -14,8 +14,8 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal RowPresenter(RowMapper rowMapper, int placeholderIndex)
-            : this(rowMapper, null, placeholderIndex)
+        internal RowPresenter(RowMapper rowMapper, int virtualRowIndex)
+            : this(rowMapper, null, virtualRowIndex)
         {
         }
 
@@ -82,7 +82,7 @@ namespace DevZest.Data.Windows
 
         private bool IsRecursive
         {
-            get { return !IsPlaceholder && Template.IsRecursive; }
+            get { return !IsVirtual && Template.IsRecursive; }
         }
 
         public DataPresenter DataPresenter
@@ -101,9 +101,9 @@ namespace DevZest.Data.Windows
 
         public DataRow DataRow { get; internal set; }
 
-        public bool IsPlaceholder
+        public bool IsVirtual
         {
-            get { return RowManager == null ? false : RowManager.Placeholder == this; }
+            get { return RowManager == null ? false : RowManager.VirtualRow == this; }
         }
 
         public bool IsEditing
@@ -113,7 +113,7 @@ namespace DevZest.Data.Windows
 
         public bool IsInserting
         {
-            get { return IsPlaceholder && IsEditing; }
+            get { return IsVirtual && IsEditing; }
         }
 
         public RowPresenter Parent { get; internal set; }
@@ -171,8 +171,8 @@ namespace DevZest.Data.Windows
                 if (IsDisposed)
                     return -1;
                 var result = RawIndex;
-                var placeholder = RowManager.Placeholder;
-                if (placeholder != null && placeholder != this && result >= placeholder.Index)
+                var virtualRow = RowManager.VirtualRow;
+                if (virtualRow != null && virtualRow != this && result >= virtualRow.Index)
                     result++;
                 return result;
             }
@@ -232,7 +232,7 @@ namespace DevZest.Data.Windows
             get { return RowManager.IsSelected(this); }
             set
             {
-                if (IsPlaceholder)
+                if (IsVirtual)
                     return;
 
                 var oldValue = IsSelected;
@@ -307,7 +307,7 @@ namespace DevZest.Data.Windows
 
         private bool CoerceTransactionalEdit()
         {
-            return IsPlaceholder ? true : Template.TransactionalEdit;
+            return IsVirtual ? true : Template.TransactionalEdit;
         }
 
         private bool HasPendingEdit
@@ -396,8 +396,8 @@ namespace DevZest.Data.Windows
         public void Delete()
         {
             VerifyDisposed();
-            if (IsPlaceholder)
-                throw new InvalidOperationException(Strings.RowPresenter_DeletePlaceholder);
+            if (IsVirtual)
+                throw new InvalidOperationException(Strings.RowPresenter_DeleteVirtualRow);
 
             DataRow.DataSet.Remove(DataRow);
         }

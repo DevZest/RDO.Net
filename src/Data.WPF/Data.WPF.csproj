@@ -116,7 +116,7 @@
     <Compile Include="Primitives\BindingCollection.cs" />
     <Compile Include="BlockView.cs" />
     <Compile Include="Primitives\ContainerViewList.cs" />
-    <Compile Include="RowPlaceholderMode.cs" />
+    <Compile Include="VirtualRowPlacement.cs" />
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="LostFocusTrigger.cs" />
     <Compile Include="Primitives\RowBinding.cs" />

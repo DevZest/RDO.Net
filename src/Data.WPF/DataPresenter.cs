@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows
 
         public bool IsInserting
         {
-            get { return IsEditing && LayoutManager.CurrentRow == LayoutManager.Placeholder; }
+            get { return IsEditing && LayoutManager.CurrentRow == LayoutManager.VirtualRow; }
         }
 
         public RowPresenter InsertingRow

@@ -14,11 +14,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static RowManager CreateRowManager<T>(DataSet<T> dataSet, RowPlaceholderMode rowPlaceholderPosition)
+        private static RowManager CreateRowManager<T>(DataSet<T> dataSet, VirtualRowPlacement rowPlaceholderPosition)
             where T : Model, new()
         {
             var template = new Template();
-            template.RowPlaceholderMode = rowPlaceholderPosition;
+            template.VirtualRowPlacement = rowPlaceholderPosition;
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
@@ -36,14 +36,14 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_RowPlaceholderMode_Explicit()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Explicit);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Explicit);
 
             Assert.AreEqual(0, rowManager.Rows.Count);
             Assert.AreEqual(null, rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
+            Assert.IsFalse(rowManager.Rows[0].IsVirtual);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
@@ -51,16 +51,16 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_RowPlaceholderMode_Tail()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.AreEqual(true, rowManager.Rows[0].IsPlaceholder);
+            Assert.AreEqual(true, rowManager.Rows[0].IsVirtual);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(2, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
-            Assert.IsTrue(rowManager.Rows[1].IsPlaceholder);
+            Assert.IsFalse(rowManager.Rows[0].IsVirtual);
+            Assert.IsTrue(rowManager.Rows[1].IsVirtual);
             Assert.AreEqual(rowManager.Rows[1], rowManager.CurrentRow);
         }
 
@@ -68,15 +68,15 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_RowPlaceholderMode_EmptyView()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.EmptyView);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.EmptyView);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsTrue(rowManager.Rows[0].IsPlaceholder);
+            Assert.IsTrue(rowManager.Rows[0].IsVirtual);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
 
             dataSet.AddRow();
             Assert.AreEqual(1, rowManager.Rows.Count);
-            Assert.IsFalse(rowManager.Rows[0].IsPlaceholder);
+            Assert.IsFalse(rowManager.Rows[0].IsVirtual);
             Assert.AreEqual(rowManager.Rows[0], rowManager.CurrentRow);
         }
 
@@ -124,7 +124,7 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_CancelEdit()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
 
             var row = rowManager.Rows[0];
             Assert.AreEqual(SalesOrderStatus.Shipped, row.GetValue(dataSet._.Status));
@@ -141,21 +141,21 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_CancelEdit_TailPlaceholder()
         {
             var dataSet = DataSet<SalesOrder>.New();
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
 
             var rows = rowManager.Rows;
             var row = rows[0];
             Assert.AreEqual(1, rows.Count);
-            Assert.IsTrue(row.IsPlaceholder);
+            Assert.IsTrue(row.IsVirtual);
 
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
-            Assert.IsTrue(row.IsPlaceholder);
+            Assert.IsTrue(row.IsVirtual);
             Assert.AreEqual(1, rows.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
             rowManager.RollbackEdit();
             Assert.IsFalse(row.IsEditing);
-            Assert.IsTrue(row.IsPlaceholder);
+            Assert.IsTrue(row.IsVirtual);
             Assert.AreEqual(1, rows.Count);
         }
 
@@ -163,50 +163,50 @@ namespace DevZest.Data.Windows.Primitives
         public void RowManager_InsertBefore()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
             var rows = rowManager.Rows;
 
             rowManager.BeginInsertBefore(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[0].IsPlaceholder);
+            Assert.IsTrue(rows[0].IsVirtual);
             rowManager.RollbackEdit();
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
-            Assert.IsTrue(rows[1].IsPlaceholder);
+            Assert.IsTrue(rows[1].IsVirtual);
 
             rowManager.BeginInsertBefore(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[0].IsPlaceholder);
+            Assert.IsTrue(rows[0].IsVirtual);
             rowManager.CommitEdit();
             Assert.AreEqual(3, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.AreEqual(dataSet[1], rows[1].DataRow);
-            Assert.IsTrue(rows[2].IsPlaceholder);
+            Assert.IsTrue(rows[2].IsVirtual);
         }
 
         [TestMethod]
         public void RowManager_InsertAfter()
         {
             var dataSet = DataSet<SalesOrder>.ParseJson(StringRes.Sales_Order_71774);
-            var rowManager = CreateRowManager(dataSet, RowPlaceholderMode.Tail);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
             var rows = rowManager.Rows;
 
             rowManager.BeginInsertAfter(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[1].IsPlaceholder);
+            Assert.IsTrue(rows[1].IsVirtual);
             rowManager.RollbackEdit();
             Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
-            Assert.IsTrue(rows[1].IsPlaceholder);
+            Assert.IsTrue(rows[1].IsVirtual);
 
             rowManager.BeginInsertAfter(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
-            Assert.IsTrue(rows[1].IsPlaceholder);
+            Assert.IsTrue(rows[1].IsVirtual);
             rowManager.CommitEdit();
             Assert.AreEqual(3, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.AreEqual(dataSet[1], rows[1].DataRow);
-            Assert.IsTrue(rows[2].IsPlaceholder);
+            Assert.IsTrue(rows[2].IsVirtual);
         }
     }
 }

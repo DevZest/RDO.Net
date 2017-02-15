@@ -196,11 +196,11 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The placeholder row cannot be deleted.
+        /// The virtual row cannot be deleted.
         /// </summary>
-        public static string RowPresenter_DeletePlaceholder
+        public static string RowPresenter_DeleteVirtualRow
         {
-            get { return GetString("RowPresenter_DeletePlaceholder"); }
+            get { return GetString("RowPresenter_DeleteVirtualRow"); }
         }
 
         /// <summary>

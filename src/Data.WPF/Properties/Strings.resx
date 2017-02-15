@@ -186,8 +186,8 @@
   <data name="RowInput_FlushCurrentRowOnly" xml:space="preserve">
     <value>Flush operation can only be performed on CurrentRow.</value>
   </data>
-  <data name="RowPresenter_DeletePlaceholder" xml:space="preserve">
-    <value>The placeholder row cannot be deleted.</value>
+  <data name="RowPresenter_DeleteVirtualRow" xml:space="preserve">
+    <value>The virtual row cannot be deleted.</value>
   </data>
   <data name="RowPresenter_InvalidChildRow" xml:space="preserve">
     <value>The child row is invalid.</value>

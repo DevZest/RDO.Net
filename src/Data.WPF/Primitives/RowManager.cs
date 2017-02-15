@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows.Primitives
             public static void EnterEditMode(RowManager rowManager)
             {
                 var currentRow = rowManager.CurrentRow;
-                if (currentRow.IsPlaceholder)
+                if (currentRow.IsVirtual)
                     InsertHandler.EnterEditMode(rowManager);
                 else
                     Singleton.OpenEdit(rowManager);
@@ -31,7 +31,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 rowManager.EditHandler = this;
                 BeginEdit(rowManager);
-                CoercePlaceholderIndex(rowManager);
+                CoerceVirtualRowIndex(rowManager);
             }
 
             public void RollbackEdit(RowManager rowManager)
@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows.Primitives
 
             protected abstract void EndEdit(RowManager rowManager);
 
-            public abstract void CoercePlaceholderIndex(RowManager rowManager);
+            public abstract void CoerceVirtualRowIndex(RowManager rowManager);
 
             private sealed class DataRowEditCommand : _EditHandler
             {
@@ -71,7 +71,7 @@ namespace DevZest.Data.Windows.Primitives
                     rowManager.CurrentRow.DataRow.EndEdit();
                 }
 
-                public override void CoercePlaceholderIndex(RowManager rowManager)
+                public override void CoerceVirtualRowIndex(RowManager rowManager)
                 {
                 }
 
@@ -87,18 +87,18 @@ namespace DevZest.Data.Windows.Primitives
         {
             public static new void EnterEditMode(RowManager rowManager)
             {
-                GetEditCommand(rowManager.PlaceholderMode).OpenEdit(rowManager);
+                GetEditCommand(rowManager.VirtualRowPlacement).OpenEdit(rowManager);
             }
 
-            private static InsertHandler GetEditCommand(RowPlaceholderMode placeholderMode)
+            private static InsertHandler GetEditCommand(VirtualRowPlacement virtualRowPlacement)
             {
-                if (placeholderMode == RowPlaceholderMode.Head)
+                if (virtualRowPlacement == VirtualRowPlacement.Head)
                     return Head;
-                else if (placeholderMode == RowPlaceholderMode.Tail)
+                else if (virtualRowPlacement == VirtualRowPlacement.Tail)
                     return Tail;
                 else
                 {
-                    Debug.Assert(placeholderMode == RowPlaceholderMode.EmptyView);
+                    Debug.Assert(virtualRowPlacement == VirtualRowPlacement.EmptyView);
                     return Tail;
                 }
             }
@@ -125,12 +125,12 @@ namespace DevZest.Data.Windows.Primitives
 
             private static void BeginInsert(RowManager rowManager, InsertHandler insertHandler)
             {
-                if (rowManager.Placeholder == null)
-                    rowManager.Placeholder = new RowPresenter(rowManager, null);
-                insertHandler.CoercePlaceholderIndex(rowManager);
+                if (rowManager.VirtualRow == null)
+                    rowManager.VirtualRow = new RowPresenter(rowManager, null);
+                insertHandler.CoerceVirtualRowIndex(rowManager);
 
-                if (rowManager.CurrentRow != rowManager.Placeholder)
-                    rowManager.CurrentRow = rowManager.Placeholder;
+                if (rowManager.CurrentRow != rowManager.VirtualRow)
+                    rowManager.CurrentRow = rowManager.VirtualRow;
 
                 insertHandler.OpenEdit(rowManager);
             }
@@ -149,12 +149,12 @@ namespace DevZest.Data.Windows.Primitives
 
             protected RowPresenter Reference { get; private set; }
 
-            public sealed override void CoercePlaceholderIndex(RowManager rowManager)
+            public sealed override void CoerceVirtualRowIndex(RowManager rowManager)
             {
-                rowManager.Placeholder.RawIndex = GetPlaceholderIndex(rowManager);
+                rowManager.VirtualRow.RawIndex = GetVirtualRowIndex(rowManager);
             }
 
-            protected abstract int GetPlaceholderIndex(RowManager rowManager);
+            protected abstract int GetVirtualRowIndex(RowManager rowManager);
 
             private DataSet GetDataSet(RowManager rowManager)
             {
@@ -163,7 +163,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private int GetInsertIndex(RowManager rowManager)
             {
-                var result = GetPlaceholderIndex(rowManager);
+                var result = GetVirtualRowIndex(rowManager);
                 if (Parent != null)
                     result -= Parent.RawIndex + 1;
                 return result;
@@ -171,13 +171,13 @@ namespace DevZest.Data.Windows.Primitives
 
             protected sealed override void BeginEdit(RowManager rowManager)
             {
-                Debug.Assert(rowManager.CurrentRow.IsPlaceholder);
+                Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
             }
 
             protected sealed override void CancelEdit(RowManager rowManager)
             {
-                Debug.Assert(rowManager.CurrentRow.IsPlaceholder);
+                Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = null;
                 GetDataSet(rowManager).CancelAdd();
             }
@@ -190,7 +190,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public override void OnRowsChanged(RowManager rowManager)
             {
-                CoercePlaceholderIndex(rowManager);
+                CoerceVirtualRowIndex(rowManager);
             }
 
             private sealed class InsertBeforeHandler : InsertHandler
@@ -200,7 +200,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                 }
 
-                protected override int GetPlaceholderIndex(RowManager rowManager)
+                protected override int GetVirtualRowIndex(RowManager rowManager)
                 {
                     if (Reference != null)
                         return Reference.RawIndex;
@@ -216,7 +216,7 @@ namespace DevZest.Data.Windows.Primitives
                 {
                 }
 
-                protected override int GetPlaceholderIndex(RowManager rowManager)
+                protected override int GetVirtualRowIndex(RowManager rowManager)
                 {
                     if (Reference != null)
                         return Reference.RawIndex + 1;
@@ -230,18 +230,18 @@ namespace DevZest.Data.Windows.Primitives
             : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;
-            var coercedPlaceholderIndex = CoercedPlaceholderIndex;
-            if (coercedPlaceholderIndex >= 0)
-                Placeholder = new RowPresenter(this, coercedPlaceholderIndex);
+            var coercedVirtualRowIndex = CoercedVirtualRowIndex;
+            if (coercedVirtualRowIndex >= 0)
+                VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
             if (Rows.Count > 0)
                 _currentRow = Rows[0];
         }
 
-        public RowPresenter Placeholder { get; private set; }
+        public RowPresenter VirtualRow { get; private set; }
 
-        private int PlaceholderIndex
+        private int VirtualRowIndex
         {
-            get { return Placeholder == null ? -1 : Placeholder.Index; }
+            get { return VirtualRow == null ? -1 : VirtualRow.Index; }
         }
 
         public sealed override IReadOnlyList<RowPresenter> Rows
@@ -261,7 +261,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 var result = base.Rows.Count;
-                if (Placeholder != null)
+                if (VirtualRow != null)
                     result++;
                 return result;
             }
@@ -271,10 +271,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(index >= 0 && index < RowCount);
 
-            if (index == PlaceholderIndex)
-                return Placeholder;
+            if (index == VirtualRowIndex)
+                return VirtualRow;
 
-            if (PlaceholderIndex >= 0 && index > PlaceholderIndex)
+            if (VirtualRowIndex >= 0 && index > VirtualRowIndex)
                 index--;
             return base.Rows[index];
         }
@@ -308,46 +308,46 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        private RowPlaceholderMode PlaceholderMode
+        private VirtualRowPlacement VirtualRowPlacement
         {
-            get { return Template.RowPlaceholderMode; }
+            get { return Template.VirtualRowPlacement; }
         }
 
         protected override void Reload()
         {
             base.Reload();
-            CoercePlaceholder();
+            CoerceVirtualRow();
             CoerceCurrentRow();
         }
 
-        private void CoercePlaceholder()
+        private void CoerceVirtualRow()
         {
             Debug.Assert(!IsEditing);
-            var coercedPlaceholderIndex = CoercedPlaceholderIndex;
-            if (coercedPlaceholderIndex >= 0)
+            var coercedVirtualRowIndex = CoercedVirtualRowIndex;
+            if (coercedVirtualRowIndex >= 0)
             {
-                if (Placeholder == null)
-                    Placeholder = new RowPresenter(this, coercedPlaceholderIndex);
+                if (VirtualRow == null)
+                    VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
                 else
-                    Placeholder.RawIndex = coercedPlaceholderIndex;
+                    VirtualRow.RawIndex = coercedVirtualRowIndex;
             }
-            else if (Placeholder != null)
+            else if (VirtualRow != null)
             {
-                var placeholder = Placeholder;
-                Placeholder = null;
-                DisposeRow(placeholder);
+                var virtualRow = VirtualRow;
+                VirtualRow = null;
+                DisposeRow(virtualRow);
             }
         }
 
-        private int CoercedPlaceholderIndex
+        private int CoercedVirtualRowIndex
         {
             get
             {
-                if (PlaceholderMode == RowPlaceholderMode.Head)
+                if (VirtualRowPlacement == VirtualRowPlacement.Head)
                     return 0;
-                else if (PlaceholderMode == RowPlaceholderMode.Tail)
+                else if (VirtualRowPlacement == VirtualRowPlacement.Tail)
                     return base.Rows.Count;
-                else if (PlaceholderMode == RowPlaceholderMode.EmptyView && base.Rows.Count == 0)
+                else if (VirtualRowPlacement == VirtualRowPlacement.EmptyView && base.Rows.Count == 0)
                     return 0;
                 else
                     return -1;
@@ -365,7 +365,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var index = CurrentRow.RawIndex;
                 Debug.Assert(index >= 0);
-                if (Placeholder != null && index >= Placeholder.RawIndex)
+                if (VirtualRow != null && index >= VirtualRow.RawIndex)
                     index++;
                 index = Math.Min(index, Rows.Count - 1);
                 CurrentRow = index >= 0 ? Rows[index] : null;
@@ -425,7 +425,7 @@ namespace DevZest.Data.Windows.Primitives
                 var oldIsEditing = IsEditing;
                 _editHandler = value;
                 if (_editHandler == null)
-                    CoercePlaceholder();
+                    CoerceVirtualRow();
                 var newIsEditing = IsEditing;
                 if (oldIsEditing != newIsEditing)
                     OnIsEditingChanged();
@@ -506,7 +506,7 @@ namespace DevZest.Data.Windows.Primitives
             if (EditHandler != null)
                 EditHandler.OnRowsChanged(this);
             else
-                CoercePlaceholder();
+                CoerceVirtualRow();
             CoerceCurrentRow();
         }
     }

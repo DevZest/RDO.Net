@@ -109,10 +109,10 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        [DefaultValue(RowPlaceholderMode.Explicit)]
-        public TemplateBuilder WithRowPlaceholderMode(RowPlaceholderMode value)
+        [DefaultValue(VirtualRowPlacement.Explicit)]
+        public TemplateBuilder WithVirtualRowPlacement(VirtualRowPlacement value)
         {
-            Template.RowPlaceholderMode = value;
+            Template.VirtualRowPlacement = value;
             return this;
         }
 

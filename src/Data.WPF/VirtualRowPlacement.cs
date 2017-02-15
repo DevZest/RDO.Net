@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Windows
 {
-    public enum RowPlaceholderMode
+    public enum VirtualRowPlacement
     {
         Explicit = 0,
         Head,
