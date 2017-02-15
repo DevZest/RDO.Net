@@ -164,6 +164,12 @@ namespace DevZest.Data.Windows
             }
         }
 
+#if DEBUG
+        public AsyncValidator()
+        {
+        }
+#endif
+
         private AsyncValidator(Action postAction)
         {
             _postAction = postAction;
@@ -211,7 +217,7 @@ namespace DevZest.Data.Windows
         public AsyncValidatorStatus Status
         {
             get { return _status; }
-            private set
+            internal set
             {
                 if (_status == value)
                     return;
