@@ -249,10 +249,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             await Task.Delay(1000);
             var value = nameColumn[index];
-            if (value == BAD_NAME)
-                return new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn);
-            else
-                return null;
+            return value == BAD_NAME ? new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
         }
     }
 }
