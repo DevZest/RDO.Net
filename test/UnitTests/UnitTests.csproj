@@ -78,7 +78,7 @@
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="BindingFactory.cs" />
     <Compile Include="BlockHeader.cs" />
-    <Compile Include="ProductCategoryDataSet.cs" />
+    <Compile Include="DataSetMock.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\InputManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />

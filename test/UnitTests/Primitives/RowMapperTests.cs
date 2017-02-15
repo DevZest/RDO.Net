@@ -103,7 +103,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_Initialize_simple()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowMapper = CreateRowMapper(dataSet);
             var rows = rowMapper.Rows;
             Assert.AreEqual(3, rows.Count);
@@ -115,7 +115,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowAdded_simple()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             RowPresenter addedRow = null;
             int addedRowIndex = -1;
             var rowMapper = CreateRowMapper(dataSet).SetupOnRowAdded((row, index) =>
@@ -138,7 +138,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowRemoved_simple()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             RowPresenter removedRowParent = null;
             int removedRowIndex = -1;
             var rowMapper = CreateRowMapper(dataSet).SetupOnRowRemoved((parent, index) =>
@@ -161,7 +161,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowUpdated_simple()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             RowPresenter rowUpdated = null;
             bool rowMoved = false;
             var rowMapper = CreateRowMapper(dataSet)
@@ -181,7 +181,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_Initialize_recursive()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowMapper = CreateRecursiveRowMapper(dataSet);
             var rows = rowMapper.Rows;
             Assert.AreEqual(3, rows.Count);
@@ -231,7 +231,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnRowAdded_recursive()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             RowPresenter addedRow = null;
             int addedRowIndex = -1;
             var rowMapper = CreateRecursiveRowMapper(dataSet).SetupOnRowAdded((row, index) =>
@@ -261,7 +261,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowRemoved_recursive()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             RowPresenter removedRowParent = null;
             int removedRowIndex = -1;
             var rowMapper = CreateRecursiveRowMapper(dataSet).SetupOnRowRemoved((parent, index) =>
@@ -281,7 +281,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_Initialize_recursive_query()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
             var where = _.Name == "Name-1-1" | _.Name == "Name-1-2";
             var orderBy = new ColumnSort[] { _.Name.Desc() };
@@ -298,7 +298,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowAdded_recursive_query()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
             var where = _.Name == "Name-1-1" | _.Name == "Name-1-2" | _.Name == "Name-1-4";
             var orderBy = new ColumnSort[] { _.Name.Desc() };
@@ -318,7 +318,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowRemoved_recursive_query()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
             var where = _.Name == "Name-1-1" | _.Name == "Name-1-2";
             var orderBy = new ColumnSort[] { _.Name.Desc() };
@@ -339,7 +339,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowMapper_OnDataRowUpdated_recursive_query()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
             var where = _.Name == "Name-1-1" | _.Name == "Name-1-2" | _.Name == "Name-1-4";
             var orderBy = new ColumnSort[] { _.Name.Desc() };

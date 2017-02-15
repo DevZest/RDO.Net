@@ -12,7 +12,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_ScrollInfo()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -81,7 +81,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_RowBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -141,7 +141,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_RowBinding_multidimensional()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -180,7 +180,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_BlockBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -229,7 +229,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_ScalarBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -258,7 +258,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_FrozenMain()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -370,7 +370,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_FrozenCross_ScalarBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(0, false);
+            var dataSet = DataSetMock.ProductCategories(0, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -414,7 +414,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_Stretches()
         {
-            var dataSet = ProductCategoryDataSet.Mock(0, false);
+            var dataSet = DataSetMock.ProductCategories(0, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -436,7 +436,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_FrozenCross_Block()
         {
-            var dataSet = ProductCategoryDataSet.Mock(2, false);
+            var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -492,7 +492,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_FrozenCross_BlockBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(2, false);
+            var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -557,7 +557,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_FrozenCross_RowBinding()
         {
-            var dataSet = ProductCategoryDataSet.Mock(2, false);
+            var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
             {
@@ -655,7 +655,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_GetLineFiguresMain_Spans()
         {
-            var dataSet = ProductCategoryDataSet.Mock(6, false);
+            var dataSet = DataSetMock.ProductCategories(6, false);
             var _ = dataSet._;
             var pen = new Pen();
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
@@ -701,7 +701,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_GetLineFiguresMain_Locations()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var pen = new Pen();
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
@@ -747,7 +747,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_GetLineFiguresCross_Span()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var pen = new Pen();
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>
@@ -784,7 +784,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutXYManager_GetLineFiguresCross_Locations()
         {
-            var dataSet = ProductCategoryDataSet.Mock(9, false);
+            var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var pen = new Pen();
             var layoutManager = (LayoutXYManager)dataSet.CreateLayoutManager((builder) =>

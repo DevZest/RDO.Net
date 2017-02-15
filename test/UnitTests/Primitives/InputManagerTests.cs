@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void InputManager_RowInput()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void InputManager_ScalarInput()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             Scalar<Int32> scalar = new Scalar<int>(valueValidator: x =>
             {

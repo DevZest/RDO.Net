@@ -3,9 +3,9 @@ using System.Globalization;
 
 namespace DevZest.Data.Windows
 {
-    internal static class ProductCategoryDataSet
+    internal static class DataSetMock
     {
-        public static DataSet<ProductCategory> Mock(int count, bool multiLevel = true)
+        public static DataSet<ProductCategory> ProductCategories(int count, bool multiLevel = true)
         {
             var dataSet = DataSet<ProductCategory>.New();
 

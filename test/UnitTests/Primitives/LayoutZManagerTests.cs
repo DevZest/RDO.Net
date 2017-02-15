@@ -11,7 +11,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void LayoutZManager_Measure()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var layoutManager = dataSet.CreateLayoutManager((builder) =>
             {
@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
         public void LayoutZManager_GridLineFigures()
         {
             var pen = new Pen();
-            var dataSet = ProductCategoryDataSet.Mock(3, false);
+            var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var layoutManager = dataSet.CreateLayoutManager((builder) =>
             {

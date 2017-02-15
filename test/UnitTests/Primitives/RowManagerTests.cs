@@ -83,7 +83,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowManager_CommitEdit()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowManager = CreateRowManager(dataSet);
             var rows = rowManager.Rows;
             rows[0].Expand();
@@ -103,7 +103,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowManager_CommitEdit_by_row_presenter_indexer()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowManager = CreateRowManager(dataSet);
             var rows = rowManager.Rows;
             rows[0].Expand();

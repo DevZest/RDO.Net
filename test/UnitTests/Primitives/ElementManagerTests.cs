@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_Elements()
         {
-            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
             ScalarBinding<ColumnHeader> columnHeader1 = null;
             BlockBinding<BlockHeader> blockHeader = null;
@@ -424,7 +424,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_RefreshElements()
         {
-            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
@@ -446,7 +446,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_RefreshElements_IsCurrent()
         {
-            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
             RowBinding<RowHeader> rowHeader = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
@@ -484,7 +484,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void ElementManager_RefreshElements_IsEditing()
         {
-            var dataSet = ProductCategoryDataSet.Mock(8, false);
+            var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
             RowBinding<RowHeader> rowHeader = null;
             var elementManager = dataSet.CreateElementManager((builder) =>

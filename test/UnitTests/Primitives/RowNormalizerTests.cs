@@ -52,7 +52,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowNormalizer_Expand_Collapse()
         {
-            var productCategories = ProductCategoryDataSet.Mock(3);
+            var productCategories = DataSetMock.ProductCategories(3);
             var rowNormalizer = CreateRowNormalizer(productCategories);
             var rows = rowNormalizer.Rows;
             VerifyDepths(rows, 0, 0, 0);
@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowNormalizer_OnRowAdded()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowNormalizer = CreateRowNormalizer(dataSet);
             var rows = rowNormalizer.Rows;
 
@@ -101,7 +101,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowNormalizer_OnRowRemoved_recursive()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var rowNormalizer = CreateRowNormalizer(dataSet);
             var rows = rowNormalizer.Rows;
 
@@ -114,7 +114,7 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void RowNormalizer_OnRowMoved()
         {
-            var dataSet = ProductCategoryDataSet.Mock(3);
+            var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
             var orderBy = new ColumnSort[] { _.Name.Desc() };
             var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, orderBy);
