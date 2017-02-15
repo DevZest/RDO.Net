@@ -18,7 +18,7 @@
     "embed": {
       "include": [ "../../src/Data.Common/Properties/*.resx" ],
       "mappings": {
-        "DevZest.Data": "../../src/Data.Common/Properties"
+        "DevZest.Data.Strings": "../../src/Data.Common/Properties/Strings.resx"
       }
     },
     "warningsAsErrors": true,
