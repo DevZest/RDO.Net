@@ -145,7 +145,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 var template = new Template();
                 action(template);
-                Assert.Fail("An ArgumentException should be thrown.'");
+                Assert.Fail("An InvalidOperationException should be thrown.'");
             }
             catch (InvalidOperationException)
             {
