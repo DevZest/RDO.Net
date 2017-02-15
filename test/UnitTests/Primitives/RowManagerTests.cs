@@ -14,11 +14,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private static RowManager CreateRowManager<T>(DataSet<T> dataSet, VirtualRowPlacement rowPlaceholderPosition)
+        private static RowManager CreateRowManager<T>(DataSet<T> dataSet, VirtualRowPlacement virtualRowPlacement)
             where T : Model, new()
         {
             var template = new Template();
-            template.VirtualRowPlacement = rowPlaceholderPosition;
+            template.VirtualRowPlacement = virtualRowPlacement;
             RowManager result = new ConcreteRowManager(template, dataSet);
             return result;
         }
@@ -33,7 +33,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_RowPlaceholderMode_Explicit()
+        public void RowManager_VirtualRowPlacement_Explicit()
         {
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Explicit);
@@ -48,7 +48,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_RowPlaceholderMode_Tail()
+        public void RowManager_VirtualRowPlacement_Tail()
         {
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_RowPlaceholderMode_EmptyView()
+        public void RowManager_VirtualRowPlacement_EmptyView()
         {
             var dataSet = DataSet<Adhoc>.New();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.EmptyView);
@@ -138,7 +138,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_CancelEdit_TailPlaceholder()
+        public void RowManager_CancelEdit_TailVirtualRowPlacement()
         {
             var dataSet = DataSet<SalesOrder>.New();
             var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Tail);
