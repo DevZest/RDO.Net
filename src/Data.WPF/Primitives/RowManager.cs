@@ -98,7 +98,7 @@ namespace DevZest.Data.Windows.Primitives
                     return Tail;
                 else
                 {
-                    Debug.Assert(virtualRowPlacement == VirtualRowPlacement.EmptyView);
+                    Debug.Assert(virtualRowPlacement == VirtualRowPlacement.Exclusive);
                     return Tail;
                 }
             }
@@ -347,7 +347,7 @@ namespace DevZest.Data.Windows.Primitives
                     return 0;
                 else if (VirtualRowPlacement == VirtualRowPlacement.Tail)
                     return base.Rows.Count;
-                else if (VirtualRowPlacement == VirtualRowPlacement.EmptyView && base.Rows.Count == 0)
+                else if (VirtualRowPlacement == VirtualRowPlacement.Exclusive && base.Rows.Count == 0)
                     return 0;
                 else
                     return -1;

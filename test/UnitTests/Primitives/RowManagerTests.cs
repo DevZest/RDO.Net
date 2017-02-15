@@ -65,10 +65,10 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void RowManager_VirtualRowPlacement_EmptyView()
+        public void RowManager_VirtualRowPlacement_Exclusive()
         {
             var dataSet = DataSet<Adhoc>.New();
-            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.EmptyView);
+            var rowManager = CreateRowManager(dataSet, VirtualRowPlacement.Exclusive);
 
             Assert.AreEqual(1, rowManager.Rows.Count);
             Assert.IsTrue(rowManager.Rows[0].IsVirtual);

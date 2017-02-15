@@ -5,6 +5,6 @@
         Explicit = 0,
         Head,
         Tail,
-        EmptyView
+        Exclusive
     }
 }
