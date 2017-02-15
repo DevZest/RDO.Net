@@ -76,21 +76,21 @@ namespace DevZest.Data.Windows.Primitives
         [TestMethod]
         public void InputManager_Scalar()
         {
-            bool valueChanged = false;
+            var oldValue = -1;
             var scalar = new Scalar<int>(0,
-                onValueChanged: () =>
+                onValueChanged: x =>
                 {
-                    valueChanged = true;
+                    oldValue = x;
                 },
                 valueValidator: x =>
                 {
                     return x > 5 ? new InputError("ERR-01", "Value cannot be greater than 5.") : InputError.Empty;
                 });
 
-            Assert.IsFalse(valueChanged);
+            Assert.AreEqual(-1, oldValue);
 
             scalar.Value = 4;
-            Assert.IsTrue(valueChanged);
+            Assert.AreEqual(0, oldValue);
 
             ArgumentException catchedException = null;
             try

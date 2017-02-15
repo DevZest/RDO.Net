@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows
 {
     public sealed class Scalar<T>
     {
-        public Scalar(T value = default(T), Action onValueChanged = null, Func<T, InputError> valueValidator = null)
+        public Scalar(T value = default(T), Action<T> onValueChanged = null, Func<T, InputError> valueValidator = null)
         {
             _value = value;
             _onValueChanged = onValueChanged;
@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
         }
 
         private T _value;
-        private Action _onValueChanged;
+        private Action<T> _onValueChanged;
         public T Value
         {
             get { return _value; }
@@ -35,12 +35,13 @@ namespace DevZest.Data.Windows
 
         internal bool ChangeValue(T value)
         {
-            if (Comparer<T>.Default.Compare(_value, value) == 0)
+            var oldValue = _value;
+            if (Comparer<T>.Default.Compare(oldValue, value) == 0)
                 return false;
 
             _value = value;
             if (_onValueChanged != null)
-                _onValueChanged();
+                _onValueChanged(oldValue);
             return true;
         }
     }
