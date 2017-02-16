@@ -272,7 +272,6 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].Errors.Count);
-
         }
 
         private static async Task<IValidationMessageGroup> ValidateBadNameAsync(_String nameColumn, int index)
@@ -381,6 +380,46 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+        }
+
+        [TestMethod]
+        public void InputManager_ShowValidationResult()
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var _ = dataSet._;
+            dataSet.Add(new DataRow());
+
+            RowBinding<TextBox> textBox = null;
+            var inputManager = dataSet.CreateInputManager(builder =>
+            {
+                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
+            });
+
+            var currentRow = inputManager.CurrentRow;
+            Assert.IsNull(_.Name[0]);
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(1, errors.Count);
+                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
+                Assert.AreEqual(_.Name, errorMessage.Source);
+            }
+
+            var validationMessage = new ValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
+            IValidationResult validationResult = ValidationResult.Empty.Add(new ValidationEntry(currentRow.DataRow, validationMessage));
+            inputManager.Show(validationResult);
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(1, errors.Count);
+                Assert.AreEqual(validationMessage, errors[0].ErrorContent);
+            }
+
+            textBox[currentRow].Text = "any value";
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
+                Assert.AreEqual(0, errors.Count);
+            }
         }
 
         // http://stackoverflow.com/questions/14087257/how-to-add-synchronization-context-to-async-test-method
