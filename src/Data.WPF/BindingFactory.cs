@@ -55,11 +55,11 @@ namespace DevZest.Data.Windows
         public static RowBinding<ValidationView> ValidationView(this Model source)
         {
             return new RowBinding<ValidationView>(
-                onRefresh: (e, r) =>
+                onSetup: (e, r) =>
                 {
                     e.AsyncValidators = r.AsyncValidators;
                 },
-                onSetup: (e, r) =>
+                onRefresh: (e, r) =>
                 {
                     e.RefreshStatus();
                 },
