@@ -252,7 +252,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].Errors.Count);
 
-            await asyncValidator.RunningTask;
+            await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
             Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
             Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
@@ -266,7 +266,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].Errors.Count);
 
-            await asyncValidator.RunningTask;
+            await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Completed, asyncValidator.Status);
             Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
             Assert.AreEqual(asyncValidator, validationView[currentRow].CompletedAsyncValidators);
@@ -317,7 +317,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
             Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
 
-            await asyncValidator.RunningTask;
+            await asyncValidator.LastRunningTask;
             Assert.AreEqual(AsyncValidatorStatus.Faulted, asyncValidator.Status);
             Assert.AreEqual(typeof(InvalidOperationException), asyncValidator.Exception.GetType());
             Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
@@ -329,6 +329,58 @@ namespace DevZest.Data.Windows.Primitives
         {
             await Task.Delay(200);
             throw new InvalidOperationException("Validation failed.");
+        }
+
+        [TestMethod]
+        public void InputManager_AsyncValidators_Reset()
+        {
+            RunInWpfSyncContext(InputManager_AsyncValidators_Reset_Async);
+        }
+
+        private async Task InputManager_AsyncValidators_Reset_Async()
+        {
+            var dataSet = DataSet<ProductCategory>.New();
+            var _ = dataSet._;
+            dataSet.Add(new DataRow());
+
+            RowBinding<TextBox> textBox = null;
+            RowBinding<ValidationView> validationView = null;
+            var inputManager = dataSet.CreateInputManager(builder =>
+            {
+                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                validationView = textBox.Input.ValidationView();
+
+                builder.GridColumns("100").GridRows("100")
+                    .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
+                    .AddBinding(0, 0, validationView);
+
+                textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
+            });
+
+            var currentRow = inputManager.CurrentRow;
+            var asyncValidator = validationView[currentRow].AsyncValidators[0];
+
+            textBox[currentRow].Text = "Anything";
+            Assert.AreEqual(AsyncValidatorStatus.Running, asyncValidator.Status);
+            Assert.AreEqual(asyncValidator, validationView[currentRow].RunningAsyncValidators);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+
+            asyncValidator.Reset();
+            inputManager.InvalidateView();
+            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
+            Assert.IsNull(asyncValidator.Exception);
+            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
+
+            await asyncValidator.LastRunningTask;
+            inputManager.InvalidateView();
+            Assert.AreEqual(AsyncValidatorStatus.Created, asyncValidator.Status);
+            Assert.IsNull(asyncValidator.Exception);
+            Assert.AreEqual(0, validationView[currentRow].RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView[currentRow].FaultedAsyncValidators.Count);
         }
 
         // http://stackoverflow.com/questions/14087257/how-to-add-synchronization-context-to-async-test-method

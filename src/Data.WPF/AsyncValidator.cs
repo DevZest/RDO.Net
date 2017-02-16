@@ -252,14 +252,14 @@ namespace DevZest.Data.Windows
         }
 
 #if DEBUG
-        internal Task RunningTask { get; private set; }
+        internal Task LastRunningTask { get; private set; }
 #endif
         private Task<IValidationDictionary> _awaitingTask;
 
         public async void Run()
         {
 #if DEBUG
-            var runningTask = RunningTask = ValidateAsync();
+            var runningTask = LastRunningTask = ValidateAsync();
 #else
             var runningTask = ValidateAsync();
 #endif
@@ -289,13 +289,15 @@ namespace DevZest.Data.Windows
                 try
                 {
                     result = await task;
-                    if (task != _awaitingTask)   // Cancelled
+                    if (task != _awaitingTask)   // cancelled
                         return;
                     status = AsyncValidatorStatus.Completed;
                     exception = null;
                 }
                 catch (Exception ex)
                 {
+                    if (task != _awaitingTask)  // cancelled
+                        return;
                     result = ValidationDictionary.Empty;
                     status = AsyncValidatorStatus.Faulted;
                     exception = ex;
@@ -329,6 +331,7 @@ namespace DevZest.Data.Windows
             if (Status == AsyncValidatorStatus.Running)
                 _awaitingTask = null;
 
+            _pendingValidationRequest = false;
             Status = AsyncValidatorStatus.Created;
             Exception = null;
             Errors = Warnings = ValidationDictionary.Empty;
