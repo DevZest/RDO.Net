@@ -210,12 +210,12 @@ namespace DevZest.Data.Windows.Primitives
         private const string BAD_NAME = "Bad Name";
 
         [TestMethod]
-        public void InputManager_AsyncValidators_InputError_to_Invalid_to_Valid()
+        public void InputManager_AsyncValidators_input_error_to_invalid_to_valid()
         {
-            RunInWpfSyncContext(InputManager_AsyncValidatorsAsync);
+            RunInWpfSyncContext(InputManager_AsyncValidators_input_error_to_invalid_to_valid_Async);
         }
 
-        private async Task InputManager_AsyncValidatorsAsync()
+        private async Task InputManager_AsyncValidators_input_error_to_invalid_to_valid_Async()
         {
             var dataSet = DataSet<ProductCategory>.New();
             var _ = dataSet._;
@@ -232,7 +232,7 @@ namespace DevZest.Data.Windows.Primitives
                     .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
                     .AddBinding(0, 0, validationView);
 
-                textBox.Input.AddAsyncValidator(() => AsyncValidate(_.Name, 0));
+                textBox.Input.AddAsyncValidator(() => ValidateBadNameAsync(_.Name, 0));
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -275,11 +275,17 @@ namespace DevZest.Data.Windows.Primitives
 
         }
 
-        private static async Task<IValidationMessageGroup> AsyncValidate(_String nameColumn, int index)
+        private static async Task<IValidationMessageGroup> ValidateBadNameAsync(_String nameColumn, int index)
         {
-            await Task.Delay(1000);
+            await Task.Delay(200);
             var value = nameColumn[index];
             return value == BAD_NAME ? new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
+        }
+
+        private static async Task<IValidationMessageGroup> ValidateFaultedAsync()
+        {
+            await Task.Delay(200);
+            throw new InvalidOperationException("Validation failed.");
         }
 
         // http://stackoverflow.com/questions/14087257/how-to-add-synchronization-context-to-async-test-method
