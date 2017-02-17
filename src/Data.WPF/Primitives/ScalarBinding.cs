@@ -68,6 +68,24 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract UIElement Setup(int blockDimension);
 
+        internal abstract void PrepareSettingUpElement(int blockDimension);
+
+        internal abstract void ClearSettingUpElement();
+
+        internal void EnterSetup(int blockDimension)
+        {
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+                scalarBindings[i].PrepareSettingUpElement(blockDimension);
+        }
+
+        internal void ExitSetup()
+        {
+            var scalarBindings = Template.ScalarBindings;
+            for (int i = 0; i < scalarBindings.Count; i++)
+                scalarBindings[i].ClearSettingUpElement();
+        }
+
         private bool _isMultidimensional;
         public bool IsMultidimensional
         {

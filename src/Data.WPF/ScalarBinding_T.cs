@@ -81,13 +81,23 @@ namespace DevZest.Data.Windows
 
         internal sealed override UIElement Setup(int blockDimension)
         {
+            EnterSetup(blockDimension);
+            return Setup();
+        }
+
+        internal sealed override void PrepareSettingUpElement(int blockDimension)
+        {
             if (IsMultidimensional)
             {
                 Debug.Assert(SettingUpElements != null);
                 SettingUpElement = SettingUpElements[blockDimension - _settingUpStartOffset];
             }
+        }
 
-            return Setup();
+        internal override void ClearSettingUpElement()
+        {
+            if (IsMultidimensional)
+                SettingUpElement = null;
         }
 
         private UIElement Setup()
@@ -97,13 +107,14 @@ namespace DevZest.Data.Windows
             Refresh(result);
             if (Input != null)
                 Input.Attach(result);
-            SettingUpElement = null;
+            ExitSetup();
             return result;
         }
 
         internal sealed override void EndSetup()
         {
             _settingUpElements = null;
+            SettingUpElement = null;
         }
 
         private Action<T> _onSetup;

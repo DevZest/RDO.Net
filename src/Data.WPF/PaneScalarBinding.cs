@@ -100,17 +100,28 @@ namespace DevZest.Data.Windows
             SettingUpPane.BeginSetup(_bindings);
         }
 
-        internal sealed override UIElement Setup(int blockDimension)
+        internal sealed override void PrepareSettingUpElement(int blockDimension)
         {
             if (IsMultidimensional)
             {
                 Debug.Assert(SettingUpPanes != null);
                 SettingUpPane = SettingUpPanes[blockDimension - _settingUpStartOffset];
             }
+        }
 
+        internal override void ClearSettingUpElement()
+        {
+            if (IsMultidimensional)
+                SettingUpPane = null;
+        }
+
+        internal sealed override UIElement Setup(int blockDimension)
+        {
+            var result = SettingUpPane;
             for (int i = 0; i < _bindings.Count; i++)
                 _bindings[i].Setup(blockDimension);
-            return SettingUpPane;
+            ExitSetup();
+            return result;
         }
 
         internal sealed override void Refresh(UIElement element)
