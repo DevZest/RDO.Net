@@ -391,7 +391,7 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
             }
             _currentContainerView = GetContainerView(rowView);
-            base.CurrentRow = rowView.RowPresenter;
+            SetCurrentRowFromView(rowView);
         }
 
         private void PrepareReload(ContainerView newCurrentContainerView)
@@ -412,26 +412,20 @@ namespace DevZest.Data.Windows.Primitives
                 return rowView.GetBlockView();
         }
 
-        public override RowPresenter CurrentRow
+        private void SetCurrentRowFromView(RowView rowView)
         {
-            get { return base.CurrentRow; }
-            internal set
-            {
-                var oldValue = CurrentRow;
-                if (oldValue == value)
-                    return;
-                base.CurrentRow = value;
-                OnCurrentRowChanged(oldValue);
-            }
+            _currentRowFromView = true;
+            CurrentRow = rowView.RowPresenter;
+            _currentRowFromView = false;
         }
 
-        protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
+        private bool _currentRowFromView;
+        protected override void OnCurrentRowChanged(RowPresenter oldValue)
         {
-            if (ElementCollection != null)
+            if (ElementCollection != null && !_currentRowFromView)
             {
                 ContainerViewList.VirtualizeAll();
                 CoerceCurrentContainerView(oldValue);
-                InvalidateView();
             }
         }
 

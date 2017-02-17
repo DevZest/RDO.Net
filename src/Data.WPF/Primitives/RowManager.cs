@@ -378,9 +378,16 @@ namespace DevZest.Data.Windows.Primitives
             get { return _currentRow; }
             internal set
             {
-                Debug.Assert(_currentRow != value);
+                var oldValue = CurrentRow;
+                if (oldValue == value)
+                    return;
                 _currentRow = value;
+                OnCurrentRowChanged(oldValue);
             }
+        }
+
+        protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
+        {
         }
 
         //protected void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode)
