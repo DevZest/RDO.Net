@@ -155,13 +155,6 @@ namespace DevZest.Data.Windows
             Cleanup(e);
         }
 
-        public ScalarBinding<T> WithIsMultidimensional(bool value)
-        {
-            VerifyNotSealed();
-            IsMultidimensional = value;
-            return this;
-        }
-
         public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)
         {
             VerifyNotSealed();

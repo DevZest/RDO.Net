@@ -1,31 +1,15 @@
 ﻿using System;
-using System.Windows;
-using DevZest.Data.Windows.Primitives;
 using System.Collections.Generic;
+using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class PaneBlockBinding : BlockBinding
+    public abstract class RowPane : RowBinding
     {
-        private sealed class ConcretePaneBlockBinding<T> : PaneBlockBinding
-            where T : Pane, new()
-        {
-            internal override Pane CreatePane()
-            {
-                return new T();
-            }
-        }
-
-        public static PaneBlockBinding Create<T>()
-            where T : Pane, new()
-        {
-            return new ConcretePaneBlockBinding<T>();
-        }
-
-        private List<BlockBinding> _bindings = new List<BlockBinding>();
+        private List<RowBinding> _bindings = new List<RowBinding>();
         private List<string> _names = new List<string>();
 
-        public void AddChild<T>(BlockBinding<T> binding, string name)
+        public void AddChild<T>(RowBinding<T> binding, string name)
             where T : UIElement, new()
         {
             Binding.VerifyAdding(binding, nameof(binding));
@@ -47,7 +31,6 @@ namespace DevZest.Data.Windows
         }
 
         private Pane _settingUpPane;
-        private List<Pane> _cachedPanes;
 
         internal sealed override UIElement GetSettingUpElement()
         {
@@ -60,10 +43,10 @@ namespace DevZest.Data.Windows
             _settingUpPane.BeginSetup(_bindings);
         }
 
-        internal sealed override UIElement Setup(BlockView blockView)
+        internal sealed override UIElement Setup(RowPresenter rowPresenter)
         {
             for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].Setup(blockView);
+                _bindings[i].Setup(rowPresenter);
             return _settingUpPane;
         }
 
@@ -82,6 +65,11 @@ namespace DevZest.Data.Windows
         {
             _settingUpPane.EndSetup(_bindings);
             _settingUpPane = null;
+        }
+
+        internal sealed override void FlushInput(UIElement element)
+        {
+            ((Pane)element).FlushInput(_bindings);
         }
     }
 }

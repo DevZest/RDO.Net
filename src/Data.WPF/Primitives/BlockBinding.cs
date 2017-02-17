@@ -48,14 +48,14 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public PaneBlockBinding Parent { get; private set; }
+        public BlockPane Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(PaneBlockBinding parent, int ordinal)
+        internal void Seal(BlockPane parent, int ordinal)
         {
             Parent = parent;
             Ordinal = ordinal;

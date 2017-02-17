@@ -29,5 +29,12 @@ namespace DevZest.Data.Windows
             return binding;
         }
 
+        public static T WithIsMultidimensional<T>(this T scalarBinding, bool value)
+            where T : ScalarBinding
+        {
+            scalarBinding.VerifyNotSealed();
+            scalarBinding.IsMultidimensional = value;
+            return scalarBinding;
+        }
     }
 }

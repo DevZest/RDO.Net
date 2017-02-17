@@ -49,14 +49,14 @@ namespace DevZest.Data.Windows.Primitives
 
         #endregion
 
-        public PaneScalarBinding Parent { get; private set; }
+        public ScalarPane Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(PaneScalarBinding parent, int ordinal)
+        internal void Seal(ScalarPane parent, int ordinal)
         {
             if (IsMultidimensional)
                 throw new InvalidOperationException(Strings.ScalarBinding_ChildMultidimensional);

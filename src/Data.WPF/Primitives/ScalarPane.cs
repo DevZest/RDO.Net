@@ -1,28 +1,12 @@
-﻿using DevZest.Data.Windows.Primitives;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
-    public abstract class PaneScalarBinding : ScalarBinding
+    public abstract class ScalarPane : ScalarBinding
     {
-        private sealed class ConcretePaneScalarBinding<T> : PaneScalarBinding
-            where T : Pane, new()
-        {
-            internal override Pane CreatePane()
-            {
-                return new T();
-            }
-        }
-
-        public static PaneScalarBinding Create<T>()
-            where T : Pane, new()
-        {
-            return new ConcretePaneScalarBinding<T>();
-        }
-
         private List<ScalarBinding> _bindings = new List<ScalarBinding>();
         private List<string> _names = new List<string>();
 

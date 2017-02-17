@@ -51,6 +51,7 @@
     <Compile Include="BindingExtensions.cs" />
     <Compile Include="BindingFactory.cs" />
     <Compile Include="BindingFactory.TextBox.cs" />
+    <Compile Include="BlockPane_T.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
@@ -59,13 +60,15 @@
     <Compile Include="IRowInput.cs" />
     <Compile Include="IValidationDictionary.cs" />
     <Compile Include="Pane.cs" />
-    <Compile Include="PaneBlockBinding.cs" />
-    <Compile Include="PaneRowBinding.cs" />
-    <Compile Include="PaneScalarBinding.cs" />
+    <Compile Include="Primitives\BlockPane.cs" />
+    <Compile Include="Primitives\RowPane.cs" />
+    <Compile Include="Primitives\ScalarPane.cs" />
     <Compile Include="Primitives\ContainerKind.cs" />
     <Compile Include="Primitives\ContainerView.cs" />
     <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
+    <Compile Include="RowPane_T.cs" />
+    <Compile Include="ScalarPane_T.cs" />
     <Compile Include="Scalar_T.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
