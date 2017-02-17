@@ -35,8 +35,6 @@ namespace DevZest.Data.Windows
             get { return Input == null ? ColumnSet.Empty : Input.Columns; }
         }
 
-        List<T> _cachedElements;
-
         private T Create()
         {
             var result = new T();
@@ -53,12 +51,7 @@ namespace DevZest.Data.Windows
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            SettingUpElement = (T)value;
-        }
-
-        internal sealed override void BeginSetup()
-        {
-            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
+            SettingUpElement = value == null ? Create() : (T)value;
         }
 
         internal sealed override UIElement Setup(RowPresenter rowPresenter)
@@ -108,7 +101,7 @@ namespace DevZest.Data.Windows
                 Refresh(e, rowPresenter);
         }
 
-        internal sealed override void Cleanup(UIElement element, bool recycle)
+        internal sealed override void Cleanup(UIElement element)
         {
             var rowPresenter = element.GetRowPresenter();
             var e = (T)element;
@@ -116,8 +109,6 @@ namespace DevZest.Data.Windows
                 Input.Detach(e);
             Cleanup(e, rowPresenter);
             e.SetRowPresenter(null);
-            if (recycle)
-                CachedList.Recycle(ref _cachedElements, e);
         }
 
         public RowInput<T> BeginInput(Trigger<T> flushTrigger)

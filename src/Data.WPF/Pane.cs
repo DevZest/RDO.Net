@@ -31,13 +31,13 @@ namespace DevZest.Data.Windows
             return FindName(name) as ContentPresenter;
         }
 
-        internal Pane BeginSetup(IReadOnlyList<Binding> bindings, IReadOnlyList<string> names)
+        internal Pane InitChildren(IReadOnlyList<Binding> bindings, IReadOnlyList<string> names)
         {
             Debug.Assert(bindings.Count == names.Count);
             for (int i = 0; i < bindings.Count; i++)
             {
                 var binding = bindings[i];
-                binding.BeginSetup();
+                binding.BeginSetup(null);
                 var name = names[i];
                 AddChild(binding.GetSettingUpElement(), name);
             }
@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(bindings.Count == Children.Count);
             for (int i = 0; i < bindings.Count; i++)
-                bindings[i].Cleanup(Children[i], false);
+                bindings[i].Cleanup(Children[i]);
         }
 
         internal void EndSetup(IReadOnlyList<Binding> bindings)

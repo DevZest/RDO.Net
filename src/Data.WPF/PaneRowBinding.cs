@@ -43,11 +43,10 @@ namespace DevZest.Data.Windows
 
         private Pane Create()
         {
-            return CreatePane().BeginSetup(_bindings, _names);
+            return CreatePane().InitChildren(_bindings, _names);
         }
 
         private Pane _settingUpPane;
-        private List<Pane> _cachedPanes;
 
         internal sealed override UIElement GetSettingUpElement()
         {
@@ -56,12 +55,8 @@ namespace DevZest.Data.Windows
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            _settingUpPane = (Pane)value;
-        }
-
-        internal sealed override void BeginSetup()
-        {
-            _settingUpPane = CachedList.GetOrCreate(ref _cachedPanes, Create).BeginSetup(_bindings);
+            _settingUpPane = value == null ? Create() : (Pane)value;
+            _settingUpPane.BeginSetup(_bindings);
         }
 
         internal sealed override UIElement Setup(RowPresenter rowPresenter)
@@ -76,12 +71,10 @@ namespace DevZest.Data.Windows
             ((Pane)element).Refresh(_bindings);
         }
 
-        internal sealed override void Cleanup(UIElement element, bool recycle)
+        internal sealed override void Cleanup(UIElement element)
         {
             var pane = (Pane)element;
             pane.Cleanup(_bindings);
-            if (recycle)
-                CachedList.Recycle(ref _cachedPanes, pane);
         }
 
         internal sealed override void EndSetup()

@@ -160,17 +160,10 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void BeginSetup(UIElement value);
 
-        internal abstract void BeginSetup();
-
         internal abstract void EndSetup();
 
         internal abstract void Refresh(UIElement element);
 
-        internal void Cleanup(UIElement element)
-        {
-            Cleanup(element, true);
-        }
-
-        internal abstract void Cleanup(UIElement element, bool recycle);
+        internal abstract void Cleanup(UIElement element);
     }
 }

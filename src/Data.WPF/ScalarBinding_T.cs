@@ -29,8 +29,6 @@ namespace DevZest.Data.Windows
                 Input.Flush((T)element);
         }
 
-        List<T> _cachedElements;
-
         private T Create()
         {
             var result = new T();
@@ -47,12 +45,7 @@ namespace DevZest.Data.Windows
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            SettingUpElement = (T)value;
-        }
-
-        internal sealed override void BeginSetup()
-        {
-            SettingUpElement = CachedList.GetOrCreate(ref _cachedElements, Create);
+            SettingUpElement = value == null ? Create() : (T)value;
         }
 
         internal sealed override UIElement Setup()
@@ -100,14 +93,12 @@ namespace DevZest.Data.Windows
                 Refresh(e);
         }
 
-        internal sealed override void Cleanup(UIElement element, bool recycle)
+        internal sealed override void Cleanup(UIElement element)
         {
             var e = (T)element;
             if (Input != null)
                 Input.Detach(e);
             Cleanup(e);
-            if (recycle)
-                CachedList.Recycle(ref _cachedElements, e);
         }
 
         public ScalarBinding<T> WithIsMultidimensional(bool value)

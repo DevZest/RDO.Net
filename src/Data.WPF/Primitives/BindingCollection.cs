@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -56,7 +57,7 @@ namespace DevZest.Data.Windows.Primitives
         internal void BeginSetup()
         {
             foreach (var binding in this)
-                binding.BeginSetup();
+                binding.BeginSetup(null);
         }
 
         internal void EndSetup()
