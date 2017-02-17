@@ -284,7 +284,7 @@ namespace DevZest.Data.Windows
             Refresh();
         }
 
-        internal sealed override bool ShouldReloadCurrentRow
+        internal sealed override bool AffectedOnRowsChanged
         {
             get
             {

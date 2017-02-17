@@ -38,7 +38,7 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal sealed override bool ShouldReloadCurrentRow
+        internal sealed override bool AffectedOnRowsChanged
         {
             get { return false; }
         }

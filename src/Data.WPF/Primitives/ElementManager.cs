@@ -59,7 +59,7 @@ namespace DevZest.Data.Windows.Primitives
                     CurrentContainerView = Setup(newValue.Index / BlockDimensions);
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentContainerView);
                 }
-                else if (oldValue != newValue || CurrentContainerView.ShouldReloadCurrentRow)
+                else if (oldValue != newValue)
                     CurrentContainerView.ReloadCurrentRow(oldValue);
             }
             else if (CurrentContainerView != null)
@@ -436,7 +436,7 @@ namespace DevZest.Data.Windows.Primitives
             var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
             ContainerViewList.VirtualizeAll();
-            if (CurrentContainerView != null && oldCurrentRow == CurrentRow && CurrentContainerView.ShouldReloadCurrentRow)
+            if (CurrentContainerView != null && oldCurrentRow == CurrentRow && CurrentContainerView.AffectedOnRowsChanged)
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 

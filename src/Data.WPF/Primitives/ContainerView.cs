@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void ReloadCurrentRow(RowPresenter oldValue);
 
-        internal abstract bool ShouldReloadCurrentRow { get; }
+        internal abstract bool AffectedOnRowsChanged { get; }
 
         internal double[] CumulativeMeasuredLengths { get; set; }
 
