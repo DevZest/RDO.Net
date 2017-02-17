@@ -210,6 +210,9 @@
   <data name="RowPresenter_VerifyRecursive" xml:space="preserve">
     <value>The row must be recursive.</value>
   </data>
+  <data name="ScalarBinding_ChildMultidimensional" xml:space="preserve">
+    <value>Child ScalarBinding cannot be multidimensional.</value>
+  </data>
   <data name="ScalarBinding_IntersectsWithRowRange" xml:space="preserve">
     <value>ScalarBindings[{index}] intersects with RowRange.</value>
   </data>

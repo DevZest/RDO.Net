@@ -260,6 +260,14 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// Child ScalarBinding cannot be multidimensional.
+        /// </summary>
+        public static string ScalarBinding_ChildMultidimensional
+        {
+            get { return GetString("ScalarBinding_ChildMultidimensional"); }
+        }
+
+        /// <summary>
         /// ScalarBindings[{index}] intersects with RowRange.
         /// </summary>
         public static string ScalarBinding_IntersectsWithRowRange(object index)

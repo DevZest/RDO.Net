@@ -58,6 +58,8 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Seal(PaneScalarBinding parent, int ordinal)
         {
+            if (IsMultidimensional)
+                throw new InvalidOperationException(Strings.ScalarBinding_ChildMultidimensional);
             Parent = parent;
             Ordinal = ordinal;
         }
@@ -71,6 +73,8 @@ namespace DevZest.Data.Windows.Primitives
             set
             {
                 VerifyNotSealed();
+                if (value && Parent != null)
+                    throw new InvalidOperationException(Strings.ScalarBinding_ChildMultidimensional);
                 _isMultidimensional = value;
             }
         }
