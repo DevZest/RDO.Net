@@ -64,7 +64,9 @@ namespace DevZest.Data.Windows.Primitives
             Ordinal = ordinal;
         }
 
-        internal abstract UIElement Setup();
+        internal abstract void BeginSetup(int startOffset);
+
+        internal abstract UIElement Setup(int blockDimension);
 
         private bool _isMultidimensional;
         public bool IsMultidimensional

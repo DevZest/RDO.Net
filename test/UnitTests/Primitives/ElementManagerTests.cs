@@ -73,6 +73,9 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[0], elements[2]);
                     Assert.AreEqual(columnHeader2[1], elements[3]);
                     Assert.AreEqual(columnHeader2[2], elements[4]);
+                    Assert.AreNotEqual(columnHeader2[0], columnHeader2[1]);
+                    Assert.AreNotEqual(columnHeader2[0], columnHeader2[2]);
+                    Assert.AreNotEqual(columnHeader2[1], columnHeader2[2]);
                 }
 
                 elementManager.ContainerViewList.RealizeFirst(1);
@@ -260,6 +263,7 @@ namespace DevZest.Data.Windows.Primitives
                     }
                     Assert.AreEqual(columnHeader2[0], elements[2]);
                     Assert.AreEqual(columnHeader2[1], elements[3]);
+                    Assert.AreNotEqual(columnHeader2[0], columnHeader2[1]);
                 }
 
                 elementManager.ContainerViewList.RealizeFirst(1);

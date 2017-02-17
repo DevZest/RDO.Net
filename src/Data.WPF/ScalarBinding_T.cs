@@ -29,6 +29,20 @@ namespace DevZest.Data.Windows
                 Input.Flush((T)element);
         }
 
+        private T[] Create(int startOffset)
+        {
+            _settingUpStartOffset = startOffset;
+
+            if (startOffset == BlockDimensions)
+                return Array<T>.Empty;
+
+            int count = BlockDimensions - startOffset;
+            var result = new T[count];
+            for (int i = 0; i < count; i++)
+                result[i] = Create();
+            return result;
+        }
+
         private T Create()
         {
             var result = new T();
@@ -36,31 +50,60 @@ namespace DevZest.Data.Windows
             return result;
         }
 
+        private int _settingUpStartOffset;
+        private T[] _settingUpElements;
+        private IReadOnlyList<T> SettingUpElements
+        {
+            get { return _settingUpElements; }
+        }
+
         public T SettingUpElement { get; private set; }
 
         internal sealed override UIElement GetSettingUpElement()
         {
+            Debug.Assert(!IsMultidimensional);
             return SettingUpElement;
+        }
+
+        internal sealed override void BeginSetup(int startOffset)
+        {
+            if (IsMultidimensional)
+                _settingUpElements = Create(startOffset);
+            else if (startOffset == 0)
+                SettingUpElement = Create();
         }
 
         internal sealed override void BeginSetup(UIElement value)
         {
+            Debug.Assert(!IsMultidimensional);
             SettingUpElement = value == null ? Create() : (T)value;
         }
 
-        internal sealed override UIElement Setup()
+        internal sealed override UIElement Setup(int blockDimension)
         {
-            Debug.Assert(SettingUpElement != null);
-            Setup(SettingUpElement);
-            Refresh(SettingUpElement);
+            if (IsMultidimensional)
+            {
+                Debug.Assert(SettingUpElements != null);
+                SettingUpElement = SettingUpElements[blockDimension - _settingUpStartOffset];
+            }
+
+            return Setup();
+        }
+
+        private UIElement Setup()
+        {
+            var result = SettingUpElement;
+            Setup(result);
+            Refresh(result);
             if (Input != null)
-                Input.Attach(SettingUpElement);
-            return SettingUpElement;
+                Input.Attach(result);
+            SettingUpElement = null;
+            return result;
         }
 
         internal sealed override void EndSetup()
         {
-            SettingUpElement = null;
+            _settingUpElements = null;
         }
 
         private Action<T> _onSetup;

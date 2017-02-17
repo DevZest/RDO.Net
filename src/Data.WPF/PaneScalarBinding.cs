@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace DevZest.Data.Windows
@@ -41,30 +42,75 @@ namespace DevZest.Data.Windows
 
         internal abstract Pane CreatePane();
 
-        private Pane Create()
+        private Pane[] Create(int startOffset)
         {
-            return CreatePane().InitChildren(_bindings, _names);
+            _settingUpStartOffset = startOffset;
+
+            if (startOffset == BlockDimensions)
+                return Array<Pane>.Empty;
+
+            var count = BlockDimensions - startOffset;
+            var result = new Pane[count];
+            for (int i = 0; i < count; i++)
+                result[i] = Create();
+            return result;
         }
 
-        private Pane _settingUpPane;
-        private List<Pane> _cachedPanes;
+        private Pane Create()
+        {
+            var result = CreatePane().InitChildren(_bindings, _names);
+            OnCreated(result);
+            return result;
+        }
+
+        private int _settingUpStartOffset;
+        private Pane[] _settingUpPanes;
+        private IReadOnlyList<Pane> SettingUpPanes
+        {
+            get { return _settingUpPanes; }
+        }
+
+        private Pane SettingUpPane { get; set; }
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            return _settingUpPane;
+            Debug.Assert(!IsMultidimensional);
+            return SettingUpPane;
+        }
+
+        internal sealed override void BeginSetup(int startOffset)
+        {
+            if (IsMultidimensional)
+            {
+                _settingUpPanes = Create(startOffset);
+                for (int i = 0; i < SettingUpPanes.Count; i++)
+                    SettingUpPanes[i].BeginSetup(_bindings);
+            }
+            else if (startOffset == 0)
+            {
+                SettingUpPane = Create();
+                SettingUpPane.BeginSetup(_bindings);
+            }
         }
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            _settingUpPane = value == null ? Create() : (Pane)value;
-            _settingUpPane.BeginSetup(_bindings);
+            Debug.Assert(!IsMultidimensional);
+            SettingUpPane = value == null ? Create() : (Pane)value;
+            SettingUpPane.BeginSetup(_bindings);
         }
 
-        internal sealed override UIElement Setup()
+        internal sealed override UIElement Setup(int blockDimension)
         {
+            if (IsMultidimensional)
+            {
+                Debug.Assert(SettingUpPanes != null);
+                SettingUpPane = SettingUpPanes[blockDimension - _settingUpStartOffset];
+            }
+
             for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].Setup();
-            return _settingUpPane;
+                _bindings[i].Setup(blockDimension);
+            return SettingUpPane;
         }
 
         internal sealed override void Refresh(UIElement element)
@@ -80,8 +126,9 @@ namespace DevZest.Data.Windows
 
         internal sealed override void EndSetup()
         {
-            _settingUpPane.EndSetup(_bindings);
-            _settingUpPane = null;
+            for (int i = 0; i < SettingUpPanes.Count; i++)
+                SettingUpPanes[i].EndSetup(_bindings);
+            _settingUpPanes = null;
         }
 
         internal sealed override void FlushInput(UIElement element)

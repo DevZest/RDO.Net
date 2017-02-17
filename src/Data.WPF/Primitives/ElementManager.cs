@@ -213,13 +213,19 @@ namespace DevZest.Data.Windows.Primitives
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
 
             var scalarBindings = Template.InternalScalarBindings;
-            scalarBindings.BeginSetup();
+            BeginSetup(scalarBindings);
             for (int i = 0; i < scalarBindings.Count; i++)
                 InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
             scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
             CoerceCurrentContainerView(null);
             RefreshView();
+        }
+
+        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings)
+        {
+            for (int i = 0; i < scalarBindings.Count; i++)
+                scalarBindings[i].BeginSetup(0);
         }
 
         private void RefreshView()
@@ -280,7 +286,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             for (int i = 0; i < count; i++)
             {
-                var element = scalarBinding.Setup();
+                var element = scalarBinding.Setup(scalarBinding.BlockDimensions - count + i);
                 ElementCollection.Insert(index + i + 1, element);
             }
             return index + count;
@@ -324,7 +330,7 @@ namespace DevZest.Data.Windows.Primitives
             var delta = 0;
             var scalarBindings = Template.InternalScalarBindings;
             if (blockDimensionsDelta > 0)
-                scalarBindings.BeginSetup();
+                BeginSetup(scalarBindings, blockDimensionsDelta);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -356,6 +362,17 @@ namespace DevZest.Data.Windows.Primitives
 
             if (CurrentContainerView != null)
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
+        }
+
+        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int blockDimensionsDelta)
+        {
+            Debug.Assert(blockDimensionsDelta > 0);
+            for (int i = 0; i < scalarBindings.Count; i++)
+            {
+                var scalarBinding = scalarBindings[i];
+                int startOffset = scalarBinding.IsMultidimensional ? BlockDimensions - blockDimensionsDelta : 1;
+                scalarBinding.BeginSetup(startOffset);
+            }
         }
 
         internal void OnFocused(RowView rowView)
