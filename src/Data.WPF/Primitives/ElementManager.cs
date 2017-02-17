@@ -382,16 +382,6 @@ namespace DevZest.Data.Windows.Primitives
             SetCurrentRowFromView(rowView);
         }
 
-        private void PrepareReload(ContainerView newCurrentContainerView)
-        {
-            _currentContainerView = newCurrentContainerView;
-            if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
-            {
-                CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
-                ContainerViewList.IncreaseCount();
-            }
-        }
-
         private ContainerView GetContainerView(RowView rowView)
         {
             if (Template.ContainerKind == ContainerKind.Row)

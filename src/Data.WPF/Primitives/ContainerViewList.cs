@@ -59,11 +59,6 @@ namespace DevZest.Data.Windows.Primitives
             public override void VirtualizeAll()
             {
             }
-
-            public override void IncreaseCount()
-            {
-                throw new NotSupportedException();
-            }
         }
 
         private sealed class ContainerViewListImpl : ContainerViewList
@@ -115,11 +110,6 @@ namespace DevZest.Data.Windows.Primitives
             public override int Count
             {
                 get { return _count; }
-            }
-
-            public override void IncreaseCount()
-            {
-                _count++;
             }
 
             public override ContainerView this[int index]
@@ -219,7 +209,5 @@ namespace DevZest.Data.Windows.Primitives
         {
             return IsRealized(ordinal) ? this[ordinal - First.ContainerOrdinal] : null;
         }
-
-        public abstract void IncreaseCount();
     }
 }
