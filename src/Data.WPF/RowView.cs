@@ -66,6 +66,11 @@ namespace DevZest.Data.Windows
             SetupElements(false);
         }
 
+        internal sealed override void Setup(ElementManager elementManager, int blockOrdinal)
+        {
+            Setup(elementManager.Rows[blockOrdinal]);
+        }
+
         internal virtual void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);

@@ -14,6 +14,8 @@ namespace DevZest.Data.Windows.Primitives
             get { return ElementManager as LayoutXYManager; }
         }
 
+        internal abstract void Setup(ElementManager elementManager, int blockOrdinal);
+
         internal abstract void ReloadCurrentRow(RowPresenter oldValue);
 
         internal abstract bool ShouldReloadCurrentRow { get; }

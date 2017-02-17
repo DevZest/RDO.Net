@@ -306,7 +306,15 @@ namespace DevZest.Data.Windows.Primitives
             _blockViewStyle = style;
         }
 
-        internal BlockView CreateBlockView()
+        internal ContainerView CreateContainerView()
+        {
+            if (ContainerKind == ContainerKind.Row)
+                return CreateRowView();
+            else
+                return CreateBlockView();
+        }
+
+        private BlockView CreateBlockView()
         {
             var result = _blockViewConstructor == null ? new BlockView() : _blockViewConstructor();
             if (_blockViewStyle != null)

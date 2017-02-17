@@ -16,33 +16,21 @@ namespace DevZest.Data.Windows.Primitives
             ContainerViewList = emptyContainerViewList ? ContainerViewList.Empty : ContainerViewList.Create(this);
         }
 
-        List<BlockView> _cachedBlockViews;
+        List<ContainerView> _cachedContainerViews;
         List<RowView> _cachedRowViews;
 
         private ContainerView Setup(int ordinal)
         {
-            if (Template.ContainerKind == ContainerKind.Row)
-            {
-                var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
-                rowView.Setup(Rows[ordinal]);
-                return rowView;
-            }
-            else
-            {
-                var blockView = CachedList.GetOrCreate(ref _cachedBlockViews, Template.CreateBlockView);
-                blockView.Setup(this, ordinal);
-                return blockView;
-            }
+            var result = CachedList.GetOrCreate(ref _cachedContainerViews, Template.CreateContainerView);
+            result.Setup(this, ordinal);
+            return result;
         }
 
         private void Cleanup(ContainerView containerView)
         {
             Debug.Assert(containerView != null);
             containerView.Cleanup();
-            if (containerView is RowView)
-                CachedList.Recycle(ref _cachedRowViews, (RowView)containerView);
-            else
-                CachedList.Recycle(ref _cachedBlockViews, (BlockView)containerView);
+            CachedList.Recycle(ref _cachedContainerViews, containerView);
         }
 
         internal ContainerViewList ContainerViewList { get; private set; }

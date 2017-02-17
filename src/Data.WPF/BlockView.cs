@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal void Setup(ElementManager elementManager, int ordinal)
+        internal sealed override void Setup(ElementManager elementManager, int ordinal)
         {
             _elementManager = elementManager;
             _ordinal = ordinal;
