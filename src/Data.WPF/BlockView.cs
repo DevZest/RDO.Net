@@ -59,7 +59,6 @@ namespace DevZest.Data.Windows
                 return;
 
             AddElements();
-            OnSetup();
         }
 
         internal sealed override void Cleanup()
@@ -70,7 +69,6 @@ namespace DevZest.Data.Windows
 
         private void CleanupElements()
         {
-            OnCleanup();
             ClearElements();
         }
 
@@ -307,8 +305,6 @@ namespace DevZest.Data.Windows
 
         private RowView RemoveAllRowViewsExcept(RowPresenter row)
         {
-            OnCleanup();
-
             RowView result = null;
             var startIndex = BlockBindingsSplit;
             int blockDimensions = Elements.Count - BlockBindings.Count;
@@ -340,8 +336,6 @@ namespace DevZest.Data.Windows
                 if (!success)   // Exceeded the total count of the rows
                     break;
             }
-
-            OnSetup();
         }
 
         internal UIElement this[BlockBinding blockBinding]

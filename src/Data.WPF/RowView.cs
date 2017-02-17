@@ -136,8 +136,6 @@ namespace DevZest.Data.Windows
                     ElementCollection.Add(element);
             }
             rowBindings.EndSetup();
-
-            OnSetup();
         }
 
         private void CleanupElements(bool removeFromCollection)
@@ -152,8 +150,6 @@ namespace DevZest.Data.Windows
             }
             if (removeFromCollection)
                 ElementCollection.RemoveRange(0, Elements.Count);
-
-            OnCleanup();
         }
 
         internal sealed override void Refresh()

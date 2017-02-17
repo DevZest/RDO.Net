@@ -27,13 +27,5 @@ namespace DevZest.Data.Windows.Primitives
         internal abstract void Refresh();
 
         internal abstract void Cleanup();
-
-        protected virtual void OnSetup()
-        {
-        }
-
-        protected virtual void OnCleanup()
-        {
-        }
     }
 }
