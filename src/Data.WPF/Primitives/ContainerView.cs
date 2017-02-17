@@ -14,17 +14,15 @@ namespace DevZest.Data.Windows.Primitives
             get { return ElementManager as LayoutXYManager; }
         }
 
-        internal abstract void Reload();
+        internal abstract void ReloadCurrentRow(RowPresenter oldValue);
 
-        internal abstract void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload);
+        internal abstract bool ShouldReloadCurrentRow { get; }
 
         internal double[] CumulativeMeasuredLengths { get; set; }
 
         internal double StartOffset { get; set; }
 
         internal abstract void Refresh();
-
-        internal abstract void ReloadIfInvalid();
 
         internal abstract void Cleanup();
 

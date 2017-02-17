@@ -361,11 +361,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
+        protected override void OnCurrentRowChanged(RowPresenter oldValue)
         {
+            base.OnCurrentRowChanged(oldValue);
             Progress.OnCurrentRowChanged();
             Template.AsyncValidators.Each(x => x.OnCurrentRowChanged());
-            base.OnCurrentRowChanged(oldValue, reload);
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)

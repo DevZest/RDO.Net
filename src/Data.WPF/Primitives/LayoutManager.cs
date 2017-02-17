@@ -420,7 +420,8 @@ namespace DevZest.Data.Windows.Primitives
             if (oldValue == value)
                 return;
 
-            SetCurrentRow(value, selectionMode);
+            throw new NotImplementedException();
+            //SetCurrentRow(value, selectionMode);
         }
     }
 }

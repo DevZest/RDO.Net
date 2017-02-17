@@ -373,47 +373,42 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private RowPresenter _currentRow;
-        public RowPresenter CurrentRow
+        public virtual RowPresenter CurrentRow
         {
             get { return _currentRow; }
-            internal set { SetCurrentRow(value, true); }
-        }
-
-        protected void SetCurrentRow(RowPresenter value, bool reload)
-        {
-            Debug.Assert(value == null || value.RowManager == this);
-            Debug.Assert(value != _currentRow);
-            var oldValue = _currentRow;
-            _currentRow = value;
-            OnCurrentRowChanged(oldValue, reload);
-        }
-
-        protected void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode)
-        {
-            var oldValue = CurrentRow;
-            Debug.Assert(oldValue != value);
-            SetCurrentRow(value, true);
-            if (!selectionMode.HasValue)
-                return;
-
-            switch (selectionMode.GetValueOrDefault())
+            internal set
             {
-                case SelectionMode.Single:
-                    _selectedRows.Clear();
-                    _selectedRows.Add(value);
-                    break;
-                case SelectionMode.Multiple:
-                    value.IsSelected = !value.IsSelected;
-                    break;
-                case SelectionMode.Extended:
-                    _selectedRows.Clear();
-                    var min = Math.Min(oldValue.Index, value.Index);
-                    var max = Math.Max(oldValue.Index, value.Index);
-                    for (int i = min; i <= max; i++)
-                        _selectedRows.Add(Rows[i]);
-                    break;
+                Debug.Assert(_currentRow != value);
+                _currentRow = value;
             }
         }
+
+        //protected void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode)
+        //{
+        //    var oldValue = CurrentRow;
+        //    Debug.Assert(oldValue != value);
+        //    SetCurrentRow(value, true);
+        //    if (!selectionMode.HasValue)
+        //        return;
+
+        //    switch (selectionMode.GetValueOrDefault())
+        //    {
+        //        case SelectionMode.Single:
+        //            _selectedRows.Clear();
+        //            _selectedRows.Add(value);
+        //            break;
+        //        case SelectionMode.Multiple:
+        //            value.IsSelected = !value.IsSelected;
+        //            break;
+        //        case SelectionMode.Extended:
+        //            _selectedRows.Clear();
+        //            var min = Math.Min(oldValue.Index, value.Index);
+        //            var max = Math.Max(oldValue.Index, value.Index);
+        //            for (int i = min; i <= max; i++)
+        //                _selectedRows.Add(Rows[i]);
+        //            break;
+        //    }
+        //}
 
         private _EditHandler _editHandler;
         private _EditHandler EditHandler
@@ -468,10 +463,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(IsEditing);
             EditHandler.RollbackEdit(this);
-        }
-
-        protected virtual void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
-        {
         }
 
         protected virtual void OnSelectedRowsChanged()

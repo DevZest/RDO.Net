@@ -59,9 +59,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void CoerceCurrentContainerView(RowPresenter oldValue, bool reload)
+        private void CoerceCurrentContainerView(RowPresenter oldValue)
         {
-            Debug.Assert(ContainerViewList.Count == 0 || !reload);
+            Debug.Assert(ContainerViewList.Count == 0);
 
             var newValue = CurrentRow;
             if (newValue != null)
@@ -71,8 +71,8 @@ namespace DevZest.Data.Windows.Primitives
                     CurrentContainerView = Setup(newValue.Index / BlockDimensions);
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentContainerView);
                 }
-                else
-                    CurrentContainerView.OnCurrentRowChanged(oldValue, reload);
+                else if (oldValue != newValue || CurrentContainerView.ShouldReloadCurrentRow)
+                    CurrentContainerView.ReloadCurrentRow(oldValue);
             }
             else if (CurrentContainerView != null)
                 ClearCurrentContainerView();
@@ -230,7 +230,7 @@ namespace DevZest.Data.Windows.Primitives
                 InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
             scalarBindings.EndSetup();
             HeadScalarElementsCount = Template.ScalarBindingsSplit;
-            CoerceCurrentContainerView(null, true);
+            CoerceCurrentContainerView(null);
             RefreshView();
         }
 
@@ -367,7 +367,7 @@ namespace DevZest.Data.Windows.Primitives
             HeadScalarElementsCount += delta;
 
             if (CurrentContainerView != null)
-                CurrentContainerView.Reload();
+                CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
         internal void OnFocused(RowView rowView)
@@ -391,7 +391,7 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
             }
             _currentContainerView = GetContainerView(rowView);
-            SetCurrentRow(rowView.RowPresenter, false);
+            base.CurrentRow = rowView.RowPresenter;
         }
 
         private void PrepareReload(ContainerView newCurrentContainerView)
@@ -412,14 +412,25 @@ namespace DevZest.Data.Windows.Primitives
                 return rowView.GetBlockView();
         }
 
-        protected override void OnCurrentRowChanged(RowPresenter oldValue, bool reload)
+        public override RowPresenter CurrentRow
         {
-            base.OnCurrentRowChanged(oldValue, reload);
+            get { return base.CurrentRow; }
+            internal set
+            {
+                var oldValue = CurrentRow;
+                if (oldValue == value)
+                    return;
+                base.CurrentRow = value;
+                OnCurrentRowChanged(oldValue);
+            }
+        }
+
+        protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
+        {
             if (ElementCollection != null)
             {
-                if (reload)
-                    ContainerViewList.VirtualizeAll();
-                CoerceCurrentContainerView(oldValue, reload);
+                ContainerViewList.VirtualizeAll();
+                CoerceCurrentContainerView(oldValue);
                 InvalidateView();
             }
         }
@@ -432,12 +443,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override void OnRowsChanged()
         {
-            // when oldCurrentRow != CurrentRow, CurrentBlockView should have been reloaded in OnCurrentRowChanged override
+            // when oldCurrentRow != CurrentRow, CurrentContainerView should have been reloaded in OnCurrentRowChanged override
             var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
             ContainerViewList.VirtualizeAll();
-            if (CurrentContainerView != null && oldCurrentRow == CurrentRow)
-                CurrentContainerView.ReloadIfInvalid();
+            if (CurrentContainerView != null && oldCurrentRow == CurrentRow && CurrentContainerView.ShouldReloadCurrentRow)
+                CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
         protected override void OnRowUpdated(RowPresenter row)

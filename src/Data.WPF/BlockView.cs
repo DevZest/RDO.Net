@@ -258,12 +258,6 @@ namespace DevZest.Data.Windows
         {
         }
 
-        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload)
-        {
-            if (reload)
-                Reload(oldCurrentRow);
-        }
-
         private bool Contains(RowPresenter rowPresenter)
         {
             for (int i = 0; i < Count; i++)
@@ -275,35 +269,28 @@ namespace DevZest.Data.Windows
             return false;
         }
 
-        private void Reload(RowPresenter oldCurrentRow)
+        internal sealed override void ReloadCurrentRow(RowPresenter oldValue)
         {
+            if (Elements == null)
+                return;
+
             Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
 
-            var currentRow = ElementManager.CurrentRow;
-            var currentRowView = RemoveAllRowViewsExcept(oldCurrentRow);
-            if (oldCurrentRow != currentRow)
-                currentRowView.Reload(currentRow);
+            var currentRowView = RemoveAllRowViewsExcept(oldValue);
+            currentRowView.ReloadCurrentRow(oldValue);
             FillMissingRowViews(currentRowView);
-            _ordinal = currentRow.Index / ElementManager.BlockDimensions;
+            var newValue = ElementManager.CurrentRow;
+            _ordinal = newValue.Index / ElementManager.BlockDimensions;
             Refresh();
         }
 
-        internal sealed override void Reload()
-        {
-            if (Elements != null)
-                Reload(ElementManager.CurrentRow);
-        }
-
-        internal sealed override void ReloadIfInvalid()
-        {
-            if (IsInvalid)
-                Reload();
-        }
-
-        private bool IsInvalid
+        internal sealed override bool ShouldReloadCurrentRow
         {
             get
             {
+                if (Elements == null)
+                    return false;
+
                 var startRowIndex = ContainerOrdinal * ElementManager.BlockDimensions;
                 var startIndex = BlockBindingsSplit;
                 int blockDimensions = Elements.Count - BlockBindings.Count;
@@ -361,6 +348,9 @@ namespace DevZest.Data.Windows
         {
             get
             {
+                if (Elements == null)
+                    return null;
+
                 var index = blockBinding.Ordinal;
                 if (index >= BlockBindingsSplit)
                     index += Count;

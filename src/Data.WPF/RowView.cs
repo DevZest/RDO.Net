@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System;
 
 namespace DevZest.Data.Windows
 {
@@ -37,36 +38,32 @@ namespace DevZest.Data.Windows
             get { return ElementCollection; }
         }
 
-        internal sealed override void OnCurrentRowChanged(RowPresenter oldCurrentRow, bool reload)
+        internal sealed override bool ShouldReloadCurrentRow
         {
-            if (reload)
-                Reload(ElementManager.CurrentRow);
+            get { return false; }
         }
 
-        internal sealed override void Reload()
+        internal sealed override void ReloadCurrentRow(RowPresenter oldValue)
         {
-        }
+            Debug.Assert(oldValue != null && RowPresenter == oldValue);
+            var newValue = ElementManager.CurrentRow;
+            Debug.Assert(newValue != null);
 
-        internal void Reload(RowPresenter rowPresenter)
-        {
-            Debug.Assert(RowPresenter != null && rowPresenter != null);
+            if (oldValue == newValue)
+                return;
 
-            OnCleanup();
-            RowPresenter.View = null;
+            CleanupElements(false);
+            oldValue.View = null;
 
-            RowPresenter = rowPresenter;
-            rowPresenter.View = this;
+            RowPresenter = newValue;
+            newValue.View = this;
             if (Elements != null)
             {
                 foreach (var element in Elements)
-                    element.SetRowPresenter(rowPresenter);
+                    element.SetRowPresenter(newValue);
             }
 
-            OnSetup();
-        }
-
-        internal sealed override void ReloadIfInvalid()
-        {
+            SetupElements(false);
         }
 
         internal virtual void Setup(RowPresenter rowPresenter)
@@ -74,7 +71,7 @@ namespace DevZest.Data.Windows
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
             rowPresenter.View = this;
-            SetupElements();
+            SetupElements(true);
         }
 
         internal sealed override void Cleanup()
@@ -82,15 +79,9 @@ namespace DevZest.Data.Windows
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
 
-            CleanupElements();
+            CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
-        }
-
-        private void CleanupElements()
-        {
-            OnCleanup();
-            ClearElements();
         }
 
         public override void OnApplyTemplate()
@@ -112,36 +103,39 @@ namespace DevZest.Data.Windows
                 if (ElementCollection.Parent == elementsPanel)
                     return;
 
-                CleanupElements();
+                CleanupElements(true);
             }
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
-            SetupElements();
+            SetupElements(true);
         }
 
-        private void SetupElements()
+        private void SetupElements(bool addToCollection)
         {
             if (RowPresenter == null || ElementCollection == null)
                 return;
 
-            AddElements();
-            OnSetup();
-        }
-
-        private void AddElements()
-        {
             var rowBindings = RowBindings;
-            rowBindings.BeginSetup();
+            if (addToCollection)
+                rowBindings.BeginSetup();
+            else
+            {
+                for (int i = 0; i < rowBindings.Count; i++)
+                    rowBindings[i].BeginSetup(Elements[i]);
+            }
             for (int i = 0; i < rowBindings.Count; i++)
             {
                 var rowBinding = rowBindings[i];
                 var element = rowBinding.Setup(RowPresenter);
-                ElementCollection.Add(element);
+                if (addToCollection)
+                    ElementCollection.Add(element);
             }
             rowBindings.EndSetup();
+
+            OnSetup();
         }
 
-        private void ClearElements()
+        private void CleanupElements(bool removeFromCollection)
         {
             var rowBindings = RowBindings;
             Debug.Assert(Elements.Count == rowBindings.Count);
@@ -151,7 +145,10 @@ namespace DevZest.Data.Windows
                 var element = Elements[i];
                 rowBinding.Cleanup(element);
             }
-            ElementCollection.RemoveRange(0, Elements.Count);
+            if (removeFromCollection)
+                ElementCollection.RemoveRange(0, Elements.Count);
+
+            OnCleanup();
         }
 
         internal sealed override void Refresh()
