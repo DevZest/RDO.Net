@@ -98,6 +98,7 @@
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowMapperTests.cs" />
     <Compile Include="Primitives\RowNormalizerTests.cs" />
+    <Compile Include="RowBindingTests.cs" />
     <Compile Include="RowPaneTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
