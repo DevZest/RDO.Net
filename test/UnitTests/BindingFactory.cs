@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -10,6 +11,24 @@ namespace DevZest.Data.Windows
             {
                 element.Text = blockOrdinal.ToString();
             });
+        }
+
+        public static BlockBinding<BlockLabel> BlockLabel<T>(this Column source, BlockBinding<T> target)
+            where T : UIElement, new()
+        {
+            return new BlockBinding<BlockLabel>(
+                onSetup: (e, i, r) =>
+                {
+                    e.Content = source.DisplayName;
+                    if (target != null)
+                        e.Target = target.SettingUpElement;
+                },
+                onRefresh: (e, i, r) =>
+                {
+                },
+                onCleanup: (e, i, r) =>
+                {
+                });
         }
 
         public static BlockBinding<Placeholder> BlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
