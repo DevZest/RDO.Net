@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DevZest")]
 [assembly: AssemblyProduct("RDO.WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -24,3 +24,7 @@ using System.Windows;
 [assembly: Guid("13148e98-0f1a-44d3-8def-99392773af3e")]
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
+
+[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows")]
+[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows.Primitives")]
+

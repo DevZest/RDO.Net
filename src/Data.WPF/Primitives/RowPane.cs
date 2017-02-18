@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
         private List<RowBinding> _bindings = new List<RowBinding>();
         private List<string> _names = new List<string>();
 
-        public void AddChild<T>(RowBinding<T> binding, string name)
+        internal void InternalAddChild<T>(RowBinding<T> binding, string name)
             where T : UIElement, new()
         {
             Binding.VerifyAdding(binding, nameof(binding));

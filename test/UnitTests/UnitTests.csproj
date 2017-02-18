@@ -67,6 +67,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -83,6 +84,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CodePane.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="BindingFactory.cs" />
     <Compile Include="BlockHeader.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowMapperTests.cs" />
     <Compile Include="Primitives\RowNormalizerTests.cs" />
+    <Compile Include="RowPaneTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -105,6 +108,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Placeholder.cs" />
     <Compile Include="ValidationViewTests.cs" />
+    <Compile Include="XamlPane.xaml.cs">
+      <DependentUpon>XamlPane.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Data.WPF\Data.WPF.csproj">
@@ -120,6 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="XamlPane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

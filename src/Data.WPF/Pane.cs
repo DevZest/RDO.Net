@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 
 namespace DevZest.Data.Windows
 {
+    [ContentPropertyAttribute(nameof(Pane.Content))]
     public class Pane : ContentPresenter
     {
         private List<UIElement> _children = new List<UIElement>();
