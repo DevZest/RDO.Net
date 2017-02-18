@@ -15,16 +15,6 @@ namespace DevZest.Data.Windows
                 });
         }
 
-        private static string GetString(object value, string format, IFormatProvider formatProvider)
-        {
-            if (string.IsNullOrEmpty(format))
-                return value.ToString();
-            else if (formatProvider == null)
-                return string.Format(format, value);
-            else
-                return string.Format(formatProvider, format, value);
-        }
-
         public static RowBinding<Label> Label<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
             where TTarget : UIElement, new()
         {
@@ -34,7 +24,7 @@ namespace DevZest.Data.Windows
             return new RowBinding<Label>(
                 onSetup: (e, r) =>
                 {
-                    e.Content = GetString(source.DisplayName, format, formatProvider);
+                    e.Content = source.DisplayName.ToString(format, formatProvider);
                     if (target != null)
                         e.Target = target.SettingUpElement;
                 },
@@ -65,7 +55,7 @@ namespace DevZest.Data.Windows
             return new ScalarBinding<TextBlock>(
                 onRefresh: e =>
                 {
-                    e.Text = GetString(source.Value, format, formatProvider);
+                    e.Text = source.Value.ToString(format, formatProvider);
                 });
         }
 
@@ -77,7 +67,7 @@ namespace DevZest.Data.Windows
             return new RowBinding<TextBlock>(
                 onRefresh: (e, r) =>
                 {
-                    e.Text = GetString(r.GetValue(source), format, formatProvider);
+                    e.Text = r.GetValue(source).ToString(format, formatProvider);
                 });
         }
 

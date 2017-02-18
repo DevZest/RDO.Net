@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DevZest.Data.Windows.Utilities
+namespace DevZest
 {
     static partial class EmptyReadOnlyDictionary<TKey, TValue>
     {

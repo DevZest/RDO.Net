@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DevZest.Data.Windows.Utilities
+namespace DevZest
 {
     internal sealed class EmptyEnumerator<T> : IEnumerator<T>
     {

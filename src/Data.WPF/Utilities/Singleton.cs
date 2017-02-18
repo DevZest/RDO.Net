@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DevZest.Data.Windows.Utilities
+namespace DevZest
 {
     static partial class Singleton
     {

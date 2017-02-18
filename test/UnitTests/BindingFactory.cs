@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DevZest.Data.Windows
 {
@@ -40,6 +41,27 @@ namespace DevZest.Data.Windows
         {
             element.DesiredWidth = desiredWidth;
             element.DesiredHeight = desiredHeight;
+        }
+
+        public static ScalarBinding<Label> ScalarLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+            where TTarget : UIElement, new()
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<Label>(
+                onSetup: e =>
+                {
+                    e.Content = source.DisplayName.ToString(format, formatProvider);
+                    if (target != null)
+                        e.Target = target.SettingUpElement;
+                },
+                onRefresh: e =>
+                {
+                },
+                onCleanup: e =>
+                {
+                });
         }
 
         public static ScalarBinding<Placeholder> ScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)

@@ -72,6 +72,7 @@
     <Compile Include="Scalar_T.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
+    <Compile Include="Utilities\Object.ToString.cs" />
     <Compile Include="Validation.cs" />
     <Compile Include="Primitives\Input_T.cs" />
     <Compile Include="RowInput.cs" />
