@@ -27,6 +27,7 @@ namespace DevZest.Data.Windows
             Assert.AreEqual(pane[currentRow].Children[1], textBlock[currentRow]);
             Assert.AreEqual(_.Name.DisplayName, label[currentRow].Content);
             Assert.AreEqual(currentRow.GetValue(_.Name), textBlock[currentRow].Text);
+            Assert.AreEqual(textBlock[currentRow], label[currentRow].Target);
         }
 
         [TestMethod]
@@ -50,6 +51,7 @@ namespace DevZest.Data.Windows
             Assert.AreEqual(pane[currentRow].Children[1], textBlock[currentRow]);
             Assert.AreEqual(_.Name.DisplayName, label[currentRow].Content);
             Assert.AreEqual(currentRow.GetValue(_.Name), textBlock[currentRow].Text);
+            Assert.AreEqual(textBlock[currentRow], label[currentRow].Target);
         }
     }
 }

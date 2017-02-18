@@ -94,7 +94,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                if (Ordinal == -1 || ElementManager == null)
+                if (Ordinal == -1)
                     return null;
 
                 if (Parent != null)
@@ -102,6 +102,9 @@ namespace DevZest.Data.Windows.Primitives
                     var pane = (Pane)Parent[blockOrdinal];
                     return pane == null ? null : pane.Children[Ordinal];
                 }
+
+                if (ElementManager == null)
+                    return null;
 
                 var blockView = (BlockView)ElementManager[blockOrdinal];
                 return blockView == null || blockView.Elements == null ? null : blockView[this];

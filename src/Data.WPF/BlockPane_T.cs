@@ -1,5 +1,5 @@
-﻿using System;
-using DevZest.Data.Windows.Primitives;
+﻿using DevZest.Data.Windows.Primitives;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -14,6 +14,13 @@ namespace DevZest.Data.Windows
         public new T this[int blockOrdinal]
         {
             get { return (T)base[blockOrdinal]; }
+        }
+
+        public BlockPane<T> AddChild<TChild>(BlockBinding<TChild> binding, string name)
+            where TChild : UIElement, new()
+        {
+            InternalAddChild(binding, name);
+            return this;
         }
     }
 }

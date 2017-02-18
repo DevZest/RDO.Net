@@ -9,7 +9,7 @@ namespace DevZest.Data.Windows.Primitives
         private List<BlockBinding> _bindings = new List<BlockBinding>();
         private List<string> _names = new List<string>();
 
-        public void AddChild<T>(BlockBinding<T> binding, string name)
+        internal void InternalAddChild<T>(BlockBinding<T> binding, string name)
             where T : UIElement, new()
         {
             Binding.VerifyAdding(binding, nameof(binding));

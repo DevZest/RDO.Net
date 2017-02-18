@@ -84,6 +84,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BlockPaneTests.cs" />
     <Compile Include="CodePane.cs" />
     <Compile Include="DataSetExtensions.cs" />
     <Compile Include="BindingFactory.cs" />
