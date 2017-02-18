@@ -39,6 +39,10 @@ namespace DevZest.Data.Windows
                     .AddBinding(0, 0, pane).AddBinding(1, 0, _.Name.TextBlock());
             });
 
+            Assert.IsNull(label.SettingUpElement);
+            Assert.IsNull(textBlock.SettingUpElement);
+            Assert.IsNull(pane.GetSettingUpElement());
+
             var currentRow = elementManager.Rows[0];
             Assert.AreEqual(pane[0].Children[0], label[0]);
             Assert.AreEqual(pane[0].Children[1], textBlock[0]);

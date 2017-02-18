@@ -22,6 +22,10 @@ namespace DevZest.Data.Windows
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });
 
+            Assert.IsNull(label.SettingUpElement);
+            Assert.IsNull(textBlock.SettingUpElement);
+            Assert.IsNull(pane.GetSettingUpElement());
+
             var currentRow = elementManager.Rows[0];
             Assert.AreEqual(pane[currentRow].Children[0], label[currentRow]);
             Assert.AreEqual(pane[currentRow].Children[1], textBlock[currentRow]);
