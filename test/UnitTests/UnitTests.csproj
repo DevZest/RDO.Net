@@ -102,6 +102,7 @@
     <Compile Include="Primitives\RowNormalizerTests.cs" />
     <Compile Include="RowBindingTests.cs" />
     <Compile Include="RowPaneTests.cs" />
+    <Compile Include="ScalarBindingTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

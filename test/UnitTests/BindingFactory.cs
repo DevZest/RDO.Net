@@ -43,7 +43,7 @@ namespace DevZest.Data.Windows
             element.DesiredHeight = desiredHeight;
         }
 
-        public static ScalarBinding<Label> ScalarLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+        public static ScalarBinding<Label> ScalarLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
             where TTarget : UIElement, new()
         {
             if (source == null)
