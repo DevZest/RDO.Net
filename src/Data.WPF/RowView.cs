@@ -66,9 +66,9 @@ namespace DevZest.Data.Windows
             SetupElements(false);
         }
 
-        internal sealed override void Setup(ElementManager elementManager, int blockOrdinal)
+        internal sealed override void Setup(ElementManager elementManager, int containerOrdinal)
         {
-            Setup(elementManager.Rows[blockOrdinal]);
+            Setup(elementManager.Rows[containerOrdinal]);
         }
 
         internal virtual void Setup(RowPresenter rowPresenter)
