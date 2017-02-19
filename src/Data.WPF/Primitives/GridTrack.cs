@@ -148,7 +148,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(Length.IsStar && Template.Orientation.HasValue);
 
             var layoutOrientation = Template.Orientation.Value;
-            if (Orientation == layoutOrientation || Template.BlockDimensions != 1)
+            if (Orientation == layoutOrientation || Template.FlowCount != 1)
                 throw new InvalidOperationException(InvalidStarLengthMessage);
         }
 
@@ -158,7 +158,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(Length.IsAuto);
 
-            if (Template.IsMultidimensional(Orientation))
+            if (Template.Flowable(Orientation))
                 throw new InvalidOperationException(InvalidAutoLengthMessage);
         }
 

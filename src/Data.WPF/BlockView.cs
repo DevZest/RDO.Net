@@ -78,14 +78,9 @@ namespace DevZest.Data.Windows
             get { return _elementManager; }
         }
 
-        public int Dimensions
+        public int FlowCount
         {
-            get { return ElementManager == null ? 1 : ElementManager.BlockDimensions; }
-        }
-
-        private int GetDimensions()
-        {
-            return ElementManager == null ? 1 : ElementManager.BlockDimensions;
+            get { return ElementManager == null ? 1 : ElementManager.FlowCount; }
         }
 
         private int _ordinal;
@@ -101,10 +96,10 @@ namespace DevZest.Data.Windows
                 if (ElementManager == null)
                     return 0;
 
-                var blockDimensions = ElementManager.BlockDimensions;
-                var nextBlockFirstRowOrdinal = (ContainerOrdinal + 1) * blockDimensions;
+                var flowCount = ElementManager.FlowCount;
+                var nextBlockFirstRowOrdinal = (ContainerOrdinal + 1) * flowCount;
                 var rowCount = ElementManager.Rows.Count;
-                return nextBlockFirstRowOrdinal <= rowCount ? blockDimensions : blockDimensions - (nextBlockFirstRowOrdinal - rowCount);
+                return nextBlockFirstRowOrdinal <= rowCount ? flowCount : flowCount - (nextBlockFirstRowOrdinal - rowCount);
             }
         }
 
@@ -115,7 +110,7 @@ namespace DevZest.Data.Windows
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ElementManager.Rows[ContainerOrdinal * ElementManager.BlockDimensions + index];
+                return ElementManager.Rows[ContainerOrdinal * ElementManager.FlowCount + index];
             }
         }
 
@@ -156,7 +151,7 @@ namespace DevZest.Data.Windows
             for (int i = 0; i < BlockBindingsSplit; i++)
                 AddElement(blockBindings[i]);
 
-            for (int i = 0; i < ElementManager.BlockDimensions; i++)
+            for (int i = 0; i < ElementManager.FlowCount; i++)
             {
                 var success = AddRowView(i);
                 if (!success)   // Exceeded the total count of the rows
@@ -178,7 +173,7 @@ namespace DevZest.Data.Windows
         private bool AddRowView(int offset)
         {
             var rows = ElementManager.Rows;
-            var rowIndex = ContainerOrdinal * ElementManager.BlockDimensions + offset;
+            var rowIndex = ContainerOrdinal * ElementManager.FlowCount + offset;
             if (rowIndex >= rows.Count)
                 return false;
             var row = rows[rowIndex];
@@ -192,13 +187,13 @@ namespace DevZest.Data.Windows
             if (ElementCollection == null)
                 return;
 
-            int blockDimensions = Elements.Count - BlockBindings.Count;
+            int flowCount = Elements.Count - BlockBindings.Count;
 
             var blockBindings = BlockBindings;
             for (int i = BlockBindings.Count - 1; i >= BlockBindingsSplit; i--)
                 RemoveLastElement(blockBindings[i]);
 
-            for (int i = blockDimensions - 1; i >= 0; i--)
+            for (int i = flowCount - 1; i >= 0; i--)
                 RemoveRowViewAt(Elements.Count - 1);
 
             for (int i = BlockBindingsSplit - 1; i >= 0 ; i--)
@@ -231,13 +226,13 @@ namespace DevZest.Data.Windows
                 return;
 
             var blockBindings = BlockBindings;
-            int blockDimensions = Elements.Count - blockBindings.Count;
+            int flowCount = Elements.Count - blockBindings.Count;
             var index = 0;
 
             for (int i = 0; i < BlockBindingsSplit; i++)
                 Refresh(blockBindings[i], index++);
 
-            for (int i = 0; i < blockDimensions; i++)
+            for (int i = 0; i < flowCount; i++)
                 ((RowView)Elements[index++]).Refresh();
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
@@ -278,7 +273,7 @@ namespace DevZest.Data.Windows
             currentRowView.ReloadCurrentRow(oldValue);
             FillMissingRowViews(currentRowView);
             var newValue = ElementManager.CurrentRow;
-            _ordinal = newValue.Index / ElementManager.BlockDimensions;
+            _ordinal = newValue.Index / ElementManager.FlowCount;
             Refresh();
         }
 
@@ -289,10 +284,10 @@ namespace DevZest.Data.Windows
                 if (Elements == null)
                     return false;
 
-                var startRowIndex = ContainerOrdinal * ElementManager.BlockDimensions;
+                var startRowIndex = ContainerOrdinal * ElementManager.FlowCount;
                 var startIndex = BlockBindingsSplit;
-                int blockDimensions = Elements.Count - BlockBindings.Count;
-                for (int i = 0; i < blockDimensions; i++)
+                int flowCount = Elements.Count - BlockBindings.Count;
+                for (int i = 0; i < flowCount; i++)
                 {
                     var index = startIndex + i;
                     var rowView = (RowView)Elements[index];
@@ -307,8 +302,8 @@ namespace DevZest.Data.Windows
         {
             RowView result = null;
             var startIndex = BlockBindingsSplit;
-            int blockDimensions = Elements.Count - BlockBindings.Count;
-            for (int i = blockDimensions - 1; i >= 0; i--)
+            int flowCount = Elements.Count - BlockBindings.Count;
+            for (int i = flowCount - 1; i >= 0; i--)
             {
                 var index = startIndex + i;
                 var rowView = (RowView)Elements[index];
@@ -324,13 +319,13 @@ namespace DevZest.Data.Windows
         private void FillMissingRowViews(RowView currentRowView)
         {
             var currentRowIndex = currentRowView.RowPresenter.Index;
-            var blockDimensions = ElementManager.BlockDimensions;
-            var offset = currentRowIndex % blockDimensions;
+            var flowCount = ElementManager.FlowCount;
+            var offset = currentRowIndex % flowCount;
 
             for (int i = 0; i < offset; i++)
                 AddRowView(i);
 
-            for (int i = offset + 1; i < blockDimensions; i++)
+            for (int i = offset + 1; i < flowCount; i++)
             {
                 var success = AddRowView(i);
                 if (!success)   // Exceeded the total count of the rows

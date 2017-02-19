@@ -96,14 +96,14 @@ namespace DevZest.Data.Windows.Primitives
                 get { return _elementManager.Rows; }
             }
 
-            private int BlockDimensions
+            private int FlowCount
             {
-                get { return _elementManager.BlockDimensions; }
+                get { return _elementManager.FlowCount; }
             }
 
             public override int MaxCount
             {
-                get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / BlockDimensions + 1; }
+                get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / FlowCount + 1; }
             }
 
             private int _count;

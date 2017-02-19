@@ -160,10 +160,10 @@
     <value>The CanInsert property must be true.</value>
   </data>
   <data name="GridColumn_InvalidAutoWidth" xml:space="preserve">
-    <value>Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.</value>
+    <value>Auto width GridColumns[{ordinal}] is invalid for flowable layout.</value>
   </data>
   <data name="GridColumn_InvalidStarWidth" xml:space="preserve">
-    <value>Star width GridColumns[{ordinal}] is invalid for horizontal or multidimensional layout.</value>
+    <value>Star width GridColumns[{ordinal}] is invalid for horizontal or flowable layout.</value>
   </data>
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
@@ -172,10 +172,10 @@
     <value>The GridRange does not belong to the same Template.</value>
   </data>
   <data name="GridRow_InvalidAutoHeight" xml:space="preserve">
-    <value>Auto height GridRows[{ordinal}] is invalid for multidimensional layout.</value>
+    <value>Auto height GridRows[{ordinal}] is invalid for flowable layout.</value>
   </data>
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
-    <value>Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.</value>
+    <value>Star height GridRows[{ordinal}] is invalid for vertical or flowable layout.</value>
   </data>
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>
@@ -210,8 +210,11 @@
   <data name="RowPresenter_VerifyRecursive" xml:space="preserve">
     <value>The row must be recursive.</value>
   </data>
-  <data name="ScalarBinding_ChildMultidimensional" xml:space="preserve">
-    <value>Child ScalarBinding cannot be multidimensional.</value>
+  <data name="ScalarBinding_FlowableChild" xml:space="preserve">
+    <value>Child ScalarBinding cannot be flowable.</value>
+  </data>
+  <data name="ScalarBinding_FlowableNotAllowedByTemplate" xml:space="preserve">
+    <value>Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).</value>
   </data>
   <data name="ScalarBinding_IntersectsWithRowRange" xml:space="preserve">
     <value>ScalarBindings[{index}] intersects with RowRange.</value>
@@ -219,14 +222,11 @@
   <data name="ScalarBinding_InvalidStretches" xml:space="preserve">
     <value>The Stretches value is invalid. It cuts across ScalarBindings[{ordinal}].</value>
   </data>
-  <data name="ScalarBinding_OneDimensionalTemplate" xml:space="preserve">
-    <value>Multidimensional ScalarBindings[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).</value>
-  </data>
   <data name="ScalarBinding_OutOfHorizontalRowRange" xml:space="preserve">
-    <value>Multidimensional ScalarBindings[{index}] is out of horizontal side of RowRange.</value>
+    <value>Flowable ScalarBindings[{index}] is out of horizontal side of RowRange.</value>
   </data>
   <data name="ScalarBinding_OutOfVerticalRowRange" xml:space="preserve">
-    <value>Multidimensional ScalarBindings[{index}] is out of vertical side of RowRange.</value>
+    <value>Flowable ScalarBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
   <data name="TemplateBuilder_AsyncValidatorScopeConflict" xml:space="preserve">
     <value>Conflict between Template.ValidationScope and AsyncValidation.Scope detected.</value>

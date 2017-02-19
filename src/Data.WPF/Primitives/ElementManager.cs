@@ -56,7 +56,7 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (CurrentContainerView == null)
                 {
-                    CurrentContainerView = Setup(newValue.Index / BlockDimensions);
+                    CurrentContainerView = Setup(newValue.Index / FlowCount);
                     ElementCollection.Insert(HeadScalarElementsCount, CurrentContainerView);
                 }
                 else if (oldValue != newValue)
@@ -88,7 +88,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected ContainerView this[RowView rowView]
         {
-            get { return this[rowView.BlockOrdinal]; }
+            get { return this[rowView.ContainerOrdinal]; }
         }
 
         public ContainerView this[int blockOrdinal]
@@ -244,7 +244,7 @@ namespace DevZest.Data.Windows.Primitives
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.FlowCount; i++)
                 {
                     var element = scalarBinding[i];
                     scalarBinding.Refresh(element);
@@ -273,12 +273,12 @@ namespace DevZest.Data.Windows.Primitives
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
-                scalarBinding.CumulativeBlockDimensionsDelta = 0;
-                int count = scalarBinding.IsMultidimensional ? BlockDimensions : 1;
+                scalarBinding.CumulativeFlowCountDelta = 0;
+                int count = scalarBinding.Flowable ? FlowCount : 1;
                 RemoveScalarElementsAfter(scalarBinding, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _blockDimensions = 1;
+            _flowCount = 1;
             ElementCollection = null;
         }
 
@@ -286,7 +286,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             for (int i = 0; i < count; i++)
             {
-                var element = scalarBinding.Setup(scalarBinding.BlockDimensions - count + i);
+                var element = scalarBinding.Setup(scalarBinding.FlowCount - count + i);
                 ElementCollection.Insert(index + i + 1, element);
             }
             return index + count;
@@ -303,34 +303,34 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int _blockDimensions = 1;
-        internal int BlockDimensions
+        private int _flowCount = 1;
+        internal int FlowCount
         {
-            get { return _blockDimensions; }
+            get { return _flowCount; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_blockDimensions == value)
+                if (_flowCount == value)
                     return;
 
-                var delta = value - _blockDimensions;
-                _blockDimensions = value;
-                OnBlockDimensionsChanged(delta);
+                var delta = value - _flowCount;
+                _flowCount = value;
+                OnFlowCountChanged(delta);
             }
         }
 
-        private void OnBlockDimensionsChanged(int blockDimensionsDelta)
+        private void OnFlowCountChanged(int flowCount)
         {
-            Debug.Assert(blockDimensionsDelta != 0);
+            Debug.Assert(flowCount != 0);
 
             ContainerViewList.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
             var scalarBindings = Template.InternalScalarBindings;
-            if (blockDimensionsDelta > 0)
-                BeginSetup(scalarBindings, blockDimensionsDelta);
+            if (flowCount > 0)
+                BeginSetup(scalarBindings, flowCount);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -338,24 +338,24 @@ namespace DevZest.Data.Windows.Primitives
                     index += 1;
                 var scalarBinding = scalarBindings[i];
 
-                var prevCumulativeBlockDimensionsDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeBlockDimensionsDelta;
-                if (!scalarBinding.IsMultidimensional)
+                var prevCumulativeFlowCountDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeFlowCountDelta;
+                if (!scalarBinding.Flowable)
                 {
-                    scalarBinding.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta + (BlockDimensions - 1);
+                    scalarBinding.CumulativeFlowCountDelta = prevCumulativeFlowCountDelta + (FlowCount - 1);
                     continue;
                 }
-                scalarBinding.CumulativeBlockDimensionsDelta = prevCumulativeBlockDimensionsDelta;
+                scalarBinding.CumulativeFlowCountDelta = prevCumulativeFlowCountDelta;
 
                 if (i < Template.ScalarBindingsSplit)
-                    delta += blockDimensionsDelta;
+                    delta += flowCount;
 
-                if (blockDimensionsDelta > 0)
-                    index = InsertScalarElementsAfter(scalarBinding, index, blockDimensionsDelta);
+                if (flowCount > 0)
+                    index = InsertScalarElementsAfter(scalarBinding, index, flowCount);
                 else
-                    RemoveScalarElementsAfter(scalarBinding, index, -blockDimensionsDelta);
+                    RemoveScalarElementsAfter(scalarBinding, index, -flowCount);
             }
 
-            if (blockDimensionsDelta > 0)
+            if (flowCount > 0)
                 scalarBindings.EndSetup();
 
             HeadScalarElementsCount += delta;
@@ -364,13 +364,13 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
-        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int blockDimensionsDelta)
+        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int flowCountDelta)
         {
-            Debug.Assert(blockDimensionsDelta > 0);
+            Debug.Assert(flowCountDelta > 0);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
-                int startOffset = scalarBinding.IsMultidimensional ? BlockDimensions - blockDimensionsDelta : 1;
+                int startOffset = scalarBinding.Flowable ? FlowCount - flowCountDelta : 1;
                 scalarBinding.BeginSetup(startOffset);
             }
         }

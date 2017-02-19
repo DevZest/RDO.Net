@@ -58,25 +58,25 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Seal(ScalarPane parent, int ordinal)
         {
-            if (IsMultidimensional)
-                throw new InvalidOperationException(Strings.ScalarBinding_ChildMultidimensional);
+            if (Flowable)
+                throw new InvalidOperationException(Strings.ScalarBinding_FlowableChild);
             Parent = parent;
             Ordinal = ordinal;
         }
 
         internal abstract void BeginSetup(int startOffset);
 
-        internal abstract UIElement Setup(int blockDimension);
+        internal abstract UIElement Setup(int flowIndex);
 
-        internal abstract void PrepareSettingUpElement(int blockDimension);
+        internal abstract void PrepareSettingUpElement(int flowIndex);
 
         internal abstract void ClearSettingUpElement();
 
-        internal void EnterSetup(int blockDimension)
+        internal void EnterSetup(int flowIndex)
         {
             var scalarBindings = Template.ScalarBindings;
             for (int i = 0; i < scalarBindings.Count; i++)
-                scalarBindings[i].PrepareSettingUpElement(blockDimension);
+                scalarBindings[i].PrepareSettingUpElement(flowIndex);
         }
 
         internal void ExitSetup()
@@ -86,41 +86,41 @@ namespace DevZest.Data.Windows.Primitives
                 scalarBindings[i].ClearSettingUpElement();
         }
 
-        private bool _isMultidimensional;
-        public bool IsMultidimensional
+        private bool _flowable;
+        public bool Flowable
         {
-            get { return _isMultidimensional; }
+            get { return _flowable; }
             set
             {
                 VerifyNotSealed();
                 if (value && Parent != null)
-                    throw new InvalidOperationException(Strings.ScalarBinding_ChildMultidimensional);
-                _isMultidimensional = value;
+                    throw new InvalidOperationException(Strings.ScalarBinding_FlowableChild);
+                _flowable = value;
             }
         }
 
-        internal int CumulativeBlockDimensionsDelta { get; set; }
+        internal int CumulativeFlowCountDelta { get; set; }
 
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
                 throw new InvalidOperationException(Strings.ScalarBinding_IntersectsWithRowRange(Ordinal));
 
-            if (!IsMultidimensional)
+            if (!Flowable)
                 return;
 
-            if (Template.IsMultidimensional(Orientation.Horizontal))
+            if (Template.Flowable(Orientation.Horizontal))
             {
                 if (!rowRange.Contains(GridRange.Left) || !rowRange.Contains(GridRange.Right))
                     throw new InvalidOperationException(Strings.ScalarBinding_OutOfHorizontalRowRange(Ordinal));
             }
-            else if (Template.IsMultidimensional(Orientation.Vertical))
+            else if (Template.Flowable(Orientation.Vertical))
             {
                 if (!rowRange.Contains(GridRange.Top) || !rowRange.Contains(GridRange.Bottom))
                     throw new InvalidOperationException(Strings.ScalarBinding_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.ScalarBinding_OneDimensionalTemplate(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_FlowableNotAllowedByTemplate(Ordinal));
         }
 
         private ElementManager ElementManager
@@ -128,12 +128,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.ElementManager; }
         }
 
-        public int BlockDimensions
+        public int FlowCount
         {
-            get { return IsMultidimensional ? ElementManager.BlockDimensions : 1; }
+            get { return Flowable ? ElementManager.FlowCount : 1; }
         }
 
-        public UIElement this[int blockDimension]
+        public UIElement this[int flowIndex]
         {
             get
             {
@@ -141,14 +141,14 @@ namespace DevZest.Data.Windows.Primitives
                     return null;
 
                 if (Parent != null)
-                    return ((Pane)Parent[blockDimension]).Children[Ordinal];
+                    return ((Pane)Parent[flowIndex]).Children[Ordinal];
 
-                if (blockDimension < 0 || blockDimension >= BlockDimensions)
-                    throw new ArgumentOutOfRangeException(nameof(blockDimension));
+                if (flowIndex < 0 || flowIndex >= FlowCount)
+                    throw new ArgumentOutOfRangeException(nameof(flowIndex));
 
                 var ordinal = Ordinal;
-                int prevCumulativeBlockDimensionsDelta = ordinal == 0 ? 0 : Template.ScalarBindings[ordinal - 1].CumulativeBlockDimensionsDelta;
-                var elementIndex = ordinal * BlockDimensions - prevCumulativeBlockDimensionsDelta + blockDimension;
+                int prevCumulativeFlowCountDelta = ordinal == 0 ? 0 : Template.ScalarBindings[ordinal - 1].CumulativeFlowCountDelta;
+                var elementIndex = ordinal * FlowCount - prevCumulativeFlowCountDelta + flowIndex;
                 if (ordinal >= Template.ScalarBindingsSplit)
                 {
                     elementIndex += ElementManager.ContainerViewList.Count;

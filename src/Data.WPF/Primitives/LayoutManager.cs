@@ -126,7 +126,7 @@ namespace DevZest.Data.Windows.Primitives
         internal virtual Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
-            BlockDimensions = Template.CoerceBlockDimensions();
+            FlowCount = Template.CoerceFlowCount();
             PrepareMeasure();
             var result = FinalizeMeasure();
             return result;
@@ -147,7 +147,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             foreach (var scalarBinding in scalarBindings)
             {
-                Debug.Assert(scalarBinding.BlockDimensions == 1, "Auto size is not allowed with multidimensional ScalarBinding.");
+                Debug.Assert(scalarBinding.FlowCount == 1, "Auto size is not allowed with flowable ScalarBinding.");
                 var element = scalarBinding[0];
                 element.Measure(scalarBinding.AvailableAutoSize);
                 UpdateAutoSize(null, scalarBinding, element.DesiredSize);
@@ -160,7 +160,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.FlowCount; i++)
                 {
                     var element = scalarBinding[i];
                     element.Measure(GetSize(scalarBinding));
@@ -272,22 +272,22 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal Rect GetRect(ScalarBinding scalarBinding, int blockDimension)
+        internal Rect GetRect(ScalarBinding scalarBinding, int flowIndex)
         {
-            var point = GetLocation(scalarBinding, blockDimension);
+            var point = GetLocation(scalarBinding, flowIndex);
             var size = GetSize(scalarBinding);
             return new Rect(point, size);
         }
 
-        internal abstract Thickness GetClip(ScalarBinding scalarBinding, int blockDimension);
+        internal abstract Thickness GetClip(ScalarBinding scalarBinding, int flowIndex);
 
-        protected abstract Point GetLocation(ScalarBinding scalarBinding, int blockDimension);
+        protected abstract Point GetLocation(ScalarBinding scalarBinding, int flowIndex);
 
         internal Size Arrange(Size finalSize)
         {
             foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.FlowCount; i++)
                 {
                     var element = scalarBinding[i];
                     var rect = GetRect(scalarBinding, i);
@@ -352,18 +352,18 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract Thickness GetClip(BlockView blockView, BlockBinding blockBinding);
 
-        internal Rect GetRect(BlockView block, int blockDimension)
+        internal Rect GetRect(BlockView block, int flowIndex)
         {
-            var location = GetLocation(block, blockDimension);
-            var size = GetSize(block, blockDimension);
+            var location = GetLocation(block, flowIndex);
+            var size = GetSize(block, flowIndex);
             return new Rect(location, size);
         }
 
-        protected abstract Point GetLocation(BlockView block, int blockDimension);
+        protected abstract Point GetLocation(BlockView block, int flowIndex);
 
-        protected abstract Size GetSize(BlockView blockView, int blockDimension);
+        protected abstract Size GetSize(BlockView blockView, int flowIndex);
 
-        internal abstract Thickness GetClip(int blockDimension);
+        internal abstract Thickness GetClip(int flowIndex);
 
         internal void ArrangeChildren(BlockView blockView)
         {

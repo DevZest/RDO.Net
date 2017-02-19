@@ -124,7 +124,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Auto width GridColumns[{ordinal}] is invalid for multidimensional layout.
+        /// Auto width GridColumns[{ordinal}] is invalid for flowable layout.
         /// </summary>
         public static string GridColumn_InvalidAutoWidth(object ordinal)
         {
@@ -132,7 +132,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Star width GridColumns[{ordinal}] is invalid for horizontal or multidimensional layout.
+        /// Star width GridColumns[{ordinal}] is invalid for horizontal or flowable layout.
         /// </summary>
         public static string GridColumn_InvalidStarWidth(object ordinal)
         {
@@ -156,7 +156,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Auto height GridRows[{ordinal}] is invalid for multidimensional layout.
+        /// Auto height GridRows[{ordinal}] is invalid for flowable layout.
         /// </summary>
         public static string GridRow_InvalidAutoHeight(object ordinal)
         {
@@ -164,7 +164,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Star height GridRows[{ordinal}] is invalid for vertical or multidemensional layout.
+        /// Star height GridRows[{ordinal}] is invalid for vertical or flowable layout.
         /// </summary>
         public static string GridRow_InvalidStarHeight(object ordinal)
         {
@@ -260,11 +260,19 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Child ScalarBinding cannot be multidimensional.
+        /// Child ScalarBinding cannot be flowable.
         /// </summary>
-        public static string ScalarBinding_ChildMultidimensional
+        public static string ScalarBinding_FlowableChild
         {
-            get { return GetString("ScalarBinding_ChildMultidimensional"); }
+            get { return GetString("ScalarBinding_FlowableChild"); }
+        }
+
+        /// <summary>
+        /// Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).
+        /// </summary>
+        public static string ScalarBinding_FlowableNotAllowedByTemplate(object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_FlowableNotAllowedByTemplate", "index"), index);
         }
 
         /// <summary>
@@ -284,15 +292,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Multidimensional ScalarBindings[{index}] conflicts with one dimensional Template (Template.BlockDimensions=1).
-        /// </summary>
-        public static string ScalarBinding_OneDimensionalTemplate(object index)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_OneDimensionalTemplate", "index"), index);
-        }
-
-        /// <summary>
-        /// Multidimensional ScalarBindings[{index}] is out of horizontal side of RowRange.
+        /// Flowable ScalarBindings[{index}] is out of horizontal side of RowRange.
         /// </summary>
         public static string ScalarBinding_OutOfHorizontalRowRange(object index)
         {
@@ -300,7 +300,7 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Multidimensional ScalarBindings[{index}] is out of vertical side of RowRange.
+        /// Flowable ScalarBindings[{index}] is out of vertical side of RowRange.
         /// </summary>
         public static string ScalarBinding_OutOfVerticalRowRange(object index)
         {

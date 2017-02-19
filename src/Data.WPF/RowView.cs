@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows
 
         public sealed override int ContainerOrdinal
         {
-            get { return RowPresenter == null ? -1 : BlockOrdinal; }
+            get { return RowPresenter == null ? -1 : RowPresenter.Index / RowPresenter.ElementManager.FlowCount; }
         }
 
         internal sealed override ElementManager ElementManager
@@ -203,14 +203,9 @@ namespace DevZest.Data.Windows
                 ElementManager.OnFocused(this);
         }
 
-        internal int BlockOrdinal
+        internal int FlowIndex
         {
-            get { return RowPresenter.Index / RowPresenter.ElementManager.BlockDimensions; }
-        }
-
-        internal int BlockDimension
-        {
-            get { return RowPresenter.Index % RowPresenter.ElementManager.BlockDimensions; }
+            get { return RowPresenter.Index % RowPresenter.ElementManager.FlowCount; }
         }
 
         private DataPresenter DataPresenter

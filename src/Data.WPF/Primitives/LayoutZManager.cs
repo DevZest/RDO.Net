@@ -18,9 +18,9 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Point GetLocation(ScalarBinding scalarBinding, int blockDimension)
+        protected override Point GetLocation(ScalarBinding scalarBinding, int flowIndex)
         {
-            Debug.Assert(blockDimension == 0);
+            Debug.Assert(flowIndex == 0);
             return scalarBinding.GridRange.MeasuredLocation;
         }
 
@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows.Primitives
             return scalarBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(ScalarBinding scalarBinding, int blockDimension)
+        internal override Thickness GetClip(ScalarBinding scalarBinding, int flowIndex)
         {
             return new Thickness();
         }
@@ -64,18 +64,18 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(BlockView blockView, int blockDimension)
+        protected override Point GetLocation(BlockView blockView, int flowIndex)
         {
-            Debug.Assert(blockDimension == 0);
+            Debug.Assert(flowIndex == 0);
             return Template.BlockRange.GetLocation(Template.RowRange);
         }
 
-        protected override Size GetSize(BlockView blockView, int blockDimension)
+        protected override Size GetSize(BlockView blockView, int flowIndex)
         {
             return Template.RowRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(int blockDimension)
+        internal override Thickness GetClip(int flowIndex)
         {
             return new Thickness();
         }

@@ -18,10 +18,9 @@ namespace DevZest.Data.Windows
                 blockHeader = _.BlockHeader();
                 blockLabel = _.Name.BlockLabel(blockHeader);
                 builder.Layout(Orientation.Vertical, 2)
-                    .GridColumns("100", "100", "100").GridRows("100")
+                    .GridColumns("100", "100", "100").GridRows("100").RowRange(2, 0, 2, 0)
                     .AddBinding(0, 0, blockLabel)
-                    .AddBinding(1, 0, blockHeader)
-                    .AddBinding(2, 0, _.Name.TextBlock());
+                    .AddBinding(1, 0, blockHeader);
             });
 
             Assert.IsNull(blockLabel.SettingUpElement);

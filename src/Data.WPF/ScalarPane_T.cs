@@ -11,9 +11,9 @@ namespace DevZest.Data.Windows
             return new T();
         }
 
-        public new T this[int blockDimension]
+        public new T this[int flowIndex]
         {
-            get { return (T)base[blockDimension]; }
+            get { return (T)base[flowIndex]; }
         }
     }
 }

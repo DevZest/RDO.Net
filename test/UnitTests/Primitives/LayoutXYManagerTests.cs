@@ -139,7 +139,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutXYManager_RowBinding_multidimensional()
+        public void LayoutXYManager_RowBinding_flowable()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
@@ -240,7 +240,7 @@ namespace DevZest.Data.Windows.Primitives
                     .AddBinding(1, 0, _.ScalarPlaceholder())
                     .AddBinding(0, 1, _.ScalarPlaceholder())
                     .AddBinding(1, 1, _.RowPlaceholder())
-                    .AddBinding(1, 2, _.ScalarPlaceholder().WithIsMultidimensional(true));
+                    .AddBinding(1, 2, _.ScalarPlaceholder().WithFlowable(true));
             });
 
             var measuredSize = layoutManager.Measure(new Size(100, 100));

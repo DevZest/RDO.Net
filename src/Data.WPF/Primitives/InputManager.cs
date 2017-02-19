@@ -28,7 +28,7 @@ namespace DevZest.Data.Windows.Primitives
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarBinding.BlockDimensions; i++)
+                for (int i = 0; i < scalarBinding.FlowCount; i++)
                 {
                     var element = scalarBinding[i];
                     scalarBinding.FlushInput(element);

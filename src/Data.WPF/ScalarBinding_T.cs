@@ -33,10 +33,10 @@ namespace DevZest.Data.Windows
         {
             _settingUpStartOffset = startOffset;
 
-            if (startOffset == BlockDimensions)
+            if (startOffset == FlowCount)
                 return Array<T>.Empty;
 
-            int count = BlockDimensions - startOffset;
+            int count = FlowCount - startOffset;
             var result = new T[count];
             for (int i = 0; i < count; i++)
                 result[i] = Create();
@@ -61,13 +61,13 @@ namespace DevZest.Data.Windows
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            Debug.Assert(!IsMultidimensional);
+            Debug.Assert(!Flowable);
             return SettingUpElement;
         }
 
         internal sealed override void BeginSetup(int startOffset)
         {
-            if (IsMultidimensional)
+            if (Flowable)
                 _settingUpElements = Create(startOffset);
             else if (startOffset == 0)
                 SettingUpElement = Create();
@@ -75,28 +75,28 @@ namespace DevZest.Data.Windows
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            Debug.Assert(!IsMultidimensional);
+            Debug.Assert(!Flowable);
             SettingUpElement = value == null ? Create() : (T)value;
         }
 
-        internal sealed override UIElement Setup(int blockDimension)
+        internal sealed override UIElement Setup(int flowIndex)
         {
-            EnterSetup(blockDimension);
+            EnterSetup(flowIndex);
             return Setup();
         }
 
-        internal sealed override void PrepareSettingUpElement(int blockDimension)
+        internal sealed override void PrepareSettingUpElement(int flowIndex)
         {
-            if (IsMultidimensional)
+            if (Flowable)
             {
                 Debug.Assert(SettingUpElements != null);
-                SettingUpElement = SettingUpElements[blockDimension - _settingUpStartOffset];
+                SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
             }
         }
 
         internal override void ClearSettingUpElement()
         {
-            if (IsMultidimensional)
+            if (Flowable)
                 SettingUpElement = null;
         }
 
@@ -169,9 +169,9 @@ namespace DevZest.Data.Windows
             return BeginInput(flushTrigger).WithFlush(data, getValue).EndInput();
         }
 
-        public new T this[int blockDimension]
+        public new T this[int flowIndex]
         {
-            get { return (T)base[blockDimension]; }
+            get { return (T)base[flowIndex]; }
         }
     }
 }

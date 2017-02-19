@@ -30,10 +30,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             _settingUpStartOffset = startOffset;
 
-            if (startOffset == BlockDimensions)
+            if (startOffset == FlowCount)
                 return Array<Pane>.Empty;
 
-            var count = BlockDimensions - startOffset;
+            var count = FlowCount - startOffset;
             var result = new Pane[count];
             for (int i = 0; i < count; i++)
                 result[i] = Create();
@@ -58,13 +58,13 @@ namespace DevZest.Data.Windows.Primitives
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            Debug.Assert(!IsMultidimensional);
+            Debug.Assert(!Flowable);
             return SettingUpPane;
         }
 
         internal sealed override void BeginSetup(int startOffset)
         {
-            if (IsMultidimensional)
+            if (Flowable)
             {
                 _settingUpPanes = Create(startOffset);
                 for (int i = 0; i < SettingUpPanes.Count; i++)
@@ -79,31 +79,31 @@ namespace DevZest.Data.Windows.Primitives
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            Debug.Assert(!IsMultidimensional);
+            Debug.Assert(!Flowable);
             SettingUpPane = value == null ? Create() : (Pane)value;
             SettingUpPane.BeginSetup(_bindings);
         }
 
-        internal sealed override void PrepareSettingUpElement(int blockDimension)
+        internal sealed override void PrepareSettingUpElement(int flowIndex)
         {
-            if (IsMultidimensional)
+            if (Flowable)
             {
                 Debug.Assert(SettingUpPanes != null);
-                SettingUpPane = SettingUpPanes[blockDimension - _settingUpStartOffset];
+                SettingUpPane = SettingUpPanes[flowIndex - _settingUpStartOffset];
             }
         }
 
         internal override void ClearSettingUpElement()
         {
-            if (IsMultidimensional)
+            if (Flowable)
                 SettingUpPane = null;
         }
 
-        internal sealed override UIElement Setup(int blockDimension)
+        internal sealed override UIElement Setup(int flowIndex)
         {
             var result = SettingUpPane;
             for (int i = 0; i < _bindings.Count; i++)
-                _bindings[i].Setup(blockDimension);
+                _bindings[i].Setup(flowIndex);
             ExitSetup();
             return result;
         }

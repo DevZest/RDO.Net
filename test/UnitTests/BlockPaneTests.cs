@@ -20,8 +20,8 @@ namespace DevZest.Data.Windows
                 blockLabel = _.Name.BlockLabel(blockHeader);
                 pane = new BlockPane<XamlPane>().AddChild(blockLabel, XamlPane.NAME_LEFT).AddChild(blockHeader, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 2)
-                    .GridColumns("100", "100").GridRows("100")
-                    .AddBinding(0, 0, pane).AddBinding(1, 0, _.Name.TextBlock());
+                    .GridColumns("100", "100").GridRows("100").RowRange(1, 0, 1, 0)
+                    .AddBinding(0, 0, pane);
             });
 
             Assert.IsNull(blockLabel.SettingUpElement);

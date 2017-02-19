@@ -55,12 +55,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder Layout(Orientation orientation, int blockDimensions = 1)
+        public TemplateBuilder Layout(Orientation orientation, int flowCount = 1)
         {
-            if (blockDimensions < 0)
-                throw new ArgumentOutOfRangeException(nameof(blockDimensions));
+            if (flowCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(flowCount));
 
-            Template.Layout(orientation, blockDimensions);
+            Template.Layout(orientation, flowCount);
             return this;
         }
 

@@ -51,18 +51,18 @@ namespace DevZest.Data.Windows.Primitives
 
         public Orientation? Orientation { get; private set; }
 
-        public int BlockDimensions { get; private set; } = 1;
+        public int FlowCount { get; private set; } = 1;
 
         internal ContainerKind ContainerKind
         {
-            get { return BlockBindings.Count > 0 || (Orientation.HasValue && BlockDimensions != 1) ? ContainerKind.Block : ContainerKind.Row; }
+            get { return BlockBindings.Count > 0 || (Orientation.HasValue && FlowCount != 1) ? ContainerKind.Block : ContainerKind.Row; }
         }
 
-        internal void Layout(Orientation orientation, int blockDimensions = 1)
+        internal void Layout(Orientation orientation, int flowCount = 1)
         {
-            Debug.Assert(blockDimensions >= 0);
+            Debug.Assert(flowCount >= 0);
             Orientation = orientation;
-            BlockDimensions = blockDimensions;
+            FlowCount = flowCount;
         }
 
         internal GridColumnCollection InternalGridColumns { get; private set; }
@@ -205,9 +205,9 @@ namespace DevZest.Data.Windows.Primitives
                 AddGridRow(height);
         }
 
-        internal bool IsMultidimensional(Orientation orientation)
+        internal bool Flowable(Orientation orientation)
         {
-            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && BlockDimensions != 1;
+            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && FlowCount != 1;
         }
 
         internal int ScalarBindingsSplit { get; private set; }
@@ -433,23 +433,23 @@ namespace DevZest.Data.Windows.Primitives
             get { return double.IsPositiveInfinity(_availableHeight); }
         }
 
-        internal int CoerceBlockDimensions()
+        internal int CoerceFlowCount()
         {
             if (!Orientation.HasValue)
                 return 1;
 
             return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Horizontal
-                ? CoerceBlockDimensions(SizeToContentX, AvailableWidth, InternalGridColumns)
-                : CoerceBlockDimensions(SizeToContentY, AvailableHeight, InternalGridRows);
+                ? CoerceFlowCount(SizeToContentX, AvailableWidth, InternalGridColumns)
+                : CoerceFlowCount(SizeToContentY, AvailableHeight, InternalGridRows);
         }
 
-        private int CoerceBlockDimensions<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
+        private int CoerceFlowCount<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
             where T : GridTrack, IConcatList<T>
         {
             if (sizeToContent)
                 return 1;
 
-            return BlockDimensions > 0 ? BlockDimensions : (int)(availableLength / gridTracks.TotalAbsoluteLength);
+            return FlowCount > 0 ? FlowCount : (int)(availableLength / gridTracks.TotalAbsoluteLength);
         }
 
         [DefaultValue(0)]

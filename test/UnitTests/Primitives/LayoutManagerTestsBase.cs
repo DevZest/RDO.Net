@@ -12,10 +12,10 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(expectedRect, rect);
         }
 
-        internal static void VerifyRowRect(LayoutManager layoutManager, int blockViewIndex, int blockDimension, Rect expectedRect)
+        internal static void VerifyRowRect(LayoutManager layoutManager, int blockViewIndex, int flowIndex, Rect expectedRect)
         {
             var blockView = (BlockView)(blockViewIndex == -1 ? layoutManager.CurrentContainerView : layoutManager.ContainerViewList[blockViewIndex]);
-            var rect = layoutManager.GetRect(blockView, blockDimension);
+            var rect = layoutManager.GetRect(blockView, flowIndex);
             Assert.AreEqual(expectedRect, rect);
         }
 

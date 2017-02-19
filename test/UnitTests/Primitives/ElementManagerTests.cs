@@ -20,7 +20,7 @@ namespace DevZest.Data.Windows.Primitives
                 columnHeader1 = _.Name.ColumnHeader();
                 blockHeader = _.BlockHeader();
                 textBlock = _.Name.TextBlock();
-                columnHeader2 = _.Name.ColumnHeader().WithIsMultidimensional(true);
+                columnHeader2 = _.Name.ColumnHeader().WithFlowable(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)
@@ -47,7 +47,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[0], elements[2]);
                 }
 
-                elementManager.BlockDimensions = 3;
+                elementManager.FlowCount = 3;
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(5, elements.Count);
@@ -243,7 +243,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[2], elements[6]);
                 }
 
-                elementManager.BlockDimensions = 2;
+                elementManager.FlowCount = 2;
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(4, elements.Count);
