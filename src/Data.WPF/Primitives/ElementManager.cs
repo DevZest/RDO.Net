@@ -19,9 +19,33 @@ namespace DevZest.Data.Windows.Primitives
         List<ContainerView> _cachedContainerViews;
         List<RowView> _cachedRowViews;
 
+        private static T GetOrCreate<T>(ref List<T> cachedList, Func<T> constructor)
+            where T : class
+        {
+            Debug.Assert(constructor != null);
+
+            if (cachedList == null || cachedList.Count == 0)
+                return constructor();
+
+            var last = cachedList.Count - 1;
+            var result = cachedList[last];
+            cachedList.RemoveAt(last);
+            return result;
+        }
+
+        private static void Recycle<T>(ref List<T> cachedList, T value)
+            where T : class
+        {
+            Debug.Assert(value != null);
+
+            if (cachedList == null)
+                cachedList = new List<T>();
+            cachedList.Add(value);
+        }
+
         private ContainerView Setup(int ordinal)
         {
-            var result = CachedList.GetOrCreate(ref _cachedContainerViews, Template.CreateContainerView);
+            var result = GetOrCreate(ref _cachedContainerViews, Template.CreateContainerView);
             result.Setup(this, ordinal);
             return result;
         }
@@ -30,7 +54,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(containerView != null);
             containerView.Cleanup();
-            CachedList.Recycle(ref _cachedContainerViews, containerView);
+            Recycle(ref _cachedContainerViews, containerView);
         }
 
         internal ContainerViewList ContainerViewList { get; private set; }
@@ -173,7 +197,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(blockView != null);
             Debug.Assert(row != null && row.View == null);
 
-            var rowView = CachedList.GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
+            var rowView = GetOrCreate(ref _cachedRowViews, Template.CreateRowView);
             rowView.SetBlockView(blockView);
             rowView.Setup(row);
             return rowView;
@@ -185,7 +209,7 @@ namespace DevZest.Data.Windows.Primitives
             Debug.Assert(rowView != null);
             rowView.Cleanup();
             rowView.SetBlockView(null);
-            CachedList.Recycle(ref _cachedRowViews, rowView);
+            Recycle(ref _cachedRowViews, rowView);
         }
 
         internal IElementCollection ElementCollection { get; private set; }

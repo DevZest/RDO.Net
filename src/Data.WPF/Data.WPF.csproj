@@ -128,7 +128,6 @@
     <Compile Include="Primitives\RowBinding.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ColumnHeader.cs" />
-    <Compile Include="Utilities\CachedList.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Utilities\Double.IsClose.cs" />
     <Compile Include="Primitives\RowViewPanel.cs" />
