@@ -210,9 +210,6 @@
   <data name="RowPresenter_VerifyRecursive" xml:space="preserve">
     <value>The row must be recursive.</value>
   </data>
-  <data name="ScalarBinding_FlowableChild" xml:space="preserve">
-    <value>Child ScalarBinding cannot be flowable.</value>
-  </data>
   <data name="ScalarBinding_FlowableNotAllowedByTemplate" xml:space="preserve">
     <value>Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).</value>
   </data>

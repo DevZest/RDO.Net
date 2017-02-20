@@ -10,7 +10,7 @@ namespace DevZest.Data.Windows.Primitives
         private List<ScalarBinding> _bindings = new List<ScalarBinding>();
         private List<string> _names = new List<string>();
 
-        public void AddChild<T>(ScalarBinding<T> binding, string name)
+        internal void InternalAddChild<T>(ScalarBinding<T> binding, string name)
             where T : UIElement, new()
         {
             Binding.VerifyAdding(binding, nameof(binding));
@@ -36,14 +36,18 @@ namespace DevZest.Data.Windows.Primitives
             var count = FlowCount - startOffset;
             var result = new Pane[count];
             for (int i = 0; i < count; i++)
-                result[i] = Create();
+                result[i] = CreatePane(startOffset + i);
             return result;
         }
 
-        private Pane Create()
+        private Pane CreatePane(int flowIndex)
         {
-            var result = CreatePane().InitChildren(_bindings, _names);
+            var result = CreatePane();
+            result.SetScalarFlowIndex(flowIndex);
+            ScalarPresenter.SetFlowIndex(flowIndex);
+            result.InitChildren(_bindings, _names);
             OnCreated(result);
+            ScalarPresenter.SetFlowIndex(-1);
             return result;
         }
 
@@ -72,7 +76,7 @@ namespace DevZest.Data.Windows.Primitives
             }
             else if (startOffset == 0)
             {
-                SettingUpPane = Create();
+                SettingUpPane = CreatePane(0);
                 SettingUpPane.BeginSetup(_bindings);
             }
         }
@@ -80,7 +84,7 @@ namespace DevZest.Data.Windows.Primitives
         internal sealed override void BeginSetup(UIElement value)
         {
             Debug.Assert(!Flowable);
-            SettingUpPane = value == null ? Create() : (Pane)value;
+            SettingUpPane = value == null ? CreatePane(0) : (Pane)value;
             SettingUpPane.BeginSetup(_bindings);
         }
 
@@ -101,9 +105,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal sealed override UIElement Setup(int flowIndex)
         {
+            EnterSetup(flowIndex);
+
             var result = SettingUpPane;
             for (int i = 0; i < _bindings.Count; i++)
                 _bindings[i].Setup(flowIndex);
+
             ExitSetup();
             return result;
         }
@@ -115,15 +122,22 @@ namespace DevZest.Data.Windows.Primitives
 
         internal sealed override void Cleanup(UIElement element)
         {
-            var pane = (Pane)element;
-            pane.Cleanup(_bindings);
+            var e = (Pane)element;
+            e.Cleanup(_bindings);
+            e.SetScalarFlowIndex(0);
         }
 
         internal sealed override void EndSetup()
         {
-            for (int i = 0; i < SettingUpPanes.Count; i++)
-                SettingUpPanes[i].EndSetup(_bindings);
+            if (Flowable)
+            {
+                for (int i = 0; i < SettingUpPanes.Count; i++)
+                    SettingUpPanes[i].EndSetup(_bindings);
+            }
+            else
+                SettingUpPane.EndSetup(_bindings);
             _settingUpPanes = null;
+            SettingUpPane = null;
         }
 
         internal sealed override void FlushInput(UIElement element)

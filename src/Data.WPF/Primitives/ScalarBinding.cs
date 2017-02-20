@@ -58,8 +58,6 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void Seal(ScalarPane parent, int ordinal)
         {
-            if (Flowable)
-                throw new InvalidOperationException(Strings.ScalarBinding_FlowableChild);
             Parent = parent;
             Ordinal = ordinal;
         }
@@ -98,12 +96,10 @@ namespace DevZest.Data.Windows.Primitives
         private bool _flowable;
         public bool Flowable
         {
-            get { return _flowable; }
+            get { return Parent != null ? Parent.Flowable : _flowable; }
             set
             {
                 VerifyNotSealed();
-                if (value && Parent != null)
-                    throw new InvalidOperationException(Strings.ScalarBinding_FlowableChild);
                 _flowable = value;
             }
         }
@@ -139,7 +135,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public int FlowCount
         {
-            get { return Flowable ? ElementManager.FlowCount : 1; }
+            get { return Parent != null ? Parent.FlowCount : (Flowable ? ElementManager.FlowCount : 1); }
         }
 
         public UIElement this[int flowIndex]

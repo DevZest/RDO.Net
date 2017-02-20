@@ -260,14 +260,6 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// Child ScalarBinding cannot be flowable.
-        /// </summary>
-        public static string ScalarBinding_FlowableChild
-        {
-            get { return GetString("ScalarBinding_FlowableChild"); }
-        }
-
-        /// <summary>
         /// Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).
         /// </summary>
         public static string ScalarBinding_FlowableNotAllowedByTemplate(object index)

@@ -65,6 +65,8 @@ namespace DevZest.Data.Windows
         {
             var result = new T();
             OnCreated(result);
+            if (Parent != null)
+                result.SetScalarFlowIndex(ScalarPresenter.FlowIndex);
             return result;
         }
 
@@ -79,7 +81,7 @@ namespace DevZest.Data.Windows
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            Debug.Assert(!Flowable);
+            Debug.Assert(Parent != null || !Flowable);
             return SettingUpElement;
         }
 
@@ -93,7 +95,7 @@ namespace DevZest.Data.Windows
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            Debug.Assert(!Flowable);
+            Debug.Assert(Parent != null || !Flowable);
             SettingUpElement = value == null ? Create() : (T)value;
         }
 

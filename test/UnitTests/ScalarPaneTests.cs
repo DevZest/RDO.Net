@@ -5,22 +5,25 @@ using System.Windows.Controls;
 namespace DevZest.Data.Windows
 {
     [TestClass]
-    public class ScalarBindingTests
+    public class ScalarPaneTests
     {
         [TestMethod]
-        public void ScalarBinding()
+        public void ScalarPane()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<ColumnHeader> columnHeader = null;
+            ScalarPane<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.ColumnHeader();
                 label = _.Name.ScalarLabel(columnHeader);
-                builder.GridColumns("100", "100", "100").GridRows("100").RowRange(2, 0, 2, 0)
-                    .AddBinding(0, 0, label)
-                    .AddBinding(1, 0, columnHeader);
+                pane = new ScalarPane<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
+                builder.Layout(Orientation.Vertical, 0)
+                    .GridColumns("100").GridRows("100", "100")
+                    .AddBinding(0, 0, pane)
+                    .AddBinding(0, 1, _.Name.TextBlock());
             });
 
             Assert.IsNull(label.SettingUpElement);
@@ -34,28 +37,29 @@ namespace DevZest.Data.Windows
         }
 
         [TestMethod]
-        public void ScalarBinding_flowable()
+        public void ScalarPane_flowable()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<ColumnHeader> columnHeader = null;
+            ScalarPane<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.ColumnHeader().WithFlowable(true);
                 label = _.Name.FlowableLabel(columnHeader);
+                pane = new ScalarPane<XamlPane>().WithFlowable(true)
+                    .AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
-                    .GridColumns("100", "100").GridRows("100", "100")
-                    .AddBinding(0, 0, label)
-                    .AddBinding(0, 1, 1, 1, _.Name.TextBlock())
-                    .AddBinding(1, 0, columnHeader);
+                    .GridColumns("100").GridRows("100", "100")
+                    .AddBinding(0, 0, pane)
+                    .AddBinding(0, 1, _.Name.TextBlock());
             });
 
             elementManager.FlowCount = 2;
-
-            Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(columnHeader.SettingUpElement);
-
+            Assert.AreEqual(2, pane.FlowCount);
+            Assert.AreEqual(0, pane[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, pane[1].GetScalarFlowIndex());
             Assert.AreEqual(2, label.FlowCount);
             Assert.AreEqual("0. " + _.Name.DisplayName, label[0].Content);
             Assert.AreEqual("1. " + _.Name.DisplayName, label[1].Content);
@@ -68,8 +72,16 @@ namespace DevZest.Data.Windows
             Assert.AreEqual(1, columnHeader[1].GetScalarFlowIndex());
             Assert.AreEqual(columnHeader[0], label[0].Target);
             Assert.AreEqual(columnHeader[1], label[1].Target);
+            Assert.AreEqual(pane[0].Children[0], label[0]);
+            Assert.AreEqual(pane[0].Children[1], columnHeader[0]);
+            Assert.AreEqual(pane[1].Children[0], label[1]);
+            Assert.AreEqual(pane[1].Children[1], columnHeader[1]);
 
             elementManager.FlowCount = 3;
+            Assert.AreEqual(3, pane.FlowCount);
+            Assert.AreEqual(0, pane[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, pane[1].GetScalarFlowIndex());
+            Assert.AreEqual(2, pane[2].GetScalarFlowIndex());
             Assert.AreEqual(3, label.FlowCount);
             Assert.AreEqual("0. " + _.Name.DisplayName, label[0].Content);
             Assert.AreEqual("1. " + _.Name.DisplayName, label[1].Content);
@@ -87,8 +99,17 @@ namespace DevZest.Data.Windows
             Assert.AreEqual(columnHeader[0], label[0].Target);
             Assert.AreEqual(columnHeader[1], label[1].Target);
             Assert.AreEqual(columnHeader[2], label[2].Target);
+            Assert.AreEqual(pane[0].Children[0], label[0]);
+            Assert.AreEqual(pane[0].Children[1], columnHeader[0]);
+            Assert.AreEqual(pane[1].Children[0], label[1]);
+            Assert.AreEqual(pane[1].Children[1], columnHeader[1]);
+            Assert.AreEqual(pane[2].Children[0], label[2]);
+            Assert.AreEqual(pane[2].Children[1], columnHeader[2]);
 
             elementManager.FlowCount = 2;
+            Assert.AreEqual(2, pane.FlowCount);
+            Assert.AreEqual(0, pane[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, pane[1].GetScalarFlowIndex());
             Assert.AreEqual(2, label.FlowCount);
             Assert.AreEqual("0. " + _.Name.DisplayName, label[0].Content);
             Assert.AreEqual("1. " + _.Name.DisplayName, label[1].Content);
@@ -101,6 +122,10 @@ namespace DevZest.Data.Windows
             Assert.AreEqual(1, columnHeader[1].GetScalarFlowIndex());
             Assert.AreEqual(columnHeader[0], label[0].Target);
             Assert.AreEqual(columnHeader[1], label[1].Target);
+            Assert.AreEqual(pane[0].Children[0], label[0]);
+            Assert.AreEqual(pane[0].Children[1], columnHeader[0]);
+            Assert.AreEqual(pane[1].Children[0], label[1]);
+            Assert.AreEqual(pane[1].Children[1], columnHeader[1]);
         }
     }
 }

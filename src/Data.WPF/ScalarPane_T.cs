@@ -1,5 +1,6 @@
 ﻿using System;
 using DevZest.Data.Windows.Primitives;
+using System.Windows;
 
 namespace DevZest.Data.Windows
 {
@@ -14,6 +15,13 @@ namespace DevZest.Data.Windows
         public new T this[int flowIndex]
         {
             get { return (T)base[flowIndex]; }
+        }
+
+        public ScalarPane<T> AddChild<TChild>(ScalarBinding<TChild> binding, string name)
+            where TChild : UIElement, new()
+        {
+            InternalAddChild(binding, name);
+            return this;
         }
     }
 }
