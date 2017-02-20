@@ -9,14 +9,14 @@ namespace DevZest.Data.Windows
     public sealed class BlockBinding<T> : BlockBinding
         where T : UIElement, new()
     {
-        public BlockBinding(Action<T, IBlockPresenter> onRefresh)
+        public BlockBinding(Action<T, BlockPresenter> onRefresh)
         {
             _onRefresh = onRefresh;
         }
 
-        public BlockBinding(Action<T, IBlockPresenter> onRefresh,
-            Action<T, IBlockPresenter> onSetup,
-            Action<T, IBlockPresenter> onCleanup)
+        public BlockBinding(Action<T, BlockPresenter> onRefresh,
+            Action<T, BlockPresenter> onSetup,
+            Action<T, BlockPresenter> onCleanup)
             : this(onRefresh)
         {
             _onSetup = onSetup;
@@ -42,12 +42,19 @@ namespace DevZest.Data.Windows
             SettingUpElement = value == null ? Create() : (T)value;
         }
 
+        private BlockPresenter BlockPresenter
+        {
+            get { return Template.BlockPresenter; }
+        }
+
         internal sealed override UIElement Setup(BlockView blockView)
         {
             Debug.Assert(SettingUpElement != null);
             SettingUpElement.SetBlockView(blockView);
-            Setup(SettingUpElement, blockView);
-            Refresh(SettingUpElement, blockView);
+            BlockPresenter.BlockView = blockView;
+            Setup(SettingUpElement, BlockPresenter);
+            Refresh(SettingUpElement, BlockPresenter);
+            BlockPresenter.BlockView = null;
             return SettingUpElement;
         }
 
@@ -56,22 +63,22 @@ namespace DevZest.Data.Windows
             SettingUpElement = null;
         }
 
-        private Action<T, IBlockPresenter> _onSetup;
-        private void Setup(T element, IBlockPresenter blockPresenter)
+        private Action<T, BlockPresenter> _onSetup;
+        private void Setup(T element, BlockPresenter blockPresenter)
         {
             if (_onSetup != null)
                 _onSetup(element, blockPresenter);
         }
 
-        private Action<T, IBlockPresenter> _onRefresh;
-        private void Refresh(T element, IBlockPresenter blockPresenter)
+        private Action<T, BlockPresenter> _onRefresh;
+        private void Refresh(T element, BlockPresenter blockPresenter)
         {
             if (_onRefresh != null)
                 _onRefresh(element, blockPresenter);
         }
 
-        private Action<T, IBlockPresenter> _onCleanup;
-        private void Cleanup(T element, IBlockPresenter blockPresenter)
+        private Action<T, BlockPresenter> _onCleanup;
+        private void Cleanup(T element, BlockPresenter blockPresenter)
         {
             if (_onCleanup != null)
                 _onCleanup(element, blockPresenter);
@@ -79,16 +86,17 @@ namespace DevZest.Data.Windows
 
         internal sealed override void Refresh(UIElement element)
         {
-            var blockPresenter = element.GetBlockView();
-            Refresh((T)element, blockPresenter);
+            BlockPresenter.BlockView = element.GetBlockView();
+            Refresh((T)element, BlockPresenter);
+            BlockPresenter.BlockView = null;
         }
 
         internal override void Cleanup(UIElement element)
         {
-            var blockPresenter = element.GetBlockView();
-            var e = (T)element;
-            Cleanup(e, blockPresenter);
-            e.SetBlockView(null);
+            BlockPresenter.BlockView = element.GetBlockView();
+            Cleanup((T)element, BlockPresenter);
+            BlockPresenter.BlockView = null;
+            element.SetBlockView(null);
         }
 
         public new T this[int blockOrdinal]

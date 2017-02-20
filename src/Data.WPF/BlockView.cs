@@ -9,7 +9,7 @@ using System.Collections;
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
-    public class BlockView : ContainerView, IBlockPresenter
+    public class BlockView : ContainerView, IReadOnlyList<RowPresenter>
     {
         static BlockView()
         {
@@ -76,11 +76,6 @@ namespace DevZest.Data.Windows
         internal sealed override ElementManager ElementManager
         {
             get { return _elementManager; }
-        }
-
-        public int FlowCount
-        {
-            get { return ElementManager == null ? 1 : ElementManager.FlowCount; }
         }
 
         private int _ordinal;

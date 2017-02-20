@@ -10,7 +10,12 @@ namespace DevZest.Data.Windows.Primitives
         {
         }
 
-        public Template Template { get; private set; }
+        private Template _template;
+        public Template Template
+        {
+            get { return ParentBinding != null ? ParentBinding.Template : _template; }
+            private set { _template = value; }
+        }
 
         public GridRange GridRange { get; private set; }
 

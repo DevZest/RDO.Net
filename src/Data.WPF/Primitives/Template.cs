@@ -507,6 +507,26 @@ namespace DevZest.Data.Windows.Primitives
             get { return IsSealed ? InternalAsyncValidators : null; }
         }
 
-        internal ScalarPresenter ScalarPresenter { get; } = new ScalarPresenter();
+        private ScalarPresenter _scalarPresenter;
+        internal ScalarPresenter ScalarPresenter
+        {
+            get
+            {
+                if (_scalarPresenter == null)
+                    _scalarPresenter = new ScalarPresenter();
+                return _scalarPresenter;
+            }
+        }
+
+        private BlockPresenter _blockPresenter;
+        internal BlockPresenter BlockPresenter
+        {
+            get
+            {
+                if (_blockPresenter == null)
+                    _blockPresenter = new BlockPresenter();
+                return _blockPresenter;
+            }
+        }
     }
 }
