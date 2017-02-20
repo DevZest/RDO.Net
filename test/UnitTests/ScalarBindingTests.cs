@@ -46,8 +46,9 @@ namespace DevZest.Data.Windows
                 columnHeader = _.Name.ColumnHeader().WithFlowable(true);
                 label = _.Name.FlowableLabel(columnHeader);
                 builder.Layout(Orientation.Vertical, 0)
-                    .GridColumns("100", "100").GridRows("100", "100").RowRange(0, 1, 1, 1)
+                    .GridColumns("100", "100").GridRows("100", "100")
                     .AddBinding(0, 0, label)
+                    .AddBinding(0, 1, 1, 1, _.Name.TextBlock())
                     .AddBinding(1, 0, columnHeader);
             });
 
