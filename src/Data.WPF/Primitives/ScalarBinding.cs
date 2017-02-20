@@ -72,11 +72,18 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract void ClearSettingUpElement();
 
+        internal ScalarPresenter ScalarPresenter
+        {
+            get { return Template.ScalarPresenter; }
+        }
+
         internal void EnterSetup(int flowIndex)
         {
             var scalarBindings = Template.ScalarBindings;
             for (int i = 0; i < scalarBindings.Count; i++)
                 scalarBindings[i].PrepareSettingUpElement(flowIndex);
+
+            ScalarPresenter.SetFlowIndex(flowIndex);
         }
 
         internal void ExitSetup()
@@ -84,6 +91,8 @@ namespace DevZest.Data.Windows.Primitives
             var scalarBindings = Template.ScalarBindings;
             for (int i = 0; i < scalarBindings.Count; i++)
                 scalarBindings[i].ClearSettingUpElement();
+
+            ScalarPresenter.SetFlowIndex(0);
         }
 
         private bool _flowable;

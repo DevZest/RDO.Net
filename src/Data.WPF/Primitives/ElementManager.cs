@@ -320,17 +320,17 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private void OnFlowCountChanged(int flowCount)
+        private void OnFlowCountChanged(int flowCountDelta)
         {
-            Debug.Assert(flowCount != 0);
+            Debug.Assert(flowCountDelta != 0);
 
             ContainerViewList.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
             var scalarBindings = Template.InternalScalarBindings;
-            if (flowCount > 0)
-                BeginSetup(scalarBindings, flowCount);
+            if (flowCountDelta > 0)
+                BeginSetup(scalarBindings, flowCountDelta);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -347,15 +347,15 @@ namespace DevZest.Data.Windows.Primitives
                 scalarBinding.CumulativeFlowCountDelta = prevCumulativeFlowCountDelta;
 
                 if (i < Template.ScalarBindingsSplit)
-                    delta += flowCount;
+                    delta += flowCountDelta;
 
-                if (flowCount > 0)
-                    index = InsertScalarElementsAfter(scalarBinding, index, flowCount);
+                if (flowCountDelta > 0)
+                    index = InsertScalarElementsAfter(scalarBinding, index + FlowCount - flowCountDelta - 1, flowCountDelta);
                 else
-                    RemoveScalarElementsAfter(scalarBinding, index, -flowCount);
+                    RemoveScalarElementsAfter(scalarBinding, index += FlowCount - 1, -flowCountDelta);
             }
 
-            if (flowCount > 0)
+            if (flowCountDelta > 0)
                 scalarBindings.EndSetup();
 
             HeadScalarElementsCount += delta;

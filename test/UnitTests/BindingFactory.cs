@@ -56,12 +56,25 @@ namespace DevZest.Data.Windows
                     if (target != null)
                         e.Target = target.SettingUpElement;
                 },
-                onRefresh: e =>
+                onRefresh: null,
+                onCleanup: null);
+        }
+
+        public static ScalarBinding<Label> FlowableLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+            where TTarget : UIElement, new()
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<Label>(
+                onSetup: (e, sp) =>
                 {
+                    e.Content = string.Format("{0}. {1}", sp.FlowIndex, source.DisplayName.ToString(format, formatProvider));
+                    if (target != null)
+                        e.Target = target.SettingUpElement;
                 },
-                onCleanup: e =>
-                {
-                });
+                onRefresh: null,
+                onCleanup: null).WithFlowable(true);
         }
 
         public static ScalarBinding<Placeholder> ScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)

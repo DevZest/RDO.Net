@@ -11,10 +11,25 @@ namespace DevZest.Data.Windows
     {
         public ScalarBinding(Action<T> onRefresh)
         {
-            _onRefresh = onRefresh;
+            if (onRefresh != null)
+                _onRefresh = (e, sp) => onRefresh(e);
         }
 
         public ScalarBinding(Action<T> onRefresh, Action<T> onSetup, Action<T> onCleanup)
+            : this(onRefresh)
+        {
+            if (onSetup != null)
+                _onSetup = (e, sp) => onSetup(e);
+            if (onCleanup != null)
+                _onCleanup = (e, sp) => onCleanup(e);
+        }
+
+        public ScalarBinding(Action<T, ScalarPresenter> onRefresh)
+        {
+            _onRefresh = onRefresh;
+        }
+
+        public ScalarBinding(Action<T, ScalarPresenter> onRefresh, Action<T, ScalarPresenter> onSetup, Action<T, ScalarPresenter> onCleanup)
             : this(onRefresh)
         {
             _onSetup = onSetup;
@@ -39,7 +54,10 @@ namespace DevZest.Data.Windows
             int count = FlowCount - startOffset;
             var result = new T[count];
             for (int i = 0; i < count; i++)
+            {
                 result[i] = Create();
+                result[i].SetScalarFlowIndex(startOffset + i);
+            }
             return result;
         }
 
@@ -82,7 +100,15 @@ namespace DevZest.Data.Windows
         internal sealed override UIElement Setup(int flowIndex)
         {
             EnterSetup(flowIndex);
-            return Setup();
+
+            var result = SettingUpElement;
+            Setup(result, ScalarPresenter);
+            Refresh(result, ScalarPresenter);
+            if (Input != null)
+                Input.Attach(result);
+
+            ExitSetup();
+            return result;
         }
 
         internal sealed override void PrepareSettingUpElement(int flowIndex)
@@ -100,59 +126,56 @@ namespace DevZest.Data.Windows
                 SettingUpElement = null;
         }
 
-        private UIElement Setup()
-        {
-            var result = SettingUpElement;
-            Setup(result);
-            Refresh(result);
-            if (Input != null)
-                Input.Attach(result);
-            ExitSetup();
-            return result;
-        }
-
         internal sealed override void EndSetup()
         {
             _settingUpElements = null;
             SettingUpElement = null;
         }
 
-        private Action<T> _onSetup;
-        private void Setup(T element)
+        private Action<T, ScalarPresenter> _onSetup;
+        private void Setup(T element, ScalarPresenter scalarPresenter)
         {
             if (_onSetup != null)
-                _onSetup(element);
+                _onSetup(element, scalarPresenter);
         }
 
-        private Action<T> _onRefresh;
-        private void Refresh(T element)
+        private Action<T, ScalarPresenter> _onRefresh;
+        private void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             if (_onRefresh != null)
-                _onRefresh(element);
+                _onRefresh(element, scalarPresenter);
         }
 
-        private Action<T> _onCleanup;
-        private void Cleanup(T element)
+        private Action<T, ScalarPresenter> _onCleanup;
+        private void Cleanup(T element, ScalarPresenter scalarPresenter)
         {
             if (_onCleanup != null)
-                _onCleanup(element);
+                _onCleanup(element, scalarPresenter);
+        }
+
+        private T Restore(UIElement element)
+        {
+            var result = (T)element;
+            ScalarPresenter.SetFlowIndex(element.GetScalarFlowIndex());
+            return result;
         }
 
         internal sealed override void Refresh(UIElement element)
         {
-            var e = (T)element;
+            var e = Restore(element);
             if (Input != null)
-                Input.Refresh(e);
+                Input.Refresh(e, ScalarPresenter);
             else
-                Refresh(e);
+                Refresh(e, ScalarPresenter);
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
-            var e = (T)element;
+            var e = Restore(element);
             if (Input != null)
                 Input.Detach(e);
-            Cleanup(e);
+            Cleanup(e, ScalarPresenter);
+            e.SetScalarFlowIndex(0);
         }
 
         public ScalarInput<T> BeginInput(Trigger<T> flushTrigger)

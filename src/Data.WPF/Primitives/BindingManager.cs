@@ -19,6 +19,23 @@ namespace DevZest.Data.Windows.Primitives
             element.SetValue(BindingProperty, value);
         }
 
+        private static readonly DependencyProperty ScalarFlowIndexProperty = DependencyProperty.RegisterAttached("ScalarFlowIndex",
+            typeof(int), typeof(BindingManager), new PropertyMetadata(0));
+
+        internal static int GetScalarFlowIndex(this UIElement element)
+        {
+            return (int)element.GetValue(ScalarFlowIndexProperty);
+        }
+
+        internal static void SetScalarFlowIndex(this UIElement element, int value)
+        {
+            if (value == 0)
+                element.ClearValue(ScalarFlowIndexProperty);
+            else
+                element.SetValue(ScalarFlowIndexProperty, value);
+        }
+
+
         private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),
             typeof(BlockView), typeof(BindingManager), new PropertyMetadata(null));
 

@@ -59,6 +59,7 @@
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />
+    <Compile Include="ScalarPresenter.cs" />
     <Compile Include="IValidationDictionary.cs" />
     <Compile Include="Pane.cs" />
     <Compile Include="Primitives\BlockPane.cs" />

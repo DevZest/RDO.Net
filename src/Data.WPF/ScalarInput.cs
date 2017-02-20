@@ -84,17 +84,21 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private Action<T, ViewInputError, ViewInputError> _onRefresh;
-        internal void Refresh(T element)
+        private Action<T, ScalarPresenter> _onRefresh;
+        internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             var inputError = GetInputError(element);
             var valueError = InputManager.GetScalarValueError(element);
             if (_onRefresh != null)
-                _onRefresh(element, inputError, valueError);
+            {
+                scalarPresenter.SetErrors(inputError, valueError);
+                _onRefresh(element, scalarPresenter);
+                scalarPresenter.SetErrors(null, null);
+            }
             element.RefreshValidation(inputError ?? valueError, AbstractValidationMessageGroup.Empty);
         }
 
-        public ScalarInput<T> WithRefreshAction(Action<T, ViewInputError, ViewInputError> onRefresh)
+        public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;
