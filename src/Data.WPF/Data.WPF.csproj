@@ -48,7 +48,7 @@
     <Compile Include="AsyncValidatorGroup.cs" />
     <Compile Include="AsyncValidatorStatus.cs" />
     <Compile Include="AutoSizeWaiver.cs" />
-    <Compile Include="BindingExtensions.cs" />
+    <Compile Include="BindingManager.cs" />
     <Compile Include="BindingFactory.cs" />
     <Compile Include="BindingFactory.TextBox.cs" />
     <Compile Include="BlockPane_T.cs" />
@@ -126,7 +126,6 @@
     <Compile Include="TemplateBuilder.cs" />
     <Compile Include="LostFocusTrigger.cs" />
     <Compile Include="Primitives\RowBinding.cs" />
-    <Compile Include="Primitives\BindingManager.cs" />
     <Compile Include="Utilities\BooleanBoxes.cs" />
     <Compile Include="ColumnHeader.cs" />
     <Compile Include="Utilities\CachedList.cs" />

@@ -1,10 +1,43 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Windows.Primitives;
+using System.Diagnostics;
 using System.Windows;
 
-namespace DevZest.Data.Windows.Primitives
+namespace DevZest.Data.Windows
 {
-    internal static class BindingManager
+    public static class BindingManager
     {
+        public static T WithStyle<T>(this T binding, Style value)
+            where T : Binding
+        {
+            binding.VerifyNotSealed();
+            binding.Style = value;
+            return binding;
+        }
+
+        public static T WithAutoSizeOrder<T>(this T binding, int value)
+            where T : Binding
+        {
+            binding.VerifyNotSealed();
+            binding.AutoSizeOrder = value;
+            return binding;
+        }
+
+        public static T WithAutoSizeWaiver<T>(this T binding, AutoSizeWaiver value)
+            where T : Binding
+        {
+            binding.VerifyNotSealed();
+            binding.AutoSizeWaiver = value;
+            return binding;
+        }
+
+        public static T WithFlowable<T>(this T scalarBinding, bool value)
+            where T : ScalarBinding
+        {
+            scalarBinding.VerifyNotSealed();
+            scalarBinding.Flowable = value;
+            return scalarBinding;
+        }
+
         private static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(nameof(Binding),
             typeof(Binding), typeof(BindingManager), new PropertyMetadata(null));
 
