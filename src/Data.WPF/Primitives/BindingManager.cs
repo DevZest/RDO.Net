@@ -3,12 +3,12 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    public static class UIElementExtensions
+    internal static class BindingManager
     {
         private static readonly DependencyProperty BindingProperty = DependencyProperty.RegisterAttached(nameof(Binding),
-            typeof(Binding), typeof(UIElementExtensions), new PropertyMetadata(null));
+            typeof(Binding), typeof(BindingManager), new PropertyMetadata(null));
 
-        public static Binding GetBinding(this UIElement element)
+        internal static Binding GetBinding(this UIElement element)
         {
             return (Binding)element.GetValue(BindingProperty);
         }
@@ -20,9 +20,9 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private static readonly DependencyProperty BlockViewProperty = DependencyProperty.RegisterAttached(nameof(BlockView),
-            typeof(BlockView), typeof(UIElementExtensions), new PropertyMetadata(null));
+            typeof(BlockView), typeof(BindingManager), new PropertyMetadata(null));
 
-        public static BlockView GetBlockView(this UIElement element)
+        internal static BlockView GetBlockView(this UIElement element)
         {
             return (BlockView)element.GetValue(BlockViewProperty);
         }
@@ -42,9 +42,9 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
-            typeof(RowPresenter), typeof(UIElementExtensions), new PropertyMetadata(null));
+            typeof(RowPresenter), typeof(BindingManager), new PropertyMetadata(null));
 
-        public static RowPresenter GetRowPresenter(this UIElement element)
+        internal static RowPresenter GetRowPresenter(this UIElement element)
         {
             return (RowPresenter)element.GetValue(RowPresenterProperty);
         }
