@@ -9,7 +9,7 @@ using System.Collections;
 namespace DevZest.Data.Windows
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
-    public class BlockView : ContainerView, IReadOnlyList<RowPresenter>
+    public class BlockView : ContainerView, IBlockPresenter
     {
         static BlockView()
         {
@@ -84,6 +84,12 @@ namespace DevZest.Data.Windows
         }
 
         private int _ordinal;
+        public int Ordinal
+        {
+            get { return _ordinal; }
+        }
+
+
         public sealed override int ContainerOrdinal
         {
             get { return _ordinal; }

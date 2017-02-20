@@ -8,9 +8,9 @@ namespace DevZest.Data.Windows
     {
         public static BlockBinding<BlockHeader> BlockHeader(this Model _)
         {
-            return new BlockBinding<BlockHeader>(onRefresh: (element, blockOrdinal, rows) =>
+            return new BlockBinding<BlockHeader>(onRefresh: (e, bp) =>
             {
-                element.Text = blockOrdinal.ToString();
+                e.Text = bp.Ordinal.ToString();
             });
         }
 
@@ -18,23 +18,23 @@ namespace DevZest.Data.Windows
             where T : UIElement, new()
         {
             return new BlockBinding<BlockLabel>(
-                onSetup: (e, i, r) =>
+                onSetup: (e, bp) =>
                 {
                     e.Content = source.DisplayName;
                     if (target != null)
                         e.Target = target.SettingUpElement;
                 },
-                onRefresh: (e, i, r) =>
+                onRefresh: (e, bp) =>
                 {
                 },
-                onCleanup: (e, i, r) =>
+                onCleanup: (e, bp) =>
                 {
                 });
         }
 
         public static BlockBinding<Placeholder> BlockPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
-            return new BlockBinding<Placeholder>(null, (e, o, r) => Setup(e, desiredWidth, desiredHeight), null);
+            return new BlockBinding<Placeholder>(null, (e, bp) => Setup(e, desiredWidth, desiredHeight), null);
         }
 
         private static void Setup(Placeholder element, double desiredWidth, double desiredHeight)

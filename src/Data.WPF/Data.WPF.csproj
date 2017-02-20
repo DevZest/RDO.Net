@@ -55,6 +55,7 @@
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
+    <Compile Include="IBlockPresenter.cs" />
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />

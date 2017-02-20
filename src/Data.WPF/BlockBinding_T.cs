@@ -9,14 +9,14 @@ namespace DevZest.Data.Windows
     public sealed class BlockBinding<T> : BlockBinding
         where T : UIElement, new()
     {
-        public BlockBinding(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh)
+        public BlockBinding(Action<T, IBlockPresenter> onRefresh)
         {
             _onRefresh = onRefresh;
         }
 
-        public BlockBinding(Action<T, int, IReadOnlyList<RowPresenter>> onRefresh,
-            Action<T, int, IReadOnlyList<RowPresenter>> onSetup,
-            Action<T, int, IReadOnlyList<RowPresenter>> onCleanup)
+        public BlockBinding(Action<T, IBlockPresenter> onRefresh,
+            Action<T, IBlockPresenter> onSetup,
+            Action<T, IBlockPresenter> onCleanup)
             : this(onRefresh)
         {
             _onSetup = onSetup;
@@ -46,8 +46,8 @@ namespace DevZest.Data.Windows
         {
             Debug.Assert(SettingUpElement != null);
             SettingUpElement.SetBlockView(blockView);
-            Setup(SettingUpElement, blockView.ContainerOrdinal, blockView);
-            Refresh(SettingUpElement, blockView.ContainerOrdinal, blockView);
+            Setup(SettingUpElement, blockView);
+            Refresh(SettingUpElement, blockView);
             return SettingUpElement;
         }
 
@@ -56,38 +56,38 @@ namespace DevZest.Data.Windows
             SettingUpElement = null;
         }
 
-        private Action<T, int, IReadOnlyList<RowPresenter>> _onSetup;
-        private void Setup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        private Action<T, IBlockPresenter> _onSetup;
+        private void Setup(T element, IBlockPresenter blockPresenter)
         {
             if (_onSetup != null)
-                _onSetup(element, blockOrdinal, rows);
+                _onSetup(element, blockPresenter);
         }
 
-        private Action<T, int, IReadOnlyList<RowPresenter>> _onRefresh;
-        private void Refresh(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        private Action<T, IBlockPresenter> _onRefresh;
+        private void Refresh(T element, IBlockPresenter blockPresenter)
         {
             if (_onRefresh != null)
-                _onRefresh(element, blockOrdinal, rows);
+                _onRefresh(element, blockPresenter);
         }
 
-        private Action<T, int, IReadOnlyList<RowPresenter>> _onCleanup;
-        private void Cleanup(T element, int blockOrdinal, IReadOnlyList<RowPresenter> rows)
+        private Action<T, IBlockPresenter> _onCleanup;
+        private void Cleanup(T element, IBlockPresenter blockPresenter)
         {
             if (_onCleanup != null)
-                _onCleanup(element, blockOrdinal, rows);
+                _onCleanup(element, blockPresenter);
         }
 
         internal sealed override void Refresh(UIElement element)
         {
-            var blockView = element.GetBlockView();
-            Refresh((T)element, blockView.ContainerOrdinal, blockView);
+            var blockPresenter = element.GetBlockView();
+            Refresh((T)element, blockPresenter);
         }
 
         internal override void Cleanup(UIElement element)
         {
-            var blockView = element.GetBlockView();
+            var blockPresenter = element.GetBlockView();
             var e = (T)element;
-            Cleanup(e, blockView.ContainerOrdinal, blockView);
+            Cleanup(e, blockPresenter);
             e.SetBlockView(null);
         }
 
