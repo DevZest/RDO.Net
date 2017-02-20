@@ -19,6 +19,14 @@ namespace DevZest.Data.Windows.Primitives
         List<ContainerView> _cachedContainerViews;
         List<RowView> _cachedRowViews;
 
+        protected void ClearCachedElements()
+        {
+            if (_cachedContainerViews != null)
+                _cachedContainerViews.Clear();
+            if (_cachedRowViews != null)
+                _cachedRowViews.Clear();
+        }
+
         private static T GetOrCreate<T>(ref List<T> cachedList, Func<T> constructor)
             where T : class
         {

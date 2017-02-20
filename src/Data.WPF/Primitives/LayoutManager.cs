@@ -176,6 +176,7 @@ namespace DevZest.Data.Windows.Primitives
                 containerView.Measure(GetSize(containerView));
             }
 
+            ClearCachedElements();
             return MeasuredSize;
         }
 
