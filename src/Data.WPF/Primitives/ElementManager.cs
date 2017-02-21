@@ -429,6 +429,7 @@ namespace DevZest.Data.Windows.Primitives
             }
             _currentContainerView = GetContainerView(rowView);
             SetCurrentRowFromView(rowView);
+            InvalidateView();
         }
 
         private ContainerView GetContainerView(RowView rowView)

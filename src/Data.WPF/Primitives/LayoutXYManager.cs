@@ -207,12 +207,6 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateMeasure();
         }
 
-        internal override Size Measure(Size availableSize)
-        {
-            //InitScroll();
-            return base.Measure(availableSize);
-        }
-
         private void InitScroll()
         {
             if (DeltaScrollOffset == 0 || (DeltaScrollOffset < 0 && Math.Abs(DeltaScrollOffset) <= ViewportMain))

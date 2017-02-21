@@ -123,7 +123,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected abstract Size GetSize(ScalarBinding scalarBinding);
 
-        internal virtual Size Measure(Size availableSize)
+        internal Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
             FlowCount = Template.CoerceFlowCount();
