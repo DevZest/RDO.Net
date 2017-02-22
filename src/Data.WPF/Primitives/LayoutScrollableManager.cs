@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows.Primitives
             if (gridTrack.IsHead)
                 return 0;
             else if (gridTrack.IsRepeat)
-                return gridOffset.Ordinal;
+                return gridOffset.ContainerOrdinal;
             else
                 return MaxContainerCount - 1;
         }
@@ -425,7 +425,7 @@ namespace DevZest.Data.Windows.Primitives
             var gridTrack = gridOffset.GridTrack;
             Debug.Assert(gridTrack.IsRepeat);
             var containerView = ContainerViewList[0];
-            Debug.Assert(containerView.ContainerOrdinal == gridOffset.Ordinal);
+            Debug.Assert(containerView.ContainerOrdinal == gridOffset.ContainerOrdinal);
             availableLength -= GetLengthMain(containerView) - GetRelativeOffsetMain(containerView, gridTrack, fraction);
             RealizeForward(availableLength);
         }

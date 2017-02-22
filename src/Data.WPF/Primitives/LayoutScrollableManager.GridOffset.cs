@@ -4,7 +4,7 @@ namespace DevZest.Data.Windows.Primitives
 {
     partial class LayoutScrollableManager
     {
-        /// <summary>The (GridTrack, Block) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.</summary>
+        /// <summary>The (GridTrack, ContainerOrdinal) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.</summary>
         private struct GridOffset
         {
             public static GridOffset Eof
@@ -16,28 +16,26 @@ namespace DevZest.Data.Windows.Primitives
             {
                 Debug.Assert(!gridTrack.IsRepeat);
                 GridTrack = gridTrack;
-                _ordinal = -1;
+                _containerOrdinal = -1;
             }
 
             public GridOffset(GridTrack gridTrack, ContainerView containerView)
+                : this(gridTrack, containerView.ContainerOrdinal)
             {
-                Debug.Assert(gridTrack.IsRepeat && containerView != null);
-                GridTrack = gridTrack;
-                _ordinal = containerView.ContainerOrdinal;
             }
 
-            public GridOffset(GridTrack gridTrack, int ordinal)
+            public GridOffset(GridTrack gridTrack, int containerOrdinal)
             {
-                Debug.Assert(gridTrack.IsRepeat && ordinal >= 0);
+                Debug.Assert(gridTrack.IsRepeat && containerOrdinal >= 0);
                 GridTrack = gridTrack;
-                _ordinal = ordinal;
+                _containerOrdinal = containerOrdinal;
             }
 
             public readonly GridTrack GridTrack;
-            private readonly int _ordinal;
-            public int Ordinal
+            private readonly int _containerOrdinal;
+            public int ContainerOrdinal
             {
-                get { return IsRepeat ? _ordinal : -1; }
+                get { return IsRepeat ? _containerOrdinal : -1; }
             }
 
             public bool IsEof
@@ -52,7 +50,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public static bool operator ==(GridOffset x, GridOffset y)
             {
-                return x.GridTrack == y.GridTrack && x.Ordinal == y.Ordinal;
+                return x.GridTrack == y.GridTrack && x.ContainerOrdinal == y.ContainerOrdinal;
             }
 
             public static bool operator !=(GridOffset x, GridOffset y)
@@ -62,7 +60,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public override int GetHashCode()
             {
-                return IsEof ? 0 : GridTrack.GetHashCode() ^ Ordinal;
+                return IsEof ? 0 : GridTrack.GetHashCode() ^ ContainerOrdinal;
             }
 
             public override bool Equals(object obj)
@@ -75,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
                 get
                 {
                     Debug.Assert(!IsEof);
-                    return GridTrack.IsRepeat ? GetGridTrackSpan(Ordinal) : GetGridTrackSpan();
+                    return GridTrack.IsRepeat ? GetGridTrackSpan(ContainerOrdinal) : GetGridTrackSpan();
                 }
             }
 
