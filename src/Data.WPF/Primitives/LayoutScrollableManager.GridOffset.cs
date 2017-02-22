@@ -91,7 +91,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private ContainerViewList ContainerViewList
             {
-                get { return LayoutXYManager.InternalContainerViewList; }
+                get { return LayoutXYManager.ContainerViewList; }
             }
 
             private int MaxContainerCount

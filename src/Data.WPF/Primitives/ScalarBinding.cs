@@ -156,7 +156,7 @@ namespace DevZest.Data.Windows.Primitives
                 var elementIndex = ordinal * FlowCount - prevCumulativeFlowCountDelta + flowIndex;
                 if (ordinal >= Template.ScalarBindingsSplit)
                 {
-                    elementIndex += ElementManager.InternalContainerViewList.Count;
+                    elementIndex += ElementManager.ContainerViewList.Count;
                     if (ElementManager.IsCurrentContainerViewIsolated)
                         elementIndex++;
                 }

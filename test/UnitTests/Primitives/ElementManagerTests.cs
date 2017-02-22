@@ -78,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreNotEqual(columnHeader2[1], columnHeader2[2]);
                 }
 
-                elementManager.InternalContainerViewList.RealizeFirst(1);
+                elementManager.ContainerViewList.RealizeFirst(1);
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(6, elements.Count);
@@ -128,7 +128,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[2], elements[5]);
                 }
 
-                elementManager.InternalContainerViewList.RealizePrev();
+                elementManager.ContainerViewList.RealizePrev();
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(6, elements.Count);
@@ -178,7 +178,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[2], elements[5]);
                 }
 
-                elementManager.InternalContainerViewList.RealizeNext();
+                elementManager.ContainerViewList.RealizeNext();
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(7, elements.Count);
@@ -266,7 +266,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreNotEqual(columnHeader2[0], columnHeader2[1]);
                 }
 
-                elementManager.InternalContainerViewList.RealizeFirst(1);
+                elementManager.ContainerViewList.RealizeFirst(1);
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(5, elements.Count);
@@ -305,7 +305,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[1], elements[4]);
                 }
 
-                elementManager.InternalContainerViewList.RealizePrev();
+                elementManager.ContainerViewList.RealizePrev();
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(5, elements.Count);
@@ -344,7 +344,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[1], elements[4]);
                 }
 
-                elementManager.InternalContainerViewList.RealizeNext();
+                elementManager.ContainerViewList.RealizeNext();
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(6, elements.Count);
@@ -398,7 +398,7 @@ namespace DevZest.Data.Windows.Primitives
                     Assert.AreEqual(columnHeader2[1], elements[5]);
                 }
 
-                elementManager.InternalContainerViewList.VirtualizeAll();
+                elementManager.ContainerViewList.VirtualizeAll();
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(4, elements.Count);
@@ -441,7 +441,7 @@ namespace DevZest.Data.Windows.Primitives
                 var template = elementManager.Template;
                 var rows = elementManager.Rows;
 
-                elementManager.InternalContainerViewList.RealizeFirst(1);
+                elementManager.ContainerViewList.RealizeFirst(1);
                 dataSet._.Name[1] = "CHANGED NAME";
                 Assert.AreEqual(dataSet._.Name[1], textBlock[rows[1]].Text);
             }

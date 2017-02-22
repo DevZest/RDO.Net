@@ -6,14 +6,14 @@ using System.Windows;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal abstract class ContainerViewList : IReadOnlyList<ContainerView>
+    public abstract class ContainerViewList : IReadOnlyList<ContainerView>
     {
-        public static ContainerViewList Empty
+        internal static ContainerViewList Empty
         {
             get { return EmptyContainerViewList.Singleton; }
         }
 
-        public static ContainerViewList Create(ElementManager elementManager)
+        internal static ContainerViewList Create(ElementManager elementManager)
         {
             return new ContainerViewListImpl(elementManager);
         }
@@ -41,22 +41,22 @@ namespace DevZest.Data.Windows.Primitives
                 get { throw new NotSupportedException(); }
             }
 
-            public override void RealizeFirst(int blockOrdinal)
+            internal override void RealizeFirst(int blockOrdinal)
             {
                 throw new NotSupportedException();
             }
 
-            public override void RealizeNext()
+            internal override void RealizeNext()
             {
                 throw new NotSupportedException();
             }
 
-            public override void RealizePrev()
+            internal override void RealizePrev()
             {
                 throw new NotSupportedException();
             }
 
-            public override void VirtualizeAll()
+            internal override void VirtualizeAll()
             {
             }
         }
@@ -122,28 +122,28 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            public override void RealizeFirst(int blockOrdinal)
+            internal override void RealizeFirst(int blockOrdinal)
             {
                 Debug.Assert(Count == 0 && blockOrdinal >= 0 && blockOrdinal < MaxCount);
                 _elementManager.Realize(blockOrdinal);
                 _count += 1;
             }
 
-            public override void RealizePrev()
+            internal override void RealizePrev()
             {
                 Debug.Assert(First != null && First.ContainerOrdinal >= 1);
                 _elementManager.Realize(First.ContainerOrdinal - 1);
                 _count += 1;
             }
 
-            public override void RealizeNext()
+            internal override void RealizeNext()
             {
                 Debug.Assert(Last != null && Last.ContainerOrdinal + 1 < MaxCount);
                 _elementManager.Realize(Last.ContainerOrdinal + 1);
                 _count += 1;
             }
 
-            public override void VirtualizeAll()
+            internal override void VirtualizeAll()
             {
                 if (_count == 0)
                     return;
@@ -192,13 +192,13 @@ namespace DevZest.Data.Windows.Primitives
             get { return Count == 0 ? null : this[Count - 1]; }
         }
 
-        public abstract void RealizeFirst(int containerOrdinal);
+        internal abstract void RealizeFirst(int containerOrdinal);
 
-        public abstract void RealizePrev();
+        internal abstract void RealizePrev();
 
-        public abstract void RealizeNext();
+        internal abstract void RealizeNext();
 
-        public abstract void VirtualizeAll();
+        internal abstract void VirtualizeAll();
 
         private bool IsRealized(int ordinal)
         {

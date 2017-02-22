@@ -16,7 +16,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private ContainerViewList ContainerViewList
             {
-                get { return _layoutXYManager.InternalContainerViewList; }
+                get { return _layoutXYManager.ContainerViewList; }
             }
 
             private GridSpan GridSpan

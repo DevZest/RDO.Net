@@ -7,7 +7,7 @@ namespace DevZest.Data.Windows.Primitives
     {
         FrameworkElement Panel { get; }
         ContainerView CurrentContainerView { get; }
-        IReadOnlyList<ContainerView> ContainerViewList { get; }
+        ContainerViewList ContainerViewList { get; }
         CurrentContainerViewPlacement CurrentContainerViewPlacement { get; }
     }
 }
