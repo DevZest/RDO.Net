@@ -1,7 +1,7 @@
 ﻿using DevZest.Data.Windows.Primitives;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows
+namespace DevZest.Data.Windows.Primitives
 {
     public abstract class ContainerView : Control
     {

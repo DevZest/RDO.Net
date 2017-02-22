@@ -7,12 +7,12 @@ namespace DevZest.Data.Windows.Primitives
     internal interface IScrollHandler
     {
         ScrollViewer ScrollOwner { get; set; }
-        double ViewportX { get; }
-        double ViewportY { get; }
-        double ExtentX { get; }
-        double ExtentY { get; }
-        double ScrollOffsetX { get; set; }
-        double ScrollOffsetY { get; set; }
+        double ViewportWidth { get; }
+        double ViewportHeight { get; }
+        double ExtentWidth { get; }
+        double ExtentHeight { get; }
+        double HorizontalOffset { get; set; }
+        double VerticalOffset { get; set; }
         Rect MakeVisible(Visual visual, Rect rectangle);
     }
 }

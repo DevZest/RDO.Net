@@ -1021,7 +1021,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override Size MeasuredSize
         {
-            get { return new Size(ViewportX, ViewportY); }
+            get { return new Size(ViewportWidth, ViewportHeight); }
         }
 
         internal override IEnumerable<GridLineFigure> GridLineFigures

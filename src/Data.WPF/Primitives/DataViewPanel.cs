@@ -70,32 +70,32 @@ namespace DevZest.Data.Windows.Primitives
 
         double IScrollInfo.ExtentWidth
         {
-            get { return ScrollHandler.ExtentX; }
+            get { return ScrollHandler.ExtentWidth; }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return ScrollHandler.ExtentY; }
+            get { return ScrollHandler.ExtentHeight; }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return ScrollHandler.ViewportX; }
+            get { return ScrollHandler.ViewportWidth; }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return ScrollHandler.ViewportY; }
+            get { return ScrollHandler.ViewportHeight; }
         }
 
         double IScrollInfo.HorizontalOffset
         {
-            get { return ScrollHandler.ScrollOffsetX; }
+            get { return ScrollHandler.HorizontalOffset; }
         }
 
         double IScrollInfo.VerticalOffset
         {
-            get { return ScrollHandler.ScrollOffsetY; }
+            get { return ScrollHandler.VerticalOffset; }
         }
 
         ScrollViewer IScrollInfo.ScrollOwner
@@ -106,72 +106,72 @@ namespace DevZest.Data.Windows.Primitives
 
         void IScrollInfo.LineUp()
         {
-            ScrollHandler.ScrollOffsetY -= ScrollLineHeight;
+            ScrollHandler.VerticalOffset -= ScrollLineHeight;
         }
 
         void IScrollInfo.LineDown()
         {
-            ScrollHandler.ScrollOffsetY += ScrollLineHeight;
+            ScrollHandler.VerticalOffset += ScrollLineHeight;
         }
 
         void IScrollInfo.LineLeft()
         {
-            ScrollHandler.ScrollOffsetX -= ScrollLineWidth;
+            ScrollHandler.HorizontalOffset -= ScrollLineWidth;
         }
 
         void IScrollInfo.LineRight()
         {
-            ScrollHandler.ScrollOffsetX += ScrollLineWidth;
+            ScrollHandler.HorizontalOffset += ScrollLineWidth;
         }
 
         void IScrollInfo.PageUp()
         {
-            ScrollHandler.ScrollOffsetY -= ScrollHandler.ViewportY;
+            ScrollHandler.VerticalOffset -= ScrollHandler.ViewportHeight;
         }
 
         void IScrollInfo.PageDown()
         {
-            ScrollHandler.ScrollOffsetY += ScrollHandler.ViewportY;
+            ScrollHandler.VerticalOffset += ScrollHandler.ViewportHeight;
         }
 
         void IScrollInfo.PageLeft()
         {
-            ScrollHandler.ScrollOffsetX -= ScrollHandler.ViewportX;
+            ScrollHandler.HorizontalOffset -= ScrollHandler.ViewportWidth;
         }
 
         void IScrollInfo.PageRight()
         {
-            ScrollHandler.ScrollOffsetX += ScrollHandler.ViewportX;
+            ScrollHandler.HorizontalOffset += ScrollHandler.ViewportWidth;
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            ScrollHandler.ScrollOffsetY -= ScrollLineHeight * SystemParameters.WheelScrollLines;
+            ScrollHandler.VerticalOffset -= ScrollLineHeight * SystemParameters.WheelScrollLines;
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            ScrollHandler.ScrollOffsetY += ScrollLineHeight * SystemParameters.WheelScrollLines;
+            ScrollHandler.VerticalOffset += ScrollLineHeight * SystemParameters.WheelScrollLines;
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            ScrollHandler.ScrollOffsetX -= ScrollLineWidth * SystemParameters.WheelScrollLines;
+            ScrollHandler.HorizontalOffset -= ScrollLineWidth * SystemParameters.WheelScrollLines;
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            ScrollHandler.ScrollOffsetX += ScrollLineWidth * SystemParameters.WheelScrollLines;
+            ScrollHandler.HorizontalOffset += ScrollLineWidth * SystemParameters.WheelScrollLines;
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
         {
-            ScrollHandler.ScrollOffsetX = offset;
+            ScrollHandler.HorizontalOffset = offset;
         }
 
         void IScrollInfo.SetVerticalOffset(double offset)
         {
-            ScrollHandler.ScrollOffsetY = offset;
+            ScrollHandler.VerticalOffset = offset;
         }
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)

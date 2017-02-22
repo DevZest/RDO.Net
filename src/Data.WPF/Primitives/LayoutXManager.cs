@@ -21,33 +21,33 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.InternalGridRows; }
         }
 
-        public override double ViewportX
+        public override double ViewportWidth
         {
             get { return ViewportMain; }
         }
 
-        public override double ViewportY
+        public override double ViewportHeight
         {
             get { return ViewportCross; }
         }
 
-        public override double ExtentX
+        public override double ExtentWidth
         {
             get { return ExtentMain; }
         }
 
-        public override double ExtentY
+        public override double ExtentHeight
         {
             get { return ExtentCross; }
         }
 
-        public override double ScrollOffsetX
+        public override double HorizontalOffset
         {
             get { return ScrollOffsetMain; }
             set { ScrollOffsetMain = value; }
         }
 
-        public override double ScrollOffsetY
+        public override double VerticalOffset
         {
             get { return ScrollOffsetCross; }
             set { ScrollOffsetCross = value; }

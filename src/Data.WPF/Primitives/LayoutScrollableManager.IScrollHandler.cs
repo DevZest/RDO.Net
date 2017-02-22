@@ -22,9 +22,9 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollOwner.InvalidateMeasure();
         }
 
-        public abstract double ViewportX { get; }
+        public abstract double ViewportWidth { get; }
 
-        public abstract double ViewportY { get; }
+        public abstract double ViewportHeight { get; }
 
         protected double ViewportMain { get; private set; }
 
@@ -39,9 +39,9 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateScrollInfo();
         }
 
-        public abstract double ExtentY { get; }
+        public abstract double ExtentHeight { get; }
 
-        public abstract double ExtentX { get; }
+        public abstract double ExtentWidth { get; }
 
         protected double ExtentMain { get; private set; }
 
@@ -56,9 +56,9 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateScrollInfo();
         }
 
-        public abstract double ScrollOffsetX { get; set; }
+        public abstract double HorizontalOffset { get; set; }
 
-        public abstract double ScrollOffsetY { get; set; }
+        public abstract double VerticalOffset { get; set; }
 
         private double _oldScrollOffsetMain;
         private double _scrollOffsetMain;
