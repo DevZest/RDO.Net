@@ -4,27 +4,27 @@ namespace DevZest.Data.Windows.Primitives
 {
     partial class LayoutScrollableManager
     {
-        /// <summary>The (GridTrack, ContainerOrdinal) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.</summary>
-        private struct GridOffset
+        /// <summary>The (GridTrack, ContainerOrdinal) pair to uniquely identify the grid track on the main axis, can be converted to/from an int index value.</summary>
+        private struct LogicalGridTrack
         {
-            public static GridOffset Eof
+            public static LogicalGridTrack Eof
             {
-                get { return new GridOffset(); }
+                get { return new LogicalGridTrack(); }
             }
 
-            public GridOffset(GridTrack gridTrack)
+            public LogicalGridTrack(GridTrack gridTrack)
             {
                 Debug.Assert(!gridTrack.IsRepeat);
                 GridTrack = gridTrack;
                 _containerOrdinal = -1;
             }
 
-            public GridOffset(GridTrack gridTrack, ContainerView containerView)
+            public LogicalGridTrack(GridTrack gridTrack, ContainerView containerView)
                 : this(gridTrack, containerView.ContainerOrdinal)
             {
             }
 
-            public GridOffset(GridTrack gridTrack, int containerOrdinal)
+            public LogicalGridTrack(GridTrack gridTrack, int containerOrdinal)
             {
                 Debug.Assert(gridTrack.IsRepeat && containerOrdinal >= 0);
                 GridTrack = gridTrack;
@@ -48,12 +48,12 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack != null && GridTrack.IsRepeat; }
             }
 
-            public static bool operator ==(GridOffset x, GridOffset y)
+            public static bool operator ==(LogicalGridTrack x, LogicalGridTrack y)
             {
                 return x.GridTrack == y.GridTrack && x.ContainerOrdinal == y.ContainerOrdinal;
             }
 
-            public static bool operator !=(GridOffset x, GridOffset y)
+            public static bool operator !=(LogicalGridTrack x, LogicalGridTrack y)
             {
                 return !(x == y);
             }
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public override bool Equals(object obj)
             {
-                return obj is GridOffset ? (GridOffset)obj == this : false;
+                return obj is LogicalGridTrack ? (LogicalGridTrack)obj == this : false;
             }
 
             public Span Span
@@ -168,24 +168,24 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private GridOffset GetGridOffset(int gridOffset)
+        private LogicalGridTrack GetLogicalGridTrack(int gridOffset)
         {
             Debug.Assert(gridOffset >= 0);
 
             if (gridOffset >= MaxGridOffsetMain)
-                return GridOffset.Eof;
+                return LogicalGridTrack.Eof;
 
             if (gridOffset < MaxFrozenHeadMain)
-                return new GridOffset(GridTracksMain[gridOffset]);
+                return new LogicalGridTrack(GridTracksMain[gridOffset]);
 
             gridOffset -= MaxFrozenHeadMain;
             var totalContainerGridTracks = TotalContainerGridTracksMain;
             if (gridOffset < totalContainerGridTracks)
-                return new GridOffset(GridTracksMain[MaxFrozenHeadMain + gridOffset % ContainerGridTracksMain], gridOffset / ContainerGridTracksMain);
+                return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + gridOffset % ContainerGridTracksMain], gridOffset / ContainerGridTracksMain);
 
             gridOffset -= totalContainerGridTracks;
             Debug.Assert(gridOffset < MaxFrozenTailMain);
-            return new GridOffset(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridOffset]);
+            return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridOffset]);
         }
     }
 }

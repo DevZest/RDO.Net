@@ -40,10 +40,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridOffset = logicalOffset.GridOffset;
             if (gridOffset >= MaxGridOffsetMain)
-                return GetGridOffset(MaxGridOffsetMain - 1).Span.End;
+                return GetLogicalGridTrack(MaxGridOffsetMain - 1).Span.End;
             else
             {
-                var span = GetGridOffset(gridOffset).Span;
+                var span = GetLogicalGridTrack(gridOffset).Span;
                 return span.Start + span.Length * logicalOffset.FractionOffset;
             }
         }
@@ -61,13 +61,13 @@ namespace DevZest.Data.Windows.Primitives
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                var offsetSpan = GetGridOffset(mid).Span;
-                if (offset < offsetSpan.Start - Epsilon)
+                var span = GetLogicalGridTrack(mid).Span;
+                if (offset < span.Start - Epsilon)
                     max = mid - 1;
-                else if (offset >= offsetSpan.End)
+                else if (offset >= span.End)
                     min = mid + 1;
                 else
-                    return new LogicalOffset(mid, Math.Max(0, offset - offsetSpan.Start) / offsetSpan.Length);
+                    return new LogicalOffset(mid, Math.Max(0, offset - span.Start) / span.Length);
             }
 
             return new LogicalOffset(MaxGridOffsetMain);
