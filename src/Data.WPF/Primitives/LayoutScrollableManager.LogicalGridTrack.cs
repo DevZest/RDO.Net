@@ -168,24 +168,24 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private LogicalGridTrack GetLogicalGridTrack(int gridOffset)
+        private LogicalGridTrack GetLogicalGridTrack(int gridExtent)
         {
-            Debug.Assert(gridOffset >= 0);
+            Debug.Assert(gridExtent >= 0);
 
-            if (gridOffset >= MaxGridOffsetMain)
+            if (gridExtent >= MaxGridExtentMain)
                 return LogicalGridTrack.Eof;
 
-            if (gridOffset < MaxFrozenHeadMain)
-                return new LogicalGridTrack(GridTracksMain[gridOffset]);
+            if (gridExtent < MaxFrozenHeadMain)
+                return new LogicalGridTrack(GridTracksMain[gridExtent]);
 
-            gridOffset -= MaxFrozenHeadMain;
+            gridExtent -= MaxFrozenHeadMain;
             var totalContainerGridTracks = TotalContainerGridTracksMain;
-            if (gridOffset < totalContainerGridTracks)
-                return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + gridOffset % ContainerGridTracksMain], gridOffset / ContainerGridTracksMain);
+            if (gridExtent < totalContainerGridTracks)
+                return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
 
-            gridOffset -= totalContainerGridTracks;
-            Debug.Assert(gridOffset < MaxFrozenTailMain);
-            return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridOffset]);
+            gridExtent -= totalContainerGridTracks;
+            Debug.Assert(gridExtent < MaxFrozenTailMain);
+            return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridExtent]);
         }
     }
 }

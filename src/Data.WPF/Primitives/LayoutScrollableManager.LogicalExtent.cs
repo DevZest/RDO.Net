@@ -39,8 +39,8 @@ namespace DevZest.Data.Windows.Primitives
         private double Translate(LogicalExtent logicalExtent)
         {
             var gridExtent = logicalExtent.GridExtent;
-            if (gridExtent >= MaxGridOffsetMain)
-                return GetLogicalGridTrack(MaxGridOffsetMain - 1).Span.End;
+            if (gridExtent >= MaxGridExtentMain)
+                return GetLogicalGridTrack(MaxGridExtentMain - 1).Span.End;
             else
             {
                 var span = GetLogicalGridTrack(gridExtent).Span;
@@ -57,7 +57,7 @@ namespace DevZest.Data.Windows.Primitives
 
             // Binary search
             var min = 0;
-            var max = MaxGridOffsetMain - 1;
+            var max = MaxGridExtentMain - 1;
             while (min <= max)
             {
                 int mid = (min + max) / 2;
@@ -70,7 +70,7 @@ namespace DevZest.Data.Windows.Primitives
                     return new LogicalExtent(mid, Math.Max(0, extent - span.Start) / span.Length);
             }
 
-            return new LogicalExtent(MaxGridOffsetMain);
+            return new LogicalExtent(MaxGridExtentMain);
         }
     }
 }

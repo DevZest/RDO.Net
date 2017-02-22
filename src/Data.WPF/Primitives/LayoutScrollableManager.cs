@@ -16,7 +16,8 @@ namespace DevZest.Data.Windows.Primitives
     // * Extent(coordinate): coordinate before scrolled/frozen.
     // * Location(coordinate): coordinate after scrolled/frozen.
     // - Coordinate + Axis combination are used, for example: ExtentMain, ExtentCross, LocationMain, LocationCross
-    // * GridOffset: the (GridTrack, ContainerView) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.
+    // * LogicalGridTrack: the (GridTrack, ContainerView) pair to uniquely identify the grid track on the main axis,
+    //   can be converted to/from an int grid extent value.
     internal abstract partial class LayoutScrollableManager : LayoutManager, IScrollHandler, IScrollable
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
@@ -165,17 +166,17 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.MaxFrozenTail; }
         }
 
-        private int MaxGridOffsetMain
+        private int MaxGridExtentMain
         {
             get { return MaxFrozenHeadMain + TotalContainerGridTracksMain + MaxFrozenTailMain; }
         }
 
-        private double MaxOffsetMain
+        private double MaxExtentMain
         {
-            get { return GetLogicalGridTrack(MaxGridOffsetMain - 1).Span.End; }
+            get { return GetLogicalGridTrack(MaxGridExtentMain - 1).Span.End; }
         }
 
-        private double MaxOffsetCross
+        private double MaxExtentCross
         {
             get
             {
@@ -211,7 +212,7 @@ namespace DevZest.Data.Windows.Primitives
             InitScroll();
             InitContainerViews();
 
-            if (DeltaScrollOffset < 0 || _scrollStartMain.GridExtent >= MaxGridOffsetMain)
+            if (DeltaScrollOffset < 0 || _scrollStartMain.GridExtent >= MaxGridExtentMain)
                 MeasureBackward(-DeltaScrollOffset, true);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
@@ -226,7 +227,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailStartOffset
         {
-            get { return MaxFrozenTailMain == 0 ? MaxOffsetMain : GetLogicalGridTrack(MaxGridOffsetMain - MaxFrozenTailMain).Span.Start; }
+            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalGridTrack(MaxGridExtentMain - MaxFrozenTailMain).Span.Start; }
         }
 
         private double FrozenHeadLengthMain
@@ -271,7 +272,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailLengthMain
         {
-            get { return MaxFrozenTailMain == 0 ? 0 : MaxOffsetMain - GetLogicalGridTrack(MaxGridOffsetMain - MaxFrozenTailMain).Span.Start; }
+            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalGridTrack(MaxGridExtentMain - MaxFrozenTailMain).Span.Start; }
         }
 
         private double GapToFill
@@ -471,10 +472,10 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshExtent()
         {
-            var valueMain = MaxOffsetMain;
+            var valueMain = MaxExtentMain;
             if (valueMain < ViewportMain)
                 valueMain = ViewportMain;
-            var valueCross = MaxOffsetCross;
+            var valueCross = MaxExtentCross;
             if (valueCross < ViewportCross)
                 valueCross = ViewportCross;
             RefreshExtent(valueMain, valueCross);
@@ -482,8 +483,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshViewport()
         {
-            var valueMain = CoerceViewport(GridTracksMain, MaxOffsetMain, FrozenHeadLengthMain, FrozenTailLengthMain);
-            var valueCross = CoerceViewport(GridTracksCross, MaxOffsetCross, FrozenHeadLengthCross, FrozenTailLengthCross);
+            var valueMain = CoerceViewport(GridTracksMain, MaxExtentMain, FrozenHeadLengthMain, FrozenTailLengthMain);
+            var valueCross = CoerceViewport(GridTracksCross, MaxExtentCross, FrozenHeadLengthCross, FrozenTailLengthCross);
             RefreshViewport(valueMain, valueCross);
         }
 
@@ -566,7 +567,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartLocationMain(LogicalGridTrack gridOffset)
         {
-            var result = gridOffset.IsEof ? MaxOffsetMain : gridOffset.Span.Start;
+            var result = gridOffset.IsEof ? MaxExtentMain : gridOffset.Span.Start;
             var gridTrack = gridOffset.GridTrack;
 
             if (gridTrack != null && gridTrack.IsFrozenHead)
@@ -576,7 +577,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (gridTrack != null && gridTrack.IsFrozenTail)
             {
-                double maxValueMain = ViewportMain - (MaxOffsetMain - gridOffset.Span.Start);
+                double maxValueMain = ViewportMain - (MaxExtentMain - gridOffset.Span.Start);
                 if (gridTrack.Ordinal >= MinStretchGridOrdinal)
                     result = maxValueMain;
                 else if (result > maxValueMain)
