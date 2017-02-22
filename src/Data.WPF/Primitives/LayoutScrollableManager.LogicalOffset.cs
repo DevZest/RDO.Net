@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutXYManager
+    partial class LayoutScrollableManager
     {
         private struct LogicalOffset
         {

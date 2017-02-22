@@ -177,6 +177,11 @@ namespace DevZest.Data.Windows
             RequireLayoutManager().Show(validationResult);
         }
 
+        public IScrollable Scrollable
+        {
+            get { return LayoutManager as LayoutScrollableManager; }
+        }
+
         public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)
         {
             if (value == CurrentRow)

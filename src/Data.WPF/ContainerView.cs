@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Data.Windows.Primitives;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Windows.Primitives
+namespace DevZest.Data.Windows
 {
     public abstract class ContainerView : Control
     {
@@ -9,9 +9,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract ElementManager ElementManager { get; }
 
-        internal LayoutXYManager LayoutXYManager
+        internal LayoutScrollableManager LayoutXYManager
         {
-            get { return ElementManager as LayoutXYManager; }
+            get { return ElementManager as LayoutScrollableManager; }
         }
 
         internal abstract void Setup(ElementManager elementManager, int containerOrdinal);

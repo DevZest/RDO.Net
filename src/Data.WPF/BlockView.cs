@@ -268,7 +268,7 @@ namespace DevZest.Data.Windows
             if (Elements == null)
                 return;
 
-            Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
+            Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone);
 
             var currentRowView = RemoveAllRowViewsExcept(oldValue);
             currentRowView.ReloadCurrentRow(oldValue);

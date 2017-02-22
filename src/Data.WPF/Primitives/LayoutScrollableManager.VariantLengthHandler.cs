@@ -2,21 +2,21 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutXYManager
+    partial class LayoutScrollableManager
     {
         private sealed class VariantLengthHandler
         {
-            public VariantLengthHandler(LayoutXYManager layoutXYManager)
+            public VariantLengthHandler(LayoutScrollableManager layoutXYManager)
             {
                 Debug.Assert(layoutXYManager != null);
                 _layoutXYManager = layoutXYManager;
             }
 
-            private readonly LayoutXYManager _layoutXYManager;
+            private readonly LayoutScrollableManager _layoutXYManager;
 
             private ContainerViewList ContainerViewList
             {
-                get { return _layoutXYManager.ContainerViewList; }
+                get { return _layoutXYManager.InternalContainerViewList; }
             }
 
             private GridSpan GridSpan
@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public void ClearMeasuredLengths()
             {
-                if (_layoutXYManager.CurrentContainerView != null && _layoutXYManager.CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+                if (_layoutXYManager.CurrentContainerView != null && _layoutXYManager.CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
                     ClearMeasuredLengths(_layoutXYManager.CurrentContainerView);
                 foreach (var containerView in ContainerViewList)
                     ClearMeasuredLengths(containerView);

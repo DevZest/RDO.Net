@@ -59,6 +59,7 @@
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />
+    <Compile Include="IScrollable.cs" />
     <Compile Include="ScalarPresenter.cs" />
     <Compile Include="IValidationDictionary.cs" />
     <Compile Include="Pane.cs" />
@@ -66,8 +67,8 @@
     <Compile Include="Primitives\RowPane.cs" />
     <Compile Include="Primitives\ScalarPane.cs" />
     <Compile Include="Primitives\ContainerKind.cs" />
-    <Compile Include="Primitives\ContainerView.cs" />
-    <Compile Include="Primitives\LayoutXYManager.VariantLengthHandler.cs" />
+    <Compile Include="ContainerView.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="RowPane_T.cs" />
     <Compile Include="ScalarPane_T.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="Primitives\Trigger.cs" />
     <Compile Include="RowHeader.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Primitives\CurrentContainerViewPosition.cs" />
+    <Compile Include="CurrentContainerViewPlacement.cs" />
     <Compile Include="Primitives\GridLine.cs" />
     <Compile Include="GridLinePosition.cs" />
     <Compile Include="Primitives\BlockViewPanel.cs" />
@@ -105,10 +106,10 @@
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutXManager.cs" />
-    <Compile Include="Primitives\LayoutXYManager.cs" />
-    <Compile Include="Primitives\LayoutXYManager.GridOffset.cs" />
-    <Compile Include="Primitives\LayoutXYManager.IScrollHandler.cs" />
-    <Compile Include="Primitives\LayoutXYManager.LogicalOffset.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.GridOffset.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.IScrollHandler.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.LogicalOffset.cs" />
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\GridLineFigure.cs" />

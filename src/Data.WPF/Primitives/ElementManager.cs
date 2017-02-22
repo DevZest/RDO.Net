@@ -13,7 +13,7 @@ namespace DevZest.Data.Windows.Primitives
         internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy)
         {
-            ContainerViewList = emptyContainerViewList ? ContainerViewList.Empty : ContainerViewList.Create(this);
+            InternalContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }
 
         List<ContainerView> _cachedContainerViews;
@@ -65,23 +65,28 @@ namespace DevZest.Data.Windows.Primitives
             Recycle(ref _cachedContainerViews, containerView);
         }
 
-        internal ContainerViewList ContainerViewList { get; private set; }
+        internal ContainerViewList InternalContainerViewList { get; private set; }
+
+        public IReadOnlyList<ContainerView> ContainerViewList
+        {
+            get { return InternalContainerViewList; }
+        }
 
         private ContainerView _currentContainerView;
-        internal ContainerView CurrentContainerView
+        public ContainerView CurrentContainerView
         {
             get { return _currentContainerView; }
             private set
             {
-                Debug.Assert(CurrentContainerViewPosition == CurrentContainerViewPosition.None || CurrentContainerViewPosition == CurrentContainerViewPosition.Alone);
+                Debug.Assert(CurrentContainerViewPlacement == CurrentContainerViewPlacement.None || CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone);
                 _currentContainerView = value;
-                CurrentContainerViewPosition = value != null ? CurrentContainerViewPosition.Alone : CurrentContainerViewPosition.None;
+                CurrentContainerViewPlacement = value != null ? CurrentContainerViewPlacement.Alone : CurrentContainerViewPlacement.None;
             }
         }
 
         private void CoerceCurrentContainerView(RowPresenter oldValue)
         {
-            Debug.Assert(ContainerViewList.Count == 0);
+            Debug.Assert(InternalContainerViewList.Count == 0);
 
             var newValue = CurrentRow;
             if (newValue != null)
@@ -106,15 +111,15 @@ namespace DevZest.Data.Windows.Primitives
             CurrentContainerView = null;
         }
 
-        internal CurrentContainerViewPosition CurrentContainerViewPosition { get; private set; }
+        public CurrentContainerViewPlacement CurrentContainerViewPlacement { get; private set; }
 
         internal bool IsCurrentContainerViewIsolated
         {
             get
             {
-                return CurrentContainerViewPosition == CurrentContainerViewPosition.Alone
-                    || CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList
-                    || CurrentContainerViewPosition == CurrentContainerViewPosition.AfterList;
+                return CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone
+                    || CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList
+                    || CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList;
             }
         }
 
@@ -129,47 +134,47 @@ namespace DevZest.Data.Windows.Primitives
             {
                 if (CurrentContainerView != null && blockOrdinal == CurrentContainerView.ContainerOrdinal)
                     return CurrentContainerView;
-                var index = ContainerViewList.IndexOf(blockOrdinal);
-                return index == -1 ? null : ContainerViewList[index];
+                var index = InternalContainerViewList.IndexOf(blockOrdinal);
+                return index == -1 ? null : InternalContainerViewList[index];
             }
         }
 
         internal void Realize(int ordinal)
         {
-            CurrentContainerViewPosition = DoRealize(ordinal);
+            CurrentContainerViewPlacement = DoRealize(ordinal);
         }
 
-        private CurrentContainerViewPosition DoRealize(int ordinal)
+        private CurrentContainerViewPlacement DoRealize(int ordinal)
         {
             Debug.Assert(CurrentContainerView != null);
 
             if (CurrentContainerView.ContainerOrdinal == ordinal)
-                return CurrentContainerViewPosition.WithinList;
+                return CurrentContainerViewPlacement.WithinList;
 
             var index = HeadScalarElementsCount;
-            switch (CurrentContainerViewPosition)
+            switch (CurrentContainerViewPlacement)
             {
-                case CurrentContainerViewPosition.Alone:
+                case CurrentContainerViewPlacement.Alone:
                     if (ordinal > CurrentContainerView.ContainerOrdinal)
                         index++;
                     break;
-                case CurrentContainerViewPosition.BeforeList:
+                case CurrentContainerViewPlacement.BeforeList:
                     index++;
-                    if (ordinal > ContainerViewList.Last.ContainerOrdinal)
-                        index += ContainerViewList.Count;
+                    if (ordinal > InternalContainerViewList.Last.ContainerOrdinal)
+                        index += InternalContainerViewList.Count;
                     break;
-                case CurrentContainerViewPosition.WithinList:
-                case CurrentContainerViewPosition.AfterList:
-                    if (ordinal > ContainerViewList.Last.ContainerOrdinal)
-                        index += ContainerViewList.Count;
+                case CurrentContainerViewPlacement.WithinList:
+                case CurrentContainerViewPlacement.AfterList:
+                    if (ordinal > InternalContainerViewList.Last.ContainerOrdinal)
+                        index += InternalContainerViewList.Count;
                     break;
             }
 
             var containerView = Setup(ordinal);
             ElementCollection.Insert(index, containerView);
-            if (CurrentContainerViewPosition == CurrentContainerViewPosition.Alone)
-                return ordinal > CurrentContainerView.ContainerOrdinal ? CurrentContainerViewPosition.BeforeList : CurrentContainerViewPosition.AfterList;
-            return CurrentContainerViewPosition;
+            if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone)
+                return ordinal > CurrentContainerView.ContainerOrdinal ? CurrentContainerViewPlacement.BeforeList : CurrentContainerViewPlacement.AfterList;
+            return CurrentContainerViewPlacement;
         }
 
         internal int ContainerViewListStartIndex
@@ -177,7 +182,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 var result = HeadScalarElementsCount;
-                if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList)
                     result++;
                 return result;
             }
@@ -185,19 +190,19 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void VirtualizeContainerViewList()
         {
-            Debug.Assert(ContainerViewList.Count > 0);
+            Debug.Assert(InternalContainerViewList.Count > 0);
 
             var startIndex = ContainerViewListStartIndex;
-            for (int i = ContainerViewList.Count - 1; i >= 0; i--)
+            for (int i = InternalContainerViewList.Count - 1; i >= 0; i--)
             {
-                var containerView = ContainerViewList[i];
+                var containerView = InternalContainerViewList[i];
                 if (containerView == CurrentContainerView)
                     continue;
                 Cleanup(containerView);
                 ElementCollection.RemoveAt(startIndex + i);
             }
 
-            CurrentContainerViewPosition = CurrentContainerViewPosition.Alone;
+            CurrentContainerViewPlacement = CurrentContainerViewPlacement.Alone;
         }
 
         internal RowView Setup(BlockView blockView, RowPresenter row)
@@ -286,9 +291,9 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshContainerViews()
         {
-            if (CurrentContainerView != null && CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+            if (CurrentContainerView != null && CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
                 CurrentContainerView.Refresh();
-            foreach (var containerView in ContainerViewList)
+            foreach (var containerView in InternalContainerViewList)
                 containerView.Refresh();
         }
 
@@ -297,7 +302,7 @@ namespace DevZest.Data.Windows.Primitives
             if (ElementCollection == null)
                 return;
 
-            ContainerViewList.VirtualizeAll();
+            InternalContainerViewList.VirtualizeAll();
             if (CurrentContainerView != null)
                 ClearCurrentContainerView();
 
@@ -356,7 +361,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(flowCountDelta != 0);
 
-            ContainerViewList.VirtualizeAll();
+            InternalContainerViewList.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
@@ -415,17 +420,17 @@ namespace DevZest.Data.Windows.Primitives
                 return;
             }
 
-            if (CurrentContainerViewPosition != CurrentContainerViewPosition.WithinList)
+            if (CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
             {
                 Cleanup(CurrentContainerView);
-                if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList)
                     ElementCollection.RemoveAt(HeadScalarElementsCount);
                 else
                 {
-                    Debug.Assert(CurrentContainerViewPosition == CurrentContainerViewPosition.AfterList);
-                    ElementCollection.RemoveAt(HeadScalarElementsCount + ContainerViewList.Count);
+                    Debug.Assert(CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList);
+                    ElementCollection.RemoveAt(HeadScalarElementsCount + InternalContainerViewList.Count);
                 }
-                CurrentContainerViewPosition = CurrentContainerViewPosition.WithinList;
+                CurrentContainerViewPlacement = CurrentContainerViewPlacement.WithinList;
             }
             _currentContainerView = GetContainerView(rowView);
             SetCurrentRowFromView(rowView);
@@ -452,7 +457,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             if (ElementCollection != null && !_currentRowFromView)
             {
-                ContainerViewList.VirtualizeAll();
+                InternalContainerViewList.VirtualizeAll();
                 CoerceCurrentContainerView(oldValue);
             }
         }
@@ -468,7 +473,7 @@ namespace DevZest.Data.Windows.Primitives
             // when oldCurrentRow != CurrentRow, CurrentContainerView should have been reloaded in OnCurrentRowChanged override
             var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
-            ContainerViewList.VirtualizeAll();
+            InternalContainerViewList.VirtualizeAll();
             if (CurrentContainerView != null && oldCurrentRow == CurrentRow && CurrentContainerView.AffectedOnRowsChanged)
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
@@ -513,23 +518,23 @@ namespace DevZest.Data.Windows.Primitives
 
         public override string ToString()
         {
-            return string.Format("{0}: [{1}]", CurrentContainerViewPosition, DebugWriteElementsString);
+            return string.Format("{0}: [{1}]", CurrentContainerViewPlacement, DebugWriteElementsString);
         }
 
         private string DebugWriteElementsString
         {
             get
             {
-                if (CurrentContainerViewPosition == CurrentContainerViewPosition.None)
+                if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.None)
                     return string.Empty;
 
-                if (CurrentContainerViewPosition == CurrentContainerViewPosition.Alone)
+                if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone)
                     return GetDebugWriteString(CurrentContainerView);
 
                 var result = GetContainerListDebugWriteString();
-                if (CurrentContainerViewPosition == CurrentContainerViewPosition.BeforeList)
+                if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList)
                     result = string.Join(", ", GetDebugWriteString(CurrentContainerView), result);
-                else if (CurrentContainerViewPosition == CurrentContainerViewPosition.AfterList)
+                else if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
                     result = string.Join(", ", result, GetDebugWriteString(CurrentContainerView));
 
                 return result;
@@ -544,7 +549,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private string GetContainerListDebugWriteString()
         {
-            return string.Join(", ", ContainerViewList.Select(x => GetDebugWriteString(x)).ToArray());
+            return string.Join(", ", InternalContainerViewList.Select(x => GetDebugWriteString(x)).ToArray());
         }
     }
 }

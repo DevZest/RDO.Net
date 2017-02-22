@@ -39,9 +39,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as LayoutManager; }
         }
 
-        internal LayoutXYManager LayoutXYManager
+        internal LayoutScrollableManager LayoutXYManager
         {
-            get { return RowManager as LayoutXYManager; }
+            get { return RowManager as LayoutScrollableManager; }
         }
 
         public DataPresenter DataPresenter

@@ -238,7 +238,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract Vector ToVector(double valueMain, double valueCross);
 
-        private LayoutXYManager LayoutXYManager
+        private LayoutScrollableManager LayoutXYManager
         {
             get { return Template.LayoutXYManager; }
         }

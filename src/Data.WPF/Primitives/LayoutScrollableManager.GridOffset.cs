@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutXYManager
+    partial class LayoutScrollableManager
     {
         /// <summary>The (GridTrack, Block) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.</summary>
         private struct GridOffset
@@ -84,14 +84,14 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack.Template; }
             }
 
-            private LayoutXYManager LayoutXYManager
+            private LayoutScrollableManager LayoutXYManager
             {
                 get { return Template.LayoutXYManager; }
             }
 
             private ContainerViewList ContainerViewList
             {
-                get { return LayoutXYManager.ContainerViewList; }
+                get { return LayoutXYManager.InternalContainerViewList; }
             }
 
             private int MaxContainerCount

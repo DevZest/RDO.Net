@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutXYManager
+    partial class LayoutScrollableManager
     {
         public ScrollViewer ScrollOwner { get; set; }
 
@@ -18,14 +18,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private void InvalidateMeasure()
         {
-            if (ElementCollection.Parent != null)
-                ElementCollection.Parent.InvalidateMeasure();
-        }
-
-        private void InvalidateArrange()
-        {
-            if (ElementCollection.Parent != null)
-                ElementCollection.Parent.InvalidateArrange();
+            if (ScrollOwner != null)
+                ScrollOwner.InvalidateMeasure();
         }
 
         public abstract double ViewportX { get; }

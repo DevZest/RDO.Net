@@ -170,9 +170,9 @@ namespace DevZest.Data.Windows.Primitives
             if (IsCurrentContainerViewIsolated)
                 CurrentContainerView.Measure(GetSize(CurrentContainerView));
 
-            for (int i = 0; i < ContainerViewList.Count; i++)
+            for (int i = 0; i < InternalContainerViewList.Count; i++)
             {
-                var containerView = ContainerViewList[i];
+                var containerView = InternalContainerViewList[i];
                 containerView.Measure(GetSize(containerView));
             }
 
@@ -329,8 +329,8 @@ namespace DevZest.Data.Windows.Primitives
             if (IsCurrentContainerViewIsolated)
                 Arrange(CurrentContainerView);
 
-            for (int i = 0; i < ContainerViewList.Count; i++)
-                Arrange(ContainerViewList[i]);
+            for (int i = 0; i < InternalContainerViewList.Count; i++)
+                Arrange(InternalContainerViewList[i]);
         }
 
         private void Arrange(ContainerView containerView)

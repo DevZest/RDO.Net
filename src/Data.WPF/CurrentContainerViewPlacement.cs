@@ -1,6 +1,6 @@
-﻿namespace DevZest.Data.Windows.Primitives
+﻿namespace DevZest.Data.Windows
 {
-    internal enum CurrentContainerViewPosition
+    public enum CurrentContainerViewPlacement
     {
         None = 0,
         Alone,
