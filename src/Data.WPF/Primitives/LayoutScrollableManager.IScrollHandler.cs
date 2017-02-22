@@ -16,10 +16,15 @@ namespace DevZest.Data.Windows.Primitives
                 ScrollOwner.InvalidateScrollInfo();
         }
 
+        public FrameworkElement Panel
+        {
+            get { return ElementCollection.Parent; }
+        }
+
         private void InvalidateMeasure()
         {
-            if (ScrollOwner != null)
-                ScrollOwner.InvalidateMeasure();
+            if (Panel != null)
+                Panel.InvalidateMeasure();
         }
 
         public abstract double ViewportWidth { get; }
