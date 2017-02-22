@@ -84,7 +84,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private LayoutScrollableManager LayoutXYManager
             {
-                get { return Template.LayoutXYManager; }
+                get { return Template.ScrollableManager; }
             }
 
             private ContainerViewList ContainerViewList

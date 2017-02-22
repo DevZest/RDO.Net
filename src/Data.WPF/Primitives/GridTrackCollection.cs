@@ -238,9 +238,9 @@ namespace DevZest.Data.Windows.Primitives
 
         public abstract Vector ToVector(double valueMain, double valueCross);
 
-        private LayoutScrollableManager LayoutXYManager
+        private LayoutScrollableManager ScrollableManager
         {
-            get { return Template.LayoutXYManager; }
+            get { return Template.ScrollableManager; }
         }
 
         private bool? _variantByContainer;
@@ -256,8 +256,8 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool CalcVariantByContainer()
         {
-            var layoutXYManager = LayoutXYManager;
-            if (layoutXYManager == null || layoutXYManager.GridTracksMain != this)
+            var scrollableManager = ScrollableManager;
+            if (scrollableManager == null || scrollableManager.GridTracksMain != this)
                 return false;
 
             var gridSpan = GetGridSpan(Template.RowRange);

@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return RowManager as LayoutManager; }
         }
 
-        internal LayoutScrollableManager LayoutXYManager
+        internal LayoutScrollableManager ScrollableManager
         {
             get { return RowManager as LayoutScrollableManager; }
         }
