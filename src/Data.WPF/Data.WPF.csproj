@@ -109,7 +109,7 @@
     <Compile Include="Primitives\LayoutScrollableManager.cs" />
     <Compile Include="Primitives\LayoutScrollableManager.LogicalGridTrack.cs" />
     <Compile Include="Primitives\LayoutScrollableManager.IScrollHandler.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.LogicalOffset.cs" />
+    <Compile Include="Primitives\LayoutScrollableManager.LogicalExtent.cs" />
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\GridLineFigure.cs" />

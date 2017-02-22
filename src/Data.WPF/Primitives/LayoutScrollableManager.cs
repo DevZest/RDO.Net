@@ -13,9 +13,9 @@ namespace DevZest.Data.Windows.Primitives
     // ================================================
     // * Main(axis): the axis where ContainerViews are arranged.
     // * Cross(axis): the axis cross to the main axis.
-    // * Offset(coordinate): coordinate before scrolled/frozen.
+    // * Extent(coordinate): coordinate before scrolled/frozen.
     // * Location(coordinate): coordinate after scrolled/frozen.
-    // - Coordinate + Axis combination are used, for example: OffsetMain, OffsetCross, LocationMain, LocationCross
+    // - Coordinate + Axis combination are used, for example: ExtentMain, ExtentCross, LocationMain, LocationCross
     // * GridOffset: the (GridTrack, ContainerView) pair to uniquely identify the grid on the main axis, can be converted to/from an int index value.
     internal abstract partial class LayoutScrollableManager : LayoutManager, IScrollHandler, IScrollable
     {
@@ -49,7 +49,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxContainerCount == 0)
                 return -1;
 
-            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridOffset);
+            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridExtent);
             if (logicalGridTrack.IsEof)
                 return MaxContainerCount - 1;
 
@@ -62,15 +62,15 @@ namespace DevZest.Data.Windows.Primitives
                 return MaxContainerCount - 1;
         }
 
-        private LogicalOffset ScrollOriginMain
+        private LogicalExtent ScrollOriginMain
         {
-            get { return new LogicalOffset(FrozenHeadMain); }
+            get { return new LogicalExtent(FrozenHeadMain); }
         }
 
-        private LogicalOffset _scrollStartMain;
+        private LogicalExtent _scrollStartMain;
         private double ScrollStartMain
         {
-            get { return GetOffset(_scrollStartMain); }
+            get { return Translate(_scrollStartMain); }
         }
 
         private LogicalGridTrack ScrollEndOffsetMain
@@ -80,7 +80,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void AdjustScrollStartMain(double delta)
         {
-            _scrollStartMain = GetLogicalOffset(ScrollStartMain + delta);
+            _scrollStartMain = Translate(ScrollStartMain + delta);
             var scrollOriginMain = ScrollOriginMain;
             if (_scrollStartMain.Value < scrollOriginMain.Value)
                 _scrollStartMain = scrollOriginMain;
@@ -211,7 +211,7 @@ namespace DevZest.Data.Windows.Primitives
             InitScroll();
             InitContainerViews();
 
-            if (DeltaScrollOffset < 0 || _scrollStartMain.GridOffset >= MaxGridOffsetMain)
+            if (DeltaScrollOffset < 0 || _scrollStartMain.GridExtent >= MaxGridOffsetMain)
                 MeasureBackward(-DeltaScrollOffset, true);
             else
                 MeasureForward(GridTracksMain.AvailableLength);
@@ -300,7 +300,7 @@ namespace DevZest.Data.Windows.Primitives
         {
             Debug.Assert(availableLength >= 0);
 
-            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridOffset);
+            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridExtent);
             if (logicalGridTrack.IsEof)
             {
                 MeasureBackwardEof(availableLength, flagScrollBack);
@@ -397,10 +397,10 @@ namespace DevZest.Data.Windows.Primitives
             if (availableLength <= 0)
                 return;
 
-            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridOffset);
+            var logicalGridTrack = GetLogicalGridTrack(_scrollStartMain.GridExtent);
             Debug.Assert(!logicalGridTrack.IsEof);
             var gridTrack = logicalGridTrack.GridTrack;
-            var fraction = _scrollStartMain.FractionOffset;
+            var fraction = _scrollStartMain.Fraction;
             if (gridTrack.IsHead)
                 MeasureForwardHead(gridTrack, fraction, availableLength);
             else if (gridTrack.IsRepeat)
@@ -499,7 +499,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void RefreshScrollOffset()
         {
-            var scrollOriginMain = GetOffset(ScrollOriginMain);
+            var scrollOriginMain = Translate(ScrollOriginMain);
             var scrollStartMain = ScrollStartMain;
             Debug.Assert(scrollStartMain >= scrollOriginMain);
             var valueMain = scrollStartMain - scrollOriginMain;
