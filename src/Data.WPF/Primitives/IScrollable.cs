@@ -9,5 +9,11 @@ namespace DevZest.Data.Windows.Primitives
         ContainerView CurrentContainerView { get; }
         ContainerViewList ContainerViewList { get; }
         CurrentContainerViewPlacement CurrentContainerViewPlacement { get; }
+        double ViewportWidth { get; }
+        double ViewportHeight { get; }
+        double ExtentWidth { get; }
+        double ExtentHeight { get; }
+        double HorizontalOffset { get; set; }
+        double VerticalOffset { get; set; }
     }
 }

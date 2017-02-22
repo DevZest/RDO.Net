@@ -4,15 +4,9 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal interface IScrollHandler
+    internal interface IScrollHandler : IScrollable
     {
         ScrollViewer ScrollOwner { get; set; }
-        double ViewportWidth { get; }
-        double ViewportHeight { get; }
-        double ExtentWidth { get; }
-        double ExtentHeight { get; }
-        double HorizontalOffset { get; set; }
-        double VerticalOffset { get; set; }
         Rect MakeVisible(Visual visual, Rect rectangle);
     }
 }
