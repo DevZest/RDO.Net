@@ -77,6 +77,35 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
+            public double StartLocation
+            {
+                get
+                {
+                    Debug.Assert(!IsEof);
+                    var result = ExtentSpan.Start;
+                    var gridTrack = GridTrack;
+
+                    if (gridTrack.IsFrozenHead)
+                        return result;
+
+                    result -= ScrollableManager.ScrollOffsetMain;
+
+                    if (gridTrack.IsFrozenTail)
+                    {
+                        double max = ScrollableManager.ViewportMain - (ScrollableManager.MaxExtentMain - ExtentSpan.Start);
+                        if (result > max || gridTrack.Ordinal >= ScrollableManager.MinStretchGridOrdinal)
+                            result = max;
+                    }
+
+                    return result;
+                }
+            }
+
+            public double EndLocation
+            {
+                get { return StartLocation + ExtentSpan.Length; }
+            }
+
             private Template Template
             {
                 get { return GridTrack.Template; }
@@ -186,6 +215,42 @@ namespace DevZest.Data.Windows.Primitives
             gridExtent -= totalContainerGridTracks;
             Debug.Assert(gridExtent < MaxFrozenTailMain);
             return new LogicalMainTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridExtent]);
+        }
+
+        private LogicalMainTrack GetStartLogicalMainTrack(GridRange gridRange)
+        {
+            var gridTrack = GridTracksMain.GetGridSpan(gridRange).StartTrack;
+            return GetStartLogicalMainTrack(gridTrack);
+        }
+
+        private LogicalMainTrack GetStartLogicalMainTrack(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
+            if (!gridTrack.IsRepeat)
+                return new LogicalMainTrack(gridTrack);
+
+            if (MaxContainerCount > 0)
+                return new LogicalMainTrack(gridTrack, 0);
+            else
+                return ScrollEndOffsetMain;
+        }
+
+        private LogicalMainTrack GetEndLogicalMainTrack(GridRange gridRange)
+        {
+            var gridTrack = GridTracksMain.GetGridSpan(gridRange).EndTrack;
+            return GetEndLogicalMainTrack(gridTrack);
+        }
+
+        private LogicalMainTrack GetEndLogicalMainTrack(GridTrack gridTrack)
+        {
+            Debug.Assert(gridTrack.Owner == GridTracksMain);
+            if (!gridTrack.IsRepeat)
+                return new LogicalMainTrack(gridTrack);
+
+            if (MaxContainerCount > 0)
+                return new LogicalMainTrack(gridTrack, MaxContainerCount - 1);
+            else
+                return ScrollEndOffsetMain;
         }
     }
 }
