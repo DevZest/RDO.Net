@@ -68,12 +68,12 @@ namespace DevZest.Data.Windows.Primitives
                 return obj is LogicalMainTrack ? (LogicalMainTrack)obj == this : false;
             }
 
-            public Span Span
+            public Span ExtentSpan
             {
                 get
                 {
                     Debug.Assert(!IsEof);
-                    return GridTrack.IsRepeat ? GetGridTrackSpan(ContainerOrdinal) : GetGridTrackSpan();
+                    return GridTrack.IsRepeat ? GetExtentSpan(ContainerOrdinal) : GetExtentSpan();
                 }
             }
 
@@ -117,7 +117,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrackOwner.VariantByContainer; }
             }
 
-            private Span GetGridTrackSpan()
+            private Span GetExtentSpan()
             {
                 Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
                 Debug.Assert(!IsRepeat);
@@ -132,7 +132,7 @@ namespace DevZest.Data.Windows.Primitives
                 return new Span(GridTrack.StartOffset + delta, GridTrack.EndOffset + delta);
             }
 
-            private Span GetGridTrackSpan(int ordinal)
+            private Span GetExtentSpan(int ordinal)
             {
                 Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
                 Debug.Assert(IsRepeat && ordinal >= 0);

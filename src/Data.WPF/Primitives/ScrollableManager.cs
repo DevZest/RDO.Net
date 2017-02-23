@@ -173,7 +173,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MaxExtentMain
         {
-            get { return GetLogicalMainTrack(MaxGridExtentMain - 1).Span.End; }
+            get { return GetLogicalMainTrack(MaxGridExtentMain - 1).ExtentSpan.End; }
         }
 
         private double MaxExtentCross
@@ -227,7 +227,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailStartOffset
         {
-            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).Span.Start; }
+            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).ExtentSpan.Start; }
         }
 
         private double FrozenHeadLengthMain
@@ -272,7 +272,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailLengthMain
         {
-            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).Span.Start; }
+            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).ExtentSpan.Start; }
         }
 
         private double GapToFill
@@ -544,7 +544,7 @@ namespace DevZest.Data.Windows.Primitives
             var gridRange = scalarBinding.GridRange;
             var startGridOffset = GetStartGridOffset(gridRange);
             var endGridOffset = GetEndGridOffset(gridRange);
-            return startGridOffset == endGridOffset ? startGridOffset.Span.Length : endGridOffset.Span.End - startGridOffset.Span.Start;
+            return startGridOffset == endGridOffset ? startGridOffset.ExtentSpan.Length : endGridOffset.ExtentSpan.End - startGridOffset.ExtentSpan.Start;
         }
 
         protected override Point GetLocation(ScalarBinding scalarBinding, int flowIndex)
@@ -567,7 +567,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartLocationMain(LogicalMainTrack gridOffset)
         {
-            var result = gridOffset.IsEof ? MaxExtentMain : gridOffset.Span.Start;
+            var result = gridOffset.IsEof ? MaxExtentMain : gridOffset.ExtentSpan.Start;
             var gridTrack = gridOffset.GridTrack;
 
             if (gridTrack != null && gridTrack.IsFrozenHead)
@@ -577,7 +577,7 @@ namespace DevZest.Data.Windows.Primitives
 
             if (gridTrack != null && gridTrack.IsFrozenTail)
             {
-                double maxValueMain = ViewportMain - (MaxExtentMain - gridOffset.Span.Start);
+                double maxValueMain = ViewportMain - (MaxExtentMain - gridOffset.ExtentSpan.Start);
                 if (gridTrack.Ordinal >= MinStretchGridOrdinal)
                     result = maxValueMain;
                 else if (result > maxValueMain)
@@ -589,7 +589,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetEndLocationMain(LogicalMainTrack gridOffset)
         {
-            return gridOffset.IsEof ? GetStartLocationMain(gridOffset) : GetStartLocationMain(gridOffset) + gridOffset.Span.Length;
+            return gridOffset.IsEof ? GetStartLocationMain(gridOffset) : GetStartLocationMain(gridOffset) + gridOffset.ExtentSpan.Length;
         }
 
         private double GetStartLocationCross(ScalarBinding scalarBinding, int flowIndex)
@@ -763,8 +763,8 @@ namespace DevZest.Data.Windows.Primitives
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
             var startTrack = gridSpan.StartTrack;
             var endTrack = gridSpan.EndTrack;
-            return startTrack == endTrack ? new LogicalMainTrack(startTrack, containerView).Span.Length
-                : new LogicalMainTrack(endTrack, containerView).Span.End - new LogicalMainTrack(startTrack, containerView).Span.Start;
+            return startTrack == endTrack ? new LogicalMainTrack(startTrack, containerView).ExtentSpan.Length
+                : new LogicalMainTrack(endTrack, containerView).ExtentSpan.End - new LogicalMainTrack(startTrack, containerView).ExtentSpan.Start;
         }
 
         private LogicalMainTrack GetStartGridOffset(GridRange gridRange)
@@ -866,12 +866,12 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartOffset(ContainerView containerView)
         {
-            return new LogicalMainTrack(GridTracksMain.ContainerStart, containerView).Span.Start;
+            return new LogicalMainTrack(GridTracksMain.ContainerStart, containerView).ExtentSpan.Start;
         }
 
         private double GetEndOffset(ContainerView containerView)
         {
-            return new LogicalMainTrack(GridTracksMain.ContainerEnd, containerView).Span.End;
+            return new LogicalMainTrack(GridTracksMain.ContainerEnd, containerView).ExtentSpan.End;
         }
 
         protected override Point GetLocation(BlockView blockView, BlockBinding blockBinding)
@@ -1325,12 +1325,12 @@ namespace DevZest.Data.Windows.Primitives
             if (startGridOffset.GridTrack.IsFrozenHead || endGridOffset.GridTrack.IsFrozenTail)
                 return 0;
 
-            var start = startGridOffset.Span.Start;
+            var start = startGridOffset.ExtentSpan.Start;
             var scrollStartMain = ScrollStartMain;
             if (start < scrollStartMain)
                 return start - scrollStartMain;
 
-            var end = endGridOffset.Span.End - ScrollOffsetMain;
+            var end = endGridOffset.ExtentSpan.End - ScrollOffsetMain;
             var scrollEnd = ViewportMain - FrozenTailLengthMain;
             if (end > scrollEnd)
                 return end - scrollEnd;

@@ -40,10 +40,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridExtent = logicalExtent.GridExtent;
             if (gridExtent >= MaxGridExtentMain)
-                return GetLogicalMainTrack(MaxGridExtentMain - 1).Span.End;
+                return GetLogicalMainTrack(MaxGridExtentMain - 1).ExtentSpan.End;
             else
             {
-                var span = GetLogicalMainTrack(gridExtent).Span;
+                var span = GetLogicalMainTrack(gridExtent).ExtentSpan;
                 return span.Start + span.Length * logicalExtent.Fraction;
             }
         }
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                var span = GetLogicalMainTrack(mid).Span;
+                var span = GetLogicalMainTrack(mid).ExtentSpan;
                 if (extent < span.Start - Epsilon)
                     max = mid - 1;
                 else if (extent >= span.End)
