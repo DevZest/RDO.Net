@@ -68,7 +68,7 @@
     <Compile Include="Primitives\ScalarPane.cs" />
     <Compile Include="Primitives\ContainerKind.cs" />
     <Compile Include="Primitives\ContainerView.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.VariantLengthHandler.cs" />
+    <Compile Include="Primitives\ScrollableManager.VariantLengthHandler.cs" />
     <Compile Include="Primitives\TwoWayBinding.cs" />
     <Compile Include="RowPane_T.cs" />
     <Compile Include="ScalarPane_T.cs" />
@@ -106,10 +106,10 @@
     <Compile Include="Primitives\IScrollHandler.cs" />
     <Compile Include="Primitives\LayoutManager.cs" />
     <Compile Include="Primitives\LayoutXManager.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.LogicalGridTrack.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.IScrollHandler.cs" />
-    <Compile Include="Primitives\LayoutScrollableManager.LogicalExtent.cs" />
+    <Compile Include="Primitives\ScrollableManager.cs" />
+    <Compile Include="Primitives\ScrollableManager.LogicalMainTrack.cs" />
+    <Compile Include="Primitives\ScrollableManager.IScrollHandler.cs" />
+    <Compile Include="Primitives\ScrollableManager.LogicalExtent.cs" />
     <Compile Include="Primitives\LayoutYManager.cs" />
     <Compile Include="Primitives\LayoutZManager.cs" />
     <Compile Include="Primitives\GridLineFigure.cs" />

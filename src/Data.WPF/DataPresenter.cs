@@ -179,7 +179,7 @@ namespace DevZest.Data.Windows
 
         public IScrollable Scrollable
         {
-            get { return LayoutManager as LayoutScrollableManager; }
+            get { return LayoutManager as ScrollableManager; }
         }
 
         public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)

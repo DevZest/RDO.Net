@@ -7,14 +7,14 @@ using System.Windows.Media;
 namespace DevZest.Data.Windows.Primitives
 {
     [TestClass]
-    public class LayoutScrollableManagerTests : LayoutManagerTestsBase
+    public class ScrollableManagerTests : LayoutManagerTestsBase
     {
         [TestMethod]
-        public void LayoutScrollableManager_ScrollInfo()
+        public void ScrollableManager_ScrollInfo()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("20")
@@ -79,11 +79,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_RowBinding()
+        public void ScrollableManager_RowBinding()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("Auto")
@@ -139,11 +139,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_RowBinding_flowable()
+        public void ScrollableManager_RowBinding_flowable()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("Auto")
@@ -178,11 +178,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_BlockBinding()
+        public void ScrollableManager_BlockBinding()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("20", "100", "20")
                     .GridRows("20")
@@ -227,11 +227,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_ScalarBinding()
+        public void ScrollableManager_ScalarBinding()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("20", "100")
                     .GridRows("20", "20", "20")
@@ -256,11 +256,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_FrozenMain()
+        public void ScrollableManager_FrozenMain()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "10", "20", "10", "10")
@@ -368,11 +368,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_FrozenCross_ScalarBinding()
+        public void ScrollableManager_FrozenCross_ScalarBinding()
         {
             var dataSet = DataSetMock.ProductCategories(0, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "50", "50", "10")
                     .GridRows("10", "20")
@@ -412,11 +412,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_Stretches()
+        public void ScrollableManager_Stretches()
         {
             var dataSet = DataSetMock.ProductCategories(0, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "20", "10")
@@ -434,11 +434,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_FrozenCross_Block()
+        public void ScrollableManager_FrozenCross_Block()
         {
             var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -490,11 +490,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_FrozenCross_BlockBinding()
+        public void ScrollableManager_FrozenCross_BlockBinding()
         {
             var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -555,11 +555,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_FrozenCross_RowBinding()
+        public void ScrollableManager_FrozenCross_RowBinding()
         {
             var dataSet = DataSetMock.ProductCategories(2, false);
             var _ = dataSet._;
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "100", "10", "10")
                     .GridRows("20")
@@ -653,12 +653,12 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_GetLineFiguresMain_Spans()
+        public void ScrollableManager_GetLineFiguresMain_Spans()
         {
             var dataSet = DataSetMock.ProductCategories(6, false);
             var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "10", "10", "10", "10")
                     .GridRows("10", "10", "20", "10", "10")
@@ -699,12 +699,12 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_GetLineFiguresMain_Locations()
+        public void ScrollableManager_GetLineFiguresMain_Locations()
         {
             var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "20", "10")
                     .GridRows("10")
@@ -745,12 +745,12 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_GetLineFiguresCross_Span()
+        public void ScrollableManager_GetLineFiguresCross_Span()
         {
             var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("10", "20", "10")
                     .GridRows("10")
@@ -782,12 +782,12 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void LayoutScrollableManager_GetLineFiguresCross_Locations()
+        public void ScrollableManager_GetLineFiguresCross_Locations()
         {
             var dataSet = DataSetMock.ProductCategories(9, false);
             var _ = dataSet._;
             var pen = new Pen();
-            var layoutManager = (LayoutScrollableManager)dataSet.CreateLayoutManager((builder) =>
+            var layoutManager = (ScrollableManager)dataSet.CreateLayoutManager((builder) =>
             {
                 builder.GridColumns("100")
                     .GridRows("10", "10", "20", "10", "10")

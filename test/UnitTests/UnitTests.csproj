@@ -95,7 +95,7 @@
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\InputManagerTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
-    <Compile Include="Primitives\LayoutScrollableManagerTests.cs" />
+    <Compile Include="Primitives\ScrollableManagerTests.cs" />
     <Compile Include="Primitives\LayoutZManagerTests.cs" />
     <Compile Include="Primitives\RowManagerTests.cs" />
     <Compile Include="Primitives\RowMapperTests.cs" />

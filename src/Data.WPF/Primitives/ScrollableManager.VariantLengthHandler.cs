@@ -2,26 +2,26 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutScrollableManager
+    partial class ScrollableManager
     {
         private sealed class VariantLengthHandler
         {
-            public VariantLengthHandler(LayoutScrollableManager layoutXYManager)
+            public VariantLengthHandler(ScrollableManager scrollableManager)
             {
-                Debug.Assert(layoutXYManager != null);
-                _layoutXYManager = layoutXYManager;
+                Debug.Assert(scrollableManager != null);
+                _scrollableManager = scrollableManager;
             }
 
-            private readonly LayoutScrollableManager _layoutXYManager;
+            private readonly ScrollableManager _scrollableManager;
 
             private ContainerViewList ContainerViewList
             {
-                get { return _layoutXYManager.ContainerViewList; }
+                get { return _scrollableManager.ContainerViewList; }
             }
 
             private GridSpan GridSpan
             {
-                get { return _layoutXYManager.GridTracksMain.GetGridSpan(_layoutXYManager.Template.RowRange); }
+                get { return _scrollableManager.GridTracksMain.GetGridSpan(_scrollableManager.Template.RowRange); }
             }
 
             private bool _isContainerLengthsValid = true;
@@ -99,8 +99,8 @@ namespace DevZest.Data.Windows.Primitives
 
             public void ClearMeasuredLengths()
             {
-                if (_layoutXYManager.CurrentContainerView != null && _layoutXYManager.CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
-                    ClearMeasuredLengths(_layoutXYManager.CurrentContainerView);
+                if (_scrollableManager.CurrentContainerView != null && _scrollableManager.CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
+                    ClearMeasuredLengths(_scrollableManager.CurrentContainerView);
                 foreach (var containerView in ContainerViewList)
                     ClearMeasuredLengths(containerView);
             }

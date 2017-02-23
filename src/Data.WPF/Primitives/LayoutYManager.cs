@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    internal sealed class LayoutYManager : LayoutScrollableManager
+    internal sealed class LayoutYManager : ScrollableManager
     {
         public LayoutYManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy)

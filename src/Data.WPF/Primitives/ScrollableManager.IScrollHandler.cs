@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutScrollableManager
+    partial class ScrollableManager
     {
         public ScrollViewer ScrollOwner { get; set; }
 

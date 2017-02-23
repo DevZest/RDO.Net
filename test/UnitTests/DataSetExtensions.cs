@@ -30,7 +30,7 @@ namespace DevZest.Data.Windows
 
             protected override Size MeasureOverride(Size constraint)
             {
-                return LayoutXYManager.Measure(this, constraint);
+                return ScrollableManager.Measure(this, constraint);
             }
         }
 

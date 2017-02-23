@@ -2,29 +2,29 @@
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutScrollableManager
+    partial class ScrollableManager
     {
         /// <summary>The (GridTrack, ContainerOrdinal) pair to uniquely identify the grid track on the main axis, can be converted to/from an int index value.</summary>
-        private struct LogicalGridTrack
+        private struct LogicalMainTrack
         {
-            public static LogicalGridTrack Eof
+            public static LogicalMainTrack Eof
             {
-                get { return new LogicalGridTrack(); }
+                get { return new LogicalMainTrack(); }
             }
 
-            public LogicalGridTrack(GridTrack gridTrack)
+            public LogicalMainTrack(GridTrack gridTrack)
             {
                 Debug.Assert(!gridTrack.IsRepeat);
                 GridTrack = gridTrack;
                 _containerOrdinal = -1;
             }
 
-            public LogicalGridTrack(GridTrack gridTrack, ContainerView containerView)
+            public LogicalMainTrack(GridTrack gridTrack, ContainerView containerView)
                 : this(gridTrack, containerView.ContainerOrdinal)
             {
             }
 
-            public LogicalGridTrack(GridTrack gridTrack, int containerOrdinal)
+            public LogicalMainTrack(GridTrack gridTrack, int containerOrdinal)
             {
                 Debug.Assert(gridTrack.IsRepeat && containerOrdinal >= 0);
                 GridTrack = gridTrack;
@@ -48,12 +48,12 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack != null && GridTrack.IsRepeat; }
             }
 
-            public static bool operator ==(LogicalGridTrack x, LogicalGridTrack y)
+            public static bool operator ==(LogicalMainTrack x, LogicalMainTrack y)
             {
                 return x.GridTrack == y.GridTrack && x.ContainerOrdinal == y.ContainerOrdinal;
             }
 
-            public static bool operator !=(LogicalGridTrack x, LogicalGridTrack y)
+            public static bool operator !=(LogicalMainTrack x, LogicalMainTrack y)
             {
                 return !(x == y);
             }
@@ -65,7 +65,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public override bool Equals(object obj)
             {
-                return obj is LogicalGridTrack ? (LogicalGridTrack)obj == this : false;
+                return obj is LogicalMainTrack ? (LogicalMainTrack)obj == this : false;
             }
 
             public Span Span
@@ -82,14 +82,14 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack.Template; }
             }
 
-            private LayoutScrollableManager LayoutXYManager
+            private ScrollableManager ScrollableManager
             {
                 get { return Template.ScrollableManager; }
             }
 
             private ContainerViewList ContainerViewList
             {
-                get { return LayoutXYManager.ContainerViewList; }
+                get { return ScrollableManager.ContainerViewList; }
             }
 
             private int MaxContainerCount
@@ -99,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private VariantLengthHandler VariantLengthHandler
             {
-                get { return LayoutXYManager.GetVariantLengthHandler(); }
+                get { return ScrollableManager.GetVariantLengthHandler(); }
             }
 
             private IGridTrackCollection GridTrackOwner
@@ -119,7 +119,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private Span GetGridTrackSpan()
             {
-                Debug.Assert(GridTrackOwner == LayoutXYManager.GridTracksMain);
+                Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
                 Debug.Assert(!IsRepeat);
 
                 if (GridTrack.IsHead)
@@ -134,7 +134,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private Span GetGridTrackSpan(int ordinal)
             {
-                Debug.Assert(GridTrackOwner == LayoutXYManager.GridTracksMain);
+                Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
                 Debug.Assert(IsRepeat && ordinal >= 0);
 
                 var relativeSpan = GetRelativeSpan(ordinal);
@@ -168,24 +168,24 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private LogicalGridTrack GetLogicalGridTrack(int gridExtent)
+        private LogicalMainTrack GetLogicalMainTrack(int gridExtent)
         {
             Debug.Assert(gridExtent >= 0);
 
             if (gridExtent >= MaxGridExtentMain)
-                return LogicalGridTrack.Eof;
+                return LogicalMainTrack.Eof;
 
             if (gridExtent < MaxFrozenHeadMain)
-                return new LogicalGridTrack(GridTracksMain[gridExtent]);
+                return new LogicalMainTrack(GridTracksMain[gridExtent]);
 
             gridExtent -= MaxFrozenHeadMain;
             var totalContainerGridTracks = TotalContainerGridTracksMain;
             if (gridExtent < totalContainerGridTracks)
-                return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
+                return new LogicalMainTrack(GridTracksMain[MaxFrozenHeadMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
 
             gridExtent -= totalContainerGridTracks;
             Debug.Assert(gridExtent < MaxFrozenTailMain);
-            return new LogicalGridTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridExtent]);
+            return new LogicalMainTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridExtent]);
         }
     }
 }

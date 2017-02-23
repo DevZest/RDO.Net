@@ -9,9 +9,9 @@ namespace DevZest.Data.Windows.Primitives
 
         internal abstract ElementManager ElementManager { get; }
 
-        internal LayoutScrollableManager LayoutXYManager
+        internal ScrollableManager ScrollableManager
         {
-            get { return ElementManager as LayoutScrollableManager; }
+            get { return ElementManager as ScrollableManager; }
         }
 
         internal abstract void Setup(ElementManager elementManager, int containerOrdinal);

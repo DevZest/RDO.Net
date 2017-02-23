@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
-    partial class LayoutScrollableManager
+    partial class ScrollableManager
     {
         private struct LogicalExtent
         {
@@ -40,10 +40,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             var gridExtent = logicalExtent.GridExtent;
             if (gridExtent >= MaxGridExtentMain)
-                return GetLogicalGridTrack(MaxGridExtentMain - 1).Span.End;
+                return GetLogicalMainTrack(MaxGridExtentMain - 1).Span.End;
             else
             {
-                var span = GetLogicalGridTrack(gridExtent).Span;
+                var span = GetLogicalMainTrack(gridExtent).Span;
                 return span.Start + span.Length * logicalExtent.Fraction;
             }
         }
@@ -61,7 +61,7 @@ namespace DevZest.Data.Windows.Primitives
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                var span = GetLogicalGridTrack(mid).Span;
+                var span = GetLogicalMainTrack(mid).Span;
                 if (extent < span.Start - Epsilon)
                     max = mid - 1;
                 else if (extent >= span.End)
