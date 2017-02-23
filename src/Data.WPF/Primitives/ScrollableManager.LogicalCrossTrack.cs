@@ -15,8 +15,7 @@ namespace DevZest.Data.Windows.Primitives
             public LogicalCrossTrack(GridTrack gridTrack, int flowIndex = 0)
             {
                 Debug.Assert(gridTrack != null && flowIndex >= 0);
-                //if (!gridTrack.IsRepeat && flowIndex > 0)
-                //    flowIndex = 0;
+                Debug.Assert(gridTrack.IsRepeat || flowIndex == 0);
                 GridTrack = gridTrack;
                 FlowIndex = flowIndex;
             }
@@ -136,12 +135,16 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartLocationCross(GridTrack gridTrack, int flowIndex)
         {
-            return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
+            if (gridTrack.IsRepeat || flowIndex == 0)
+                return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
+            else
+                return new LogicalCrossTrack(gridTrack, 0).StartLocation + flowIndex * FlowLength;
+
         }
 
         private double GetEndLocationCross(GridTrack gridTrack, int flowIndex)
         {
-            return new LogicalCrossTrack(gridTrack, flowIndex).EndLocation;
+            return GetStartLocationCross(gridTrack, flowIndex) + gridTrack.MeasuredLength;
         }
 
         private double GetStartLocationCross(GridRange gridRange, int flowIndex)

@@ -886,8 +886,10 @@ namespace DevZest.Data.Windows.Primitives
         {
             get
             {
-                foreach (var gridLine in Template.GridLines)
+                var gridLines = Template.GridLines;
+                for (int i = 0; i < gridLines.Count; i++)
                 {
+                    var gridLine = gridLines[i];
                     foreach (var lineFigure in GetLineFigures(gridLine))
                         yield return new GridLineFigure(gridLine, lineFigure);
                 }
