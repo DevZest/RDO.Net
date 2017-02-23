@@ -78,22 +78,22 @@ namespace DevZest.Data.Windows.Primitives
                 get { return ScrollableManager.FlowLength; }
             }
 
-            //private double StartExtent
-            //{
-            //    get
-            //    {
-            //        Debug.Assert(!IsEof);
+            private double StartExtent
+            {
+                get
+                {
+                    Debug.Assert(!IsEof);
 
-            //        var result = GridTrack.StartOffset;
+                    var result = GridTrack.StartOffset;
 
-            //        if (GridTrack.IsTail && FlowCount > 1)
-            //            result += (FlowCount - 1) * FlowLength;
-            //        else if (GridTrack.IsRepeat && FlowIndex > 0)
-            //            result += FlowIndex * FlowLength;
+                    if (GridTrack.IsTail && FlowCount > 1)
+                        result += (FlowCount - 1) * FlowLength;
+                    else if (GridTrack.IsRepeat && FlowIndex > 0)
+                        result += FlowIndex * FlowLength;
 
-            //        return result;
-            //    }
-            //}
+                    return result;
+                }
+            }
 
             public double Length
             {
@@ -106,15 +106,12 @@ namespace DevZest.Data.Windows.Primitives
                 {
                     Debug.Assert(!IsEof);
 
-                    var result = GridTrack.StartOffset;
+                    var result = StartExtent;
 
                     if (FlowIndex == 0 && GridTrack.IsFrozenHead)
                         return result;
 
                     result -= ScrollableManager.ScrollOffsetCross;
-                    if (FlowIndex > 0)
-                        result += FlowIndex * FlowLength;
-
 
                     if (FlowIndex == FlowCount - 1 && GridTrack.IsFrozenTail)
                     {
@@ -135,11 +132,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double GetStartLocationCross(GridTrack gridTrack, int flowIndex)
         {
-            if (gridTrack.IsRepeat || flowIndex == 0)
-                return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
-            else
-                return new LogicalCrossTrack(gridTrack, 0).StartLocation + flowIndex * FlowLength;
-
+            return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
         }
 
         private double GetEndLocationCross(GridTrack gridTrack, int flowIndex)
