@@ -675,61 +675,6 @@ namespace DevZest.Data.Windows.Primitives
             return GetClipCross(startLocation, endLocation, scalarBinding, new Clip());
         }
 
-        private double GetStartLocationCross(GridRange gridRange, int flowIndex)
-        {
-            var gridTrack = GridTracksCross.GetGridSpan(gridRange).StartTrack;
-            return GetStartLocationCross(gridTrack, flowIndex);
-        }
-
-        private double GetStartLocationCross(GridTrack gridTrack, int flowIndex)
-        {
-            Debug.Assert(gridTrack.Owner == GridTracksCross);
-            var result = gridTrack.StartOffset;
-
-            if (flowIndex == 0 && gridTrack.IsFrozenHead)
-                return result;
-
-            result -= ScrollOffsetCross;
-            if (flowIndex > 0)
-                result += flowIndex * FlowLength;
-
-            if (flowIndex == FlowCount - 1 && gridTrack.IsFrozenTail)
-            {
-                double maxValueCross = ViewportCross - (GridTracksCross.LastOf().EndOffset - gridTrack.StartOffset);
-                if (result > maxValueCross)
-                    result = maxValueCross;
-            }
-
-            return result;
-        }
-
-        private double GetEndLocationCross(GridRange gridRange, int flowIndex)
-        {
-            var gridTrack = GridTracksCross.GetGridSpan(gridRange).EndTrack;
-            return GetEndLocationCross(gridTrack, flowIndex);
-        }
-
-        private double GetEndLocationCross(GridTrack gridTrack, int flowIndex)
-        {
-            var result = gridTrack.EndOffset;
-
-            if (flowIndex == 0 && gridTrack.IsFrozenHead)
-                return result;
-
-            result -= ScrollOffsetCross;
-            if (flowIndex > 0)
-                result += flowIndex * FlowLength;
-
-            if (flowIndex == FlowCount - 1 && gridTrack.IsFrozenTail)
-            {
-                double maxValueCross = ViewportCross - (GridTracksCross.LastOf().EndOffset - gridTrack.EndOffset);
-                if (result > maxValueCross)
-                    result = maxValueCross;
-            }
-
-            return result;
-        }
-
         private double GetMeasuredLengthMain(ContainerView containerView, GridRange gridRange)
         {
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
@@ -884,20 +829,6 @@ namespace DevZest.Data.Windows.Primitives
             var startLocation = GetStartLocationCross(flowIndex);
             var endLocation = GetEndLocationCross(flowIndex);
             return GetClipCross(startLocation, endLocation, Template.RowRange, GetContainerClipCross(), flowIndex);
-        }
-
-        private double GetStartLocationCross(int flowIndex)
-        {
-            var rowRange = Template.RowRange;
-            var result = GetStartLocationCross(rowRange, flowIndex);
-            if (flowIndex == FlowCount - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
-                result = Math.Min(ViewportCross - FrozenTailLengthCross, result);
-            return result;
-        }
-
-        private double GetEndLocationCross(int flowIndex)
-        {
-            return GetEndLocationCross(Template.RowRange, flowIndex);
         }
 
         protected override Point GetLocation(RowView rowView, RowBinding rowBinding)
