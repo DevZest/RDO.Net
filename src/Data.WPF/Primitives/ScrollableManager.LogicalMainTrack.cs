@@ -77,6 +77,21 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
+            public double Length
+            {
+                get { return ExtentSpan.Length; }
+            }
+
+            public double StartExtent
+            {
+                get { return ExtentSpan.Start; }
+            }
+
+            public double EndExtent
+            {
+                get { return ExtentSpan.End; }
+            }
+
             public double StartLocation
             {
                 get

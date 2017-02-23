@@ -173,7 +173,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double MaxExtentMain
         {
-            get { return GetLogicalMainTrack(MaxGridExtentMain - 1).ExtentSpan.End; }
+            get { return GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent; }
         }
 
         private double MaxExtentCross
@@ -227,7 +227,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailStartOffset
         {
-            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).ExtentSpan.Start; }
+            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).StartExtent; }
         }
 
         private double FrozenHeadLengthMain
@@ -272,7 +272,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailLengthMain
         {
-            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).ExtentSpan.Start; }
+            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).StartExtent; }
         }
 
         private double GapToFill
@@ -284,7 +284,7 @@ namespace DevZest.Data.Windows.Primitives
                     return availableLength;
 
                 var scrollable = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
-                var endOffset = ContainerViewList.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndOffset(ContainerViewList[ContainerViewList.Count - 1]);
+                var endOffset = ContainerViewList.Count == 0 ? GridTracksMain[MaxFrozenHeadMain].StartOffset : GetEndExtent(ContainerViewList[ContainerViewList.Count - 1]);
                 return scrollable - (endOffset - ScrollStartMain);
             }
         }
@@ -354,7 +354,7 @@ namespace DevZest.Data.Windows.Primitives
                 return;
 
             var containerView = ContainerViewList[0];
-            var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartOffset(containerView));
+            var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartExtent(containerView));
             if (scrollLength > 0)
             {
                 AdjustScrollStartMain(-scrollLength);
@@ -544,7 +544,7 @@ namespace DevZest.Data.Windows.Primitives
             var gridRange = scalarBinding.GridRange;
             var startGridOffset = GetStartLogicalMainTrack(gridRange);
             var endGridOffset = GetEndLogicalMainTrack(gridRange);
-            return startGridOffset == endGridOffset ? startGridOffset.ExtentSpan.Length : endGridOffset.ExtentSpan.End - startGridOffset.ExtentSpan.Start;
+            return startGridOffset == endGridOffset ? startGridOffset.Length : endGridOffset.EndExtent - startGridOffset.StartExtent;
         }
 
         protected override Point GetLocation(ScalarBinding scalarBinding, int flowIndex)
@@ -735,8 +735,8 @@ namespace DevZest.Data.Windows.Primitives
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
             var startTrack = gridSpan.StartTrack;
             var endTrack = gridSpan.EndTrack;
-            return startTrack == endTrack ? new LogicalMainTrack(startTrack, containerView).ExtentSpan.Length
-                : new LogicalMainTrack(endTrack, containerView).ExtentSpan.End - new LogicalMainTrack(startTrack, containerView).ExtentSpan.Start;
+            return startTrack == endTrack ? new LogicalMainTrack(startTrack, containerView).Length
+                : new LogicalMainTrack(endTrack, containerView).EndExtent - new LogicalMainTrack(startTrack, containerView).StartExtent;
         }
 
         protected override Point GetLocation(ContainerView containerView)
@@ -800,14 +800,14 @@ namespace DevZest.Data.Windows.Primitives
             return GetClipCross(startLocation, endLocation, Template.BlockRange, new Clip());
         }
 
-        private double GetStartOffset(ContainerView containerView)
+        private double GetStartExtent(ContainerView containerView)
         {
-            return new LogicalMainTrack(GridTracksMain.ContainerStart, containerView).ExtentSpan.Start;
+            return new LogicalMainTrack(GridTracksMain.ContainerStart, containerView).StartExtent;
         }
 
-        private double GetEndOffset(ContainerView containerView)
+        private double GetEndExtent(ContainerView containerView)
         {
-            return new LogicalMainTrack(GridTracksMain.ContainerEnd, containerView).ExtentSpan.End;
+            return new LogicalMainTrack(GridTracksMain.ContainerEnd, containerView).EndExtent;
         }
 
         protected override Point GetLocation(BlockView blockView, BlockBinding blockBinding)
@@ -1261,12 +1261,12 @@ namespace DevZest.Data.Windows.Primitives
             if (startGridOffset.GridTrack.IsFrozenHead || endGridOffset.GridTrack.IsFrozenTail)
                 return 0;
 
-            var start = startGridOffset.ExtentSpan.Start;
+            var startExtent = startGridOffset.StartExtent;
             var scrollStartMain = ScrollStartMain;
-            if (start < scrollStartMain)
-                return start - scrollStartMain;
+            if (startExtent < scrollStartMain)
+                return startExtent - scrollStartMain;
 
-            var end = endGridOffset.ExtentSpan.End - ScrollOffsetMain;
+            var end = endGridOffset.EndExtent - ScrollOffsetMain;
             var scrollEnd = ViewportMain - FrozenTailLengthMain;
             if (end > scrollEnd)
                 return end - scrollEnd;
