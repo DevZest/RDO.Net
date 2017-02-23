@@ -804,16 +804,25 @@ namespace DevZest.Data.Windows.Primitives
             return GetClipCross(startLocation, endLocation, blockBinding, GetContainerClipCross());
         }
 
+        private double GetRowViewStartLocationCross(int flowIndex)
+        {
+            var rowRange = Template.RowRange;
+            var result = GetStartLocationCross(rowRange, flowIndex);
+            if (flowIndex == FlowCount - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
+                result = Math.Min(ViewportCross - FrozenTailLengthCross, result);
+            return result;
+        }
+
         protected override Point GetLocation(BlockView blockView, int flowIndex)
         {
-            var valueCross = GetStartLocationCross(flowIndex) - GetContainerStartLocationCross();
+            var valueCross = GetRowViewStartLocationCross(flowIndex) - GetContainerStartLocationCross();
             return ToPoint(0, valueCross);
         }
 
         protected override Size GetSize(BlockView blockView, int flowIndex)
         {
             var valueMain = GetMeasuredLengthMain(blockView, Template.RowRange);
-            var valueCross = GetEndLocationCross(flowIndex) - GetStartLocationCross(flowIndex);
+            var valueCross = GetEndLocationCross(Template.RowRange, flowIndex) - GetRowViewStartLocationCross(flowIndex);
             return ToSize(valueMain, valueCross);
         }
 
@@ -826,15 +835,15 @@ namespace DevZest.Data.Windows.Primitives
 
         private Clip GetClipCross(int flowIndex)
         {
-            var startLocation = GetStartLocationCross(flowIndex);
-            var endLocation = GetEndLocationCross(flowIndex);
+            var startLocation = GetRowViewStartLocationCross(flowIndex);
+            var endLocation = GetEndLocationCross(Template.RowRange, flowIndex);
             return GetClipCross(startLocation, endLocation, Template.RowRange, GetContainerClipCross(), flowIndex);
         }
 
         protected override Point GetLocation(RowView rowView, RowBinding rowBinding)
         {
             var valueMain = GetStartLocationMain(rowView, rowBinding);
-            var valueCross = GetStartLocationCross(rowView, rowBinding) - GetStartLocationCross(rowView.FlowIndex);
+            var valueCross = GetStartLocationCross(rowView, rowBinding) - GetRowViewStartLocationCross(rowView.FlowIndex);
             return ToPoint(valueMain, valueCross);
         }
 

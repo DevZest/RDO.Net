@@ -151,19 +151,5 @@ namespace DevZest.Data.Windows.Primitives
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).EndTrack;
             return new LogicalCrossTrack(gridTrack, flowIndex).EndLocation;
         }
-
-        private double GetStartLocationCross(int flowIndex)
-        {
-            var rowRange = Template.RowRange;
-            var result = GetStartLocationCross(rowRange, flowIndex);
-            if (flowIndex == FlowCount - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
-                result = Math.Min(ViewportCross - FrozenTailLengthCross, result);
-            return result;
-        }
-
-        private double GetEndLocationCross(int flowIndex)
-        {
-            return GetEndLocationCross(Template.RowRange, flowIndex);
-        }
     }
 }
