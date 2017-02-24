@@ -244,14 +244,16 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null,
+            GridPointPlacement placement = GridPointPlacement.Both)
         {
-            return GridLine(Orientation.Horizontal, startGridPoint, length, pen, position);
+            return GridLine(Orientation.Horizontal, startGridPoint, length, pen, placement);
         }
 
-        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null, GridLinePosition position = GridLinePosition.Both)
+        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null,
+            GridPointPlacement placement = GridPointPlacement.Both)
         {
-            return GridLine(Orientation.Vertical, startGridPoint, length, pen, position);
+            return GridLine(Orientation.Vertical, startGridPoint, length, pen, placement);
         }
 
         private static readonly Pen DefaultGridLinePen = GetDefaultGridLinePen();
@@ -262,7 +264,8 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen, GridLinePosition position = GridLinePosition.Both)
+        private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen,
+            GridPointPlacement placement = GridPointPlacement.Both)
         {
             IReadOnlyList<GridTrack> gridTracks;
             if (orientation == Orientation.Horizontal)
@@ -294,7 +297,7 @@ namespace DevZest.Data.Windows
                     throw new ArgumentOutOfRangeException(nameof(length));
             }
 
-            var gridLine = new GridLine(startGridPoint, new GridPoint(endGridOffsetX, endGridOffsetY), pen, position);
+            var gridLine = new GridLine(startGridPoint, new GridPoint(endGridOffsetX, endGridOffsetY), pen, placement);
             Template.AddGridLine(gridLine);
             return this;
         }

@@ -53,14 +53,14 @@ namespace DevZest.Data.Windows.Primitives
             set { ScrollOffsetCross = value; }
         }
 
-        protected override IEnumerable<LineFigure> GetLineFiguresX(int startGridOrdinalX, int endGridOrdinalX, GridLinePosition position, int gridOrdinalY)
+        protected override IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPointPlacement placement, int gridPointY)
         {
-            return GetLineFiguresMain(startGridOrdinalX, endGridOrdinalX, position, gridOrdinalY);
+            return GetLineFiguresMain(startGridPointX, endGridPointX, placement, gridPointY);
         }
 
-        protected override IEnumerable<LineFigure> GetLineFiguresY(int startGridOrdinalY, int endGridOrdinalY, GridLinePosition position, int gridOrdinalX)
+        protected override IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPointPlacement placement, int gridPointX)
         {
-            return GetLineFiguresCross(startGridOrdinalY, endGridOrdinalY, position, gridOrdinalX);
+            return GetLineFiguresCross(startGridPointY, endGridPointY, placement, gridPointX);
         }
     }
 }

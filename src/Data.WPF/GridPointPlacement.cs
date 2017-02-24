@@ -3,7 +3,7 @@
 namespace DevZest.Data.Windows
 {
     [Flags]
-    public enum GridLinePosition
+    public enum GridPointPlacement
     {
         PreviousTrack = 0x1,
         NextTrack = 0x2,

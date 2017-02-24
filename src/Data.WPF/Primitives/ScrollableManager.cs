@@ -908,35 +908,35 @@ namespace DevZest.Data.Windows.Primitives
         private IEnumerable<LineFigure> GetLineFigures(GridLine gridLine)
         {
             return gridLine.Orientation == Orientation.Horizontal
-                ? GetLineFiguresX(gridLine.StartGridPoint.X, gridLine.EndGridPoint.X, gridLine.Position, gridLine.StartGridPoint.Y)
-                : GetLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Position, gridLine.StartGridPoint.X);
+                ? GetLineFiguresX(gridLine.StartGridPoint.X, gridLine.EndGridPoint.X, gridLine.Placement, gridLine.StartGridPoint.Y)
+                : GetLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Placement, gridLine.StartGridPoint.X);
         }
 
-        protected abstract IEnumerable<LineFigure> GetLineFiguresX(int startGridOrdinalX, int endGridOrdinalX, GridLinePosition position, int gridOrdinalY);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPointPlacement placement, int gridPointY);
 
-        protected abstract IEnumerable<LineFigure> GetLineFiguresY(int startGridOrdinalY, int endGridOrdinalY, GridLinePosition position, int gridOrdinalX);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPointPlacement placement, int gridPointX);
 
-        private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridLinePosition position)
+        private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPointPlacement placement)
         {
-            if ((position & GridLinePosition.PreviousTrack) != GridLinePosition.PreviousTrack)
+            if ((placement & GridPointPlacement.PreviousTrack) != GridPointPlacement.PreviousTrack)
                 return null;
             return gridPoint == 0 ? null : gridTracks[gridPoint - 1];
         }
 
-        private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridLinePosition position)
+        private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPointPlacement placement)
         {
-            if ((position & GridLinePosition.NextTrack) != GridLinePosition.NextTrack)
+            if ((placement & GridPointPlacement.NextTrack) != GridPointPlacement.NextTrack)
                 return null;
             return gridPoint == gridTracks.Count ? null : gridTracks[gridPoint];
         }
 
-        protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridPointMain, int endGridPointMain, GridLinePosition position, int gridPointCross)
+        protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridPointMain, int endGridPointMain, GridPointPlacement placement, int gridPointCross)
         {
             var spansMain = GetLineFigureSpansMain(startGridPointMain, endGridPointMain);
             if (spansMain == null)
                 yield break;
 
-            foreach (var locationCross in GetLineFigureLocationsCross(gridPointCross, position))
+            foreach (var locationCross in GetLineFigureLocationsCross(gridPointCross, placement))
             {
                 foreach (var spanMain in spansMain)
                     yield return new LineFigure(ToPoint(spanMain.Start, locationCross), ToPoint(spanMain.End, locationCross));
@@ -980,9 +980,9 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private double GetPrevTrackEndLocationMain(int gridOrdinal)
+        private double GetPrevTrackEndLocationMain(int gridPoint)
         {
-            var prevTrack = GridTracksMain[gridOrdinal - 1];
+            var prevTrack = GridTracksMain[gridPoint - 1];
             if (!prevTrack.IsRepeat)
                 return new LogicalMainTrack(prevTrack).EndLocation;
 
@@ -993,11 +993,11 @@ namespace DevZest.Data.Windows.Primitives
             return prevTrack == null ? -ScrollOffsetMain : new LogicalMainTrack(prevTrack).EndLocation;
         }
 
-        private static void AnalyzeLineFigureLocation(IGridTrackCollection gridTracks, int gridPoint, GridLinePosition position,
+        private static void AnalyzeLineFigureLocation(IGridTrackCollection gridTracks, int gridPoint, GridPointPlacement placement,
             out GridTrack prevGridTrack, out GridTrack nextGridTrack, out bool isHead, out bool isRepeat, out bool isTail)
         {
-            prevGridTrack = GetPrevGridTrack(gridTracks, gridPoint, position);
-            nextGridTrack = GetNextGridTrack(gridTracks, gridPoint, position);
+            prevGridTrack = GetPrevGridTrack(gridTracks, gridPoint, placement);
+            nextGridTrack = GetNextGridTrack(gridTracks, gridPoint, placement);
 
             var containerStart = gridTracks.ContainerStart.Ordinal;
             var containerEnd = gridTracks.ContainerEnd.Ordinal + 1;
@@ -1022,11 +1022,11 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private IEnumerable<double> GetLineFigureLocationsCross(int gridPointCross, GridLinePosition position)
+        private IEnumerable<double> GetLineFigureLocationsCross(int gridPointCross, GridPointPlacement placement)
         {
             GridTrack prevGridTrack, nextGridTrack;
             bool isHead, isRepeat, isTail;
-            AnalyzeLineFigureLocation(GridTracksCross, gridPointCross, position, out prevGridTrack, out nextGridTrack, out isHead, out isRepeat, out isTail);
+            AnalyzeLineFigureLocation(GridTracksCross, gridPointCross, placement, out prevGridTrack, out nextGridTrack, out isHead, out isRepeat, out isTail);
 
             GridTrack gridTrack;
             if (isHead)
@@ -1102,20 +1102,20 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridOffsetCross, int endGridOffsetCross, GridLinePosition position, int gridOffsetMain)
+        protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridPointCross, int endGridPointCross, GridPointPlacement placement, int gridPointMain)
         {
-            var spanCross = GetLineFigureSpanCross(startGridOffsetCross, endGridOffsetCross);
+            var spanCross = GetLineFigureSpanCross(startGridPointCross, endGridPointCross);
             if (spanCross.Length <= 0)
                 yield break;
 
-            foreach (var locationMain in GetLineFigureLocationsMain(gridOffsetMain, position))
+            foreach (var locationMain in GetLineFigureLocationsMain(gridPointMain, placement))
                 yield return new LineFigure(ToPoint(locationMain, spanCross.Start), ToPoint(locationMain, spanCross.End));
         }
 
-        private Span GetLineFigureSpanCross(int startGridOffsetCross, int endGridOffsetCross)
+        private Span GetLineFigureSpanCross(int startGridPointCross, int endGridPointCross)
         {
-            var startTrackCross = GridTracksCross[startGridOffsetCross];
-            var endTrackCross = GridTracksCross[endGridOffsetCross - 1];
+            var startTrackCross = GridTracksCross[startGridPointCross];
+            var endTrackCross = GridTracksCross[endGridPointCross - 1];
             var startLocationCross = GetStartLocationCross(startTrackCross, 0);
             var endLocationCross = GetEndLocationCross(endTrackCross, endTrackCross.IsRepeat ? FlowCount - 1 : 0);
             if (endLocationCross <= startLocationCross)
@@ -1132,11 +1132,11 @@ namespace DevZest.Data.Windows.Primitives
             return new Span(startLocationCross, endLocationCross);
         }
 
-        private IEnumerable<double> GetLineFigureLocationsMain(int gridOrdinalMain, GridLinePosition position)
+        private IEnumerable<double> GetLineFigureLocationsMain(int gridOrdinalMain, GridPointPlacement placement)
         {
             GridTrack prevGridTrack, nextGridTrack;
             bool isHead, isRepeat, isTail;
-            AnalyzeLineFigureLocation(GridTracksMain, gridOrdinalMain, position, out prevGridTrack, out nextGridTrack, out isHead, out isRepeat, out isTail);
+            AnalyzeLineFigureLocation(GridTracksMain, gridOrdinalMain, placement, out prevGridTrack, out nextGridTrack, out isHead, out isRepeat, out isTail);
             bool isStretch = gridOrdinalMain == MinStretchGridOrdinal && StretchGap.HasValue;
 
             GridTrack gridTrack;

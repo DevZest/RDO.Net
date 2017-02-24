@@ -92,7 +92,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Primitives\CurrentContainerViewPlacement.cs" />
     <Compile Include="Primitives\GridLine.cs" />
-    <Compile Include="GridLinePosition.cs" />
+    <Compile Include="GridPointPlacement.cs" />
     <Compile Include="Primitives\BlockViewPanel.cs" />
     <Compile Include="Primitives\BlockBinding.cs" />
     <Compile Include="Primitives\Clip.cs" />
