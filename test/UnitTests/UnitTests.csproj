@@ -94,6 +94,7 @@
     <Compile Include="DataSetMock.cs" />
     <Compile Include="Primitives\ElementManagerTests.cs" />
     <Compile Include="Primitives\InputManagerTests.cs" />
+    <Compile Include="Primitives\IScrollableTests.cs" />
     <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
     <Compile Include="Primitives\ScrollableManagerTests.cs" />
     <Compile Include="Primitives\LayoutZManagerTests.cs" />

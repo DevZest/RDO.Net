@@ -137,7 +137,7 @@ namespace DevZest.Data.Windows.Primitives
             get
             {
                 return HeadTracksCountCross + TailTracksCountCross
-                  + FlowCount * RepeatTracksCountCross + (ContainerTracksCountCross - RepeatTracksCountCross);
+                  + FlowCount * RowTracksCountCross + (ContainerTracksCountCross - RowTracksCountCross);
             }
         }
 
@@ -184,7 +184,7 @@ namespace DevZest.Data.Windows.Primitives
         public double GetPositionY(int gridExtentY, GridPointPlacement placement)
         {
             VerifyGridExtent(gridExtentY, nameof(gridExtentY), placement, nameof(placement), MaxGridExtentY);
-            return GetPositionXCore(gridExtentY, placement);
+            return GetPositionYCore(gridExtentY, placement);
         }
 
         protected abstract double GetPositionYCore(int gridExtentY, GridPointPlacement placement);

@@ -155,9 +155,9 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksCross.ContainerTracksCount; }
         }
 
-        private int RepeatTracksCountCross
+        private int RowTracksCountCross
         {
-            get { throw new NotImplementedException(); }
+            get { return GridTracksCross.RowTracksCount; }
         }
 
         private int TailTracksCountCross

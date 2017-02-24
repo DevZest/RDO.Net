@@ -435,8 +435,11 @@ namespace DevZest.Data.Windows.Primitives
 
         internal int CoerceFlowCount()
         {
-            if (!Orientation.HasValue)
+            if (!Orientation.HasValue || FlowCount == 1)
                 return 1;
+
+            if (FlowCount != 0)
+                return FlowCount;
 
             return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Horizontal
                 ? CoerceFlowCount(SizeToContentX, AvailableWidth, InternalGridColumns)
