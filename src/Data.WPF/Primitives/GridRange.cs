@@ -105,7 +105,7 @@ namespace DevZest.Data.Windows.Primitives
             return Template.InternalGridRows.Filter(this, predict, action);
         }
 
-        internal Point MeasuredLocation
+        internal Point MeasuredPosition
         {
             get { return new Point(Left == null ? 0 : Left.StartOffset, Top == null ? 0 : Top.StartOffset); }
         }
@@ -170,13 +170,13 @@ namespace DevZest.Data.Windows.Primitives
             get { return new GridSpan<GridRow>(Top, Bottom); }
         }
 
-        internal Point GetLocation(GridRange innerGridRange)
+        internal Point GetRelativePosition(GridRange innerGridRange)
         {
             Debug.Assert(Contains(innerGridRange));
 
-            var originPoint = MeasuredLocation;
-            var point = innerGridRange.MeasuredLocation;
-            return new Point(point.X - originPoint.X, point.Y - originPoint.Y);
+            var originPosition = MeasuredPosition;
+            var position = innerGridRange.MeasuredPosition;
+            return new Point(position.X - originPosition.X, position.Y - originPosition.Y);
         }
     }
 }

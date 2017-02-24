@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -100,7 +99,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack.MeasuredLength; }
             }
 
-            public double StartLocation
+            public double StartPosition
             {
                 get
                 {
@@ -124,32 +123,32 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            public double EndLocation
+            public double EndPosition
             {
-                get { return StartLocation + Length; }
+                get { return StartPosition + Length; }
             }
         }
 
-        private double GetStartLocationCross(GridTrack gridTrack, int flowIndex)
+        private double GetStartPositionCross(GridTrack gridTrack, int flowIndex)
         {
-            return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
+            return new LogicalCrossTrack(gridTrack, flowIndex).StartPosition;
         }
 
-        private double GetEndLocationCross(GridTrack gridTrack, int flowIndex)
+        private double GetEndPositionCross(GridTrack gridTrack, int flowIndex)
         {
-            return GetStartLocationCross(gridTrack, flowIndex) + gridTrack.MeasuredLength;
+            return GetStartPositionCross(gridTrack, flowIndex) + gridTrack.MeasuredLength;
         }
 
-        private double GetStartLocationCross(GridRange gridRange, int flowIndex)
+        private double GetStartPositionCross(GridRange gridRange, int flowIndex)
         {
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).StartTrack;
-            return new LogicalCrossTrack(gridTrack, flowIndex).StartLocation;
+            return new LogicalCrossTrack(gridTrack, flowIndex).StartPosition;
         }
 
-        private double GetEndLocationCross(GridRange gridRange, int flowIndex)
+        private double GetEndPositionCross(GridRange gridRange, int flowIndex)
         {
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).EndTrack;
-            return new LogicalCrossTrack(gridTrack, flowIndex).EndLocation;
+            return new LogicalCrossTrack(gridTrack, flowIndex).EndPosition;
         }
     }
 }

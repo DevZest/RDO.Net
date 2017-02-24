@@ -699,7 +699,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         [TestMethod]
-        public void ScrollableManager_GetLineFiguresMain_Locations()
+        public void ScrollableManager_GetLineFiguresMain_Positions()
         {
             var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;

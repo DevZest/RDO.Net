@@ -18,10 +18,10 @@ namespace DevZest.Data.Windows.Primitives
                 CurrentContainerView.Measure(Size.Empty);  // Available size is ignored when preparing blocks
         }
 
-        protected override Point GetLocation(ScalarBinding scalarBinding, int flowIndex)
+        protected override Point GetPosition(ScalarBinding scalarBinding, int flowIndex)
         {
             Debug.Assert(flowIndex == 0);
-            return scalarBinding.GridRange.MeasuredLocation;
+            return scalarBinding.GridRange.MeasuredPosition;
         }
 
         protected override Size GetSize(ScalarBinding scalarBinding)
@@ -34,9 +34,9 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(ContainerView containerView)
+        protected override Point GetPosition(ContainerView containerView)
         {
-            return Template.Range().GetLocation(Template.BlockRange);
+            return Template.Range().GetRelativePosition(Template.BlockRange);
         }
 
         protected override Size GetSize(ContainerView containerView)
@@ -49,9 +49,9 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(BlockView blockView, BlockBinding blockBinding)
+        protected override Point GetPosition(BlockView blockView, BlockBinding blockBinding)
         {
-            return Template.BlockRange.GetLocation(blockBinding.GridRange);
+            return Template.BlockRange.GetRelativePosition(blockBinding.GridRange);
         }
 
         protected override Size GetSize(BlockView blockView, BlockBinding blockBinding)
@@ -64,10 +64,10 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(BlockView blockView, int flowIndex)
+        protected override Point GetPosition(BlockView blockView, int flowIndex)
         {
             Debug.Assert(flowIndex == 0);
-            return Template.BlockRange.GetLocation(Template.RowRange);
+            return Template.BlockRange.GetRelativePosition(Template.RowRange);
         }
 
         protected override Size GetSize(BlockView blockView, int flowIndex)
@@ -80,9 +80,9 @@ namespace DevZest.Data.Windows.Primitives
             return new Thickness();
         }
 
-        protected override Point GetLocation(RowView rowView, RowBinding rowBinding)
+        protected override Point GetPosition(RowView rowView, RowBinding rowBinding)
         {
-            return Template.RowRange.GetLocation(rowBinding.GridRange);
+            return Template.RowRange.GetRelativePosition(rowBinding.GridRange);
         }
 
         protected override Size GetSize(RowView rowView, RowBinding rowBinding)

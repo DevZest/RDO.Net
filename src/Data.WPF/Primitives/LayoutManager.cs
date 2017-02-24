@@ -275,14 +275,14 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetRect(ScalarBinding scalarBinding, int flowIndex)
         {
-            var point = GetLocation(scalarBinding, flowIndex);
+            var point = GetPosition(scalarBinding, flowIndex);
             var size = GetSize(scalarBinding);
             return new Rect(point, size);
         }
 
         internal abstract Thickness GetClip(ScalarBinding scalarBinding, int flowIndex);
 
-        protected abstract Point GetLocation(ScalarBinding scalarBinding, int flowIndex);
+        protected abstract Point GetPosition(ScalarBinding scalarBinding, int flowIndex);
 
         internal Size Arrange(Size finalSize)
         {
@@ -315,12 +315,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetRect(ContainerView containerView)
         {
-            var offset = GetLocation(containerView);
+            var offset = GetPosition(containerView);
             var size = GetSize(containerView);
             return new Rect(offset, size);
         }
 
-        protected abstract Point GetLocation(ContainerView containerView);
+        protected abstract Point GetPosition(ContainerView containerView);
 
         internal abstract Thickness GetClip(ContainerView containerView);
 
@@ -342,12 +342,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetRect(BlockView blockView, BlockBinding blockBinding)
         {
-            var location = GetLocation(blockView, blockBinding);
+            var position = GetPosition(blockView, blockBinding);
             var size = GetSize(blockView, blockBinding);
-            return new Rect(location, size);
+            return new Rect(position, size);
         }
 
-        protected abstract Point GetLocation(BlockView blockView, BlockBinding blockBinding);
+        protected abstract Point GetPosition(BlockView blockView, BlockBinding blockBinding);
 
         protected abstract Size GetSize(BlockView blockView, BlockBinding blockBinding);
 
@@ -355,12 +355,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetRect(BlockView block, int flowIndex)
         {
-            var location = GetLocation(block, flowIndex);
+            var position = GetPosition(block, flowIndex);
             var size = GetSize(block, flowIndex);
-            return new Rect(location, size);
+            return new Rect(position, size);
         }
 
-        protected abstract Point GetLocation(BlockView block, int flowIndex);
+        protected abstract Point GetPosition(BlockView block, int flowIndex);
 
         protected abstract Size GetSize(BlockView blockView, int flowIndex);
 
@@ -387,12 +387,12 @@ namespace DevZest.Data.Windows.Primitives
 
         internal Rect GetRect(RowView rowView, RowBinding rowBinding)
         {
-            var location = GetLocation(rowView, rowBinding);
+            var position = GetPosition(rowView, rowBinding);
             var size = GetSize(rowView, rowBinding);
-            return new Rect(location, size);
+            return new Rect(position, size);
         }
 
-        protected abstract Point GetLocation(RowView rowView, RowBinding rowBinding);
+        protected abstract Point GetPosition(RowView rowView, RowBinding rowBinding);
 
         protected abstract Size GetSize(RowView rowView, RowBinding rowBinding);
 

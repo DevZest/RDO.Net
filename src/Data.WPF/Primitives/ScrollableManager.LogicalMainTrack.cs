@@ -92,7 +92,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return ExtentSpan.End; }
             }
 
-            public double StartLocation
+            public double StartPosition
             {
                 get
                 {
@@ -116,9 +116,9 @@ namespace DevZest.Data.Windows.Primitives
                 }
             }
 
-            public double EndLocation
+            public double EndPosition
             {
-                get { return StartLocation + ExtentSpan.Length; }
+                get { return StartPosition + ExtentSpan.Length; }
             }
 
             private Template Template
