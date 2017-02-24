@@ -184,25 +184,40 @@ namespace DevZest.Data.Windows.Primitives
                 gridTrack.MeasuredLength = totalLength * (gridTrack.Length.Value / totalStarFactor);
         }
 
-        private GridSpan<T> BlockSpan
+        private GridSpan<T> ContainerSpan
         {
-            get { return GetGridSpan(Template.BlockRange); }
+            get { return GetGridSpan(Template.ContainerRange); }
         }
 
-        public abstract int FrozenHead { get; }
+        private GridSpan<T> RowSpan
+        {
+            get { return GetGridSpan(Template.RowRange); }
+        }
+
+        public abstract int FrozenHeadTracksCount { get; }
 
         protected abstract string FrozenHeadName { get; }
 
-        public abstract int FrozenTail { get; }
+        public abstract int FrozenTailTracksCount { get; }
 
         protected abstract string FrozenTailName { get; }
 
-        public int MaxFrozenHead
+        public int HeadTracksCount
         {
             get { return ContainerStart.Ordinal; }
         }
 
-        public int MaxFrozenTail
+        public int ContainerTracksCount
+        {
+            get { return ContainerEnd.Ordinal - ContainerStart.Ordinal + 1; }
+        }
+
+        public int RowTracksCount
+        {
+            get { return RowEnd.Ordinal - RowStart.Ordinal + 1; }
+        }
+
+        public int TailTracksCount
         {
             get { return Count - 1 - ContainerEnd.Ordinal; }
         }
@@ -214,22 +229,32 @@ namespace DevZest.Data.Windows.Primitives
 
         internal void VerifyFrozenMargins()
         {
-            if (FrozenHead > MaxFrozenHead)
+            if (FrozenHeadTracksCount > HeadTracksCount)
                 throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenHeadName));
-            if (FrozenTail > MaxFrozenTail)
+            if (FrozenTailTracksCount > TailTracksCount)
                 throw new InvalidOperationException(Strings.Template_InvalidFrozenMargin(FrozenTailName));
-            if (Stretches > FrozenTail)
+            if (Stretches > FrozenTailTracksCount)
                 throw new InvalidOperationException(Strings.Template_InvalidStretches(FrozenTailName));
         }
 
         public GridTrack ContainerStart
         {
-            get { return BlockSpan.StartTrack; }
+            get { return ContainerSpan.StartTrack; }
         }
 
         public GridTrack ContainerEnd
         {
-            get { return BlockSpan.EndTrack; }
+            get { return ContainerSpan.EndTrack; }
+        }
+
+        public GridTrack RowStart
+        {
+            get { return RowSpan.StartTrack; }
+        }
+
+        public GridTrack RowEnd
+        {
+            get { return RowSpan.EndTrack; }
         }
 
         public abstract bool SizeToContent { get; }

@@ -31,12 +31,12 @@ namespace DevZest.Data.Windows.Primitives
             get { return Template.AvailableHeight; }
         }
 
-        public override int FrozenHead
+        public override int FrozenHeadTracksCount
         {
             get { return Template.FrozenTop; }
         }
 
-        public override int FrozenTail
+        public override int FrozenTailTracksCount
         {
             get { return Template.FrozenBottom; }
         }

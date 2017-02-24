@@ -118,7 +118,7 @@ namespace DevZest.Data.Windows.Primitives
             return result;
         }
 
-        public GridRange BlockRange
+        public GridRange ContainerRange
         {
             get { return RowRange.Union(InternalBlockBindings.Range); }
         }

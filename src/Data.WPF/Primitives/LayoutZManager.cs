@@ -36,12 +36,12 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetPosition(ContainerView containerView)
         {
-            return Template.Range().GetRelativePosition(Template.BlockRange);
+            return Template.Range().GetRelativePosition(Template.ContainerRange);
         }
 
         protected override Size GetSize(ContainerView containerView)
         {
-            return Template.BlockRange.MeasuredSize;
+            return Template.ContainerRange.MeasuredSize;
         }
 
         internal override Thickness GetClip(ContainerView containerView)
@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected override Point GetPosition(BlockView blockView, BlockBinding blockBinding)
         {
-            return Template.BlockRange.GetRelativePosition(blockBinding.GridRange);
+            return Template.ContainerRange.GetRelativePosition(blockBinding.GridRange);
         }
 
         protected override Size GetSize(BlockView blockView, BlockBinding blockBinding)
@@ -67,7 +67,7 @@ namespace DevZest.Data.Windows.Primitives
         protected override Point GetPosition(BlockView blockView, int flowIndex)
         {
             Debug.Assert(flowIndex == 0);
-            return Template.BlockRange.GetRelativePosition(Template.RowRange);
+            return Template.ContainerRange.GetRelativePosition(Template.RowRange);
         }
 
         protected override Size GetSize(BlockView blockView, int flowIndex)

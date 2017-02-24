@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows.Primitives
             public LogicalCrossTrack(GridTrack gridTrack, int flowIndex = 0)
             {
                 Debug.Assert(gridTrack != null && flowIndex >= 0);
-                Debug.Assert(gridTrack.IsRepeat || flowIndex == 0);
+                Debug.Assert(gridTrack.IsContainer || flowIndex == 0);
                 GridTrack = gridTrack;
                 FlowIndex = flowIndex;
             }
@@ -29,7 +29,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public bool IsRepeat
             {
-                get { return GridTrack != null && GridTrack.IsRepeat; }
+                get { return GridTrack != null && GridTrack.IsContainer; }
             }
 
             public static bool operator ==(LogicalCrossTrack x, LogicalCrossTrack y)
@@ -87,7 +87,7 @@ namespace DevZest.Data.Windows.Primitives
 
                     if (GridTrack.IsTail && FlowCount > 1)
                         result += (FlowCount - 1) * FlowLength;
-                    else if (GridTrack.IsRepeat && FlowIndex > 0)
+                    else if (GridTrack.IsContainer && FlowIndex > 0)
                         result += FlowIndex * FlowLength;
 
                     return result;

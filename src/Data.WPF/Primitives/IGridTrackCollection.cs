@@ -12,12 +12,16 @@ namespace DevZest.Data.Windows.Primitives
         void InvalidateOffset();
         void RefreshOffset();
         Vector ToVector(double valueMain, double valueCross);
-        int FrozenHead { get; }
-        int FrozenTail { get; }
+        int FrozenHeadTracksCount { get; }
+        int FrozenTailTracksCount { get; }
         GridTrack ContainerStart { get; }
         GridTrack ContainerEnd { get; }
-        int MaxFrozenHead { get; }
-        int MaxFrozenTail { get; }
+        GridTrack RowStart { get; }
+        GridTrack RowEnd { get; }
+        int HeadTracksCount { get; }
+        int ContainerTracksCount { get; }
+        int RowTracksCount { get; }
+        int TailTracksCount { get; }
         bool SizeToContent { get; }
         double AvailableLength { get; }
         double GetMeasuredLength(GridRange gridRange);

@@ -169,9 +169,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return Ordinal < Owner.ContainerStart.Ordinal; }
         }
 
-        internal bool IsRepeat
+        internal bool IsContainer
         {
             get { return Ordinal >= Owner.ContainerStart.Ordinal && Ordinal <= Owner.ContainerEnd.Ordinal; }
+        }
+
+        internal bool IsRow
+        {
+            get { return Ordinal >= Owner.RowStart.Ordinal && Ordinal <= Owner.RowEnd.Ordinal; }
         }
 
         internal bool IsTail
@@ -181,17 +186,17 @@ namespace DevZest.Data.Windows.Primitives
 
         internal bool IsFrozenHead
         {
-            get { return Ordinal < Owner.FrozenHead; }
+            get { return Ordinal < Owner.FrozenHeadTracksCount; }
         }
 
         internal bool IsFrozenTail
         {
-            get { return Ordinal >= Owner.Count - Owner.FrozenTail; }
+            get { return Ordinal >= Owner.Count - Owner.FrozenTailTracksCount; }
         }
 
         internal int VariantByContainerIndex
         {
-            get { return Owner.VariantByContainer && IsRepeat ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
+            get { return Owner.VariantByContainer && IsContainer ? Ordinal - Owner.ContainerStart.Ordinal : -1; }
         }
 
         internal bool VariantByContainer

@@ -14,7 +14,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public LogicalMainTrack(GridTrack gridTrack)
             {
-                Debug.Assert(!gridTrack.IsRepeat);
+                Debug.Assert(!gridTrack.IsContainer);
                 GridTrack = gridTrack;
                 _containerOrdinal = -1;
             }
@@ -26,7 +26,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public LogicalMainTrack(GridTrack gridTrack, int containerOrdinal)
             {
-                Debug.Assert(gridTrack.IsRepeat && containerOrdinal >= 0);
+                Debug.Assert(gridTrack.IsContainer && containerOrdinal >= 0);
                 GridTrack = gridTrack;
                 _containerOrdinal = containerOrdinal;
             }
@@ -45,7 +45,7 @@ namespace DevZest.Data.Windows.Primitives
 
             public bool IsRepeat
             {
-                get { return GridTrack != null && GridTrack.IsRepeat; }
+                get { return GridTrack != null && GridTrack.IsContainer; }
             }
 
             public static bool operator ==(LogicalMainTrack x, LogicalMainTrack y)
@@ -73,7 +73,7 @@ namespace DevZest.Data.Windows.Primitives
                 get
                 {
                     Debug.Assert(!IsEof);
-                    return GridTrack.IsRepeat ? GetExtentSpan(ContainerOrdinal) : GetExtentSpan();
+                    return GridTrack.IsContainer ? GetExtentSpan(ContainerOrdinal) : GetExtentSpan();
                 }
             }
 
@@ -153,7 +153,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private int MaxFrozenHead
             {
-                get { return GridTrackOwner.MaxFrozenHead; }
+                get { return GridTrackOwner.HeadTracksCount; }
             }
 
             private bool VariantByContainer
@@ -172,7 +172,7 @@ namespace DevZest.Data.Windows.Primitives
                 Debug.Assert(GridTrack.IsTail);
                 var delta = GetContainerViewsLength(MaxContainerCount);
                 if (!GridTrackOwner.VariantByContainer && MaxContainerCount > 0)
-                    delta -= GridTrackOwner.GetMeasuredLength(Template.BlockRange);
+                    delta -= GridTrackOwner.GetMeasuredLength(Template.ContainerRange);
                 return new Span(GridTrack.StartOffset + delta, GridTrack.EndOffset + delta);
             }
 
@@ -219,17 +219,17 @@ namespace DevZest.Data.Windows.Primitives
             if (gridExtent >= MaxGridExtentMain)
                 return LogicalMainTrack.Eof;
 
-            if (gridExtent < MaxFrozenHeadMain)
+            if (gridExtent < HeadTracksCountMain)
                 return new LogicalMainTrack(GridTracksMain[gridExtent]);
 
-            gridExtent -= MaxFrozenHeadMain;
+            gridExtent -= HeadTracksCountMain;
             var totalContainerGridTracks = TotalContainerGridTracksMain;
             if (gridExtent < totalContainerGridTracks)
-                return new LogicalMainTrack(GridTracksMain[MaxFrozenHeadMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
+                return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
 
             gridExtent -= totalContainerGridTracks;
             Debug.Assert(gridExtent < MaxFrozenTailMain);
-            return new LogicalMainTrack(GridTracksMain[MaxFrozenHeadMain + ContainerGridTracksMain + gridExtent]);
+            return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + ContainerGridTracksMain + gridExtent]);
         }
 
         private LogicalMainTrack GetStartLogicalMainTrack(GridRange gridRange)
@@ -241,7 +241,7 @@ namespace DevZest.Data.Windows.Primitives
         private LogicalMainTrack GetStartLogicalMainTrack(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack.Owner == GridTracksMain);
-            if (!gridTrack.IsRepeat)
+            if (!gridTrack.IsContainer)
                 return new LogicalMainTrack(gridTrack);
 
             if (MaxContainerCount > 0)
@@ -259,7 +259,7 @@ namespace DevZest.Data.Windows.Primitives
         private LogicalMainTrack GetEndLogicalMainTrack(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack.Owner == GridTracksMain);
-            if (!gridTrack.IsRepeat)
+            if (!gridTrack.IsContainer)
                 return new LogicalMainTrack(gridTrack);
 
             if (MaxContainerCount > 0)
