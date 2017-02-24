@@ -190,17 +190,6 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.TailTracksCount; }
         }
 
-        protected int MaxGridExtentMain
-        {
-            get { return HeadTracksCountMain + TotalContainerGridTracksMain + MaxFrozenTailMain; }
-        }
-
-        protected int MaxGridExtentCross
-        {
-            get { return HeadTracksCountCross + TailTracksCountCross
-                    + FlowCount * RepeatTracksCountCross + (ContainerTracksCountCross - RepeatTracksCountCross); }
-        }
-
         private double MaxExtentMain
         {
             get { return GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent; }

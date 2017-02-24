@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -77,7 +78,7 @@ namespace DevZest.Data.Windows.Primitives
                 get { return ScrollableManager.FlowLength; }
             }
 
-            private double StartExtent
+            public double StartExtent
             {
                 get
                 {
@@ -92,6 +93,11 @@ namespace DevZest.Data.Windows.Primitives
 
                     return result;
                 }
+            }
+
+            public double EndExtent
+            {
+                get { return StartExtent + Length; }
             }
 
             public double Length
@@ -150,5 +156,30 @@ namespace DevZest.Data.Windows.Primitives
             var gridTrack = GridTracksCross.GetGridSpan(gridRange).EndTrack;
             return new LogicalCrossTrack(gridTrack, flowIndex).EndPosition;
         }
+
+        private LogicalCrossTrack GetLogicalCrossTrack(int gridExtent)
+        {
+            Debug.Assert(gridExtent >= 0);
+
+            if (gridExtent >= MaxGridExtentCross)
+                return LogicalCrossTrack.Eof;
+
+            var index = 0;
+            var beforeRowGridExtent = GridTracksCross.RowStart.Ordinal;
+            if (gridExtent < beforeRowGridExtent)
+                return new LogicalCrossTrack(GridTracksCross[gridExtent]);
+
+            index += beforeRowGridExtent;
+            gridExtent -= beforeRowGridExtent;
+            var rowTracksCount = GridTracksCross.RowTracksCount;
+            var rowGridExtent = rowTracksCount * FlowCount;
+            if (gridExtent < rowGridExtent)
+                return new LogicalCrossTrack(GridTracksCross[index + gridExtent % rowTracksCount], gridExtent / rowTracksCount);
+
+            index += GridTracksCross.RowTracksCount;
+            gridExtent -= rowGridExtent;
+            return new LogicalCrossTrack(GridTracksCross[index + gridExtent]);
+        }
+
     }
 }

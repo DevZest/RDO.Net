@@ -148,6 +148,30 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
+        /// The value GridPointPlacement.Both is invalid.
+        /// </summary>
+        public static string GridPointPlacement_InvalidBothValue
+        {
+            get { return GetString("GridPointPlacement_InvalidBothValue"); }
+        }
+
+        /// <summary>
+        /// The value GridPointPlacement.NextTrack is invalid for the end grid extent.
+        /// </summary>
+        public static string GridPointPlacement_InvalidNextTrackValue
+        {
+            get { return GetString("GridPointPlacement_InvalidNextTrackValue"); }
+        }
+
+        /// <summary>
+        /// The value GridPointPlacement.PreviousTrack is invalid for the start grid extent.
+        /// </summary>
+        public static string GridPointPlacement_InvalidPreviousTrackValue
+        {
+            get { return GetString("GridPointPlacement_InvalidPreviousTrackValue"); }
+        }
+
+        /// <summary>
         /// The GridRange does not belong to the same Template.
         /// </summary>
         public static string GridRange_InvalidOwner

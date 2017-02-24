@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System.Collections.Generic;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -61,6 +59,36 @@ namespace DevZest.Data.Windows.Primitives
         protected override IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPointPlacement placement, int gridPointX)
         {
             return GetLineFiguresMain(startGridPointY, endGridPointY, placement, gridPointX);
+        }
+
+        public override int MaxGridExtentX
+        {
+            get { return MaxGridExtentCross; }
+        }
+
+        public override int MaxGridExtentY
+        {
+            get { return MaxGridExtentMain; }
+        }
+
+        protected sealed override double GetExtentXCore(int gridExtentX)
+        {
+            return GetExtentCross(gridExtentX);
+        }
+
+        protected sealed override double GetExtentYCore(int gridExtentY)
+        {
+            return GetExtentMain(gridExtentY);
+        }
+
+        protected sealed override double GetPositionXCore(int gridExtentX, GridPointPlacement placement)
+        {
+            return GetPositionCross(gridExtentX, placement);
+        }
+
+        protected sealed override double GetPositionYCore(int gridExtentY, GridPointPlacement placement)
+        {
+            return GetPositionMain(gridExtentY, placement);
         }
     }
 }

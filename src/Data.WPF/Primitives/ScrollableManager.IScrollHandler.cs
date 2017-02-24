@@ -122,5 +122,106 @@ namespace DevZest.Data.Windows.Primitives
             EnsureVisible(visual);
             return rectangle;
         }
+
+        public abstract int MaxGridExtentX { get; }
+
+        public abstract int MaxGridExtentY { get; }
+
+        protected int MaxGridExtentMain
+        {
+            get { return HeadTracksCountMain + TotalContainerGridTracksMain + MaxFrozenTailMain; }
+        }
+
+        protected int MaxGridExtentCross
+        {
+            get
+            {
+                return HeadTracksCountCross + TailTracksCountCross
+                  + FlowCount * RepeatTracksCountCross + (ContainerTracksCountCross - RepeatTracksCountCross);
+            }
+        }
+
+        public double GetExtentX(int gridExtentX)
+        {
+            VerifyGridExtent(gridExtentX, nameof(gridExtentX), MaxGridExtentX);
+            return GetExtentXCore(gridExtentX);
+        }
+
+        protected abstract double GetExtentXCore(int gridExtentX);
+
+        public double GetExtentY(int gridExtentY)
+        {
+            VerifyGridExtent(gridExtentY, nameof(gridExtentY), MaxGridExtentY);
+            return GetExtentYCore(gridExtentY);
+        }
+
+        protected abstract double GetExtentYCore(int gridExtentY);
+
+        protected double GetExtentMain(int gridExtent)
+        {
+            Debug.Assert(gridExtent >= 0);
+            return gridExtent >= MaxGridExtentMain
+                ? GetLogicalMainTrack(MaxGridExtentMain - 1).EndExtent
+                : GetLogicalMainTrack(gridExtent).StartExtent;
+        }
+
+        protected double GetExtentCross(int gridExtent)
+        {
+            Debug.Assert(gridExtent >= 0);
+            return gridExtent >= MaxGridExtentCross
+                ? GetLogicalCrossTrack(MaxGridExtentCross - 1).EndExtent
+                : GetLogicalCrossTrack(gridExtent).StartExtent;
+        }
+
+        public double GetPositionX(int gridExtentX, GridPointPlacement placement)
+        {
+            VerifyGridExtent(gridExtentX, nameof(gridExtentX), placement, nameof(placement), MaxGridExtentX);
+            return GetPositionXCore(gridExtentX, placement);
+        }
+
+        protected abstract double GetPositionXCore(int gridExtentX, GridPointPlacement placement);
+
+        public double GetPositionY(int gridExtentY, GridPointPlacement placement)
+        {
+            VerifyGridExtent(gridExtentY, nameof(gridExtentY), placement, nameof(placement), MaxGridExtentY);
+            return GetPositionXCore(gridExtentY, placement);
+        }
+
+        protected abstract double GetPositionYCore(int gridExtentY, GridPointPlacement placement);
+
+        protected double GetPositionMain(int gridExtent, GridPointPlacement placement)
+        {
+            return placement == GridPointPlacement.PreviousTrack
+                ? GetLogicalMainTrack(gridExtent - 1).EndPosition
+                : GetLogicalMainTrack(gridExtent).StartPosition;
+        }
+
+        protected double GetPositionCross(int gridExtent, GridPointPlacement placement)
+        {
+            return placement == GridPointPlacement.PreviousTrack
+                ? GetLogicalCrossTrack(gridExtent - 1).EndPosition
+                : GetLogicalCrossTrack(gridExtent).StartPosition;
+        }
+
+        private void VerifyGridExtent(int gridExtent, string gridExtentParamName, int maxGridExtent)
+        {
+            if (gridExtent < 0 || gridExtent > maxGridExtent)
+                throw new ArgumentOutOfRangeException(gridExtentParamName);
+        }
+
+        private void VerifyGridExtent(int gridExtent, string gridExtentParamName,
+            GridPointPlacement placement, string placementParamName, int maxGridExtent)
+        {
+            VerifyGridExtent(gridExtent, gridExtentParamName, maxGridExtent);
+
+            if (placement == GridPointPlacement.Both)
+                throw new ArgumentException(Strings.GridPointPlacement_InvalidBothValue, placementParamName);
+
+            if (gridExtent == 0 && placement == GridPointPlacement.PreviousTrack)
+                throw new ArgumentException(Strings.GridPointPlacement_InvalidPreviousTrackValue, placementParamName);
+
+            if (gridExtent == maxGridExtent && placement == GridPointPlacement.NextTrack)
+                throw new ArgumentException(Strings.GridPointPlacement_InvalidNextTrackValue, placementParamName);
+        }
     }
 }
