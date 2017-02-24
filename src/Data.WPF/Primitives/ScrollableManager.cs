@@ -546,9 +546,9 @@ namespace DevZest.Data.Windows.Primitives
         private double GetLengthMain(ScalarBinding scalarBinding)
         {
             var gridRange = scalarBinding.GridRange;
-            var startGridOffset = GetStartLogicalMainTrack(gridRange);
-            var endGridOffset = GetEndLogicalMainTrack(gridRange);
-            return startGridOffset == endGridOffset ? startGridOffset.Length : endGridOffset.EndExtent - startGridOffset.StartExtent;
+            var start = GetStartLogicalMainTrack(gridRange);
+            var end = GetEndLogicalMainTrack(gridRange);
+            return start == end ? start.Length : end.EndExtent - start.StartExtent;
         }
 
         protected override Point GetPosition(ScalarBinding scalarBinding, int flowIndex)
@@ -1230,20 +1230,20 @@ namespace DevZest.Data.Windows.Primitives
                 base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
 
-        private double GetEnsureVisibleOffsetMain(LogicalMainTrack startGridOffset, LogicalMainTrack endGridOffset)
+        private double GetEnsureVisibleOffsetMain(LogicalMainTrack start, LogicalMainTrack end)
         {
-            if (startGridOffset.GridTrack.IsFrozenHead || endGridOffset.GridTrack.IsFrozenTail)
+            if (start.GridTrack.IsFrozenHead || end.GridTrack.IsFrozenTail)
                 return 0;
 
-            var startExtent = startGridOffset.StartExtent;
+            var startExtent = start.StartExtent;
             var scrollStartMain = ScrollStartMain;
             if (startExtent < scrollStartMain)
                 return startExtent - scrollStartMain;
 
-            var end = endGridOffset.EndExtent - ScrollOffsetMain;
+            var endPosition = end.EndExtent - ScrollOffsetMain;
             var scrollEnd = ViewportMain - FrozenTailLengthMain;
-            if (end > scrollEnd)
-                return end - scrollEnd;
+            if (endPosition > scrollEnd)
+                return endPosition - scrollEnd;
 
             return 0;
         }

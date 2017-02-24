@@ -144,14 +144,14 @@ namespace DevZest.Data.Windows.Primitives
                 Bottom == null ? string.Empty : Bottom.Ordinal.ToString(CultureInfo.InvariantCulture));
         }
 
-        internal bool HorizontallyIntersectsWith(int gridOffset)
+        internal bool HorizontallyIntersectsWith(int gridOrdinal)
         {
-            return gridOffset > Left.Ordinal && gridOffset < Right.Ordinal;
+            return gridOrdinal > Left.Ordinal && gridOrdinal < Right.Ordinal;
         }
 
-        internal bool VerticallyIntersectsWith(int gridOffset)
+        internal bool VerticallyIntersectsWith(int gridOrdinal)
         {
-            return gridOffset > Top.Ordinal && gridOffset < Bottom.Ordinal;
+            return gridOrdinal > Top.Ordinal && gridOrdinal < Bottom.Ordinal;
         }
 
         private static bool Contains<T>(T headTrack, T tailTrack, T gridTrack)

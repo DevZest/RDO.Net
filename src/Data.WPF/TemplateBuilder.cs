@@ -282,22 +282,22 @@ namespace DevZest.Data.Windows
             if (pen == null)
                 pen = DefaultGridLinePen;
 
-            int endGridOffsetX = startGridPoint.X;
-            int endGridOffsetY = startGridPoint.Y;
+            int endGridPointX = startGridPoint.X;
+            int endGridPointY = startGridPoint.Y;
             if (orientation == Orientation.Horizontal)
             {
-                endGridOffsetX += length;
-                if (endGridOffsetX > Template.GridColumns.Count)
+                endGridPointX += length;
+                if (endGridPointX > Template.GridColumns.Count)
                     throw new ArgumentOutOfRangeException(nameof(length));
             }
             else
             {
-                endGridOffsetY += length;
-                if (endGridOffsetY > Template.GridRows.Count)
+                endGridPointY += length;
+                if (endGridPointY > Template.GridRows.Count)
                     throw new ArgumentOutOfRangeException(nameof(length));
             }
 
-            var gridLine = new GridLine(startGridPoint, new GridPoint(endGridOffsetX, endGridOffsetY), pen, placement);
+            var gridLine = new GridLine(startGridPoint, new GridPoint(endGridPointX, endGridPointY), pen, placement);
             Template.AddGridLine(gridLine);
             return this;
         }

@@ -29,12 +29,12 @@ namespace DevZest.Data.Windows
             return new Point(offsetX, offsetY);
         }
 
-        private static double GetOffset(IReadOnlyList<GridTrack> gridTracks, int gridOffset)
+        private static double GetOffset(IReadOnlyList<GridTrack> gridTracks, int gridPoint)
         {
             Debug.Assert(gridTracks.Count > 0);
-            Debug.Assert(gridOffset >= 0 && gridOffset <= gridTracks.Count);
+            Debug.Assert(gridPoint >= 0 && gridPoint <= gridTracks.Count);
 
-            return gridOffset == gridTracks.Count ? gridTracks[gridOffset - 1].EndOffset : gridTracks[gridOffset].StartOffset;
+            return gridPoint == gridTracks.Count ? gridTracks[gridPoint - 1].EndOffset : gridTracks[gridPoint].StartOffset;
         }
     }
 }
