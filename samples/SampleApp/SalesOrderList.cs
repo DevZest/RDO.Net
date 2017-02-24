@@ -37,23 +37,22 @@ namespace SampleApp
             .GridLineY(new GridPoint(8, 0), 2)
             .GridLineY(new GridPoint(9, 0), 3, _frozenLine)
             .GridLineY(new GridPoint(10, 0), 3)
-            .AddBinding(0, 1, new ScalarBinding<RowHeader>())
-            .AddBinding(1, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.SalesOrderID).ToString() })
-            .AddBinding(2, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = (p.GetValue(_.SalesOrderNumber) ?? string.Empty).ToString() })
-            .AddBinding(3, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.DueDate).ToString() })
-            .AddBinding(4, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.ShipDate).ToString() })
-            .AddBinding(5, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.Status).ToString() })
-            .AddBinding(6, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = (p.GetValue(_.PurchaseOrderNumber) ?? string.Empty).ToString() })
-            .AddBinding(7, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.SubTotal).ToString() })
-            .AddBinding(8, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.TaxAmt).ToString() })
-            .AddBinding(9, 1, new RowBinding<TextBlock>() { OnRefresh = (v, p) => v.Text = p.GetValue(_.TotalDue).ToString() })
-            .AddBinding(2, 2, 8, 2, new ScalarBinding<TextBlock>() { OnSetup = (v) =>
+            .AddBinding(0, 1, _.RowHeader())
+            .AddBinding(1, 1, _.SalesOrderID.TextBlock())
+            .AddBinding(2, 1, _.SalesOrderNumber.TextBlock())
+            .AddBinding(3, 1, _.DueDate.TextBlock())
+            .AddBinding(4, 1, _.ShipDate.TextBlock())
+            .AddBinding(5, 1, _.Status.TextBlock())
+            .AddBinding(6, 1, _.PurchaseOrderNumber.TextBlock())
+            .AddBinding(7, 1, _.SubTotal.TextBlock())
+            .AddBinding(8, 1, _.TaxAmt.TextBlock())
+            .AddBinding(9, 1, _.TotalDue.TextBlock())
+            .AddBinding(2, 2, 8, 2, new ScalarBinding<TextBlock>(onSetup: (v, sp) =>
                 {
                     v.TextAlignment = TextAlignment.Right;
                     v.Text = "Total: ";
-                }
-            })
-            .AddBinding(9, 2, new ScalarBinding<TextBlock>() { OnRefresh = (v) => v.Text = Rows.Sum(x => x.GetValue(_.TotalDue)).ToString() });
+                }, onRefresh: null, onCleanup: null))
+            .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => { v.Text = Rows.Sum(x => x.GetValue(_.TotalDue)).ToString(); }));
         }
     }
 }
