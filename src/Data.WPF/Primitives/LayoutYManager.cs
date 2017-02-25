@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Windows.Primitives
 {
@@ -89,6 +90,11 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override double GetPositionYCore(int gridExtentY, GridPlacement placement)
         {
             return GetPositionMain(gridExtentY, placement);
+        }
+
+        public sealed override void ScrollBy(double x, double y)
+        {
+            InternalScrollBy(y, x);
         }
     }
 }

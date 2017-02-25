@@ -220,5 +220,17 @@ namespace DevZest.Data.Windows.Primitives
             if (gridExtent == maxGridExtent && placement == GridPlacement.Head)
                 throw new ArgumentException(Strings.GridPlacement_InvalidHeadValue, placementParamName);
         }
+
+        public void ScrollTo(int gridExtent, double fraction, GridPlacement placement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract void ScrollBy(double x, double y);
+
+        protected void InternalScrollBy(double valueMain, double valueCross)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
