@@ -931,25 +931,25 @@ namespace DevZest.Data.Windows.Primitives
                 : GetLineFiguresY(gridLine.StartGridPoint.Y, gridLine.EndGridPoint.Y, gridLine.Placement, gridLine.StartGridPoint.X);
         }
 
-        protected abstract IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPointPlacement placement, int gridPointY);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPlacement? placement, int gridPointY);
 
-        protected abstract IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPointPlacement placement, int gridPointX);
+        protected abstract IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPlacement? placement, int gridPointX);
 
-        private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPointPlacement placement)
+        private static GridTrack GetPrevGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPlacement? placement)
         {
-            if ((placement & GridPointPlacement.PreviousTrack) != GridPointPlacement.PreviousTrack)
+            if (placement.HasValue && placement.GetValueOrDefault() != GridPlacement.Tail)
                 return null;
             return gridPoint == 0 ? null : gridTracks[gridPoint - 1];
         }
 
-        private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPointPlacement placement)
+        private static GridTrack GetNextGridTrack(IReadOnlyList<GridTrack> gridTracks, int gridPoint, GridPlacement? placement)
         {
-            if ((placement & GridPointPlacement.NextTrack) != GridPointPlacement.NextTrack)
+            if (placement.HasValue && placement.GetValueOrDefault() != GridPlacement.Head)
                 return null;
             return gridPoint == gridTracks.Count ? null : gridTracks[gridPoint];
         }
 
-        protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridPointMain, int endGridPointMain, GridPointPlacement placement, int gridPointCross)
+        protected IEnumerable<LineFigure> GetLineFiguresMain(int startGridPointMain, int endGridPointMain, GridPlacement? placement, int gridPointCross)
         {
             var spansMain = GetLineFigureSpansMain(startGridPointMain, endGridPointMain);
             if (spansMain == null)
@@ -1013,7 +1013,7 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private static void AnalyzeLineGridPoint(IGridTrackCollection gridTracks, int startGridPoint, int endGridPoint,
-            int gridPoint, GridPointPlacement placement,
+            int gridPoint, GridPlacement? placement,
             out GridTrack prevGridTrack, out GridTrack nextGridTrack, out bool beforeRepeat, out bool isRepeat, out bool afterRepeat)
         {
             prevGridTrack = GetPrevGridTrack(gridTracks, gridPoint, placement);
@@ -1040,7 +1040,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private IEnumerable<double> GetLineFigurePositionsCross(int gridPointCross, GridPointPlacement placement)
+        private IEnumerable<double> GetLineFigurePositionsCross(int gridPointCross, GridPlacement? placement)
         {
             GridTrack prevGridTrack, nextGridTrack;
             bool beforeRepeat, isRepeat, afterRepeat;
@@ -1121,7 +1121,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridPointCross, int endGridPointCross, GridPointPlacement placement, int gridPointMain)
+        protected IEnumerable<LineFigure> GetLineFiguresCross(int startGridPointCross, int endGridPointCross, GridPlacement? placement, int gridPointMain)
         {
             var spanCross = GetLineFigureSpanCross(startGridPointCross, endGridPointCross);
             if (spanCross.Length <= 0)
@@ -1151,7 +1151,7 @@ namespace DevZest.Data.Windows.Primitives
             return new Span(startPositionCross, endPositionCross);
         }
 
-        private IEnumerable<double> GetPositionsMain(int gridPointMain, GridPointPlacement placement)
+        private IEnumerable<double> GetPositionsMain(int gridPointMain, GridPlacement? placement)
         {
             GridTrack prevGridTrack, nextGridTrack;
             bool beforeRepeat, isRepeat, afterRepeat;

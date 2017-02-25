@@ -173,32 +173,32 @@ namespace DevZest.Data.Windows.Primitives
                 : GetLogicalCrossTrack(gridExtent).StartExtent;
         }
 
-        public double GetPositionX(int gridExtentX, GridPointPlacement placement)
+        public double GetPositionX(int gridExtentX, GridPlacement placement)
         {
             VerifyGridExtent(gridExtentX, nameof(gridExtentX), placement, nameof(placement), MaxGridExtentX);
             return GetPositionXCore(gridExtentX, placement);
         }
 
-        protected abstract double GetPositionXCore(int gridExtentX, GridPointPlacement placement);
+        protected abstract double GetPositionXCore(int gridExtentX, GridPlacement placement);
 
-        public double GetPositionY(int gridExtentY, GridPointPlacement placement)
+        public double GetPositionY(int gridExtentY, GridPlacement placement)
         {
             VerifyGridExtent(gridExtentY, nameof(gridExtentY), placement, nameof(placement), MaxGridExtentY);
             return GetPositionYCore(gridExtentY, placement);
         }
 
-        protected abstract double GetPositionYCore(int gridExtentY, GridPointPlacement placement);
+        protected abstract double GetPositionYCore(int gridExtentY, GridPlacement placement);
 
-        protected double GetPositionMain(int gridExtent, GridPointPlacement placement)
+        protected double GetPositionMain(int gridExtent, GridPlacement placement)
         {
-            return placement == GridPointPlacement.PreviousTrack
+            return placement == GridPlacement.Tail
                 ? GetLogicalMainTrack(gridExtent - 1).EndPosition
                 : GetLogicalMainTrack(gridExtent).StartPosition;
         }
 
-        protected double GetPositionCross(int gridExtent, GridPointPlacement placement)
+        protected double GetPositionCross(int gridExtent, GridPlacement placement)
         {
-            return placement == GridPointPlacement.PreviousTrack
+            return placement == GridPlacement.Tail
                 ? GetLogicalCrossTrack(gridExtent - 1).EndPosition
                 : GetLogicalCrossTrack(gridExtent).StartPosition;
         }
@@ -210,18 +210,15 @@ namespace DevZest.Data.Windows.Primitives
         }
 
         private void VerifyGridExtent(int gridExtent, string gridExtentParamName,
-            GridPointPlacement placement, string placementParamName, int maxGridExtent)
+            GridPlacement placement, string placementParamName, int maxGridExtent)
         {
             VerifyGridExtent(gridExtent, gridExtentParamName, maxGridExtent);
 
-            if (placement == GridPointPlacement.Both)
-                throw new ArgumentException(Strings.GridPointPlacement_InvalidBothValue, placementParamName);
+            if (gridExtent == 0 && placement == GridPlacement.Tail)
+                throw new ArgumentException(Strings.GridPlacement_InvalidTailValue, placementParamName);
 
-            if (gridExtent == 0 && placement == GridPointPlacement.PreviousTrack)
-                throw new ArgumentException(Strings.GridPointPlacement_InvalidPreviousTrackValue, placementParamName);
-
-            if (gridExtent == maxGridExtent && placement == GridPointPlacement.NextTrack)
-                throw new ArgumentException(Strings.GridPointPlacement_InvalidNextTrackValue, placementParamName);
+            if (gridExtent == maxGridExtent && placement == GridPlacement.Head)
+                throw new ArgumentException(Strings.GridPlacement_InvalidHeadValue, placementParamName);
         }
     }
 }

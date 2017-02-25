@@ -168,14 +168,11 @@
   <data name="GridLengthParser_InvalidInput" xml:space="preserve">
     <value>The input string "{input}" is invalid.</value>
   </data>
-  <data name="GridPointPlacement_InvalidBothValue" xml:space="preserve">
-    <value>The value GridPointPlacement.Both is invalid.</value>
+  <data name="GridPlacement_InvalidHeadValue" xml:space="preserve">
+    <value>The value GridPlacement.Head is invalid for the end grid extent.</value>
   </data>
-  <data name="GridPointPlacement_InvalidNextTrackValue" xml:space="preserve">
-    <value>The value GridPointPlacement.NextTrack is invalid for the end grid extent.</value>
-  </data>
-  <data name="GridPointPlacement_InvalidPreviousTrackValue" xml:space="preserve">
-    <value>The value GridPointPlacement.PreviousTrack is invalid for the start grid extent.</value>
+  <data name="GridPlacement_InvalidTailValue" xml:space="preserve">
+    <value>The value GridPlacement.Tail is invalid for the start grid extent.</value>
   </data>
   <data name="GridRange_InvalidOwner" xml:space="preserve">
     <value>The GridRange does not belong to the same Template.</value>

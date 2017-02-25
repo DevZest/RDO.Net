@@ -18,7 +18,7 @@ namespace DevZest.Data.Windows.Primitives
         int MaxGridExtentY { get; }
         double GetExtentX(int gridExtentX);
         double GetExtentY(int gridExtentY);
-        double GetPositionX(int gridExtentX, GridPointPlacement placement);
-        double GetPositionY(int gridExtentY, GridPointPlacement placement);
+        double GetPositionX(int gridExtentX, GridPlacement placement);
+        double GetPositionY(int gridExtentY, GridPlacement placement);
     }
 }

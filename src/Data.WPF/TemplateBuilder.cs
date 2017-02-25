@@ -244,14 +244,12 @@ namespace DevZest.Data.Windows
             return this;
         }
 
-        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null,
-            GridPointPlacement placement = GridPointPlacement.Both)
+        public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridPlacement? placement = null)
         {
             return GridLine(Orientation.Horizontal, startGridPoint, length, pen, placement);
         }
 
-        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null,
-            GridPointPlacement placement = GridPointPlacement.Both)
+        public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null, GridPlacement? placement = null)
         {
             return GridLine(Orientation.Vertical, startGridPoint, length, pen, placement);
         }
@@ -264,8 +262,7 @@ namespace DevZest.Data.Windows
             return result;
         }
 
-        private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen,
-            GridPointPlacement placement = GridPointPlacement.Both)
+        private TemplateBuilder GridLine(Orientation orientation, GridPoint startGridPoint, int length, Pen pen, GridPlacement? placement)
         {
             IReadOnlyList<GridTrack> gridTracks;
             if (orientation == Orientation.Horizontal)

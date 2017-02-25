@@ -148,27 +148,19 @@ namespace DevZest.Data.Windows
         }
 
         /// <summary>
-        /// The value GridPointPlacement.Both is invalid.
+        /// The value GridPlacement.Head is invalid for the end grid extent.
         /// </summary>
-        public static string GridPointPlacement_InvalidBothValue
+        public static string GridPlacement_InvalidHeadValue
         {
-            get { return GetString("GridPointPlacement_InvalidBothValue"); }
+            get { return GetString("GridPlacement_InvalidHeadValue"); }
         }
 
         /// <summary>
-        /// The value GridPointPlacement.NextTrack is invalid for the end grid extent.
+        /// The value GridPlacement.Tail is invalid for the start grid extent.
         /// </summary>
-        public static string GridPointPlacement_InvalidNextTrackValue
+        public static string GridPlacement_InvalidTailValue
         {
-            get { return GetString("GridPointPlacement_InvalidNextTrackValue"); }
-        }
-
-        /// <summary>
-        /// The value GridPointPlacement.PreviousTrack is invalid for the start grid extent.
-        /// </summary>
-        public static string GridPointPlacement_InvalidPreviousTrackValue
-        {
-            get { return GetString("GridPointPlacement_InvalidPreviousTrackValue"); }
+            get { return GetString("GridPlacement_InvalidTailValue"); }
         }
 
         /// <summary>

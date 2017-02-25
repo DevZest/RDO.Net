@@ -51,12 +51,12 @@ namespace DevZest.Data.Windows.Primitives
             set { ScrollOffsetCross = value; }
         }
 
-        protected override IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPointPlacement placement, int gridPointY)
+        protected override IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPlacement? placement, int gridPointY)
         {
             return GetLineFiguresMain(startGridPointX, endGridPointX, placement, gridPointY);
         }
 
-        protected override IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPointPlacement placement, int gridPointX)
+        protected override IEnumerable<LineFigure> GetLineFiguresY(int startGridPointY, int endGridPointY, GridPlacement? placement, int gridPointX)
         {
             return GetLineFiguresCross(startGridPointY, endGridPointY, placement, gridPointX);
         }
@@ -81,12 +81,12 @@ namespace DevZest.Data.Windows.Primitives
             return GetExtentCross(gridExtentY);
         }
 
-        protected sealed override double GetPositionXCore(int gridExtentX, GridPointPlacement placement)
+        protected sealed override double GetPositionXCore(int gridExtentX, GridPlacement placement)
         {
             return GetPositionMain(gridExtentX, placement);
         }
 
-        protected sealed override double GetPositionYCore(int gridExtentY, GridPointPlacement placement)
+        protected sealed override double GetPositionYCore(int gridExtentY, GridPlacement placement)
         {
             return GetPositionCross(gridExtentY, placement);
         }

@@ -5,7 +5,7 @@ namespace DevZest.Data.Windows.Primitives
 {
     public sealed class GridLine
     {
-        internal GridLine(GridPoint startGridPoint, GridPoint endGridPoint, Pen pen, GridPointPlacement placement)
+        internal GridLine(GridPoint startGridPoint, GridPoint endGridPoint, Pen pen, GridPlacement? placement)
         {
             StartGridPoint = startGridPoint;
             EndGridPoint = endGridPoint;
@@ -19,7 +19,7 @@ namespace DevZest.Data.Windows.Primitives
 
         public Pen Pen { get; private set; }
 
-        public GridPointPlacement Placement { get; private set; }
+        public GridPlacement? Placement { get; private set; }
 
         public Orientation Orientation
         {

@@ -711,7 +711,7 @@ namespace DevZest.Data.Windows.Primitives
                     .Layout(Orientation.Vertical, 3)
                     .WithFrozenLeft(1)
                     .AddBinding(1, 0, _.RowPlaceholder())
-                    .GridLineY(new GridPoint(1, 0), 1, pen, GridPointPlacement.PreviousTrack)
+                    .GridLineY(new GridPoint(1, 0), 1, pen, GridPlacement.Tail)
                     .GridLineY(new GridPoint(2, 0), 1, pen);
             });
 
@@ -797,7 +797,7 @@ namespace DevZest.Data.Windows.Primitives
                     .WithStretches(1)
                     .AddBinding(0, 2, _.RowPlaceholder())
                     .GridLineX(new GridPoint(0, 1), 1, pen)
-                    .GridLineX(new GridPoint(0, 2), 1, pen, GridPointPlacement.PreviousTrack)
+                    .GridLineX(new GridPoint(0, 2), 1, pen, GridPlacement.Tail)
                     .GridLineX(new GridPoint(0, 3), 1, pen)
                     .GridLineX(new GridPoint(0, 4), 1, pen);
             });
