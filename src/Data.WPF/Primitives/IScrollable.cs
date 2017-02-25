@@ -12,8 +12,8 @@ namespace DevZest.Data.Windows.Primitives
         double ViewportHeight { get; }
         double ExtentWidth { get; }
         double ExtentHeight { get; }
-        double HorizontalOffset { get; set; }
-        double VerticalOffset { get; set; }
+        double HorizontalOffset { get; }
+        double VerticalOffset { get; }
         int MaxGridExtentX { get; }
         int MaxGridExtentY { get; }
         double GetExtentX(int gridExtentX);
@@ -22,5 +22,6 @@ namespace DevZest.Data.Windows.Primitives
         double GetPositionY(int gridExtentY, GridPlacement placement);
         void ScrollTo(int gridExtent, double fraction, GridPlacement placement);
         void ScrollBy(double x, double y);
+        void ScrollTo(double x, double y);
     }
 }

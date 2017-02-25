@@ -49,8 +49,7 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             {
-                layoutManager.HorizontalOffset = 20;
-                layoutManager.VerticalOffset = 30;
+                layoutManager.ScrollTo(20, 30);
                 var measuredSize = layoutManager.Measure(new Size(50, 30));
                 Assert.AreEqual(1, layoutManager.ContainerViewList.First.ContainerOrdinal);
                 Assert.AreEqual(2, layoutManager.ContainerViewList.Last.ContainerOrdinal);
@@ -64,7 +63,7 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             {
-                layoutManager.VerticalOffset = 0;
+                layoutManager.ScrollTo(double.NaN, 0);
                 var measuredSize = layoutManager.Measure(new Size(50, 30));
                 Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
                 Assert.AreEqual(1, layoutManager.ContainerViewList.Last.ContainerOrdinal);
@@ -299,7 +298,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[3], 0));
 
             //==============================
-            layoutManager.VerticalOffset = 5;
+            layoutManager.ScrollTo(double.NaN, 5);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
             Assert.AreEqual(3, layoutManager.ContainerViewList.Last.ContainerOrdinal);
@@ -322,7 +321,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[3], 0));
 
             //==============================
-            layoutManager.VerticalOffset = 15;
+            layoutManager.ScrollTo(double.NaN, 15);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, layoutManager.ContainerViewList.First.ContainerOrdinal);
             Assert.AreEqual(4, layoutManager.ContainerViewList.Last.ContainerOrdinal);
@@ -347,7 +346,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[3], 0));
 
             //==============================
-            layoutManager.VerticalOffset = 45;
+            layoutManager.ScrollTo(double.NaN, 45);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(1, layoutManager.ContainerViewList.First.ContainerOrdinal);
             Assert.AreEqual(5, layoutManager.ContainerViewList.Last.ContainerOrdinal);
@@ -401,7 +400,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(90, 0, 10, 10), layoutManager.GetRect(scalarBindings[2], 0));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(scalarBindings[2], 0));
 
-            layoutManager.HorizontalOffset = 10;
+            layoutManager.ScrollTo(10, double.NaN);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(0, 0, 50, 10), layoutManager.GetRect(scalarBindings[0], 0));
             Assert.AreEqual(new Thickness(10, 0, 0, 0), layoutManager.GetClip(scalarBindings[0], 0));
@@ -475,7 +474,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(210, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[1]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[1]));
 
-            layoutManager.HorizontalOffset = 5;
+            layoutManager.ScrollTo(5, double.NaN);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(5, 0, 220, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(5, 0, 135, 0), layoutManager.GetClip(blocks[0]));
@@ -536,7 +535,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(90, 0, 10, 20), layoutManager.GetRect((BlockView)blocks[0], blockBindings[3]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip((BlockView)blocks[0], blockBindings[3]));
 
-            layoutManager.HorizontalOffset = 5;
+            layoutManager.ScrollTo(5, double.NaN);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(new Rect(0, 0, 100, 20), layoutManager.GetRect(blocks[0]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(blocks[0]));
@@ -613,7 +612,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Rect(0, 0, 10, 20), layoutManager.GetRect(((BlockView)containerViews[0])[1].View, rowBindings[4]));
             Assert.AreEqual(new Thickness(), layoutManager.GetClip(((BlockView)containerViews[0])[1].View, rowBindings[4]));
 
-            layoutManager.HorizontalOffset = 5;
+            layoutManager.ScrollTo(5, double.NaN);
             layoutManager.Measure(new Size(100, 100));
             Assert.AreEqual(0, containerViews.First.ContainerOrdinal);
             Assert.AreEqual(0, containerViews.Last.ContainerOrdinal);
@@ -724,7 +723,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(70, gridLineFigures[3].StartPoint.X);
 
             layoutManager.Measure(new Size(70, 100));
-            layoutManager.HorizontalOffset = 10;
+            layoutManager.ScrollTo(10, double.NaN);
             layoutManager.Measure(new Size(70, 100));
             Assert.AreEqual(10, layoutManager.HorizontalOffset);
             gridLineFigures = layoutManager.GridLineFigures.ToArray();
@@ -735,7 +734,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(60, gridLineFigures[3].StartPoint.X);
 
             layoutManager.Measure(new Size(40, 100));
-            layoutManager.HorizontalOffset = 40;
+            layoutManager.ScrollTo(40, double.NaN);
             layoutManager.Measure(new Size(40, 100));
             Assert.AreEqual(40, layoutManager.HorizontalOffset);
             gridLineFigures = layoutManager.GridLineFigures.ToArray();
@@ -770,7 +769,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(new Point(80, 10), gridLineFigures[1].EndPoint);
 
             layoutManager.Measure(new Size(70, 100));
-            layoutManager.HorizontalOffset = 10;
+            layoutManager.ScrollTo(10, double.NaN);
             layoutManager.Measure(new Size(70, 100));
             Assert.AreEqual(10, layoutManager.HorizontalOffset);
             gridLineFigures = layoutManager.GridLineFigures.ToArray();
@@ -812,7 +811,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(80, gridLineFigures[4].StartPoint.Y);
             Assert.AreEqual(90, gridLineFigures[5].StartPoint.Y);
 
-            layoutManager.VerticalOffset = 15;
+            layoutManager.ScrollTo(double.NaN, 15);
             layoutManager.Measure(new Size(100, 100));
             gridLineFigures = layoutManager.GridLineFigures.ToArray();
             Assert.AreEqual(6, gridLineFigures.Length);
@@ -823,7 +822,7 @@ namespace DevZest.Data.Windows.Primitives
             Assert.AreEqual(85, gridLineFigures[4].StartPoint.Y);
             Assert.AreEqual(90, gridLineFigures[5].StartPoint.Y);
 
-            layoutManager.VerticalOffset = 0;
+            layoutManager.ScrollTo(double.NaN, 0);
             layoutManager.Measure(new Size(100, 300));  // Stretched
             Assert.AreEqual(0, layoutManager.VerticalOffset);
             Assert.AreEqual(9, layoutManager.ContainerViewList.Count);

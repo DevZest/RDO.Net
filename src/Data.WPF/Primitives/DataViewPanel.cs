@@ -106,72 +106,72 @@ namespace DevZest.Data.Windows.Primitives
 
         void IScrollInfo.LineUp()
         {
-            ScrollHandler.VerticalOffset -= ScrollLineHeight;
+            ScrollHandler.ScrollBy(0, -ScrollLineHeight);
         }
 
         void IScrollInfo.LineDown()
         {
-            ScrollHandler.VerticalOffset += ScrollLineHeight;
+            ScrollHandler.ScrollBy(0, ScrollLineHeight);
         }
 
         void IScrollInfo.LineLeft()
         {
-            ScrollHandler.HorizontalOffset -= ScrollLineWidth;
+            ScrollHandler.ScrollBy(-ScrollLineWidth, 0);
         }
 
         void IScrollInfo.LineRight()
         {
-            ScrollHandler.HorizontalOffset += ScrollLineWidth;
+            ScrollHandler.ScrollBy(ScrollLineWidth, 0);
         }
 
         void IScrollInfo.PageUp()
         {
-            ScrollHandler.VerticalOffset -= ScrollHandler.ViewportHeight;
+            ScrollHandler.ScrollBy(0, -ScrollHandler.ViewportHeight);
         }
 
         void IScrollInfo.PageDown()
         {
-            ScrollHandler.VerticalOffset += ScrollHandler.ViewportHeight;
+            ScrollHandler.ScrollBy(0, ScrollHandler.ViewportHeight);
         }
 
         void IScrollInfo.PageLeft()
         {
-            ScrollHandler.HorizontalOffset -= ScrollHandler.ViewportWidth;
+            ScrollHandler.ScrollBy(-ScrollHandler.ViewportWidth, 0);
         }
 
         void IScrollInfo.PageRight()
         {
-            ScrollHandler.HorizontalOffset += ScrollHandler.ViewportWidth;
+            ScrollHandler.ScrollBy(ScrollHandler.ViewportWidth, 0);
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            ScrollHandler.VerticalOffset -= ScrollLineHeight * SystemParameters.WheelScrollLines;
+            ScrollHandler.ScrollBy(0,  -ScrollLineHeight * SystemParameters.WheelScrollLines);
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            ScrollHandler.VerticalOffset += ScrollLineHeight * SystemParameters.WheelScrollLines;
+            ScrollHandler.ScrollBy(0, ScrollLineHeight * SystemParameters.WheelScrollLines);
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            ScrollHandler.HorizontalOffset -= ScrollLineWidth * SystemParameters.WheelScrollLines;
+            ScrollHandler.ScrollBy(-ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            ScrollHandler.HorizontalOffset += ScrollLineWidth * SystemParameters.WheelScrollLines;
+            ScrollHandler.ScrollBy(ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
         {
-            ScrollHandler.HorizontalOffset = offset;
+            ScrollHandler.ScrollTo(offset, ScrollHandler.VerticalOffset);
         }
 
         void IScrollInfo.SetVerticalOffset(double offset)
         {
-            ScrollHandler.VerticalOffset = offset;
+            ScrollHandler.ScrollTo(ScrollHandler.HorizontalOffset, offset);
         }
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)

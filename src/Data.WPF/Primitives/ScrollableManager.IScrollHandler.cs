@@ -61,16 +61,16 @@ namespace DevZest.Data.Windows.Primitives
             InvalidateScrollInfo();
         }
 
-        public abstract double HorizontalOffset { get; set; }
+        public abstract double HorizontalOffset { get; }
 
-        public abstract double VerticalOffset { get; set; }
+        public abstract double VerticalOffset { get; }
 
         private double _oldScrollOffsetMain;
         private double _scrollOffsetMain;
         protected double ScrollOffsetMain
         {
             get { return _scrollOffsetMain; }
-            set { SetScrollOffsetMain(value, true); }
+            private set { SetScrollOffsetMain(value, true); }
         }
 
         private void SetScrollOffsetMain(double value, bool invalidateMeasure)
@@ -95,7 +95,7 @@ namespace DevZest.Data.Windows.Primitives
         protected double ScrollOffsetCross
         {
             get { return _scrollOffsetCross; }
-            set { SetScrollOffsetCross(value, true); }
+            private set { SetScrollOffsetCross(value, true); }
         }
 
         private void SetScrollOffsetCross(double value, bool invalidateMeasure)
@@ -226,11 +226,19 @@ namespace DevZest.Data.Windows.Primitives
             throw new NotImplementedException();
         }
 
+        public void ScrollTo(double horizontalOffset, double verticalOffset)
+        {
+            var offsetX = double.IsNaN(horizontalOffset) ? 0 : horizontalOffset - HorizontalOffset;
+            var offsetY = double.IsNaN(verticalOffset) ? 0 : verticalOffset - VerticalOffset;
+            ScrollBy(offsetX, offsetY);
+        }
+
         public abstract void ScrollBy(double x, double y);
 
         protected void InternalScrollBy(double valueMain, double valueCross)
         {
-            throw new NotImplementedException();
+            ScrollOffsetMain = ScrollOffsetMain + valueMain;
+            ScrollOffsetCross = ScrollOffsetCross + valueCross;
         }
     }
 }

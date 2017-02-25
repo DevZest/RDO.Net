@@ -43,13 +43,11 @@ namespace DevZest.Data.Windows.Primitives
         public override double HorizontalOffset
         {
             get { return ScrollOffsetCross; }
-            set { ScrollOffsetCross = value; }
         }
 
         public override double VerticalOffset
         {
             get { return ScrollOffsetMain; }
-            set { ScrollOffsetMain = value; }
         }
 
         protected override IEnumerable<LineFigure> GetLineFiguresX(int startGridPointX, int endGridPointX, GridPlacement? placement, int gridPointY)
