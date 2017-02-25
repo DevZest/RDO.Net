@@ -1342,8 +1342,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(ScalarBinding scalarBinding, int flowIndex)
         {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(scalarBinding), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(scalarBinding, flowIndex), true);
+            InternalScrollBy(GetEnsureVisibleOffsetMain(scalarBinding), GetEnsureVisibleOffsetCross(scalarBinding, flowIndex));
         }
 
         private double GetEnsureVisibleOffsetMain(ScalarBinding scalarBinding)
@@ -1361,8 +1360,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(RowView rowView)
         {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(rowView), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(rowView), true);
+            ScrollBy(GetEnsureVisibleOffsetMain(rowView), GetEnsureVisibleOffsetCross(rowView));
         }
 
         private double GetEnsureVisibleOffsetMain(RowView rowView)
@@ -1381,8 +1379,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(RowView rowView, RowBinding rowBinding)
         {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(rowView, rowBinding), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(rowView, rowBinding), true);
+            ScrollBy(GetEnsureVisibleOffsetMain(rowView, rowBinding), GetEnsureVisibleOffsetCross(rowView, rowBinding));
         }
 
         private double GetEnsureVisibleOffsetMain(RowView rowView, RowBinding rowBinding)
@@ -1401,8 +1398,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(BlockView blockView, BlockBinding blockBinding)
         {
-            SetScrollOffsetMain(ScrollOffsetMain + GetEnsureVisibleOffsetMain(blockView, blockBinding), true);
-            SetScrollOffsetCross(ScrollOffsetCross + GetEnsureVisibleOffsetCross(blockView, blockBinding), true);
+            ScrollBy(GetEnsureVisibleOffsetMain(blockView, blockBinding), GetEnsureVisibleOffsetCross(blockView, blockBinding));
         }
 
         private double GetEnsureVisibleOffsetMain(BlockView blockView, BlockBinding blockBinding)
