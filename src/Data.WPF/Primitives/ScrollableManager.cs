@@ -51,7 +51,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return Translate(_scrollToMain); }
         }
 
-        private LogicalMainTrack ScrollEndOffsetMain
+        private LogicalMainTrack TailStartLogicalMainTrack
         {
             get { return TailTracksCountMain > 0 ? new LogicalMainTrack(GridTracksMain.LastOf(TailTracksCountMain)) : LogicalMainTrack.Eof; }
         }
@@ -145,12 +145,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return MaxContainerCount * ContainerTracksCountMain; }
         }
 
-        private int FrozenTailMain
-        {
-            get { return GridTracksMain.FrozenTailTracksCount; }
-        }
-
-        private int FrozenTailCross
+        private int FrozenTailTracksCountCross
         {
             get { return GridTracksCross.FrozenTailTracksCount; }
         }
@@ -199,21 +194,23 @@ namespace DevZest.Data.Windows.Primitives
 
         private double FrozenTailLengthMain
         {
-            get
-            {
-                if (FrozenTailMain == 0)
-                    return 0;
+            get { return GetTailLengthMain(FrozenTailTracksCountMain); }
+        }
 
-                var totalTracks = GridTracksMain.Count;
-                var endOffset = GridTracksMain[totalTracks - 1].EndOffset;
-                var startOffset = GridTracksMain[totalTracks - FrozenTailMain].StartOffset;
-                return endOffset - startOffset;
-            }
+        private double GetTailLengthMain(int count)
+        {
+            if (count == 0)
+                return 0;
+
+            var totalTracks = GridTracksMain.Count;
+            var endOffset = GridTracksMain[totalTracks - 1].EndOffset;
+            var startOffset = GridTracksMain[totalTracks - count].StartOffset;
+            return endOffset - startOffset;
         }
 
         private double FrozenTailLengthCross
         {
-            get { return GetTailLengthCross(FrozenTailCross); }
+            get { return GetTailLengthCross(FrozenTailTracksCountCross); }
         }
 
         private double GetTailLengthCross(int tracksCount)
@@ -346,7 +343,7 @@ namespace DevZest.Data.Windows.Primitives
         private double? GetMaxClipMain(GridTrack gridTrack)
         {
             Debug.Assert(gridTrack.Owner == GridTracksMain);
-            return FrozenTailMain == 0 || gridTrack.IsFrozenTail ? new double?() : ViewportMain - FrozenTailLengthMain;
+            return FrozenTailTracksCountMain == 0 || gridTrack.IsFrozenTail ? new double?() : ViewportMain - FrozenTailLengthMain;
         }
 
         private Clip GetClipCross(double startPosition, double endPosition, Binding binding, Clip containerClip)
@@ -374,7 +371,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private double? GetMaxClipCross(GridTrack gridTrack, int? flowIndex = null, Clip containerClip = new Clip())
         {
-            return FrozenTailCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridTrack, flowIndex)
+            return FrozenTailTracksCountCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridTrack, flowIndex)
                 ? new double?() : ViewportCross - FrozenTailLengthCross;
         }
 

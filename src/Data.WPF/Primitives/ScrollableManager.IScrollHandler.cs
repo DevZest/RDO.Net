@@ -447,21 +447,16 @@ namespace DevZest.Data.Windows.Primitives
             if (_scrollDeltaMain != 0)
                 AdjustScrollToMain(true);
 
-            var headGap = HeadGap;
-            if (headGap > 0)
-                AdjustScrollToMain(-headGap, true);
+            var headGapToAdjust = HeadGapToAdjust;
+            if (headGapToAdjust > 0)
+                AdjustScrollToMain(-headGapToAdjust, true);
 
-            var tailGap = TailGap;
-            if (tailGap == 0)
-                return;
-
-            var extraLength = Math.Max(0, Translate(MinScrollToMain) - GetStartPositionMain(ContainerViewList[0]));
-            var lengthToAdjust = Math.Min(extraLength, tailGap);
-            if (lengthToAdjust > 0)
-                AdjustScrollToMain(-lengthToAdjust, true);
+            var tailGapToAdjust = TailGapToAdjust;
+            if (tailGapToAdjust > 0)
+                AdjustScrollToMain(-tailGapToAdjust, true);
         }
 
-        private double HeadGap
+        private double HeadGapToAdjust
         {
             get
             {
@@ -469,8 +464,31 @@ namespace DevZest.Data.Windows.Primitives
                 if (first == null)
                     return 0;
                 var firstStartPosition = GetStartPositionMain(first);
-                var scrollableStart = FrozenHeadLengthMain;
-                return firstStartPosition > 0 ? firstStartPosition - scrollableStart : 0;
+                return Math.Max(0, firstStartPosition - ScrollableStartPositionMain);
+            }
+        }
+
+        private double ScrollableStartPositionMain
+        {
+            get
+            {
+                var result = FrozenHeadLengthMain;
+                if (HeadTracksCountMain - FrozenHeadTracksCountMain > 0)
+                    result = Math.Max(result, GetPositionMain(HeadTracksCountMain, GridPlacement.Tail));
+                return result;
+            }
+        }
+
+        private double TailGapToAdjust
+        {
+            get
+            {
+                var tailGap = TailGap;
+                if (tailGap == 0)
+                    return 0;
+
+                var result = Math.Max(0, Translate(MinScrollToMain) - GetStartPositionMain(ContainerViewList.First));
+                return Math.Min(result, tailGap);
             }
         }
 
@@ -486,6 +504,8 @@ namespace DevZest.Data.Windows.Primitives
                 if (last == null)
                     return 0;
                 var lastEndPosition = GetStartPositionMain(last) + GetLengthMain(last);
+                if (TailTracksCountMain - FrozenTailTracksCountMain > 0)
+                    lastEndPosition += GetTailLengthMain(TailTracksCountMain) - FrozenTailLengthMain;
                 var scrollableEnd = availableLength - FrozenTailLengthMain;
                 return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
             }

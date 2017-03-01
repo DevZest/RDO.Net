@@ -267,7 +267,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxContainerCount > 0)
                 return new LogicalMainTrack(gridTrack, 0);
             else
-                return ScrollEndOffsetMain;
+                return TailStartLogicalMainTrack;
         }
 
         private LogicalMainTrack GetEndLogicalMainTrack(GridRange gridRange)
@@ -285,7 +285,7 @@ namespace DevZest.Data.Windows.Primitives
             if (MaxContainerCount > 0)
                 return new LogicalMainTrack(gridTrack, MaxContainerCount - 1);
             else
-                return ScrollEndOffsetMain;
+                return TailStartLogicalMainTrack;
         }
     }
 }
