@@ -67,8 +67,11 @@ namespace DevZest.Data.Windows.Primitives
 
         private LogicalExtent _scrollToMain;
         private GridPlacement _scrollToMainPlacement;
-
-        protected double ScrollOffsetMain { get; private set; }
+        private double? _scrollOffsetMain;
+        protected double ScrollOffsetMain
+        {
+            get { return _scrollOffsetMain.HasValue ? _scrollOffsetMain.GetValueOrDefault() : Translate(_scrollToMain) - Translate(MinScrollToMain); }
+        }
 
         private double _scrollDeltaMain;
         private void SetScrollDeltaMain(double value, bool invalidateMeasure)
@@ -104,7 +107,7 @@ namespace DevZest.Data.Windows.Primitives
         private void RefreshScrollOffset(double valueMain, double valueCross)
         {
             bool invalidateScrollInfo = !ScrollOffsetMain.IsClose(valueMain) || !ScrollOffsetCross.IsClose(valueCross);
-            ScrollOffsetMain = valueMain;
+            _scrollOffsetMain = valueMain;
             ScrollOffsetCross = valueCross;
             SetScrollDeltaMain(0, false);
             SetScrollDeltaCross(0, false);
@@ -246,6 +249,7 @@ namespace DevZest.Data.Windows.Primitives
 
         protected sealed override void PrepareMeasureContainers()
         {
+            _scrollOffsetMain = null;
             if (!UpdateScrollToMain())
                 CoerceScrollToMain();
             InitContainerViews();
@@ -443,34 +447,34 @@ namespace DevZest.Data.Windows.Primitives
             if (_scrollDeltaMain != 0)
                 AdjustScrollToMain(true);
 
-            var headGapToFill = HeadGapToFill;
-            if (headGapToFill > 0)
-                AdjustScrollToMain(-headGapToFill, true);
+            var headGap = HeadGap;
+            if (headGap > 0)
+                AdjustScrollToMain(-headGap, true);
 
-            var tailGapToFill = TailGapToFill;
-            if (tailGapToFill == 0)
+            var tailGap = TailGap;
+            if (tailGap == 0)
                 return;
 
-            var extraLength = Math.Max(0, Translate(MinScrollToMain) - GetFillPositionMain(ContainerViewList[0]));
-            var lengthToAdjust = Math.Min(extraLength, tailGapToFill);
+            var extraLength = Math.Max(0, Translate(MinScrollToMain) - GetStartPositionMain(ContainerViewList[0]));
+            var lengthToAdjust = Math.Min(extraLength, tailGap);
             if (lengthToAdjust > 0)
                 AdjustScrollToMain(-lengthToAdjust, true);
         }
 
-        private double HeadGapToFill
+        private double HeadGap
         {
             get
             {
                 var first = ContainerViewList.First;
                 if (first == null)
                     return 0;
-                var firstStartPosition = GetFillPositionMain(first);
+                var firstStartPosition = GetStartPositionMain(first);
                 var scrollableStart = FrozenHeadLengthMain;
                 return firstStartPosition > 0 ? firstStartPosition - scrollableStart : 0;
             }
         }
 
-        private double TailGapToFill
+        private double TailGap
         {
             get
             {
@@ -481,19 +485,10 @@ namespace DevZest.Data.Windows.Primitives
                 var last = ContainerViewList.Last;
                 if (last == null)
                     return 0;
-                var lastEndPosition = GetFillPositionMain(last) + GetLengthMain(last);
+                var lastEndPosition = GetStartPositionMain(last) + GetLengthMain(last);
                 var scrollableEnd = availableLength - FrozenTailLengthMain;
                 return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
             }
-        }
-
-        /// <remarks>ScrollOffsetMain is not available during FillForward/FillBackward, position must be calculated differently.</remarks>
-        private double GetFillPositionMain(ContainerView containerView)
-        {
-            var startTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).StartTrack;
-            var startExtent = new LogicalMainTrack(startTrack, containerView).StartExtent;
-            var scrollOffsetMain = Translate(_scrollToMain) - Translate(MinScrollToMain);
-            return startExtent - scrollOffsetMain;
         }
 
         private bool RemoveUnnecessaryContainerViews()
