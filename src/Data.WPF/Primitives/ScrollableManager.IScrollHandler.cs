@@ -336,9 +336,11 @@ namespace DevZest.Data.Windows.Primitives
                 if (lengthToFill > 0)
                     FillForward(logicalMainTrack, lengthToFill);
             }
+
             if (_scrollDeltaMain != 0)
                 AdjustScrollToMain();
-            //FillGap();
+
+            FillGap();
         }
 
         private void FillForward(LogicalMainTrack start, double availableLength)
@@ -498,8 +500,7 @@ namespace DevZest.Data.Windows.Primitives
                 var first = ContainerViewList.First;
                 if (first == null)
                     return 0;
-                var firstGridExtent = HeadTracksCountMain + first.ContainerOrdinal * ContainerTracksCountMain;
-                var firstStartPosition = GetPositionMain(firstGridExtent, GridPlacement.Head);
+                var firstStartPosition = GetFillPositionMain(first);
                 var scrollableStart = FrozenHeadLengthMain;
                 return firstStartPosition > scrollableStart ? firstStartPosition - scrollableStart : 0;
             }
@@ -516,11 +517,19 @@ namespace DevZest.Data.Windows.Primitives
                 var last = ContainerViewList.Last;
                 if (last == null)
                     return 0;
-                var lastGridExtent = HeadTracksCountMain + last.ContainerOrdinal * ContainerTracksCountMain;
-                var lastEndPosition = GetPositionMain(lastGridExtent, GridPlacement.Tail);
+                var lastEndPosition = GetFillPositionMain(last) + GetLengthMain(last);
                 var scrollableEnd = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
                 return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
             }
+        }
+
+        /// <remarks>ScrollOffsetMain is not available during FillForward/FillBackward, position must be calculated differently.</remarks>
+        private double GetFillPositionMain(ContainerView containerView)
+        {
+            var startTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).StartTrack;
+            var startExtent = new LogicalMainTrack(startTrack, containerView).StartExtent;
+            var scrollOffsetMain = Translate(_scrollToMain) - Translate(MinScrollToMain);
+            return startExtent - scrollOffsetMain;
         }
 
         protected sealed override void PrepareMeasure()
