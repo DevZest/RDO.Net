@@ -262,20 +262,32 @@ namespace DevZest.Data.Windows.Primitives
             if (_scrollDeltaMain == 0 || Math.Abs(_scrollDeltaMain) <= ViewportMain)
                 return false;
 
-            AdjustScrollToMain();
+            AdjustScrollToMain(false);
             return true;
         }
 
-        private void AdjustScrollToMain()
+        private void AdjustScrollToMain(bool assertRealized)
         {
-            AdjustScrollToMain(_scrollDeltaMain);
+            AdjustScrollToMain(_scrollDeltaMain, assertRealized);
         }
 
-        private void AdjustScrollToMain(double delta)
+        private void AdjustScrollToMain(double delta, bool assertRealized)
         {
             _scrollToMain = Translate(ScrollToMainExtent + delta);
             SetScrollDeltaMain(0, false);
             CoerceScrollToMain();
+            if (assertRealized)
+                AssertAdjustedScrollToMain();
+        }
+
+        [Conditional("DEBUG")]
+        private void AssertAdjustedScrollToMain()
+        {
+            var scrollTo = GetLogicalMainTrack(_scrollToMain.GridExtent);
+            Debug.Assert(!scrollTo.IsEof);
+
+            if (scrollTo.IsContainer)
+                Debug.Assert(ContainerViewList.GetContainerView(scrollTo.ContainerOrdinal) != null, "_scrollToMain must be realized ContainerView.");
         }
 
         private void CoerceScrollToMain()
@@ -322,80 +334,89 @@ namespace DevZest.Data.Windows.Primitives
 
         private void FillForward()
         {
-            var logicalMainTrack = GetLogicalMainTrack(_scrollToMain.GridExtent);
-            if (!logicalMainTrack.IsEof)
+            if (CanRealizeForward)
             {
-                var lengthToFill = GridTracksMain.AvailableLength + _scrollDeltaMain;
-                if (logicalMainTrack.IsContainer)
-                {
-                    if (ContainerViewList.Count == 1)
-                        lengthToFill += GetFillForwardOffset(ContainerViewList[0], logicalMainTrack.GridTrack, _scrollToMain.Fraction);
-                }
-                else
-                    lengthToFill += logicalMainTrack.GridTrack.MeasuredLength * _scrollToMain.Fraction;
-                if (lengthToFill > 0)
-                    FillForward(logicalMainTrack, lengthToFill);
+                var lengthToRealize = LengthToRealizeForwardFromHead;
+                if (lengthToRealize > 0)
+                    RealizeForward(lengthToRealize);
+            }
+
+            if (CanRealizeBackward && _scrollDeltaMain < 0)
+            {
+                var lengthToRealize = LengthToRealizeBackwardFromHead;
+                if (lengthToRealize > 0)
+                    RealizeBackward(lengthToRealize);
             }
 
             if (_scrollDeltaMain != 0)
-                AdjustScrollToMain();
+                AdjustScrollToMain(true);
 
             FillGap();
         }
 
-        private void FillForward(LogicalMainTrack start, double availableLength)
+        private bool CanRealizeForward
         {
-            Debug.Assert(!start.IsEof);
-            Debug.Assert(availableLength > 0);
-
-            if (start.IsTail)
-                return;
-
-            if (start.IsContainer)
-            {
-                RealizeForward(start.ContainerOrdinal, availableLength);
-                return;
-            }
-
-            Debug.Assert(start.IsHead && !start.IsFrozenHead);
-            var startTrack = start.GridTrack;
-            var endTrack = GridTracksMain[HeadTracksCountMain - 1];
-            var measuredLength = endTrack.EndOffset - startTrack.StartOffset;
-            availableLength -= measuredLength;
-            if (availableLength <= 0)
-                return;
-
-            if (MaxContainerCount > 0)
-                RealizeForward(0, availableLength);
+            get { return ContainerViewList.Last != null && ContainerViewList.Last.ContainerOrdinal < MaxContainerCount - 1; }
         }
 
-        private void RealizeForward(int containerOrdinal, double availableLength)
+        private bool CanRealizeBackward
         {
-            Debug.Assert(containerOrdinal >= 0 && containerOrdinal <= MaxContainerCount - 1);
-            Debug.Assert(availableLength > 0);
+            get { return ContainerViewList.First != null && ContainerViewList.First.ContainerOrdinal > 0; }
+        }
 
-            Debug.Assert((ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == containerOrdinal) ||
-                ContainerViewList.Last.ContainerOrdinal == containerOrdinal - 1);
-
-            for (int ordinal = containerOrdinal; ordinal < MaxContainerCount; ordinal++)
+        private double LengthToRealizeForwardFromHead
+        {
+            get
             {
-                ContainerView containerView;
-                if (ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == ordinal)
-                    containerView = ContainerViewList[0];
-                else
-                {
-                    ContainerViewList.RealizeNext();
-                    containerView = ContainerViewList.Last;
-                    containerView.Measure(Size.Empty);
-                }
-                var measuredLength = GetLengthMain(containerView);
-                availableLength -= measuredLength;
-                if (availableLength <= 0)
-                    return;
+                Debug.Assert(_scrollToMainPlacement == GridPlacement.Head);
+                Debug.Assert(ContainerViewList.Count == 1);
+
+                var start = GetLogicalMainTrack(_scrollToMain.GridExtent);
+                if (start.IsEof || start.IsTail)
+                    return 0;
+
+                var result = GridTracksMain.AvailableLength + _scrollDeltaMain;
+
+                var fraction = _scrollToMain.Fraction;
+                if (start.IsContainer)
+                    return result - GetOffset(ContainerViewList.GetContainerView(start.ContainerOrdinal), start.GridTrack, fraction);
+
+                Debug.Assert(start.IsHead && !start.IsFrozenHead);
+                Debug.Assert(ContainerViewList.Count == 1);
+                var startTrack = start.GridTrack;
+                var endTrack = GridTracksMain[HeadTracksCountMain - 1];
+                var excludedLength = endTrack.EndOffset - (startTrack.StartOffset + startTrack.MeasuredLength * fraction);
+                return result - excludedLength - GetLengthMain(ContainerViewList[0]);
             }
         }
 
-        private double GetFillForwardOffset(ContainerView containerView, GridTrack gridTrack, double fraction)
+        private double LengthToRealizeBackwardFromHead
+        {
+            get
+            {
+                Debug.Assert(_scrollToMainPlacement == GridPlacement.Head);
+                Debug.Assert(ContainerViewList.Count > 0);
+                Debug.Assert(_scrollDeltaMain < 0);
+
+                var end = GetLogicalMainTrack(_scrollToMain.GridExtent);
+                if (end.IsEof || end.IsHead)
+                    return 0;
+
+                var result = -_scrollDeltaMain;
+                var fraction = _scrollToMain.Fraction;
+                if (end.IsContainer)
+                    return result - GetOffset(ContainerViewList.GetContainerView(end.ContainerOrdinal), end.GridTrack, fraction);
+
+                Debug.Assert(end.IsTail && !end.IsFrozenTail);
+                Debug.Assert(ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == MaxContainerCount - 1);
+                var endTrack = end.GridTrack;
+                var startTrack = GridTracksMain[HeadTracksCountMain + ContainerTracksCountMain];
+                var excludedLength = (endTrack.StartOffset - endTrack.MeasuredLength * fraction) - startTrack.StartOffset;
+                return result - excludedLength - GetLengthMain(ContainerViewList[0]);
+            }
+        }
+
+        private double GetOffset(ContainerView containerView, GridTrack gridTrack, double fraction)
         {
             Debug.Assert(gridTrack.IsContainer);
 
@@ -408,61 +429,49 @@ namespace DevZest.Data.Windows.Primitives
             return length - gridSpan.Length * (1 - fraction);
         }
 
+
+        private double RealizeForward(double availableLength)
+        {
+            Debug.Assert(availableLength > 0 && CanRealizeForward);
+
+            double result = 0;
+            for (int ordinal = ContainerViewList.Last.ContainerOrdinal + 1; ordinal < MaxContainerCount; ordinal++)
+            {
+                ContainerViewList.RealizeNext();
+                var containerView = ContainerViewList.Last;
+                containerView.Measure(Size.Empty);
+                var measuredLength = GetLengthMain(containerView);
+                result += measuredLength;
+                availableLength -= measuredLength;
+                if (availableLength <= 0)
+                    break;
+            }
+            return result;
+        }
+
         private void FillBackward()
         {
             throw new NotImplementedException();
         }
 
-        private void FillBackward(LogicalMainTrack end, double availableLength)
+        private double RealizeBackward(double availableLength)
         {
-            Debug.Assert(!end.IsEof);
+            Debug.Assert(CanRealizeBackward);
             Debug.Assert(availableLength > 0);
 
-            if (end.IsHead)
-                return;
-
-            if (end.IsContainer)
+            double result = 0;
+            for (int ordinal = ContainerViewList.First.ContainerOrdinal - 1; ordinal >= 0; ordinal--)
             {
-                RealizeBackward(end.ContainerOrdinal, availableLength);
-                return;
-            }
-
-            Debug.Assert(end.IsTail && !end.IsFrozenTail);
-            var startTrack = GridTracksMain[HeadTracksCountMain + ContainerTracksCountMain];
-            var endTrack = end.GridTrack;
-            var measuredLength = endTrack.EndOffset - startTrack.StartOffset;
-            availableLength -= measuredLength;
-            if (availableLength <= 0)
-                return;
-
-            if (MaxContainerCount > 0)
-                RealizeBackward(MaxContainerCount - 1, availableLength);
-        }
-
-        private void RealizeBackward(int containerOrdinal, double availableLength)
-        {
-            Debug.Assert(containerOrdinal >= 0 && containerOrdinal <= MaxContainerCount - 1);
-            Debug.Assert(availableLength > 0);
-
-            Debug.Assert((ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == containerOrdinal)
-                || ContainerViewList.First.ContainerOrdinal == containerOrdinal + 1);
-
-            for (int ordinal = containerOrdinal; ordinal >= 0; ordinal--)
-            {
-                ContainerView containerView;
-                if (ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == containerOrdinal)
-                    containerView = ContainerViewList[0];
-                else
-                {
-                    ContainerViewList.RealizePrev();
-                    containerView = ContainerViewList.First;
-                    containerView.Measure(Size.Empty);
-                }
+                ContainerViewList.RealizePrev();
+                var containerView = ContainerViewList.First;
+                containerView.Measure(Size.Empty);
                 var measuredLength = GetLengthMain(containerView);
+                result += measuredLength;
                 availableLength -= measuredLength;
                 if (availableLength <= 0)
-                    return;
+                    break;
             }
+            return result;
         }
 
         private void FillGap()
@@ -472,59 +481,49 @@ namespace DevZest.Data.Windows.Primitives
             if (ContainerViewList.Count == 0)
                 return;
 
-            var headGapToFill = HeadGapToFill;
-            if (headGapToFill > 0)
-            {
-                var first = ContainerViewList.First;
-                if (first != null && first.ContainerOrdinal > 0)
-                    RealizeBackward(first.ContainerOrdinal - 1, headGapToFill);
-            }
+            var headGapToFill = GetHeadGapToFill(true);
+            if (headGapToFill > 0 && CanRealizeBackward)
+                RealizeBackward(headGapToFill);
 
-            headGapToFill = HeadGapToFill;
-            if (headGapToFill > 0)
-                AdjustScrollToMain(-headGapToFill);
+            var tailGapToFill = GetTailGapToFill(true);
+            if (tailGapToFill > 0 && CanRealizeForward)
+                RealizeForward(tailGapToFill);
 
-            var tailGapToFill = TailGapToFill;
-            if (tailGapToFill > 0)
-            {
-                var last = ContainerViewList.Last;
-                if (last != null && last.ContainerOrdinal < MaxContainerCount - 1)
-                    RealizeForward(last.ContainerOrdinal + 1, tailGapToFill);
-            }
+            tailGapToFill = GetTailGapToFill(true);
+            var extraLength = Math.Max(0, -GetFillPositionMain(ContainerViewList[0], true));
+            tailGapToFill -= extraLength;
+            if (tailGapToFill > 0 && CanRealizeBackward)
+                RealizeBackward(tailGapToFill);
         }
 
-        private double HeadGapToFill
+        private double GetHeadGapToFill(bool ignoreFrozen)
         {
-            get
-            {
-                var first = ContainerViewList.First;
-                if (first == null)
-                    return 0;
-                var firstStartPosition = GetFillPositionMain(first);
-                var scrollableStart = FrozenHeadLengthMain;
-                return firstStartPosition > scrollableStart ? firstStartPosition - scrollableStart : 0;
-            }
+            var first = ContainerViewList.First;
+            if (first == null)
+                return 0;
+            var firstStartPosition = GetFillPositionMain(first, ignoreFrozen);
+            var scrollableStart = ignoreFrozen ? 0 : FrozenHeadLengthMain;
+            return firstStartPosition > 0 ? firstStartPosition - scrollableStart : 0;
         }
 
-        private double TailGapToFill
+        private double GetTailGapToFill(bool ignoreFrozen)
         {
-            get
-            {
-                var availableLength = GridTracksMain.AvailableLength;
-                if (double.IsPositiveInfinity(availableLength))
-                    return availableLength;
+            var availableLength = GridTracksMain.AvailableLength;
+            if (double.IsPositiveInfinity(availableLength))
+                return availableLength;
 
-                var last = ContainerViewList.Last;
-                if (last == null)
-                    return 0;
-                var lastEndPosition = GetFillPositionMain(last) + GetLengthMain(last);
-                var scrollableEnd = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
-                return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
-            }
+            var last = ContainerViewList.Last;
+            if (last == null)
+                return 0;
+            var lastEndPosition = GetFillPositionMain(last, ignoreFrozen) + GetLengthMain(last);
+            var scrollableEnd = availableLength;
+            if (!ignoreFrozen)
+                scrollableEnd -= FrozenTailLengthMain;
+            return scrollableEnd > lastEndPosition ? scrollableEnd - lastEndPosition : 0;
         }
 
         /// <remarks>ScrollOffsetMain is not available during FillForward/FillBackward, position must be calculated differently.</remarks>
-        private double GetFillPositionMain(ContainerView containerView)
+        private double GetFillPositionMain(ContainerView containerView, bool ignoreFrozne)
         {
             var startTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).StartTrack;
             var startExtent = new LogicalMainTrack(startTrack, containerView).StartExtent;
@@ -535,10 +534,28 @@ namespace DevZest.Data.Windows.Primitives
         protected sealed override void PrepareMeasure()
         {
             base.PrepareMeasure();
-            // must be done after ScalarBindings.PostAutoSizeBindings measured.
+
+            // The following operations must be done after ScalarBindings.PostAutoSizeBindings measured.
+            CoerceGapToFill();
             RefreshViewport();
             RefreshExtent();  // Exec order matters: RefreshExtent relies on RefreshViewport
             RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
+        }
+
+        private void CoerceGapToFill()
+        {
+            var headGapToFill = GetHeadGapToFill(false);
+            if (headGapToFill > 0)
+                AdjustScrollToMain(-headGapToFill, true);
+
+            var tailGapToFill = GetTailGapToFill(false);
+            if (tailGapToFill == 0)
+                return;
+
+            var extraLength = Math.Max(0, Translate(MinScrollToMain) - GetFillPositionMain(ContainerViewList[0], false));
+            var lengthToAdjust = Math.Min(extraLength, tailGapToFill);
+            if (lengthToAdjust > 0)
+                AdjustScrollToMain(-lengthToAdjust, true);
         }
 
         private void RefreshExtent()
