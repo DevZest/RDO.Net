@@ -379,7 +379,7 @@ namespace DevZest.Data.Windows.Primitives
 
                 var fraction = _scrollToMain.Fraction;
                 if (start.IsContainer)
-                    return result - GetOffset(ContainerViewList.GetContainerView(start.ContainerOrdinal), start.GridTrack, fraction);
+                    return result - GetRelativePositionMain(ContainerViewList.GetContainerView(start.ContainerOrdinal), start.GridTrack, fraction);
 
                 Debug.Assert(start.IsHead && !start.IsFrozenHead);
                 Debug.Assert(ContainerViewList.Count == 1);
@@ -405,7 +405,7 @@ namespace DevZest.Data.Windows.Primitives
                 var result = -_scrollDeltaMain;
                 var fraction = _scrollToMain.Fraction;
                 if (end.IsContainer)
-                    return result - GetOffset(ContainerViewList.GetContainerView(end.ContainerOrdinal), end.GridTrack, fraction);
+                    return result - GetRelativePositionMain(ContainerViewList.GetContainerView(end.ContainerOrdinal), end.GridTrack, fraction);
 
                 Debug.Assert(end.IsTail && !end.IsFrozenTail);
                 Debug.Assert(ContainerViewList.Count == 1 && ContainerViewList[0].ContainerOrdinal == MaxContainerCount - 1);
@@ -416,17 +416,15 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private double GetOffset(ContainerView containerView, GridTrack gridTrack, double fraction)
+        private double GetRelativePositionMain(ContainerView containerView, GridTrack gridTrack, double fraction)
         {
             Debug.Assert(gridTrack.IsContainer);
+            Debug.Assert(fraction >= 0 && fraction <= 1);
 
-            var firstGridTrack = GridTracksMain[HeadTracksCountMain];
-            var gridSpan = new LogicalMainTrack(gridTrack, containerView);
-            if (firstGridTrack == gridTrack)
-                return gridSpan.Length * fraction;
-
-            var length = gridSpan.EndExtent - new LogicalMainTrack(firstGridTrack, containerView).StartExtent;
-            return length - gridSpan.Length * (1 - fraction);
+            var result = GetRelativePositionMain(containerView, gridTrack);
+            if (fraction > 0)
+                result += new LogicalMainTrack(gridTrack, containerView).Length * fraction;
+            return result;
         }
 
 
