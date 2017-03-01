@@ -59,6 +59,16 @@ namespace DevZest.Data.Windows.Primitives
             internal override void VirtualizeAll()
             {
             }
+
+            internal override void VirtualizeFirst()
+            {
+                throw new NotSupportedException();
+            }
+
+            internal override void VirtualizeLast()
+            {
+                throw new NotSupportedException();
+            }
         }
 
         private sealed class ContainerViewListImpl : ContainerViewList
@@ -148,8 +158,24 @@ namespace DevZest.Data.Windows.Primitives
                 if (_count == 0)
                     return;
 
-                _elementManager.VirtualizeContainerViewList();
+                _elementManager.VirtualizeAll();
                 _count = 0;
+            }
+
+            internal override void VirtualizeFirst()
+            {
+                Debug.Assert(First != null);
+
+                _elementManager.VirtualizeFirst();
+                _count--;
+            }
+
+            internal override void VirtualizeLast()
+            {
+                Debug.Assert(Last != null);
+
+                _elementManager.VirtualizeLast();
+                _count--;
             }
         }
 
@@ -199,6 +225,10 @@ namespace DevZest.Data.Windows.Primitives
         internal abstract void RealizeNext();
 
         internal abstract void VirtualizeAll();
+
+        internal abstract void VirtualizeFirst();
+
+        internal abstract void VirtualizeLast();
 
         private bool IsRealized(int ordinal)
         {

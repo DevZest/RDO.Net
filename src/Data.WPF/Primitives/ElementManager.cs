@@ -183,7 +183,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        internal void VirtualizeContainerViewList()
+        internal void VirtualizeAll()
         {
             Debug.Assert(ContainerViewList.Count > 0);
 
@@ -198,6 +198,31 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             CurrentContainerViewPlacement = CurrentContainerViewPlacement.Alone;
+        }
+
+        internal void VirtualizeFirst()
+        {
+            var containerView = ContainerViewList.First;
+            if (containerView == CurrentContainerView)
+                CurrentContainerViewPlacement = CurrentContainerViewPlacement.BeforeList;
+            else
+            {
+                Cleanup(containerView);
+                ElementCollection.RemoveAt(ContainerViewListStartIndex);
+            }
+        }
+
+        internal void VirtualizeLast()
+        {
+            var startIndex = ContainerViewListStartIndex;
+            var containerView = ContainerViewList.Last;
+            if (containerView == CurrentContainerView)
+                CurrentContainerViewPlacement = CurrentContainerViewPlacement.BeforeList;
+            else
+            {
+                Cleanup(containerView);
+                ElementCollection.RemoveAt(ContainerViewListStartIndex + ContainerViewList.Count - 1);
+            }
         }
 
         internal RowView Setup(BlockView blockView, RowPresenter row)

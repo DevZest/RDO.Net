@@ -537,6 +537,7 @@ namespace DevZest.Data.Windows.Primitives
 
             // The following operations must be done after ScalarBindings.PostAutoSizeBindings measured.
             CoerceGapToFill();
+            RemoveunnecessaryContainerViews();
             RefreshViewport();
             RefreshExtent();  // Exec order matters: RefreshExtent relies on RefreshViewport
             RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
@@ -556,6 +557,11 @@ namespace DevZest.Data.Windows.Primitives
             var lengthToAdjust = Math.Min(extraLength, tailGapToFill);
             if (lengthToAdjust > 0)
                 AdjustScrollToMain(-lengthToAdjust, true);
+        }
+
+        private void RemoveunnecessaryContainerViews()
+        {
+
         }
 
         private void RefreshExtent()
