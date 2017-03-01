@@ -356,6 +356,9 @@ namespace DevZest.Data.Windows.Primitives
             var extraFillForward = Math.Max(0, GridTracksMain.AvailableLength - lengthFilledForward - lengthFilledBackward);
             if (extraFillForward > 0 && CanRealizeForward)
                 RealizeForward(extraFillForward);
+
+            if (_scrollDeltaMain != 0)
+                AdjustScrollToMain(true);
         }
 
         private bool CanRealizeForward
@@ -429,9 +432,9 @@ namespace DevZest.Data.Windows.Primitives
             base.PrepareMeasure();
 
             // The following operations must be done after ScalarBindings.PostAutoSizeBindings measured.
-            AdjustScrollToMain();
+            FillGap();
             RefreshScrollInfo();
-            if (RemoveUnnecessaryContainerViews() && _variantLengthHandler != null)
+            if (RemoveInvisibleContainerViews() && _variantLengthHandler != null)
                 RefreshScrollInfo();
         }
 
@@ -442,11 +445,8 @@ namespace DevZest.Data.Windows.Primitives
             RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
         }
 
-        private void AdjustScrollToMain()
+        private void FillGap()
         {
-            if (_scrollDeltaMain != 0)
-                AdjustScrollToMain(true);
-
             var headGapToAdjust = HeadGapToAdjust;
             if (headGapToAdjust > 0)
                 AdjustScrollToMain(-headGapToAdjust, true);
@@ -511,21 +511,21 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private bool RemoveUnnecessaryContainerViews()
+        private bool RemoveInvisibleContainerViews()
         {
-            var countFirst = FirstContainerViewToRemoveCount;
-            var countLast = LastContainerViewToRemoveCount;
+            var countHead = HeadInvisibleContainerViewsCount;
+            var countTail = TailInvisibleContainerViewsCount;
 
-            for (int i = 0; i < countFirst; i++)
+            for (int i = 0; i < countHead; i++)
                 RemoveFirstContainerView();
 
-            for (int i = 0; i < countLast; i++)
+            for (int i = 0; i < countTail; i++)
                 RemoveLastContainerView();
 
-            return countFirst > 0 || countLast > 0;
+            return countHead > 0 || countTail > 0;
         }
 
-        private int FirstContainerViewToRemoveCount
+        private int HeadInvisibleContainerViewsCount
         {
             get
             {
@@ -542,7 +542,7 @@ namespace DevZest.Data.Windows.Primitives
             }
         }
 
-        private int LastContainerViewToRemoveCount
+        private int TailInvisibleContainerViewsCount
         {
             get
             {
