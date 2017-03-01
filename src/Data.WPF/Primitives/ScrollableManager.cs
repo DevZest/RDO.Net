@@ -29,76 +29,31 @@ namespace DevZest.Data.Windows.Primitives
         protected ScrollableManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
             : base(template, dataSet, where, orderBy, false)
         {
-            _scrollStartMain = ScrollOriginMain;
+            _scrollToMain = MinScrollToMain;
+            _scrollToMainPlacement = GridPlacement.Head;
         }
 
         internal abstract IGridTrackCollection GridTracksMain { get; }
         internal abstract IGridTrackCollection GridTracksCross { get; }
 
-        private void InitContainerViews()
-        {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.ClearMeasuredLengths();
-            ContainerViewList.VirtualizeAll();
-
-            var initialOrdinal = GetInitialOrdinal();
-            if (initialOrdinal >= 0)
-            {
-                ContainerViewList.RealizeFirst(initialOrdinal);
-                ContainerViewList[0].Measure(Size.Empty);
-            }
-        }
-
-        private int GetInitialOrdinal()
-        {
-            if (MaxContainerCount == 0)
-                return -1;
-
-            var logicalMainTrack = GetLogicalMainTrack(_scrollStartMain.GridExtent);
-            if (logicalMainTrack.IsEof)
-                return MaxContainerCount - 1;
-
-            var gridTrack = logicalMainTrack.GridTrack;
-            if (gridTrack.IsHead)
-                return 0;
-            else if (gridTrack.IsContainer)
-                return logicalMainTrack.ContainerOrdinal;
-            else
-                return MaxContainerCount - 1;
-        }
-
-        private LogicalExtent ScrollOriginMain
+        private LogicalExtent MinScrollToMain
         {
             get { return new LogicalExtent(FrozenHeadTracksCountMain); }
         }
 
-        private LogicalExtent _scrollStartMain;
-        private double ScrollStartMain
+        private LogicalExtent MaxScrollToMain
         {
-            get { return Translate(_scrollStartMain); }
+            get { return new LogicalExtent(MaxGridExtentMain - FrozenTailTracksCountMain); }
+        }
+
+        private double ScrollToMainExtent
+        {
+            get { return Translate(_scrollToMain); }
         }
 
         private LogicalMainTrack ScrollEndOffsetMain
         {
-            get { return MaxFrozenTailMain > 0 ? new LogicalMainTrack(GridTracksMain.LastOf(MaxFrozenTailMain)) : LogicalMainTrack.Eof; }
-        }
-
-        private void AdjustScrollStartMain(double delta)
-        {
-            _scrollStartMain = Translate(ScrollStartMain + delta);
-            var scrollOriginMain = ScrollOriginMain;
-            if (_scrollStartMain.Value < scrollOriginMain.Value)
-                _scrollStartMain = scrollOriginMain;
-        }
-
-        private double DeltaScrollOffset
-        {
-            get { return _scrollOffsetMain - _oldScrollOffsetMain; }
-        }
-
-        private void ClearDeltaScrollOffset()
-        {
-            _oldScrollOffsetMain = _scrollOffsetMain;
+            get { return TailTracksCountMain > 0 ? new LogicalMainTrack(GridTracksMain.LastOf(TailTracksCountMain)) : LogicalMainTrack.Eof; }
         }
 
         private Vector ToVector(double valueMain, double valueCross)
@@ -135,6 +90,11 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksMain.FrozenHeadTracksCount; }
         }
 
+        private int FrozenTailTracksCountMain
+        {
+            get { return GridTracksMain.FrozenTailTracksCount; }
+        }
+
         private int FrozenHeadTracksCountCross
         {
             get { return GridTracksCross.FrozenHeadTracksCount; }
@@ -143,6 +103,16 @@ namespace DevZest.Data.Windows.Primitives
         private int HeadTracksCountMain
         {
             get { return GridTracksMain.HeadTracksCount; }
+        }
+
+        private LogicalMainTrack LastHeadTrackMain
+        {
+            get { return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain - 1]); }
+        }
+
+        private LogicalMainTrack FirstTailTrackMain
+        {
+            get { return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + ContainerTracksCountMain]); }
         }
 
         private int HeadTracksCountCross
@@ -165,14 +135,14 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksCross.TailTracksCount; }
         }
 
-        private int ContainerGridTracksMain
+        private int ContainerTracksCountMain
         {
             get { return GridTracksMain.ContainerEnd.Ordinal - GridTracksMain.ContainerStart.Ordinal + 1; }
         }
 
         private int TotalContainerGridTracksMain
         {
-            get { return MaxContainerCount * ContainerGridTracksMain; }
+            get { return MaxContainerCount * ContainerTracksCountMain; }
         }
 
         private int FrozenTailMain
@@ -185,7 +155,7 @@ namespace DevZest.Data.Windows.Primitives
             get { return GridTracksCross.FrozenTailTracksCount; }
         }
 
-        private int MaxFrozenTailMain
+        private int TailTracksCountMain
         {
             get { return GridTracksMain.TailTracksCount; }
         }
@@ -215,38 +185,6 @@ namespace DevZest.Data.Windows.Primitives
         {
             base.OnRowsChanged();
             InvalidateMeasure();
-        }
-
-        private void InitScroll()
-        {
-            if (DeltaScrollOffset == 0 || (DeltaScrollOffset < 0 && Math.Abs(DeltaScrollOffset) <= ViewportMain))
-                return;
-
-            AdjustScrollStartMain(DeltaScrollOffset);
-            ClearDeltaScrollOffset();
-        }
-
-        protected sealed override void PrepareMeasureContainers()
-        {
-            InitScroll();
-            InitContainerViews();
-
-            if (DeltaScrollOffset < 0 || _scrollStartMain.GridExtent >= MaxGridExtentMain)
-                MeasureBackward(-DeltaScrollOffset, true);
-            else
-                MeasureForward(GridTracksMain.AvailableLength);
-            FillGap();
-            RefreshScrollInfo();
-        }
-
-        private double HeadEndOffset
-        {
-            get { return HeadTracksCountMain == 0 ? 0 : GridTracksMain[HeadTracksCountMain - 1].EndOffset; }
-        }
-
-        private double TailStartOffset
-        {
-            get { return MaxFrozenTailMain == 0 ? MaxExtentMain : GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).StartExtent; }
         }
 
         private double FrozenHeadLengthMain
@@ -291,240 +229,13 @@ namespace DevZest.Data.Windows.Primitives
 
         private double TailLengthMain
         {
-            get { return MaxFrozenTailMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - MaxFrozenTailMain).StartExtent; }
+            get { return TailTracksCountMain == 0 ? 0 : MaxExtentMain - GetLogicalMainTrack(MaxGridExtentMain - TailTracksCountMain).StartExtent; }
         }
 
-        private double GapToFill
-        {
-            get
-            {
-                var availableLength = GridTracksMain.AvailableLength;
-                if (double.IsPositiveInfinity(availableLength))
-                    return availableLength;
-
-                var scrollable = availableLength - (FrozenHeadLengthMain + FrozenTailLengthMain);
-                var endOffset = ContainerViewList.Count == 0 ? GridTracksMain[HeadTracksCountMain].StartOffset : GetEndExtent(ContainerViewList[ContainerViewList.Count - 1]);
-                return scrollable - (endOffset - ScrollStartMain);
-            }
-        }
-
-        private void FillGap()
-        {
-            var gap = GapToFill;
-            gap -= RealizeForward(gap) + TailLengthMain - FrozenTailLengthMain;
-            if (gap > 0)
-                MeasureBackward(gap, false);
-        }
-
-        private void MeasureBackward(double availableLength, bool flagScrollBack)
-        {
-            Debug.Assert(availableLength >= 0);
-
-            var logicalMainTrack = GetLogicalMainTrack(_scrollStartMain.GridExtent);
-            if (logicalMainTrack.IsEof)
-            {
-                MeasureBackwardEof(availableLength, flagScrollBack);
-                return;
-            }
-
-            var gridTrack = logicalMainTrack.GridTrack;
-            if (gridTrack.IsTail)
-                MeasureBackwardTail(availableLength, flagScrollBack);
-            else if (gridTrack.IsContainer)
-                MeasureBackwardRepeat(availableLength, flagScrollBack);
-            else
-            {
-                Debug.Assert(gridTrack.IsHead);
-                MeasureBackwardHead(availableLength, flagScrollBack);
-            }
-        }
-
-        private void MeasureBackwardEof(double availableLength, bool flagScrollBack)
-        {
-            if (MaxFrozenTailMain > 0)
-                MeasureBackwardTail(availableLength, flagScrollBack);
-            else if (MaxContainerCount > 0)
-                MeasureBackwardRepeat(availableLength, flagScrollBack);
-            else if (HeadTracksCountMain > 0)
-                MeasureBackwardHead(availableLength, flagScrollBack);
-        }
-
-        private void MeasureBackwardTail(double availableLength, bool flagScrollBack)
-        {
-            var measuredLength = Math.Min(availableLength, ScrollStartMain - TailStartOffset);
-            Debug.Assert(measuredLength >= 0);
-            if (measuredLength > 0)
-            {
-                AdjustScrollStartMain(-measuredLength);
-                availableLength -= measuredLength;
-            }
-            if (availableLength == 0)
-                return;
-
-            if (MaxContainerCount > 0)
-                MeasureBackwardRepeat(availableLength, flagScrollBack);
-            else if (HeadTracksCountMain > 0)
-                MeasureBackwardHead(availableLength, flagScrollBack);
-        }
-
-        private void MeasureBackwardRepeat(double availableLength, bool flagScrollBack)
-        {
-            if (availableLength <= 0)
-                return;
-
-            var containerView = ContainerViewList[0];
-            var scrollLength = Math.Min(availableLength, ScrollStartMain - GetStartExtent(containerView));
-            if (scrollLength > 0)
-            {
-                AdjustScrollStartMain(-scrollLength);
-                availableLength -= scrollLength;
-            }
-            availableLength = RealizeBackward(availableLength);
-            if (availableLength > 0 && FrozenHeadTracksCountMain > 0)
-                MeasureBackwardHead(availableLength, flagScrollBack);
-        }
-
-        private double RealizeBackward(double availableLength)
-        {
-            if (ContainerViewList.Count == 0)
-                return availableLength;
-
-            Debug.Assert(ContainerViewList.Count > 0);
-
-            for (int ordinal = ContainerViewList.First.ContainerOrdinal - 1; ordinal >= 0 && availableLength > 0; ordinal--)
-            {
-                ContainerViewList.RealizePrev();
-                var containerView = ContainerViewList.First;
-                containerView.Measure(Size.Empty);
-                var measuredLength = Math.Min(availableLength, GetLengthMain(containerView));
-                AdjustScrollStartMain(-measuredLength);
-                availableLength -= measuredLength;
-            }
-            return availableLength;
-        }
-
-        private void MeasureBackwardHead(double availableLength, bool flagScrollBack)
-        {
-            Debug.Assert(availableLength >= 0);
-            var measuredLength = Math.Min(availableLength, flagScrollBack ? _oldScrollOffsetMain : ScrollOffsetMain);
-            if (measuredLength > 0)
-               AdjustScrollStartMain(-measuredLength);
-        }
-
-        private void MeasureForward(double availableLength)
-        {
-            availableLength -= Math.Max(FrozenHeadLengthMain, HeadEndOffset - ScrollOffsetMain);
-            if (availableLength <= 0)
-                return;
-
-            var logicalMainTrack = GetLogicalMainTrack(_scrollStartMain.GridExtent);
-            Debug.Assert(!logicalMainTrack.IsEof);
-            var gridTrack = logicalMainTrack.GridTrack;
-            var fraction = _scrollStartMain.Fraction;
-            if (gridTrack.IsHead)
-                MeasureForwardHead(gridTrack, fraction, availableLength);
-            else if (gridTrack.IsContainer)
-                MeasureForwardRepeat(logicalMainTrack, fraction, availableLength);
-        }
-
-        private void MeasureForwardHead(GridTrack gridTrack, double fraction, double availableLength)
-        {
-            Debug.Assert(gridTrack.IsHead);
-            var measuredLength = HeadEndOffset - (gridTrack.StartOffset + gridTrack.MeasuredLength * fraction);
-            Debug.Assert(measuredLength >= 0);
-            if (MaxContainerCount > 0)
-                MeasureForwardRepeat(new LogicalMainTrack(GridTracksMain.ContainerStart, 0), 0, availableLength - measuredLength);
-        }
-
-        private void MeasureForwardRepeat(LogicalMainTrack logicalGridTrack, double fraction, double availableLength)
-        {
-            Debug.Assert(ContainerViewList.Count == 1);
-            if (FrozenTailMain > 0)
-                availableLength -= FrozenTailLengthMain;
-
-            var gridTrack = logicalGridTrack.GridTrack;
-            Debug.Assert(gridTrack.IsContainer);
-            var containerView = ContainerViewList[0];
-            Debug.Assert(containerView.ContainerOrdinal == logicalGridTrack.ContainerOrdinal);
-            availableLength -= GetLengthMain(containerView) - GetRelativeOffsetMain(containerView, gridTrack, fraction);
-            RealizeForward(availableLength);
-        }
-
-        private double GetRelativeOffsetMain(ContainerView containerView, GridTrack gridTrack)
+        private double GetRelativePositionMain(ContainerView containerView, GridTrack gridTrack)
         {
             Debug.Assert(GridTracksMain.GetGridSpan(Template.ContainerRange).Contains(gridTrack));
             return new LogicalMainTrack(gridTrack, containerView).StartPosition - GetStartPositionMain(containerView);
-        }
-
-        private double GetRelativeOffsetMain(ContainerView containerView, GridTrack gridTrack, double fraction)
-        {
-            return GetRelativeOffsetMain(containerView, gridTrack) + GetMeasuredLength(containerView, gridTrack) * fraction;
-        }
-
-        private double RealizeForward(double availableLength)
-        {
-            if (ContainerViewList.Count == 0)
-                return 0;
-
-            Debug.Assert(ContainerViewList.Last != null);
-
-            double result = 0;
-
-            for (int ordinal = ContainerViewList.Last.ContainerOrdinal + 1; ordinal < MaxContainerCount && availableLength > 0; ordinal++)
-            {
-                ContainerViewList.RealizeNext();
-                var containerView = ContainerViewList.Last;
-                containerView.Measure(Size.Empty);
-                var measuredLength = GetLengthMain(containerView);
-                result += measuredLength;
-                availableLength -= measuredLength;
-            }
-            return result;
-        }
-
-        private void RefreshScrollInfo()
-        {
-            RefreshViewport();
-            RefreshExtent();  // Exec order matters: RefreshExtent relies on RefreshViewport
-            RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
-        }
-
-        private void RefreshExtent()
-        {
-            var valueMain = MaxExtentMain;
-            if (valueMain < ViewportMain)
-                valueMain = ViewportMain;
-            var valueCross = MaxExtentCross;
-            if (valueCross < ViewportCross)
-                valueCross = ViewportCross;
-            RefreshExtent(valueMain, valueCross);
-        }
-
-        private void RefreshViewport()
-        {
-            var valueMain = CoerceViewport(GridTracksMain, MaxExtentMain, FrozenHeadLengthMain, FrozenTailLengthMain);
-            var valueCross = CoerceViewport(GridTracksCross, MaxExtentCross, FrozenHeadLengthCross, FrozenTailLengthCross);
-            RefreshViewport(valueMain, valueCross);
-        }
-
-        private static double CoerceViewport(IGridTrackCollection gridTracks, double maxOffset, double frozenHeadLength, double frozenTailLength)
-        {
-            if (gridTracks.SizeToContent)
-                return maxOffset;
-
-            var result = gridTracks.AvailableLength;
-            var frozenLength = frozenHeadLength + frozenTailLength;
-            return Math.Max(frozenLength, result);
-        }
-
-        private void RefreshScrollOffset()
-        {
-            var scrollOriginMain = Translate(ScrollOriginMain);
-            var scrollStartMain = ScrollStartMain;
-            Debug.Assert(scrollStartMain >= scrollOriginMain);
-            var valueMain = scrollStartMain - scrollOriginMain;
-            var valueCross = Math.Min(ScrollOffsetCross, ExtentCross - ViewportCross);
-            RefreshScollOffset(valueMain, valueCross);
         }
 
         private bool IsFrozenHeadMain(GridSpan gridSpan)
@@ -784,7 +495,7 @@ namespace DevZest.Data.Windows.Primitives
         private double GetStartPositionMain(BlockView blockView, BlockBinding blockBinding)
         {
             var startTrack = GridTracksMain.GetGridSpan(blockBinding.GridRange).StartTrack;
-            return GetRelativeOffsetMain(blockView, startTrack);
+            return GetRelativePositionMain(blockView, startTrack);
         }
 
         protected override Size GetSize(BlockView blockView, BlockBinding blockBinding)
@@ -1252,7 +963,7 @@ namespace DevZest.Data.Windows.Primitives
                 return 0;
 
             var startExtent = start.StartExtent;
-            var scrollStartMain = ScrollStartMain;
+            var scrollStartMain = ScrollToMainExtent;
             if (startExtent < scrollStartMain)
                 return startExtent - scrollStartMain;
 

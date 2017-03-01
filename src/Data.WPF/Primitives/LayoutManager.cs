@@ -134,7 +134,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private bool IsPreparingMeasure;
 
-        private void PrepareMeasure()
+        protected virtual void PrepareMeasure()
         {
             IsPreparingMeasure = true;
             PrepareMeasure(ScalarBindings.PreAutoSizeBindings);

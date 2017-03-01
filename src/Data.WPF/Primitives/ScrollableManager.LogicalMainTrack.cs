@@ -35,7 +35,7 @@ namespace DevZest.Data.Windows.Primitives
             private readonly int _containerOrdinal;
             public int ContainerOrdinal
             {
-                get { return IsRepeat ? _containerOrdinal : -1; }
+                get { return IsContainer ? _containerOrdinal : -1; }
             }
 
             public bool IsEof
@@ -43,9 +43,29 @@ namespace DevZest.Data.Windows.Primitives
                 get { return GridTrack == null; }
             }
 
-            public bool IsRepeat
+            public bool IsHead
+            {
+                get { return GridTrack != null && GridTrack.IsHead; }
+            }
+
+            public bool IsFrozenHead
+            {
+                get { return GridTrack != null && GridTrack.IsFrozenHead; }
+            }
+
+            public bool IsContainer
             {
                 get { return GridTrack != null && GridTrack.IsContainer; }
+            }
+
+            public bool IsTail
+            {
+                get { return GridTrack != null && GridTrack.IsTail; }
+            }
+
+            public bool IsFrozenTail
+            {
+                get { return GridTrack != null && GridTrack.IsFrozenTail; }
             }
 
             public static bool operator ==(LogicalMainTrack x, LogicalMainTrack y)
@@ -164,7 +184,7 @@ namespace DevZest.Data.Windows.Primitives
             private Span GetExtentSpan()
             {
                 Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
-                Debug.Assert(!IsRepeat);
+                Debug.Assert(!IsContainer);
 
                 if (GridTrack.IsHead)
                     return new Span(GridTrack.StartOffset, GridTrack.EndOffset);
@@ -179,7 +199,7 @@ namespace DevZest.Data.Windows.Primitives
             private Span GetExtentSpan(int ordinal)
             {
                 Debug.Assert(GridTrackOwner == ScrollableManager.GridTracksMain);
-                Debug.Assert(IsRepeat && ordinal >= 0);
+                Debug.Assert(IsContainer && ordinal >= 0);
 
                 var relativeSpan = GetRelativeSpan(ordinal);
                 var startOffset = (MaxFrozenHead == 0 ? 0 : GridTrackOwner[MaxFrozenHead - 1].EndOffset) + GetContainerViewsLength(ordinal);
@@ -206,7 +226,7 @@ namespace DevZest.Data.Windows.Primitives
 
             private Span GetRelativeSpan()
             {
-                Debug.Assert(IsRepeat && !VariantByContainer);
+                Debug.Assert(IsContainer && !VariantByContainer);
                 var originOffset = GridTrackOwner.GetGridSpan(Template.RowRange).StartTrack.StartOffset;
                 return new Span(GridTrack.StartOffset - originOffset, GridTrack.EndOffset - originOffset);
             }
@@ -225,11 +245,11 @@ namespace DevZest.Data.Windows.Primitives
             gridExtent -= HeadTracksCountMain;
             var totalContainerGridTracks = TotalContainerGridTracksMain;
             if (gridExtent < totalContainerGridTracks)
-                return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + gridExtent % ContainerGridTracksMain], gridExtent / ContainerGridTracksMain);
+                return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + gridExtent % ContainerTracksCountMain], gridExtent / ContainerTracksCountMain);
 
             gridExtent -= totalContainerGridTracks;
-            Debug.Assert(gridExtent < MaxFrozenTailMain);
-            return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + ContainerGridTracksMain + gridExtent]);
+            Debug.Assert(gridExtent < TailTracksCountMain);
+            return new LogicalMainTrack(GridTracksMain[HeadTracksCountMain + ContainerTracksCountMain + gridExtent]);
         }
 
         private LogicalMainTrack GetStartLogicalMainTrack(GridRange gridRange)
