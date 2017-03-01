@@ -427,6 +427,12 @@ namespace DevZest.Data.Windows.Primitives
             return new LogicalMainTrack(startTrack, containerView).StartPosition;
         }
 
+        private double GetEndPositionMain(ContainerView containerView)
+        {
+            var endTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).EndTrack;
+            return new LogicalMainTrack(endTrack, containerView).EndPosition;
+        }
+
         private double GetContainerStartPositionCross()
         {
             return GetStartPositionCross(Template.ContainerRange, 0);

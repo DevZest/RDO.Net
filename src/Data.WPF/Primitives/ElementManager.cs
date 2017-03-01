@@ -217,7 +217,7 @@ namespace DevZest.Data.Windows.Primitives
             var startIndex = ContainerViewListStartIndex;
             var containerView = ContainerViewList.Last;
             if (containerView == CurrentContainerView)
-                CurrentContainerViewPlacement = CurrentContainerViewPlacement.BeforeList;
+                CurrentContainerViewPlacement = CurrentContainerViewPlacement.AfterList;
             else
             {
                 Cleanup(containerView);

@@ -25,7 +25,7 @@ namespace DevZest.Data.Windows.Primitives
             }
 
             private bool _isContainerLengthsValid = true;
-            private void InvalidateContainerLengths()
+            internal void InvalidateContainerLengths()
             {
                 _isContainerLengthsValid = false;
             }
@@ -103,6 +103,21 @@ namespace DevZest.Data.Windows.Primitives
                     ClearMeasuredLengths(_scrollableManager.CurrentContainerView);
                 foreach (var containerView in ContainerViewList)
                     ClearMeasuredLengths(containerView);
+            }
+
+            internal void RemoveFirst()
+            {
+                var first = _scrollableManager.ContainerViewList.First;
+                ClearMeasuredLengths(first);
+                _scrollableManager.ContainerViewList[1].StartOffset = 0;
+                InvalidateContainerLengths();
+            }
+
+            internal void RemoveLast()
+            {
+                var last = _scrollableManager.ContainerViewList.Last;
+                ClearMeasuredLengths(last);
+                InvalidateContainerLengths();
             }
 
             private void ClearMeasuredLengths(ContainerView containerView)

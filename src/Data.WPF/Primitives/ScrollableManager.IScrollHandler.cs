@@ -537,10 +537,11 @@ namespace DevZest.Data.Windows.Primitives
 
             // The following operations must be done after ScalarBindings.PostAutoSizeBindings measured.
             CoerceGapToFill();
-            RemoveunnecessaryContainerViews();
             RefreshViewport();
             RefreshExtent();  // Exec order matters: RefreshExtent relies on RefreshViewport
             RefreshScrollOffset();  // Exec order matters: RefreshScrollOffset relies on RefreshViewport and RefreshExtent
+            if (RemoveUnnecessaryContainerViews())
+                RefreshScrollOffset();
         }
 
         private void CoerceGapToFill()
@@ -559,10 +560,68 @@ namespace DevZest.Data.Windows.Primitives
                 AdjustScrollToMain(-lengthToAdjust, true);
         }
 
-        private void RemoveunnecessaryContainerViews()
+        private bool RemoveUnnecessaryContainerViews()
         {
+            var countFirst = FirstContainerViewToRemoveCount;
+            var countLast = LastContainerViewToRemoveCount;
 
+            for (int i = 0; i < countFirst; i++)
+                RemoveFirstContainerView();
+
+            for (int i = 0; i < countLast; i++)
+                RemoveLastContainerView();
+
+            return countFirst + countLast > 0;
         }
+
+        private int FirstContainerViewToRemoveCount
+        {
+            get
+            {
+                var result = 0;
+                var startPosition = FrozenHeadLengthMain;
+                for (int i = 0; i < ContainerViewList.Count - 1; i++)
+                {
+                    if (GetEndPositionMain(ContainerViewList[i]) < startPosition)
+                        result++;
+                    else
+                        break;
+                }
+                return result;
+            }
+        }
+
+        private int LastContainerViewToRemoveCount
+        {
+            get
+            {
+                var result = 0;
+                var endPosition = GridTracksMain.AvailableLength - FrozenTailLengthMain;
+                for (int i = ContainerViewList.Count - 1; i > 0; i--)
+                {
+                    if (GetStartPositionMain(ContainerViewList[i]) >= endPosition)
+                        result++;
+                    else
+                        break;
+                }
+                return result;
+            }
+        }
+
+        private void RemoveFirstContainerView()
+        {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.RemoveFirst();
+            ContainerViewList.VirtualizeFirst();
+        }
+
+        private void RemoveLastContainerView()
+        {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.RemoveLast();
+            ContainerViewList.VirtualizeLast();
+        }
+
 
         private void RefreshExtent()
         {
