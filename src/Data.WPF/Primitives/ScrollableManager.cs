@@ -1074,7 +1074,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(RowView rowView)
         {
-            ScrollBy(GetEnsureVisibleOffsetMain(rowView), GetEnsureVisibleOffsetCross(rowView));
+            InternalScrollBy(GetEnsureVisibleOffsetMain(rowView), GetEnsureVisibleOffsetCross(rowView));
         }
 
         private double GetEnsureVisibleOffsetMain(RowView rowView)
@@ -1093,7 +1093,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(RowView rowView, RowBinding rowBinding)
         {
-            ScrollBy(GetEnsureVisibleOffsetMain(rowView, rowBinding), GetEnsureVisibleOffsetCross(rowView, rowBinding));
+            InternalScrollBy(GetEnsureVisibleOffsetMain(rowView, rowBinding), GetEnsureVisibleOffsetCross(rowView, rowBinding));
         }
 
         private double GetEnsureVisibleOffsetMain(RowView rowView, RowBinding rowBinding)
@@ -1112,7 +1112,7 @@ namespace DevZest.Data.Windows.Primitives
 
         private void EnsureVisible(BlockView blockView, BlockBinding blockBinding)
         {
-            ScrollBy(GetEnsureVisibleOffsetMain(blockView, blockBinding), GetEnsureVisibleOffsetCross(blockView, blockBinding));
+            InternalScrollBy(GetEnsureVisibleOffsetMain(blockView, blockBinding), GetEnsureVisibleOffsetCross(blockView, blockBinding));
         }
 
         private double GetEnsureVisibleOffsetMain(BlockView blockView, BlockBinding blockBinding)
