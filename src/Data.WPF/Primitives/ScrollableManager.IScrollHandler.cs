@@ -225,12 +225,16 @@ namespace DevZest.Data.Windows.Primitives
                 && _scrollToMainPlacement == placement
                 && _scrollDeltaMain == 0)
                 return;
-            _scrollToMain = new LogicalExtent(gridExtent, fraction);
+            ScrollTo(new LogicalExtent(gridExtent, fraction), placement);
+        }
+
+        private void ScrollTo(LogicalExtent scrollTo, GridPlacement placement)
+        {
+            _scrollToMain = scrollTo;
             _scrollToMainPlacement = placement;
             SetScrollDeltaMain(0, false);
             InvalidateMeasure();
         }
-
 
         public void ScrollTo(double horizontalOffset, double verticalOffset)
         {
@@ -243,8 +247,52 @@ namespace DevZest.Data.Windows.Primitives
 
         protected void InternalScrollBy(double valueMain, double valueCross)
         {
-            SetScrollDeltaMain(valueMain, true);
+            var scrollTo = TryScrollToMain(valueMain);
+            if (scrollTo.HasValue)
+                ScrollTo(scrollTo.GetValueOrDefault(), _scrollToMainPlacement);
+            else
+                SetScrollDeltaMain(valueMain, true);
             SetScrollDeltaCross(valueCross, true);
+        }
+
+        private LogicalExtent? TryScrollToMain(double scrollByMain)
+        {
+            var result = Translate(Translate(_scrollToMain) + _scrollDeltaMain + scrollByMain);
+            var resultMainTrack = GetLogicalMainTrack(result.GridExtent);
+            var currentMainTrack = GetLogicalMainTrack(_scrollToMain.GridExtent);
+
+            if (!IsContinuous(resultMainTrack, currentMainTrack))
+                return null;
+
+            if (resultMainTrack.IsContainer && ContainerViewList.GetContainerView(resultMainTrack.ContainerOrdinal) == null)
+                return null;
+
+            return result;
+        }
+
+        private bool IsContinuous(LogicalMainTrack result, LogicalMainTrack current)
+        {
+            if (result.IsEof)
+                return false;
+
+            if (result.IsContainer)
+                return current.IsContainer || (current.IsHead && IsFirstRowRealized) || (current.IsTail && IsLastRowRealized);
+
+            if (result.IsHead)
+                return current.IsHead || (current.IsContainer && IsFirstRowRealized) || (current.IsTail && ContainerViewList.Count == 0);
+
+            Debug.Assert(result.IsTail);
+            return current.IsTail || (current.IsContainer && IsLastRowRealized) || (current.IsHead && ContainerViewList.Count == 0);
+        }
+
+        private bool IsFirstRowRealized
+        {
+            get { return ContainerViewList.First != null && ContainerViewList.First.ContainerOrdinal == 0; }
+        }
+
+        private bool IsLastRowRealized
+        {
+            get { return ContainerViewList.Last != null && ContainerViewList.Last.ContainerOrdinal == MaxContainerCount - 1; }
         }
 
         protected sealed override void PrepareMeasureContainers()
