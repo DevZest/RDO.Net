@@ -9,9 +9,9 @@ using System.Windows.Markup;
 [assembly: AssemblyTitle("RDO.WPF")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DevZest")]
+[assembly: AssemblyCompany("Weifen Luo | DevZest")]
 [assembly: AssemblyProduct("RDO.WPF")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © Weifen Luo | DevZest")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

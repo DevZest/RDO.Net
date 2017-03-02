@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DevZest.Data.Windows {
+namespace DevZest.Windows.Data {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DevZest.Data.Windows {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Data.Windows.StringRes", typeof(StringRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DevZest.Windows.Data.StringRes", typeof(StringRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

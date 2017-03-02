@@ -6,7 +6,7 @@
     <ProjectGuid>{0A97428A-730F-4939-BF41-A65AE91BB01E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DevZest.Data.Windows</RootNamespace>
+    <RootNamespace>DevZest.Windows.Data</RootNamespace>
     <AssemblyName>DevZest.Data.Wpf.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -84,38 +84,38 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BlockBindingTests.cs" />
-    <Compile Include="BlockLabel.cs" />
-    <Compile Include="BlockPaneTests.cs" />
-    <Compile Include="CodePane.cs" />
-    <Compile Include="DataSetExtensions.cs" />
-    <Compile Include="BindingFactory.cs" />
-    <Compile Include="BlockHeader.cs" />
-    <Compile Include="DataSetMock.cs" />
-    <Compile Include="Primitives\ElementManagerTests.cs" />
-    <Compile Include="Primitives\InputManagerTests.cs" />
-    <Compile Include="Primitives\IScrollableTests.cs" />
-    <Compile Include="Primitives\LayoutManagerTestsBase.cs" />
-    <Compile Include="Primitives\ScrollableManagerTests.cs" />
-    <Compile Include="Primitives\LayoutZManagerTests.cs" />
-    <Compile Include="Primitives\RowManagerTests.cs" />
-    <Compile Include="Primitives\RowMapperTests.cs" />
-    <Compile Include="Primitives\RowNormalizerTests.cs" />
-    <Compile Include="RowBindingTests.cs" />
-    <Compile Include="RowPaneTests.cs" />
-    <Compile Include="ScalarBindingTests.cs" />
-    <Compile Include="ScalarPaneTests.cs" />
+    <Compile Include="Data\BlockBindingTests.cs" />
+    <Compile Include="Data\BlockLabel.cs" />
+    <Compile Include="Data\BlockPaneTests.cs" />
+    <Compile Include="Data\CodePane.cs" />
+    <Compile Include="Data\DataSetExtensions.cs" />
+    <Compile Include="Data\BindingFactory.cs" />
+    <Compile Include="Data\BlockHeader.cs" />
+    <Compile Include="Data\DataSetMock.cs" />
+    <Compile Include="Data\Primitives\ElementManagerTests.cs" />
+    <Compile Include="Data\Primitives\InputManagerTests.cs" />
+    <Compile Include="Data\Primitives\IScrollableTests.cs" />
+    <Compile Include="Data\Primitives\LayoutManagerTestsBase.cs" />
+    <Compile Include="Data\Primitives\ScrollableManagerTests.cs" />
+    <Compile Include="Data\Primitives\LayoutZManagerTests.cs" />
+    <Compile Include="Data\Primitives\RowManagerTests.cs" />
+    <Compile Include="Data\Primitives\RowMapperTests.cs" />
+    <Compile Include="Data\Primitives\RowNormalizerTests.cs" />
+    <Compile Include="Data\RowBindingTests.cs" />
+    <Compile Include="Data\RowPaneTests.cs" />
+    <Compile Include="Data\ScalarBindingTests.cs" />
+    <Compile Include="Data\ScalarPaneTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringRes.resx</DependentUpon>
     </Compile>
-    <Compile Include="Primitives\GridLengthParserTests.cs" />
-    <Compile Include="Primitives\TemplateTests.cs" />
+    <Compile Include="Data\Primitives\GridLengthParserTests.cs" />
+    <Compile Include="Data\Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Placeholder.cs" />
-    <Compile Include="ValidationViewTests.cs" />
-    <Compile Include="XamlPane.xaml.cs">
+    <Compile Include="Data\Placeholder.cs" />
+    <Compile Include="Data\ValidationViewTests.cs" />
+    <Compile Include="Data\XamlPane.xaml.cs">
       <DependentUpon>XamlPane.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -135,11 +135,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="XamlPane.xaml">
+    <Page Include="Data\XamlPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
