@@ -348,17 +348,13 @@ namespace DevZest.Data.Windows.Primitives
             if (start.IsContainer)
                 lengthToFillForward -= GetRelativePositionMain(ContainerViewList.GetContainerView(start.ContainerOrdinal), start.GridTrack, fraction);
             lengthToFillForward = Math.Max(0, lengthToFillForward);
-            var lengthFilledForward = (lengthToFillForward > 0 && CanRealizeForward) ? RealizeForward(lengthToFillForward) : 0;
+            var lengthFilledForward = RealizeForward(lengthToFillForward);
 
             var lengthToFillBackward = Math.Max(-_scrollDeltaMain, 0) + Math.Max(0, lengthToFillForward - lengthFilledForward);
-            var lengthFilledBackward = (lengthToFillBackward > 0 && CanRealizeBackward) ? RealizeBackward(lengthToFillBackward) : 0;
+            var lengthFilledBackward = RealizeBackward(lengthToFillBackward);
 
             var extraFillForward = Math.Max(0, GridTracksMain.AvailableLength - lengthFilledForward - lengthFilledBackward);
-            if (extraFillForward > 0 && CanRealizeForward)
-                RealizeForward(extraFillForward);
-
-            if (_scrollDeltaMain != 0)
-                AdjustScrollToMain(true);
+            RealizeForward(extraFillForward);
         }
 
         private bool CanRealizeForward
@@ -383,9 +379,11 @@ namespace DevZest.Data.Windows.Primitives
         }
 
 
-        private double RealizeForward(double availableLength)
+        private double RealizeForward(double length)
         {
-            Debug.Assert(availableLength > 0 && CanRealizeForward);
+            Debug.Assert(length >= 0);
+            if (length == 0 || !CanRealizeForward)
+                return 0;
 
             double result = 0;
             for (int ordinal = ContainerViewList.Last.ContainerOrdinal + 1; ordinal < MaxContainerCount; ordinal++)
@@ -395,17 +393,18 @@ namespace DevZest.Data.Windows.Primitives
                 containerView.Measure(Size.Empty);
                 var measuredLength = GetLengthMain(containerView);
                 result += measuredLength;
-                availableLength -= measuredLength;
-                if (availableLength <= 0)
+                length -= measuredLength;
+                if (length <= 0)
                     break;
             }
             return result;
         }
 
-        private double RealizeBackward(double availableLength)
+        private double RealizeBackward(double length)
         {
-            Debug.Assert(CanRealizeBackward);
-            Debug.Assert(availableLength > 0);
+            Debug.Assert(length >= 0);
+            if (length == 0 || !CanRealizeBackward)
+                return 0;
 
             double result = 0;
             for (int ordinal = ContainerViewList.First.ContainerOrdinal - 1; ordinal >= 0; ordinal--)
@@ -415,8 +414,8 @@ namespace DevZest.Data.Windows.Primitives
                 containerView.Measure(Size.Empty);
                 var measuredLength = GetLengthMain(containerView);
                 result += measuredLength;
-                availableLength -= measuredLength;
-                if (availableLength <= 0)
+                length -= measuredLength;
+                if (length <= 0)
                     break;
             }
             return result;
@@ -424,7 +423,34 @@ namespace DevZest.Data.Windows.Primitives
 
         private void FillBackward()
         {
-            throw new NotImplementedException();
+            if (ContainerViewList.Count == 0)
+                return;
+
+            LogicalMainTrack end;
+            double fraction;
+            var gridExtent = _scrollToMain.GridExtent;
+            if (gridExtent >= MaxGridExtentMain)
+            {
+                end = GetLogicalMainTrack(MaxGridExtentMain - 1);
+                fraction = 1;
+            }
+            else
+            {
+                end = GetLogicalMainTrack(gridExtent);
+                fraction = _scrollToMain.Fraction;
+            }
+
+            var lengthToFillBackward = GridTracksMain.AvailableLength - _scrollDeltaMain;
+            if (end.IsContainer)
+                lengthToFillBackward -= GetRelativePositionMain(ContainerViewList.GetContainerView(end.ContainerOrdinal), end.GridTrack, fraction);
+            lengthToFillBackward = Math.Max(0, lengthToFillBackward);
+            var lengthFilledBackward = RealizeBackward(lengthToFillBackward);
+
+            var lengthToFillForward = Math.Max(-_scrollDeltaMain, 0) + Math.Max(0, lengthToFillBackward - lengthFilledBackward);
+            var lengthFilledForward = RealizeForward(lengthToFillForward);
+
+            var extraFillBackward = Math.Max(0, GridTracksMain.AvailableLength - lengthFilledBackward - lengthFilledForward);
+            RealizeBackward(extraFillBackward);
         }
 
         protected sealed override void PrepareMeasure()
@@ -432,10 +458,24 @@ namespace DevZest.Data.Windows.Primitives
             base.PrepareMeasure();
 
             // The following operations must be done after ScalarBindings.PostAutoSizeBindings measured.
+            AdjustScrollToMain();
             FillGap();
             RefreshScrollInfo();
             if (RemoveInvisibleContainerViews() && _variantLengthHandler != null)
                 RefreshScrollInfo();
+        }
+
+        private void AdjustScrollToMain()
+        {
+            if (_scrollDeltaMain != 0)
+                AdjustScrollToMain(true);
+
+            if (_scrollToMainPlacement == GridPlacement.Tail)
+            {
+                _scrollToMainPlacement = GridPlacement.Head;
+                var delta = Translate(_scrollToMain) - Translate(MinScrollToMain);
+                AdjustScrollToMain(-delta, true);
+            }
         }
 
         private void RefreshScrollInfo()
