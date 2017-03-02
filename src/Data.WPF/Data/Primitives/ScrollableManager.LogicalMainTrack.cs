@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DevZest.Windows.Controls.Primitives;
+using System.Diagnostics;
 
 namespace DevZest.Windows.Data.Primitives
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Collections.Generic;
+using DevZest.Windows.Controls;
 
 namespace DevZest.Windows.Data.Primitives
 {

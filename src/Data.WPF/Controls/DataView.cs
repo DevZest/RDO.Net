@@ -1,11 +1,12 @@
-﻿using DevZest.Windows.Data.Primitives;
-using System;
+﻿using DevZest.Windows.Controls.Primitives;
+using DevZest.Windows.Data;
+using DevZest.Windows.Data.Primitives;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control

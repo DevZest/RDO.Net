@@ -85,12 +85,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Data\BlockBindingTests.cs" />
-    <Compile Include="Data\BlockLabel.cs" />
+    <Compile Include="Controls\BlockLabel.cs" />
     <Compile Include="Data\BlockPaneTests.cs" />
-    <Compile Include="Data\CodePane.cs" />
+    <Compile Include="Controls\CodePane.cs" />
     <Compile Include="Data\DataSetExtensions.cs" />
     <Compile Include="Data\BindingFactory.cs" />
-    <Compile Include="Data\BlockHeader.cs" />
+    <Compile Include="Controls\BlockHeader.cs" />
     <Compile Include="Data\DataSetMock.cs" />
     <Compile Include="Data\Primitives\ElementManagerTests.cs" />
     <Compile Include="Data\Primitives\InputManagerTests.cs" />
@@ -113,9 +113,9 @@
     <Compile Include="Data\Primitives\GridLengthParserTests.cs" />
     <Compile Include="Data\Primitives\TemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\Placeholder.cs" />
+    <Compile Include="Controls\Placeholder.cs" />
     <Compile Include="Data\ValidationViewTests.cs" />
-    <Compile Include="Data\XamlPane.xaml.cs">
+    <Compile Include="Controls\XamlPane.xaml.cs">
       <DependentUpon>XamlPane.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -135,7 +135,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Data\XamlPane.xaml">
+    <Page Include="Controls\XamlPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     public class ColumnHeader : Control
     {

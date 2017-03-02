@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     internal class BlockHeader : TextBlock
     {

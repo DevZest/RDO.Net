@@ -4,6 +4,7 @@ using System;
 using System.Windows.Input;
 using System.Windows.Controls;
 using DevZest.Data;
+using DevZest.Windows.Controls;
 
 namespace DevZest.Windows.Data
 {

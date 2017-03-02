@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevZest.Windows.Data;
+using DevZest.Windows.Data.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -6,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace DevZest.Windows.Data.Primitives
+namespace DevZest.Windows.Controls.Primitives
 {
     public sealed class DataViewPanel : FrameworkElement, IScrollInfo
     {

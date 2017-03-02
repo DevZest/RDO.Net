@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Collections;
+using DevZest.Windows.Data;
+using DevZest.Windows.Controls.Primitives;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
     public class BlockView : ContainerView, IReadOnlyList<RowPresenter>

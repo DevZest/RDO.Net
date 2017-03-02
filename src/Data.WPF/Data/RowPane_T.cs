@@ -1,6 +1,7 @@
 ﻿using System;
 using DevZest.Windows.Data.Primitives;
 using System.Windows;
+using DevZest.Windows.Controls;
 
 namespace DevZest.Windows.Data
 {

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     public sealed class Placeholder : UIElement
     {

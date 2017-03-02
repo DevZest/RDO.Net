@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Windows.Controls;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
 
 namespace DevZest.Windows.Data.Primitives

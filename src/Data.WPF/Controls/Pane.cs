@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace DevZest.Windows.Data
+namespace DevZest.Windows.Controls
 {
     [ContentPropertyAttribute(nameof(Pane.Content))]
     public class Pane : ContentPresenter
