@@ -414,8 +414,6 @@ namespace DevZest.Windows.Data.Primitives
 
         private void InitContainerViews()
         {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.ClearMeasuredLengths();
             ContainerViewList.VirtualizeAll();
 
             var initialOrdinal = GetInitialOrdinal();
@@ -665,10 +663,10 @@ namespace DevZest.Windows.Data.Primitives
             var countTail = TailInvisibleContainerViewsCount;
 
             for (int i = 0; i < countHead; i++)
-                RemoveFirstContainerView();
+                ContainerViewList.VirtualizeFirst();
 
             for (int i = 0; i < countTail; i++)
-                RemoveLastContainerView();
+                ContainerViewList.VirtualizeLast();
 
             return countHead > 0 || countTail > 0;
         }
@@ -706,21 +704,6 @@ namespace DevZest.Windows.Data.Primitives
                 return result;
             }
         }
-
-        private void RemoveFirstContainerView()
-        {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.RemoveFirst();
-            ContainerViewList.VirtualizeFirst();
-        }
-
-        private void RemoveLastContainerView()
-        {
-            if (_variantLengthHandler != null)
-                _variantLengthHandler.RemoveLast();
-            ContainerViewList.VirtualizeLast();
-        }
-
 
         private void RefreshExtent()
         {

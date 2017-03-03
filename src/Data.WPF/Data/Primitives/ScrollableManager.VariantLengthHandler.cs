@@ -231,5 +231,26 @@ namespace DevZest.Windows.Data.Primitives
                 return count == 0 ? 0 : GetEndOffset(ContainerViewList[count - 1]);
             }
         }
+
+        internal sealed override void VirtualizeAll()
+        {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.ClearMeasuredLengths();
+            base.VirtualizeAll();
+        }
+
+        internal sealed override void VirtualizeFirst()
+        {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.RemoveFirst();
+            base.VirtualizeFirst();
+        }
+
+        internal sealed override void VirtualizeLast()
+        {
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.RemoveLast();
+            base.VirtualizeLast();
+        }
     }
 }

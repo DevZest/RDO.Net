@@ -185,7 +185,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        internal void VirtualizeAll()
+        internal virtual void VirtualizeAll()
         {
             Debug.Assert(ContainerViewList.Count > 0);
 
@@ -202,7 +202,7 @@ namespace DevZest.Windows.Data.Primitives
             CurrentContainerViewPlacement = CurrentContainerViewPlacement.Alone;
         }
 
-        internal void VirtualizeFirst()
+        internal virtual void VirtualizeFirst()
         {
             var containerView = ContainerViewList.First;
             if (containerView == CurrentContainerView)
@@ -214,7 +214,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        internal void VirtualizeLast()
+        internal virtual void VirtualizeLast()
         {
             var startIndex = ContainerViewListStartIndex;
             var containerView = ContainerViewList.Last;
