@@ -374,49 +374,54 @@ namespace DevZest.Windows.Data.Primitives
         }
 
         private RowPresenter _currentRow;
-        public virtual RowPresenter CurrentRow
+        public RowPresenter CurrentRow
         {
             get { return _currentRow; }
-            internal set
+            set
             {
                 var oldValue = CurrentRow;
                 if (oldValue == value)
                     return;
+                if (!CanChangeCurrentRow)
+                    throw new InvalidOperationException(Strings.RowManager_ChangeCurrentRowNotAllowed);
                 _currentRow = value;
                 OnCurrentRowChanged(oldValue);
             }
+        }
+
+        public virtual bool CanChangeCurrentRow
+        {
+            get { return !IsEditing; }
         }
 
         protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
         {
         }
 
-        //protected void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode)
-        //{
-        //    var oldValue = CurrentRow;
-        //    Debug.Assert(oldValue != value);
-        //    SetCurrentRow(value, true);
-        //    if (!selectionMode.HasValue)
-        //        return;
+        public void Select(RowPresenter value, SelectionMode selectionMode)
+        {
+            var oldValue = CurrentRow;
+            Debug.Assert(oldValue != value);
+            CurrentRow = value;
 
-        //    switch (selectionMode.GetValueOrDefault())
-        //    {
-        //        case SelectionMode.Single:
-        //            _selectedRows.Clear();
-        //            _selectedRows.Add(value);
-        //            break;
-        //        case SelectionMode.Multiple:
-        //            value.IsSelected = !value.IsSelected;
-        //            break;
-        //        case SelectionMode.Extended:
-        //            _selectedRows.Clear();
-        //            var min = Math.Min(oldValue.Index, value.Index);
-        //            var max = Math.Max(oldValue.Index, value.Index);
-        //            for (int i = min; i <= max; i++)
-        //                _selectedRows.Add(Rows[i]);
-        //            break;
-        //    }
-        //}
+            switch (selectionMode)
+            {
+                case SelectionMode.Single:
+                    _selectedRows.Clear();
+                    _selectedRows.Add(value);
+                    break;
+                case SelectionMode.Multiple:
+                    value.IsSelected = !value.IsSelected;
+                    break;
+                case SelectionMode.Extended:
+                    _selectedRows.Clear();
+                    var min = Math.Min(oldValue.Index, value.Index);
+                    var max = Math.Max(oldValue.Index, value.Index);
+                    for (int i = min; i <= max; i++)
+                        _selectedRows.Add(Rows[i]);
+                    break;
+            }
+        }
 
         private _EditHandler _editHandler;
         private _EditHandler EditHandler

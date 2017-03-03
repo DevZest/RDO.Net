@@ -417,15 +417,5 @@ namespace DevZest.Windows.Data.Primitives
         }
 
         internal abstract IEnumerable<GridLineFigure> GridLineFigures { get; }
-
-        public virtual void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible)
-        {
-            var oldValue = CurrentRow;
-            if (oldValue == value)
-                return;
-
-            throw new NotImplementedException();
-            //SetCurrentRow(value, selectionMode);
-        }
     }
 }

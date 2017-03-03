@@ -195,6 +195,9 @@
   <data name="RowInput_NullTemplateWhenAddAsyncValidator" xml:space="preserve">
     <value>The RowBinding must be added into Template before adding async validator.</value>
   </data>
+  <data name="RowManager_ChangeCurrentRowNotAllowed" xml:space="preserve">
+    <value>Change current row is not allowed (CanChangeCurrentRow property is false).</value>
+  </data>
   <data name="RowPresenter_DeleteVirtualRow" xml:space="preserve">
     <value>The virtual row cannot be deleted.</value>
   </data>

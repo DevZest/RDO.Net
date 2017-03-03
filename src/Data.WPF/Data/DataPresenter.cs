@@ -51,9 +51,39 @@ namespace DevZest.Windows.Data
             get { return LayoutManager == null ? null : LayoutManager.Rows; }
         }
 
+        public bool CanChangeCurrentRow
+        {
+            get { return LayoutManager == null ? false : LayoutManager.CanChangeCurrentRow; }
+        }
+
         public RowPresenter CurrentRow
         {
             get { return LayoutManager == null ? null : LayoutManager.CurrentRow; }
+            set
+            {
+                VerifyRowPresenter(value, nameof(value));
+                RequireLayoutManager().CurrentRow = value;
+            }
+        }
+
+        private void VerifyRowPresenter(RowPresenter value,  string paramName)
+        {
+            if (value == null)
+                throw new ArgumentNullException(paramName);
+
+            if (value.DataPresenter != this)
+                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, paramName);
+        }
+
+        public void Select(RowPresenter rowPresenter, SelectionMode selectionMode)
+        {
+            VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
+            RequireLayoutManager().Select(rowPresenter, selectionMode);
+        }
+
+        public IReadOnlyCollection<RowPresenter> SelectedRows
+        {
+            get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
         public bool IsEditing
@@ -99,11 +129,6 @@ namespace DevZest.Windows.Data
                 throw new InvalidOperationException(Strings.DataPresenter_VerifyCanInsert);
             if (row != null && row.DataPresenter != this)
                 throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(row));
-        }
-
-        public IReadOnlyCollection<RowPresenter> SelectedRows
-        {
-            get { return LayoutManager == null ? null : LayoutManager.SelectedRows; }
         }
 
         public void InvalidateView()
@@ -181,23 +206,6 @@ namespace DevZest.Windows.Data
         public IScrollable Scrollable
         {
             get { return LayoutManager as ScrollableManager; }
-        }
-
-        public void SetCurrentRow(RowPresenter value, SelectionMode? selectionMode, bool ensureVisible = true)
-        {
-            if (value == CurrentRow)
-                return;
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            if (value.DataPresenter != this)
-                throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, nameof(value));
-
-            if (CurrentRow.IsEditing)
-                throw new InvalidOperationException(Strings.DataPresenter_CurrentRowIsEditing);
-
-            RequireLayoutManager().SetCurrentRow(value, selectionMode, ensureVisible);
         }
 
         protected internal virtual IEnumerable<CommandBinding> DataViewCommandBindings

@@ -220,6 +220,14 @@ namespace DevZest.Windows
         }
 
         /// <summary>
+        /// Change current row is not allowed (CanChangeCurrentRow property is false).
+        /// </summary>
+        public static string RowManager_ChangeCurrentRowNotAllowed
+        {
+            get { return GetString("RowManager_ChangeCurrentRowNotAllowed"); }
+        }
+
+        /// <summary>
         /// The virtual row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteVirtualRow

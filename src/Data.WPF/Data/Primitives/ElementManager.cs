@@ -436,12 +436,45 @@ namespace DevZest.Windows.Data.Primitives
 
         internal void OnFocused(RowView rowView)
         {
-            if (rowView.RowPresenter == CurrentRow)
+            if (rowView.RowPresenter != CurrentRow)
             {
-                InvalidateView();
-                return;
+                if (!CanChangeCurrentRow)
+                    PreventCurrentRowViewFromLosingFocus(rowView);
+                else
+                    SetCurrentRowFromView(rowView);
             }
+            InvalidateView();
+        }
 
+        private void PreventCurrentRowViewFromLosingFocus(RowView newFocusedRowView)
+        {
+            // Focus management is tricky, we choose not to manage focus at all:
+            // instead of setting focus back to current RowView, we reload CurrentRow
+            // to the newly focused RowView.
+            var oldValue = newFocusedRowView.RowPresenter;
+            UpdateCurrentContainerView(newFocusedRowView);
+            ContainerViewList.VirtualizeAll();
+            CurrentContainerView.ReloadCurrentRow(oldValue);
+        }
+
+        private ContainerView GetContainerView(RowView rowView)
+        {
+            if (Template.ContainerKind == ContainerKind.Row)
+                return rowView;
+            else
+                return rowView.GetBlockView();
+        }
+
+        private void SetCurrentRowFromView(RowView rowView)
+        {
+            UpdateCurrentContainerView(rowView);
+            _currentRowFromView = true;
+            CurrentRow = rowView.RowPresenter;
+            _currentRowFromView = false;
+        }
+
+        private void UpdateCurrentContainerView(RowView rowView)
+        {
             if (CurrentContainerViewPlacement != CurrentContainerViewPlacement.WithinList)
             {
                 Cleanup(CurrentContainerView);
@@ -455,23 +488,6 @@ namespace DevZest.Windows.Data.Primitives
                 CurrentContainerViewPlacement = CurrentContainerViewPlacement.WithinList;
             }
             _currentContainerView = GetContainerView(rowView);
-            SetCurrentRowFromView(rowView);
-            InvalidateView();
-        }
-
-        private ContainerView GetContainerView(RowView rowView)
-        {
-            if (Template.ContainerKind == ContainerKind.Row)
-                return rowView;
-            else
-                return rowView.GetBlockView();
-        }
-
-        private void SetCurrentRowFromView(RowView rowView)
-        {
-            _currentRowFromView = true;
-            CurrentRow = rowView.RowPresenter;
-            _currentRowFromView = false;
         }
 
         private bool _currentRowFromView;
