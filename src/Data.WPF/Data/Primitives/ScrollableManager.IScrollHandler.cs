@@ -262,38 +262,97 @@ namespace DevZest.Windows.Data.Primitives
             var resultMainTrack = GetLogicalMainTrack(result.GridExtent);
             var currentMainTrack = GetLogicalMainTrack(_scrollToMain.GridExtent);
 
-            if (!IsContinuous(resultMainTrack, currentMainTrack))
+            if (IsBroken(resultMainTrack, currentMainTrack))
                 return null;
-
-            if (resultMainTrack.IsContainer && ContainerViewList.GetContainerView(resultMainTrack.ContainerOrdinal) == null)
-                return null;
-
-            return result;
+            else
+                return result;
         }
 
-        private bool IsContinuous(LogicalMainTrack result, LogicalMainTrack current)
+        private bool IsBroken(LogicalMainTrack result, LogicalMainTrack current)
         {
-            if (result.IsEof)
-                return false;
+            if (result.IsEof || current.IsEof)
+                return true;
 
             if (result.IsContainer)
-                return current.IsContainer || (current.IsHead && IsFirstRowRealized) || (current.IsTail && IsLastRowRealized);
+            {
+                if (IsVirtualized(result.ContainerOrdinal))
+                    return true;
 
-            if (result.IsHead)
-                return current.IsHead || (current.IsContainer && IsFirstRowRealized) || (current.IsTail && ContainerViewList.Count == 0);
-
-            Debug.Assert(result.IsTail);
-            return current.IsTail || (current.IsContainer && IsLastRowRealized) || (current.IsHead && ContainerViewList.Count == 0);
+                return IsBrokenToContainer(current);
+            }
+            else if (result.IsHead)
+                return IsBrokenToHead(current);
+            else
+            {
+                Debug.Assert(result.IsTail);
+                return IsBrokenToTail(current);
+            }
         }
 
-        private bool IsFirstRowRealized
+        private bool IsBrokenToContainer(LogicalMainTrack track)
         {
-            get { return ContainerViewList.First != null && ContainerViewList.First.ContainerOrdinal == 0; }
+            Debug.Assert(!track.IsEof);
+            if (track.IsContainer)
+                return IsVirtualized(track.ContainerOrdinal);
+            else if (track.IsHead)
+                return IsFirstRowVirtualized;
+            else
+            {
+                Debug.Assert(track.IsTail);
+                return !IsLastRowVirtualized;
+            }
         }
 
-        private bool IsLastRowRealized
+        private bool IsBrokenToHead(LogicalMainTrack track)
         {
-            get { return ContainerViewList.Last != null && ContainerViewList.Last.ContainerOrdinal == MaxContainerCount - 1; }
+            Debug.Assert(!track.IsEof);
+            if (track.IsHead)
+                return false;
+            else if (track.IsContainer)
+                return IsFirstRowVirtualized;
+            else
+            {
+                Debug.Assert(track.IsTail);
+                return ContainerViewList.Count > 0;
+            }
+        }
+
+        private bool IsBrokenToTail(LogicalMainTrack track)
+        {
+            Debug.Assert(!track.IsEof);
+
+            if (track.IsTail)
+                return false;
+            else if (track.IsContainer)
+                return IsLastRowVirtualized;
+            else
+            {
+                Debug.Assert(track.IsHead);
+                return ContainerViewList.Count > 0;
+            }
+        }
+
+        private bool IsVirtualized(int containerOrdinal)
+        {
+            return ContainerViewList.GetContainerView(containerOrdinal) == null;
+        }
+
+        private bool IsFirstRowVirtualized
+        {
+            get
+            {
+                Debug.Assert(ContainerViewList.First != null);
+                return ContainerViewList.First.ContainerOrdinal > 0;
+            }
+        }
+
+        private bool IsLastRowVirtualized
+        {
+            get
+            {
+                Debug.Assert(ContainerViewList.Last != null);
+                return ContainerViewList.Last.ContainerOrdinal < MaxContainerCount - 1;
+            }
         }
 
         protected sealed override void PrepareMeasureContainers()
