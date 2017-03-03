@@ -220,16 +220,25 @@ namespace DevZest.Windows.Data.Primitives
                 throw new ArgumentException(Strings.GridPlacement_InvalidHeadValue, placementParamName);
         }
 
-        public void ScrollTo(int gridExtent, double fraction, GridPlacement placement)
+        public abstract void ScrollToX(int gridExtent, double fraction, GridPlacement placement);
+
+        public abstract void ScrollToY(int gridExtent, double fraction, GridPlacement placement);
+
+        protected void ScrollToMain(int gridExtent, double fraction, GridPlacement placement)
         {
             if (_scrollToMain.GridExtent == gridExtent && _scrollToMain.Fraction.IsClose(fraction)
                 && _scrollToMainPlacement == placement
                 && _scrollDeltaMain == 0)
                 return;
-            ScrollTo(new LogicalExtent(gridExtent, fraction), placement);
+            ScrollToMain(new LogicalExtent(gridExtent, fraction), placement);
         }
 
-        private void ScrollTo(LogicalExtent scrollTo, GridPlacement placement)
+        protected void ScrollToCross(int gridExtent, double fraction, GridPlacement placement)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ScrollToMain(LogicalExtent scrollTo, GridPlacement placement)
         {
             _scrollToMain = scrollTo;
             _scrollToMainPlacement = placement;
@@ -250,7 +259,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var scrollTo = TryScrollToMain(valueMain);
             if (scrollTo.HasValue)
-                ScrollTo(scrollTo.GetValueOrDefault(), _scrollToMainPlacement);
+                ScrollToMain(scrollTo.GetValueOrDefault(), _scrollToMainPlacement);
             else
                 SetScrollDeltaMain(valueMain, true);
             SetScrollDeltaCross(valueCross, true);
@@ -579,7 +588,7 @@ namespace DevZest.Windows.Data.Primitives
             if (_scrollToMainPlacement == GridPlacement.Tail)
             {
                 _scrollToMainPlacement = GridPlacement.Head;
-                var delta = Translate(_scrollToMain) - Translate(MinScrollToMain);
+                var delta = GridTracksMain.AvailableLength - FrozenTailLengthMain;
                 AdjustScrollToMain(-delta, true);
             }
         }

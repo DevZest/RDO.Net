@@ -963,44 +963,41 @@ namespace DevZest.Windows.Data.Primitives
                 base.SetMeasuredAutoLength(containerView, gridTrack, value);
         }
 
-        private double GetEnsureVisibleOffsetMain(LogicalMainTrack start, LogicalMainTrack end)
+        private void EnsureVisibleMain(LogicalMainTrack start, LogicalMainTrack end)
         {
             if (start.GridTrack.IsFrozenHead || end.GridTrack.IsFrozenTail)
-                return 0;
+                return;
 
             var startExtent = start.StartExtent;
             var scrollStartMain = ScrollToMainExtent;
             if (startExtent < scrollStartMain)
-                return startExtent - scrollStartMain;
+                ScrollToMain(start.GridExtent, 0, GridPlacement.Head);
 
             var endPosition = end.EndExtent - ScrollOffsetMain;
             var scrollEnd = ViewportMain - FrozenTailLengthMain;
             if (endPosition > scrollEnd)
-                return endPosition - scrollEnd;
-
-            return 0;
+                //InternalScrollBy(endPosition - scrollEnd, 0);
+                ScrollToMain(end.GridExtent, 1, GridPlacement.Tail);
         }
 
-        private double GetEnsureVisibleOffsetCross(GridTrack startGridTrack, int startFlowIndex, GridTrack endGridTrack, int endFlowIndex)
+        private void EnsureVisibleCross(GridTrack startGridTrack, int startFlowIndex, GridTrack endGridTrack, int endFlowIndex)
         {
             if (startGridTrack.IsFrozenHead || endGridTrack.IsFrozenTail)
-                return 0;
+                return;
 
             var start = startGridTrack.StartOffset;
             if (startFlowIndex > 0)
                 start += startFlowIndex * FlowLength;
             var scrollStart = ScrollOffsetCross + FrozenHeadLengthCross;
             if (start < scrollStart)
-                return start - scrollStart;
+                InternalScrollBy(0, start - scrollStart);
 
             var end = endGridTrack.EndOffset - ScrollOffsetCross;
             if (endFlowIndex > 0)
                 end += endFlowIndex * FlowLength;
             var scrollEnd = ViewportCross - FrozenTailLengthCross;
             if (end > scrollEnd)
-                return end - scrollEnd;
-
-            return 0;
+                InternalScrollBy(0, end - scrollEnd);
         }
 
         public void EnsureVisible(DependencyObject visual)
@@ -1059,77 +1056,81 @@ namespace DevZest.Windows.Data.Primitives
 
         private void EnsureVisible(ScalarBinding scalarBinding, int flowIndex)
         {
-            InternalScrollBy(GetEnsureVisibleOffsetMain(scalarBinding), GetEnsureVisibleOffsetCross(scalarBinding, flowIndex));
+            EnsureVisibleMain(scalarBinding);
+            EnsureVisibleCross(scalarBinding, flowIndex);
         }
 
-        private double GetEnsureVisibleOffsetMain(ScalarBinding scalarBinding)
+        private void EnsureVisibleMain(ScalarBinding scalarBinding)
         {
             var gridRange = scalarBinding.GridRange;
-            return GetEnsureVisibleOffsetMain(GetStartLogicalMainTrack(gridRange), GetEndLogicalMainTrack(gridRange));
+            EnsureVisibleMain(GetStartLogicalMainTrack(gridRange), GetEndLogicalMainTrack(gridRange));
         }
 
-        private double GetEnsureVisibleOffsetCross(ScalarBinding scalarBinding, int flowIndex)
+        private void EnsureVisibleCross(ScalarBinding scalarBinding, int flowIndex)
         {
             var gridSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);
             var endFlowIndex = ShouldStretchCross(scalarBinding) ? FlowCount - 1 : flowIndex;
-            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, endFlowIndex);
+            EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, endFlowIndex);
         }
 
         private void EnsureVisible(RowView rowView)
         {
-            InternalScrollBy(GetEnsureVisibleOffsetMain(rowView), GetEnsureVisibleOffsetCross(rowView));
+            EnsureVisibleMain(rowView);
+            EnsureVisibleCross(rowView);
         }
 
-        private double GetEnsureVisibleOffsetMain(RowView rowView)
+        private void EnsureVisibleMain(RowView rowView)
         {
             var gridSpan = GridTracksMain.GetGridSpan(Template.RowRange);
             var containerOrdinal = rowView.ContainerOrdinal;
-            return GetEnsureVisibleOffsetMain(new LogicalMainTrack(gridSpan.StartTrack, containerOrdinal), new LogicalMainTrack(gridSpan.EndTrack, containerOrdinal));
+            EnsureVisibleMain(new LogicalMainTrack(gridSpan.StartTrack, containerOrdinal), new LogicalMainTrack(gridSpan.EndTrack, containerOrdinal));
         }
 
-        private double GetEnsureVisibleOffsetCross(RowView rowView)
+        private void EnsureVisibleCross(RowView rowView)
         {
             var gridSpan = GridTracksCross.GetGridSpan(Template.RowRange);
             var flowIndex = rowView.FlowIndex;
-            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
+            EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
 
         private void EnsureVisible(RowView rowView, RowBinding rowBinding)
         {
-            InternalScrollBy(GetEnsureVisibleOffsetMain(rowView, rowBinding), GetEnsureVisibleOffsetCross(rowView, rowBinding));
+            EnsureVisibleMain(rowView, rowBinding);
+            EnsureVisibleCross(rowView, rowBinding);
         }
 
-        private double GetEnsureVisibleOffsetMain(RowView rowView, RowBinding rowBinding)
+        private void EnsureVisibleMain(RowView rowView, RowBinding rowBinding)
         {
             var gridSpan = GridTracksMain.GetGridSpan(rowBinding.GridRange);
             var containerOrdinal = rowView.ContainerOrdinal;
-            return GetEnsureVisibleOffsetMain(new LogicalMainTrack(gridSpan.StartTrack, containerOrdinal), new LogicalMainTrack(gridSpan.EndTrack, containerOrdinal));
+            EnsureVisibleMain(new LogicalMainTrack(gridSpan.StartTrack, containerOrdinal), new LogicalMainTrack(gridSpan.EndTrack, containerOrdinal));
         }
 
-        private double GetEnsureVisibleOffsetCross(RowView rowView, RowBinding rowBinding)
+        private void EnsureVisibleCross(RowView rowView, RowBinding rowBinding)
         {
             var gridSpan = GridTracksCross.GetGridSpan(rowBinding.GridRange);
             var flowIndex = rowView.FlowIndex;
-            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
+            EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
 
         private void EnsureVisible(BlockView blockView, BlockBinding blockBinding)
         {
-            InternalScrollBy(GetEnsureVisibleOffsetMain(blockView, blockBinding), GetEnsureVisibleOffsetCross(blockView, blockBinding));
+            EnsureVisibleMain(blockView, blockBinding);
+            EnsureVisibleCross(blockView, blockBinding);
         }
 
-        private double GetEnsureVisibleOffsetMain(BlockView blockView, BlockBinding blockBinding)
+        private void EnsureVisibleMain(BlockView blockView, BlockBinding blockBinding)
         {
             var gridSpan = GridTracksMain.GetGridSpan(blockBinding.GridRange);
             var blockOrdinal = blockView.ContainerOrdinal;
-            return GetEnsureVisibleOffsetMain(new LogicalMainTrack(gridSpan.StartTrack, blockOrdinal), new LogicalMainTrack(gridSpan.EndTrack, blockOrdinal));
+            EnsureVisibleMain(new LogicalMainTrack(gridSpan.StartTrack, blockOrdinal), new LogicalMainTrack(gridSpan.EndTrack, blockOrdinal));
         }
 
-        private double GetEnsureVisibleOffsetCross(BlockView blockView, BlockBinding blockBinding)
+        private void EnsureVisibleCross(BlockView blockView, BlockBinding blockBinding)
         {
             var gridSpan = GridTracksCross.GetGridSpan(blockBinding.GridRange);
             var flowIndex = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? FlowCount : 0;
-            return GetEnsureVisibleOffsetCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
+            EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
     }
 }

@@ -180,6 +180,5 @@ namespace DevZest.Windows.Data.Primitives
             gridExtent -= rowGridExtent;
             return new LogicalCrossTrack(GridTracksCross[index + gridExtent]);
         }
-
     }
 }

@@ -21,7 +21,8 @@ namespace DevZest.Windows.Data.Primitives
         double GetExtentY(int gridExtentY);
         double GetPositionX(int gridExtentX, GridPlacement placement);
         double GetPositionY(int gridExtentY, GridPlacement placement);
-        void ScrollTo(int gridExtent, double fraction, GridPlacement placement);
+        void ScrollToX(int gridExtent, double fraction, GridPlacement placement);
+        void ScrollToY(int gridExtent, double fraction, GridPlacement placement);
         void ScrollBy(double x, double y);
         void ScrollTo(double x, double y);
     }

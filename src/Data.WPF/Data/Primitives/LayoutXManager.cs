@@ -95,5 +95,15 @@ namespace DevZest.Windows.Data.Primitives
         {
             InternalScrollBy(x, y);
         }
+
+        public sealed override void ScrollToX(int gridExtent, double fraction, GridPlacement placement)
+        {
+            ScrollToMain(gridExtent, fraction, placement);
+        }
+
+        public sealed override void ScrollToY(int gridExtent, double fraction, GridPlacement placement)
+        {
+            ScrollToCross(gridExtent, fraction, placement);
+        }
     }
 }

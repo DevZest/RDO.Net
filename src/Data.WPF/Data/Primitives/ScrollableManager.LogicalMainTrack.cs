@@ -172,7 +172,7 @@ namespace DevZest.Windows.Data.Primitives
                 get { return GridTrack.Owner; }
             }
 
-            private int MaxFrozenHead
+            private int HeadTracksCount
             {
                 get { return GridTrackOwner.HeadTracksCount; }
             }
@@ -203,7 +203,7 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(IsContainer && ordinal >= 0);
 
                 var relativeSpan = GetRelativeSpan(ordinal);
-                var startOffset = (MaxFrozenHead == 0 ? 0 : GridTrackOwner[MaxFrozenHead - 1].EndOffset) + GetContainerViewsLength(ordinal);
+                var startOffset = (HeadTracksCount == 0 ? 0 : GridTrackOwner[HeadTracksCount - 1].EndOffset) + GetContainerViewsLength(ordinal);
                 return new Span(startOffset + relativeSpan.Start, startOffset + relativeSpan.End);
             }
 
@@ -230,6 +230,29 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(IsContainer && !VariantByContainer);
                 var originOffset = GridTrackOwner.GetGridSpan(Template.RowRange).StartTrack.StartOffset;
                 return new Span(GridTrack.StartOffset - originOffset, GridTrack.EndOffset - originOffset);
+            }
+
+            public int GridExtent
+            {
+                get
+                {
+                    Debug.Assert(!IsEof);
+
+                    if (IsHead)
+                        return GridTrack.Ordinal;
+                    else if (IsContainer)
+                        return GridTrack.Ordinal + ContainerOrdinal * ContainerTracksCount;
+                    else
+                    {
+                        Debug.Assert(IsTail);
+                        return GridTrack.Ordinal + MaxContainerCount == 0 ? 0 : (MaxContainerCount - 1) * ContainerTracksCount;
+                    }
+                }
+            }
+
+            private int ContainerTracksCount
+            {
+                get { return GridTrackOwner.ContainerTracksCount; }
             }
         }
 
