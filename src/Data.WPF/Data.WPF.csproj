@@ -52,6 +52,7 @@
     <Compile Include="Data\BindingFactory.cs" />
     <Compile Include="Data\BindingFactory.TextBox.cs" />
     <Compile Include="Data\BlockPane_T.cs" />
+    <Compile Include="Data\DataPresenter.DataViewCommands.cs" />
     <Compile Include="Data\DataPresenter_T.cs" />
     <Compile Include="Data\ExplicitTrigger.cs" />
     <Compile Include="Data\IAsyncValidatorGroup.cs" />

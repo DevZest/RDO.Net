@@ -8,7 +8,7 @@ using DevZest.Windows.Controls;
 
 namespace DevZest.Windows.Data
 {
-    public abstract class DataPresenter
+    public abstract partial class DataPresenter
     {
         public abstract DataView View { get; }
 
@@ -206,16 +206,6 @@ namespace DevZest.Windows.Data
         public IScrollable Scrollable
         {
             get { return LayoutManager as ScrollableManager; }
-        }
-
-        protected internal virtual IEnumerable<CommandBinding> DataViewCommandBindings
-        {
-            get { return null; }
-        }
-
-        protected internal virtual IEnumerable<InputBinding> DataViewInputBindings
-        {
-            get { return null; }
         }
 
         protected internal virtual IEnumerable<CommandBinding> RowViewCommandBindings
