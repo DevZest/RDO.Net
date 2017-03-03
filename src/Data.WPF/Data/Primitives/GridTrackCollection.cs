@@ -285,7 +285,7 @@ namespace DevZest.Windows.Data.Primitives
             if (scrollableManager == null || scrollableManager.GridTracksMain != this)
                 return false;
 
-            var gridSpan = GetGridSpan(Template.RowRange);
+            var gridSpan = GetGridSpan(Template.ContainerRange);
             for (int i = 0; i < gridSpan.Count; i++)
             {
                 if (gridSpan[i].IsAutoLength)
