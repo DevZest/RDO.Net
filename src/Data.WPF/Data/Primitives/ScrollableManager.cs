@@ -976,7 +976,6 @@ namespace DevZest.Windows.Data.Primitives
             var endPosition = end.EndExtent - ScrollOffsetMain;
             var scrollEnd = ViewportMain - FrozenTailLengthMain;
             if (endPosition > scrollEnd)
-                //InternalScrollBy(endPosition - scrollEnd, 0);
                 ScrollToMain(end.GridExtent, 1, GridPlacement.Tail);
         }
 
@@ -985,19 +984,20 @@ namespace DevZest.Windows.Data.Primitives
             if (startGridTrack.IsFrozenHead || endGridTrack.IsFrozenTail)
                 return;
 
-            var start = startGridTrack.StartOffset;
-            if (startFlowIndex > 0)
-                start += startFlowIndex * FlowLength;
+            var start = new LogicalCrossTrack(startGridTrack, startFlowIndex);
+            var end = new LogicalCrossTrack(endGridTrack, endFlowIndex);
+            
+            var startExtent = start.StartExtent;
             var scrollStart = ScrollOffsetCross + FrozenHeadLengthCross;
-            if (start < scrollStart)
-                InternalScrollBy(0, start - scrollStart);
+            if (startExtent < scrollStart)
+                //InternalScrollBy(0, startExtent - scrollStart);
+                ScrollToCross(start.GridExtent, 0, GridPlacement.Head);
 
-            var end = endGridTrack.EndOffset - ScrollOffsetCross;
-            if (endFlowIndex > 0)
-                end += endFlowIndex * FlowLength;
+            var endPosition = end.EndPosition;
             var scrollEnd = ViewportCross - FrozenTailLengthCross;
-            if (end > scrollEnd)
-                InternalScrollBy(0, end - scrollEnd);
+            if (endPosition > scrollEnd)
+                //InternalScrollBy(0, endPosition - scrollEnd
+                ScrollToCross(end.GridExtent, 1, GridPlacement.Tail);
         }
 
         public void EnsureVisible(DependencyObject visual)

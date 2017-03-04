@@ -226,6 +226,7 @@ namespace DevZest.Windows.Data.Primitives
 
         protected void ScrollToMain(int gridExtent, double fraction, GridPlacement placement)
         {
+            VerifyLogicalExtent(gridExtent, fraction, MaxGridExtentMain);
             if (_scrollToMain.GridExtent == gridExtent && _scrollToMain.Fraction.IsClose(fraction)
                 && _scrollToMainPlacement == placement
                 && _scrollDeltaMain == 0)
@@ -233,9 +234,29 @@ namespace DevZest.Windows.Data.Primitives
             ScrollToMain(new LogicalExtent(gridExtent, fraction), placement);
         }
 
+        private void VerifyLogicalExtent(int gridExtent, double fraction, int maxGridExtent)
+        {
+            if (gridExtent < 0 || gridExtent >= maxGridExtent)
+                throw new ArgumentOutOfRangeException(nameof(gridExtent));
+            if (fraction < 0 || fraction > 1)
+                throw new ArgumentOutOfRangeException(nameof(fraction));
+        }
+
         protected void ScrollToCross(int gridExtent, double fraction, GridPlacement placement)
         {
-            throw new NotImplementedException();
+            VerifyLogicalExtent(gridExtent, fraction, MaxGridExtentCross);
+            var logicalTrack = GetLogicalCrossTrack(gridExtent);
+            Debug.Assert(!logicalTrack.IsEof);
+            if (placement == GridPlacement.Head)
+            {
+                var extent = logicalTrack.StartExtent + logicalTrack.GridTrack.MeasuredLength * fraction;
+                InternalScrollBy(0, extent - FrozenHeadLengthCross - ScrollOffsetCross);
+            }
+            else
+            {
+                var position = logicalTrack.EndPosition - logicalTrack.GridTrack.MeasuredLength * (1 - fraction);
+                InternalScrollBy(0, position - (ViewportCross - FrozenTailLengthCross));
+            }
         }
 
         private void ScrollToMain(LogicalExtent scrollTo, GridPlacement placement)

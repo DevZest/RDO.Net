@@ -28,9 +28,19 @@ namespace DevZest.Windows.Data.Primitives
                 get { return GridTrack == null; }
             }
 
-            public bool IsRepeat
+            public bool IsHead
+            {
+                get { return GridTrack != null && GridTrack.IsHead; }
+            }
+
+            public bool IsContainer
             {
                 get { return GridTrack != null && GridTrack.IsContainer; }
+            }
+
+            public bool IsTail
+            {
+                get { return GridTrack != null && GridTrack.IsTail; }
             }
 
             public static bool operator ==(LogicalCrossTrack x, LogicalCrossTrack y)
@@ -132,6 +142,29 @@ namespace DevZest.Windows.Data.Primitives
             public double EndPosition
             {
                 get { return StartPosition + Length; }
+            }
+
+            private int ContainerTracksCount
+            {
+                get { return GridTracksCross.ContainerTracksCount; }
+            }
+
+            public int GridExtent
+            {
+                get
+                {
+                    Debug.Assert(!IsEof);
+
+                    if (GridTrack.IsHead)
+                        return GridTrack.Ordinal;
+                    else if (IsContainer)
+                        return GridTrack.Ordinal + FlowIndex * ContainerTracksCount;
+                    else
+                    {
+                        Debug.Assert(IsTail);
+                        return GridTrack.Ordinal + (FlowCount - 1) * ContainerTracksCount;
+                    }
+                }
             }
         }
 

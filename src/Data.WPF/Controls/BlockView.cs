@@ -15,6 +15,7 @@ namespace DevZest.Windows.Controls
         static BlockView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(typeof(BlockView)));
+            FocusableProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
         public BlockView()
