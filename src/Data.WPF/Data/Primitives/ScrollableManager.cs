@@ -968,15 +968,21 @@ namespace DevZest.Windows.Data.Primitives
             if (start.GridTrack.IsFrozenHead || end.GridTrack.IsFrozenTail)
                 return;
 
-            var startExtent = start.StartExtent;
-            var scrollStartMain = ScrollToMainExtent;
-            if (startExtent < scrollStartMain)
-                ScrollToMain(start.GridExtent, 0, GridPlacement.Head);
+            var startGridExtent = start.StartGridExtent;
+            var startPosition = GetPositionMain(startGridExtent, GridPlacement.Head);
+            var frozenHeadPosition = FrozenHeadGridExtentMain == 0 ? 0 : GetPositionMain(FrozenHeadGridExtentMain, GridPlacement.Tail);
+            var isHeadClipped = startPosition < frozenHeadPosition;
+            var endGridExtent = end.EndGridExtent;
+            var endPosition = GetPositionMain(endGridExtent, GridPlacement.Tail);
+            var frozenTailPosition = FrozenTailGridExtentMain == MaxGridExtentMain ? ViewportMain : GetPositionMain(FrozenTailGridExtentMain, GridPlacement.Head);
+            var isTailClipped = endPosition > frozenTailPosition;
 
-            var endPosition = end.EndExtent - ScrollOffsetMain;
-            var scrollEnd = ViewportMain - FrozenTailLengthMain;
-            if (endPosition > scrollEnd)
-                ScrollToMain(end.GridExtent, 1, GridPlacement.Tail);
+            if (isHeadClipped && isTailClipped)
+                return;
+            else if (isHeadClipped)
+                ScrollToMain(startGridExtent, 0, GridPlacement.Head);
+            else if (isTailClipped)
+                ScrollToMain(startGridExtent, 1, GridPlacement.Tail);
         }
 
         private void EnsureVisibleCross(GridTrack startGridTrack, int startFlowIndex, GridTrack endGridTrack, int endFlowIndex)
@@ -986,18 +992,22 @@ namespace DevZest.Windows.Data.Primitives
 
             var start = new LogicalCrossTrack(startGridTrack, startFlowIndex);
             var end = new LogicalCrossTrack(endGridTrack, endFlowIndex);
-            
-            var startExtent = start.StartExtent;
-            var scrollStart = ScrollOffsetCross + FrozenHeadLengthCross;
-            if (startExtent < scrollStart)
-                //InternalScrollBy(0, startExtent - scrollStart);
-                ScrollToCross(start.GridExtent, 0, GridPlacement.Head);
 
-            var endPosition = end.EndPosition;
-            var scrollEnd = ViewportCross - FrozenTailLengthCross;
-            if (endPosition > scrollEnd)
-                //InternalScrollBy(0, endPosition - scrollEnd
-                ScrollToCross(end.GridExtent, 1, GridPlacement.Tail);
+            var startGridExtent = start.StartGridExtent;
+            var startPosition = GetPositionCross(startGridExtent, GridPlacement.Head);
+            var frozenHeadPosition = FrozenHeadGridExtentCross == 0 ? 0 : GetPositionMain(FrozenHeadGridExtentCross, GridPlacement.Tail);
+            var isHeadClipped = startPosition < frozenHeadPosition;
+            var endGridExtent = end.EndGridExtent;
+            var endPosition = GetPositionCross(endGridExtent, GridPlacement.Tail);
+            var frozenTailPosition = FrozenTailGridExtentCross == MaxGridExtentCross ? ViewportCross : GetPositionCross(FrozenTailGridExtentCross, GridPlacement.Head);
+            var isTailClipped = endPosition > frozenTailPosition;
+
+            if (isHeadClipped && isTailClipped)
+                return;
+            else if (isHeadClipped)
+                ScrollToCross(startGridExtent, 0, GridPlacement.Head);
+            else if (isTailClipped)
+                ScrollToCross(startGridExtent, 1, GridPlacement.Tail);
         }
 
         public void EnsureVisible(DependencyObject visual)

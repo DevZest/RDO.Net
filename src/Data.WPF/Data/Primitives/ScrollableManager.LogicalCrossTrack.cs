@@ -149,7 +149,7 @@ namespace DevZest.Windows.Data.Primitives
                 get { return GridTracksCross.ContainerTracksCount; }
             }
 
-            public int GridExtent
+            public int StartGridExtent
             {
                 get
                 {
@@ -165,6 +165,11 @@ namespace DevZest.Windows.Data.Primitives
                         return GridTrack.Ordinal + (FlowCount - 1) * ContainerTracksCount;
                     }
                 }
+            }
+
+            public int EndGridExtent
+            {
+                get { return StartGridExtent + 1; }
             }
         }
 

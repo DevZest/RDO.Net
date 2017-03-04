@@ -232,7 +232,7 @@ namespace DevZest.Windows.Data.Primitives
                 return new Span(GridTrack.StartOffset - originOffset, GridTrack.EndOffset - originOffset);
             }
 
-            public int GridExtent
+            public int StartGridExtent
             {
                 get
                 {
@@ -248,6 +248,11 @@ namespace DevZest.Windows.Data.Primitives
                         return GridTrack.Ordinal + MaxContainerCount == 0 ? 0 : (MaxContainerCount - 1) * ContainerTracksCount;
                     }
                 }
+            }
+
+            public int EndGridExtent
+            {
+                get { return StartGridExtent + 1; }
             }
 
             private int ContainerTracksCount

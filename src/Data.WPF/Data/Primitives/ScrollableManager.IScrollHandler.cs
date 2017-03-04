@@ -140,6 +140,34 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
+        public abstract int FrozenHeadGridExtentX { get; }
+
+        public abstract int FrozenTailGridExtentX { get; }
+
+        public abstract int FrozenHeadGridExtentY { get; }
+
+        public abstract int FrozenTailGridExtentY { get; }
+
+        protected int FrozenHeadGridExtentMain
+        {
+            get { return FrozenHeadTracksCountMain; }
+        }
+
+        protected int FrozenHeadGridExtentCross
+        {
+            get { return FrozenHeadTracksCountCross; }
+        }
+
+        protected int FrozenTailGridExtentMain
+        {
+            get { return MaxGridExtentMain - FrozenTailTracksCountMain; }
+        }
+
+        protected int FrozenTailGridExtentCross
+        {
+            get { return MaxGridExtentCross - FrozenTailTracksCountCross; }
+        }
+
         public double GetExtentX(int gridExtentX)
         {
             VerifyGridExtent(gridExtentX, nameof(gridExtentX), MaxGridExtentX);

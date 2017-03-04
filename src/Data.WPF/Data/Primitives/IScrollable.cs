@@ -16,6 +16,10 @@ namespace DevZest.Windows.Data.Primitives
         double VerticalOffset { get; }
         int MaxGridExtentX { get; }
         int MaxGridExtentY { get; }
+        int FrozenHeadGridExtentX { get; }
+        int FrozenTailGridExtentX { get; }
+        int FrozenHeadGridExtentY { get; }
+        int FrozenTailGridExtentY { get; }
         double GetExtentX(int gridExtentX);
         double GetExtentY(int gridExtentY);
         double GetPositionX(int gridExtentX, GridPlacement placement);

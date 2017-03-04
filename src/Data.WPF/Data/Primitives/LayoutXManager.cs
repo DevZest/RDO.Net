@@ -71,6 +71,26 @@ namespace DevZest.Windows.Data.Primitives
             get { return MaxGridExtentCross; }
         }
 
+        public override int FrozenHeadGridExtentX
+        {
+            get { return FrozenHeadGridExtentMain; }
+        }
+
+        public override int FrozenTailGridExtentX
+        {
+            get { return FrozenTailGridExtentMain; }
+        }
+
+        public override int FrozenHeadGridExtentY
+        {
+            get { return FrozenHeadGridExtentCross; }
+        }
+
+        public override int FrozenTailGridExtentY
+        {
+            get { return FrozenTailGridExtentCross; }
+        }
+
         protected override double GetExtentXCore(int gridExtentX)
         {
             return GetExtentMain(gridExtentX);
