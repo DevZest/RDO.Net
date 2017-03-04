@@ -1,5 +1,4 @@
-﻿using DevZest.Windows.Controls.Primitives;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DevZest.Windows.Data.Primitives
 {
