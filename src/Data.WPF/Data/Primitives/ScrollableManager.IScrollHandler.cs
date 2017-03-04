@@ -236,10 +236,10 @@ namespace DevZest.Windows.Data.Primitives
 
         private void VerifyLogicalExtent(int gridExtent, double fraction, int maxGridExtent)
         {
-            if (gridExtent < 0 || gridExtent >= maxGridExtent)
-                throw new ArgumentOutOfRangeException(nameof(gridExtent));
             if (fraction < 0 || fraction > 1)
                 throw new ArgumentOutOfRangeException(nameof(fraction));
+            if (gridExtent < 0 || gridExtent + fraction > maxGridExtent)
+                throw new ArgumentOutOfRangeException(nameof(gridExtent));
         }
 
         protected void ScrollToCross(int gridExtent, double fraction, GridPlacement placement)
