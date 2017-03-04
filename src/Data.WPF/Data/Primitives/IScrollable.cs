@@ -6,7 +6,6 @@ namespace DevZest.Windows.Data.Primitives
     public interface  IScrollable
     {
         FrameworkElement Panel { get; }
-        ContainerView CurrentContainerView { get; }
         ContainerViewList ContainerViewList { get; }
         CurrentContainerViewPlacement CurrentContainerViewPlacement { get; }
         double ViewportWidth { get; }

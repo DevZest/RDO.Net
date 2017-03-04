@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using DevZest.Data;
 using DevZest.Windows.Controls;
+using DevZest.Windows.Controls.Primitives;
 
 namespace DevZest.Windows.Data
 {
@@ -64,6 +65,11 @@ namespace DevZest.Windows.Data
                 VerifyRowPresenter(value, nameof(value));
                 RequireLayoutManager().CurrentRow = value;
             }
+        }
+
+        public ContainerView CurrentContainerView
+        {
+            get { return RequireLayoutManager().CurrentContainerView; }
         }
 
         private void VerifyRowPresenter(RowPresenter value,  string paramName)
