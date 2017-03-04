@@ -1,7 +1,8 @@
 ﻿using DevZest.Windows.Data;
+using SmoothScroll.Models;
 using System.Windows.Controls;
 
-namespace SmoothScroll
+namespace SmoothScroll.Presenters
 {
     internal class FooList : DataPresenter<Foo>
     {
@@ -10,7 +11,7 @@ namespace SmoothScroll
             builder.GridColumns("*")
             .GridRows("Auto")
             .Layout(Orientation.Vertical)
-            .AddBinding(0, 0, _.BindTextBlock())
+            .AddBinding(0, 0, _.TextBlock())
             .AddBinding(0, 0, _.BindBorder());
         }
     }

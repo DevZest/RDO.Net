@@ -1,22 +1,11 @@
 ﻿using DevZest.Data;
+using SmoothScroll.Models;
 using System;
-using System.Windows;
 
 namespace SmoothScroll
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    static class Data
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            var fooList = new FooList();
-            fooList.Show(dataView, GetTestData(10000));
-        }
-
         private static void AddSectionHeader(DataSet<Foo> dataSet, int index)
         {
             var dataRow = new DataRow();
@@ -36,7 +25,7 @@ namespace SmoothScroll
             dataSet._.BackgroundB[dataRow] = b;
         }
 
-        private static DataSet<Foo> GetTestData(int count)
+        public static DataSet<Foo> GetTestData(int count)
         {
             var result = DataSet<Foo>.New();
 

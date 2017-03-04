@@ -1,6 +1,6 @@
 ﻿using DevZest.Data;
 
-namespace SmoothScroll
+namespace SmoothScroll.Models
 {
     public class Foo : Model
     {

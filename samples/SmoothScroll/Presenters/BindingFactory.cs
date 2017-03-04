@@ -3,8 +3,9 @@ using System.Windows.Media;
 using System.Windows;
 using DevZest.Data;
 using DevZest.Windows.Data;
+using SmoothScroll.Models;
 
-namespace SmoothScroll
+namespace SmoothScroll.Presenters
 {
     internal static class BindingFactory
     {
@@ -30,7 +31,7 @@ namespace SmoothScroll
             }
         }
 
-        public static RowBinding<TextBlock> BindTextBlock(this Foo _)
+        public static RowBinding<TextBlock> TextBlock(this Foo _)
         {
             return new RowBinding<TextBlock>((e, r) => Refresh(e, _, r));
         }
