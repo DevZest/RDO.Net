@@ -413,6 +413,17 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
+        public void EnsureCurrentRowVisible()
+        {
+            if (CurrentRow == null)
+                return;
+
+            if (!Panel.IsMeasureValid)
+                Panel.UpdateLayout();
+            EnsureVisibleMain(CurrentRow.View);
+            EnsureVisibleCross(CurrentRow.View);
+        }
+
         protected sealed override void PrepareMeasureContainers()
         {
             _scrollOffsetMain = null;

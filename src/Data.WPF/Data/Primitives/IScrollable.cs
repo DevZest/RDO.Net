@@ -27,5 +27,6 @@ namespace DevZest.Windows.Data.Primitives
         void ScrollToY(int gridExtent, double fraction, GridPlacement placement);
         void ScrollBy(double x, double y);
         void ScrollTo(double x, double y);
+        void EnsureCurrentRowVisible();
     }
 }

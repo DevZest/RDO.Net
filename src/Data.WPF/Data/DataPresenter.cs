@@ -81,10 +81,12 @@ namespace DevZest.Windows.Data
                 throw new ArgumentException(Strings.DataPresenter_InvalidRowPresenter, paramName);
         }
 
-        public void Select(RowPresenter rowPresenter, SelectionMode selectionMode)
+        public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
             RequireLayoutManager().Select(rowPresenter, selectionMode);
+            if (ensureVisible && Scrollable != null)
+                Scrollable.EnsureCurrentRowVisible();
         }
 
         public IReadOnlyCollection<RowPresenter> SelectedRows
