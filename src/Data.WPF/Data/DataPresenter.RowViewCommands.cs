@@ -7,7 +7,7 @@ namespace DevZest.Windows.Data
 {
     partial class DataPresenter
     {
-        protected internal virtual IEnumerable<CommandBinding> DataViewCommandBindings
+        protected internal virtual IEnumerable<CommandEntry> RowViewCommandEntries
         {
             get
             {
@@ -15,23 +15,8 @@ namespace DevZest.Windows.Data
                 {
                     if (Template.Orientation == Orientation.Vertical)
                     {
-                        yield return new CommandBinding(DataView.MoveFocusUpCommand, MoveToPreviousRow, CanMoveToPreviousRow);
-                        yield return new CommandBinding(DataView.MoveFocusDownCommand, MoveToNextRow, CanMoveToNextRow);
-                    }
-                }
-            }
-        }
-
-        protected internal virtual IEnumerable<InputBinding> DataViewInputBindings
-        {
-            get
-            {
-                if (Scrollable != null)
-                {
-                    if (Template.Orientation == Orientation.Vertical)
-                    {
-                        yield return new InputBinding(DataView.MoveFocusUpCommand, new KeyGesture(Key.A, ModifierKeys.Alt));
-                        yield return new InputBinding(DataView.MoveFocusDownCommand, new KeyGesture(Key.Z, ModifierKeys.Alt));
+                        yield return RowView.MoveFocusUpCommand.InputBinding(MoveToPreviousRow, CanMoveToPreviousRow, new KeyGesture(Key.Up));
+                        yield return RowView.MoveFocusDownCommand.InputBinding(MoveToNextRow, CanMoveToNextRow, new KeyGesture(Key.Down));
                     }
                 }
             }

@@ -214,14 +214,9 @@ namespace DevZest.Windows.Data
             get { return LayoutManager as ScrollableManager; }
         }
 
-        protected internal virtual IEnumerable<CommandBinding> RowViewCommandBindings
+        protected internal virtual IEnumerable<CommandEntry> DataViewCommandEntries
         {
-            get { return null; }
-        }
-
-        protected internal virtual IEnumerable<InputBinding> RowViewInputBindings
-        {
-            get { return null; }
+            get { yield break; }
         }
     }
 }

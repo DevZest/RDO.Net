@@ -12,6 +12,14 @@ namespace DevZest.Windows
             = new ResourceManager("DevZest.Windows.Strings", typeof(Strings).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// The {array}[{index}] is null.
+        /// </summary>
+        public static string ArgumentNullAtIndex(object array, object index)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ArgumentNullAtIndex", "array", "index"), array, index);
+        }
+
+        /// <summary>
         /// Invalid input for type {type}.
         /// </summary>
         public static string BindingFactory_InvalidInput(object type)

@@ -20,8 +20,7 @@ namespace DevZest.Windows.Data
             if (dataView.DataPresenter != null && dataView.DataPresenter != this)
                 throw new ArgumentException(Strings.DataPresenter_InvalidDataView, nameof(dataView));
 
-            var existingView = dataView.DataPresenter == this;
-            if (existingView)
+            if (View != null)
                 DetachView();
             DataSet = dataSet;
             var template = new Template();
@@ -31,16 +30,12 @@ namespace DevZest.Windows.Data
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
             AttachView(dataView);
-            if (!existingView)
-            {
-                dataView.SetupCommandBindings();
-                dataView.SetupInputBindings();
-            }
         }
 
         private void DetachView()
         {
             Debug.Assert(_view != null);
+            _view.CleanupCommandEntries();
             _layoutManager.ClearElements();
             _view.DataPresenter = null;
             _view = null;
@@ -51,6 +46,7 @@ namespace DevZest.Windows.Data
             Debug.Assert(View == null && value != null);
             _view = value;
             _view.DataPresenter = this;
+            _view.SetupCommandEntries();
         }
 
         public new DataSet<T> DataSet { get; private set; }
