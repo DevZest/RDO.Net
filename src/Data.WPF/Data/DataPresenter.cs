@@ -20,6 +20,11 @@ namespace DevZest.Windows.Data
             get { return LayoutManager == null ? null : LayoutManager.Template; }
         }
 
+        public Orientation? LayoutOrientation
+        {
+            get { return Template.Orientation; }
+        }
+
         public DataSet DataSet
         {
             get { return LayoutManager == null ? null : LayoutManager.DataSet; }
@@ -70,6 +75,11 @@ namespace DevZest.Windows.Data
         public ContainerView CurrentContainerView
         {
             get { return RequireLayoutManager().CurrentContainerView; }
+        }
+
+        public int FlowCount
+        {
+            get { return LayoutManager == null ? 1 : LayoutManager.FlowCount; }
         }
 
         private void VerifyRowPresenter(RowPresenter value,  string paramName)

@@ -272,11 +272,12 @@ namespace DevZest.Windows.Controls
 
             Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone);
 
+            var newValue = ElementManager.CurrentRow;
+            _ordinal = newValue.Index / ElementManager.FlowCount; // FillMissingRowViews relies on updated _ordinal
+
             var currentRowView = RemoveAllRowViewsExcept(oldValue);
             currentRowView.ReloadCurrentRow(oldValue);
             FillMissingRowViews(currentRowView);
-            var newValue = ElementManager.CurrentRow;
-            _ordinal = newValue.Index / ElementManager.FlowCount;
             Refresh();
         }
 

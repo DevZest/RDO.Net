@@ -401,8 +401,8 @@ namespace DevZest.Windows.Data.Primitives
         public void Select(RowPresenter value, SelectionMode selectionMode)
         {
             var oldValue = CurrentRow;
-            Debug.Assert(oldValue != value);
-            CurrentRow = value;
+            if (oldValue != value)
+                CurrentRow = value;
 
             switch (selectionMode)
             {
