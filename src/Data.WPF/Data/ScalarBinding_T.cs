@@ -198,5 +198,29 @@ namespace DevZest.Windows.Data
         {
             get { return (T)base[flowIndex]; }
         }
+
+        public ScalarBinding<T> OverrideSetup(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideSetup)
+        {
+            if (overrideSetup == null)
+                throw new ArgumentNullException(nameof(overrideSetup));
+            _onSetup = _onSetup.Override(overrideSetup);
+            return this;
+        }
+
+        public ScalarBinding<T> OverrideRefresh(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideRefresh)
+        {
+            if (overrideRefresh == null)
+                throw new ArgumentNullException(nameof(overrideRefresh));
+            _onRefresh = _onRefresh.Override(overrideRefresh);
+            return this;
+        }
+
+        public ScalarBinding<T> OverrideCleanup(Action<T, ScalarPresenter, Action<T, ScalarPresenter>> overrideCleanup)
+        {
+            if (overrideCleanup == null)
+                throw new ArgumentNullException(nameof(overrideCleanup));
+            _onCleanup = _onRefresh.Override(overrideCleanup);
+            return this;
+        }
     }
 }

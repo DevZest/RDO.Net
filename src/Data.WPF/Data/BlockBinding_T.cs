@@ -103,5 +103,29 @@ namespace DevZest.Windows.Data
         {
             get { return (T)base[blockOrdinal]; }
         }
+
+        public BlockBinding<T> OverrideSetup(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideSetup)
+        {
+            if (overrideSetup == null)
+                throw new ArgumentNullException(nameof(overrideSetup));
+            _onSetup = _onSetup.Override(overrideSetup);
+            return this;
+        }
+
+        public BlockBinding<T> OverrideRefresh(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideRefresh)
+        {
+            if (overrideRefresh == null)
+                throw new ArgumentNullException(nameof(overrideRefresh));
+            _onRefresh = _onRefresh.Override(overrideRefresh);
+            return this;
+        }
+
+        public BlockBinding<T> OverrideCleanup(Action<T, BlockPresenter, Action<T, BlockPresenter>> overrideCleanup)
+        {
+            if (overrideCleanup == null)
+                throw new ArgumentNullException(nameof(overrideCleanup));
+            _onCleanup = _onRefresh.Override(overrideCleanup);
+            return this;
+        }
     }
 }

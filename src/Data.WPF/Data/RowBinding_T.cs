@@ -128,5 +128,29 @@ namespace DevZest.Windows.Data
         {
             get { return (T)base[rowPresenter]; }
         }
+                
+        public RowBinding<T> OverrideSetup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideSetup)
+        {
+            if (overrideSetup == null)
+                throw new ArgumentNullException(nameof(overrideSetup));
+            _onSetup = _onSetup.Override(overrideSetup);
+            return this;
+        }
+
+        public RowBinding<T> OverrideRefresh(Action<T, RowPresenter, Action<T, RowPresenter>> overrideRefresh)
+        {
+            if (overrideRefresh == null)
+                throw new ArgumentNullException(nameof(overrideRefresh));
+            _onRefresh = _onRefresh.Override(overrideRefresh);
+            return this;
+        }
+
+        public RowBinding<T> OverrideCleanup(Action<T, RowPresenter, Action<T, RowPresenter>> overrideCleanup)
+        {
+            if (overrideCleanup == null)
+                throw new ArgumentNullException(nameof(overrideCleanup));
+            _onCleanup = _onRefresh.Override(overrideCleanup);
+            return this;
+        }
     }
 }

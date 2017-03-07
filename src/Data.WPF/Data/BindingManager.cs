@@ -189,5 +189,13 @@ namespace DevZest.Windows.Data
             element.CommandBindings.Clear();
             element.InputBindings.Clear();
         }
+
+        internal static Action<TElement, TPresenter> Override<TElement, TPresenter>(this Action<TElement, TPresenter> action,
+            Action<TElement, TPresenter, Action<TElement, TPresenter>> overrideAction)
+        {
+            if (action == null)
+                action = (e, sp) => { };
+            return (e, sp) => overrideAction(e, sp, action);
+        }
     }
 }
