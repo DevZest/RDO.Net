@@ -128,22 +128,22 @@ namespace DevZest.Windows.Controls.Primitives
 
         void IScrollInfo.PageUp()
         {
-            ScrollHandler.ScrollBy(0, -ScrollHandler.ViewportHeight);
+            ScrollHandler.ScrollBy(0, -ScrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
         }
 
         void IScrollInfo.PageDown()
         {
-            ScrollHandler.ScrollBy(0, ScrollHandler.ViewportHeight);
+            ScrollHandler.ScrollBy(0, ScrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
         }
 
         void IScrollInfo.PageLeft()
         {
-            ScrollHandler.ScrollBy(-ScrollHandler.ViewportWidth, 0);
+            ScrollHandler.ScrollBy(-ScrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
         }
 
         void IScrollInfo.PageRight()
         {
-            ScrollHandler.ScrollBy(ScrollHandler.ViewportWidth, 0);
+            ScrollHandler.ScrollBy(ScrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
         }
 
         void IScrollInfo.MouseWheelUp()

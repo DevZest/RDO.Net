@@ -185,17 +185,17 @@ namespace DevZest.Windows.Data.Primitives
             InvalidateMeasure();
         }
 
-        private double FrozenHeadLengthMain
+        protected double FrozenHeadLengthMain
         {
             get { return FrozenHeadTracksCountMain == 0 ? 0 : GridTracksMain[FrozenHeadTracksCountMain - 1].EndOffset; }
         }
 
-        private double FrozenHeadLengthCross
+        protected double FrozenHeadLengthCross
         {
             get { return GridTracksCross[FrozenHeadTracksCountCross].StartOffset; }
         }
 
-        private double FrozenTailLengthMain
+        protected double FrozenTailLengthMain
         {
             get { return GetTailLengthMain(FrozenTailTracksCountMain); }
         }
@@ -211,7 +211,7 @@ namespace DevZest.Windows.Data.Primitives
             return endOffset - startOffset;
         }
 
-        private double FrozenTailLengthCross
+        protected double FrozenTailLengthCross
         {
             get { return GetTailLengthCross(FrozenTailTracksCountCross); }
         }

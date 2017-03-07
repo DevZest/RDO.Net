@@ -32,6 +32,10 @@ namespace DevZest.Windows.Data.Primitives
 
         public abstract double ViewportHeight { get; }
 
+        public abstract double ScrollableWidth { get; }
+
+        public abstract double ScrollableHeight { get; }
+
         protected double ViewportMain { get; private set; }
 
         protected double ViewportCross { get; private set; }

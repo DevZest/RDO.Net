@@ -76,6 +76,7 @@
     <Compile Include="Data\RowPane_T.cs" />
     <Compile Include="Data\ScalarPane_T.cs" />
     <Compile Include="Data\Scalar_T.cs" />
+    <Compile Include="Utilities\Double.IfZero.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
     <Compile Include="Utilities\Object.ToString.cs" />

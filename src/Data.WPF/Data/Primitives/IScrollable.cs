@@ -9,6 +9,8 @@ namespace DevZest.Windows.Data.Primitives
         CurrentContainerViewPlacement CurrentContainerViewPlacement { get; }
         double ViewportWidth { get; }
         double ViewportHeight { get; }
+        double ScrollableWidth { get; }
+        double ScrollableHeight { get; }
         double ExtentWidth { get; }
         double ExtentHeight { get; }
         double HorizontalOffset { get; }

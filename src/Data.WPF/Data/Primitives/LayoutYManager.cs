@@ -125,5 +125,15 @@ namespace DevZest.Windows.Data.Primitives
         {
             ScrollToMain(gridExtent, fraction, placement);
         }
+
+        public sealed override double ScrollableWidth
+        {
+            get { return Math.Max(0, ViewportWidth - FrozenHeadLengthCross - FrozenTailLengthCross); }
+        }
+
+        public sealed override double ScrollableHeight
+        {
+            get { return Math.Max(0, ViewportHeight - FrozenHeadLengthMain - FrozenTailLengthMain); }
+        }
     }
 }
