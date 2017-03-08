@@ -423,9 +423,14 @@ namespace DevZest.Windows.Data.Primitives
                 return;
 
             if (!Panel.IsMeasureValid)
-                Panel.UpdateLayout();
+                UpdateLayout();
             EnsureVisibleMain(CurrentRow.View);
             EnsureVisibleCross(CurrentRow.View);
+        }
+
+        private void UpdateLayout()
+        {
+            Panel.UpdateLayout();
         }
 
         protected sealed override void PrepareMeasureContainers()
@@ -831,22 +836,25 @@ namespace DevZest.Windows.Data.Primitives
 
         private RowPresenter ScrollByPage(GridPlacement placement)
         {
+            UpdateLayout();
             if (ContainerViewList.Count == 0)
                 return null;
 
             if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList ||
                 CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
+            {
                 EnsureVisibleMain(CurrentRow.View);
+                UpdateLayout();
+            }
 
             Debug.Assert(CurrentContainerViewPlacement == CurrentContainerViewPlacement.WithinList);
-            Panel.UpdateLayout();
 
             int currentContainerOrdinal = CurrentContainerView.ContainerOrdinal;
             var containerOrdinal = GetContainerOrdinalByPage(placement, false);
             var scrolled = placement == GridPlacement.Head ? ScrollByPageUp(containerOrdinal) : ScrollByPageDown(containerOrdinal);
             if (scrolled)
             {
-                Panel.UpdateLayout();
+                UpdateLayout();
                 containerOrdinal = GetContainerOrdinalByPage(placement, true);
             }
 
