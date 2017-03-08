@@ -1,5 +1,8 @@
 ﻿using DevZest.Windows.Controls;
+using DevZest.Windows.Data.Primitives;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -27,16 +30,16 @@ namespace DevZest.Windows.Data
                         yield return RowView.SelectRightCommand.InputBinding(SelectRight, CanSelectRight, new KeyGesture(Key.Right));
                         yield return RowView.SelectHomeCommand.InputBinding(SelectHome, CanSelect, new KeyGesture(Key.Home));
                         yield return RowView.SelectEndCommand.InputBinding(SelectEnd, CanSelect, new KeyGesture(Key.End));
-                        //yield return RowView.SelectPageUpCommand.InputBinding(SelectPageUp, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp));
-                        //yield return RowView.SelectPageDownCommand.InputBinding(SelectPageDown, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown));
+                        yield return RowView.SelectPageUpCommand.InputBinding(SelectPageUp, CanSelect, new KeyGesture(Key.PageUp));
+                        yield return RowView.SelectPageDownCommand.InputBinding(SelectPageDown, CanSelect, new KeyGesture(Key.PageDown));
                         yield return RowView.ExtendSelectionUpCommand.InputBinding(ExtendSelectionUp, CanSelectUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
                         yield return RowView.ExtendSelectionDownCommand.InputBinding(ExtendSelectionDown, CanSelectDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
                         yield return RowView.ExtendSelectionLeftCommand.InputBinding(ExtendSelectionLeft, CanSelectLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
                         yield return RowView.ExtendSelectionRightCommand.InputBinding(ExtendSelectionRight, CanSelectRight, new KeyGesture(Key.Right));
                         yield return RowView.ExtendSelectionHomeCommand.InputBinding(ExtendSelectionHome, CanSelect, new KeyGesture(Key.Home, ModifierKeys.Shift));
                         yield return RowView.ExtendSelectionEndCommand.InputBinding(ExtendSelectionEnd, CanSelect, new KeyGesture(Key.End, ModifierKeys.Shift));
-                        //yield return RowView.ExtendSelectionPageUpCommand.InputBinding(ExtendSelectionPageUp, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                        //yield return RowView.ExtendSelectionPageDownCommand.InputBinding(ExtendSelectionPageDown, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionPageUpCommand.InputBinding(ExtendSelectionPageUp, CanSelect, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionPageDownCommand.InputBinding(ExtendSelectionPageDown, CanSelect, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                     }
                 }
             }
@@ -64,6 +67,11 @@ namespace DevZest.Windows.Data
 
         private void ScrollPageUp(object sender, ExecutedRoutedEventArgs e)
         {
+            ScrollPageUp();
+        }
+
+        private void ScrollPageUp()
+        {
             if (LayoutOrientation == Orientation.Vertical)
                 Scrollable.ScrollBy(0, -Scrollable.ScrollableHeight);
             else
@@ -71,6 +79,11 @@ namespace DevZest.Windows.Data
         }
 
         private void ScrollPageDown(object sender, ExecutedRoutedEventArgs e)
+        {
+            ScrollPageDown();
+        }
+
+        private void ScrollPageDown()
         {
             if (LayoutOrientation == Orientation.Vertical)
                 Scrollable.ScrollBy(0, Scrollable.ScrollableHeight);
@@ -208,6 +221,66 @@ namespace DevZest.Windows.Data
         private void ExtendSelectionEnd(object sender, ExecutedRoutedEventArgs e)
         {
             Select(Rows[Rows.Count - 1], SelectionMode.Extended);
+        }
+
+        public RowPresenter ScrollByPage(GridPlacement placement)
+        {
+            if (Scrollable == null || Scrollable.ContainerViewList.Count == 0)
+                return null;
+
+            if (Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList ||
+                Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
+                Scrollable.EnsureCurrentRowVisible();
+
+            Debug.Assert(Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.WithinList);
+            Scrollable.Panel.UpdateLayout();
+
+            int currentContainerOrdinal = CurrentContainerView.ContainerOrdinal;
+            var containerOrdinal = GetContainerOrdinalByPage(placement, false);
+            if (currentContainerOrdinal == containerOrdinal)
+            {
+                if (placement == GridPlacement.Head)
+                    ScrollPageUp();
+                else
+                    ScrollPageDown();
+                Scrollable.Panel.UpdateLayout();
+            }
+
+            containerOrdinal = GetContainerOrdinalByPage(placement, true);
+            return GetRowPresenter(containerOrdinal);
+        }
+
+        private int GetContainerOrdinalByPage(GridPlacement placement, bool enforceCurrent)
+        {
+            return placement == GridPlacement.Head ? Scrollable.GetPageHeadContainerOrdinal(enforceCurrent) : Scrollable.GetPageTailContainerOrdinal(enforceCurrent);
+        }
+
+        private RowPresenter GetRowPresenter(int containerOrdinal)
+        {
+            Debug.Assert(CurrentRow != null);
+            var delta = containerOrdinal - CurrentContainerView.ContainerOrdinal;
+            var index = Math.Min(Rows.Count - 1, CurrentRow.Index + delta * FlowCount);
+            return Rows[index];
+        }
+
+        private void SelectPageUp(object sender, ExecutedRoutedEventArgs e)
+        {
+            Select(ScrollByPage(GridPlacement.Head), SelectionMode.Single, false);
+        }
+
+        private void SelectPageDown(object sender, ExecutedRoutedEventArgs e)
+        {
+            Select(ScrollByPage(GridPlacement.Tail), SelectionMode.Single, false);
+        }
+
+        private void ExtendSelectionPageUp(object sender, ExecutedRoutedEventArgs e)
+        {
+            Select(ScrollByPage(GridPlacement.Head), SelectionMode.Extended, false);
+        }
+
+        private void ExtendSelectionPageDown(object sender, ExecutedRoutedEventArgs e)
+        {
+            Select(ScrollByPage(GridPlacement.Tail), SelectionMode.Extended, false);
         }
     }
 }

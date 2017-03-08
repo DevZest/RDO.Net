@@ -969,13 +969,9 @@ namespace DevZest.Windows.Data.Primitives
                 return;
 
             var startGridExtent = start.StartGridExtent;
-            var startPosition = GetPositionMain(startGridExtent, GridPlacement.Head);
-            var frozenHeadPosition = FrozenHeadGridExtentMain == 0 ? 0 : GetPositionMain(FrozenHeadGridExtentMain, GridPlacement.Tail);
-            var isHeadClipped = startPosition < frozenHeadPosition;
+            var isHeadClipped = IsHeadClippedMain(startGridExtent);
             var endGridExtent = end.EndGridExtent;
-            var endPosition = GetPositionMain(endGridExtent, GridPlacement.Tail);
-            var frozenTailPosition = FrozenTailGridExtentMain == MaxGridExtentMain ? ViewportMain : GetPositionMain(FrozenTailGridExtentMain, GridPlacement.Head);
-            var isTailClipped = endPosition > frozenTailPosition;
+            var isTailClipped = IsTailClippedMain(endGridExtent);
 
             if (isHeadClipped && isTailClipped)
                 return;
@@ -983,6 +979,20 @@ namespace DevZest.Windows.Data.Primitives
                 ScrollToMain(startGridExtent, 0, GridPlacement.Head);
             else if (isTailClipped)
                 ScrollToMain(startGridExtent, 1, GridPlacement.Tail);
+        }
+
+        private bool IsHeadClippedMain(int gridExtent)
+        {
+            var startPosition = GetPositionMain(gridExtent, GridPlacement.Head);
+            var frozenHeadPosition = FrozenHeadGridExtentMain == 0 ? 0 : GetPositionMain(FrozenHeadGridExtentMain, GridPlacement.Tail);
+            return startPosition < frozenHeadPosition;
+        }
+
+        private bool IsTailClippedMain(int gridExtent)
+        {
+            var endPosition = GetPositionMain(gridExtent, GridPlacement.Tail);
+            var frozenTailPosition = FrozenTailGridExtentMain == MaxGridExtentMain ? ViewportMain : GetPositionMain(FrozenTailGridExtentMain, GridPlacement.Head);
+            return endPosition > frozenTailPosition;
         }
 
         private void EnsureVisibleCross(GridTrack startGridTrack, int startFlowIndex, GridTrack endGridTrack, int endFlowIndex)

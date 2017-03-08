@@ -439,7 +439,6 @@ namespace DevZest.Windows.Data.Primitives
                 FillForward();
             else
                 FillBackward();
-
         }
 
         private bool UpdateScrollToMain()
@@ -814,6 +813,66 @@ namespace DevZest.Windows.Data.Primitives
             var valueMain = scrollToMainExtent - minScrollToMain;
             var valueCross = CoerceScrollOffset(ScrollOffsetCross + _scrollDeltaCross, ExtentCross - ViewportCross);
             RefreshScrollOffset(valueMain, valueCross);
+        }
+
+        public int GetPageHeadContainerOrdinal(bool enforceCurrent)
+        {
+            if (ContainerViewList.Count == 0)
+                return -1;
+
+            var containerOrdinal = ContainerViewList.First.ContainerOrdinal;
+            var startTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).StartTrack;
+            var startGridExtent = new LogicalMainTrack(startTrack, ContainerViewList.First).StartGridExtent;
+            var isClipped = IsHeadClippedMain(startGridExtent);
+            if (NextContainerAsPageHeader(containerOrdinal, isClipped, enforceCurrent))
+            {
+                containerOrdinal++;
+                startGridExtent += ContainerTracksCountMain;
+                isClipped = false;
+            }
+
+            if (enforceCurrent && isClipped)
+                ScrollToMain(startGridExtent, 0, GridPlacement.Head);
+            return containerOrdinal;
+        }
+
+        private bool NextContainerAsPageHeader(int startContainerOrdinal, bool isClipped, bool enforceCurrent)
+        {
+            if (!isClipped)
+                return false;
+            if (enforceCurrent && CurrentContainerView.ContainerOrdinal == startContainerOrdinal + 1)
+                return false;
+            return startContainerOrdinal < ContainerViewList.Count - 1;
+        }
+
+        public int GetPageTailContainerOrdinal(bool enforceCurrent)
+        {
+            if (ContainerViewList.Count == 0)
+                return -1;
+
+            var containerOrdinal = ContainerViewList.Last.ContainerOrdinal;
+            var endTrack = GridTracksMain.GetGridSpan(Template.ContainerRange).EndTrack;
+            var endGridExtent = new LogicalMainTrack(endTrack, ContainerViewList.Last).EndGridExtent;
+            var isClipped = IsTailClippedMain(endGridExtent);
+            if (PreviousContainerAsPageTail(containerOrdinal, isClipped, enforceCurrent))
+            {
+                containerOrdinal--;
+                endGridExtent -= ContainerTracksCountMain;
+                isClipped = false;
+            }
+
+            if (enforceCurrent && isClipped)
+                ScrollToMain(endGridExtent, 1, GridPlacement.Tail);
+            return containerOrdinal;
+        }
+
+        private bool PreviousContainerAsPageTail(int endContainerOrdinal, bool isClipped, bool enforceCurrent)
+        {
+            if (!isClipped)
+                return false;
+            if (enforceCurrent && CurrentContainerView.ContainerOrdinal == endContainerOrdinal - 1)
+                return false;
+            return endContainerOrdinal > 0;
         }
     }
 }
