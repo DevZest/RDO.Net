@@ -30,7 +30,9 @@ namespace DevZest.Windows.Data.Primitives
         void ScrollBy(double x, double y);
         void ScrollTo(double x, double y);
         void EnsureCurrentRowVisible();
-        int GetPageHeadContainerOrdinal(bool enforceCurrent);
-        int GetPageTailContainerOrdinal(bool enforceCurrent);
+        void ScrollPageUp();
+        void ScrollPageDown();
+        RowPresenter ScrollToPageUp();
+        RowPresenter ScrollToPageDown();
     }
 }

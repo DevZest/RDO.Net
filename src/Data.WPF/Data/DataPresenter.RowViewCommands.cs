@@ -67,28 +67,12 @@ namespace DevZest.Windows.Data
 
         private void ScrollPageUp(object sender, ExecutedRoutedEventArgs e)
         {
-            ScrollPageUp();
-        }
-
-        private void ScrollPageUp()
-        {
-            if (LayoutOrientation == Orientation.Vertical)
-                Scrollable.ScrollBy(0, -Scrollable.ScrollableHeight);
-            else
-                Scrollable.ScrollBy(0, -Scrollable.ScrollableWidth);
+            Scrollable.ScrollPageUp();
         }
 
         private void ScrollPageDown(object sender, ExecutedRoutedEventArgs e)
         {
-            ScrollPageDown();
-        }
-
-        private void ScrollPageDown()
-        {
-            if (LayoutOrientation == Orientation.Vertical)
-                Scrollable.ScrollBy(0, Scrollable.ScrollableHeight);
-            else
-                Scrollable.ScrollBy(0, Scrollable.ScrollableWidth);
+            Scrollable.ScrollPageDown();
         }
 
         private bool CanSelect(Orientation orientation)
@@ -223,87 +207,24 @@ namespace DevZest.Windows.Data
             Select(Rows[Rows.Count - 1], SelectionMode.Extended);
         }
 
-        public RowPresenter ScrollToPageUp()
-        {
-            return ScrollByPage(GridPlacement.Head);
-        }
-
-        public RowPresenter ScrollToPageDown()
-        {
-            return ScrollByPage(GridPlacement.Tail);
-        }
-
-        private RowPresenter ScrollByPage(GridPlacement placement)
-        {
-            if (Scrollable == null || Scrollable.ContainerViewList.Count == 0)
-                return null;
-
-            if (Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList ||
-                Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
-                Scrollable.EnsureCurrentRowVisible();
-
-            Debug.Assert(Scrollable.CurrentContainerViewPlacement == CurrentContainerViewPlacement.WithinList);
-            Scrollable.Panel.UpdateLayout();
-
-            int currentContainerOrdinal = CurrentContainerView.ContainerOrdinal;
-            var containerOrdinal = GetContainerOrdinalByPage(placement, false);
-            var scrolled = placement == GridPlacement.Head ? ScrollByPageUp(containerOrdinal) : ScrollByPageDown(containerOrdinal);
-            if (scrolled)
-            {
-                Scrollable.Panel.UpdateLayout();
-                containerOrdinal = GetContainerOrdinalByPage(placement, true);
-            }
-
-            return GetRowPresenter(containerOrdinal);
-        }
-
-        private bool ScrollByPageUp(int containerOrdinal)
-        {
-            if (containerOrdinal < CurrentContainerView.ContainerOrdinal)
-                return false;
-            ScrollPageUp();
-            return true;
-        }
-
-        private bool ScrollByPageDown(int containerOrdinal)
-        {
-            if (containerOrdinal > CurrentContainerView.ContainerOrdinal)
-                return false;
-            ScrollPageDown();
-            return true;
-        }
-
-        private int GetContainerOrdinalByPage(GridPlacement placement, bool enforceCurrent)
-        {
-            return placement == GridPlacement.Head ? Scrollable.GetPageHeadContainerOrdinal(enforceCurrent) : Scrollable.GetPageTailContainerOrdinal(enforceCurrent);
-        }
-
-        private RowPresenter GetRowPresenter(int containerOrdinal)
-        {
-            Debug.Assert(CurrentRow != null);
-            var delta = containerOrdinal - CurrentContainerView.ContainerOrdinal;
-            var index = Math.Min(Rows.Count - 1, CurrentRow.Index + delta * FlowCount);
-            return Rows[index];
-        }
-
         private void SelectPageUp(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(ScrollByPage(GridPlacement.Head), SelectionMode.Single, false);
+            Select(Scrollable.ScrollToPageUp(), SelectionMode.Single, false);
         }
 
         private void SelectPageDown(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(ScrollByPage(GridPlacement.Tail), SelectionMode.Single, false);
+            Select(Scrollable.ScrollToPageDown(), SelectionMode.Single, false);
         }
 
         private void ExtendSelectionPageUp(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(ScrollByPage(GridPlacement.Head), SelectionMode.Extended, false);
+            Select(Scrollable.ScrollToPageUp(), SelectionMode.Extended, false);
         }
 
         private void ExtendSelectionPageDown(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(ScrollByPage(GridPlacement.Tail), SelectionMode.Extended, false);
+            Select(Scrollable.ScrollToPageDown(), SelectionMode.Extended, false);
         }
     }
 }

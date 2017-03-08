@@ -135,5 +135,15 @@ namespace DevZest.Windows.Data.Primitives
         {
             get { return Math.Max(0, ViewportHeight - FrozenHeadLengthMain - FrozenTailLengthMain); }
         }
+
+        public sealed override void ScrollPageUp()
+        {
+            ScrollBy(0, -ScrollableHeight);
+        }
+
+        public sealed override void ScrollPageDown()
+        {
+            ScrollBy(0, ScrollableHeight);
+        }
     }
 }

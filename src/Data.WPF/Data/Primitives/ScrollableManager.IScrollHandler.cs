@@ -815,7 +815,74 @@ namespace DevZest.Windows.Data.Primitives
             RefreshScrollOffset(valueMain, valueCross);
         }
 
-        public int GetPageHeadContainerOrdinal(bool enforceCurrent)
+        public abstract void ScrollPageUp();
+
+        public abstract void ScrollPageDown();
+
+        public RowPresenter ScrollToPageUp()
+        {
+            return ScrollByPage(GridPlacement.Head);
+        }
+
+        public RowPresenter ScrollToPageDown()
+        {
+            return ScrollByPage(GridPlacement.Tail);
+        }
+
+        private RowPresenter ScrollByPage(GridPlacement placement)
+        {
+            if (ContainerViewList.Count == 0)
+                return null;
+
+            if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList ||
+                CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
+                EnsureCurrentRowVisible();
+
+            Debug.Assert(CurrentContainerViewPlacement == CurrentContainerViewPlacement.WithinList);
+            Panel.UpdateLayout();
+
+            int currentContainerOrdinal = CurrentContainerView.ContainerOrdinal;
+            var containerOrdinal = GetContainerOrdinalByPage(placement, false);
+            var scrolled = placement == GridPlacement.Head ? ScrollByPageUp(containerOrdinal) : ScrollByPageDown(containerOrdinal);
+            if (scrolled)
+            {
+                Panel.UpdateLayout();
+                containerOrdinal = GetContainerOrdinalByPage(placement, true);
+            }
+
+            return GetRowPresenter(containerOrdinal);
+        }
+
+        private bool ScrollByPageUp(int containerOrdinal)
+        {
+            if (containerOrdinal < CurrentContainerView.ContainerOrdinal)
+                return false;
+            ScrollPageUp();
+            return true;
+        }
+
+        private bool ScrollByPageDown(int containerOrdinal)
+        {
+            if (containerOrdinal > CurrentContainerView.ContainerOrdinal)
+                return false;
+            ScrollPageDown();
+            return true;
+        }
+
+        private int GetContainerOrdinalByPage(GridPlacement placement, bool enforceCurrent)
+        {
+            return placement == GridPlacement.Head ? GetPageHeadContainerOrdinal(enforceCurrent) : GetPageTailContainerOrdinal(enforceCurrent);
+        }
+
+        private RowPresenter GetRowPresenter(int containerOrdinal)
+        {
+            Debug.Assert(CurrentRow != null);
+            var delta = containerOrdinal - CurrentContainerView.ContainerOrdinal;
+            var index = Math.Min(Rows.Count - 1, CurrentRow.Index + delta * FlowCount);
+            return Rows[index];
+        }
+
+        private int GetPageHeadContainerOrdinal(bool enforceCurrent)
         {
             if (ContainerViewList.Count == 0)
                 return -1;
@@ -845,7 +912,7 @@ namespace DevZest.Windows.Data.Primitives
             return startContainerOrdinal < ContainerViewList.Last.ContainerOrdinal;
         }
 
-        public int GetPageTailContainerOrdinal(bool enforceCurrent)
+        private int GetPageTailContainerOrdinal(bool enforceCurrent)
         {
             if (ContainerViewList.Count == 0)
                 return -1;
