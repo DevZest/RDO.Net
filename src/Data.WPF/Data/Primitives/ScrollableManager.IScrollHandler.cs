@@ -836,7 +836,7 @@ namespace DevZest.Windows.Data.Primitives
 
             if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.BeforeList ||
                 CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
-                EnsureCurrentRowVisible();
+                EnsureVisibleMain(CurrentRow.View);
 
             Debug.Assert(CurrentContainerViewPlacement == CurrentContainerViewPlacement.WithinList);
             Panel.UpdateLayout();
