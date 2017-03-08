@@ -11,6 +11,12 @@ namespace DevZest.Windows.Controls
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
+        public static RoutedUICommand ScrollUpCommand { get { return ComponentCommands.MoveFocusUp; } }
+        public static RoutedUICommand ScrollDownCommand { get { return ComponentCommands.MoveFocusDown; } }
+        public static RoutedUICommand ScrollLeftCommand { get { return ComponentCommands.MoveFocusBack; } }
+        public static RoutedUICommand ScrollRightCommand { get { return ComponentCommands.MoveFocusForward; } }
+        public static RoutedUICommand ScrollPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
+        public static RoutedUICommand ScrollPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
         public static RoutedUICommand SelectUpCommand { get { return ComponentCommands.MoveUp; } }
         public static RoutedUICommand SelectDownCommand { get { return ComponentCommands.MoveDown; } }
         public static RoutedUICommand SelectLeftCommand { get { return ComponentCommands.MoveLeft; } }
