@@ -25,8 +25,8 @@ namespace DevZest.Windows.Controls
         public static RoutedUICommand ExtendSelectionRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
         public static readonly RoutedUICommand ExtendSelectionHomeCommand = new RoutedUICommand();
         public static readonly RoutedUICommand ExtendSelectionEndCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand MoveToPageUpCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand MoveToPageDownCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand ExtendSelectionPageUpCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand ExtendSelectionPageDownCommand = new RoutedUICommand();
 
         static RowView()
         {

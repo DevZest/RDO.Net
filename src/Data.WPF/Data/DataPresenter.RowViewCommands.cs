@@ -16,24 +16,28 @@ namespace DevZest.Windows.Data
                 {
                     if (LayoutOrientation.HasValue)
                     {
-                        yield return RowView.SelectUpCommand.InputBinding(MoveFocusUp, CanMoveFocusUp, new KeyGesture(Key.Up));
-                        yield return RowView.SelectDownCommand.InputBinding(MoveFocusDown, CanMoveFocusDown, new KeyGesture(Key.Down));
-                        yield return RowView.SelectLeftCommand.InputBinding(MoveFocusLeft, CanMoveFocusLeft, new KeyGesture(Key.Left));
-                        yield return RowView.SelectRightCommand.InputBinding(MoveFocusRight, CanMoveFocusRight, new KeyGesture(Key.Right));
-                        yield return RowView.SelectHomeCommand.InputBindings(MoveToHome, CanMoveToHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Control), new KeyGesture(Key.Home, ModifierKeys.Control));
-                        yield return RowView.SelectEndCommand.InputBindings(MoveToEnd, CanMoveToHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Control), new KeyGesture(Key.End, ModifierKeys.Control));
-                        yield return RowView.ExtendSelectionUpCommand.InputBinding(ExtendSelectionUp, CanMoveFocusUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
-                        yield return RowView.ExtendSelectionDownCommand.InputBinding(ExtendSelectionDown, CanMoveFocusDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                        yield return RowView.ExtendSelectionLeftCommand.InputBinding(ExtendSelectionLeft, CanMoveFocusLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                        yield return RowView.ExtendSelectionRightCommand.InputBinding(ExtendSelectionRight, CanMoveFocusRight, new KeyGesture(Key.Right));
-                        yield return RowView.ExtendSelectionHomeCommand.InputBindings(ExtendSelectionHome, CanMoveToHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Control | ModifierKeys.Shift), new KeyGesture(Key.Home, ModifierKeys.Control | ModifierKeys.Shift));
-                        yield return RowView.ExtendSelectionEndCommand.InputBindings(ExtendSelectionEnd, CanMoveToHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Shift), new KeyGesture(Key.End, ModifierKeys.Control | ModifierKeys.Shift));
+                        yield return RowView.SelectUpCommand.InputBinding(SelectUp, CanSelectUp, new KeyGesture(Key.Up));
+                        yield return RowView.SelectDownCommand.InputBinding(SelectDown, CanSelectDown, new KeyGesture(Key.Down));
+                        yield return RowView.SelectLeftCommand.InputBinding(SelectLeft, CanSelectLeft, new KeyGesture(Key.Left));
+                        yield return RowView.SelectRightCommand.InputBinding(SelectRight, CanSelectRight, new KeyGesture(Key.Right));
+                        yield return RowView.SelectHomeCommand.InputBindings(SelectHome, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Control), new KeyGesture(Key.Home, ModifierKeys.Control));
+                        yield return RowView.SelectEndCommand.InputBindings(SelectEnd, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Control), new KeyGesture(Key.End, ModifierKeys.Control));
+                        //yield return RowView.SelectPageUpCommand.InputBinding(SelectPageUp, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp));
+                        //yield return RowView.SelectPageDownCommand.InputBinding(SelectPageDown, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown));
+                        yield return RowView.ExtendSelectionUpCommand.InputBinding(ExtendSelectionUp, CanSelectUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionDownCommand.InputBinding(ExtendSelectionDown, CanSelectDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionLeftCommand.InputBinding(ExtendSelectionLeft, CanSelectLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionRightCommand.InputBinding(ExtendSelectionRight, CanSelectRight, new KeyGesture(Key.Right));
+                        yield return RowView.ExtendSelectionHomeCommand.InputBindings(ExtendSelectionHome, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Control | ModifierKeys.Shift), new KeyGesture(Key.Home, ModifierKeys.Control | ModifierKeys.Shift));
+                        yield return RowView.ExtendSelectionEndCommand.InputBindings(ExtendSelectionEnd, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Control | ModifierKeys.Shift), new KeyGesture(Key.End, ModifierKeys.Control | ModifierKeys.Shift));
+                        //yield return RowView.ExtendSelectionPageUpCommand.InputBinding(ExtendSelectionPageUp, CanSelectHomeOrEnd, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                        //yield return RowView.ExtendSelectionPageDownCommand.InputBinding(ExtendSelectionPageDown, CanSelectHomeOrEnd, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                     }
                 }
             }
         }
 
-        private bool CanMoveFocus(Orientation orientation)
+        private bool CanSelect(Orientation orientation)
         {
             if (CurrentRow == null || !LayoutOrientation.HasValue)
                 return false;
@@ -44,112 +48,113 @@ namespace DevZest.Windows.Data
             return true;
         }
 
-        private RowPresenter GetBackwardRow(Orientation orientation)
+        private RowPresenter GetRowBackward(Orientation orientation)
         {
-            if (!CanMoveFocus(orientation))
+            if (!CanSelect(orientation))
                 return null;
             var index = CurrentRow.Index - (LayoutOrientation == orientation ? FlowCount : 1);
             return index >= 0 ? Rows[index] : null;
         }
 
-        private RowPresenter GetForwardRow(Orientation orientation)
+        private RowPresenter GetRowForward(Orientation orientation)
         {
-            if (!CanMoveFocus(orientation))
+            if (!CanSelect(orientation))
                 return null;
             var index = CurrentRow.Index + (LayoutOrientation == orientation ? FlowCount : 1);
             return index < Rows.Count - 1 ? Rows[index] : null;
         }
-        private RowPresenter FocusUpRow
+
+        private RowPresenter SelectUpRow
         {
-            get { return GetBackwardRow(Orientation.Vertical); }
+            get { return GetRowBackward(Orientation.Vertical); }
         }
 
-        private RowPresenter FocusDownRow
+        private RowPresenter SelectDownRow
         {
-            get { return GetForwardRow(Orientation.Vertical); }
+            get { return GetRowForward(Orientation.Vertical); }
         }
 
-        private RowPresenter FocusLeftRow
+        private RowPresenter SelectLeftRow
         {
-            get { return GetBackwardRow(Orientation.Horizontal); }
+            get { return GetRowBackward(Orientation.Horizontal); }
         }
 
-        private RowPresenter FocusRightRow
+        private RowPresenter SelectRightRow
         {
-            get { return GetForwardRow(Orientation.Horizontal); }
+            get { return GetRowForward(Orientation.Horizontal); }
         }
 
-        private void CanMoveFocusUp(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectUp(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Scrollable != null && FocusUpRow != null;
+            e.CanExecute = Scrollable != null && SelectUpRow != null;
         }
 
-        private void MoveFocusUp(object sender, ExecutedRoutedEventArgs e)
+        private void SelectUp(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusUpRow, SelectionMode.Single);
+            Select(SelectUpRow, SelectionMode.Single);
         }
 
-        private void CanMoveFocusDown(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectDown(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Scrollable != null && FocusDownRow != null;
+            e.CanExecute = Scrollable != null && SelectDownRow != null;
         }
 
-        private void MoveFocusDown(object sender, ExecutedRoutedEventArgs e)
+        private void SelectDown(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusDownRow, SelectionMode.Single);
+            Select(SelectDownRow, SelectionMode.Single);
         }
 
-        private void CanMoveFocusLeft(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectLeft(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Scrollable != null && FocusLeftRow != null;
+            e.CanExecute = Scrollable != null && SelectLeftRow != null;
         }
 
-        private void MoveFocusLeft(object sender, ExecutedRoutedEventArgs e)
+        private void SelectLeft(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusLeftRow, SelectionMode.Single);
+            Select(SelectLeftRow, SelectionMode.Single);
         }
 
-        private void CanMoveFocusRight(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectRight(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Scrollable != null && FocusRightRow != null;
+            e.CanExecute = Scrollable != null && SelectRightRow != null;
         }
 
-        private void MoveFocusRight(object sender, ExecutedRoutedEventArgs e)
+        private void SelectRight(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusRightRow, SelectionMode.Single);
+            Select(SelectRightRow, SelectionMode.Single);
         }
 
         private void ExtendSelectionUp(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusUpRow, SelectionMode.Extended);
+            Select(SelectUpRow, SelectionMode.Extended);
         }
 
         private void ExtendSelectionDown(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusDownRow, SelectionMode.Extended);
+            Select(SelectDownRow, SelectionMode.Extended);
         }
 
         private void ExtendSelectionLeft(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusLeftRow, SelectionMode.Extended);
+            Select(SelectLeftRow, SelectionMode.Extended);
         }
 
         private void ExtendSelectionRight(object sender, ExecutedRoutedEventArgs e)
         {
-            Select(FocusRightRow, SelectionMode.Extended);
+            Select(SelectRightRow, SelectionMode.Extended);
         }
 
-        private void CanMoveToHomeOrEnd(object sender, CanExecuteRoutedEventArgs e)
+        private void CanSelectHomeOrEnd(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Scrollable != null && Rows.Count > 0;
         }
 
-        private void MoveToHome(object sender, ExecutedRoutedEventArgs e)
+        private void SelectHome(object sender, ExecutedRoutedEventArgs e)
         {
             Select(Rows[0], SelectionMode.Single);
         }
 
-        private void MoveToEnd(object sender, ExecutedRoutedEventArgs e)
+        private void SelectEnd(object sender, ExecutedRoutedEventArgs e)
         {
             Select(Rows[Rows.Count - 1], SelectionMode.Single);
         }
