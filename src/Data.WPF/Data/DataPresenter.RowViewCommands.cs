@@ -223,7 +223,17 @@ namespace DevZest.Windows.Data
             Select(Rows[Rows.Count - 1], SelectionMode.Extended);
         }
 
-        public RowPresenter ScrollByPage(GridPlacement placement)
+        public RowPresenter ScrollToPageUp()
+        {
+            return ScrollByPage(GridPlacement.Head);
+        }
+
+        public RowPresenter ScrollToPageDown()
+        {
+            return ScrollByPage(GridPlacement.Tail);
+        }
+
+        private RowPresenter ScrollByPage(GridPlacement placement)
         {
             if (Scrollable == null || Scrollable.ContainerViewList.Count == 0)
                 return null;
@@ -237,17 +247,30 @@ namespace DevZest.Windows.Data
 
             int currentContainerOrdinal = CurrentContainerView.ContainerOrdinal;
             var containerOrdinal = GetContainerOrdinalByPage(placement, false);
-            if (currentContainerOrdinal == containerOrdinal)
+            var scrolled = placement == GridPlacement.Head ? ScrollByPageUp(containerOrdinal) : ScrollByPageDown(containerOrdinal);
+            if (scrolled)
             {
-                if (placement == GridPlacement.Head)
-                    ScrollPageUp();
-                else
-                    ScrollPageDown();
                 Scrollable.Panel.UpdateLayout();
+                containerOrdinal = GetContainerOrdinalByPage(placement, true);
             }
 
-            containerOrdinal = GetContainerOrdinalByPage(placement, true);
             return GetRowPresenter(containerOrdinal);
+        }
+
+        private bool ScrollByPageUp(int containerOrdinal)
+        {
+            if (containerOrdinal < CurrentContainerView.ContainerOrdinal)
+                return false;
+            ScrollPageUp();
+            return true;
+        }
+
+        private bool ScrollByPageDown(int containerOrdinal)
+        {
+            if (containerOrdinal > CurrentContainerView.ContainerOrdinal)
+                return false;
+            ScrollPageDown();
+            return true;
         }
 
         private int GetContainerOrdinalByPage(GridPlacement placement, bool enforceCurrent)

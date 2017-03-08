@@ -842,7 +842,7 @@ namespace DevZest.Windows.Data.Primitives
                 return false;
             if (enforceCurrent && CurrentContainerView.ContainerOrdinal == startContainerOrdinal + 1)
                 return false;
-            return startContainerOrdinal < ContainerViewList.Count - 1;
+            return startContainerOrdinal < ContainerViewList.Last.ContainerOrdinal;
         }
 
         public int GetPageTailContainerOrdinal(bool enforceCurrent)
@@ -862,7 +862,7 @@ namespace DevZest.Windows.Data.Primitives
             }
 
             if (enforceCurrent && isClipped)
-                ScrollToMain(endGridExtent, 1, GridPlacement.Tail);
+                ScrollToMain(endGridExtent - 1, 1, GridPlacement.Tail);
             return containerOrdinal;
         }
 
@@ -872,7 +872,7 @@ namespace DevZest.Windows.Data.Primitives
                 return false;
             if (enforceCurrent && CurrentContainerView.ContainerOrdinal == endContainerOrdinal - 1)
                 return false;
-            return endContainerOrdinal > 0;
+            return endContainerOrdinal > ContainerViewList.First.ContainerOrdinal;
         }
     }
 }
