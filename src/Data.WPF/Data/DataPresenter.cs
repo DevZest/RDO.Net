@@ -93,9 +93,9 @@ namespace DevZest.Windows.Data
         public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
-            var currentRow = CurrentRow;
+            var oldCurrentRow = CurrentRow;
             CurrentRow = rowPresenter;
-            RequireLayoutManager().Select(rowPresenter, selectionMode, currentRow);
+            RequireLayoutManager().Select(rowPresenter, selectionMode, oldCurrentRow);
             if (ensureVisible && Scrollable != null)
                 Scrollable.EnsureCurrentRowVisible();
         }

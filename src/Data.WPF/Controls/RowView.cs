@@ -18,14 +18,14 @@ namespace DevZest.Windows.Controls
         public static RoutedUICommand ScrollRightCommand { get { return ComponentCommands.MoveFocusForward; } }
         public static RoutedUICommand ScrollPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
         public static RoutedUICommand ScrollPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
-        public static RoutedUICommand SelectUpCommand { get { return ComponentCommands.MoveUp; } }
-        public static RoutedUICommand SelectDownCommand { get { return ComponentCommands.MoveDown; } }
-        public static RoutedUICommand SelectLeftCommand { get { return ComponentCommands.MoveLeft; } }
-        public static RoutedUICommand SelectRightCommand { get { return ComponentCommands.MoveRight; } }
-        public static RoutedUICommand SelectPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
-        public static RoutedUICommand SelectPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
-        public static RoutedUICommand SelectHomeCommand { get { return ComponentCommands.MoveToHome; } }
-        public static RoutedUICommand SelectEndCommand { get { return ComponentCommands.MoveToEnd; } }
+        public static RoutedUICommand MoveUpCommand { get { return ComponentCommands.MoveUp; } }
+        public static RoutedUICommand MoveDownCommand { get { return ComponentCommands.MoveDown; } }
+        public static RoutedUICommand MoveLeftCommand { get { return ComponentCommands.MoveLeft; } }
+        public static RoutedUICommand MoveRightCommand { get { return ComponentCommands.MoveRight; } }
+        public static RoutedUICommand MoveToPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
+        public static RoutedUICommand MoveToPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
+        public static RoutedUICommand MoveToHomeCommand { get { return ComponentCommands.MoveToHome; } }
+        public static RoutedUICommand MoveToEndCommand { get { return ComponentCommands.MoveToEnd; } }
         public static RoutedUICommand SelectExtendedUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
         public static RoutedUICommand SelectExtendedDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
         public static RoutedUICommand SelectiExtendedLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
@@ -236,17 +236,17 @@ namespace DevZest.Windows.Controls
             return focusMoved || selected;
         }
 
-        private SelectionMode? SelectMode
+        private SelectionMode? TemplateSelectionMode
         {
-            get { return SelectionMode.Extended; }
+            get { return ElementManager.Template.SelectionMode; }
         }
 
         private bool Select(MouseButton mouseButton, RowPresenter currentRow)
         {
-            if (!SelectMode.HasValue)
+            if (!TemplateSelectionMode.HasValue)
                 return false;
 
-            switch (SelectMode.Value)
+            switch (TemplateSelectionMode.Value)
             {
                 case SelectionMode.Single:
                     Select((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control ? SelectionMode.Multiple : SelectionMode.Single, currentRow);
@@ -287,9 +287,9 @@ namespace DevZest.Windows.Controls
             get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
         }
 
-        private void Select(SelectionMode selectionMode, RowPresenter currentRow)
+        private void Select(SelectionMode selectionMode, RowPresenter oldCurrentRow)
         {
-            ElementManager.Select(RowPresenter, selectionMode, currentRow);
+            ElementManager.Select(RowPresenter, selectionMode, oldCurrentRow);
         }
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)

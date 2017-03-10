@@ -17,6 +17,7 @@ namespace SmoothScroll.Presenters
                 //.GridColumns("300")
                 //.GridRows("Auto")
                 //.Layout(Orientation.Vertical, 2)
+                .WithSelectionMode(SelectionMode.Extended)
                 .AddBinding(0, 0, _.TextBlock())
                 .AddBinding(0, 0, _.BindBorder());
         }

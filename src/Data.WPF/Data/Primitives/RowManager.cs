@@ -235,7 +235,10 @@ namespace DevZest.Windows.Data.Primitives
             if (coercedVirtualRowIndex >= 0)
                 VirtualRow = new RowPresenter(this, coercedVirtualRowIndex);
             if (Rows.Count > 0)
+            {
                 _currentRow = Rows[0];
+                InitInitialSelection();
+            }
         }
 
         public RowPresenter VirtualRow { get; private set; }
@@ -360,7 +363,10 @@ namespace DevZest.Windows.Data.Primitives
             if (CurrentRow == null)
             {
                 if (Rows.Count > 0)
+                {
                     CurrentRow = Rows[0];
+                    InitInitialSelection();
+                }
             }
             else if (CurrentRow.IsDisposed)
             {
@@ -371,6 +377,12 @@ namespace DevZest.Windows.Data.Primitives
                 index = Math.Min(index, Rows.Count - 1);
                 CurrentRow = index >= 0 ? Rows[index] : null;
             }
+        }
+
+        private void InitInitialSelection()
+        {
+            if (Template.SelectionMode == SelectionMode.Single || Template.SelectionMode == SelectionMode.Extended)
+                Select(CurrentRow, SelectionMode.Single, null);
         }
 
         private RowPresenter _currentRow;
@@ -399,7 +411,7 @@ namespace DevZest.Windows.Data.Primitives
         }
 
         private RowPresenter _lastExtnedSelection;
-        public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter currentRow)
+        public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
         {
             switch (selectionMode)
             {
@@ -414,7 +426,7 @@ namespace DevZest.Windows.Data.Primitives
                     break;
                 case SelectionMode.Extended:
                     if (_lastExtnedSelection == null)
-                        _lastExtnedSelection = currentRow;
+                        _lastExtnedSelection = oldCurrentRow;
                     _selectedRows.Clear();
                     var min = Math.Min(_lastExtnedSelection.Index, value.Index);
                     var max = Math.Max(_lastExtnedSelection.Index, value.Index);
