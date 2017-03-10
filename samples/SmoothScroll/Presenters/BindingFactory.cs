@@ -43,8 +43,8 @@ namespace SmoothScroll.Presenters
 
         private static void Refresh(Border element, RowPresenter rowPresenter)
         {
-            var thickness = rowPresenter.View.IsKeyboardFocusWithin ? 2 : (rowPresenter.IsCurrent ? 1 : 0);
-            element.BorderThickness = new Thickness(thickness);
+            var thickness = rowPresenter.View.IsKeyboardFocusWithin ? 4 : (rowPresenter.IsCurrent ? 1 : 0);
+            element.BorderThickness = new Thickness(rowPresenter.IsSelected ? 12 : thickness, thickness, thickness, thickness);
         }
 
         public static RowBinding<Border> BindBorder(this Model _)

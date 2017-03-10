@@ -398,29 +398,32 @@ namespace DevZest.Windows.Data.Primitives
         {
         }
 
-        public void Select(RowPresenter value, SelectionMode selectionMode)
+        private RowPresenter _lastExtnedSelection;
+        public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter currentRow)
         {
-            var oldValue = CurrentRow;
-            if (oldValue != value)
-                CurrentRow = value;
-
             switch (selectionMode)
             {
                 case SelectionMode.Single:
+                    _lastExtnedSelection = null;
                     _selectedRows.Clear();
                     _selectedRows.Add(value);
                     break;
                 case SelectionMode.Multiple:
+                    _lastExtnedSelection = null;
                     value.IsSelected = !value.IsSelected;
                     break;
                 case SelectionMode.Extended:
+                    if (_lastExtnedSelection == null)
+                        _lastExtnedSelection = currentRow;
                     _selectedRows.Clear();
-                    var min = Math.Min(oldValue.Index, value.Index);
-                    var max = Math.Max(oldValue.Index, value.Index);
+                    var min = Math.Min(_lastExtnedSelection.Index, value.Index);
+                    var max = Math.Max(_lastExtnedSelection.Index, value.Index);
                     for (int i = min; i <= max; i++)
                         _selectedRows.Add(Rows[i]);
                     break;
             }
+
+            OnSelectedRowsChanged();
         }
 
         private _EditHandler _editHandler;

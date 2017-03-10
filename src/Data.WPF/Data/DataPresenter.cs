@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DevZest.Windows.Data.Primitives;
 using System;
-using System.Windows.Input;
 using System.Windows.Controls;
 using DevZest.Data;
 using DevZest.Windows.Controls;
@@ -94,7 +93,9 @@ namespace DevZest.Windows.Data
         public void Select(RowPresenter rowPresenter, SelectionMode selectionMode, bool ensureVisible = true)
         {
             VerifyRowPresenter(rowPresenter, nameof(rowPresenter));
-            RequireLayoutManager().Select(rowPresenter, selectionMode);
+            var currentRow = CurrentRow;
+            CurrentRow = rowPresenter;
+            RequireLayoutManager().Select(rowPresenter, selectionMode, currentRow);
             if (ensureVisible && Scrollable != null)
                 Scrollable.EnsureCurrentRowVisible();
         }

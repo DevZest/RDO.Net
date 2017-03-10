@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using DevZest.Windows.Controls.Primitives;
 using DevZest.Windows.Data;
+using System.Windows.Controls;
 
 namespace DevZest.Windows.Controls
 {
@@ -25,14 +26,17 @@ namespace DevZest.Windows.Controls
         public static RoutedUICommand SelectPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
         public static RoutedUICommand SelectHomeCommand { get { return ComponentCommands.MoveToHome; } }
         public static RoutedUICommand SelectEndCommand { get { return ComponentCommands.MoveToEnd; } }
-        public static RoutedUICommand ExtendSelectionUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
-        public static RoutedUICommand ExtendSelectionDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
-        public static RoutedUICommand ExtendSelectionLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
-        public static RoutedUICommand ExtendSelectionRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
-        public static readonly RoutedUICommand ExtendSelectionHomeCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ExtendSelectionEndCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ExtendSelectionPageUpCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ExtendSelectionPageDownCommand = new RoutedUICommand();
+        public static RoutedUICommand SelectExtendedUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
+        public static RoutedUICommand SelectExtendedDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
+        public static RoutedUICommand SelectiExtendedLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
+        public static RoutedUICommand SelectExtendedRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
+        public static readonly RoutedUICommand SelectExtendedHomeCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectExtendedEndCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectExtendedPageUpCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectExtendedPageDownCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectSingleCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectMultipleCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand SelectExtendedCommand = new RoutedUICommand();
 
         static RowView()
         {
@@ -210,11 +214,82 @@ namespace DevZest.Windows.Controls
             }
         }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            base.OnMouseDown(e);
-            if (!IsKeyboardFocusWithin)
-                e.Handled = MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            if (!e.Handled)
+                e.Handled = HandleMouseButtonDown(MouseButton.Left);
+            base.OnMouseLeftButtonDown(e);
+        }
+
+        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
+        {
+            if (!e.Handled)
+                e.Handled = HandleMouseButtonDown(MouseButton.Right);
+            base.OnMouseRightButtonDown(e);
+        }
+
+        private bool HandleMouseButtonDown(MouseButton mouseButton)
+        {
+            var oldCurrentRow = ElementManager.CurrentRow;
+            var focusMoved = IsKeyboardFocusWithin ? true : MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            var selected = Select(mouseButton, oldCurrentRow);
+            return focusMoved || selected;
+        }
+
+        private SelectionMode? SelectMode
+        {
+            get { return SelectionMode.Extended; }
+        }
+
+        private bool Select(MouseButton mouseButton, RowPresenter currentRow)
+        {
+            if (!SelectMode.HasValue)
+                return false;
+
+            switch (SelectMode.Value)
+            {
+                case SelectionMode.Single:
+                    Select((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control ? SelectionMode.Multiple : SelectionMode.Single, currentRow);
+                    return true;
+                case SelectionMode.Multiple:
+                    Select(SelectionMode.Multiple, currentRow);
+                    return true;
+                case SelectionMode.Extended:
+                    if (mouseButton != MouseButton.Left)
+                    {
+                        if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
+                        {
+                            if (RowPresenter.IsSelected)
+                                return false;
+                            Select(SelectionMode.Single, currentRow);
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    if (IsControlDown && IsShiftDown)
+                        return false;
+
+                    var selectionMode = IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
+                    Select(selectionMode, currentRow);
+                    return true;
+            }
+            return false;
+        }
+
+        private bool IsControlDown
+        {
+            get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; }
+        }
+
+        private bool IsShiftDown
+        {
+            get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
+        }
+
+        private void Select(SelectionMode selectionMode, RowPresenter currentRow)
+        {
+            ElementManager.Select(RowPresenter, selectionMode, currentRow);
         }
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
