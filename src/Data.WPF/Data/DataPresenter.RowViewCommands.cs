@@ -28,21 +28,23 @@ namespace DevZest.Windows.Data
                         yield return RowView.MoveDownCommand.InputBinding(MoveDown, CanMoveDown, new KeyGesture(Key.Down));
                         yield return RowView.MoveLeftCommand.InputBinding(MoveLeft, CanMoveLeft, new KeyGesture(Key.Left));
                         yield return RowView.MoveRightCommand.InputBinding(MoveRight, CanMoveRight, new KeyGesture(Key.Right));
-                        yield return RowView.MoveToHomeCommand.InputBinding(MoveToHome, CanSelect, new KeyGesture(Key.Home));
-                        yield return RowView.MoveToEndCommand.InputBinding(MoveToEnd, CanSelect, new KeyGesture(Key.End));
-                        yield return RowView.MoveToPageUpCommand.InputBinding(MoveToPageUp, CanSelect, new KeyGesture(Key.PageUp));
-                        yield return RowView.MoveToPageDownCommand.InputBinding(MoveToPageDown, CanSelect, new KeyGesture(Key.PageDown));
+                        yield return RowView.MoveToHomeCommand.InputBinding(MoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
+                        yield return RowView.MoveToEndCommand.InputBinding(MoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
+                        yield return RowView.MoveToPageUpCommand.InputBinding(MoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
+                        yield return RowView.MoveToPageDownCommand.InputBinding(MoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
                         if (Template.SelectionMode == SelectionMode.Extended)
                         {
                             yield return RowView.SelectExtendedUpCommand.InputBinding(SelectExtendUp, CanMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
                             yield return RowView.SelectExtendedDownCommand.InputBinding(SelectExtendedDown, CanMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
                             yield return RowView.SelectiExtendedLeftCommand.InputBinding(SelectiExtendedLeft, CanMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
                             yield return RowView.SelectExtendedRightCommand.InputBinding(SelectExtendedRight, CanMoveRight, new KeyGesture(Key.Right));
-                            yield return RowView.SelectExtendedHomeCommand.InputBinding(SelectExtendedHome, CanSelect, new KeyGesture(Key.Home, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedEndCommand.InputBinding(SelectExtendedEnd, CanSelect, new KeyGesture(Key.End, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedPageUpCommand.InputBinding(SelectExtendedPageUp, CanSelect, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedPageDownCommand.InputBinding(SelectExtendedPageDown, CanSelect, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                            yield return RowView.SelectExtendedHomeCommand.InputBinding(SelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                            yield return RowView.SelectExtendedEndCommand.InputBinding(SelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
+                            yield return RowView.SelectExtendedPageUpCommand.InputBinding(SelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                            yield return RowView.SelectExtendedPageDownCommand.InputBinding(SelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                         }
+                        if (Template.SelectionMode == SelectionMode.Multiple)
+                            yield return RowView.ToggleSelectionCommand.InputBinding(ToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
                     }
                 }
             }
@@ -143,7 +145,7 @@ namespace DevZest.Windows.Data
 
         private void CanMoveUp(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanSelect(e) && MoveUpRow != null;
+            e.CanExecute = CanExecuteByKeyGesture(e) && MoveUpRow != null;
         }
 
         private void MoveUp(object sender, ExecutedRoutedEventArgs e)
@@ -153,7 +155,7 @@ namespace DevZest.Windows.Data
 
         private void CanMoveDown(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanSelect(e) && MoveDownRow != null;
+            e.CanExecute = CanExecuteByKeyGesture(e) && MoveDownRow != null;
         }
 
         private void MoveDown(object sender, ExecutedRoutedEventArgs e)
@@ -163,7 +165,7 @@ namespace DevZest.Windows.Data
 
         private void CanMoveLeft(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanSelect(e) && MoveLeftRow != null;
+            e.CanExecute = CanExecuteByKeyGesture(e) && MoveLeftRow != null;
         }
 
         private void MoveLeft(object sender, ExecutedRoutedEventArgs e)
@@ -173,7 +175,7 @@ namespace DevZest.Windows.Data
 
         private void CanMoveRight(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanSelect(e) && MoveRightRow != null;
+            e.CanExecute = CanExecuteByKeyGesture(e) && MoveRightRow != null;
         }
 
         private void MoveRight(object sender, ExecutedRoutedEventArgs e)
@@ -221,12 +223,12 @@ namespace DevZest.Windows.Data
             Select(MoveRightRow, SelectionMode.Extended);
         }
 
-        private void CanSelect(object sender, CanExecuteRoutedEventArgs e)
+        private void CanExecuteByKeyGesture(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CanSelect(e);
+            e.CanExecute = CanExecuteByKeyGesture(e);
         }
 
-        private bool CanSelect(CanExecuteRoutedEventArgs e)
+        private bool CanExecuteByKeyGesture(CanExecuteRoutedEventArgs e)
         {
             return e.OriginalSource is RowView && Rows.Count > 0;
         }
@@ -249,6 +251,12 @@ namespace DevZest.Windows.Data
         private void SelectExtendedPageDown(object sender, ExecutedRoutedEventArgs e)
         {
             Select(Scrollable.ScrollToPageDown(), SelectionMode.Extended, false);
+        }
+
+        private void ToggleSelection(object sender, ExecutedRoutedEventArgs e)
+        {
+            var rowPresenter = ((RowView)e.OriginalSource).RowPresenter;
+            rowPresenter.IsSelected = !rowPresenter.IsSelected;
         }
     }
 }
