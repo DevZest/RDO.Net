@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmoothScroll", "samples\Smo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApp", "samples\SampleApp\SampleApp.csproj", "{89595262-2443-4F2E-9789-60C7998A0A07}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileExplorer", "samples\FileExplorer\FileExplorer.csproj", "{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{89595262-2443-4F2E-9789-60C7998A0A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89595262-2443-4F2E-9789-60C7998A0A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89595262-2443-4F2E-9789-60C7998A0A07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 		{0A97428A-730F-4939-BF41-A65AE91BB01E} = {792398A7-F929-420B-869F-278249C733B1}
 		{4E1C60AD-880E-419D-B87A-18FCE594412A} = {6421FDB8-DAF1-41EB-8B64-9D2AF589D926}
 		{89595262-2443-4F2E-9789-60C7998A0A07} = {6421FDB8-DAF1-41EB-8B64-9D2AF589D926}
+		{CFFCA50E-AC24-4EC2-AA89-412EFEA87B73} = {6421FDB8-DAF1-41EB-8B64-9D2AF589D926}
 	EndGlobalSection
 EndGlobal
