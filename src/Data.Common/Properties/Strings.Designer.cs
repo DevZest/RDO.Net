@@ -827,6 +827,14 @@ namespace DevZest.Data
             get { return GetString("ValidationEntry_EmptyMessages"); }
         }
 
+        /// <summary>
+        /// The column name '{columnName}' is invalid.
+        /// </summary>
+        public static string Model_InvalidColumnName(object columnName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Model_InvalidColumnName", "columnName"), columnName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

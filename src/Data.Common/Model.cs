@@ -821,7 +821,7 @@ namespace DevZest.Data
 
             var result = Columns[columnName];
             if (result == null)
-                throw new FormatException();
+                throw new FormatException(Strings.Model_InvalidColumnName(columnName));
             return result;
         }
     }

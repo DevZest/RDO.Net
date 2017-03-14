@@ -423,4 +423,7 @@
   <data name="ValidationEntry_EmptyMessages" xml:space="preserve">
     <value>The messages cannot be empty.</value>
   </data>
+  <data name="Model_InvalidColumnName" xml:space="preserve">
+    <value>The column name '{columnName}' is invalid.</value>
+  </data>
 </root>
