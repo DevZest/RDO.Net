@@ -13,17 +13,17 @@ namespace DevZest.Data
     public abstract class DataSet<T> : DataSet
         where T : Model, new()
     {
-        private sealed class GlobalDataSet : DataSet<T>
+        private sealed class BaseDataSet : DataSet<T>
         {
-            public GlobalDataSet(T model)
+            public BaseDataSet(T model)
                 : base(model)
             {
                 model.SetDataSource(this);
             }
 
-            internal override DataSet CreateSubDataSet(DataRow parentRow)
+            internal override DataSet CreateChildDataSet(DataRow parentRow)
             {
-                return new SubDataSet(this, parentRow);
+                return new ChildDataSet(this, parentRow);
             }
 
             public override DataRow ParentDataRow
@@ -45,7 +45,7 @@ namespace DevZest.Data
             {
                 Debug.Assert(dataRow.Model == Model && dataRow.Ordinal == index);
 
-                dataRow.DisposeByGlobalDataSet();
+                dataRow.DisposeByBaseDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustOrdinal(i);
@@ -56,29 +56,29 @@ namespace DevZest.Data
                 Debug.Assert(index >= 0 && index <= Count);
                 Debug.Assert(dataRow.Model == null);
 
-                dataRow.InitializeByGlobalDataSet(Model, index);
+                dataRow.InitializeByBaseDataSet(Model, index);
                 _rows.Insert(index, dataRow);
                 for (int i = index + 1; i < _rows.Count; i++)
                     _rows[i].AdjustOrdinal(i);
             }
         }
 
-        private sealed class SubDataSet : DataSet<T>
+        private sealed class ChildDataSet : DataSet<T>
         {
-            public SubDataSet(GlobalDataSet globalDataSet, DataRow parentRow)
-                : base(globalDataSet._)
+            public ChildDataSet(BaseDataSet baseDataSet, DataRow parentRow)
+                : base(baseDataSet._)
             {
-                Debug.Assert(globalDataSet != null);
-                _globalDataSet = globalDataSet;
+                Debug.Assert(baseDataSet != null);
+                _baseDataSet = baseDataSet;
                 _parentRow = parentRow;
             }
 
-            internal override DataSet CreateSubDataSet(DataRow parentRow)
+            internal override DataSet CreateChildDataSet(DataRow parentRow)
             {
                 throw new NotSupportedException();
             }
 
-            private DataSet<T> _globalDataSet;
+            private DataSet<T> _baseDataSet;
             private DataRow _parentRow;
             public override DataRow ParentDataRow
             {
@@ -99,12 +99,12 @@ namespace DevZest.Data
             {
                 Debug.Assert(dataRow.Model == Model && dataRow.Index == index);
 
-                dataRow.DisposeBySubDataSet();
+                dataRow.DisposeByChildDataSet();
                 _rows.RemoveAt(index);
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustIndex(i);
 
-                _globalDataSet.InternalRemoveAt(dataRow.Ordinal);
+                _baseDataSet.InternalRemoveAt(dataRow.Ordinal);
             }
 
             internal override void InternalInsertCore(int index, DataRow dataRow)
@@ -112,16 +112,16 @@ namespace DevZest.Data
                 Debug.Assert(index >= 0 && index <= Count);
                 Debug.Assert(dataRow.Model == null);
 
-                dataRow.InitializeBySubDataSet(_parentRow, index);
+                dataRow.InitializeByChildDataSet(_parentRow, index);
                 _rows.Insert(index, dataRow);
                 for (int i = index + 1; i < _rows.Count; i++)
                     _rows[i].AdjustIndex(i);
-                _globalDataSet.InternalInsert(GetGlobalDataSetOrdinal(dataRow), dataRow);
+                _baseDataSet.InternalInsert(GetBaseDataSetOrdinal(dataRow), dataRow);
             }
 
-            private int GetGlobalDataSetOrdinal(DataRow dataRow)
+            private int GetBaseDataSetOrdinal(DataRow dataRow)
             {
-                if (_globalDataSet.Count == 0)
+                if (_baseDataSet.Count == 0)
                     return 0;
 
                 if (Count > 1)
@@ -132,19 +132,19 @@ namespace DevZest.Data
                         return this[dataRow.Index + 1].Ordinal - 1;  // before the next DataRow
                 }
 
-                return BinarySearchGlobalDataSetOrdinal(dataRow);
+                return BinarySearchBaseDataSetOrdinal(dataRow);
             }
 
-            private int BinarySearchGlobalDataSetOrdinal(DataRow dataRow)
+            private int BinarySearchBaseDataSetOrdinal(DataRow dataRow)
             {
                 var parentOrdinal = dataRow.ParentDataRow.Ordinal;
 
-                var endOrdinal = _globalDataSet.Count - 1;
-                if (parentOrdinal > _globalDataSet[endOrdinal].ParentDataRow.Ordinal)
+                var endOrdinal = _baseDataSet.Count - 1;
+                if (parentOrdinal > _baseDataSet[endOrdinal].ParentDataRow.Ordinal)
                     return endOrdinal + 1;  // after the end
 
                 var startOrdinal = 0;
-                if (parentOrdinal < _globalDataSet[startOrdinal].ParentDataRow.Ordinal)
+                if (parentOrdinal < _baseDataSet[startOrdinal].ParentDataRow.Ordinal)
                     return startOrdinal;  // before the start
 
                 int resultOrdinal = endOrdinal;
@@ -152,7 +152,7 @@ namespace DevZest.Data
                 while (startOrdinal < endOrdinal)
                 {
                     var mid = (startOrdinal + endOrdinal) / 2;
-                    if (parentOrdinal < _globalDataSet[mid].ParentDataRow.Ordinal)
+                    if (parentOrdinal < _baseDataSet[mid].ParentDataRow.Ordinal)
                     {
                         resultOrdinal = endOrdinal;
                         flagBefore = true;
@@ -180,7 +180,7 @@ namespace DevZest.Data
 
         internal static DataSet<T> Create(T model)
         {
-            return new GlobalDataSet(model);
+            return new BaseDataSet(model);
         }
 
         public new DataSet<T> Clone()

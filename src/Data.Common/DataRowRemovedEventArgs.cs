@@ -25,12 +25,12 @@ namespace DevZest.Data
 
         public DataSet DataSet
         {
-            get { return ParentDataRow == null ? GlobalDataSet : ParentDataRow[Model]; }
+            get { return ParentDataRow == null ? BaseDataSet : ParentDataRow[Model]; }
         }
 
-        public DataSet GlobalDataSet
+        public DataSet BaseDataSet
         {
-            get { return DataSet.Get(Model); }
+            get { return Model.DataSet; }
         }
     }
 }

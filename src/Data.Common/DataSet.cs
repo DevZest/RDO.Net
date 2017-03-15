@@ -11,11 +11,6 @@ namespace DevZest.Data
 {
     public abstract class DataSet : DataSource, IList<DataRow>
     {
-        public static DataSet Get(Model model)
-        {
-            return model == null ? null : model.DataSet;
-        }
-
         internal DataSet(Model model)
             : base(model)
         {
@@ -34,7 +29,7 @@ namespace DevZest.Data
             get { return DataSourceKind.DataSet; }
         }
 
-        internal abstract DataSet CreateSubDataSet(DataRow parentRow);
+        internal abstract DataSet CreateChildDataSet(DataRow parentRow);
 
         internal DataRow AddRow(Action<DataRow> updateAction = null)
         {

@@ -41,16 +41,21 @@ namespace DevZest.Data
         /// <summary>Gets the parent <see cref="DataRow"/>.</summary>
         public DataRow ParentDataRow { get; private set; }
 
+        public DataSet BaseDataSet
+        {
+            get { return Model == null ? null : Model.DataSet; }
+        }
+
         public DataSet DataSet
         {
             get
             {
                 var parentRow = ParentDataRow;
-                return parentRow == null ? DataSet.Get(Model) : parentRow[Model];
+                return parentRow == null ? BaseDataSet : parentRow[Model];
             }
         }
 
-        internal void InitializeBySubDataSet(DataRow parent, int index)
+        internal void InitializeByChildDataSet(DataRow parent, int index)
         {
             Debug.Assert(ParentDataRow == null);
             Debug.Assert(parent != null);
@@ -59,13 +64,13 @@ namespace DevZest.Data
             _index = index;
         }
 
-        internal void DisposeBySubDataSet()
+        internal void DisposeByChildDataSet()
         {
             ParentDataRow = null;
             _index = -1;
         }
 
-        internal void InitializeByGlobalDataSet(Model model, int ordinal)
+        internal void InitializeByBaseDataSet(Model model, int ordinal)
         {
             Debug.Assert(Model == null);
             Debug.Assert(model != null);
@@ -77,14 +82,14 @@ namespace DevZest.Data
             var childModels = model.ChildModels;
             _childDataSets = childModels.Count == 0 ? Array<DataSet>.Empty : new DataSet[childModels.Count];
             for (int i = 0; i < childModels.Count; i++)
-                _childDataSets[i] = childModels[i].DataSet.CreateSubDataSet(this);
+                _childDataSets[i] = childModels[i].DataSet.CreateChildDataSet(this);
 
             var columns = model.Columns;
             foreach (var column in columns)
                 column.InsertRow(this);
         }
 
-        internal void DisposeByGlobalDataSet()
+        internal void DisposeByBaseDataSet()
         {
             ClearChildren();
 
