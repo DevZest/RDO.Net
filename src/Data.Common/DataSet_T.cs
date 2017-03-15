@@ -26,7 +26,7 @@ namespace DevZest.Data
                 return new SubDataSet(this, parentRow);
             }
 
-            public override DataRow ParentRow
+            public override DataRow ParentDataRow
             {
                 get { return null; }
             }
@@ -80,7 +80,7 @@ namespace DevZest.Data
 
             private DataSet<T> _globalDataSet;
             private DataRow _parentRow;
-            public override DataRow ParentRow
+            public override DataRow ParentDataRow
             {
                 get { return _parentRow; }
             }

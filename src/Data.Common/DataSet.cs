@@ -45,7 +45,7 @@ namespace DevZest.Data
 
         internal readonly List<DataRow> _rows = new List<DataRow>();
 
-        public abstract DataRow ParentRow { get; }
+        public abstract DataRow ParentDataRow { get; }
 
         /// <inheritdoc cref="ICollection{T}.Count"/>
         public int Count
