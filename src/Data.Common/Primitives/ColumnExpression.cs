@@ -7,6 +7,8 @@ namespace DevZest.Data.Primitives
     public abstract class ColumnExpression
     {
         internal abstract void SetOwner(Column column);
+
+        public abstract IColumnSet ReferencedColumns { get; }
     }
 
     /// <summary>

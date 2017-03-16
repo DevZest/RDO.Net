@@ -56,6 +56,23 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
+        private IColumnSet _referencedColumns;
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return _referencedColumns ?? (_referencedColumns = GetReferencedColumns()); }
+        }
+
+        private IColumnSet GetReferencedColumns()
+        {
+            var result = ColumnSet.Empty;
+            for (int i = 0; i < _when.Count; i++)
+                result = result.Union(_when[i].ReferencedColumns);
+            for (int i = 0; i < _then.Count; i++)
+                result = result.Union(_then[i].ReferencedColumns);
+            result = result.Union(_else.ReferencedColumns);
+            return result.Seal();
+        }
+
         public CaseWhen<TResult> When(_Boolean when)
         {
             Check.NotNull(when, nameof(when));

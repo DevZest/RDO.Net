@@ -99,5 +99,11 @@ namespace DevZest.Data.Primitives
         /// <param name="y">The right operand value.</param>
         /// <returns>The result.</returns>
         protected abstract TResult EvalCore(T x, T y);
+
+        private IColumnSet _refrencedColumns;
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return _refrencedColumns ?? (_refrencedColumns = Left.ReferencedColumns.Union(Right.ReferencedColumns).Seal()); }
+        }
     }
 }

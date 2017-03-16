@@ -35,6 +35,11 @@ namespace DevZest.Data.Primitives
             Operand = operand;
         }
 
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return Operand.ReferencedColumns; }
+        }
+
         /// <summary>Gets the operand to be casted.</summary>
         public Column<TSource> Operand { get; private set; }
 

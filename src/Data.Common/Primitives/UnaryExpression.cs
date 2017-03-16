@@ -68,5 +68,10 @@ namespace DevZest.Data.Primitives
         /// <param name="x">The given value.</param>
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
+
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return Operand.ReferencedColumns; }
+        }
     }
 }

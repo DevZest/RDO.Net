@@ -252,6 +252,11 @@ namespace DevZest.Data
         /// <value>The expression of this column.</value>
         public ColumnExpression<T> Expression { get; internal set; }
 
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return IsExpression ? Expression.ReferencedColumns : this; }
+        }
+
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> object.</summary>
         /// <param name="dataRow">The provided <see cref="DataRow"/> object.</param>
         /// <returns>The value of this column from provided <see cref="DataRow"/> object.</returns>
@@ -557,6 +562,11 @@ namespace DevZest.Data
             protected override IModelSet GetParentModelSet()
             {
                 return Computation.ParentModelSet;
+            }
+
+            public override IColumnSet ReferencedColumns
+            {
+                get { return Computation.ReferencedColumns; }
             }
         }
 

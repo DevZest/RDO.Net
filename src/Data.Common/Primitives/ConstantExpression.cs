@@ -33,5 +33,10 @@ namespace DevZest.Data.Primitives
                 exprValue = Value;
             return new DbConstantExpression(Owner, exprValue);
         }
+
+        public override IColumnSet ReferencedColumns
+        {
+            get { return ColumnSet.Empty; }
+        }
     }
 }

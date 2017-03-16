@@ -87,6 +87,25 @@ namespace DevZest.Data.Primitives
 
         public ReadOnlyCollection<Column> Parameters;
 
+        private IColumnSet _referencedColumns;
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return _referencedColumns ?? (_referencedColumns = GetReferencedColumns()); }
+        }
+
+        private IColumnSet GetReferencedColumns()
+        {
+            var result = ColumnSet.Empty;
+            if (Parameters == null)
+                return result;
+
+            for (int i = 0; i < Parameters.Count; i++)
+                result = result.Union(Parameters[i].ReferencedColumns);
+
+            return result.Seal();
+        }
+
+
         protected abstract FunctionKey FunctionKey { get; }
 
         private DbExpression _dbExpression;

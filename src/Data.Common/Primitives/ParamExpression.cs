@@ -36,6 +36,11 @@ namespace DevZest.Data.Primitives
             SourceColumn = sourceColumn;
         }
 
+        public sealed override IColumnSet ReferencedColumns
+        {
+            get { return ColumnSet.Empty; }
+        }
+
         public Column<T> SourceColumn { get; private set; }
 
         public override DbExpression GetDbExpression()
