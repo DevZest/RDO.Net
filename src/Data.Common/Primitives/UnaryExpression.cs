@@ -37,6 +37,11 @@ namespace DevZest.Data.Primitives
         /// <summary>Gets the operand of this expression.</summary>
         public Column<T> Operand { get; private set; }
 
+        protected sealed override IColumnSet GetBaseColumns()
+        {
+            return Operand.BaseColumns;
+        }
+
         /// <inheritdoc/>
         protected override IModelSet GetParentModelSet()
         {
@@ -68,10 +73,5 @@ namespace DevZest.Data.Primitives
         /// <param name="x">The given value.</param>
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
-
-        public sealed override IColumnSet BaseColumns
-        {
-            get { return Operand.BaseColumns; }
-        }
     }
 }

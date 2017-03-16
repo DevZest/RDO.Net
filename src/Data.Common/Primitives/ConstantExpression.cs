@@ -33,10 +33,5 @@ namespace DevZest.Data.Primitives
                 exprValue = Value;
             return new DbConstantExpression(Owner, exprValue);
         }
-
-        public override IColumnSet BaseColumns
-        {
-            get { return ColumnSet.Empty; }
-        }
     }
 }

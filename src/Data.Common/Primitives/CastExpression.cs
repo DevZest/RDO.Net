@@ -35,9 +35,9 @@ namespace DevZest.Data.Primitives
             Operand = operand;
         }
 
-        public sealed override IColumnSet BaseColumns
+        protected sealed override IColumnSet GetBaseColumns()
         {
-            get { return Operand.BaseColumns; }
+            return Operand.BaseColumns;
         }
 
         /// <summary>Gets the operand to be casted.</summary>

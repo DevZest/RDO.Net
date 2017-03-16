@@ -40,6 +40,11 @@ namespace DevZest.Data.Primitives
             get { return Value; }
         }
 
+        protected sealed override IColumnSet GetBaseColumns()
+        {
+            return ColumnSet.Empty;
+        }
+
         protected sealed override IModelSet GetParentModelSet()
         {
             return ModelSet.Empty;

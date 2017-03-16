@@ -87,13 +87,7 @@ namespace DevZest.Data.Primitives
 
         public ReadOnlyCollection<Column> Parameters;
 
-        private IColumnSet _baseColumns;
-        public sealed override IColumnSet BaseColumns
-        {
-            get { return _baseColumns ?? (_baseColumns = GetBaseColumns()); }
-        }
-
-        private IColumnSet GetBaseColumns()
+        protected sealed override IColumnSet GetBaseColumns()
         {
             var result = ColumnSet.Empty;
             if (Parameters == null)
@@ -104,7 +98,6 @@ namespace DevZest.Data.Primitives
 
             return result.Seal();
         }
-
 
         protected abstract FunctionKey FunctionKey { get; }
 

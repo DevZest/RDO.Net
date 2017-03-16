@@ -564,9 +564,9 @@ namespace DevZest.Data
                 return Computation.ParentModelSet;
             }
 
-            public override IColumnSet BaseColumns
+            protected override IColumnSet GetBaseColumns()
             {
-                get { return Computation.BaseColumns; }
+                return Computation.BaseColumns;
             }
         }
 

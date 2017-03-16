@@ -63,13 +63,7 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
-        private IColumnSet _baseColumns;
-        public override IColumnSet BaseColumns
-        {
-            get { return _baseColumns ?? (_baseColumns = GetBaseColumns()); }
-        }
-
-        private IColumnSet GetBaseColumns()
+        protected sealed override IColumnSet GetBaseColumns()
         {
             var result = _on.BaseColumns;
             for (int i = 0; i < _when.Count; i++)

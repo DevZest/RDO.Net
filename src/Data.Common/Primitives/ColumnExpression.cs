@@ -7,7 +7,13 @@ namespace DevZest.Data.Primitives
     {
         internal abstract void SetOwner(Column column);
 
-        public abstract IColumnSet BaseColumns { get; }
+        private IColumnSet _baseColumns;
+        public IColumnSet BaseColumns
+        {
+            get { return _baseColumns ?? (_baseColumns = GetBaseColumns().Seal()); }
+        }
+
+        protected abstract IColumnSet GetBaseColumns();
     }
 
     /// <summary>
