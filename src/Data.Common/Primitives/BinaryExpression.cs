@@ -68,13 +68,13 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         protected sealed override IModelSet GetParentModelSet()
         {
-            return Left.ParentModelSet.Union(Right.ParentModelSet);
+            return Left.ParentModelSet.Union(Right.ParentModelSet).Seal();
         }
 
         /// <inheritdoc/>
         protected sealed override IModelSet GetAggregateModelSet()
         {
-            return Left.AggregateModelSet.Union(Right.AggregateModelSet);
+            return Left.AggregateModelSet.Union(Right.AggregateModelSet).Seal();
         }
 
         /// <inheritdoc/>

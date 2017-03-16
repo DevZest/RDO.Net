@@ -139,11 +139,11 @@ namespace DevZest.Data.Primitives
             var result = _on.ParentModelSet;
             for (int i = 0; i < _when.Count; i++)
             {
-                result.Union(_when[i].ParentModelSet);
-                result.Union(_then[i].ParentModelSet);
+                result = result.Union(_when[i].ParentModelSet);
+                result = result.Union(_then[i].ParentModelSet);
             }
-            result.Union(_else.ParentModelSet);
-            return result;
+            result = result.Union(_else.ParentModelSet);
+            return result.Seal();
         }
 
         /// <inheritdoc/>
@@ -152,11 +152,11 @@ namespace DevZest.Data.Primitives
             var result = _on.AggregateModelSet;
             for (int i = 0; i < _when.Count; i++)
             {
-                result.Union(_when[i].AggregateModelSet);
-                result.Union(_then[i].AggregateModelSet);
+                result = result.Union(_when[i].AggregateModelSet);
+                result = result.Union(_then[i].AggregateModelSet);
             }
-            result.Union(_else.AggregateModelSet);
-            return result;
+            result = result.Union(_else.AggregateModelSet);
+            return result.Seal();
         }
 
         protected internal override Type[] ArgColumnTypes

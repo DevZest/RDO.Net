@@ -45,7 +45,7 @@ namespace DevZest.Data.Primitives
         /// </summary>
         public IModelSet ParentModelSet
         {
-            get { return _parentModelSet ?? (_parentModelSet = GetParentModelSet()); }
+            get { return _parentModelSet ?? (_parentModelSet = GetParentModelSet().Seal()); }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace DevZest.Data.Primitives
         /// </summary>
         public IModelSet AggregateModelSet
         {
-            get { return _aggregateModelSet ?? (_aggregateModelSet = GetAggregateModelSet()); }
+            get { return _aggregateModelSet ?? (_aggregateModelSet = GetAggregateModelSet().Seal()); }
         }
 
         /// <summary>
