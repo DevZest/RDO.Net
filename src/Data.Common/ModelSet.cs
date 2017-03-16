@@ -1,14 +1,22 @@
 ﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    internal class ModelSet : List<Model>, IModelSet
+    public static class ModelSet
     {
         private class EmptyModelSet : IModelSet
         {
+            public static EmptyModelSet Singleton = new EmptyModelSet();
+
+            private EmptyModelSet()
+            {
+            }
+
             public bool Contains(Model model)
             {
                 return false;
@@ -19,9 +27,9 @@ namespace DevZest.Data
                 get { return 0; }
             }
 
-            public Model this[int index]
+            public bool IsSealed
             {
-                get { throw new ArgumentOutOfRangeException(nameof(index)); }
+                get { return true; }
             }
 
             public IEnumerator<Model> GetEnumerator()
@@ -33,27 +41,345 @@ namespace DevZest.Data
             {
                 yield break;
             }
+
+            public IModelSet Seal()
+            {
+                return this;
+            }
+
+            public IModelSet Add(Model value)
+            {
+                Check.NotNull(value, nameof(value));
+                return value;
+            }
+
+            public IModelSet Remove(Model value)
+            {
+                Check.NotNull(value, nameof(value));
+                return this;
+            }
+
+            public IModelSet Clear()
+            {
+                return this;
+            }
         }
 
-        public static readonly IModelSet Empty = new EmptyModelSet();
-
-        public ModelSet()
+        public static IModelSet Empty
         {
+            get { return EmptyModelSet.Singleton; }
         }
 
-        public ModelSet(IModelSet modelSet)
-            : base(modelSet)
+
+        private class HashSetModelSet : IModelSet
         {
+            private bool _isSealed;
+            private HashSet<Model> _hashSet = new HashSet<Model>();
+
+            public HashSetModelSet(Model value1, Model value2)
+            {
+                Debug.Assert(value1 != null && value2 != null && value1 != value2);
+                Add(value1);
+                Add(value2);
+            }
+
+            private HashSetModelSet()
+            {
+            }
+
+            public bool IsSealed
+            {
+                get { return _isSealed; }
+            }
+
+            public int Count
+            {
+                get { return _hashSet.Count; }
+            }
+
+            public IModelSet Seal()
+            {
+                _isSealed = true;
+                return this;
+            }
+
+            public IModelSet Add(Model value)
+            {
+                Check.NotNull(value, nameof(value));
+
+                if (Contains(value))
+                    return this;
+
+                if (!IsSealed)
+                {
+                    _hashSet.Add(value);
+                    return this;
+                }
+
+                if (Count == 0)
+                    return value;
+                else
+                {
+                    var result = new HashSetModelSet();
+                    foreach (var model in this)
+                        result.Add(model);
+                    result.Add(value);
+                    return result;
+                }
+            }
+
+            public IModelSet Remove(Model value)
+            {
+                Check.NotNull(value, nameof(value));
+
+                if (!Contains(value))
+                    return this;
+
+                if (!IsSealed)
+                {
+                    _hashSet.Remove(value);
+                    return this;
+                }
+
+                if (Count == 1)
+                    return Empty;
+
+                var result = new HashSetModelSet();
+                foreach (var element in this)
+                {
+                    if (element != value)
+                        result.Add(element);
+                }
+                return result;
+            }
+
+            public IModelSet Clear()
+            {
+                if (IsSealed)
+                    return Empty;
+                else
+                {
+                    _hashSet.Clear();
+                    return this;
+                }
+            }
+
+            public bool Contains(Model value)
+            {
+                Check.NotNull(value, nameof(value));
+                return _hashSet.Contains(value);
+            }
+
+            public IEnumerator<Model> GetEnumerator()
+            {
+                return _hashSet.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _hashSet.GetEnumerator();
+            }
+        }
+
+        internal static IModelSet New(Model value1, Model value2)
+        {
+            Debug.Assert(value1 != null && value2 != null && value1 != value2);
+            return new HashSetModelSet(value1, value2);
+        }
+
+        public static IModelSet New(params Model[] values)
+        {
+            Check.NotNull(values, nameof(values));
+
+            if (values.Length == 0)
+                return Empty;
+
+            IModelSet result = values[0].CheckNotNull(nameof(values), 0);
+            for (int i = 1; i < values.Length; i++)
+                result = result.Add(values[i].CheckNotNull(nameof(values), i));
+            return result;
+        }
+
+        /// <summary>Removes the models in the specified collection from the current set.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection of items to remove from this set.</param>
+        /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
+        public static IModelSet Except(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            foreach (var item in source)
+            {
+                if (other.Contains(item))
+                    source = source.Remove(item);
+            }
+            return source;
+        }
+
+        /// <summary>Removes the models to ensure the set contains only models both exist in this set and the specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
+        public static IModelSet Intersect(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            foreach (var item in source)
+            {
+                if (!other.Contains(item))
+                    source = source.Remove(item);
+            }
+            return source;
+        }
+
+        private static bool ContainsAll(this IModelSet source, IModelSet other)
+        {
+            foreach (var item in other)
+            {
+                if (!source.Contains(item))
+                    return false;
+            }
+            return true;
+        }
+
+        public static bool ContainsAny(this IModelSet source, IModelSet other)
+        {
+            foreach (var item in other)
+            {
+                if (source.Contains(item))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>Determines whether the current set is a proper (strict) subset of the specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsProperSubsetOf(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            return source.Count < other.Count ? other.ContainsAll(source) : false;
+        }
+
+        /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsProperSupersetOf(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            return source.Count > other.Count ? source.ContainsAll(other) : false;
+        }
+
+        /// <summary>Determines whether the current set is a subset of a specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsSubsetOf(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            return source.Count <= other.Count ? other.ContainsAll(source) : false;
+        }
+
+        /// <summary>Determines whether the current set is a superset of a specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool IsSupersetOf(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            return source.Count >= other.Count ? source.ContainsAll(other) : false;
+        }
+
+        /// <summary>Determines whether the current set overlaps with the specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
+        public static bool Overlaps(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            foreach (var item in source)
+            {
+                if (other.Contains(item))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>Determines whether the current set and the specified collection contain the same elements.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
+        public static bool SetEquals(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            return source.Count == other.Count ? source.ContainsAll(other) : false;
+        }
+
+        /// <summary>Ensures set contain only elements that are present either in the current set or in the specified collection, but not both.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to compare to the current set.</param>
+        /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
+        public static IModelSet SymmetricExcept(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            IModelSet removedModelSet = ModelSet.Empty;
+            foreach (var item in source)
+            {
+                if (other.Contains(item))
+                {
+                    removedModelSet = removedModelSet.Add(item);
+                    source = source.Remove(item);
+                }
+            }
+
+            foreach (var item in other)
+            {
+                if (removedModelSet.Contains(item))
+                    source = source.Add(item);
+            }
+
+            return source;
+        }
+
+        /// <summary>Ensures set contain all elements that are present in either the current set or in the specified collection.</summary>
+        /// <param name="source">The current set.</param>
+        /// <param name="other">The collection to add elements from.</param>
+        /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
+        public static IModelSet Union(this IModelSet source, IModelSet other)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(other, nameof(other));
+
+            foreach (var item in other)
+                source = source.Add(item);
+            return source;
         }
 
         private sealed class SourceModelResolver : DbFromClauseVisitor
         {
-            public SourceModelResolver(ModelSet sourceModelSet)
+            public SourceModelResolver(IModelSet sourceModelSet)
             {
-                _sourceModelSet = sourceModelSet;
+                SourceModelSet = sourceModelSet;
             }
 
-            private ModelSet _sourceModelSet;
+            public IModelSet SourceModelSet { get; private set; }
 
             public override void Visit(DbUnionStatement union)
             {
@@ -69,18 +395,20 @@ namespace DevZest.Data
 
             public override void Visit(DbSelectStatement select)
             {
-                _sourceModelSet.Add(select.Model);
+                SourceModelSet = SourceModelSet.Add(select.Model);
             }
 
             public override void Visit(DbTableClause table)
             {
-                _sourceModelSet.Add(table.Model);
+                SourceModelSet = SourceModelSet.Add(table.Model);
             }
         }
 
-        public void Add(DbFromClause dbFromClause)
+        public static IModelSet Add(this IModelSet modelSet, DbFromClause dbFromClause)
         {
-            dbFromClause.Accept(new SourceModelResolver(this));
+            var resolver = new SourceModelResolver(modelSet);
+            dbFromClause.Accept(resolver);
+            return resolver.SourceModelSet.Seal();
         }
     }
 }

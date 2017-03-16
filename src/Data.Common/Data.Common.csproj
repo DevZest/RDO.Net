@@ -147,7 +147,6 @@
     <Compile Include="IdentityAttribute.cs" />
     <Compile Include="IMockDb.cs" />
     <Compile Include="IModelSet.cs" />
-    <Compile Include="IModelSetExtensions.cs" />
     <Compile Include="ValidationMessageGroup.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />

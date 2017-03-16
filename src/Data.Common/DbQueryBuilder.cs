@@ -26,7 +26,7 @@ namespace DevZest.Data
         {
             _subQueryEliminator = query.SubQueryEliminator;
             FromClause = query.From;
-            _sourceModelSet.Add(FromClause);
+            _sourceModelSet = _sourceModelSet.Add(FromClause);
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
         }
@@ -44,7 +44,7 @@ namespace DevZest.Data
 
         #region FROM
 
-        ModelSet _sourceModelSet = new ModelSet();
+        IModelSet _sourceModelSet = ModelSet.Empty;
         SubQueryEliminator _subQueryEliminator;
         Dictionary<ColumnKey, List<Column>> _sourceColumnsByKey = new Dictionary<ColumnKey, List<Column>>();
 
@@ -77,7 +77,7 @@ namespace DevZest.Data
         {
             Debug.Assert(!_sourceModelSet.Contains(model));
 
-            _sourceModelSet.Add(model);
+            _sourceModelSet = _sourceModelSet.Add(model);
             foreach (var column in model.Columns)
             {
                 var columnKey = column.Key;

@@ -409,6 +409,7 @@ namespace DevZest.Data
             set { _ordinal = value; }
         }
 
+        #region IModelSet
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IModelSet.Contains(Model model)
         {
@@ -422,17 +423,6 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        Model IReadOnlyList<Model>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<Model> IEnumerable<Model>.GetEnumerator()
         {
             yield return this;
@@ -443,6 +433,44 @@ namespace DevZest.Data
         {
             yield return this;
         }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        bool IModelSet.IsSealed
+        {
+            get { return true; }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IModelSet IModelSet.Seal()
+        {
+            return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IModelSet IModelSet.Add(Model value)
+        {
+            Utilities.Check.NotNull(value, nameof(value));
+            if (value == this)
+                return this;
+            return ModelSet.New(this, value);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IModelSet IModelSet.Remove(Model value)
+        {
+            Utilities.Check.NotNull(value, nameof(value));
+            if (value == this)
+                return ModelSet.Empty;
+            else
+                return this;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
+        IModelSet IModelSet.Clear()
+        {
+            return ModelSet.Empty;
+        }
+        #endregion
 
         internal static T Clone<T>(T prototype, bool setDataSource)
             where T : Model, new()
