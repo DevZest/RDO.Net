@@ -82,6 +82,11 @@ namespace DevZest.Data
         /// <summary>Gets a value indicates whether current column is expression.</summary>
         public abstract bool IsExpression { get; }
 
+        public bool IsAbsoluteExpression
+        {
+            get { return ParentModel == null && IsExpression; }
+        }
+
         internal static T Create<T>(Type originalOwnerType, string originalName)
             where T : Column, new()
         {
@@ -126,6 +131,8 @@ namespace DevZest.Data
 
         /// <summary>Gets the <see cref="DbExpression"/> of this column for SQL generation.</summary>
         public abstract DbExpression DbExpression { get; }
+
+        public abstract DbExpression DbComputedExpression { get; }
 
         /// <summary>Gets the data type of this <see cref="Column"/>.</summary>
         public abstract Type DataType { get; }
@@ -278,10 +285,6 @@ namespace DevZest.Data
             return GetInterceptor<Default>();
         }
 
-        /// <summary>Gets the computation expression of this column.</summary>
-        /// <returns>The computation expression.</returns>
-        public abstract Column GetComputation();
-
         public abstract bool IsDbComputed { get; }
 
         /// <summary>Determines whether the value of given <see cref="DataRow"/> is null.</summary>
@@ -384,7 +387,7 @@ namespace DevZest.Data
                 foreach (var childRow in childDataSet)
                 {
                     result = childColumn.OnChildValueChanged(childRow, result);
-                    childRow.OnUpdated();
+                    childRow.OnValueChanged();
                 }
                 result = result.Union(childModel);
             }

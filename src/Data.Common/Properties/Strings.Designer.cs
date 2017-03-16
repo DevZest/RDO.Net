@@ -835,6 +835,22 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("Model_InvalidColumnName", "columnName"), columnName);
         }
 
+        /// <summary>
+        /// This column is already a computed column.
+        /// </summary>
+        public static string Column_AlreadyComputed
+        {
+            get { return GetString("Column_AlreadyComputed"); }
+        }
+
+        /// <summary>
+        /// Computed column must be member of column.
+        /// </summary>
+        public static string Column_ComputedColumnMustBeMemberOfModel
+        {
+            get { return GetString("Column_ComputedColumnMustBeMemberOfModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

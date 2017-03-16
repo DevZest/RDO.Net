@@ -111,7 +111,7 @@ namespace DevZest.Data.Primitives
         internal void WriteJson(JsonWriter jsonWriter, Column column)
         {
             jsonWriter.WriteStartObject().WriteNameStringPair(JsonColumn.TYPE_ID, TypeId).WriteComma();
-            if (column.IsExpression)
+            if (column.IsAbsoluteExpression)
                 WriteExpressionJson(jsonWriter, column);
             else
                 jsonWriter.WriteNameStringPair(JsonColumn.NAME, column.Name);

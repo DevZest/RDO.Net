@@ -793,11 +793,11 @@ namespace DevZest.Data
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
 
-            dataRow.BeginUpdate();
+            dataRow.SuppressValueChangedNotification();
             foreach (var column in Columns)
                 column.EndEdit(dataRow);
             EditingRow = null;
-            dataRow.EndUpdate();
+            dataRow.ResumeValueChangedNotification();
         }
 
         internal void CancelEdit()
@@ -823,6 +823,41 @@ namespace DevZest.Data
             if (result == null)
                 throw new FormatException(Strings.Model_InvalidColumnName(columnName));
             return result;
+        }
+
+        private IColumnSet _computatedColumns;
+        private IColumnSet ComputatedColumns
+        {
+            get
+            {
+                if (_computatedColumns == null)
+                {
+                    _computatedColumns = ColumnSet.Empty;
+                    for (int i = 0; i < Columns.Count; i++)
+                    {
+                        var column = Columns[i];
+                        if (column.IsExpression)
+                            _computatedColumns = _computatedColumns.Add(column);
+                    }
+                    _computatedColumns.Seal();
+                }
+                return _computatedColumns;
+            }
+        }
+
+        internal IColumnSet GetAggregateComputerColumns(IModelSet decendentModelSet)
+        {
+            if (ComputatedColumns.Count == 0)
+                return ColumnSet.Empty;
+
+            var result = ColumnSet.Empty;
+            foreach (var computation in ComputatedColumns)
+            {
+                if (computation.AggregateModelSet.ContainsAny(decendentModelSet))
+                    result = result.Add(computation);
+            }
+
+            return result.Seal();
         }
     }
 }

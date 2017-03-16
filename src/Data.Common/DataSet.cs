@@ -124,14 +124,14 @@ namespace DevZest.Data
 
             if (updateAction != null)
             {
-                dataRow.BeginUpdate();
+                dataRow.SuppressValueChangedNotification();
                 try
                 {
                     updateAction(dataRow);
                 }
                 finally
                 {
-                    dataRow.EndUpdate(true);
+                    dataRow.ResumeValueChangedNotification(true);
                 }
             }
             dataRow.OnAdded();

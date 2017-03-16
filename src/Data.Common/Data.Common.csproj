@@ -59,6 +59,7 @@
     <Compile Include="CharEnum.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
+    <Compile Include="EventHandlers.cs" />
     <Compile Include="IValidationMessageGroup.cs" />
     <Compile Include="IValidationResult.cs" />
     <Compile Include="AbstractValidationMessageGroup.cs" />

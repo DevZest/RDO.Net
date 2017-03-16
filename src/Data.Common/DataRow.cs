@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -10,7 +9,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a row of in-memory data.
     /// </summary>
-    public sealed class DataRow : EventArgs
+    public sealed class DataRow
     {
         internal static readonly DataRow Placeholder = new DataRow();
 
@@ -242,14 +241,14 @@ namespace DevZest.Data
 
         internal void OnUpdated(IModelSet modelSet)
         {
-            OnUpdated();
+            OnValueChanged();
             if (ParentDataRow != null)
                 ParentDataRow.BubbleUpdatedEvent(modelSet);
         }
 
-        internal void OnUpdated(bool omitNotification = false)
+        internal void OnValueChanged(bool omitNotification = false)
         {
-            if (IsUpdating)
+            if (_suppressValueChangedNotificationCount > 0)
             {
                 _isUpdated = true;
                 return;
@@ -294,10 +293,11 @@ namespace DevZest.Data
 
         private void BubbleUpdatedEvent(IModelSet modelSet)
         {
-            if (ShouldRaiseUpdatedEvent(modelSet))
+            var aggregateComputerColumns = Model.GetAggregateComputerColumns(modelSet);
+            if (aggregateComputerColumns.Count > 0)
             {
                 modelSet = modelSet.Union(Model);
-                OnUpdated();
+                OnValueChanged();
             }
 
             var parentDataRow = ParentDataRow;
@@ -305,63 +305,47 @@ namespace DevZest.Data
                 parentDataRow.BubbleUpdatedEvent(modelSet);
         }
 
-        private bool ShouldRaiseUpdatedEvent(IModelSet modelSet)
-        {
-            foreach (var column in Model.Columns)
-            {
-                var computation = column.GetComputation();
-                if (computation == null)
-                    continue;
-
-                if (computation.AggregateModelSet.ContainsAny(modelSet))
-                    return true;
-            }
-
-            return false;
-        }
-
         public IValidationMessageGroup Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
             return Model.Validate(this, severity);
         }
 
-        private int _updateLevel;
+        private int _suppressValueChangedNotificationCount;
         private bool _isUpdated;
 
-        public bool IsUpdating
+        public void SuppressValueChangedNotification()
         {
-            get { return _updateLevel > 0; }
+            if (this == Placeholder)
+                return;
+            _suppressValueChangedNotificationCount++;
         }
 
-        public void BeginUpdate()
+        public void ResumeValueChangedNotification()
         {
-            _updateLevel++;
+            if (this == Placeholder)
+                return;
+            ResumeValueChangedNotification(false);
         }
 
-        public void EndUpdate()
+        internal void ResumeValueChangedNotification(bool omitNotification)
         {
-            EndUpdate(false);
-        }
-
-        internal void EndUpdate(bool omitNotification)
-        {
-            _updateLevel--;
-            if (_updateLevel == 0 && _isUpdated)
-                OnUpdated(omitNotification);
+            _suppressValueChangedNotificationCount--;
+            if (_suppressValueChangedNotificationCount == 0 && _isUpdated)
+                OnValueChanged(omitNotification);
         }
 
         internal void Update(Action<DataRow> updateAction)
         {
             Check.NotNull(updateAction, nameof(updateAction));
 
-            BeginUpdate();
+            SuppressValueChangedNotification();
             try
             {
                 updateAction(this);
             }
             finally
             {
-                EndUpdate();
+                ResumeValueChangedNotification();
             }
         }
 

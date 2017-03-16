@@ -149,22 +149,22 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class ComputedValueManager : IValueManager
+        private sealed class ExpressionValueManager : IValueManager
         {
-            public ComputedValueManager(DataSet dataSet, Column<T> computation)
+            public ExpressionValueManager(DataSet dataSet, ColumnExpression<T> expression)
             {
                 Debug.Assert(dataSet != null);
-                Debug.Assert(computation != null);
+                Debug.Assert(expression != null);
                 _dataSet = dataSet;
-                _computation = computation;
+                _expression = expression;
             }
 
             private DataSet _dataSet;
-            private Column<T> _computation;
+            private ColumnExpression<T> _expression;
 
             public T this[int ordinal]
             {
-                get { return _computation[_dataSet[ordinal]]; }
+                get { return _expression[_dataSet[ordinal]]; }
                 set { Debug.Fail("Computed column is read only."); }
             }
 
@@ -216,9 +216,8 @@ namespace DevZest.Data
             if (parentColumn != null)
                 return new ChildValueManager(dataSet, parentColumn);
 
-            var computation = column.Computation;
-            if (computation != null)
-                return new ComputedValueManager(dataSet, computation);
+            if (column.IsExpression)
+                return new ExpressionValueManager(dataSet, column.Expression);
 
             return new ListValueManager(column);
         }
@@ -409,8 +408,13 @@ namespace DevZest.Data
         {
             get
             {
-                return _dbExpression ?? (_dbExpression = Expression == null ? new DbColumnExpression(this) : Expression.GetDbExpression());
+                return _dbExpression ?? (_dbExpression = IsAbsoluteExpression ? Expression.GetDbExpression() : new DbColumnExpression(this));
             }
+        }
+
+        public sealed override DbExpression DbComputedExpression
+        {
+            get { return IsDbComputed ? Expression.GetDbExpression() : null; }
         }
 
         /// <inheritdoc/>
@@ -507,14 +511,67 @@ namespace DevZest.Data
             return defaultDef != null ? defaultDef.Value : default(T);
         }
 
+        [ExpressionConverterGenerics(typeof(Column<>.ComputationExpression.Converter), Id = "Column<>.Computation")]
+        private sealed class ComputationExpression : ColumnExpression<T>
+        {
+            /// <remarks>
+            /// Every ColumnExpression requires an ExpressionConverter to fail fast. However the ComputationExpression will never be serialized/deserialized,
+            /// because computed columns must be the member of Model, they will always be serialized to column name, so the converter will never be executed.
+            /// </remarks>
+            private sealed class Converter : ExpressionConverter
+            {
+                internal override ColumnExpression ParseJson(JsonParser parser, Model model)
+                {
+                    throw new NotSupportedException();
+                }
+
+                internal override void WriteJson(JsonWriter jsonWriter, ColumnExpression expression)
+                {
+                    throw new NotSupportedException();
+                }
+            }
+
+            internal ComputationExpression(Column<T> computation)
+            {
+                Debug.Assert(computation != null);
+                Computation = computation;
+            }
+
+            protected internal override T this[DataRow dataRow]
+            {
+                get { return Computation[dataRow]; }
+            }
+
+            public Column<T> Computation { get; private set; }
+
+            public override DbExpression GetDbExpression()
+            {
+                return Computation.DbExpression;
+            }
+
+            protected override IModelSet GetAggregateModelSet()
+            {
+                return Computation.AggregateModelSet;
+            }
+
+            protected override IModelSet GetParentModelSet()
+            {
+                return Computation.ParentModelSet;
+            }
+        }
+
         /// <summary>Defines the computation expression for this column.</summary>
         /// <param name="computation">The computation expression.</param>
         public void ComputedAs(Column<T> computation, bool isDbComputed = true)
         {
             Check.NotNull(computation, nameof(computation));
+            if (ParentModel == null)
+                throw new InvalidOperationException(Strings.Column_ComputedColumnMustBeMemberOfModel);
+            if (Expression != null)
+                throw new InvalidOperationException(Strings.Column_AlreadyComputed);
 
             VerifyDesignMode();
-            Computation = computation;
+            new ComputationExpression(computation).SetOwner(this);
             _isDbComputed = isDbComputed;
         }
 
@@ -522,15 +579,6 @@ namespace DevZest.Data
         public sealed override bool IsDbComputed
         {
             get { return _isDbComputed; }
-        }
-
-        /// <summary>Gets the computation expression for this column.</summary>
-        public Column<T> Computation { get; private set; }
-
-        /// <inheritdoc/>
-        public sealed override Column GetComputation()
-        {
-            return Computation;
         }
 
         public sealed override ColumnMapping MapFrom(Column column)

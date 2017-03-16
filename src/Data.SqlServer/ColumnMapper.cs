@@ -52,14 +52,13 @@ namespace DevZest.Data.SqlServer
             {
                 if (column.IsDbComputed)
                 {
-                    var computation = column.GetComputation();
                     sqlBuilder.Append("AS (");
                     var generator = new ExpressionGenerator()
                     {
                         SqlBuilder = sqlBuilder,
                         SqlVersion = sqlVersion
                     };
-                    computation.DbExpression.Accept(generator);
+                    column.DbComputedExpression.Accept(generator);
                     sqlBuilder.Append(")");
                     return;
                 }
