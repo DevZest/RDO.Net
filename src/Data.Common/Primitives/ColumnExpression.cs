@@ -14,35 +14,6 @@ namespace DevZest.Data.Primitives
         }
 
         protected abstract IColumnSet GetBaseColumns();
-    }
-
-    /// <summary>
-    /// Represents the expression of <see cref="Column{T}"/>.
-    /// </summary>
-    /// <typeparam name="T">Data type of the expression.</typeparam>
-    public abstract class ColumnExpression<T> : ColumnExpression
-    {
-        protected ColumnExpression()
-        {
-            ExpressionConverter.EnsureInitialized(this);
-        }
-
-        protected internal abstract T this[DataRow dataRow] { get; }
-
-        private Column<T> _owner;
-        /// <summary>
-        /// Gets the <see cref="Column{T}" /> object which owns this expression.
-        /// </summary>
-        public Column<T> Owner
-        {
-            get { return _owner; }
-            private set
-            {
-                Debug.Assert(_owner == null && value.Expression == null);
-                _owner = value;
-                value.Expression = this;
-            }
-        }
 
         private IModelSet _parentModelSet;
         /// <summary>
@@ -79,6 +50,35 @@ namespace DevZest.Data.Primitives
         /// </summary>
         /// <returns>The <see cref="DbExpression"/> object.</returns>
         public abstract DbExpression GetDbExpression();
+    }
+
+    /// <summary>
+    /// Represents the expression of <see cref="Column{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">Data type of the expression.</typeparam>
+    public abstract class ColumnExpression<T> : ColumnExpression
+    {
+        protected ColumnExpression()
+        {
+            ExpressionConverter.EnsureInitialized(this);
+        }
+
+        protected internal abstract T this[DataRow dataRow] { get; }
+
+        private Column<T> _owner;
+        /// <summary>
+        /// Gets the <see cref="Column{T}" /> object which owns this expression.
+        /// </summary>
+        public Column<T> Owner
+        {
+            get { return _owner; }
+            private set
+            {
+                Debug.Assert(_owner == null && value.Expression == null);
+                _owner = value;
+                value.Expression = this;
+            }
+        }
 
         /// <summary>
         /// Makes a new <see cref="Column{T}"/> object which contains this expression.
