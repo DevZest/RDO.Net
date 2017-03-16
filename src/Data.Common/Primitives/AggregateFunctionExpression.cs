@@ -22,15 +22,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetParentModelSet()
+        protected sealed override IModelSet GetScalarBaseModels()
         {
             return ModelSet.Empty;
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetAggregateModelSet()
+        protected sealed override IModelSet GetAggregateBaseModels()
         {
-            return Param.ParentModelSet;
+            return Param.ScalarBaseModels;
         }
 
         /// <summary>Initializes the expression evaluation.</summary>

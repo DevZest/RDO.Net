@@ -9,7 +9,7 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        protected override IModelSet GetParentModelSet()
+        protected override IModelSet GetScalarBaseModels()
         {
             if (Parameters == null)
                 return ModelSet.Empty;
@@ -20,13 +20,13 @@ namespace DevZest.Data.Primitives
                 if (column == null)
                     continue;
 
-                result = result.Union(column.ParentModelSet);
+                result = result.Union(column.ScalarBaseModels);
             }
 
-            return result;
+            return result.Seal();
         }
 
-        protected override IModelSet GetAggregateModelSet()
+        protected override IModelSet GetAggregateBaseModels()
         {
             if (Parameters == null)
                 return ModelSet.Empty;
@@ -37,10 +37,10 @@ namespace DevZest.Data.Primitives
                 if (column == null)
                     continue;
 
-                result = result.Union(column.AggregateModelSet);
+                result = result.Union(column.AggregateBaseModels);
             }
 
-            return result;
+            return result.Seal();
         }
     }
 }

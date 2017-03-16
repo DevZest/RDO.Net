@@ -55,15 +55,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetParentModelSet()
+        protected sealed override IModelSet GetScalarBaseModels()
         {
             return Operand.ParentModel;
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetAggregateModelSet()
+        protected sealed override IModelSet GetAggregateBaseModels()
         {
-            return Operand.AggregateModelSet;
+            return Operand.AggregateBaseModels;
         }
 
         /// <inheritdoc/>

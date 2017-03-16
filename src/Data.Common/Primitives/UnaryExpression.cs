@@ -43,15 +43,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetParentModelSet()
+        protected override IModelSet GetScalarBaseModels()
         {
             return Operand.ParentModel;
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetAggregateModelSet()
+        protected override IModelSet GetAggregateBaseModels()
         {
-            return Operand.AggregateModelSet;
+            return Operand.AggregateBaseModels;
         }
 
         /// <summary>Gets the kind of the unary expression.</summary>

@@ -128,28 +128,28 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetParentModelSet()
+        protected override IModelSet GetScalarBaseModels()
         {
-            var result = _on.ParentModelSet;
+            var result = _on.ScalarBaseModels;
             for (int i = 0; i < _when.Count; i++)
             {
-                result = result.Union(_when[i].ParentModelSet);
-                result = result.Union(_then[i].ParentModelSet);
+                result = result.Union(_when[i].ScalarBaseModels);
+                result = result.Union(_then[i].ScalarBaseModels);
             }
-            result = result.Union(_else.ParentModelSet);
+            result = result.Union(_else.ScalarBaseModels);
             return result.Seal();
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetAggregateModelSet()
+        protected override IModelSet GetAggregateBaseModels()
         {
-            var result = _on.AggregateModelSet;
+            var result = _on.AggregateBaseModels;
             for (int i = 0; i < _when.Count; i++)
             {
-                result = result.Union(_when[i].AggregateModelSet);
-                result = result.Union(_then[i].AggregateModelSet);
+                result = result.Union(_when[i].AggregateBaseModels);
+                result = result.Union(_then[i].AggregateBaseModels);
             }
-            result = result.Union(_else.AggregateModelSet);
+            result = result.Union(_else.AggregateBaseModels);
             return result.Seal();
         }
 

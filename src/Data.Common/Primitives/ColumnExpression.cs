@@ -15,35 +15,35 @@ namespace DevZest.Data.Primitives
 
         protected abstract IColumnSet GetBaseColumns();
 
-        private IModelSet _parentModelSet;
+        private IModelSet _scalarBaseModels;
         /// <summary>
         /// Gets the set of parent models involved in this expression.
         /// </summary>
-        public IModelSet ParentModelSet
+        public IModelSet ScalarBaseModels
         {
-            get { return _parentModelSet ?? (_parentModelSet = GetParentModelSet().Seal()); }
+            get { return _scalarBaseModels ?? (_scalarBaseModels = GetScalarBaseModels().Seal()); }
         }
 
         /// <summary>
         /// Gets the set of parent models involved in this expression.
         /// </summary>
         /// <returns>The set of parent models involved in this expression.</returns>
-        protected abstract IModelSet GetParentModelSet();
+        protected abstract IModelSet GetScalarBaseModels();
 
-        private IModelSet _aggregateModelSet;
+        private IModelSet _aggregateBaseModels;
         /// <summary>
         /// Gets the set of aggregated models involved in this expression.
         /// </summary>
-        public IModelSet AggregateModelSet
+        public IModelSet AggregateBaseModels
         {
-            get { return _aggregateModelSet ?? (_aggregateModelSet = GetAggregateModelSet().Seal()); }
+            get { return _aggregateBaseModels ?? (_aggregateBaseModels = GetAggregateBaseModels().Seal()); }
         }
 
         /// <summary>
         /// Gets the set of aggregated models involved in this expression.
         /// </summary>
         /// <returns>The set of aggregated models involved in this expression.</returns>
-        protected abstract IModelSet GetAggregateModelSet();
+        protected abstract IModelSet GetAggregateBaseModels();
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> object which can be used for database command generation.

@@ -76,7 +76,7 @@ namespace DevZest.Data
         {
             Check.NotNull(sourceColumn, nameof(sourceColumn));
 
-            var parentModelSet = sourceColumn.ParentModelSet;
+            var parentModelSet = sourceColumn.ScalarBaseModels;
             foreach (var parentModel in parentModelSet)
             {
                 if (parentModel != _sourceModel)

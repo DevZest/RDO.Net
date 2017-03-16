@@ -45,12 +45,12 @@ namespace DevZest.Data.Primitives
             return ColumnSet.Empty;
         }
 
-        protected sealed override IModelSet GetParentModelSet()
+        protected sealed override IModelSet GetScalarBaseModels()
         {
             return ModelSet.Empty;
         }
 
-        protected sealed override IModelSet GetAggregateModelSet()
+        protected sealed override IModelSet GetAggregateBaseModels()
         {
             return ModelSet.Empty;
         }

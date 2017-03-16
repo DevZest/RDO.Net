@@ -881,7 +881,7 @@ namespace DevZest.Data
             var result = ColumnSet.Empty;
             foreach (var computation in ComputatedColumns)
             {
-                if (computation.AggregateModelSet.ContainsAny(decendentModelSet))
+                if (computation.AggregateBaseModels.ContainsAny(decendentModelSet))
                     result = result.Add(computation);
             }
 

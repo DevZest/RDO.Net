@@ -151,11 +151,11 @@ namespace DevZest.Data
             return IsExpression ? "[Expression]" : Name;
         }
 
-        /// <summary>Gets the set of parent <see cref="Model"/> objects related to this <see cref="Column"/>.</summary>
-        public abstract IModelSet ParentModelSet { get; }
+        /// <summary>Gets the set of <see cref="Model"/> objects directly combined this <see cref="Column"/>.</summary>
+        public abstract IModelSet ScalarBaseModels { get; }
 
         /// <summary>Gets the set of parent <see cref="Model"/> objects aggregated to this <see cref="Column"/>.</summary>
-        public abstract IModelSet AggregateModelSet { get; }
+        public abstract IModelSet AggregateBaseModels { get; }
 
         /// <summary>Verifies whether this column belongs to provided <see cref="DbReader"/>.</summary>
         /// <param name="reader">The <see cref="DbReader"/> object to be verified.</param>
@@ -227,13 +227,13 @@ namespace DevZest.Data
 
         internal void VerifyModelSet(string exceptionParamName, IModelSet sourceModels, bool allowsAggregate)
         {
-            foreach (var parentModel in ParentModelSet)
+            foreach (var parentModel in ScalarBaseModels)
             {
                 if (!sourceModels.Contains(parentModel))
                     throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnParentModels(parentModel), exceptionParamName);
             }
 
-            if (!allowsAggregate && AggregateModelSet.Count > 0)
+            if (!allowsAggregate && AggregateBaseModels.Count > 0)
                 throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
         }
 
