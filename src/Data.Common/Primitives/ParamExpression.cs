@@ -36,7 +36,7 @@ namespace DevZest.Data.Primitives
             SourceColumn = sourceColumn;
         }
 
-        public sealed override IColumnSet ReferencedColumns
+        public sealed override IColumnSet BaseColumns
         {
             get { return ColumnSet.Empty; }
         }

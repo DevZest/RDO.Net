@@ -69,9 +69,9 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract T EvalCore(T x);
 
-        public sealed override IColumnSet ReferencedColumns
+        public sealed override IColumnSet BaseColumns
         {
-            get { return Operand.ReferencedColumns; }
+            get { return Operand.BaseColumns; }
         }
     }
 }

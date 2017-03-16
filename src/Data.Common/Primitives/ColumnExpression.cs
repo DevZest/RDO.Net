@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace DevZest.Data.Primitives
 {
@@ -8,7 +7,7 @@ namespace DevZest.Data.Primitives
     {
         internal abstract void SetOwner(Column column);
 
-        public abstract IColumnSet ReferencedColumns { get; }
+        public abstract IColumnSet BaseColumns { get; }
     }
 
     /// <summary>

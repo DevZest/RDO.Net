@@ -252,9 +252,9 @@ namespace DevZest.Data
         /// <value>The expression of this column.</value>
         public ColumnExpression<T> Expression { get; internal set; }
 
-        public sealed override IColumnSet ReferencedColumns
+        public sealed override IColumnSet BaseColumns
         {
-            get { return IsExpression ? Expression.ReferencedColumns : this; }
+            get { return IsExpression ? Expression.BaseColumns : this; }
         }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> object.</summary>
@@ -564,9 +564,9 @@ namespace DevZest.Data
                 return Computation.ParentModelSet;
             }
 
-            public override IColumnSet ReferencedColumns
+            public override IColumnSet BaseColumns
             {
-                get { return Computation.ReferencedColumns; }
+                get { return Computation.BaseColumns; }
             }
         }
 

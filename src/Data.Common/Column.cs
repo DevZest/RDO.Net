@@ -134,7 +134,7 @@ namespace DevZest.Data
 
         public abstract DbExpression DbComputedExpression { get; }
 
-        public abstract IColumnSet ReferencedColumns { get; }
+        public abstract IColumnSet BaseColumns { get; }
 
         /// <summary>Gets the data type of this <see cref="Column"/>.</summary>
         public abstract Type DataType { get; }

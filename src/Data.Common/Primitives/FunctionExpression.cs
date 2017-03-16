@@ -87,20 +87,20 @@ namespace DevZest.Data.Primitives
 
         public ReadOnlyCollection<Column> Parameters;
 
-        private IColumnSet _referencedColumns;
-        public sealed override IColumnSet ReferencedColumns
+        private IColumnSet _baseColumns;
+        public sealed override IColumnSet BaseColumns
         {
-            get { return _referencedColumns ?? (_referencedColumns = GetReferencedColumns()); }
+            get { return _baseColumns ?? (_baseColumns = GetBaseColumns()); }
         }
 
-        private IColumnSet GetReferencedColumns()
+        private IColumnSet GetBaseColumns()
         {
             var result = ColumnSet.Empty;
             if (Parameters == null)
                 return result;
 
             for (int i = 0; i < Parameters.Count; i++)
-                result = result.Union(Parameters[i].ReferencedColumns);
+                result = result.Union(Parameters[i].BaseColumns);
 
             return result.Seal();
         }

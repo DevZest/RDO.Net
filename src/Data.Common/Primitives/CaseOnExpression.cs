@@ -63,20 +63,20 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
-        private IColumnSet _referencedColumns;
-        public override IColumnSet ReferencedColumns
+        private IColumnSet _baseColumns;
+        public override IColumnSet BaseColumns
         {
-            get { return _referencedColumns ?? (_referencedColumns = GetReferencedColumns()); }
+            get { return _baseColumns ?? (_baseColumns = GetBaseColumns()); }
         }
 
-        private IColumnSet GetReferencedColumns()
+        private IColumnSet GetBaseColumns()
         {
-            var result = _on.ReferencedColumns;
+            var result = _on.BaseColumns;
             for (int i = 0; i < _when.Count; i++)
-                result = result.Union(_when[i].ReferencedColumns);
+                result = result.Union(_when[i].BaseColumns);
             for (int i = 0; i < _then.Count; i++)
-                result = result.Union(_then[i].ReferencedColumns);
-            result = result.Union(_else.ReferencedColumns);
+                result = result.Union(_then[i].BaseColumns);
+            result = result.Union(_else.BaseColumns);
             return result.Seal();
         }
 

@@ -101,9 +101,9 @@ namespace DevZest.Data.Primitives
         protected abstract TResult EvalCore(T x, T y);
 
         private IColumnSet _refrencedColumns;
-        public sealed override IColumnSet ReferencedColumns
+        public sealed override IColumnSet BaseColumns
         {
-            get { return _refrencedColumns ?? (_refrencedColumns = Left.ReferencedColumns.Union(Right.ReferencedColumns).Seal()); }
+            get { return _refrencedColumns ?? (_refrencedColumns = Left.BaseColumns.Union(Right.BaseColumns).Seal()); }
         }
     }
 }
