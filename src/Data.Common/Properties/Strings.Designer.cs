@@ -284,19 +284,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Aggregate expression is not supported.
+        /// Aggregate expression is not allowed.
         /// </summary>
-        public static string DbQueryBuilder_VerifySourceColumnAggregateModels
+        public static string DbQueryBuilder_AggregateNotAllowed
         {
-            get { return GetString("DbQueryBuilder_VerifySourceColumnAggregateModels"); }
-        }
-
-        /// <summary>
-        /// The expression contains parent model '{0}' which does not exist in the source queries.
-        /// </summary>
-        public static string DbQueryBuilder_VerifySourceColumnParentModels(object p0)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_VerifySourceColumnParentModels"), p0);
+            get { return GetString("DbQueryBuilder_AggregateNotAllowed"); }
         }
 
         /// <summary>
@@ -860,11 +852,27 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The computation is invalid.
+        /// The column has invalid scalar source model: "{0}".
         /// </summary>
-        public static string Column_InvalidComputation
+        public static string Column_InvalidScalarSourceModel(object p0)
         {
-            get { return GetString("Column_InvalidComputation"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("Column_InvalidScalarSourceModel"), p0);
+        }
+
+        /// <summary>
+        /// The column's ScalarSourceModels is empty.
+        /// </summary>
+        public static string Column_EmptyScalarSourceModels
+        {
+            get { return GetString("Column_EmptyScalarSourceModels"); }
+        }
+
+        /// <summary>
+        /// The column contains invalid aggregate source model: "{0}".
+        /// </summary>
+        public static string Column_InvalidAggregateSourceModel(object p0)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Column_InvalidAggregateSourceModel"), p0);
         }
 
         private static string GetString(string name, params string[] formatterNames)

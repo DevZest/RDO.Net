@@ -887,5 +887,17 @@ namespace DevZest.Data
 
             return result.Seal();
         }
+
+        internal bool IsAncestorOf(Model model)
+        {
+            Debug.Assert(model != null);
+            for (var parentModel = model.ParentModel; parentModel != null;  parentModel = parentModel.ParentModel)
+            {
+
+                if (parentModel == this)
+                    return true;
+            }
+            return false;
+        }
     }
 }

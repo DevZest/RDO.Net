@@ -240,7 +240,7 @@ namespace DevZest.Data
         public DbQueryBuilder Select<T>(T source, T target)
             where T : Column, new()
         {
-            VerifyModelSet(source, nameof(source));
+            VerifySourceColumn(source, nameof(source));
             VerifyTargetColumn(target);
             SelectCore(source, target);
             return this;
@@ -297,32 +297,38 @@ namespace DevZest.Data
         public DbQueryBuilder Where(_Boolean condition)
         {
             Check.NotNull(condition, nameof(condition));
-            VerifyModelSet(condition, nameof(condition));
+            VerifySourceColumn(condition, nameof(condition));
             WhereExpression = And(WhereExpression, EliminateSubQuery(condition.DbExpression));
 
             return this;
         }
 
-        internal void VerifyModelSet(Column column, string exceptionParamName)
+        internal void VerifySourceColumn(Column column, string exceptionParamName)
         {
-            VerifyModelSet(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder));
+            VerifySourceColumn(column, exceptionParamName, this.GetType() == typeof(DbAggregateQueryBuilder));
         }
 
-        internal void VerifyModelSet(Column column, string paramName, bool allowsAggregate)
+        internal void VerifySourceColumn(Column column, string paramName, bool allowsAggregate)
         {
-            VerifySourceModels(column, paramName, _sourceModelSet, allowsAggregate);
+            VerifySourceColumn(column, paramName, _sourceModelSet, allowsAggregate);
         }
 
-        private void VerifySourceModels(Column sourceColumn, string exceptionParamName, IModelSet sourceModels, bool allowsAggregate)
+        private void VerifySourceColumn(Column sourceColumn, string exceptionParamName, IModelSet sourceModelSet, bool allowsAggregate)
         {
-            foreach (var model in sourceColumn.ScalarSourceModels)
+            sourceColumn.VerifyScalarSourceModels(sourceModelSet, exceptionParamName);
+            if (allowsAggregate)
+                VerifyAggregateSourceModels(sourceColumn, exceptionParamName, sourceModelSet);
+            else if (sourceColumn.AggregateSourceModels.Count > 0)
+                throw new ArgumentException(Strings.DbQueryBuilder_AggregateNotAllowed, exceptionParamName);
+        }
+
+        private static void VerifyAggregateSourceModels(Column sourceColumn, string exceptionParamName, IModelSet modelSet)
+        {
+            foreach (var model in sourceColumn.AggregateSourceModels)
             {
-                if (!sourceModels.Contains(model))
-                    throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnParentModels(model), exceptionParamName);
+                if (!modelSet.Contains(model))
+                    throw new ArgumentException(Strings.Column_InvalidAggregateSourceModel(model), exceptionParamName);
             }
-
-            if (!allowsAggregate && sourceColumn.AggregateSourceModels.Count > 0)
-                throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
         }
 
         #endregion
@@ -385,7 +391,7 @@ namespace DevZest.Data
             for (int i = 0; i < orderByList.Length; i++)
             {
                 var orderBy = orderByList[i];
-                VerifyModelSet(orderBy.Column, string.Format("orderByList[{0}]", i));
+                VerifySourceColumn(orderBy.Column, string.Format("orderByList[{0}]", i));
             }
         }
 

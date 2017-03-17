@@ -219,11 +219,8 @@
   <data name="DbQueryBuilder_Join_InvalidRightKey" xml:space="preserve">
     <value>Invalid right key. Its ParentModel must be the same as the provided model parameter.</value>
   </data>
-  <data name="DbQueryBuilder_VerifySourceColumnAggregateModels" xml:space="preserve">
-    <value>Aggregate expression is not supported.</value>
-  </data>
-  <data name="DbQueryBuilder_VerifySourceColumnParentModels" xml:space="preserve">
-    <value>The expression contains parent model '{0}' which does not exist in the source queries.</value>
+  <data name="DbQueryBuilder_AggregateNotAllowed" xml:space="preserve">
+    <value>Aggregate expression is not allowed.</value>
   </data>
   <data name="DbQueryBuilder_VerifyTargetColumn" xml:space="preserve">
     <value>Invalid targetColumn. It must be a column of target model, and cannot be selected already.</value>
@@ -435,7 +432,13 @@
   <data name="Column_ComputationNotAllowedForChildColumn" xml:space="preserve">
     <value>Computation is not allowed for child column.</value>
   </data>
-  <data name="Column_InvalidComputation" xml:space="preserve">
-    <value>The computation is invalid.</value>
+  <data name="Column_InvalidScalarSourceModel" xml:space="preserve">
+    <value>The column has invalid scalar source model: "{0}".</value>
+  </data>
+  <data name="Column_EmptyScalarSourceModels" xml:space="preserve">
+    <value>The column's ScalarSourceModels is empty.</value>
+  </data>
+  <data name="Column_InvalidAggregateSourceModel" xml:space="preserve">
+    <value>The column contains invalid aggregate source model: "{0}".</value>
   </data>
 </root>

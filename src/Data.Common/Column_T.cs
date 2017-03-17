@@ -573,22 +573,24 @@ namespace DevZest.Data
                     return result;
                 result++;
             }
-            throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+            throw new ArgumentException(Strings.Column_InvalidScalarSourceModel(computationModel), nameof(paramName));
         }
 
         void VerifyIsolatedComputation(Column<T> computation, string paramName)
         {
             Debug.Assert(computation.ParentModel == null);
 
-            var expression = computation.GetExpression();
-            if (expression == null)
-                throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+            computation.VerifyScalarSourceModels(ParentModel, paramName);
+            computation.VerifyAggregateSourceModels(ParentModel, paramName);
+        }
 
-            var sourceModels = expression.ScalarSourceModels;
-            if (sourceModels.Count == 0)
-                return;
-            if (sourceModels != ParentModel)
-                throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+        private void VerifyAggregateSourceModels(Model ancestor, string exceptionParamName)
+        {
+            foreach (var model in AggregateSourceModels)
+            {
+                if (!ancestor.IsAncestorOf(model))
+                    throw new ArgumentException(Strings.Column_InvalidAggregateSourceModel(model), exceptionParamName);
+            }
         }
 
         private void SetComputation(Column<T> computation, int ancestorLevel, bool isDbComputed)

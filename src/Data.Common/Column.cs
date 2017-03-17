@@ -519,5 +519,17 @@ namespace DevZest.Data
         }
 
         public abstract int Compare(DataRow x, DataRow y);
+
+        internal void VerifyScalarSourceModels(IModelSet containsBy, string exceptionParamName)
+        {
+            if (ScalarSourceModels.Count == 0 && GetExpression() == null)
+                throw new ArgumentException(Strings.Column_EmptyScalarSourceModels, exceptionParamName);
+
+            foreach (var model in ScalarSourceModels)
+            {
+                if (!containsBy.Contains(model))
+                    throw new ArgumentException(Strings.Column_InvalidScalarSourceModel(model), exceptionParamName);
+            }
+        }
     }
 }

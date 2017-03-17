@@ -116,14 +116,14 @@ namespace DevZest.Data
 
         public DbAggregateQueryBuilder GroupBy(Column column)
         {
-            VerifyModelSet(column, nameof(column), false);
+            VerifySourceColumn(column, nameof(column), false);
             _groupByList.Add(EliminateSubQuery(column.DbExpression));
             return this;
         }
 
         public DbAggregateQueryBuilder Having(_Boolean condition)
         {
-            VerifyModelSet(condition, nameof(condition));
+            VerifySourceColumn(condition, nameof(condition));
             HavingExpression = EliminateSubQuery(condition.DbExpression);
             return this;
         }
