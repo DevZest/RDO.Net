@@ -890,14 +890,23 @@ namespace DevZest.Data
 
         internal bool IsAncestorOf(Model model)
         {
+            var ancestorLevel = AncestorLevelOf(model);
+            return ancestorLevel.HasValue && ancestorLevel.GetValueOrDefault() > 0;
+        }
+
+        internal int? AncestorLevelOf(Model model)
+        {
             Debug.Assert(model != null);
-            for (var parentModel = model.ParentModel; parentModel != null;  parentModel = parentModel.ParentModel)
+            var result = 0;
+            for (; model != null; model = model.ParentModel)
             {
 
-                if (parentModel == this)
-                    return true;
+                if (model == this)
+                    return result;
+                result++;
             }
-            return false;
+            return null;
+
         }
     }
 }

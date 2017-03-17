@@ -562,26 +562,16 @@ namespace DevZest.Data
             var computationModel = computation.ParentModel;
             if (computationModel == null)
             {
-                VerifyIsolatedComputation(computation, paramName);
+                computation.VerifyScalarSourceModels(ParentModel, paramName);
+                computation.VerifyAggregateSourceModels(ParentModel, paramName);
                 return 0;
             }
 
-            int result = 0;
-            for (var model = ParentModel; model != null; model = model.ParentModel)
-            {
-                if (model == computationModel)
-                    return result;
-                result++;
-            }
-            throw new ArgumentException(Strings.Column_InvalidScalarSourceModel(computationModel), nameof(paramName));
-        }
-
-        void VerifyIsolatedComputation(Column<T> computation, string paramName)
-        {
-            Debug.Assert(computation.ParentModel == null);
-
-            computation.VerifyScalarSourceModels(ParentModel, paramName);
-            computation.VerifyAggregateSourceModels(ParentModel, paramName);
+            var ancestorLevel = computationModel.AncestorLevelOf(ParentModel);
+            if (ancestorLevel.HasValue)
+                return ancestorLevel.GetValueOrDefault();
+            else
+                throw new ArgumentException(Strings.Column_InvalidScalarSourceModel(computationModel), nameof(paramName));
         }
 
         private void VerifyAggregateSourceModels(Model ancestor, string exceptionParamName)
