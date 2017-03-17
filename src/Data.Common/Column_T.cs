@@ -557,7 +557,7 @@ namespace DevZest.Data
             SetComputation(computation, 0, isDbComputed);
         }
 
-        int VerifyComputation(Column<T> computation, string paramName)
+        private int VerifyComputation(Column<T> computation, string paramName)
         {
             var computationModel = computation.ParentModel;
             if (computationModel == null)
