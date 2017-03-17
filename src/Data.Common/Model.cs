@@ -906,7 +906,6 @@ namespace DevZest.Data
                 result++;
             }
             return null;
-
         }
     }
 }
