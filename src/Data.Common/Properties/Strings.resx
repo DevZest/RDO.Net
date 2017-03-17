@@ -432,4 +432,10 @@
   <data name="Column_ComputedColumnMustBeMemberOfModel" xml:space="preserve">
     <value>Computed column must be member of column.</value>
   </data>
+  <data name="Column_ComputationNotAllowedForChildColumn" xml:space="preserve">
+    <value>Computation is not allowed for child column.</value>
+  </data>
+  <data name="Column_InvalidComputation" xml:space="preserve">
+    <value>The computation is invalid.</value>
+  </data>
 </root>

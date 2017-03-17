@@ -45,7 +45,7 @@ namespace DevZest.Data.Primitives
             return ColumnSet.Empty;
         }
 
-        protected sealed override IModelSet GetScalarBaseModels()
+        protected sealed override IModelSet GetScalarSourceModels()
         {
             return ModelSet.Empty;
         }

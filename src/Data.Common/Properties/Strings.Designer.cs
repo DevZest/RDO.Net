@@ -851,6 +851,22 @@ namespace DevZest.Data
             get { return GetString("Column_ComputedColumnMustBeMemberOfModel"); }
         }
 
+        /// <summary>
+        /// Computation is not allowed for child column.
+        /// </summary>
+        public static string Column_ComputationNotAllowedForChildColumn
+        {
+            get { return GetString("Column_ComputationNotAllowedForChildColumn"); }
+        }
+
+        /// <summary>
+        /// The computation is invalid.
+        /// </summary>
+        public static string Column_InvalidComputation
+        {
+            get { return GetString("Column_InvalidComputation"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

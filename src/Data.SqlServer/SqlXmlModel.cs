@@ -56,14 +56,14 @@ namespace DevZest.Data.SqlServer
                 get { return FunctionKeys.XmlValue; }
             }
 
-            protected override IModelSet GetScalarBaseModels()
+            protected override IModelSet GetScalarSourceModels()
             {
-                return Parameters[0].ScalarBaseModels;
+                return Parameters[0].ScalarSourceModels;
             }
 
             protected sealed override IModelSet GetAggregateBaseModels()
             {
-                return Parameters[0].AggregateBaseModels;
+                return Parameters[0].AggregateSourceModels;
             }
 
             protected override T this[DataRow dataRow]

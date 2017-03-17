@@ -873,7 +873,7 @@ namespace DevZest.Data
             }
         }
 
-        internal IColumnSet GetAggregateComputerColumns(IModelSet decendentModelSet)
+        internal IColumnSet GetAggregateComputedColumns(IModelSet decendentModelSet)
         {
             if (ComputatedColumns.Count == 0)
                 return ColumnSet.Empty;
@@ -881,7 +881,7 @@ namespace DevZest.Data
             var result = ColumnSet.Empty;
             foreach (var computation in ComputatedColumns)
             {
-                if (computation.AggregateBaseModels.ContainsAny(decendentModelSet))
+                if (computation.GetExpression().AggregateSourceModels.ContainsAny(decendentModelSet))
                     result = result.Add(computation);
             }
 

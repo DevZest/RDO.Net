@@ -15,28 +15,28 @@ namespace DevZest.Data.Primitives
 
         protected abstract IColumnSet GetBaseColumns();
 
-        private IModelSet _scalarBaseModels;
+        private IModelSet _scalarSourceModels;
         /// <summary>
         /// Gets the set of parent models involved in this expression.
         /// </summary>
-        public IModelSet ScalarBaseModels
+        public IModelSet ScalarSourceModels
         {
-            get { return _scalarBaseModels ?? (_scalarBaseModels = GetScalarBaseModels().Seal()); }
+            get { return _scalarSourceModels ?? (_scalarSourceModels = GetScalarSourceModels().Seal()); }
         }
 
         /// <summary>
         /// Gets the set of parent models involved in this expression.
         /// </summary>
         /// <returns>The set of parent models involved in this expression.</returns>
-        protected abstract IModelSet GetScalarBaseModels();
+        protected abstract IModelSet GetScalarSourceModels();
 
-        private IModelSet _aggregateBaseModels;
+        private IModelSet _aggregateSourceModels;
         /// <summary>
         /// Gets the set of aggregated models involved in this expression.
         /// </summary>
-        public IModelSet AggregateBaseModels
+        public IModelSet AggregateSourceModels
         {
-            get { return _aggregateBaseModels ?? (_aggregateBaseModels = GetAggregateBaseModels().Seal()); }
+            get { return _aggregateSourceModels ?? (_aggregateSourceModels = GetAggregateBaseModels().Seal()); }
         }
 
         /// <summary>

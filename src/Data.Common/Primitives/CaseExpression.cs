@@ -119,15 +119,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetScalarBaseModels()
+        protected override IModelSet GetScalarSourceModels()
         {
             var result = ModelSet.Empty;
             for (int i = 0; i < _when.Count; i++)
             {
-                result = result.Union(_when[i].ScalarBaseModels);
-                result = result.Union(_then[i].ScalarBaseModels);
+                result = result.Union(_when[i].ScalarSourceModels);
+                result = result.Union(_then[i].ScalarSourceModels);
             }
-            result = result.Union(_else.ScalarBaseModels);
+            result = result.Union(_else.ScalarSourceModels);
             return result.Seal();
         }
 
@@ -137,10 +137,10 @@ namespace DevZest.Data.Primitives
             var result = ModelSet.Empty;
             for (int i = 0; i < _when.Count; i++)
             {
-                result = result.Union(_when[i].AggregateBaseModels);
-                result = result.Union(_then[i].AggregateBaseModels);
+                result = result.Union(_when[i].AggregateSourceModels);
+                result = result.Union(_then[i].AggregateSourceModels);
             }
-            result = result.Union(_else.AggregateBaseModels);
+            result = result.Union(_else.AggregateSourceModels);
             return result;
         }
 

@@ -66,15 +66,15 @@ namespace DevZest.Data.Primitives
         protected abstract BinaryExpressionKind Kind { get; }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetScalarBaseModels()
+        protected sealed override IModelSet GetScalarSourceModels()
         {
-            return Left.ScalarBaseModels.Union(Right.ScalarBaseModels).Seal();
+            return Left.ScalarSourceModels.Union(Right.ScalarSourceModels).Seal();
         }
 
         /// <inheritdoc/>
         protected sealed override IModelSet GetAggregateBaseModels()
         {
-            return Left.AggregateBaseModels.Union(Right.AggregateBaseModels).Seal();
+            return Left.AggregateSourceModels.Union(Right.AggregateSourceModels).Seal();
         }
 
         /// <inheritdoc/>

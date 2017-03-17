@@ -24,54 +24,6 @@ namespace DevZest.Data
             void ClearRows();
         }
 
-        private sealed class ChildValueManager : IValueManager
-        {
-            public ChildValueManager(DataSet dataSet, Column<T> parentColumn)
-            {
-                Debug.Assert(dataSet != null);
-                Debug.Assert(parentColumn != null);
-                Debug.Assert(dataSet.Model.ParentModel == parentColumn.ParentModel);
-                _dataSet = dataSet;
-                _parentColumn = parentColumn;
-            }
-
-            private DataSet _dataSet;
-            private Column<T> _parentColumn;
-
-            public int RowCount
-            {
-                get { return _dataSet.Count; }
-            }
-
-            public bool ShouldSerialize
-            {
-                get { return false; }
-            }
-
-            public bool IsReadOnly(int ordinal)
-            {
-                return true;
-            }
-
-            public T this[int ordinal]
-            {
-                get { return _parentColumn[_dataSet[ordinal].ParentDataRow.Ordinal]; }
-                set { Debug.Fail("Child column is readonly."); }
-            }
-
-            public void AddRow(DataRow dataRow)
-            {
-            }
-
-            public void RemoveRow(DataRow dataRow)
-            {
-            }
-
-            public void ClearRows()
-            {
-            }
-        }
-
         private sealed class ListValueManager : IValueManager
         {
             public ListValueManager(Column<T> column)
@@ -205,35 +157,38 @@ namespace DevZest.Data
 
         internal sealed override void InitValueManager()
         {
-            var dataSet = ParentModel.DataSet;
-            Debug.Assert(dataSet != null);
-            _valueManager = CreateValueManager(dataSet, this);
+            _valueManager = CreateValueManager();
         }
 
-        private static IValueManager CreateValueManager(DataSet dataSet, Column<T> column)
+        private IValueManager CreateValueManager()
         {
-            var parentColumn = GetParentColumn(column);
+            var parentColumn = ParentColumn;
             if (parentColumn != null)
-                return new ChildValueManager(dataSet, parentColumn);
+                SetComputation(parentColumn, 1, false);
 
-            if (column.IsExpression)
-                return new ExpressionValueManager(dataSet, column.Expression);
+            if (IsExpression)
+                return new ExpressionValueManager(ParentModel.DataSet, Expression);
 
-            return new ListValueManager(column);
+            return new ListValueManager(this);
         }
 
-        private static Column<T> GetParentColumn(Column<T> column)
+        private Column<T> ParentColumn
         {
-            var model = column.ParentModel;
-            var parentMappings = model.ParentMappings;
-            if (parentMappings == null)
-                return null;
-            foreach (var parentMapping in parentMappings)
+            get
             {
-                if (parentMapping.SourceExpression == column.DbExpression)
-                    return (Column<T>)parentMapping.Target;
+                var model = ParentModel;
+                if (model == null)
+                    return null;
+                var parentMappings = model.ParentMappings;
+                if (parentMappings == null)
+                    return null;
+                foreach (var parentMapping in parentMappings)
+                {
+                    if (parentMapping.SourceExpression == DbExpression)
+                        return (Column<T>)parentMapping.Target;
+                }
+                return null;
             }
-            return null;
         }
 
         private IValueManager _valueManager;
@@ -251,6 +206,11 @@ namespace DevZest.Data
         /// <summary>Gets the expression of this column.</summary>
         /// <value>The expression of this column.</value>
         public ColumnExpression<T> Expression { get; internal set; }
+
+        public sealed override ColumnExpression GetExpression()
+        {
+            return Expression;
+        }
 
         public sealed override IColumnSet BaseColumns
         {
@@ -432,15 +392,15 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        public sealed override IModelSet ScalarBaseModels
+        public sealed override IModelSet ScalarSourceModels
         {
-            get { return Expression == null ? ParentModel : Expression.ScalarBaseModels; }
+            get { return IsAbsoluteExpression ? Expression.ScalarSourceModels : ParentModel; }
         }
 
         /// <inheritdoc/>
-        public sealed override IModelSet AggregateBaseModels
+        public sealed override IModelSet AggregateSourceModels
         {
-            get { return Expression == null ? ModelSet.Empty : Expression.AggregateBaseModels; }
+            get { return IsAbsoluteExpression ? Expression.AggregateSourceModels : ModelSet.Empty; }
         }
 
         /// <summary>Creates a column of constant expression.</summary>
@@ -536,37 +496,47 @@ namespace DevZest.Data
                 }
             }
 
-            internal ComputationExpression(Column<T> computation)
+            internal ComputationExpression(Column<T> computation, int ancestorLevel)
             {
                 Debug.Assert(computation != null);
-                Computation = computation;
+                Debug.Assert(ancestorLevel >= 0);
+                _computation = computation;
+                _ancestorLevel = ancestorLevel;
+            }
+
+            private DataRow IfAncestor(DataRow dataRow)
+            {
+                for (int i = 0; i < _ancestorLevel; i++)
+                    dataRow = dataRow.ParentDataRow;
+                return dataRow;
             }
 
             protected internal override T this[DataRow dataRow]
             {
-                get { return Computation[dataRow]; }
+                get { return _computation[IfAncestor(dataRow)]; }
             }
 
-            public Column<T> Computation { get; private set; }
+            private Column<T> _computation;
+            int _ancestorLevel;
 
             public override DbExpression GetDbExpression()
             {
-                return Computation.DbExpression;
+                return _computation.DbExpression;
             }
 
             protected override IModelSet GetAggregateBaseModels()
             {
-                return Computation.AggregateBaseModels;
+                return _computation.AggregateSourceModels;
             }
 
-            protected override IModelSet GetScalarBaseModels()
+            protected override IModelSet GetScalarSourceModels()
             {
-                return Computation.ScalarBaseModels;
+                return _computation.ScalarSourceModels;
             }
 
             protected override IColumnSet GetBaseColumns()
             {
-                return Computation.BaseColumns;
+                return _computation.BaseColumns;
             }
         }
 
@@ -577,11 +547,53 @@ namespace DevZest.Data
             Check.NotNull(computation, nameof(computation));
             if (ParentModel == null)
                 throw new InvalidOperationException(Strings.Column_ComputedColumnMustBeMemberOfModel);
+            if (ParentColumn != null)
+                throw new InvalidOperationException(Strings.Column_ComputationNotAllowedForChildColumn);
             if (Expression != null)
                 throw new InvalidOperationException(Strings.Column_AlreadyComputed);
 
             VerifyDesignMode();
-            new ComputationExpression(computation).SetOwner(this);
+            var ancestorLevel = VerifyComputation(computation, nameof(computation));
+            SetComputation(computation, 0, isDbComputed);
+        }
+
+        int VerifyComputation(Column<T> computation, string paramName)
+        {
+            var computationModel = computation.ParentModel;
+            if (computationModel == null)
+            {
+                VerifyIsolatedComputation(computation, paramName);
+                return 0;
+            }
+
+            int result = 0;
+            for (var model = ParentModel; model != null; model = model.ParentModel)
+            {
+                if (model == computationModel)
+                    return result;
+                result++;
+            }
+            throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+        }
+
+        void VerifyIsolatedComputation(Column<T> computation, string paramName)
+        {
+            Debug.Assert(computation.ParentModel == null);
+
+            var expression = computation.GetExpression();
+            if (expression == null)
+                throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+
+            var sourceModels = expression.ScalarSourceModels;
+            if (sourceModels.Count == 0)
+                return;
+            if (sourceModels != ParentModel)
+                throw new ArgumentException(Strings.Column_InvalidComputation, nameof(paramName));
+        }
+
+        private void SetComputation(Column<T> computation, int ancestorLevel, bool isDbComputed)
+        {
+            new ComputationExpression(computation, ancestorLevel).SetOwner(this);
             _isDbComputed = isDbComputed;
         }
 

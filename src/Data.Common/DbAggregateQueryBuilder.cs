@@ -141,7 +141,7 @@ namespace DevZest.Data
             if (source == null)
                 return;
 
-            if (target.IsSystem || (AutoGroupBy && source.AggregateBaseModels.Count == 0))
+            if (target.IsSystem || (AutoGroupBy && source.AggregateSourceModels.Count == 0))
                 _groupByList.Add(sourceExpression);
         }
 

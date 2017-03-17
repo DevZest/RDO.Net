@@ -237,7 +237,7 @@ namespace DevZest.Data
             if (whereExpr == null)
                 return null;
 
-            var parentModelSet = whereExpr.ScalarBaseModels;
+            var parentModelSet = whereExpr.ScalarSourceModels;
             if (parentModelSet.Count == 0 || (parentModelSet.Count == 1 && parentModelSet.Contains(_)))
                 return whereExpr.DbExpression;
 

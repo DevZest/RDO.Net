@@ -293,7 +293,7 @@ namespace DevZest.Data
 
         private void BubbleUpdatedEvent(IModelSet modelSet)
         {
-            var aggregateComputerColumns = Model.GetAggregateComputerColumns(modelSet);
+            var aggregateComputerColumns = Model.GetAggregateComputedColumns(modelSet);
             if (aggregateComputerColumns.Count > 0)
             {
                 modelSet = modelSet.Union(Model);

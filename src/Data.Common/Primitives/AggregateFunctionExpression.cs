@@ -22,7 +22,7 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetScalarBaseModels()
+        protected sealed override IModelSet GetScalarSourceModels()
         {
             return ModelSet.Empty;
         }
@@ -30,7 +30,7 @@ namespace DevZest.Data.Primitives
         /// <inheritdoc/>
         protected sealed override IModelSet GetAggregateBaseModels()
         {
-            return Param.ScalarBaseModels;
+            return Param.ScalarSourceModels;
         }
 
         /// <summary>Initializes the expression evaluation.</summary>

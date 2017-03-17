@@ -76,11 +76,11 @@ namespace DevZest.Data
         {
             Check.NotNull(sourceColumn, nameof(sourceColumn));
 
-            var parentModelSet = sourceColumn.ScalarBaseModels;
-            foreach (var parentModel in parentModelSet)
+            var sourceModels = sourceColumn.ScalarSourceModels;
+            foreach (var model in sourceModels)
             {
-                if (parentModel != _sourceModel)
-                    throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidSourceParentModelSet(parentModel), nameof(sourceColumn));
+                if (model != _sourceModel)
+                    throw new ArgumentException(Strings.ColumnMappingsBuilder_InvalidSourceParentModelSet(model), nameof(sourceColumn));
             }
         }
     }

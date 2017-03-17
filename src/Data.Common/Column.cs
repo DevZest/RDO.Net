@@ -132,6 +132,8 @@ namespace DevZest.Data
         /// <summary>Gets the <see cref="DbExpression"/> of this column for SQL generation.</summary>
         public abstract DbExpression DbExpression { get; }
 
+        public abstract ColumnExpression GetExpression();
+
         public abstract DbExpression DbComputedExpression { get; }
 
         public abstract IColumnSet BaseColumns { get; }
@@ -152,10 +154,10 @@ namespace DevZest.Data
         }
 
         /// <summary>Gets the set of <see cref="Model"/> objects directly combined this <see cref="Column"/>.</summary>
-        public abstract IModelSet ScalarBaseModels { get; }
+        public abstract IModelSet ScalarSourceModels { get; }
 
         /// <summary>Gets the set of parent <see cref="Model"/> objects aggregated to this <see cref="Column"/>.</summary>
-        public abstract IModelSet AggregateBaseModels { get; }
+        public abstract IModelSet AggregateSourceModels { get; }
 
         /// <summary>Verifies whether this column belongs to provided <see cref="DbReader"/>.</summary>
         /// <param name="reader">The <see cref="DbReader"/> object to be verified.</param>
@@ -223,18 +225,6 @@ namespace DevZest.Data
         public Identity GetIdentity(bool isTempTable)
         {
             return (Identity)GetInterceptor(isTempTable ? Identity.FULL_NAME_TEMP_TABLE : Identity.FULL_NAME_TABLE);
-        }
-
-        internal void VerifyModelSet(string exceptionParamName, IModelSet sourceModels, bool allowsAggregate)
-        {
-            foreach (var parentModel in ScalarBaseModels)
-            {
-                if (!sourceModels.Contains(parentModel))
-                    throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnParentModels(parentModel), exceptionParamName);
-            }
-
-            if (!allowsAggregate && AggregateBaseModels.Count > 0)
-                throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
         }
 
         /// <summary>Gets this column as asending sorted.</summary>

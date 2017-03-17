@@ -310,7 +310,19 @@ namespace DevZest.Data
 
         internal void VerifyModelSet(Column column, string paramName, bool allowsAggregate)
         {
-            column.VerifyModelSet(paramName, _sourceModelSet, allowsAggregate);
+            VerifySourceModels(column, paramName, _sourceModelSet, allowsAggregate);
+        }
+
+        private void VerifySourceModels(Column sourceColumn, string exceptionParamName, IModelSet sourceModels, bool allowsAggregate)
+        {
+            foreach (var model in sourceColumn.ScalarSourceModels)
+            {
+                if (!sourceModels.Contains(model))
+                    throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnParentModels(model), exceptionParamName);
+            }
+
+            if (!allowsAggregate && sourceColumn.AggregateSourceModels.Count > 0)
+                throw new ArgumentException(Strings.DbQueryBuilder_VerifySourceColumnAggregateModels, exceptionParamName);
         }
 
         #endregion
