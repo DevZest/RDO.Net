@@ -430,7 +430,7 @@
     <value>Computed column must be member of column.</value>
   </data>
   <data name="Column_ComputationNotAllowedForChildColumn" xml:space="preserve">
-    <value>Computation is not allowed for child column.</value>
+    <value>Computation is not allowed for child column {columnName}.</value>
   </data>
   <data name="Column_InvalidScalarSourceModel" xml:space="preserve">
     <value>The column has invalid scalar source model: "{0}".</value>

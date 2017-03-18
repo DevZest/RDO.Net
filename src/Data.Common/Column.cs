@@ -531,5 +531,7 @@ namespace DevZest.Data
                     throw new ArgumentException(Strings.Column_InvalidScalarSourceModel(model), exceptionParamName);
             }
         }
+
+        internal abstract void InitAsChild(Column parentColumn);
     }
 }

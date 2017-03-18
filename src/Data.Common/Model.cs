@@ -235,6 +235,17 @@ namespace DevZest.Data
             Debug.Assert(parentRelationship != null);
             ParentRelationship = parentRelationship;
             ParentMappings = parentMappings;
+            InitChildColumns();
+        }
+
+        private void InitChildColumns()
+        {
+            var parentMappings = ParentMappings;
+            for (int i = 0; i < parentMappings.Count; i++)
+            {
+                var mapping = parentMappings[i];
+                mapping.Source.InitAsChild(mapping.Target);
+            }
         }
 
         /// <summary>

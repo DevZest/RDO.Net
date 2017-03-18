@@ -844,11 +844,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Computation is not allowed for child column.
+        /// Computation is not allowed for child column {columnName}.
         /// </summary>
-        public static string Column_ComputationNotAllowedForChildColumn
+        public static string Column_ComputationNotAllowedForChildColumn(object columnName)
         {
-            get { return GetString("Column_ComputationNotAllowedForChildColumn"); }
+            return string.Format(CultureInfo.CurrentCulture, GetString("Column_ComputationNotAllowedForChildColumn", "columnName"), columnName);
         }
 
         /// <summary>

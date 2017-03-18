@@ -161,33 +161,17 @@ namespace DevZest.Data
 
         private IValueManager CreateValueManager()
         {
-            var parentColumn = ParentColumn;
-            if (parentColumn != null)
-                SetComputation(parentColumn, 1, false);
-
             if (IsExpression)
                 return new ExpressionValueManager(ParentModel.DataSet, Expression);
 
             return new ListValueManager(this);
         }
 
-        private Column<T> ParentColumn
+        internal sealed override void InitAsChild(Column parentColumn)
         {
-            get
-            {
-                var model = ParentModel;
-                if (model == null)
-                    return null;
-                var parentMappings = model.ParentMappings;
-                if (parentMappings == null)
-                    return null;
-                foreach (var parentMapping in parentMappings)
-                {
-                    if (parentMapping.SourceExpression == DbExpression)
-                        return (Column<T>)parentMapping.Target;
-                }
-                return null;
-            }
+            if (IsExpression)
+                throw new InvalidOperationException(Strings.Column_ComputationNotAllowedForChildColumn(this.Name));
+            SetComputation((Column<T>)parentColumn, 1, false);
         }
 
         private IValueManager _valueManager;
@@ -546,8 +530,6 @@ namespace DevZest.Data
             Check.NotNull(computation, nameof(computation));
             if (ParentModel == null)
                 throw new InvalidOperationException(Strings.Column_ComputedColumnMustBeMemberOfModel);
-            if (ParentColumn != null)
-                throw new InvalidOperationException(Strings.Column_ComputationNotAllowedForChildColumn);
             if (Expression != null)
                 throw new InvalidOperationException(Strings.Column_AlreadyComputed);
 
