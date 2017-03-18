@@ -271,9 +271,16 @@ namespace DevZest.Data
             base.ConstructModelMember(parentModel, ownerType, name);
             ParentModel.ChildModels.Add(this);
             Depth = ParentModel.Depth + 1;
+            _rootModel = ParentModel.RootModel;
         }
 
         internal int Depth { get; private set; }
+
+        private Model _rootModel;
+        internal Model RootModel
+        {
+            get { return _rootModel ?? this; }
+        }
 
         /// <summary>
         /// Gets a value indicates whether child models are initialized.
