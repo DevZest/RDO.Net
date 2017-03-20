@@ -624,7 +624,7 @@ namespace DevZest.Windows.Data.Primitives
             var newIndex = GetIndex(row, oldIndex);
             if (oldIndex == newIndex)
             {
-                OnRowUpdated(row);
+                FireOnRowUpdated(row);
                 return;
             }
 
@@ -682,6 +682,23 @@ namespace DevZest.Windows.Data.Primitives
 
         protected virtual void OnRowMoved(RowPresenter row, int oldIndex, int newIndex)
         {
+        }
+
+        private DataPresenter DataPresenter
+        {
+            get { return Template.DataPresenter; }
+        }
+
+        private bool _isOnRowUpdated;
+
+        protected void FireOnRowUpdated(RowPresenter row)
+        {
+            if (_isOnRowUpdated)
+                return;
+            OnRowUpdated(row);
+            if (DataPresenter != null)
+                DataPresenter.OnRowUpdated(row);
+            _isOnRowUpdated = false;
         }
 
         protected virtual void OnRowUpdated(RowPresenter row)

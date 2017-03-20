@@ -174,6 +174,8 @@ namespace DevZest.Windows.Data.Primitives
             {
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
+                if (rowManager.Template.ExtenderDataSet != null)
+                    rowManager.CurrentRow.ExtenderDataRow = rowManager.Template.ExtenderDataSet.BeginAdd();
             }
 
             protected sealed override void CancelEdit(RowManager rowManager)
@@ -181,12 +183,23 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = null;
                 GetDataSet(rowManager).CancelAdd();
+                if (rowManager.Template.ExtenderDataSet != null)
+                {
+                    rowManager.CurrentRow.ExtenderDataRow = null;
+                    rowManager.Template.ExtenderDataSet.CancelAdd();
+                }
             }
 
             protected sealed override void EndEdit(RowManager rowManager)
             {
                 rowManager.CurrentRow.DataRow = null;
-                GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
+                var dataRow = GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
+                if  (rowManager.Template.ExtenderDataSet != null)
+                {
+                    rowManager.CurrentRow.ExtenderDataRow = null;
+                    var extenderDataRow = rowManager.Template.ExtenderDataSet.EndAdd();
+                    dataRow.SetExtenderDataRow(extenderDataRow);
+                }
             }
 
             public override void OnRowsChanged(RowManager rowManager)
@@ -239,7 +252,29 @@ namespace DevZest.Windows.Data.Primitives
                 _currentRow = Rows[0];
                 InitInitialSelection();
             }
+            WireExtenderDataSetChangedEvents();
         }
+
+        private void WireExtenderDataSetChangedEvents()
+        {
+            var extenderDataSet = Template.ExtenderDataSet;
+            if (extenderDataSet != null)
+                extenderDataSet.RowUpdated += OnExtenderDataSetUpdated;
+        }
+
+        private void OnExtenderDataSetUpdated(object sender, DataRow e)
+        {
+            FireOnRowUpdated(GetRowPresenterOfExtenderDataRow(e));
+        }
+
+        private RowPresenter GetRowPresenterOfExtenderDataRow(DataRow dataRow)
+        {
+            Debug.Assert(Template.ExtenderDataSet != null);
+            if (dataRow == Template.ExtenderDataSet.AddingRow)
+                return CurrentRow;
+            return dataRow.GetRowPresenter();
+        }
+
 
         public RowPresenter VirtualRow { get; private set; }
 

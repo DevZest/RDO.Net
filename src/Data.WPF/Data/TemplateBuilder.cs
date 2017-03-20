@@ -300,5 +300,10 @@ namespace DevZest.Windows.Data
             Template.AddGridLine(gridLine);
             return this;
         }
+
+        public Column<T> AddExtenderColumn<T>()
+        {
+            return Template.AddExtenderColumn<T>();
+        }
     }
 }

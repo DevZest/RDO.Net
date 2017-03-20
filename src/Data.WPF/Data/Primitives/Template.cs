@@ -1,4 +1,5 @@
-﻿using DevZest.Windows.Controls;
+﻿using DevZest.Data;
+using DevZest.Windows.Controls;
 using DevZest.Windows.Controls.Primitives;
 using System;
 using System.Collections.Generic;
@@ -531,6 +532,53 @@ namespace DevZest.Windows.Data.Primitives
                     _blockPresenter = new BlockPresenter();
                 return _blockPresenter;
             }
+        }
+
+        private sealed class ExtenderColumn<T> : Column<T>
+        {
+            public override bool AreEqual(T x, T y)
+            {
+                return Comparer<T>.Default.Compare(x, y) == 0;
+            }
+
+            public override _String CastToString()
+            {
+                throw new NotSupportedException();
+            }
+
+            protected override Column<T> CreateConst(T value)
+            {
+                throw new NotSupportedException();
+            }
+
+            protected override Column<T> CreateParam(T value)
+            {
+                throw new NotSupportedException();
+            }
+
+            protected override T DeserializeValue(JsonValue value)
+            {
+                throw new NotSupportedException();
+            }
+
+            protected override bool IsNull(T value)
+            {
+                throw new NotSupportedException();
+            }
+
+            protected override JsonValue SerializeValue(T value)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        internal DataSet<Adhoc> ExtenderDataSet { get; private set; }
+
+        internal Column<T> AddExtenderColumn<T>()
+        {
+            if (ExtenderDataSet == null)
+                ExtenderDataSet = DataSet<Adhoc>.New();
+            return ExtenderDataSet._.AddColumn<ExtenderColumn<T>>();
         }
     }
 }

@@ -231,5 +231,9 @@ namespace DevZest.Windows.Data
         {
             get { yield break; }
         }
+
+        protected internal virtual void OnRowUpdated(RowPresenter rowPresenter)
+        {
+        }
     }
 }
