@@ -22,7 +22,7 @@ namespace DevZest.Data.Helpers
 
             protected override void OnChildModelsInitialized()
             {
-                ChildCount.ComputedAs(Child.Id.CountRows());
+                ChildCount.ComputedAs(Child.Id.CountRows(), false);
             }
 
             public _Int32 InheritedValue { get; private set; }

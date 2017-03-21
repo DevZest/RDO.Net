@@ -315,6 +315,7 @@ namespace DevZest.Data
                     invoker(model);
                 }
                 OnChildModelsInitialized();
+                RootModel.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }

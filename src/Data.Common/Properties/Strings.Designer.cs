@@ -875,6 +875,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("Column_InvalidAggregateSourceModel"), p0);
         }
 
+        /// <summary>
+        /// Circular computation detected for column {columnName}.
+        /// </summary>
+        public static string Model_CircularComputation(object columnName)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Model_CircularComputation", "columnName"), columnName);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

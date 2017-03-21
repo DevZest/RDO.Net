@@ -21,6 +21,9 @@ namespace DevZest.Data
             void AddRow(DataRow dataRow);
             void RemoveRow(DataRow dataRow);
             void ClearRows();
+            void EnsureConcrete();
+            T GetComputationValue(DataRow dataRow);
+            void RefreshComputationValue(DataRow dataRow, T value);
         }
 
         private sealed class ListValueManager : IValueManager
@@ -98,24 +101,40 @@ namespace DevZest.Data
             {
                 _values.Clear();
             }
+
+            public void EnsureConcrete()
+            {
+            }
+
+            public T GetComputationValue(DataRow dataRow)
+            {
+                return this[dataRow.Ordinal];
+            }
+
+            public void RefreshComputationValue(DataRow dataRow, T value)
+            {
+            }
         }
 
         private sealed class ExpressionValueManager : IValueManager
         {
-            public ExpressionValueManager(DataSet dataSet, ColumnExpression<T> expression)
+            public ExpressionValueManager(DataSet dataSet, ColumnExpression<T> expression, bool cacheValues)
             {
                 Debug.Assert(dataSet != null);
                 Debug.Assert(expression != null);
                 _dataSet = dataSet;
                 _expression = expression;
+                if (cacheValues)
+                    EnsureConcrete();
             }
 
             private DataSet _dataSet;
             private ColumnExpression<T> _expression;
+            private List<T> _cachedValues;
 
             public T this[int ordinal]
             {
-                get { return _expression[_dataSet[ordinal]]; }
+                get { return _cachedValues != null ? _cachedValues[ordinal] : GetComputationValue(_dataSet[ordinal]); }
                 set { Debug.Fail("Computed column is read only."); }
             }
 
@@ -131,10 +150,14 @@ namespace DevZest.Data
 
             public void AddRow(DataRow dataRow)
             {
+                if (_cachedValues != null)
+                    _cachedValues.Insert(dataRow.Ordinal, GetComputationValue(dataRow));
             }
 
             public void ClearRows()
             {
+                if (_cachedValues != null)
+                    _cachedValues.Clear();
             }
 
             public bool IsReadOnly(int ordinal)
@@ -144,6 +167,30 @@ namespace DevZest.Data
 
             public void RemoveRow(DataRow dataRow)
             {
+                if (_cachedValues != null)
+                    _cachedValues.RemoveAt(dataRow.Ordinal);
+            }
+
+            public void EnsureConcrete()
+            {
+                if (_cachedValues == null)
+                {
+                    var cachedValues = new List<T>();
+                    for (int i = 0; i < _dataSet.Count; i++)
+                        cachedValues.Add(this[i]);
+                    _cachedValues = cachedValues;
+                }
+            }
+
+            public T GetComputationValue(DataRow dataRow)
+            {
+                return _expression[dataRow];
+            }
+
+            public void RefreshComputationValue(DataRow dataRow, T value)
+            {
+                if (_cachedValues != null)
+                    _cachedValues[dataRow.Ordinal] = value;
             }
         }
 
@@ -162,7 +209,7 @@ namespace DevZest.Data
         private IValueManager CreateValueManager()
         {
             if (IsExpression)
-                return new ExpressionValueManager(ParentModel.DataSet, Expression);
+                return new ExpressionValueManager(ParentModel.DataSet, Expression, _isConcrete);
 
             return new ListValueManager(this);
         }
@@ -171,7 +218,7 @@ namespace DevZest.Data
         {
             if (IsExpression)
                 throw new InvalidOperationException(Strings.Column_ComputationNotAllowedForChildColumn(this.Name));
-            SetComputation((Column<T>)parentColumn, 1, false);
+            SetComputation((Column<T>)parentColumn, 1, false, false);
         }
 
         private IValueManager _valueManager;
@@ -525,7 +572,7 @@ namespace DevZest.Data
 
         /// <summary>Defines the computation expression for this column.</summary>
         /// <param name="computation">The computation expression.</param>
-        public void ComputedAs(Column<T> computation, bool isDbComputed = true)
+        public void ComputedAs(Column<T> computation, bool isConcrete = true, bool isDbComputed = true)
         {
             Check.NotNull(computation, nameof(computation));
             if (ParentModel == null)
@@ -535,7 +582,7 @@ namespace DevZest.Data
 
             VerifyDesignMode();
             var ancestorLevel = VerifyComputation(computation, nameof(computation));
-            SetComputation(computation, 0, isDbComputed);
+            SetComputation(computation, 0, isConcrete, isDbComputed);
         }
 
         private int VerifyComputation(Column<T> computation, string paramName)
@@ -564,10 +611,36 @@ namespace DevZest.Data
             }
         }
 
-        private void SetComputation(Column<T> computation, int ancestorLevel, bool isDbComputed)
+        private void SetComputation(Column<T> computation, int ancestorLevel, bool isConcrete, bool isDbComputed)
         {
             new ComputationExpression(computation, ancestorLevel).SetOwner(this);
+            _isConcrete = isConcrete;
             _isDbComputed = isDbComputed;
+        }
+
+        private bool _isConcrete;
+        public sealed override bool IsConcrete
+        {
+            get { return _isConcrete; }
+        }
+
+        internal sealed override void EnsureConcrete()
+        {
+            if (!_isConcrete)
+            {
+                _isConcrete = true;
+                if (_valueManager != null)
+                    _valueManager.EnsureConcrete();
+            }
+        }
+
+        internal sealed override bool RefreshComputation(DataRow dataRow)
+        {
+            Debug.Assert(IsExpression);
+            var computationValue = _valueManager.GetComputationValue(dataRow);
+            var areEqual = AreEqual(this[dataRow], computationValue);
+            _valueManager.RefreshComputationValue(dataRow, computationValue);
+            return !areEqual;
         }
 
         private bool _isDbComputed;

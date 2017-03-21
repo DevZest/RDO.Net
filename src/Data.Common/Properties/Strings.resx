@@ -441,4 +441,7 @@
   <data name="Column_InvalidAggregateSourceModel" xml:space="preserve">
     <value>The column contains invalid aggregate source model: "{0}".</value>
   </data>
+  <data name="Model_CircularComputation" xml:space="preserve">
+    <value>Circular computation detected for column {columnName}.</value>
+  </data>
 </root>

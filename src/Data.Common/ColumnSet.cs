@@ -129,14 +129,17 @@ namespace DevZest.Data
                 if (!Contains(value))
                     return this;
 
+                if (Count == 1)
+                    return Empty;
+
+                if (Count == 2)
+                    return _hashSet.Single(x => x != value);
+
                 if (!IsSealed)
                 {
                     _hashSet.Remove(value);
                     return this;
                 }
-
-                if (Count == 1)
-                    return Empty;
 
                 var result = new HashSetColumnSet();
                 foreach (var element in this)

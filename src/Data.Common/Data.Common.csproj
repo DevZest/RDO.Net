@@ -65,6 +65,7 @@
     <Compile Include="AbstractValidationMessageGroup.cs" />
     <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
+    <Compile Include="Model.ComputationManager.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />

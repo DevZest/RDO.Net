@@ -533,5 +533,11 @@ namespace DevZest.Data
         }
 
         internal abstract void InitAsChild(Column parentColumn);
+
+        public abstract bool IsConcrete { get; }
+
+        internal abstract void EnsureConcrete();
+
+        internal abstract bool RefreshComputation(DataRow dataRow);
     }
 }
