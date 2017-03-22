@@ -3,9 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Text;
 
 namespace DevZest.Data
 {
@@ -50,34 +48,6 @@ namespace DevZest.Data
 
         /// <inheritdoc cref="ICollection{T}.IsReadOnly"/>
         public abstract bool IsReadOnly { get; }
-
-        public event EventHandler<DataRow> RowAdded;
-
-        internal void OnRowAdded(DataRow e)
-        {
-            var rowAdded = RowAdded;
-            if (rowAdded != null)
-                rowAdded(this, e);
-        }
-
-        public event EventHandler<DataRowRemovedEventArgs> RowRemoved;
-
-        internal void OnRowRemoved(DataRowRemovedEventArgs e)
-        {
-            var rowRemoved = RowRemoved;
-            if (rowRemoved != null)
-                rowRemoved(this, e);
-        }
-
-        public event EventHandler<DataRow> RowUpdated;
-
-        internal void OnRowUpdated(DataRow e)
-        {
-            UpdateRevision();
-            var rowUpdated = RowUpdated;
-            if (rowUpdated != null)
-                rowUpdated(this, e);
-        }
 
         /// <summary>Gets or sets the <see cref="DataRow"/> at specified index.</summary>
         /// <param name="index">The zero-based index of the <see cref="DataRow"/> to get or set.</param>
@@ -124,17 +94,17 @@ namespace DevZest.Data
 
             if (updateAction != null)
             {
-                dataRow.SuspendUpdate();
+                dataRow.SuspendUpdated();
                 try
                 {
                     updateAction(dataRow);
                 }
                 finally
                 {
-                    dataRow.ResumeUpdate(true);
+                    dataRow.ResumeUpdated(true);
                 }
             }
-            dataRow.OnAdded();
+            Model.HandlesDataRowAdded(dataRow);
         }
 
         internal void InternalInsert(int index, DataRow dataRow)
@@ -164,9 +134,11 @@ namespace DevZest.Data
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             var dataRow = this[index];
-            var e = new DataRowRemovedEventArgs(dataRow);
+            var baseDataSet = dataRow.BaseDataSet;
+            var ordinal = dataRow.Ordinal;
+            var dataSet = dataRow.DataSet;
             InternalRemoveAt(index);
-            dataRow.OnRemoved(e);
+            Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
         }
 
         internal void InternalRemoveAt(int index)

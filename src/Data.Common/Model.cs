@@ -319,6 +319,10 @@ namespace DevZest.Data
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
+
+            var childModelsInitialized = ChildModelsInitialized;
+            if (childModelsInitialized != null)
+                childModelsInitialized(this);
         }
 
         protected virtual void OnChildModelsInitialized()
@@ -840,11 +844,11 @@ namespace DevZest.Data
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
 
-            dataRow.SuspendUpdate();
+            dataRow.SuspendUpdated();
             foreach (var column in Columns)
                 column.EndEdit(dataRow);
             EditingRow = null;
-            dataRow.ResumeUpdate();
+            dataRow.ResumeUpdated();
         }
 
         internal void CancelEdit()
@@ -872,33 +876,33 @@ namespace DevZest.Data
             return result;
         }
 
-        private IColumnSet _computatedColumns;
-        private IColumnSet ComputatedColumns
+        private IColumnSet _computationColumns;
+        private IColumnSet ComputationColumns
         {
             get
             {
-                if (_computatedColumns == null)
+                if (_computationColumns == null)
                 {
-                    _computatedColumns = ColumnSet.Empty;
+                    _computationColumns = ColumnSet.Empty;
                     for (int i = 0; i < Columns.Count; i++)
                     {
                         var column = Columns[i];
                         if (column.IsExpression)
-                            _computatedColumns = _computatedColumns.Add(column);
+                            _computationColumns = _computationColumns.Add(column);
                     }
-                    _computatedColumns.Seal();
+                    _computationColumns.Seal();
                 }
-                return _computatedColumns;
+                return _computationColumns;
             }
         }
 
         internal IColumnSet GetAggregateComputedColumns(IModelSet decendentModelSet)
         {
-            if (ComputatedColumns.Count == 0)
+            if (ComputationColumns.Count == 0)
                 return ColumnSet.Empty;
 
             var result = ColumnSet.Empty;
-            foreach (var computation in ComputatedColumns)
+            foreach (var computation in ComputationColumns)
             {
                 if (computation.GetExpression().AggregateSourceModels.ContainsAny(decendentModelSet))
                     result = result.Add(computation);
@@ -925,6 +929,102 @@ namespace DevZest.Data
                 result++;
             }
             return null;
+        }
+
+        private IReadOnlyDictionary<Model, IColumnSet> _aggregateAffectedColumns;
+        private IReadOnlyDictionary<Model, IColumnSet> AggregateAffectedColumns
+        {
+            get { return _aggregateAffectedColumns ?? (_aggregateAffectedColumns = GetAggregateAffectedColumns()); }
+        }
+
+        public event ChildModelsInitialized ChildModelsInitialized;
+        public event DataRowAddedEventHandler DataRowAdded;
+        public event DataRowRemovedEventHandler DataRowRemoved;
+        public event DataRowUpdatedEventHandler DataRowUpdated;
+
+        protected virtual void OnDataRowAdded(DataRow dataRow)
+        {
+        }
+
+        internal void HandlesDataRowAdded(DataRow dataRow)
+        {
+            dataRow.SuspendUpdated();
+            var computationColumns = ComputationColumns;
+            if (computationColumns.Count > 0)
+            {
+                foreach (var computationColumn in computationColumns)
+                    computationColumn.RefreshComputation(dataRow);
+            }
+            try
+            {
+                OnDataRowAdded(dataRow);
+            }
+            finally
+            {
+                dataRow.ResumeUpdated(false);
+            }
+            var dataRowAdded = DataRowAdded;
+            if (dataRowAdded != null)
+                dataRowAdded(dataRow);
+
+            RefreshAggregateAffectedColumns(dataRow, false);
+        }
+
+        private void RefreshAggregateAffectedColumns(DataRow dataRow, bool isParent)
+        {
+            var aggregateAffectedColumns = AggregateAffectedColumns;
+            if (aggregateAffectedColumns.Count == 0)
+                return;
+
+            foreach (var keyValuePair in aggregateAffectedColumns)
+            {
+                var aggregateModel = keyValuePair.Key;
+                var aggregateColumns = keyValuePair.Value;
+                var ancestorLevel = Depth - aggregateModel.Depth;
+                if (isParent)
+                    ancestorLevel--;
+                var aggregateDataRow = dataRow.AncestorOf(ancestorLevel);
+                aggregateDataRow.RefreshComputations(aggregateColumns);
+            }
+        }
+
+        protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
+        }
+
+        internal void HandlesDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
+            if (EditingRow == dataRow)
+                CancelEdit();
+
+            OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+
+            var dataRowRemoved = DataRowRemoved;
+            if (dataRowRemoved != null)
+                dataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+
+            var parentDataRow = dataSet.ParentDataRow;
+            if (parentDataRow != null)
+                RefreshAggregateAffectedColumns(parentDataRow, true);
+        }
+
+        protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        {
+        }
+
+        internal void HandlesDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        {
+            OnDataRowUpdated(dataRow, updatedColumns);
+            var affectedColumns = GetAffectedColumns(updatedColumns);
+            if (affectedColumns.Count > 0)
+                dataRow.RefreshComputations(affectedColumns);
+        }
+
+        internal void FireDataRowUpdatedEvent(DataRow dataRow, IColumnSet updatedColumns)
+        {
+            var dataRowUpdated = DataRowUpdated;
+            if (dataRowUpdated != null)
+                dataRowUpdated(dataRow, updatedColumns);
         }
     }
 }

@@ -315,17 +315,17 @@ namespace DevZest.Data
             var child = dataSet._.Child;
             var childDataSet = dataSet[0][child];
             int childUpdated = 0;
-            childDataSet.RowUpdated += (sender, e) => { childUpdated++; };
+            childDataSet.Model.DataRowUpdated += (dataRow, columns) => { childUpdated++; };
 
             var grandChild = child.Child;
             var grandChildSet = childDataSet[0][grandChild];
             int grandChildUpdated = 0;
-            grandChildSet.RowUpdated += (sender, e) => { grandChildUpdated++; };
+            grandChildSet.Model.DataRowUpdated += (dataRow, columns) => { grandChildUpdated++; };
 
             dataSet._.InheritedValue[0] = 5;
 
             Assert.AreEqual(3, childUpdated);
-            Assert.AreEqual(3, grandChildUpdated);
+            Assert.AreEqual(9, grandChildUpdated);
         }
 
         [TestMethod]
@@ -337,21 +337,21 @@ namespace DevZest.Data
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
 
             int rowUpdated = 0;
-            dataSet.RowUpdated += (sender, e) => { rowUpdated++; };
+            dataSet.Model.DataRowUpdated += (dataRow, columns) => { rowUpdated++; };
 
             var child = dataSet._.Child;
 
             var grandChild = child.Child;
             var childDataSet = dataSet[0][child];
             int childRowUpdated = 0;
-            childDataSet.RowUpdated += (sender, e) => { childRowUpdated++; };
+            childDataSet.Model.DataRowUpdated += (dataRow, columns) => { childRowUpdated++; };
             var grandChildSet = childDataSet[0][grandChild];
 
             grandChildSet.RemoveAt(0);
             Assert.AreEqual(2, child.ChildCount[0]);
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
             Assert.AreEqual(1, childRowUpdated);
-            Assert.AreEqual(1, rowUpdated);
+            Assert.AreEqual(0, rowUpdated);
         }
 
         [TestMethod]

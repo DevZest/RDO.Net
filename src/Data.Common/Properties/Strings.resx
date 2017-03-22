@@ -444,4 +444,7 @@
   <data name="Model_CircularComputation" xml:space="preserve">
     <value>Circular computation detected for column {columnName}.</value>
   </data>
+  <data name="DataRow_UpdateInDataRowChangedEventNotAllowed" xml:space="preserve">
+    <value>Update in DataRowChanged event handler is not allowed.</value>
+  </data>
 </root>

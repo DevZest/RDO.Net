@@ -151,7 +151,7 @@ namespace DevZest.Data
             public void AddRow(DataRow dataRow)
             {
                 if (_cachedValues != null)
-                    _cachedValues.Insert(dataRow.Ordinal, GetComputationValue(dataRow));
+                    _cachedValues.Insert(dataRow.Ordinal, default(T));
             }
 
             public void ClearRows()
@@ -294,7 +294,7 @@ namespace DevZest.Data
             bool areEqual = AreEqual(ValueManager[ordinal], value);
             ValueManager[ordinal] = value;
             if (!areEqual)
-                OnValueChanged(dataRow);
+                dataRow.OnUpdated(this);
         }
 
         private void VerifyDataRow(DataRow dataRow, string paramName)
@@ -536,9 +536,7 @@ namespace DevZest.Data
 
             private DataRow IfAncestor(DataRow dataRow)
             {
-                for (int i = 0; i < _ancestorLevel; i++)
-                    dataRow = dataRow.ParentDataRow;
-                return dataRow;
+                return dataRow.AncestorOf(_ancestorLevel);
             }
 
             protected internal override T this[DataRow dataRow]
@@ -582,7 +580,7 @@ namespace DevZest.Data
 
             VerifyDesignMode();
             var ancestorLevel = VerifyComputation(computation, nameof(computation));
-            SetComputation(computation, 0, isConcrete, isDbComputed);
+            SetComputation(computation, ancestorLevel, isConcrete, isDbComputed);
         }
 
         private int VerifyComputation(Column<T> computation, string paramName)
@@ -637,6 +635,9 @@ namespace DevZest.Data
         internal sealed override bool RefreshComputation(DataRow dataRow)
         {
             Debug.Assert(IsExpression);
+            if (!IsConcrete)
+                return true;
+
             var computationValue = _valueManager.GetComputationValue(dataRow);
             var areEqual = AreEqual(this[dataRow], computationValue);
             _valueManager.RefreshComputationValue(dataRow, computationValue);

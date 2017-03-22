@@ -358,46 +358,6 @@ namespace DevZest.Data
 
         #endregion
 
-        internal void OnValueChanged(DataRow dataRow)
-        {
-            Debug.Assert(ParentModel == dataRow.Model);
-
-            var modelSet = OnChildValueChanged(dataRow, ModelSet.Empty);
-            dataRow.Update(x => x.OnUpdated(modelSet.Union(ParentModel)));
-        }
-
-        private IModelSet OnChildValueChanged(DataRow dataRow, IModelSet modelSet)
-        {
-            var result = modelSet;
-            foreach (var childModel in ParentModel.ChildModels)
-            {
-                var childColumn = GetChildColumn(childModel);
-                if (childColumn == null)
-                    continue;
-
-                var childDataSet = dataRow[childModel];
-                foreach (var childRow in childDataSet)
-                {
-                    result = childColumn.OnChildValueChanged(childRow, result);
-                    childRow.OnValueChanged();
-                }
-                result = result.Union(childModel);
-            }
-
-            return result;
-        }
-
-        private Column GetChildColumn(Model childModel)
-        {
-            foreach (var parentMapping in childModel.ParentMappings)
-            {
-                if (parentMapping.TargetExpression == DbExpression)
-                    return parentMapping.Source;
-            }
-
-            return null;
-        }
-
         internal abstract void BeginEdit(DataRow dataRow);
 
         internal abstract void EndEdit(DataRow dataRow);

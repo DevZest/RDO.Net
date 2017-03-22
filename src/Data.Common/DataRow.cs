@@ -361,109 +361,169 @@ namespace DevZest.Data
             return true;
         }
 
-        private int _suspendUpdateCount;
-        private bool _isUpdated;
+        internal DataRow AncestorOf(int ancestorLevel)
+        {
+            var dataRow = this;
+            Debug.Assert(ancestorLevel >= 0);
+            for (int i = 0; i < ancestorLevel; i++)
+                dataRow = dataRow.ParentDataRow;
+            return dataRow;
+        }
 
-        public void SuspendUpdate()
+        private int _suspendUpdatedCount;
+        private IColumnSet _pendingUpdatedColumns = ColumnSet.Empty;
+        private IColumnSet _pendingComputationColumns = ColumnSet.Empty;
+        private IColumnSet _handledColumns = ColumnSet.Empty;
+        private bool _isFiringEvent;
+
+        public void SuspendUpdated()
         {
             if (this == Placeholder)
                 return;
-            _suspendUpdateCount++;
+            _suspendUpdatedCount++;
         }
 
-        public void ResumeUpdate()
+        public void ResumeUpdated()
         {
             if (this == Placeholder)
                 return;
-            ResumeUpdate(false);
+            ResumeUpdated(false);
         }
 
-        internal void ResumeUpdate(bool omitNotification)
+        internal void ResumeUpdated(bool omitHandler)
         {
-            _suspendUpdateCount--;
-            if (_suspendUpdateCount == 0 && _isUpdated)
-                OnValueChanged(omitNotification);
+            if (_suspendUpdatedCount == 1)
+            {
+                if (omitHandler)
+                    _pendingUpdatedColumns = _pendingComputationColumns = _handledColumns = ColumnSet.Empty;
+                else
+                    HandlesUpdated();
+            }
+            _suspendUpdatedCount--;
+        }
+
+        private void HandlesUpdated()
+        {
+            for (var pendingColumns = HandlePendingColumns(); pendingColumns.Count > 0; pendingColumns = HandlePendingColumns())
+                Model.HandlesDataRowUpdated(this, pendingColumns);
+
+            if (_handledColumns.Count > 0)
+            {
+                UpdateDataSetRevision();
+                var updatedColumns = FireUpdatedEvent();
+                RefreshCascadeComputations(updatedColumns);
+            }
+        }
+
+        private void UpdateDataSetRevision()
+        {
+            BaseDataSet.UpdateRevision();
+            if (DataSet != BaseDataSet)
+                DataSet.UpdateRevision();
+        }
+
+        private IColumnSet FireUpdatedEvent()
+        {
+            Debug.Assert(_handledColumns.Count > 0);
+            _isFiringEvent = true;
+            var result = _handledColumns.Seal();
+            _handledColumns = ColumnSet.Empty;
+            try
+            {
+                Model.FireDataRowUpdatedEvent(this, result);
+            }
+            finally
+            {
+                _isFiringEvent = false;
+            }
+            return result;
+        }
+
+        private void RefreshCascadeComputations(IColumnSet updatedColumns)
+        {
+            var cascadeComputations = Model.GetCascadeAffectedColumns(updatedColumns);
+            if (cascadeComputations.Count == 0)
+                return;
+            foreach (var keyValuePair in cascadeComputations)
+            {
+                var model = keyValuePair.Key;
+                Debug.Assert(model.Depth != Model.Depth);
+                var columns = keyValuePair.Value;
+                if (model.Depth < Model.Depth)
+                    AncestorOf(Model.Depth - model.Depth).RefreshComputations(columns);
+                else
+                    RefreshDescendentComputations(model, columns);
+            }
+        }
+
+        private void RefreshDescendentComputations(Model decendent, IColumnSet columnSet)
+        {
+            var childModel = ChildAncestorOf(decendent);
+            var childDataSet = this[childModel];
+            if (childModel == decendent)
+            {
+                for (int i = 0; i < childDataSet.Count; i++)
+                    childDataSet[i].RefreshComputations(columnSet);
+            }
+            else
+            {
+                for (int i = 0; i < childDataSet.Count; i++)
+                    childDataSet[i].RefreshDescendentComputations(decendent, columnSet);
+            }
+        }
+
+        private Model ChildAncestorOf(Model decendent)
+        {
+            for (; decendent != null; decendent = decendent.ParentModel)
+            {
+                if (decendent.ParentModel == Model)
+                    return decendent;
+            }
+            return null;
+        }
+
+        private IColumnSet HandlePendingColumns()
+        {
+            var result = ColumnSet.Empty.Union(_pendingUpdatedColumns).Union(_pendingComputationColumns).Seal();
+            _handledColumns = _handledColumns.Union(result);
+            _pendingUpdatedColumns = _pendingComputationColumns = ColumnSet.Empty;
+            return result;
+        }
+
+        internal void OnUpdated(Column column)
+        {
+            if (_isFiringEvent)
+                throw new InvalidOperationException(Strings.DataRow_UpdateInDataRowChangedEventNotAllowed);
+
+            SuspendUpdated();
+            _pendingUpdatedColumns = _pendingUpdatedColumns.Add(column);
+            ResumeUpdated();
+        }
+
+        internal void RefreshComputations(IColumnSet computationColumns)
+        {
+            SuspendUpdated();
+            foreach (var computationColumn in computationColumns)
+            {
+                if (computationColumn.RefreshComputation(this))
+                    _pendingComputationColumns = _pendingComputationColumns.Add(computationColumn);
+            }
+            ResumeUpdated();
         }
 
         internal void Update(Action<DataRow> updateAction)
         {
             Check.NotNull(updateAction, nameof(updateAction));
 
-            SuspendUpdate();
+            SuspendUpdated();
             try
             {
                 updateAction(this);
             }
             finally
             {
-                ResumeUpdate();
+                ResumeUpdated();
             }
-        }
-
-        internal void OnUpdated(IModelSet modelSet)
-        {
-            OnValueChanged();
-            if (ParentDataRow != null)
-                ParentDataRow.BubbleUpdatedEvent(modelSet);
-        }
-
-        internal void OnValueChanged(bool omitNotification = false)
-        {
-            if (_suspendUpdateCount > 0)
-            {
-                _isUpdated = true;
-                return;
-            }
-
-            _isUpdated = false;
-            if (!omitNotification)
-            {
-                Model.OnRowUpdated(this);
-                if (ParentDataRow != null)
-                    DataSet.OnRowUpdated(this);
-                Model.DataSet.OnRowUpdated(this);
-            }
-        }
-
-        internal void OnAdded()
-        {
-            Model.OnRowAdded(this);
-            if (ParentDataRow != null)
-                DataSet.OnRowAdded(this);
-            Model.DataSet.OnRowAdded(this);
-
-            if (ParentDataRow != null)
-                ParentDataRow.BubbleUpdatedEvent(Model);
-        }
-
-        internal void OnRemoved(DataRowRemovedEventArgs e)
-        {
-            Debug.Assert(e.DataRow == this);
-
-            if (e.Model.EditingRow == this)
-                e.Model.CancelEdit();
-
-            e.Model.OnRowRemoved(e);
-            if (e.ParentDataRow != null)
-                e.DataSet.OnRowRemoved(e);
-            e.Model.DataSet.OnRowRemoved(e);
-
-            if (e.ParentDataRow != null)
-                e.ParentDataRow.BubbleUpdatedEvent(e.Model);
-        }
-
-        private void BubbleUpdatedEvent(IModelSet modelSet)
-        {
-            var aggregateComputerColumns = Model.GetAggregateComputedColumns(modelSet);
-            if (aggregateComputerColumns.Count > 0)
-            {
-                modelSet = modelSet.Union(Model);
-                OnValueChanged();
-            }
-
-            var parentDataRow = ParentDataRow;
-            if (parentDataRow != null)
-                parentDataRow.BubbleUpdatedEvent(modelSet);
         }
     }
 }

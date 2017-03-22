@@ -883,6 +883,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("Model_CircularComputation", "columnName"), columnName);
         }
 
+        /// <summary>
+        /// Update in DataRowChanged event handler is not allowed.
+        /// </summary>
+        public static string DataRow_UpdateInDataRowChangedEventNotAllowed
+        {
+            get { return GetString("DataRow_UpdateInDataRowChangedEventNotAllowed"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
