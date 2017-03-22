@@ -259,12 +259,12 @@ namespace DevZest.Windows.Data.Primitives
         {
             var extenderDataSet = Template.ExtenderDataSet;
             if (extenderDataSet != null)
-                extenderDataSet.RowUpdated += OnExtenderDataSetUpdated;
+                extenderDataSet.Model.DataRowUpdated += OnExtenderDataSetUpdated;
         }
 
-        private void OnExtenderDataSetUpdated(object sender, DataRow e)
+        private void OnExtenderDataSetUpdated(DataRow dataRow, IColumnSet columns)
         {
-            FireOnRowUpdated(GetRowPresenterOfExtenderDataRow(e));
+            FireOnRowUpdated(GetRowPresenterOfExtenderDataRow(dataRow));
         }
 
         private RowPresenter GetRowPresenterOfExtenderDataRow(DataRow dataRow)

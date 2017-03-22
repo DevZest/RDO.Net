@@ -134,23 +134,23 @@ namespace DevZest.Windows.Data.Primitives
 
         private void WireDataChangedEvents()
         {
-            WireDataChangedEvents(_dataSet);
+            WireDataChangedEvents(_dataSet.Model);
 
             if (IsRecursive)
             {
                 for (var childDataSet = GetChildDataSet(_dataSet); childDataSet != null; childDataSet = GetChildDataSet(childDataSet))
                 {
-                    WireDataChangedEvents(childDataSet);
+                    WireDataChangedEvents(childDataSet.Model);
                     _maxDepth++;
                 }
             }
         }
 
-        private void WireDataChangedEvents(DataSet dataSet)
+        private void WireDataChangedEvents(Model model)
         {
-            dataSet.RowAdded += OnDataRowAdded;
-            dataSet.RowRemoved += OnDataRowRemoved;
-            dataSet.RowUpdated += OnDataRowUpdated;
+            model.DataRowAdded += OnDataRowAdded;
+            model.DataRowRemoved += OnDataRowRemoved;
+            model.DataRowUpdated += OnDataRowUpdated;
         }
 
         private readonly Template _template;
@@ -432,7 +432,7 @@ namespace DevZest.Windows.Data.Primitives
             return _normalizedWhere == null || ApplyWhere(dataRow);
         }
 
-        private void OnDataRowAdded(object sender, DataRow dataRow)
+        private void OnDataRowAdded(DataRow dataRow)
         {
             if (!IsValid(dataRow))
                 return;
@@ -440,7 +440,7 @@ namespace DevZest.Windows.Data.Primitives
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
-                WireDataChangedEvents(childDataSet);
+                WireDataChangedEvents(childDataSet.Model);
             }
             Add(dataRow);
         }
@@ -538,18 +538,18 @@ namespace DevZest.Windows.Data.Primitives
             return x.Index > y.Index;
         }
 
-        private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
+        private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            if (!IsValid(e.Model))
+            if (!IsValid(baseDataSet.Model))
                 return;
-            var row = this[e];
+            var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
         }
 
-        private RowPresenter this[DataRowRemovedEventArgs e]
+        private RowPresenter this[DataRow dataRow, int index]
         {
-            get { return _mappings == null ? _rows[e.Index] : this[e.DataRow]; }
+            get { return _mappings == null ? _rows[index] : this[dataRow]; }
         }
 
         protected RowPresenter this[DataRow dataRow]
@@ -604,7 +604,7 @@ namespace DevZest.Windows.Data.Primitives
             return -1;
         }
 
-        private void OnDataRowUpdated(object sender, DataRow dataRow)
+        private void OnDataRowUpdated(DataRow dataRow, IColumnSet columns)
         {
             if (!IsValid(dataRow))
                 return;
