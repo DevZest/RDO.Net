@@ -239,114 +239,9 @@ namespace DevZest.Data
             return result;
         }
 
-        internal void OnUpdated(IModelSet modelSet)
-        {
-            OnValueChanged();
-            if (ParentDataRow != null)
-                ParentDataRow.BubbleUpdatedEvent(modelSet);
-        }
-
-        internal void OnValueChanged(bool omitNotification = false)
-        {
-            if (_suppressValueChangedNotificationCount > 0)
-            {
-                _isUpdated = true;
-                return;
-            }
-
-            _isUpdated = false;
-            if (!omitNotification)
-            {
-                Model.OnRowUpdated(this);
-                if (ParentDataRow != null)
-                    DataSet.OnRowUpdated(this);
-                Model.DataSet.OnRowUpdated(this);
-            }
-        }
-
-        internal void OnAdded()
-        {
-            Model.OnRowAdded(this);
-            if (ParentDataRow != null)
-                DataSet.OnRowAdded(this);
-            Model.DataSet.OnRowAdded(this);
-
-            if (ParentDataRow != null)
-                ParentDataRow.BubbleUpdatedEvent(Model);
-        }
-
-        internal void OnRemoved(DataRowRemovedEventArgs e)
-        {
-            Debug.Assert(e.DataRow == this);
-
-            if (e.Model.EditingRow == this)
-                e.Model.CancelEdit();
-
-            e.Model.OnRowRemoved(e);
-            if (e.ParentDataRow != null)
-                e.DataSet.OnRowRemoved(e);
-            e.Model.DataSet.OnRowRemoved(e);
-
-            if (e.ParentDataRow != null)
-                e.ParentDataRow.BubbleUpdatedEvent(e.Model);
-        }
-
-        private void BubbleUpdatedEvent(IModelSet modelSet)
-        {
-            var aggregateComputerColumns = Model.GetAggregateComputedColumns(modelSet);
-            if (aggregateComputerColumns.Count > 0)
-            {
-                modelSet = modelSet.Union(Model);
-                OnValueChanged();
-            }
-
-            var parentDataRow = ParentDataRow;
-            if (parentDataRow != null)
-                parentDataRow.BubbleUpdatedEvent(modelSet);
-        }
-
         public IValidationMessageGroup Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
             return Model.Validate(this, severity);
-        }
-
-        private int _suppressValueChangedNotificationCount;
-        private bool _isUpdated;
-
-        public void SuppressValueChangedNotification()
-        {
-            if (this == Placeholder)
-                return;
-            _suppressValueChangedNotificationCount++;
-        }
-
-        public void ResumeValueChangedNotification()
-        {
-            if (this == Placeholder)
-                return;
-            ResumeValueChangedNotification(false);
-        }
-
-        internal void ResumeValueChangedNotification(bool omitNotification)
-        {
-            _suppressValueChangedNotificationCount--;
-            if (_suppressValueChangedNotificationCount == 0 && _isUpdated)
-                OnValueChanged(omitNotification);
-        }
-
-        internal void Update(Action<DataRow> updateAction)
-        {
-            Check.NotNull(updateAction, nameof(updateAction));
-
-            SuppressValueChangedNotification();
-            try
-            {
-                updateAction(this);
-            }
-            finally
-            {
-                ResumeValueChangedNotification();
-            }
         }
 
         public void CopyValuesFrom(DataRow from, bool recursive = true)
@@ -464,6 +359,111 @@ namespace DevZest.Data
 
             Model.CancelEdit();
             return true;
+        }
+
+        private int _suspendUpdateCount;
+        private bool _isUpdated;
+
+        public void SuspendUpdate()
+        {
+            if (this == Placeholder)
+                return;
+            _suspendUpdateCount++;
+        }
+
+        public void ResumeUpdate()
+        {
+            if (this == Placeholder)
+                return;
+            ResumeUpdate(false);
+        }
+
+        internal void ResumeUpdate(bool omitNotification)
+        {
+            _suspendUpdateCount--;
+            if (_suspendUpdateCount == 0 && _isUpdated)
+                OnValueChanged(omitNotification);
+        }
+
+        internal void Update(Action<DataRow> updateAction)
+        {
+            Check.NotNull(updateAction, nameof(updateAction));
+
+            SuspendUpdate();
+            try
+            {
+                updateAction(this);
+            }
+            finally
+            {
+                ResumeUpdate();
+            }
+        }
+
+        internal void OnUpdated(IModelSet modelSet)
+        {
+            OnValueChanged();
+            if (ParentDataRow != null)
+                ParentDataRow.BubbleUpdatedEvent(modelSet);
+        }
+
+        internal void OnValueChanged(bool omitNotification = false)
+        {
+            if (_suspendUpdateCount > 0)
+            {
+                _isUpdated = true;
+                return;
+            }
+
+            _isUpdated = false;
+            if (!omitNotification)
+            {
+                Model.OnRowUpdated(this);
+                if (ParentDataRow != null)
+                    DataSet.OnRowUpdated(this);
+                Model.DataSet.OnRowUpdated(this);
+            }
+        }
+
+        internal void OnAdded()
+        {
+            Model.OnRowAdded(this);
+            if (ParentDataRow != null)
+                DataSet.OnRowAdded(this);
+            Model.DataSet.OnRowAdded(this);
+
+            if (ParentDataRow != null)
+                ParentDataRow.BubbleUpdatedEvent(Model);
+        }
+
+        internal void OnRemoved(DataRowRemovedEventArgs e)
+        {
+            Debug.Assert(e.DataRow == this);
+
+            if (e.Model.EditingRow == this)
+                e.Model.CancelEdit();
+
+            e.Model.OnRowRemoved(e);
+            if (e.ParentDataRow != null)
+                e.DataSet.OnRowRemoved(e);
+            e.Model.DataSet.OnRowRemoved(e);
+
+            if (e.ParentDataRow != null)
+                e.ParentDataRow.BubbleUpdatedEvent(e.Model);
+        }
+
+        private void BubbleUpdatedEvent(IModelSet modelSet)
+        {
+            var aggregateComputerColumns = Model.GetAggregateComputedColumns(modelSet);
+            if (aggregateComputerColumns.Count > 0)
+            {
+                modelSet = modelSet.Union(Model);
+                OnValueChanged();
+            }
+
+            var parentDataRow = ParentDataRow;
+            if (parentDataRow != null)
+                parentDataRow.BubbleUpdatedEvent(modelSet);
         }
     }
 }

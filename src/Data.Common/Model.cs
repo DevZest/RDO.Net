@@ -840,11 +840,11 @@ namespace DevZest.Data
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
 
-            dataRow.SuppressValueChangedNotification();
+            dataRow.SuspendUpdate();
             foreach (var column in Columns)
                 column.EndEdit(dataRow);
             EditingRow = null;
-            dataRow.ResumeValueChangedNotification();
+            dataRow.ResumeUpdate();
         }
 
         internal void CancelEdit()
