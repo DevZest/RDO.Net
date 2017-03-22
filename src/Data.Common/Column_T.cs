@@ -32,27 +32,13 @@ namespace DevZest.Data
             {
                 Debug.Assert(column != null);
                 _column = column;
-                _isPrimaryKey = GetIsPrimaryKey();
+                _isPrimaryKey = column.IsPrimaryKey;
             }
 
             private List<T> _values = new List<T>();
             private Column<T> _column;
 
             bool _isPrimaryKey;
-
-            private bool GetIsPrimaryKey()
-            {
-                var primaryKey = Model.PrimaryKey;
-                if (primaryKey == null)
-                    return false;
-
-                for (int i = 0; i < primaryKey.Count; i++)
-                {
-                    if (_column == primaryKey[i].Column)
-                        return true;
-                }
-                return false;
-            }
 
             private Model Model
             {

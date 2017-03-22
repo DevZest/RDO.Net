@@ -55,7 +55,6 @@ namespace DevZest.Data
             }
         }
 
-
         private int _ordinal = -1;
         /// <summary>Gets the zero-based position of the column in the <see cref="Model.Columns"/> collection.</summary>
         /// <remarks>If the column is not added to any <see cref="Model"/>, -1 is returned.</remarks>
