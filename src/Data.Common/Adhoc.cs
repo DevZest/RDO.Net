@@ -5,7 +5,7 @@ namespace DevZest.Data
     /// <summary>Model for adhoc queries.</summary>
     /// <seealso cref="DbQueryBuilder.Select{T}(T, Adhoc, string)"/>
     /// <seealso cref="DbAggregateQueryBuilder.Select{T}(T, Adhoc, string)"/>
-    public sealed class Adhoc : Model
+    public class Adhoc : Model
     {
         static Adhoc()
         {
