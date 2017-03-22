@@ -817,18 +817,6 @@ namespace DevZest.Data
             return DataSet<T>.New();
         }
 
-        protected internal virtual void OnRowAdded(DataRow e)
-        {
-        }
-
-        protected internal virtual void OnRowUpdated(DataRow e)
-        {
-        }
-
-        protected internal virtual void OnRowRemoved(DataRowRemovedEventArgs e)
-        {
-        }
-
         internal DataRow EditingRow { get; private set; }
 
         internal void BeginEdit(DataRow dataRow)

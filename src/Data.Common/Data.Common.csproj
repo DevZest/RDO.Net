@@ -78,7 +78,6 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="Column_T.ConverterBase.cs" />
-    <Compile Include="DataRowRemovedEventArgs.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="IgnoreColumnAttribute.cs" />
