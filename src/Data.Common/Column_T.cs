@@ -296,6 +296,8 @@ namespace DevZest.Data
         public bool IsReadOnly(DataRow dataRow)
         {
             VerifyDataRow(dataRow, nameof(dataRow));
+            if (IsExpression)
+                return true;
             return dataRow == DataRow.Placeholder ? false : IsReadOnly(dataRow.Ordinal);
         }
 
@@ -304,8 +306,6 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if this column is readonly for provided <see cref="DataRow"/> oridinal, otherwise <see langword="false"/>.</returns>
         public bool IsReadOnly(int ordinal)
         {
-            if (IsExpression)
-                return true;
             return ValueManager.IsReadOnly(ordinal);
         }
 
