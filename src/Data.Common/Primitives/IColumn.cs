@@ -4,7 +4,7 @@ namespace DevZest.Data.Primitives
 {
     public interface IColumn
     {
-        bool IsReadOnly(int ordinal);
+        bool IsReadOnly(DataRow dataRow);
     }
 
     public interface IColumn<in TReader> : IColumn

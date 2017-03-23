@@ -246,7 +246,7 @@ namespace DevZest.Data.Primitives
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                if (!column.IsReadOnly(dataRow.Ordinal))
+                if (!column.IsReadOnly(dataRow))
                     column.Read(reader, dataRow);
             }
 
