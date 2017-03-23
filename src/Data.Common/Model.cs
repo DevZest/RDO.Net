@@ -732,31 +732,21 @@ namespace DevZest.Data
             AddDbTableConstraint(new CheckConstraint(constraintName, condition.DbExpression), false);
         }
 
-        internal bool AllowsKeyUpdate(bool value)
+        private int _suspendIdentityCount;
+        internal bool IsIdentitySuspended
         {
-            var result = IsKeyUpdateAllowed;
-            IsKeyUpdateAllowed = value;
-            return result;
+            get { return _suspendIdentityCount > 0; }
         }
 
-        internal bool IsKeyUpdateAllowed { get; private set; }
-
-        private bool _oldIsKeyUpdateAllowed;
-        private bool _oldIsIdentityGenerationDisabled;
-        internal void EnterDataSetInitialization()
+        internal void SuspendIdentity()
         {
-            _oldIsKeyUpdateAllowed = AllowsKeyUpdate(true);
-            _oldIsIdentityGenerationDisabled = IsIdentityGenerationDisabled;
-            IsIdentityGenerationDisabled = true;
+            _suspendIdentityCount++;
         }
 
-        internal void ExitDataSetInitialization()
+        internal void ResumeIdentity()
         {
-            AllowsKeyUpdate(_oldIsKeyUpdateAllowed);
-            IsIdentityGenerationDisabled = _oldIsIdentityGenerationDisabled;
+            _suspendIdentityCount--;
         }
-
-        internal bool IsIdentityGenerationDisabled { get; private set; }
 
         internal DbTable<KeyOutput> SequentialKeyTempTable { get; set; }
 

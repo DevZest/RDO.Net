@@ -525,5 +525,7 @@ namespace DevZest.Data
                 ResumeUpdated();
             }
         }
+
+        public bool IsPrimaryKeySealed { get; set; }
     }
 }

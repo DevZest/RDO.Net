@@ -240,17 +240,20 @@ namespace DevZest.Data.Primitives
         private static void NewDataRow(DataSet dataSet, IList<IColumn<TReader>> columns, TReader reader)
         {
             var model = dataSet.Model;
-            model.EnterDataSetInitialization();
+            model.SuspendIdentity();
 
-            var dataRow = dataSet.AddRow();
-            for (int i = 0; i < columns.Count; i++)
+            dataSet.AddRow(x =>
             {
-                var column = columns[i];
-                if (!column.IsReadOnly(dataRow))
-                    column.Read(reader, dataRow);
-            }
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    var column = columns[i];
+                    if (!column.IsReadOnly(x))
+                        column.Read(reader, x);
+                }
+                x.IsPrimaryKeySealed = true;
+            });
 
-            model.ExitDataSetInitialization();
+            model.ResumeIdentity();
         }
 
         private void FillChildrenDataSet(IDbSet dbSet, Model dataSetModel)

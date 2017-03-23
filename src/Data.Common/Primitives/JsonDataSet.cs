@@ -46,17 +46,25 @@ namespace DevZest.Data.Primitives
             if (jsonParser.PeekToken().Kind == JsonTokenKind.CurlyOpen)
             {
                 var model = dataSet.Model;
-                model.EnterDataSetInitialization();
+                model.SuspendIdentity();
 
-                jsonParser.Parse(dataSet.AddRow());
+                dataSet.AddRow(x =>
+                {
+                    jsonParser.Parse(x);
+                    x.IsPrimaryKeySealed = true;
+                });
 
                 while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
                 {
                     jsonParser.ConsumeToken();
-                    jsonParser.Parse(dataSet.AddRow());
+                    dataSet.AddRow(x =>
+                    {
+                        jsonParser.Parse(x);
+                        x.IsPrimaryKeySealed = true;
+                    });
                 }
 
-                model.ExitDataSetInitialization();
+                model.ResumeIdentity();
             }
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredClose);

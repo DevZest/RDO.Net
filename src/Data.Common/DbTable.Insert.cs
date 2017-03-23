@@ -194,7 +194,7 @@ namespace DevZest.Data
             var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
             var result = DbSession.InsertScalar(statement, updateIdentity);
             if (updateIdentity)
-                UpdateIdentity(source, ordinal, result.IdentityValue);
+                UpdateIdentity(source, source[ordinal], result.IdentityValue);
             return UpdateOrigin(source, result.Success);
         }
 
@@ -207,7 +207,7 @@ namespace DevZest.Data
             var statement = BuildInsertScalarStatement(source, ordinal, columnMappingsBuilder, autoJoin);
             var result = await DbSession.InsertScalarAsync(statement, updateIdentity, cancellationToken);
             if (updateIdentity)
-                UpdateIdentity(source, ordinal, result.IdentityValue);
+                UpdateIdentity(source, source[ordinal], result.IdentityValue);
             return UpdateOrigin(source, result.Success);
         }
 
@@ -256,17 +256,16 @@ namespace DevZest.Data
 
             var identityMappings = result.IdentityMappings;
             var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
-            var model = dataSet.Model;
-            var oldValue = model.AllowsKeyUpdate(true);
             using (var reader = DbSession.ExecuteDbReader(identityMappings))
             {
                 int ordinal = 0;
                 while (reader.Read())
                 {
-                    identityColumn[ordinal++] = identityMappings._.NewValue[reader];
+                    var dataRow = dataSet[ordinal++];
+                    identityColumn[dataRow] = identityMappings._.NewValue[reader];
+                    dataRow.IsPrimaryKeySealed = true;
                 }
             }
-            model.AllowsKeyUpdate(oldValue);
         }
 
         private async Task UpdateIdentityAsync<TSource>(DataSet<TSource> dataSet, InsertTableResult result, CancellationToken cancellationToken)
@@ -277,17 +276,16 @@ namespace DevZest.Data
 
             var identityOutput = result.IdentityMappings;
             var identityColumn = (_Int32)dataSet._.Columns[this._.GetIdentity(false).Column.Ordinal];
-            var model = dataSet.Model;
-            var oldValue = model.AllowsKeyUpdate(true);
             using (var reader = await DbSession.ExecuteDbReaderAsync(identityOutput, cancellationToken))
             {
                 int ordinal = 0;
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    identityColumn[ordinal++] = identityOutput._.NewValue[reader];
+                    var dataRow = dataSet[ordinal++];
+                    identityColumn[dataRow] = identityOutput._.NewValue[reader];
+                    dataRow.IsPrimaryKeySealed = true;
                 }
             }
-            model.AllowsKeyUpdate(oldValue);
         }
 
         private static IList<DbSelectStatement> BuildUpdateIdentityStatement<TSource>(DbTable<TSource> dbTable, InsertTableResult result)
@@ -322,12 +320,11 @@ namespace DevZest.Data
             }
         }
 
-        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, int ordinal, int? value)
+        private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
             where TSource : Model, new()
         {
-            var oldValue = dataSet.AllowsKeyUpdate(true);
-            dataSet._.GetIdentity(false).Column[ordinal] = value;
-            dataSet.AllowsKeyUpdate(oldValue);
+            dataSet._.GetIdentity(false).Column[dataRow] = value;
+            dataRow.IsPrimaryKeySealed = true;
         }
     }
 }

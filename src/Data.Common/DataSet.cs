@@ -197,11 +197,6 @@ namespace DevZest.Data
             return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
-        public bool AllowsKeyUpdate(bool value)
-        {
-            return Model.AllowsKeyUpdate(value);
-        }
-
         private abstract class ValidationEntriesCounter
         {
             public static ValidationEntriesCounter Create(ValidationSeverity severity, int maxEntries)

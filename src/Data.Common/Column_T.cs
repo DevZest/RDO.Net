@@ -17,7 +17,6 @@ namespace DevZest.Data
             bool IsPrimaryKey { get; }
             int RowCount { get; }
             bool ShouldSerialize { get; }
-            bool IsReadOnly(int ordinal);
             T this[int ordinal] { get; set; }
             void AddRow(DataRow dataRow);
             void RemoveRow(DataRow dataRow);
@@ -54,15 +53,6 @@ namespace DevZest.Data
             public bool ShouldSerialize
             {
                 get { return true; }
-            }
-
-            public bool IsReadOnly(int ordinal)
-            {
-                if (Model.IsKeyUpdateAllowed)
-                    return false;
-                if (IsPrimaryKey)
-                    return !_column.IsNull(_values[ordinal]);
-                return false;
             }
 
             public T this[int ordinal]
@@ -150,11 +140,6 @@ namespace DevZest.Data
             {
                 if (_cachedValues != null)
                     _cachedValues.Clear();
-            }
-
-            public bool IsReadOnly(int ordinal)
-            {
-                return true;
             }
 
             public void RemoveRow(DataRow dataRow)
@@ -311,22 +296,7 @@ namespace DevZest.Data
             VerifyDataRow(dataRow, nameof(dataRow));
             if (IsExpression)
                 return true;
-            return dataRow == DataRow.Placeholder ? false : IsReadOnly(dataRow.Ordinal);
-        }
-
-        /// <summary>Gets a value indicates whether this column is readonly for provided <see cref="DataRow"/> ordinal.</summary>
-        /// <param name="ordinal">The <see cref="DataRow"/> ordinal.</param>
-        /// <returns><see langword="true"/> if this column is readonly for provided <see cref="DataRow"/> oridinal, otherwise <see langword="false"/>.</returns>
-        public bool IsReadOnly(int ordinal)
-        {
-            if (ordinal < 0 || ordinal >= (_valueManager == null ? 0 : _valueManager.RowCount))
-                throw new ArgumentOutOfRangeException(nameof(ordinal));
-            return _valueManager.IsReadOnly(ordinal);
-        }
-
-        public bool IsReadOnly(DataRow parentDataRow, int childOrdinal)
-        {
-            return IsReadOnly(GetDataRow(parentDataRow, childOrdinal));
+            return IsPrimaryKey ? dataRow.IsPrimaryKeySealed : false;
         }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>

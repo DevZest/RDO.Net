@@ -1036,9 +1036,17 @@ namespace DevZest.Data
 
         internal override int? GetDefaultValue()
         {
-            if (ParentModel.IsIdentityGenerationDisabled)
+            if (ParentModel.IsIdentitySuspended)
                 return base.GetDefaultValue();
 
+            EnsureIdentityInitialized();
+            if (_identity != null)
+                return _currentIdentityValue -= _identity.Increment;
+            return base.GetDefaultValue();
+        }
+
+        private void EnsureIdentityInitialized()
+        {
             if (!_isIdentityInitialized)
             {
                 var identity = this.GetIdentity(false);
@@ -1049,10 +1057,6 @@ namespace DevZest.Data
                 }
                 _isIdentityInitialized = true;
             }
-
-            if (_identity != null)
-                return _currentIdentityValue -= _identity.Increment;
-            return base.GetDefaultValue();
         }
     }
 }
