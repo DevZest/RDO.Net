@@ -63,7 +63,7 @@ namespace DevZest.Data.Primitives
             ExpressionConverter.EnsureInitialized(this);
         }
 
-        protected internal abstract T this[DataRow dataRow] { get; }
+        public abstract T this[DataRow dataRow] { get; }
 
         private Column<T> _owner;
         /// <summary>

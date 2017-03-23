@@ -510,7 +510,7 @@ namespace DevZest.Data
                 return dataRow.AncestorOf(_ancestorLevel);
             }
 
-            protected internal override T this[DataRow dataRow]
+            public override T this[DataRow dataRow]
             {
                 get { return _computation[IfAncestor(dataRow)]; }
             }

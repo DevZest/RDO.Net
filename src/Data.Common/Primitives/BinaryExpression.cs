@@ -84,7 +84,7 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected internal sealed override TResult this[DataRow dataRow]
+        public sealed override TResult this[DataRow dataRow]
         {
             get
             {

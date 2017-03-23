@@ -35,7 +35,7 @@ namespace DevZest.Data.Primitives
 
         public T Value { get; private set; }
 
-        protected internal sealed override T this[DataRow dataRow]
+        public sealed override T this[DataRow dataRow]
         {
             get { return Value; }
         }

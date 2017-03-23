@@ -66,7 +66,7 @@ namespace DevZest.Data.SqlServer
                 return Parameters[0].AggregateSourceModels;
             }
 
-            protected override T this[DataRow dataRow]
+            public sealed override T this[DataRow dataRow]
             {
                 get { throw new NotSupportedException(); }
             }

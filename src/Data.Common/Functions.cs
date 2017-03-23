@@ -32,7 +32,7 @@ namespace DevZest.Data
                 get { return FunctionKeys.IsNull; }
             }
 
-            protected internal override bool? this[DataRow dataRow]
+            public override bool? this[DataRow dataRow]
             {
                 get { return _column.IsNull(dataRow); }
             }
@@ -72,7 +72,7 @@ namespace DevZest.Data
                 get { return FunctionKeys.IsNotNull; }
             }
 
-            protected internal override bool? this[DataRow dataRow]
+            public override bool? this[DataRow dataRow]
             {
                 get { return !_column.IsNull(dataRow); }
             }
@@ -119,7 +119,7 @@ namespace DevZest.Data
             Column<T> _column;
             Column<T> _replaceColumn;
 
-            protected internal override T this[DataRow dataRow]
+            public override T this[DataRow dataRow]
             {
                 get
                 {
@@ -170,7 +170,7 @@ namespace DevZest.Data
                 }
             }
 
-            protected internal override DateTime? this[DataRow dataRow]
+            public override DateTime? this[DataRow dataRow]
             {
                 get { return DateTime.Now; }
             }
@@ -201,7 +201,7 @@ namespace DevZest.Data
                 }
             }
 
-            protected internal override DateTime? this[DataRow dataRow]
+            public override DateTime? this[DataRow dataRow]
             {
                 get { return DateTime.UtcNow; }
             }
@@ -232,7 +232,7 @@ namespace DevZest.Data
                 }
             }
 
-            protected internal override Guid? this[DataRow dataRow]
+            public override Guid? this[DataRow dataRow]
             {
                 get { return Guid.NewGuid(); }
             }

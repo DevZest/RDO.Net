@@ -49,7 +49,7 @@ namespace DevZest.Data.Primitives
         protected abstract TTarget Cast(TSource value);
 
         /// <inheritdoc/>
-        protected internal sealed override TTarget this[DataRow dataRow]
+        public sealed override TTarget this[DataRow dataRow]
         {
             get { return Cast(Operand[dataRow]); }
         }
