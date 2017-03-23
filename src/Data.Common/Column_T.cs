@@ -297,8 +297,8 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if this column is readonly for provided <see cref="DataRow"/> oridinal, otherwise <see langword="false"/>.</returns>
         public bool IsReadOnly(int ordinal)
         {
-            if (_valueManager == null)
-                throw new InvalidOperationException(Strings.Column_NullValueManager);
+            if (ordinal < 0 || ordinal >= (_valueManager == null ? 0 : _valueManager.RowCount))
+                throw new ArgumentOutOfRangeException(nameof(ordinal));
             return _valueManager.IsReadOnly(ordinal);
         }
 

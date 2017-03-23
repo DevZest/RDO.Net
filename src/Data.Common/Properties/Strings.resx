@@ -261,9 +261,6 @@
   <data name="DbSet_VerifyCreateChild_InvalidDataSourceKind" xml:space="preserve">
     <value>Creating child DbSet on DbTable is not allowed.</value>
   </data>
-  <data name="Column_NullValueManager" xml:space="preserve">
-    <value>Cannot access values of the column. The column must belong to a dataset.</value>
-  </data>
   <data name="Column_SetReadOnlyValue" xml:space="preserve">
     <value>Cannot set value of readonly column '{column}'.</value>
   </data>

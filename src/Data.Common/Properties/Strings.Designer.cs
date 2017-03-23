@@ -396,14 +396,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Cannot access values of the column. The column must belong to a dataset.
-        /// </summary>
-        public static string Column_NullValueManager
-        {
-            get { return GetString("Column_NullValueManager"); }
-        }
-
-        /// <summary>
         /// Cannot set value of readonly column '{column}'.
         /// </summary>
         public static string Column_SetReadOnlyValue(object column)
