@@ -14,6 +14,7 @@ namespace DevZest.Data
     {
         private interface IValueManager
         {
+            bool IsPrimaryKey { get; }
             int RowCount { get; }
             bool ShouldSerialize { get; }
             bool IsReadOnly(int ordinal);
@@ -32,13 +33,13 @@ namespace DevZest.Data
             {
                 Debug.Assert(column != null);
                 _column = column;
-                _isPrimaryKey = column.IsPrimaryKey;
+                IsPrimaryKey = column.GetIsPrimaryKey();
             }
 
             private List<T> _values = new List<T>();
             private Column<T> _column;
 
-            bool _isPrimaryKey;
+            public bool IsPrimaryKey { get; private set; }
 
             private Model Model
             {
@@ -59,7 +60,7 @@ namespace DevZest.Data
             {
                 if (Model.IsKeyUpdateAllowed)
                     return false;
-                if (_isPrimaryKey)
+                if (IsPrimaryKey)
                     return !_column.IsNull(_values[ordinal]);
                 return false;
             }
@@ -117,6 +118,11 @@ namespace DevZest.Data
             private DataSet _dataSet;
             private ColumnExpression<T> _expression;
             private List<T> _cachedValues;
+
+            public bool IsPrimaryKey
+            {
+                get { return false; }
+            }
 
             public T this[int ordinal]
             {
@@ -208,6 +214,22 @@ namespace DevZest.Data
         }
 
         private IValueManager _valueManager;
+
+        public sealed override bool IsPrimaryKey
+        {
+            get { return _valueManager == null ? GetIsPrimaryKey() : _valueManager.IsPrimaryKey; }
+        }
+
+        private bool GetIsPrimaryKey()
+        {
+            var parentModel = ParentModel;
+            if (parentModel == null)
+                return false;
+            var primaryKey = parentModel.PrimaryKey;
+            if (primaryKey == null)
+                return false;
+            return primaryKey.Contains(this);
+        }
 
         /// <summary>Gets the expression of this column.</summary>
         /// <value>The expression of this column.</value>

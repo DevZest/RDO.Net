@@ -41,19 +41,7 @@ namespace DevZest.Data
         /// <summary>
         /// Gets a value indicates whether this column is part of primary key.
         /// </summary>
-        public bool IsPrimaryKey
-        {
-            get
-            {
-                var parentModel = this.ParentModel;
-                if (parentModel == null)
-                    return false;
-                var primaryKey = parentModel.PrimaryKey;
-                if (primaryKey == null)
-                    return false;
-                return primaryKey.Contains(this);
-            }
-        }
+        public abstract bool IsPrimaryKey { get; }
 
         private int _ordinal = -1;
         /// <summary>Gets the zero-based position of the column in the <see cref="Model.Columns"/> collection.</summary>
