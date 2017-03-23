@@ -244,9 +244,8 @@ namespace DevZest.Data
         {
             get
             {
-                if (IsExpression)
+                if (ParentModel == null && IsExpression)
                     return Expression[dataRow];
-
                 VerifyDataRow(dataRow, nameof(dataRow));
                 return ValueOf(dataRow);
             }
@@ -278,15 +277,17 @@ namespace DevZest.Data
         {
             var ordinal = dataRow.Ordinal;
             bool areEqual = AreEqual(ValueManager[ordinal], value);
-            ValueManager[ordinal] = value;
             if (!areEqual)
+            {
+                ValueManager[ordinal] = value;
                 dataRow.OnUpdated(this);
+            }
         }
 
         private void VerifyDataRow(DataRow dataRow, string paramName)
         {
             Check.NotNull(dataRow, paramName);
-            if (dataRow != ParentModel.EditingRow && dataRow.Model != ParentModel)
+            if (ParentModel == null || (dataRow != ParentModel.EditingRow && dataRow.Model != ParentModel))
                 throw new ArgumentException(Strings.Column_VerifyDataRow, paramName);
         }
 
@@ -626,7 +627,8 @@ namespace DevZest.Data
 
             var computationValue = _valueManager.GetComputationValue(dataRow);
             var areEqual = AreEqual(this[dataRow], computationValue);
-            _valueManager.RefreshComputationValue(dataRow, computationValue);
+            if (!areEqual)
+                _valueManager.RefreshComputationValue(dataRow, computationValue);
             return !areEqual;
         }
 
