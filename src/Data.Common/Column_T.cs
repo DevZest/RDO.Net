@@ -209,16 +209,6 @@ namespace DevZest.Data
 
         private IValueManager _valueManager;
 
-        private IValueManager ValueManager
-        {
-            get
-            {
-                if (_valueManager == null)
-                    throw new InvalidOperationException(Strings.Column_NullValueManager);
-                return _valueManager;
-            }
-        }
-
         /// <summary>Gets the expression of this column.</summary>
         /// <value>The expression of this column.</value>
         public ColumnExpression<T> Expression { get; internal set; }
@@ -258,7 +248,7 @@ namespace DevZest.Data
 
         private T ValueOf(DataRow dataRow)
         {
-            return dataRow == ParentModel.EditingRow ? _editingValue : ValueManager[dataRow.Ordinal];
+            return dataRow == ParentModel.EditingRow ? _editingValue : _valueManager[dataRow.Ordinal];
         }
 
         private void SetValue(DataRow dataRow, T value)
@@ -276,10 +266,10 @@ namespace DevZest.Data
         private void UpdateValue(DataRow dataRow, T value)
         {
             var ordinal = dataRow.Ordinal;
-            bool areEqual = AreEqual(ValueManager[ordinal], value);
+            bool areEqual = AreEqual(_valueManager[ordinal], value);
             if (!areEqual)
             {
-                ValueManager[ordinal] = value;
+                _valueManager[ordinal] = value;
                 dataRow.OnUpdated(this);
             }
         }
@@ -307,7 +297,9 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if this column is readonly for provided <see cref="DataRow"/> oridinal, otherwise <see langword="false"/>.</returns>
         public bool IsReadOnly(int ordinal)
         {
-            return ValueManager.IsReadOnly(ordinal);
+            if (_valueManager == null)
+                throw new InvalidOperationException(Strings.Column_NullValueManager);
+            return _valueManager.IsReadOnly(ordinal);
         }
 
         public bool IsReadOnly(DataRow parentDataRow, int childOrdinal)
@@ -668,7 +660,7 @@ namespace DevZest.Data
         private T _editingValue;
         internal sealed override void BeginEdit(DataRow dataRow)
         {
-            _editingValue = dataRow == DataRow.Placeholder ? GetDefaultValue() : ValueManager[dataRow.Ordinal];
+            _editingValue = dataRow == DataRow.Placeholder ? GetDefaultValue() : _valueManager[dataRow.Ordinal];
         }
 
         internal sealed override void EndEdit(DataRow dataRow)
