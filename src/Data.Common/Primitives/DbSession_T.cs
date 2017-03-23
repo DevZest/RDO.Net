@@ -247,7 +247,7 @@ namespace DevZest.Data.Primitives
             {
                 var column = columns[i];
                 if (!column.IsReadOnly(dataRow.Ordinal))
-                    columns[i].Read(reader, dataRow);
+                    column.Read(reader, dataRow);
             }
 
             model.ExitDataSetInitialization();
