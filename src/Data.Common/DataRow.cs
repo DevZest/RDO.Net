@@ -511,7 +511,7 @@ namespace DevZest.Data
             ResumeUpdated();
         }
 
-        internal void Update(Action<DataRow> updateAction)
+        public void Update(Action<DataRow> updateAction)
         {
             Check.NotNull(updateAction, nameof(updateAction));
 

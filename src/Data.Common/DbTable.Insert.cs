@@ -262,8 +262,11 @@ namespace DevZest.Data
                 while (reader.Read())
                 {
                     var dataRow = dataSet[ordinal++];
-                    identityColumn[dataRow] = identityMappings._.NewValue[reader];
-                    dataRow.IsPrimaryKeySealed = true;
+                    dataRow.Update(x =>
+                    {
+                        identityColumn[x] = identityMappings._.NewValue[reader];
+                        x.IsPrimaryKeySealed = true;
+                    });
                 }
             }
         }
@@ -282,8 +285,11 @@ namespace DevZest.Data
                 while (await reader.ReadAsync(cancellationToken))
                 {
                     var dataRow = dataSet[ordinal++];
-                    identityColumn[dataRow] = identityOutput._.NewValue[reader];
-                    dataRow.IsPrimaryKeySealed = true;
+                    dataRow.Update(x =>
+                    {
+                        identityColumn[x] = identityOutput._.NewValue[reader];
+                        x.IsPrimaryKeySealed = true;
+                    });
                 }
             }
         }
@@ -323,8 +329,11 @@ namespace DevZest.Data
         private static void UpdateIdentity<TSource>(DataSet<TSource> dataSet, DataRow dataRow, int? value)
             where TSource : Model, new()
         {
-            dataSet._.GetIdentity(false).Column[dataRow] = value;
-            dataRow.IsPrimaryKeySealed = true;
+            dataRow.Update(x =>
+            {
+                dataSet._.GetIdentity(false).Column[x] = value;
+                x.IsPrimaryKeySealed = true;
+            });
         }
     }
 }
