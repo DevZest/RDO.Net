@@ -605,7 +605,7 @@ namespace DevZest.Data
 
         internal sealed override bool RefreshComputation(DataRow dataRow)
         {
-            Debug.Assert(IsExpression);
+            Debug.Assert(_valueManager != null);
             if (!IsConcrete)
                 return true;
 

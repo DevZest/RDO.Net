@@ -298,7 +298,7 @@ namespace DevZest.Data
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
         /// <see cref="EnsureChildModelsInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
         /// </remarks>
-        internal void EnsureChildModelsInitialized()
+        public void EnsureChildModelsInitialized()
         {
             if (AreChildModelsInitialized)
                 return;
@@ -320,9 +320,7 @@ namespace DevZest.Data
                     column.InitValueManager();
             }
 
-            var childModelsInitialized = ChildModelsInitialized;
-            if (childModelsInitialized != null)
-                childModelsInitialized(this);
+            ChildModelsInitialized(this);
         }
 
         protected virtual void OnChildModelsInitialized()
@@ -855,7 +853,7 @@ namespace DevZest.Data
         }
 
         private IColumnSet _computationColumns;
-        private IColumnSet ComputationColumns
+        internal IColumnSet ComputationColumns
         {
             get
             {
@@ -915,10 +913,10 @@ namespace DevZest.Data
             get { return _aggregateAffectedColumns ?? (_aggregateAffectedColumns = GetAggregateAffectedColumns()); }
         }
 
-        public event ChildModelsInitialized ChildModelsInitialized;
-        public event DataRowAddedEventHandler DataRowAdded;
-        public event DataRowRemovedEventHandler DataRowRemoved;
-        public event DataRowUpdatedEventHandler DataRowUpdated;
+        public event ChildModelsInitialized ChildModelsInitialized = delegate { };
+        public event DataRowAddedEventHandler DataRowAdded = delegate { };
+        public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
+        public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
 
         protected virtual void OnDataRowAdded(DataRow dataRow)
         {
@@ -941,9 +939,7 @@ namespace DevZest.Data
             {
                 dataRow.ResumeUpdated(false);
             }
-            var dataRowAdded = DataRowAdded;
-            if (dataRowAdded != null)
-                dataRowAdded(dataRow);
+            DataRowAdded(dataRow);
 
             RefreshAggregateAffectedColumns(dataRow, false);
         }
@@ -962,7 +958,7 @@ namespace DevZest.Data
                 if (isParent)
                     ancestorLevel--;
                 var aggregateDataRow = dataRow.AncestorOf(ancestorLevel);
-                aggregateDataRow.RefreshComputations(aggregateColumns);
+                aggregateDataRow.RefreshComputationsInternal(aggregateColumns);
             }
         }
 
@@ -977,9 +973,7 @@ namespace DevZest.Data
 
             OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
 
-            var dataRowRemoved = DataRowRemoved;
-            if (dataRowRemoved != null)
-                dataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
 
             var parentDataRow = dataSet.ParentDataRow;
             if (parentDataRow != null)
@@ -995,14 +989,12 @@ namespace DevZest.Data
             OnDataRowUpdated(dataRow, updatedColumns);
             var affectedColumns = GetAffectedColumns(updatedColumns);
             if (affectedColumns.Count > 0)
-                dataRow.RefreshComputations(affectedColumns);
+                dataRow.RefreshComputationsInternal(affectedColumns);
         }
 
         internal void FireDataRowUpdatedEvent(DataRow dataRow, IColumnSet updatedColumns)
         {
-            var dataRowUpdated = DataRowUpdated;
-            if (dataRowUpdated != null)
-                dataRowUpdated(dataRow, updatedColumns);
+            DataRowUpdated(dataRow, updatedColumns);
         }
     }
 }
