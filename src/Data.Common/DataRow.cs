@@ -387,19 +387,15 @@ namespace DevZest.Data
         {
             if (this == Placeholder)
                 return;
-            ResumeUpdated(false);
+            if (_suspendUpdatedCount == 1)
+                HandlesUpdated();
+            _suspendUpdatedCount--;
         }
 
-        internal void ResumeUpdated(bool omitHandler)
+        internal void ResetUpdated()
         {
-            if (_suspendUpdatedCount == 1)
-            {
-                if (omitHandler)
-                    _pendingUpdatedColumns = _pendingComputationColumns = _handledColumns = ColumnSet.Empty;
-                else
-                    HandlesUpdated();
-            }
-            _suspendUpdatedCount--;
+            _pendingUpdatedColumns = _pendingComputationColumns = _handledColumns = ColumnSet.Empty;
+            _suspendUpdatedCount = 0;
         }
 
         private void HandlesUpdated()

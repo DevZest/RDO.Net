@@ -102,7 +102,7 @@ namespace DevZest.Data
                 }
                 finally
                 {
-                    dataRow.ResumeUpdated(true);
+                    dataRow.ResetUpdated();
                 }
             }
             Model.HandlesDataRowAdded(dataRow);
@@ -150,7 +150,7 @@ namespace DevZest.Data
                 var dataSet = dataRow.DataSet;
                 dataRow.SuspendUpdated();
                 InternalRemoveAtCore(index, dataRow);
-                dataRow.ResumeUpdated(true);
+                dataRow.ResetUpdated();
                 Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
             }
             else

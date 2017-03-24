@@ -948,7 +948,7 @@ namespace DevZest.Data
             }
             finally
             {
-                dataRow.ResumeUpdated(false);
+                dataRow.ResumeUpdated();
             }
             DataRowAdded(dataRow);
 
