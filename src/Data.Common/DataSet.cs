@@ -80,7 +80,7 @@ namespace DevZest.Data
             Insert(index, dataRow, null);
         }
 
-        internal void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
+        public void Insert(int index, DataRow dataRow, Action<DataRow> updateAction)
         {
             Check.NotNull(dataRow, nameof(dataRow));
             if (IsReadOnly)
@@ -154,6 +154,11 @@ namespace DevZest.Data
         public void Add(DataRow dataRow)
         {
             Insert(Count, dataRow, null);
+        }
+
+        public void Add(DataRow dataRow, Action<DataRow> updateAction)
+        {
+            Insert(Count, dataRow, updateAction);
         }
 
         public void Clear()

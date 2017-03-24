@@ -3,6 +3,7 @@ using DevZest.Data.Primitives;
 using Moq;
 using DevZest.Data.Helpers;
 using DevZest.Data.SqlServer;
+using DevZest.Samples.AdventureWorksLT;
 
 namespace DevZest.Data
 {
@@ -308,6 +309,58 @@ namespace DevZest.Data
         {
             var model = new SimpleModel();
             Assert.AreEqual(2, model.Validators.Count);
+        }
+
+        [TestMethod]
+        public void Model_DataRowAdded()
+        {
+            var salesOrders = DataSet<SalesOrder>.New();
+            var _ = salesOrders._;
+            var dataRowAddedCount = 0;
+            _.DataRowAdded += delegate { dataRowAddedCount++; };
+            var dataRowUpdatedCount = 0;
+            _.DataRowUpdated += delegate { dataRowUpdatedCount++; };
+            salesOrders.Add(new DataRow(), x =>
+            {
+                _.SalesOrderID[x] = 12345;
+            });
+
+            Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
+            Assert.AreEqual(1, dataRowAddedCount);
+            Assert.AreEqual(0, dataRowUpdatedCount);
+        }
+
+        [TestMethod]
+        public void Model_DataRowUpdated()
+        {
+            var salesOrders = DataSet<SalesOrder>.New();
+            var _ = salesOrders._;
+            var dataRowUpdatedCount = 0;
+            var changedColumns = ColumnSet.Empty;
+            _.DataRowUpdated += (dataRow, updatedColumns) =>
+            {
+                dataRowUpdatedCount++;
+                changedColumns = changedColumns.Union(updatedColumns);
+            };
+            salesOrders.Add(new DataRow());
+            _.SalesOrderID[0] = 12345;
+
+            Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
+            Assert.AreEqual(1, dataRowUpdatedCount);
+            Assert.IsTrue(changedColumns.SetEquals(ColumnSet.Empty.Add(_.SalesOrderID).Add(_.SalesOrderNumber)));
+        }
+
+        [TestMethod]
+        public void Model_DataRowRemoved()
+        {
+            var salesOrders = DataSet<SalesOrder>.New();
+            var _ = salesOrders._;
+            var dataRowRemovedCount = 0;
+            _.DataRowRemoved += delegate { dataRowRemovedCount++; };
+            salesOrders.Add(new DataRow());
+
+            salesOrders.Remove(salesOrders[0]);
+            Assert.AreEqual(1, dataRowRemovedCount);
         }
     }
 }
