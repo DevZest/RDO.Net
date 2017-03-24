@@ -914,9 +914,20 @@ namespace DevZest.Data
         }
 
         public event ChildModelsInitialized ChildModelsInitialized = delegate { };
-        public event DataRowAddedEventHandler DataRowAdded = delegate { };
+        public event DataRowAddEventHandler DataRowAdding = delegate { };
+        public event DataRowAddEventHandler DataRowAdded = delegate { };
         public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
         public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
+
+        internal void HandlesDataRowAdding(DataRow dataRow)
+        {
+            OnDataRowAdding(dataRow);
+            DataRowAdding(dataRow);
+        }
+
+        protected virtual void OnDataRowAdding(DataRow dataRow)
+        {
+        }
 
         protected virtual void OnDataRowAdded(DataRow dataRow)
         {

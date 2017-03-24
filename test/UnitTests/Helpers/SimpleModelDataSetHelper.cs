@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace DevZest.Data.Helpers
 {
@@ -30,6 +32,47 @@ namespace DevZest.Data.Helpers
             public _Int32 ChildCount { get; private set; }
 
             public SimpleModel Child { get; private set; }
+
+            public StringBuilder StartLog(int depth)
+            {
+                var log = new StringBuilder();
+                for (var _ = this; (depth--) >= 0; _ = _.Child)
+                {
+                    _.DataRowAdding += dataRow => { LogDataRowAdding(log, dataRow); };
+                    _.DataRowAdded += dataRow => { LogDataRowAdded(log, dataRow); };
+                    _.DataRowRemoved += (dataRow, baseDataSet, ordinal, parentDataSet, index) => { LogDataRowRemoved(log, baseDataSet, ordinal); };
+                    _.DataRowUpdated += (dataRow, columns) => { LogDataRowUpdated(log, dataRow, columns); };
+                }
+                return log;
+            }
+
+            private static void LogDataRowAdding(StringBuilder log, DataRow dataRow)
+            {
+                log.AppendLine(string.Format("DataSet-{0}[{1}] adding.", dataRow.Model.Depth, dataRow.Ordinal));
+            }
+
+            private static void LogDataRowAdded(StringBuilder log, DataRow dataRow)
+            {
+                log.AppendLine(string.Format("DataSet-{0}[{1}] added.", dataRow.Model.Depth, dataRow.Ordinal));
+            }
+
+            private static void LogDataRowRemoved(StringBuilder log, DataSet baseDataSet, int ordinal)
+            {
+                log.AppendLine(string.Format("DataSet-{0}[{1}] removed.", baseDataSet.Model.Depth, ordinal));
+            }
+
+            private static void LogDataRowUpdated(StringBuilder log, DataRow dataRow, IColumnSet columns)
+            {
+                log.AppendLine(string.Format("DataSet-{0}[{1}] updated: {2}", dataRow.Model.Depth, dataRow.Ordinal, GetColumnsString(columns)));
+            }
+
+            private static string GetColumnsString(IColumnSet columns)
+            {
+                if (columns == null)
+                    return "null";
+                var array = columns.Select(x => x.Name).OrderBy(x => x).ToArray();
+                return string.Format("[\"{0}\"]", string.Join(", ", array));
+            }
         }
 
         protected DataSet<SimpleModel> GetDataSet(int count, bool createChildren = true)

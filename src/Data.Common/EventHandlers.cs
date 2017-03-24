@@ -2,7 +2,7 @@
 {
     public delegate void ChildModelsInitialized(Model model);
 
-    public delegate void DataRowAddedEventHandler(DataRow dataRow);
+    public delegate void DataRowAddEventHandler(DataRow dataRow);
 
     public delegate void DataRowRemovedEventHandler(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index);
 

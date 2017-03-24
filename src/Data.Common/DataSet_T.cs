@@ -104,7 +104,7 @@ namespace DevZest.Data
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustIndex(i);
 
-                _baseDataSet.InternalRemoveAt(dataRow.Ordinal);
+                _baseDataSet.InternalRemoveAt(dataRow.Ordinal, false);
             }
 
             internal override void InternalInsertCore(int index, DataRow dataRow)

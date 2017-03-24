@@ -92,6 +92,7 @@ namespace DevZest.Data
 
             InternalInsert(index, dataRow);
 
+            Model.HandlesDataRowAdding(dataRow);
             if (updateAction != null)
             {
                 dataRow.SuspendUpdated();
@@ -133,20 +134,27 @@ namespace DevZest.Data
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            var dataRow = this[index];
-            var baseDataSet = dataRow.BaseDataSet;
-            var ordinal = dataRow.Ordinal;
-            var dataSet = dataRow.DataSet;
-            InternalRemoveAt(index);
-            Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            InternalRemoveAt(index, true);
         }
 
-        internal void InternalRemoveAt(int index)
+        internal void InternalRemoveAt(int index, bool notifyChange)
         {
             Debug.Assert(index >= 0 && index < Count);
 
             UpdateRevision();
-            InternalRemoveAtCore(index, this[index]);
+            var dataRow = this[index];
+            if (notifyChange)
+            {
+                var baseDataSet = dataRow.BaseDataSet;
+                var ordinal = dataRow.Ordinal;
+                var dataSet = dataRow.DataSet;
+                dataRow.SuspendUpdated();
+                InternalRemoveAtCore(index, dataRow);
+                dataRow.ResumeUpdated(true);
+                Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            }
+            else
+                InternalRemoveAtCore(index, dataRow);
         }
 
         internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
@@ -167,7 +175,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
 
             for (int i = Count - 1; i >= 0; i--)
-                InternalRemoveAt(i);
+                InternalRemoveAt(i, true);
         }
 
         public void CopyTo(DataRow[] array, int arrayIndex)
