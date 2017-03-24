@@ -111,10 +111,10 @@ namespace DevZest.Data
         internal void InternalInsert(int index, DataRow dataRow)
         {
             UpdateRevision();
-            InternalInsertCore(index, dataRow);
+            CoreInsert(index, dataRow);
         }
 
-        internal abstract void InternalInsertCore(int index, DataRow dataRow);
+        internal abstract void CoreInsert(int index, DataRow dataRow);
 
         public bool Remove(DataRow dataRow)
         {
@@ -134,31 +134,29 @@ namespace DevZest.Data
             if (index < 0 || index > Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            InternalRemoveAt(index, true);
+            OuterRemoveAt(index);
         }
 
-        internal void InternalRemoveAt(int index, bool notifyChange)
+        internal void OuterRemoveAt(int index)
         {
-            Debug.Assert(index >= 0 && index < Count);
-
-            UpdateRevision();
             var dataRow = this[index];
-            if (notifyChange)
-            {
-                var baseDataSet = dataRow.BaseDataSet;
-                var ordinal = dataRow.Ordinal;
-                var dataSet = dataRow.DataSet;
-                Model.HandlesDataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
-                dataRow.SuspendUpdated();
-                InternalRemoveAtCore(index, dataRow);
-                dataRow.ResetUpdated();
-                Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-            }
-            else
-                InternalRemoveAtCore(index, dataRow);
+            var baseDataSet = dataRow.BaseDataSet;
+            var ordinal = dataRow.Ordinal;
+            var dataSet = dataRow.DataSet;
+            Model.HandlesDataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
+            dataRow.SuspendUpdated();
+            InnerRemoveAt(index);
+            dataRow.ResetUpdated();
+            Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
         }
 
-        internal abstract void InternalRemoveAtCore(int index, DataRow dataRow);
+        internal void InnerRemoveAt(int index)
+        {
+            UpdateRevision();
+            CoreRemoveAt(index, this[index]);
+        }
+
+        internal abstract void CoreRemoveAt(int index, DataRow dataRow);
 
         public void Add(DataRow dataRow)
         {
@@ -176,7 +174,7 @@ namespace DevZest.Data
                 throw new NotSupportedException(Strings.NotSupportedByReadOnlyList);
 
             for (int i = Count - 1; i >= 0; i--)
-                InternalRemoveAt(i, true);
+                OuterRemoveAt(i);
         }
 
         public void CopyTo(DataRow[] array, int arrayIndex)

@@ -41,7 +41,7 @@ namespace DevZest.Data
                 return dataRow == null || dataRow.Model != Model ? -1 : dataRow.Ordinal;
             }
 
-            internal override void InternalRemoveAtCore(int index, DataRow dataRow)
+            internal override void CoreRemoveAt(int index, DataRow dataRow)
             {
                 Debug.Assert(dataRow.Model == Model && dataRow.Ordinal == index);
 
@@ -51,7 +51,7 @@ namespace DevZest.Data
                     _rows[i].AdjustOrdinal(i);
             }
 
-            internal override void InternalInsertCore(int index, DataRow dataRow)
+            internal override void CoreInsert(int index, DataRow dataRow)
             {
                 Debug.Assert(index >= 0 && index <= Count);
                 Debug.Assert(dataRow.Model == null);
@@ -95,7 +95,7 @@ namespace DevZest.Data
                 return dataRow == null || dataRow.Model != Model ? -1 : dataRow.Index;
             }
 
-            internal override void InternalRemoveAtCore(int index, DataRow dataRow)
+            internal override void CoreRemoveAt(int index, DataRow dataRow)
             {
                 Debug.Assert(dataRow.Model == Model && dataRow.Index == index);
 
@@ -104,10 +104,10 @@ namespace DevZest.Data
                 for (int i = index; i < _rows.Count; i++)
                     _rows[i].AdjustIndex(i);
 
-                _baseDataSet.InternalRemoveAt(dataRow.Ordinal, false);
+                _baseDataSet.InnerRemoveAt(dataRow.Ordinal);
             }
 
-            internal override void InternalInsertCore(int index, DataRow dataRow)
+            internal override void CoreInsert(int index, DataRow dataRow)
             {
                 Debug.Assert(index >= 0 && index <= Count);
                 Debug.Assert(dataRow.Model == null);
