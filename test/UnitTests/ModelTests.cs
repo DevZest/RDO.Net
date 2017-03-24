@@ -312,12 +312,12 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Model_DataRowAdded()
+        public void Model_DataRowInserted()
         {
             var salesOrders = DataSet<SalesOrder>.New();
             var _ = salesOrders._;
-            var dataRowAddedCount = 0;
-            _.DataRowAdded += delegate { dataRowAddedCount++; };
+            var dataRowInsertedCount = 0;
+            _.DataRowInserted += delegate { dataRowInsertedCount++; };
             var dataRowUpdatedCount = 0;
             _.DataRowUpdated += delegate { dataRowUpdatedCount++; };
             salesOrders.Add(new DataRow(), x =>
@@ -326,7 +326,7 @@ namespace DevZest.Data
             });
 
             Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
-            Assert.AreEqual(1, dataRowAddedCount);
+            Assert.AreEqual(1, dataRowInsertedCount);
             Assert.AreEqual(0, dataRowUpdatedCount);
         }
 

@@ -38,22 +38,28 @@ namespace DevZest.Data.Helpers
                 var log = new StringBuilder();
                 for (var _ = this; (depth--) >= 0; _ = _.Child)
                 {
-                    _.DataRowAdding += dataRow => { LogDataRowAdding(log, dataRow); };
-                    _.DataRowAdded += dataRow => { LogDataRowAdded(log, dataRow); };
-                    _.DataRowRemoved += (dataRow, baseDataSet, ordinal, parentDataSet, index) => { LogDataRowRemoved(log, baseDataSet, ordinal); };
-                    _.DataRowUpdated += (dataRow, columns) => { LogDataRowUpdated(log, dataRow, columns); };
+                    _.DataRowInserting += dataRow => LogDataRowInserting(log, dataRow);
+                    _.DataRowInserted += dataRow => LogDataRowInserted(log, dataRow);
+                    _.DataRowRemoving += (dataRow, baseDataSet, ordinal, parentDataSet, index) => LogDataRowRemoving(log, baseDataSet, ordinal);
+                    _.DataRowRemoved += (dataRow, baseDataSet, ordinal, parentDataSet, index) => LogDataRowRemoved(log, baseDataSet, ordinal);
+                    _.DataRowUpdated += (dataRow, columns) => LogDataRowUpdated(log, dataRow, columns);
                 }
                 return log;
             }
 
-            private static void LogDataRowAdding(StringBuilder log, DataRow dataRow)
+            private static void LogDataRowInserting(StringBuilder log, DataRow dataRow)
             {
-                log.AppendLine(string.Format("DataSet-{0}[{1}] adding.", dataRow.Model.Depth, dataRow.Ordinal));
+                log.AppendLine(string.Format("DataSet-{0}[{1}] inserting.", dataRow.Model.Depth, dataRow.Ordinal));
             }
 
-            private static void LogDataRowAdded(StringBuilder log, DataRow dataRow)
+            private static void LogDataRowInserted(StringBuilder log, DataRow dataRow)
             {
-                log.AppendLine(string.Format("DataSet-{0}[{1}] added.", dataRow.Model.Depth, dataRow.Ordinal));
+                log.AppendLine(string.Format("DataSet-{0}[{1}] inserted.", dataRow.Model.Depth, dataRow.Ordinal));
+            }
+
+            private static void LogDataRowRemoving(StringBuilder log, DataSet baseDataSet, int ordinal)
+            {
+                log.AppendLine(string.Format("DataSet-{0}[{1}] removing.", baseDataSet.Model.Depth, ordinal));
             }
 
             private static void LogDataRowRemoved(StringBuilder log, DataSet baseDataSet, int ordinal)

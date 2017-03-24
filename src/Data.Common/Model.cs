@@ -913,27 +913,28 @@ namespace DevZest.Data
             get { return _aggregateAffectedColumns ?? (_aggregateAffectedColumns = GetAggregateAffectedColumns()); }
         }
 
-        public event ChildModelsInitialized ChildModelsInitialized = delegate { };
-        public event DataRowAddEventHandler DataRowAdding = delegate { };
-        public event DataRowAddEventHandler DataRowAdded = delegate { };
-        public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
-        public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
+        public event ModelEventHandler ChildModelsInitialized = delegate { };
+        public event DataRowInsertEventHandler DataRowInserting = delegate { };
+        public event DataRowInsertEventHandler DataRowInserted = delegate { };
+        public event DataRowRemoveEventHandler DataRowRemoving = delegate { };
+        public event DataRowRemoveEventHandler DataRowRemoved = delegate { };
+        public event DataRowUpdateEventHandler DataRowUpdated = delegate { };
 
-        internal void HandlesDataRowAdding(DataRow dataRow)
+        internal void HandlesDataRowInserting(DataRow dataRow)
         {
-            OnDataRowAdding(dataRow);
-            DataRowAdding(dataRow);
+            OnDataRowInserting(dataRow);
+            DataRowInserting(dataRow);
         }
 
-        protected virtual void OnDataRowAdding(DataRow dataRow)
-        {
-        }
-
-        protected virtual void OnDataRowAdded(DataRow dataRow)
+        protected virtual void OnDataRowInserting(DataRow dataRow)
         {
         }
 
-        internal void HandlesDataRowAdded(DataRow dataRow)
+        protected virtual void OnDataRowInserted(DataRow dataRow)
+        {
+        }
+
+        internal void HandlesDataRowInserted(DataRow dataRow)
         {
             dataRow.SuspendUpdated();
             var computationColumns = ComputationColumns;
@@ -944,13 +945,13 @@ namespace DevZest.Data
             }
             try
             {
-                OnDataRowAdded(dataRow);
+                OnDataRowInserted(dataRow);
             }
             finally
             {
                 dataRow.ResumeUpdated();
             }
-            DataRowAdded(dataRow);
+            DataRowInserted(dataRow);
 
             RefreshAggregateAffectedColumns(dataRow, false);
         }
@@ -971,6 +972,16 @@ namespace DevZest.Data
                 var aggregateDataRow = dataRow.AncestorOf(ancestorLevel);
                 aggregateDataRow.RefreshComputationsInternal(aggregateColumns);
             }
+        }
+
+        internal void HandlesDataRowRemoving(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
+            OnDataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
+            DataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
+        }
+
+        protected virtual void OnDataRowRemoving(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
         }
 
         protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
