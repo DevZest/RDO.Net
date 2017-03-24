@@ -140,10 +140,10 @@ namespace DevZest.Data
         internal void OuterRemoveAt(int index)
         {
             var dataRow = this[index];
+            Model.HandlesDataRowRemoving(dataRow);
             var baseDataSet = dataRow.BaseDataSet;
             var ordinal = dataRow.Ordinal;
             var dataSet = dataRow.DataSet;
-            Model.HandlesDataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
             dataRow.SuspendUpdated();
             InnerRemoveAt(index);
             dataRow.ResetUpdated();

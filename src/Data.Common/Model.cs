@@ -914,11 +914,11 @@ namespace DevZest.Data
         }
 
         public event ModelEventHandler ChildModelsInitialized = delegate { };
-        public event DataRowInsertEventHandler DataRowInserting = delegate { };
-        public event DataRowInsertEventHandler DataRowInserted = delegate { };
-        public event DataRowRemoveEventHandler DataRowRemoving = delegate { };
-        public event DataRowRemoveEventHandler DataRowRemoved = delegate { };
-        public event DataRowUpdateEventHandler DataRowUpdated = delegate { };
+        public event DataRowEventHandler DataRowInserting = delegate { };
+        public event DataRowEventHandler DataRowInserted = delegate { };
+        public event DataRowEventHandler DataRowRemoving = delegate { };
+        public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
+        public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
 
         internal void HandlesDataRowInserting(DataRow dataRow)
         {
@@ -974,13 +974,13 @@ namespace DevZest.Data
             }
         }
 
-        internal void HandlesDataRowRemoving(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        internal void HandlesDataRowRemoving(DataRow dataRow)
         {
-            OnDataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
-            DataRowRemoving(dataRow, baseDataSet, ordinal, dataSet, index);
+            OnDataRowRemoving(dataRow);
+            DataRowRemoving(dataRow);
         }
 
-        protected virtual void OnDataRowRemoving(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        protected virtual void OnDataRowRemoving(DataRow dataRow)
         {
         }
 
