@@ -384,7 +384,10 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        protected internal abstract bool IsNull(T value);
+        protected internal virtual bool IsNull(T value)
+        {
+            return value == null;
+        }
 
         /// <inheritdoc/>
         public sealed override bool IsNull(DataRow dataRow)
