@@ -923,15 +923,20 @@ namespace DevZest.Data
         internal void HandlesDataRowInserting(DataRow dataRow)
         {
             OnDataRowInserting(dataRow);
-            DataRowInserting(dataRow);
         }
 
         protected virtual void OnDataRowInserting(DataRow dataRow)
+        {
+            DataRowInserting(dataRow);
+        }
+
+        protected virtual void ProcessDataRowInserted(DataRow dataRow)
         {
         }
 
         protected virtual void OnDataRowInserted(DataRow dataRow)
         {
+            DataRowInserted(dataRow);
         }
 
         internal void HandlesDataRowInserted(DataRow dataRow)
@@ -945,13 +950,13 @@ namespace DevZest.Data
             }
             try
             {
-                OnDataRowInserted(dataRow);
+                ProcessDataRowInserted(dataRow);
             }
             finally
             {
                 dataRow.ResumeUpdated();
             }
-            DataRowInserted(dataRow);
+            OnDataRowInserted(dataRow);
 
             RefreshAggregateAffectedColumns(dataRow, false);
         }
@@ -977,15 +982,16 @@ namespace DevZest.Data
         internal void HandlesDataRowRemoving(DataRow dataRow)
         {
             OnDataRowRemoving(dataRow);
-            DataRowRemoving(dataRow);
         }
 
         protected virtual void OnDataRowRemoving(DataRow dataRow)
         {
+            DataRowRemoving(dataRow);
         }
 
         protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
+            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
         }
 
         internal void HandlesDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
@@ -995,26 +1001,24 @@ namespace DevZest.Data
 
             OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
 
-            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-
             var parentDataRow = dataSet.ParentDataRow;
             if (parentDataRow != null)
                 RefreshAggregateAffectedColumns(parentDataRow, true);
         }
 
-        protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        protected internal virtual void ProcessDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
         }
 
         internal void HandlesDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
-            OnDataRowUpdated(dataRow, updatedColumns);
+            ProcessDataRowUpdated(dataRow, updatedColumns);
             var affectedColumns = GetAffectedColumns(updatedColumns);
             if (affectedColumns.Count > 0)
                 dataRow.RefreshComputationsInternal(affectedColumns);
         }
 
-        internal void FireDataRowUpdatedEvent(DataRow dataRow, IColumnSet updatedColumns)
+        internal void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
             DataRowUpdated(dataRow, updatedColumns);
         }

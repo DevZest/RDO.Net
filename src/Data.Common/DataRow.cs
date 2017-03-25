@@ -426,7 +426,7 @@ namespace DevZest.Data
             _handledColumns = ColumnSet.Empty;
             try
             {
-                Model.FireDataRowUpdatedEvent(this, result);
+                Model.OnDataRowUpdated(this, result);
             }
             finally
             {
