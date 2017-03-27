@@ -148,7 +148,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void WireDataChangedEvents(Model model)
         {
-            model.DataRowAdded += OnDataRowAdded;
+            model.DataRowInserted += OnDataRowInserted;
             model.DataRowRemoved += OnDataRowRemoved;
             model.DataRowUpdated += OnDataRowUpdated;
         }
@@ -432,7 +432,7 @@ namespace DevZest.Windows.Data.Primitives
             return _normalizedWhere == null || ApplyWhere(dataRow);
         }
 
-        private void OnDataRowAdded(DataRow dataRow)
+        private void OnDataRowInserted(DataRow dataRow)
         {
             if (!IsValid(dataRow))
                 return;

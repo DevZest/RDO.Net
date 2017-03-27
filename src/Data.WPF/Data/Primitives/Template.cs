@@ -556,9 +556,10 @@ namespace DevZest.Windows.Data.Primitives
                 throw new NotSupportedException();
             }
 
+            internal Func<T, bool> IsNullChecker;
             protected override bool IsNull(T value)
             {
-                throw new NotSupportedException();
+                return IsNullChecker == null ? base.IsNull(value) : IsNullChecker(value);
             }
 
             protected override JsonValue SerializeValue(T value)
@@ -590,12 +591,12 @@ namespace DevZest.Windows.Data.Primitives
             get { return _extenderDataSet; }
         }
 
-        internal Column<T> AddExtenderColumn<T>()
+        internal Column<T> AddExtenderColumn<T>(Func<T, bool> isNullChecker)
         {
             if (_extenderDataSet == null)
                 _extenderDataSet = DataSet<ExtenderModel>.New();
             _extenderDataSet._.Template = this;
-            return _extenderDataSet._.AddColumn<ExtenderColumn<T>>();
+            return _extenderDataSet._.AddColumn<ExtenderColumn<T>>(x => x.IsNullChecker = isNullChecker);
         }
     }
 }
