@@ -1018,7 +1018,7 @@ namespace DevZest.Data
                 dataRow.RefreshComputationsInternal(affectedColumns);
         }
 
-        protected internal void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
             DataRowUpdated(dataRow, updatedColumns);
         }
