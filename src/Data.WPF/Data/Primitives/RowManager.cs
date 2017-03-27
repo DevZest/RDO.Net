@@ -252,19 +252,11 @@ namespace DevZest.Windows.Data.Primitives
                 _currentRow = Rows[0];
                 InitInitialSelection();
             }
-            WireExtenderDataSetChangedEvents();
         }
 
-        private void WireExtenderDataSetChangedEvents()
+        internal void OnExtenderDataRowUpdated(DataRow dataRow, IColumnSet columns)
         {
-            var extenderDataSet = Template.ExtenderDataSet;
-            if (extenderDataSet != null)
-                extenderDataSet.Model.DataRowUpdated += OnExtenderDataSetUpdated;
-        }
-
-        private void OnExtenderDataSetUpdated(DataRow dataRow, IColumnSet columns)
-        {
-            FireOnRowUpdated(GetRowPresenterOfExtenderDataRow(dataRow));
+            HandlesRowUpdated(GetRowPresenterOfExtenderDataRow(dataRow), columns);
         }
 
         private RowPresenter GetRowPresenterOfExtenderDataRow(DataRow dataRow)
@@ -274,7 +266,6 @@ namespace DevZest.Windows.Data.Primitives
                 return CurrentRow;
             return dataRow.GetRowPresenter();
         }
-
 
         public RowPresenter VirtualRow { get; private set; }
 

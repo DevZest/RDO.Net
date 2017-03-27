@@ -615,16 +615,16 @@ namespace DevZest.Windows.Data.Primitives
             else if (!PassesFilter(dataRow))
                 Remove(row);
             else
-                Update(row);
+                Update(row, columns);
         }
 
-        private void Update(RowPresenter row)
+        private void Update(RowPresenter row, IColumnSet columns)
         {
             var oldIndex = IndexOf(row);
             var newIndex = GetIndex(row, oldIndex);
             if (oldIndex == newIndex)
             {
-                FireOnRowUpdated(row);
+                HandlesRowUpdated(row, columns);
                 return;
             }
 
@@ -689,16 +689,11 @@ namespace DevZest.Windows.Data.Primitives
             get { return Template.DataPresenter; }
         }
 
-        private bool _isOnRowUpdated;
-
-        protected void FireOnRowUpdated(RowPresenter row)
+        protected void HandlesRowUpdated(RowPresenter row, IColumnSet columns)
         {
-            if (_isOnRowUpdated)
-                return;
-            OnRowUpdated(row);
             if (DataPresenter != null)
-                DataPresenter.OnRowUpdated(row);
-            _isOnRowUpdated = false;
+                DataPresenter.OnRowUpdated(row, columns);
+            OnRowUpdated(row);
         }
 
         protected virtual void OnRowUpdated(RowPresenter row)

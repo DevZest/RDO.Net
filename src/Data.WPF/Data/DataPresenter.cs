@@ -232,7 +232,19 @@ namespace DevZest.Windows.Data
             get { yield break; }
         }
 
-        protected internal virtual void OnRowUpdated(RowPresenter rowPresenter)
+        protected internal virtual void OnRowAdded(RowPresenter rowPresenter)
+        {
+        }
+
+        protected internal virtual void OnRowRemoved(RowPresenter rowPresenter, int ordinal, RowPresenter parentRow, int index)
+        {
+        }
+
+        protected internal virtual void OnRowMoved(RowPresenter rowPresenter, int oldOrdinal, RowPresenter oldParentRow, int oldIndex)
+        {
+        }
+
+        protected internal virtual void OnRowUpdated(RowPresenter rowPresenter, IColumnSet columns)
         {
         }
     }

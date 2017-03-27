@@ -536,11 +536,6 @@ namespace DevZest.Windows.Data.Primitives
 
         private sealed class ExtenderColumn<T> : Column<T>
         {
-            public override bool AreEqual(T x, T y)
-            {
-                return Comparer<T>.Default.Compare(x, y) == 0;
-            }
-
             public override _String CastToString()
             {
                 throw new NotSupportedException();
@@ -572,13 +567,35 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        internal DataSet<Adhoc> ExtenderDataSet { get; private set; }
+        private sealed class ExtenderModel : Adhoc
+        {
+            public Template Template { get; set; }
+
+            private RowManager RowManager
+            {
+                get { return Template.RowManager; }
+            }
+
+            protected override void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+            {
+                var rowManager = RowManager;
+                if (rowManager != null)
+                    rowManager.OnExtenderDataRowUpdated(dataRow, updatedColumns);
+            }
+        }
+
+        private DataSet<ExtenderModel> _extenderDataSet;
+        internal DataSet ExtenderDataSet
+        {
+            get { return _extenderDataSet; }
+        }
 
         internal Column<T> AddExtenderColumn<T>()
         {
-            if (ExtenderDataSet == null)
-                ExtenderDataSet = DataSet<Adhoc>.New();
-            return ExtenderDataSet._.AddColumn<ExtenderColumn<T>>();
+            if (_extenderDataSet == null)
+                _extenderDataSet = DataSet<ExtenderModel>.New();
+            _extenderDataSet._.Template = this;
+            return _extenderDataSet._.AddColumn<ExtenderColumn<T>>();
         }
     }
 }
