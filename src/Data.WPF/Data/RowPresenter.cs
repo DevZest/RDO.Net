@@ -15,17 +15,17 @@ namespace DevZest.Windows.Data
         {
         }
 
-        internal RowPresenter(RowMapper rowMapper, int virtualRowIndex)
-            : this(rowMapper, null, virtualRowIndex)
+        internal RowPresenter(RowMapper rowMapper, int rawIndex)
+            : this(rowMapper, null, rawIndex)
         {
         }
 
-        private RowPresenter(RowMapper rowMapper, DataRow dataRow, int absoluteIndex)
+        private RowPresenter(RowMapper rowMapper, DataRow dataRow, int rawIndex)
         {
             Debug.Assert(rowMapper != null);
             _rowMapper = rowMapper;
             DataRow = dataRow;
-            RawIndex = absoluteIndex;
+            RawIndex = rawIndex;
             InitExtenderDataRow();
         }
 
@@ -123,7 +123,7 @@ namespace DevZest.Windows.Data
             get { return Template.ExtenderDataSet; }
         }
 
-        internal DataRow ExtenderDataRow;
+        internal DataRow ExtenderDataRow { get; set; }
 
         public bool IsVirtual
         {
