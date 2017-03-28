@@ -123,12 +123,6 @@ namespace DevZest.Windows.Data.Primitives
             _rows.RemoveRange(startIndex, count);
         }
 
-        private void RemoveAt(int index)
-        {
-            _rows[index].RawIndex = -1;
-            _rows.RemoveAt(index);
-        }
-
         protected sealed override void OnRowAdded(RowPresenter row, int index)
         {
             if (IsRecursive)

@@ -148,6 +148,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void WireDataChangedEvents(Model model)
         {
+            model.DataRowInserting += OnDataRowInserting;
             model.DataRowInserted += OnDataRowInserted;
             model.DataRowRemoved += OnDataRowRemoved;
             model.DataRowUpdated += OnDataRowUpdated;
@@ -406,43 +407,30 @@ namespace DevZest.Windows.Data.Primitives
             row.Dispose();
         }
 
-        private bool IsValid(DataRow dataRow)
-        {
-            return IsValid(dataRow.Model);
-        }
-
-        private bool IsValid(Model model)
-        {
-            if (model == DataSet.Model)
-                return true;
-
-            if (IsRecursive)
-            {
-                for (var dataSet = GetChildDataSet(DataSet); dataSet != null; dataSet = GetChildDataSet(dataSet))
-                {
-                    if (model == dataSet.Model)
-                        return true;
-                }
-            }
-            return false;
-        }
-
         private bool PassesFilter(DataRow dataRow)
         {
             return _normalizedWhere == null || ApplyWhere(dataRow);
         }
 
-        private void OnDataRowInserted(DataRow dataRow)
-        {
-            if (!IsValid(dataRow))
-                return;
+        private Stack<DataRow> _insertingDataRows = new Stack<DataRow>();
 
+        private void OnDataRowInserting(DataRow dataRow)
+        {
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
                 WireDataChangedEvents(childDataSet.Model);
             }
+            _insertingDataRows.Push(dataRow);
+        }
+
+        private void OnDataRowInserted(DataRow dataRow)
+        {
+            if (_insertingDataRows.Peek() != dataRow)
+                return;
             Add(dataRow);
+            Debug.Assert(_insertingDataRows.Peek() == dataRow);
+            _insertingDataRows.Pop();
         }
 
         private void Add(DataRow dataRow)
@@ -463,6 +451,8 @@ namespace DevZest.Windows.Data.Primitives
                     row.Parent = parentRow;
                     if (parentRow == existedAncestor)
                         break;
+                    Debug.Assert(_insertingDataRows.Peek() == row.DataRow);
+                    _insertingDataRows.Pop();
                     parentRow.InsertChild(0, row);
                     row = row.Parent;
                 }
@@ -540,8 +530,6 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            if (!IsValid(baseDataSet.Model))
-                return;
             var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
@@ -606,9 +594,6 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowUpdated(DataRow dataRow, IColumnSet columns)
         {
-            if (!IsValid(dataRow))
-                return;
-
             var row = this[dataRow];
             if (row == null)
                 Add(dataRow);

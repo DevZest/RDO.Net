@@ -297,7 +297,7 @@ namespace DevZest.Windows.Data.Primitives
         }
 
         [TestMethod]
-        public void RowMapper_OnDataRowAdded_recursive_query()
+        public void RowMapper_OnDataRowInserted_recursive_query()
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
