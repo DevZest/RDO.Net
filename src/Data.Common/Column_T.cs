@@ -285,7 +285,7 @@ namespace DevZest.Data
         {
             Check.NotNull(dataRow, paramName);
             if (ParentModel == null || (dataRow != ParentModel.EditingRow && dataRow.Model != ParentModel))
-                throw new ArgumentException(Strings.Column_VerifyDataRow, paramName);
+                throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
         }
 
         /// <summary>Gets a value indicates whether this column is readonly for provided <see cref="DataRow"/> object.</summary>

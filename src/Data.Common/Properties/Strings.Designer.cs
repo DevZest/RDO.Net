@@ -100,19 +100,19 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The Model of the given DataRow must be the same as this column's ParentModel.
+        /// The DataRow is invalid, it does not contain this Column.
         /// </summary>
-        public static string Column_VerifyDataRow
+        public static string Column_InvalidDataRow
         {
-            get { return GetString("Column_VerifyDataRow"); }
+            get { return GetString("Column_InvalidDataRow"); }
         }
 
         /// <summary>
-        /// The Model of the given DbReader parameter must be the same as this column's ParentModel.
+        /// The DbReader is invalid, it does not contain this Column.
         /// </summary>
-        public static string Column_VerifyDbReader
+        public static string Column_InvalidDbReader
         {
-            get { return GetString("Column_VerifyDbReader"); }
+            get { return GetString("Column_InvalidDbReader"); }
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid parent DataRow.
+        /// Invalid parent DataRow, it does not contain this child column.
         /// </summary>
         public static string Column_InvalidParentDataRow
         {

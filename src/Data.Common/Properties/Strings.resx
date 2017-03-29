@@ -150,11 +150,11 @@
   <data name="ColumnExpression_AlreadyAttached" xml:space="preserve">
     <value>The expression is already attached to a Column.</value>
   </data>
-  <data name="Column_VerifyDataRow" xml:space="preserve">
-    <value>The Model of the given DataRow must be the same as this column's ParentModel.</value>
+  <data name="Column_InvalidDataRow" xml:space="preserve">
+    <value>The DataRow is invalid, it does not contain this Column.</value>
   </data>
-  <data name="Column_VerifyDbReader" xml:space="preserve">
-    <value>The Model of the given DbReader parameter must be the same as this column's ParentModel.</value>
+  <data name="Column_InvalidDbReader" xml:space="preserve">
+    <value>The DbReader is invalid, it does not contain this Column.</value>
   </data>
   <data name="DbLogger_CommandCanceled" xml:space="preserve">
     <value>-- Canceled in {elapsedMilliSeconds} ms</value>
@@ -337,7 +337,7 @@
     <value>No ColumnMapping specified.</value>
   </data>
   <data name="Column_InvalidParentDataRow" xml:space="preserve">
-    <value>Invalid parent DataRow.</value>
+    <value>Invalid parent DataRow, it does not contain this child column.</value>
   </data>
   <data name="DataSet_InvalidNewDataRow" xml:space="preserve">
     <value>Cannot add DataRow into multiple DataSet.</value>
