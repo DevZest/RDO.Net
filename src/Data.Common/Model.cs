@@ -810,6 +810,7 @@ namespace DevZest.Data
         internal void BeginEdit(DataRow dataRow)
         {
             Debug.Assert(EditingRow == null && dataRow != null);
+            EnsureChildModelsInitialized();
             EditingRow = dataRow;
             foreach (var column in Columns)
                 column.BeginEdit(dataRow);
@@ -887,26 +888,6 @@ namespace DevZest.Data
             return result.Seal();
         }
 
-        internal bool IsAncestorOf(Model model)
-        {
-            var ancestorLevel = AncestorLevelOf(model);
-            return ancestorLevel.HasValue && ancestorLevel.GetValueOrDefault() > 0;
-        }
-
-        internal int? AncestorLevelOf(Model model)
-        {
-            Debug.Assert(model != null);
-            var result = 0;
-            for (; model != null; model = model.ParentModel)
-            {
-
-                if (model == this)
-                    return result;
-                result++;
-            }
-            return null;
-        }
-
         private IReadOnlyDictionary<Model, IColumnSet> _aggregateAffectedColumns;
         private IReadOnlyDictionary<Model, IColumnSet> AggregateAffectedColumns
         {
@@ -939,22 +920,25 @@ namespace DevZest.Data
             DataRowInserted(dataRow);
         }
 
-        internal void HandlesDataRowInserted(DataRow dataRow)
+        internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
         {
             dataRow.SuspendUpdated();
-            var computationColumns = ComputationColumns;
-            if (computationColumns.Count > 0)
-            {
-                foreach (var computationColumn in computationColumns)
-                    computationColumn.RefreshComputation(dataRow);
-            }
             try
             {
+                if (updateAction != null)
+                    updateAction(dataRow);
+
+                var computationColumns = ComputationColumns;
+                if (computationColumns.Count > 0)
+                {
+                    foreach (var computationColumn in computationColumns)
+                        computationColumn.RefreshComputation(dataRow);
+                }
                 ProcessDataRowInserted(dataRow);
             }
             finally
             {
-                dataRow.ResumeUpdated();
+                dataRow.ResetUpdated();
             }
             OnDataRowInserted(dataRow);
 

@@ -83,6 +83,7 @@
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="IAbstractValidationMessageGroup.cs" />
+    <Compile Include="Primitives\IDataRowProxy.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />

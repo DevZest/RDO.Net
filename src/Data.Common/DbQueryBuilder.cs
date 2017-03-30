@@ -315,11 +315,23 @@ namespace DevZest.Data
 
         private void VerifySourceColumn(Column sourceColumn, string exceptionParamName, IModelSet sourceModelSet, bool allowsAggregate)
         {
-            sourceColumn.VerifyScalarSourceModels(sourceModelSet, exceptionParamName);
+            VerifyScalarSourceModels(sourceModelSet, sourceColumn, exceptionParamName);
             if (allowsAggregate)
                 VerifyAggregateSourceModels(sourceColumn, exceptionParamName, sourceModelSet);
             else if (sourceColumn.AggregateSourceModels.Count > 0)
                 throw new ArgumentException(Strings.DbQueryBuilder_AggregateNotAllowed, exceptionParamName);
+        }
+
+        private void VerifyScalarSourceModels(IModelSet containsBy, Column sourceColumn, string exceptionParamName)
+        {
+            if (sourceColumn.ScalarSourceModels.Count == 0 && sourceColumn.GetExpression() == null)
+                throw new ArgumentException(Strings.Column_EmptyScalarSourceModels, exceptionParamName);
+
+            foreach (var model in sourceColumn.ScalarSourceModels)
+            {
+                if (!containsBy.Contains(model))
+                    throw new ArgumentException(Strings.DbQueryBuilder_InvalidScalarSourceModel(model), exceptionParamName);
+            }
         }
 
         private static void VerifyAggregateSourceModels(Column sourceColumn, string exceptionParamName, IModelSet modelSet)
@@ -327,7 +339,7 @@ namespace DevZest.Data
             foreach (var model in sourceColumn.AggregateSourceModels)
             {
                 if (!modelSet.Contains(model))
-                    throw new ArgumentException(Strings.Column_InvalidAggregateSourceModel(model), exceptionParamName);
+                    throw new ArgumentException(Strings.DbQueryBuilder_InvalidAggregateSourceModel(model), exceptionParamName);
             }
         }
 

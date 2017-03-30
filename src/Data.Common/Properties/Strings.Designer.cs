@@ -846,9 +846,9 @@ namespace DevZest.Data
         /// <summary>
         /// The column has invalid scalar source model: "{0}".
         /// </summary>
-        public static string Column_InvalidScalarSourceModel(object p0)
+        public static string DbQueryBuilder_InvalidScalarSourceModel(object p0)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Column_InvalidScalarSourceModel"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidScalarSourceModel"), p0);
         }
 
         /// <summary>
@@ -862,9 +862,9 @@ namespace DevZest.Data
         /// <summary>
         /// The column contains invalid aggregate source model: "{0}".
         /// </summary>
-        public static string Column_InvalidAggregateSourceModel(object p0)
+        public static string DbQueryBuilder_InvalidAggregateSourceModel(object p0)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Column_InvalidAggregateSourceModel"), p0);
+            return string.Format(CultureInfo.CurrentCulture, GetString("DbQueryBuilder_InvalidAggregateSourceModel"), p0);
         }
 
         /// <summary>

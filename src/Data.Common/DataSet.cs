@@ -93,19 +93,7 @@ namespace DevZest.Data
             InternalInsert(index, dataRow);
 
             Model.HandlesDataRowInserting(dataRow);
-            if (updateAction != null)
-            {
-                dataRow.SuspendUpdated();
-                try
-                {
-                    updateAction(dataRow);
-                }
-                finally
-                {
-                    dataRow.ResetUpdated();
-                }
-            }
-            Model.HandlesDataRowInserted(dataRow);
+            Model.HandlesDataRowInserted(dataRow, updateAction);
         }
 
         internal void InternalInsert(int index, DataRow dataRow)
