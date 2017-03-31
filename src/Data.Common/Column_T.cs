@@ -285,16 +285,16 @@ namespace DevZest.Data
             set { this[null, ordinal] = value; }
         }
 
-        public T this[DataRow parentDataRow, int childOrdinal]
+        public T this[DataRow parentDataRow, int index]
         {
             get
             {
-                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, childOrdinal);
+                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, index);
                 return InternalGetValue(dataRow, Translate(dataRow));
             }
             set
             {
-                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, childOrdinal);
+                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, index);
                 InternalSetValue(dataRow, value);
             }
         }
@@ -598,17 +598,12 @@ namespace DevZest.Data
             get { return Comparer<T>.Default; }
         }
 
-        private sealed class DefaultValueProxy : IDataRowProxy
+        private sealed class DefaultDataRowProxy : IDataRowProxy
         {
-            public static readonly DefaultValueProxy Singleton = new DefaultValueProxy();
+            public static readonly DefaultDataRowProxy Singleton = new DefaultDataRowProxy();
 
-            private DefaultValueProxy()
+            private DefaultDataRowProxy()
             {
-            }
-
-            public IModelSet GetAllowedScalarSourceModels(Model parentModel)
-            {
-                return parentModel;
             }
 
             public DataRow Translate(DataRow dataRow)
@@ -639,7 +634,7 @@ namespace DevZest.Data
 
         protected virtual IDataRowProxy DataRowProxy
         {
-            get { return DefaultValueProxy.Singleton; }
+            get { return DefaultDataRowProxy.Singleton; }
         }
     }
 }
