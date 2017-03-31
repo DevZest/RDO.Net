@@ -9,7 +9,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a row of in-memory data.
     /// </summary>
-    public sealed class DataRow
+    public class DataRow
     {
         internal static readonly DataRow Placeholder = new DataRow();
 
