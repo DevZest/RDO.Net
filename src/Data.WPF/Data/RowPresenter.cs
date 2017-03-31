@@ -26,26 +26,10 @@ namespace DevZest.Windows.Data
             _rowMapper = rowMapper;
             DataRow = dataRow;
             RawIndex = rawIndex;
-            InitExtenderDataRow();
-        }
-
-        private void InitExtenderDataRow()
-        {
-            if (ExtenderDataSet == null || DataRow == null)
-                return;
-
-            ExtenderDataRow = DataRow.GetExtenderDataRow();
-            if (ExtenderDataRow != null)
-                DataRow.SetExtenderDataRow(null);
-            else
-                ExtenderDataSet.Add(ExtenderDataRow = new DataRow());
-            ExtenderDataRow.SetRowPresenter(this);
         }
 
         internal void Dispose()
         {
-            if (ExtenderDataRow != null)
-                ExtenderDataSet.Remove(ExtenderDataRow);
             _rowMapper = null;
             Parent = null;
         }
@@ -117,13 +101,6 @@ namespace DevZest.Windows.Data
         }
 
         public DataRow DataRow { get; internal set; }
-
-        private DataSet ExtenderDataSet
-        {
-            get { return Template.ExtenderDataSet; }
-        }
-
-        internal DataRow ExtenderDataRow { get; set; }
 
         public bool IsVirtual
         {
@@ -274,20 +251,9 @@ namespace DevZest.Windows.Data
 
         public T GetValue<T>(Column<T> column)
         {
-            VerifyColumn(column, nameof(column));
-
-            var isExtenderColumn = IsExtenderColumn(column);
-            if (!isExtenderColumn && Depth > 0)
+            if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
-            var dataRow = isExtenderColumn ? ExtenderDataRow : DataRow;
-
-            return DataRow == null ? default(T) : column[dataRow];
-        }
-
-        private bool IsExtenderColumn(Column column)
-        {
-            Debug.Assert(column != null);
-            return ExtenderDataSet != null && column.GetParentModel() == ExtenderDataSet.Model;
+            return DataRow == null ? default(T) : column[DataRow];
         }
 
         private void VerifyColumn(Column column, string paramName)
@@ -295,7 +261,7 @@ namespace DevZest.Windows.Data
             if (column == null)
                 throw new ArgumentNullException(paramName);
 
-            if (column.GetParentModel() != RowMapper.DataSet.Model && !IsExtenderColumn(column))
+            if (column.GetParentModel() != RowMapper.DataSet.Model)
                 throw new ArgumentException(Strings.RowPresenter_VerifyColumn, paramName);
         }
 
@@ -312,21 +278,18 @@ namespace DevZest.Windows.Data
             {
                 VerifyColumn(column, nameof(column));
 
-                var isExtenderColumn = IsExtenderColumn(column);
-                if (!isExtenderColumn && Depth > 0)
+                if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
-                var dataRow = isExtenderColumn ? ExtenderDataRow : DataRow;
-                return dataRow == null ? GetDefault(column.DataType) : column.GetValue(dataRow);
+                return DataRow == null ? GetDefault(column.DataType) : column.GetValue(DataRow);
             }
             internal set
             {
                 VerifyColumn(column, nameof(column));
 
-                var isExtenderColumn = IsExtenderColumn(column);
-                if (!isExtenderColumn && Depth > 0)
+                if (Depth > 0)
                     column = DataRow.Model.GetColumns()[column.Ordinal];
                 CoerceEditMode();
-                column.SetValue(isExtenderColumn ? ExtenderDataRow : DataRow, value);
+                column.SetValue(DataRow, value);
             }
         }
 
@@ -375,12 +338,11 @@ namespace DevZest.Windows.Data
         {
             VerifyColumn(column, nameof(column));
 
-            var isExtenderColumn = IsExtenderColumn(column);
-            if (!isExtenderColumn && Depth > 0)
+            if (Depth > 0)
                 column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
 
             CoerceEditMode();
-            column[isExtenderColumn ? ExtenderDataRow : DataRow] = value;
+            column[DataRow] = value;
         }
 
         public void CancelEdit()

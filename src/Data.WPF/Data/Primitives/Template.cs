@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Primitives;
 using DevZest.Windows.Controls;
 using DevZest.Windows.Controls.Primitives;
 using System;
@@ -566,10 +567,17 @@ namespace DevZest.Windows.Data.Primitives
             {
                 throw new NotImplementedException();
             }
+
+            protected override IDataRowProxy DataRowProxy
+            {
+                get { return ((ExtenderModel)this.GetParentModel()).Template.RowManager; }
+            }
         }
 
         private sealed class ExtenderModel : Adhoc
         {
+            internal readonly Dictionary<DataRow, DataRow> DataRowMappings = new Dictionary<DataRow, DataRow>();
+
             public Template Template { get; set; }
 
             private RowManager RowManager
@@ -591,11 +599,18 @@ namespace DevZest.Windows.Data.Primitives
             get { return _extenderDataSet; }
         }
 
+        internal Dictionary<DataRow, DataRow> ExtenderDataRowMappings
+        {
+            get { return _extenderDataSet == null ? null : _extenderDataSet._.DataRowMappings; }
+        }
+
         internal Column<T> AddExtenderColumn<T>(Func<T, bool> isNullChecker)
         {
             if (_extenderDataSet == null)
+            {
                 _extenderDataSet = DataSet<ExtenderModel>.New();
-            _extenderDataSet._.Template = this;
+                _extenderDataSet._.Template = this;
+            }
             return _extenderDataSet._.AddColumn<ExtenderColumn<T>>(x => x.IsNullChecker = isNullChecker);
         }
     }

@@ -236,6 +236,14 @@ namespace DevZest.Windows
         }
 
         /// <summary>
+        /// The parent DataRow is invalid.
+        /// </summary>
+        public static string RowMapper_InvalidParentDataRow
+        {
+            get { return GetString("RowMapper_InvalidParentDataRow"); }
+        }
+
+        /// <summary>
         /// The virtual row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteVirtualRow

@@ -19,20 +19,5 @@ namespace DevZest.Windows.Data.Primitives
             if (value != null)
                 s_dataRowToRowPresenterMappings.Add(dataRow, value);
         }
-
-        private static readonly ConditionalWeakTable<DataRow, DataRow> s_dataRowToExtenderDataRowMappings = new ConditionalWeakTable<DataRow, DataRow>();
-
-        internal static DataRow GetExtenderDataRow(this DataRow dataRow)
-        {
-            DataRow result;
-            return s_dataRowToExtenderDataRowMappings.TryGetValue(dataRow, out result) ? result : null;
-        }
-
-        internal static void SetExtenderDataRow(this DataRow dataRow, DataRow value)
-        {
-            s_dataRowToExtenderDataRowMappings.Remove(dataRow);
-            if (value != null)
-                s_dataRowToExtenderDataRowMappings.Add(dataRow, value);
-        }
     }
 }

@@ -174,8 +174,9 @@ namespace DevZest.Windows.Data.Primitives
             {
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
-                if (rowManager.Template.ExtenderDataSet != null)
-                    rowManager.CurrentRow.ExtenderDataRow = rowManager.Template.ExtenderDataSet.BeginAdd();
+                var extenderDataSet = rowManager.ExtenderDataSet;
+                if (extenderDataSet != null)
+                    extenderDataSet.BeginAdd();
             }
 
             protected sealed override void CancelEdit(RowManager rowManager)
@@ -183,23 +184,18 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = null;
                 GetDataSet(rowManager).CancelAdd();
-                if (rowManager.Template.ExtenderDataSet != null)
-                {
-                    rowManager.CurrentRow.ExtenderDataRow = null;
-                    rowManager.Template.ExtenderDataSet.CancelAdd();
-                }
+                var extenderDataSet = rowManager.ExtenderDataSet;
+                if (extenderDataSet != null)
+                    extenderDataSet.CancelAdd();
             }
 
             protected sealed override void EndEdit(RowManager rowManager)
             {
                 rowManager.CurrentRow.DataRow = null;
                 var dataRow = GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
-                if  (rowManager.Template.ExtenderDataSet != null)
-                {
-                    rowManager.CurrentRow.ExtenderDataRow = null;
-                    var extenderDataRow = rowManager.Template.ExtenderDataSet.EndAdd();
-                    dataRow.SetExtenderDataRow(extenderDataRow);
-                }
+                var extenderDataSet = rowManager.ExtenderDataSet;
+                if  (extenderDataSet != null)
+                    extenderDataSet.EndAdd();
             }
 
             public override void OnRowsChanged(RowManager rowManager)

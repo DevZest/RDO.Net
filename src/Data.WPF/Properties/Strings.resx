@@ -201,6 +201,9 @@
   <data name="RowManager_ChangeCurrentRowNotAllowed" xml:space="preserve">
     <value>Change current row is not allowed (CanChangeCurrentRow property is false).</value>
   </data>
+  <data name="RowMapper_InvalidParentDataRow" xml:space="preserve">
+    <value>The parent DataRow is invalid.</value>
+  </data>
   <data name="RowPresenter_DeleteVirtualRow" xml:space="preserve">
     <value>The virtual row cannot be deleted.</value>
   </data>

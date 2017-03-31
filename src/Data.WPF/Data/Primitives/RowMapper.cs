@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System;
 
 namespace DevZest.Windows.Data.Primitives
 {
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
-    internal abstract class RowMapper : IDataCriteria
+    internal abstract class RowMapper : IDataCriteria, IDataRowProxy
     {
         private abstract class Normalized<T> : IReadOnlyList<T>
             where T : class
@@ -254,7 +255,8 @@ namespace DevZest.Windows.Data.Primitives
         private void Initialize()
         {
             InitializeMappings();
-            InitializeRows();
+            InitializeRowPresenters();
+            InitializeExtenderDataRows();
         }
 
         /// <summary>Mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/></summary>
@@ -388,7 +390,7 @@ namespace DevZest.Windows.Data.Primitives
             get { return _rows; }
         }
 
-        private void InitializeRows()
+        private void InitializeRowPresenters()
         {
             _rows = new List<RowPresenter>();
             var dataRows = Filter(DataSet);
@@ -530,6 +532,8 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
+            if (ExtenderDataSet != null)
+                RemoveExtenderDataRow(dataRow);
             var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
@@ -683,6 +687,97 @@ namespace DevZest.Windows.Data.Primitives
 
         protected virtual void OnRowUpdated(RowPresenter row)
         {
+        }
+
+        private Dictionary<DataRow, DataRow> _extenderDataRows;
+
+        internal DataSet ExtenderDataSet
+        {
+            get { return Template.ExtenderDataSet; }
+        }
+
+        private Dictionary<DataRow, DataRow> ExtenderDataRowMappings
+        {
+            get { return Template.ExtenderDataRowMappings; }
+        }
+
+        private void InitializeExtenderDataRows()
+        {
+            if (ExtenderDataSet == null)
+                return;
+
+            ExtenderDataSet.Clear();
+            ExtenderDataRowMappings.Clear();
+            foreach (var dataRow in GetDataRows())
+                AddExtenderDataRow(dataRow);
+        }
+
+        private void AddExtenderDataRow(DataRow dataRow)
+        {
+            Debug.Assert(ExtenderDataSet != null);
+            var extenderDataRow = new DataRow();
+            ExtenderDataRowMappings.Add(dataRow, extenderDataRow);
+            DataSet.Add(extenderDataRow);
+        }
+
+        private void RemoveExtenderDataRow(DataRow dataRow)
+        {
+            Debug.Assert(ExtenderDataSet != null);
+            Debug.Assert(ExtenderDataRowMappings.ContainsKey(dataRow));
+            var extenderDataRow = ExtenderDataRowMappings[dataRow];
+            DataSet.Remove(extenderDataRow);
+            ExtenderDataRowMappings.Remove(dataRow);
+        }
+
+        DataRow IDataRowProxy.Translate(DataRow dataRow)
+        {
+            DataRow extenderDataRow;
+            if (ExtenderDataRowMappings.TryGetValue(dataRow, out extenderDataRow))
+                return extenderDataRow;
+            return dataRow;
+        }
+
+        IEnumerable<DataRow> IDataRowProxy.GetDataRows(Model parentModel)
+        {
+            Debug.Assert(parentModel == ExtenderDataSet.Model);
+            return GetDataRows();
+        }
+
+        private IEnumerable<DataRow> GetDataRows()
+        {
+            return IsRecursive ? GetDataRowsRecursively(DataSet) : DataSet;
+        }
+
+        private IEnumerable<DataRow> GetDataRowsRecursively(DataSet dataSet)
+        {
+            Debug.Assert(IsRecursive);
+            foreach (var dataRow in dataSet)
+                yield return dataRow;
+
+            var childDataSet = GetChildDataSet(dataSet);
+            if (childDataSet != null)
+            {
+                foreach (var childDataRow in GetDataRowsRecursively(childDataSet))
+                    yield return childDataRow;
+            }
+        }
+
+        DataRow IDataRowProxy.GetDataRow(Model parentModel, DataRow parentDataRow, int index)
+        {
+            Debug.Assert(parentModel == ExtenderDataSet.Model);
+            var dataSet = GetDataSet(parentDataRow);
+            return dataSet[index];
+        }
+
+        private DataSet GetDataSet(DataRow parentDataRow)
+        {
+            if (parentDataRow == null)
+                return DataSet;
+
+            if (!IsRecursive || !ExtenderDataRowMappings.ContainsKey(parentDataRow))
+                throw new ArgumentException(Strings.RowMapper_InvalidParentDataRow, nameof(parentDataRow));
+            var childModel = GetChildDataSet(parentDataRow.Model).Model;
+            return parentDataRow[childModel];
         }
     }
 }
