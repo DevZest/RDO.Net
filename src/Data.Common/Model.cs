@@ -896,9 +896,11 @@ namespace DevZest.Data
 
         public event ModelEventHandler ChildModelsInitialized = delegate { };
         public event DataRowEventHandler DataRowInserting = delegate { };
+        public event DataRowEventHandler ProcessDataRowInserted = delegate { };
         public event DataRowEventHandler DataRowInserted = delegate { };
         public event DataRowEventHandler DataRowRemoving = delegate { };
         public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
+        public event DataRowUpdatedEventHandler ProcessDataRowUpdated = delegate { };
         public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
 
         internal void HandlesDataRowInserting(DataRow dataRow)
@@ -911,8 +913,9 @@ namespace DevZest.Data
             DataRowInserting(dataRow);
         }
 
-        protected virtual void ProcessDataRowInserted(DataRow dataRow)
+        protected virtual void OnProcessDataRowInserted(DataRow dataRow)
         {
+            ProcessDataRowInserted(dataRow);
         }
 
         protected virtual void OnDataRowInserted(DataRow dataRow)
@@ -934,7 +937,7 @@ namespace DevZest.Data
                     foreach (var computationColumn in computationColumns)
                         computationColumn.RefreshComputation(dataRow);
                 }
-                ProcessDataRowInserted(dataRow);
+                OnProcessDataRowInserted(dataRow);
             }
             finally
             {
@@ -990,13 +993,14 @@ namespace DevZest.Data
                 RefreshAggregateAffectedColumns(parentDataRow, true);
         }
 
-        protected internal virtual void ProcessDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        protected virtual void OnProcessDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
+            ProcessDataRowUpdated(dataRow, updatedColumns);
         }
 
         internal void HandlesDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
-            ProcessDataRowUpdated(dataRow, updatedColumns);
+            OnProcessDataRowUpdated(dataRow, updatedColumns);
             var affectedColumns = GetAffectedColumns(updatedColumns);
             if (affectedColumns.Count > 0)
                 dataRow.RefreshComputationsInternal(affectedColumns);

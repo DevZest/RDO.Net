@@ -39,9 +39,11 @@ namespace DevZest.Data.Helpers
                 for (var _ = this; (depth--) >= 0; _ = _.Child)
                 {
                     _.DataRowInserting += dataRow => LogDataRowInserting(log, dataRow);
+                    _.ProcessDataRowInserted += dataRow => LogProcessDataRowInserted(log, dataRow);
                     _.DataRowInserted += dataRow => LogDataRowInserted(log, dataRow);
                     _.DataRowRemoving += (dataRow) => LogDataRowRemoving(log, dataRow);
                     _.DataRowRemoved += (dataRow, baseDataSet, ordinal, parentDataSet, index) => LogDataRowRemoved(log, baseDataSet, ordinal);
+                    _.ProcessDataRowUpdated += (dataRow, columns) => LogProcessDataRowUpdated(log, dataRow, columns);
                     _.DataRowUpdated += (dataRow, columns) => LogDataRowUpdated(log, dataRow, columns);
                 }
                 return log;
@@ -50,6 +52,11 @@ namespace DevZest.Data.Helpers
             private static void LogDataRowInserting(StringBuilder log, DataRow dataRow)
             {
                 log.AppendLine(string.Format("DataSet-{0}[{1}] inserting.", dataRow.Model.Depth, dataRow.Ordinal));
+            }
+
+            private static void LogProcessDataRowInserted(StringBuilder log, DataRow dataRow)
+            {
+                log.AppendLine(string.Format("Process DataSet-{0}[{1}] inserted.", dataRow.Model.Depth, dataRow.Ordinal));
             }
 
             private static void LogDataRowInserted(StringBuilder log, DataRow dataRow)
@@ -65,6 +72,11 @@ namespace DevZest.Data.Helpers
             private static void LogDataRowRemoved(StringBuilder log, DataSet baseDataSet, int ordinal)
             {
                 log.AppendLine(string.Format("DataSet-{0}[{1}] removed.", baseDataSet.Model.Depth, ordinal));
+            }
+
+            private static void LogProcessDataRowUpdated(StringBuilder log, DataRow dataRow, IColumnSet columns)
+            {
+                log.AppendLine(string.Format("Process DataSet-{0}[{1}] updated: {2}", dataRow.Model.Depth, dataRow.Ordinal, GetColumnsString(columns)));
             }
 
             private static void LogDataRowUpdated(StringBuilder log, DataRow dataRow, IColumnSet columns)
