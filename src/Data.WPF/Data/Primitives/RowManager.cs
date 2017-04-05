@@ -174,9 +174,7 @@ namespace DevZest.Windows.Data.Primitives
             {
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
-                var extenderDataSet = rowManager.ExtenderDataSet;
-                if (extenderDataSet != null)
-                    extenderDataSet.BeginAdd();
+                rowManager.ExtenderModel?.DataSet.BeginAdd();
             }
 
             protected sealed override void CancelEdit(RowManager rowManager)
@@ -184,18 +182,14 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = null;
                 GetDataSet(rowManager).CancelAdd();
-                var extenderDataSet = rowManager.ExtenderDataSet;
-                if (extenderDataSet != null)
-                    extenderDataSet.CancelAdd();
+                rowManager.ExtenderModel?.DataSet.CancelAdd();
             }
 
             protected sealed override void EndEdit(RowManager rowManager)
             {
                 rowManager.CurrentRow.DataRow = null;
                 var dataRow = GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
-                var extenderDataSet = rowManager.ExtenderDataSet;
-                if  (extenderDataSet != null)
-                    extenderDataSet.EndAdd();
+                rowManager.ExtenderModel?.DataSet.EndAdd();
             }
 
             public override void OnRowsChanged(RowManager rowManager)
@@ -248,19 +242,6 @@ namespace DevZest.Windows.Data.Primitives
                 _currentRow = Rows[0];
                 InitInitialSelection();
             }
-        }
-
-        internal void OnExtenderDataRowUpdated(DataRow dataRow, IColumnSet columns)
-        {
-            HandlesRowUpdated(GetRowPresenterOfExtenderDataRow(dataRow), columns);
-        }
-
-        private RowPresenter GetRowPresenterOfExtenderDataRow(DataRow dataRow)
-        {
-            Debug.Assert(Template.ExtenderDataSet != null);
-            if (dataRow == Template.ExtenderDataSet.AddingRow)
-                return CurrentRow;
-            return dataRow.GetRowPresenter();
         }
 
         public RowPresenter VirtualRow { get; private set; }

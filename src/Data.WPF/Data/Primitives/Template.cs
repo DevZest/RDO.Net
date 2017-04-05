@@ -149,7 +149,7 @@ namespace DevZest.Windows.Data.Primitives
             for (int i = 0; i < RowBindings.Count; i++)
             {
                 var rowBinding = RowBindings[i];
-                    rowBinding.VerifyRowRange();
+                rowBinding.VerifyRowRange();
             }
 
             for (int i = 0; i < ScalarBindings.Count; i++)
@@ -535,83 +535,13 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private sealed class ExtenderColumn<T> : Column<T>
-        {
-            public override _String CastToString()
-            {
-                throw new NotSupportedException();
-            }
-
-            protected override Column<T> CreateConst(T value)
-            {
-                throw new NotSupportedException();
-            }
-
-            protected override Column<T> CreateParam(T value)
-            {
-                throw new NotSupportedException();
-            }
-
-            protected override T DeserializeValue(JsonValue value)
-            {
-                throw new NotSupportedException();
-            }
-
-            internal Func<T, bool> IsNullChecker;
-            protected override bool IsNull(T value)
-            {
-                return IsNullChecker == null ? base.IsNull(value) : IsNullChecker(value);
-            }
-
-            protected override JsonValue SerializeValue(T value)
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override IDataRowProxy DataRowProxy
-            {
-                get { return ((ExtenderModel)this.GetParentModel()).Template.RowManager; }
-            }
-        }
-
-        private sealed class ExtenderModel : Adhoc
-        {
-            internal readonly Dictionary<DataRow, DataRow> DataRowMappings = new Dictionary<DataRow, DataRow>();
-
-            public Template Template { get; set; }
-
-            private RowManager RowManager
-            {
-                get { return Template.RowManager; }
-            }
-
-            protected override void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
-            {
-                var rowManager = RowManager;
-                if (rowManager != null)
-                    rowManager.OnExtenderDataRowUpdated(dataRow, updatedColumns);
-            }
-        }
-
-        private DataSet<ExtenderModel> _extenderDataSet;
-        internal DataSet ExtenderDataSet
-        {
-            get { return _extenderDataSet; }
-        }
-
-        internal Dictionary<DataRow, DataRow> ExtenderDataRowMappings
-        {
-            get { return _extenderDataSet == null ? null : _extenderDataSet._.DataRowMappings; }
-        }
+        internal ExtenderModel ExtenderModel { get; private set; }
 
         internal Column<T> AddExtenderColumn<T>(Func<T, bool> isNullChecker)
         {
-            if (_extenderDataSet == null)
-            {
-                _extenderDataSet = DataSet<ExtenderModel>.New();
-                _extenderDataSet._.Template = this;
-            }
-            return _extenderDataSet._.AddColumn<ExtenderColumn<T>>(x => x.IsNullChecker = isNullChecker);
+            if (ExtenderModel == null)
+                ExtenderModel = DataSet<ExtenderModel>.New(x => x.Initialize(this))._;
+            return ExtenderModel.AddColumn(isNullChecker);
         }
     }
 }
