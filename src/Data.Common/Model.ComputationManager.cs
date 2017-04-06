@@ -84,11 +84,14 @@ namespace DevZest.Data
                     affectedColumnsByModel.Add(model, affectedColumn);
             }
 
-            public IReadOnlyDictionary<Model, IColumnSet> GetAffectedColumnsByModel(Column column)
+            public IReadOnlyDictionary<Model, IColumnSet> this[Column column]
             {
-                Dictionary<Model, IColumnSet> result;
-                _dependencies.TryGetValue(column, out result);
-                return result;
+                get
+                {
+                    Dictionary<Model, IColumnSet> result;
+                    _dependencies.TryGetValue(column, out result);
+                    return result;
+                }
             }
         }
 
@@ -161,7 +164,7 @@ namespace DevZest.Data
             foreach (var updatedColumn in updatedColumns)
             {
                 Debug.Assert(updatedColumn.ParentModel == this);
-                var affectedColumns = computationManager.GetAffectedColumnsByModel(updatedColumn);
+                var affectedColumns = computationManager[updatedColumn];
                 if (affectedColumns != null && affectedColumns.ContainsKey(this))
                     result = result.Union(affectedColumns[this]);
             }
@@ -187,7 +190,7 @@ namespace DevZest.Data
 
         private static Dictionary<Model, IColumnSet> GetCascadeAffectedColumns(Dictionary<Model, IColumnSet> result, ComputationManager computationManager, Column column)
         {
-            var affectedColumnsByModel = computationManager.GetAffectedColumnsByModel(column);
+            var affectedColumnsByModel = computationManager[column];
             if (affectedColumnsByModel == null)
                 return result;
 
@@ -220,7 +223,7 @@ namespace DevZest.Data
             for (int i = 0; i < columns.Count; i++)
             {
                 var column = columns[i];
-                var affectedColumns = computationManager.GetAffectedColumnsByModel(column);
+                var affectedColumns = computationManager[column];
                 if (affectedColumns == null || affectedColumns.Count == 0)
                     continue;
 
