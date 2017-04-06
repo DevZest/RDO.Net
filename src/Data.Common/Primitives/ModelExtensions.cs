@@ -90,12 +90,6 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public static void EnsureChildModelsInitialized(this Model model)
-        {
-            Check.NotNull(model, nameof(model));
-            model.EnsureChildModelsInitialized();
-        }
-
         public static ModelCollection GetChildModels(this Model model)
         {
             Check.NotNull(model, nameof(model));
