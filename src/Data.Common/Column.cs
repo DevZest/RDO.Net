@@ -167,7 +167,7 @@ namespace DevZest.Data
             return result;
         }
 
-        internal void Seal(Dictionary<string, int> dbColumnNameSuffixes)
+        internal void InitDbColumnName(Dictionary<string, int> dbColumnNameSuffixes)
         {
             if (_dbColumnName != null)
                 _dbColumnName = dbColumnNameSuffixes.GetUniqueName(_dbColumnName);

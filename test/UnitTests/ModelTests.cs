@@ -288,7 +288,7 @@ namespace DevZest.Data
         public void Model_Columns_DbColumnName_suffix_assigned()
         {
             var model = new SimpleModel();
-            model.Columns.Seal();
+            model.Columns.InitDbColumnNames();
             Assert.AreEqual("DbColumnName", model.Columns[0].DbColumnName);
             Assert.AreEqual("DbColumnName1", model.Columns[1].DbColumnName);
         }
@@ -297,7 +297,7 @@ namespace DevZest.Data
         public void Model_Columns_indexer_by_name()
         {
             var model = new SimpleModel();
-            model.Columns.Seal();
+            model.Columns.InitDbColumnNames();
             Assert.AreSame(model.Column1, model.Columns["Column1"]);
             Assert.AreSame(model.Column2, model.Columns["Column2"]);
             Assert.IsNull(model.Columns["DbColumnName"]);

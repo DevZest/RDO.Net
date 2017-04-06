@@ -303,8 +303,6 @@ namespace DevZest.Data
             if (AreChildModelsInitialized)
                 return;
 
-            AreChildModelsInitialized = true;
-
             Initialize(s_childModelManager);
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
@@ -314,17 +312,23 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnChildModelsInitialized();
+                ProcessChildModelsInitialized();
                 RootModel.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
+            AreChildModelsInitialized = true;
 
-            ChildModelsInitialized(this);
+            OnChildModelsInitialized();
+        }
+
+        protected virtual void ProcessChildModelsInitialized()
+        {
         }
 
         protected virtual void OnChildModelsInitialized()
         {
+            ChildModelsInitialized(this);
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
@@ -406,7 +410,7 @@ namespace DevZest.Data
 
             DataSource = dataSource;
             DataSet = dataSource as DataSet;
-            Columns.Seal();
+            Columns.InitDbColumnNames();
         }
 
         protected internal sealed override bool DesignMode
@@ -417,7 +421,7 @@ namespace DevZest.Data
                     return true;
                 if (DataSource.Kind != DataSourceKind.DataSet)
                     return false;
-                return DataSet.Count == 0;
+                return !AreChildModelsInitialized;
             }
         }
 

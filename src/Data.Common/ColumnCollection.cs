@@ -67,12 +67,12 @@ namespace DevZest.Data
             }
         }
 
-        internal void Seal()
+        internal void InitDbColumnNames()
         {
             var columnNameSuffixes = new Dictionary<string, int>();
             var columns = Columns;
             foreach (var column in columns)
-                column.Seal(columnNameSuffixes);
+                column.InitDbColumnName(columnNameSuffixes);
         }
     }
 }
