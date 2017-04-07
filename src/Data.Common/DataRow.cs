@@ -446,7 +446,7 @@ namespace DevZest.Data
                 Debug.Assert(model.Depth != Model.Depth);
                 var columns = keyValuePair.Value;
                 if (model.Depth < Model.Depth)
-                    AncestorOf(Model.Depth - model.Depth).RefreshComputationsInternal(columns);
+                    AncestorOf(Model.Depth - model.Depth).RefreshComputations(columns);
                 else
                     RefreshDescendentComputations(model, columns);
             }
@@ -459,7 +459,7 @@ namespace DevZest.Data
             if (childModel == decendent)
             {
                 for (int i = 0; i < childDataSet.Count; i++)
-                    childDataSet[i].RefreshComputationsInternal(columnSet);
+                    childDataSet[i].RefreshComputations(columnSet);
             }
             else
             {
@@ -496,15 +496,7 @@ namespace DevZest.Data
             ResumeUpdated();
         }
 
-        public void RefreshComputations(IColumnSet computationColumns)
-        {
-            if (computationColumns == null || Model == null)
-                return;
-
-            RefreshComputationsInternal(computationColumns);
-        }
-
-        internal void RefreshComputationsInternal(IColumnSet computationColumns)
+        internal void RefreshComputations(IColumnSet computationColumns)
         {
             SuspendUpdated();
             foreach (var computationColumn in computationColumns)

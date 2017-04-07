@@ -116,6 +116,14 @@ namespace DevZest.Data.Primitives
                 return Seal(result);
         }
 
+        public void RefreshComputations(DataRow dataRow, IColumnSet computationColumns)
+        {
+            Check.NotNull(dataRow, nameof(dataRow));
+            Check.NotNull(computationColumns, nameof(computationColumns));
+
+            dataRow.RefreshComputations(computationColumns);
+        }
+
         private sealed class EmptyColumnsByModel : IReadOnlyDictionary<Model, IColumnSet>
         {
             public static readonly EmptyColumnsByModel Singleton = new EmptyColumnsByModel();

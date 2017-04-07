@@ -966,7 +966,7 @@ namespace DevZest.Data
                 if (isParent)
                     ancestorLevel--;
                 var aggregateDataRow = dataRow.AncestorOf(ancestorLevel);
-                aggregateDataRow.RefreshComputationsInternal(aggregateColumns);
+                aggregateDataRow.RefreshComputations(aggregateColumns);
             }
         }
 
@@ -1007,7 +1007,7 @@ namespace DevZest.Data
             OnProcessDataRowUpdated(dataRow, updatedColumns);
             var siblingComputationColumns = ComputationManager.GetSiblingComputationColumns(updatedColumns);
             if (siblingComputationColumns.Count > 0)
-                dataRow.RefreshComputationsInternal(siblingComputationColumns);
+                dataRow.RefreshComputations(siblingComputationColumns);
         }
 
         protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
