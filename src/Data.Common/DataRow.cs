@@ -407,7 +407,7 @@ namespace DevZest.Data
             {
                 UpdateDataSetRevision();
                 var updatedColumns = FireUpdatedEvent();
-                RefreshCascadeComputations(updatedColumns);
+                RefreshNonsiblingComputationColumns(updatedColumns);
             }
         }
 
@@ -435,12 +435,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private void RefreshCascadeComputations(IColumnSet updatedColumns)
+        private void RefreshNonsiblingComputationColumns(IColumnSet baseColumns)
         {
-            var cascadeComputations = Model.GetCascadeAffectedColumns(updatedColumns);
-            if (cascadeComputations.Count == 0)
+            var computationColumns = Model.ComputationManager.GetNonSiblingComputationColumns(baseColumns);
+            if (computationColumns.Count == 0)
                 return;
-            foreach (var keyValuePair in cascadeComputations)
+            foreach (var keyValuePair in computationColumns)
             {
                 var model = keyValuePair.Key;
                 Debug.Assert(model.Depth != Model.Depth);

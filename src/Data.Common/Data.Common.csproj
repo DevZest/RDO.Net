@@ -65,7 +65,6 @@
     <Compile Include="AbstractValidationMessageGroup.cs" />
     <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
-    <Compile Include="Model.ComputationManager.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />
@@ -83,6 +82,7 @@
     <Compile Include="IgnoreColumnAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="IAbstractValidationMessageGroup.cs" />
+    <Compile Include="Primitives\ComputationManager.cs" />
     <Compile Include="Primitives\IDataRowProxy.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />

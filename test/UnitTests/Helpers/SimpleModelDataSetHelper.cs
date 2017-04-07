@@ -100,12 +100,8 @@ namespace DevZest.Data.Helpers
 
         private void AddRows(DataSet<SimpleModel> dataSet, int count)
         {
-            var model = dataSet._;
             for (int i = 0; i < count; i++)
-            {
-                var dataRow = dataSet.AddRow();
-                model.Id[dataRow] = i;
-            }
+                dataSet.AddRow(x => dataSet._.Id[x] = i);
         }
     }
 }

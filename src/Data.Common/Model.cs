@@ -892,10 +892,10 @@ namespace DevZest.Data
             return result.Seal();
         }
 
-        private IReadOnlyDictionary<Model, IColumnSet> _aggregateAffectedColumns;
-        private IReadOnlyDictionary<Model, IColumnSet> AggregateAffectedColumns
+        private IReadOnlyDictionary<Model, IColumnSet> _aggregateComputationColumns;
+        private IReadOnlyDictionary<Model, IColumnSet> AggregateComputationColumns
         {
-            get { return _aggregateAffectedColumns ?? (_aggregateAffectedColumns = GetAggregateAffectedColumns()); }
+            get { return _aggregateComputationColumns ?? (_aggregateComputationColumns = ComputationManager.GetAggregateComputationColumns(this)); }
         }
 
         public event ModelEventHandler ChildModelsInitialized = delegate { };
@@ -949,12 +949,12 @@ namespace DevZest.Data
             }
             OnDataRowInserted(dataRow);
 
-            RefreshAggregateAffectedColumns(dataRow, false);
+            RefreshAggregateComputationColumns(dataRow, false);
         }
 
-        private void RefreshAggregateAffectedColumns(DataRow dataRow, bool isParent)
+        private void RefreshAggregateComputationColumns(DataRow dataRow, bool isParent)
         {
-            var aggregateAffectedColumns = AggregateAffectedColumns;
+            var aggregateAffectedColumns = AggregateComputationColumns;
             if (aggregateAffectedColumns.Count == 0)
                 return;
 
@@ -994,7 +994,7 @@ namespace DevZest.Data
 
             var parentDataRow = dataSet.ParentDataRow;
             if (parentDataRow != null)
-                RefreshAggregateAffectedColumns(parentDataRow, true);
+                RefreshAggregateComputationColumns(parentDataRow, true);
         }
 
         protected virtual void OnProcessDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
@@ -1005,14 +1005,30 @@ namespace DevZest.Data
         internal void HandlesDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
             OnProcessDataRowUpdated(dataRow, updatedColumns);
-            var affectedColumns = GetAffectedColumns(updatedColumns);
-            if (affectedColumns.Count > 0)
-                dataRow.RefreshComputationsInternal(affectedColumns);
+            var siblingComputationColumns = ComputationManager.GetSiblingComputationColumns(updatedColumns);
+            if (siblingComputationColumns.Count > 0)
+                dataRow.RefreshComputationsInternal(siblingComputationColumns);
         }
 
         protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
         {
             DataRowUpdated(dataRow, updatedColumns);
         }
+
+        private ComputationManager _computationManager;
+        protected internal ComputationManager ComputationManager
+        {
+            get { return RootModel._computationManager; }
+        }
+
+        private void MergeComputations(Model model)
+        {
+            Debug.Assert(RootModel == this);
+            Debug.Assert(model.RootModel == this);
+            if (_computationManager == null)
+                _computationManager = ComputationManager.Empty;
+            _computationManager = _computationManager.Merge(model);
+        }
+
     }
 }
