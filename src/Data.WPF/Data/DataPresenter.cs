@@ -81,7 +81,7 @@ namespace DevZest.Windows.Data
             get { return LayoutManager == null ? 1 : LayoutManager.FlowCount; }
         }
 
-        private void VerifyRowPresenter(RowPresenter value,  string paramName)
+        private void VerifyRowPresenter(RowPresenter value, string paramName)
         {
             if (value == null)
                 throw new ArgumentNullException(paramName);
@@ -232,15 +232,23 @@ namespace DevZest.Windows.Data
             get { yield break; }
         }
 
-        protected internal virtual void OnRowAdded(RowPresenter rowPresenter)
+        protected internal virtual void OnDataRowAdding(DataRow dataRow)
         {
         }
 
-        protected internal virtual void OnRowRemoved(RowPresenter rowPresenter, int ordinal, RowPresenter parentRow, int index)
+        protected internal virtual void OnDataRowAdded(DataRow dataRow)
         {
         }
 
-        protected internal virtual void OnRowMoved(RowPresenter rowPresenter, int oldOrdinal, RowPresenter oldParentRow, int oldIndex)
+        protected internal virtual void OnDataRowRemoving(DataRow dataRow)
+        {
+        }
+
+        protected internal virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
+        }
+
+        protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet columns)
         {
         }
 
