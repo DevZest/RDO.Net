@@ -191,7 +191,7 @@ namespace DevZest.Data.Primitives
 
             public override IReadOnlyDictionary<Model, IColumnSet> BaseColumns
             {
-                get { return EmptyColumnsByModel.Singleton; }
+                get { return null; }
             }
 
             internal override IColumnSet GetSiblingComputationColumns(IColumnSet baseColumns)
@@ -224,6 +224,8 @@ namespace DevZest.Data.Primitives
                 foreach (var column in computationColumns)
                     Merge(column);
 
+                Seal(_baseColumns);
+
                 foreach (var value in _dependencies.Values)
                     Seal(value);
 
@@ -248,6 +250,7 @@ namespace DevZest.Data.Primitives
                 {
                     if (addDependency)
                     {
+                        AddColumn(_baseColumns, baseColumn);
                         AddDependency(baseColumn, computationColumn);
                         addDependency = false;
                     }
@@ -272,10 +275,17 @@ namespace DevZest.Data.Primitives
                     _dependencies.Add(baseColumn, computationColumns);
                     baseColumn.EnsureConcrete();
                 }
-                if (computationColumns.ContainsKey(model))
-                    computationColumns[model] = computationColumns[model].Add(computationColumn);
+                AddColumn(computationColumns, computationColumn);
+            }
+
+            private static void AddColumn(Dictionary<Model, IColumnSet> columnsByModel, Column column)
+            {
+                var model = column.ParentModel;
+                Debug.Assert(model != null);
+                if (columnsByModel.ContainsKey(model))
+                    columnsByModel[model] = columnsByModel[model].Add(column);
                 else
-                    computationColumns.Add(model, computationColumn);
+                    columnsByModel.Add(model, column);
             }
 
             public override IReadOnlyDictionary<Model, IColumnSet> this[Column column]
