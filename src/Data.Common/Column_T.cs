@@ -529,6 +529,11 @@ namespace DevZest.Data
 
         public sealed override bool RefreshComputation(DataRow dataRow)
         {
+            return ParentModel == null ? InternalRefreshComputation(dataRow) : ParentModel.RefreshComputation(this, dataRow);
+        }
+
+        internal bool InternalRefreshComputation(DataRow dataRow)
+        {
             if (Expression == null)
                 return false;
             if (_valueManager == null)

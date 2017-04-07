@@ -935,12 +935,7 @@ namespace DevZest.Data
                 if (updateAction != null)
                     updateAction(dataRow);
 
-                var computationColumns = ComputationColumns;
-                if (computationColumns.Count > 0)
-                {
-                    foreach (var computationColumn in computationColumns)
-                        computationColumn.RefreshComputation(dataRow);
-                }
+                dataRow.RefreshComputations(ComputationColumns);
                 OnProcessDataRowInserted(dataRow);
             }
             finally
@@ -1030,5 +1025,9 @@ namespace DevZest.Data
             _computationManager = _computationManager.Merge(model);
         }
 
+        protected internal virtual bool RefreshComputation<T>(Column<T> column, DataRow dataRow)
+        {
+            return column.InternalRefreshComputation(dataRow);
+        }
     }
 }

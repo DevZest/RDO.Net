@@ -498,6 +498,9 @@ namespace DevZest.Data
 
         internal void RefreshComputations(IColumnSet computationColumns)
         {
+            Debug.Assert(computationColumns != null);
+            if (computationColumns.Count == 0)
+                return;
             SuspendUpdated();
             foreach (var computationColumn in computationColumns)
             {
