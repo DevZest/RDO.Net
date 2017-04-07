@@ -116,12 +116,25 @@ namespace DevZest.Data.Primitives
                 return Seal(result);
         }
 
+        public void RefreshComputations(DataRow dataRow)
+        {
+            VerifyDataRow(dataRow, nameof(dataRow));
+            dataRow.RefreshComputations(dataRow.Model.ComputationColumns);
+        }
+
         public void RefreshComputations(DataRow dataRow, IColumnSet computationColumns)
         {
-            Check.NotNull(dataRow, nameof(dataRow));
+            VerifyDataRow(dataRow, nameof(dataRow));
             Check.NotNull(computationColumns, nameof(computationColumns));
 
             dataRow.RefreshComputations(computationColumns);
+        }
+
+        private void VerifyDataRow(DataRow dataRow, string paramName)
+        {
+            Check.NotNull(dataRow, paramName);
+            if (dataRow.Model == null)
+                throw new ObjectDisposedException(paramName);
         }
 
         private sealed class EmptyColumnsByModel : IReadOnlyDictionary<Model, IColumnSet>
