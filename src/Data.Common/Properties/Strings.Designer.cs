@@ -870,9 +870,9 @@ namespace DevZest.Data
         /// <summary>
         /// Circular computation detected for column {columnName}.
         /// </summary>
-        public static string Model_CircularComputation(object columnName)
+        public static string ComputationManager_CircularComputation(object columnName)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Model_CircularComputation", "columnName"), columnName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ComputationManager_CircularComputation", "columnName"), columnName);
         }
 
         /// <summary>

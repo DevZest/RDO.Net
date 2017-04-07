@@ -242,7 +242,7 @@ namespace DevZest.Data.Primitives
             private void Merge(Column baseColumn, Column computationColumn, bool addDependency)
             {
                 if (baseColumn == computationColumn)
-                    throw new InvalidOperationException(Strings.Model_CircularComputation(baseColumn.Name));
+                    throw new InvalidOperationException(Strings.ComputationManager_CircularComputation(baseColumn.Name));
 
                 if (baseColumn.ParentModel != null)
                 {
