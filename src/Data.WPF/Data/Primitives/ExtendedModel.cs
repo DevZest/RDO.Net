@@ -106,26 +106,32 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        internal void OnDataRowAdding(DataRow dataRow)
+        internal void OnOriginalDataRowAdding(DataRow dataRow)
         {
             var extendedDataRow = new ExtendedDataRow();
             DataSet.Add(extendedDataRow);
             _extendedDataRows.Add(dataRow, extendedDataRow);
         }
 
-        internal void OnDataRowAdded(DataRow dataRow)
+        internal void OnOriginalDataRowAdded(DataRow dataRow)
         {
             Debug.Assert(_extendedDataRows.ContainsKey(dataRow));
             var extendedDataRow = _extendedDataRows[dataRow];
             extendedDataRow.Initialize(dataRow);
         }
 
-        internal void OnDataRowRemoved(DataRow dataRow)
+        internal void OnOriginalDataRowRemoved(DataRow dataRow)
         {
             Debug.Assert(_extendedDataRows.ContainsKey(dataRow));
             var extendedDataRow = _extendedDataRows[dataRow];
             DataSet.Remove(extendedDataRow);
             _extendedDataRows.Remove(dataRow);
+        }
+
+        protected override bool RefreshComputation<T>(Column<T> column, DataRow dataRow)
+        {
+            var extendedDataRow = (ExtendedDataRow)dataRow;
+            return extendedDataRow.Origin == null ? false : base.RefreshComputation<T>(column, extendedDataRow.Origin);
         }
     }
 }

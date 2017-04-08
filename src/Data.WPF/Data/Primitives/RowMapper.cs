@@ -418,7 +418,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowInserting(DataRow dataRow)
         {
-            ExtendedModel?.OnDataRowAdding(dataRow);
+            ExtendedModel?.OnOriginalDataRowAdding(dataRow);
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
@@ -429,7 +429,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowInserted(DataRow dataRow)
         {
-            ExtendedModel?.OnDataRowAdded(dataRow);
+            ExtendedModel?.OnOriginalDataRowAdded(dataRow);
             if (_insertingDataRows.Peek() != dataRow)
                 return;
             Add(dataRow);
@@ -534,7 +534,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            ExtendedModel?.OnDataRowRemoved(dataRow);
+            ExtendedModel?.OnOriginalDataRowRemoved(dataRow);
             var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
