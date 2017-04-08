@@ -1029,5 +1029,10 @@ namespace DevZest.Data
         {
             return column.InternalRefreshComputation(dataRow);
         }
+
+        protected internal virtual IDataRowProxy DataRowProxy
+        {
+            get { return DefaultDataRowProxy.Singleton; }
+        }
     }
 }

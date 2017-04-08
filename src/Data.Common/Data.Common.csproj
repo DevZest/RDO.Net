@@ -83,6 +83,7 @@
     <Compile Include="Model.Validator.cs" />
     <Compile Include="IAbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\ComputationManager.cs" />
+    <Compile Include="Primitives\DefaultDataRowProxy.cs" />
     <Compile Include="Primitives\IDataRowProxy.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />

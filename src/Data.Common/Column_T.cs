@@ -603,43 +603,9 @@ namespace DevZest.Data
             get { return Comparer<T>.Default; }
         }
 
-        private sealed class DefaultDataRowProxy : IDataRowProxy
+        private IDataRowProxy DataRowProxy
         {
-            public static readonly DefaultDataRowProxy Singleton = new DefaultDataRowProxy();
-
-            private DefaultDataRowProxy()
-            {
-            }
-
-            public DataRow Translate(DataRow dataRow)
-            {
-                return dataRow;
-            }
-
-            public IEnumerable<DataRow> GetDataRows(Model parentModel)
-            {
-                return parentModel.DataSet;
-            }
-
-            public DataRow GetDataRow(Model parentModel, DataRow parentDataRow, int index)
-            {
-                var dataSet = GetDataSet(parentModel, parentDataRow);
-                return dataSet[index];
-            }
-
-            private static DataSet GetDataSet(Model parentModel, DataRow parentDataRow)
-            {
-                if (parentDataRow == null)
-                    return parentModel.DataSet;
-                if (parentDataRow.Model != parentModel.ParentModel)
-                    throw new ArgumentException(Strings.Column_InvalidParentDataRow, nameof(parentDataRow));
-                return parentDataRow[parentModel];
-            }
-        }
-
-        protected virtual IDataRowProxy DataRowProxy
-        {
-            get { return DefaultDataRowProxy.Singleton; }
+            get { return ParentModel == null ? DefaultDataRowProxy.Singleton : ParentModel.DataRowProxy; }
         }
     }
 }

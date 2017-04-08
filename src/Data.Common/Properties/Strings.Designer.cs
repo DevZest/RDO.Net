@@ -596,14 +596,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Invalid parent DataRow, it does not contain this child column.
-        /// </summary>
-        public static string Column_InvalidParentDataRow
-        {
-            get { return GetString("Column_InvalidParentDataRow"); }
-        }
-
-        /// <summary>
         /// Cannot add DataRow into multiple DataSet.
         /// </summary>
         public static string DataSet_InvalidNewDataRow
