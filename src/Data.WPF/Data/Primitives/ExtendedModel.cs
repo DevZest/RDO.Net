@@ -6,9 +6,9 @@ using System.Diagnostics;
 
 namespace DevZest.Windows.Data.Primitives
 {
-    internal class ExtenderModel : Adhoc
+    internal class ExtendedModel : Adhoc
     {
-        private sealed class ExtenderColumn<T> : Column<T>
+        private sealed class ExtendedColumn<T> : Column<T>
         {
             public override _String CastToString()
             {
@@ -43,13 +43,13 @@ namespace DevZest.Windows.Data.Primitives
 
             protected override IDataRowProxy DataRowProxy
             {
-                get { return ((ExtenderModel)this.GetParentModel()).Template.RowManager; }
+                get { return ((ExtendedModel)this.GetParentModel()).Template.RowManager; }
             }
         }
 
-        private sealed class ExtenderDataRow : DataRow
+        private sealed class ExtendedDataRow : DataRow
         {
-            public ExtenderDataRow()
+            public ExtendedDataRow()
             {
             }
 
@@ -61,7 +61,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private readonly Dictionary<DataRow, ExtenderDataRow> _dataRowToExtenderMap = new Dictionary<DataRow, ExtenderDataRow>();
+        private Dictionary<DataRow, ExtendedDataRow> _extendedDataRows;
 
         internal Template Template { get; private set; }
 
@@ -77,50 +77,55 @@ namespace DevZest.Windows.Data.Primitives
 
         internal Column<T> AddColumn<T>(Func<T, bool> isNullChecker)
         {
-            return base.AddColumn<ExtenderColumn<T>>(x => x.IsNullChecker = isNullChecker);
+            return base.AddColumn<ExtendedColumn<T>>(x => x.IsNullChecker = isNullChecker);
         }
 
-        internal DataRow GetExtenderDataRow(DataRow dataRow)
+        internal DataRow GetExtendedDataRow(DataRow dataRow)
         {
-            ExtenderDataRow result;
-            _dataRowToExtenderMap.TryGetValue(dataRow, out result);
+            ExtendedDataRow result;
+            _extendedDataRows.TryGetValue(dataRow, out result);
             return result;
         }
 
         internal void Initialize(IEnumerable<DataRow> dataRows)
         {
-            _dataRowToExtenderMap.Clear();
-            DataSet.Clear();
+            if (_extendedDataRows == null)
+                _extendedDataRows = new Dictionary<DataRow, ExtendedDataRow>();
+            else
+            {
+                _extendedDataRows.Clear();
+                DataSet.Clear();
+            }
 
             foreach (var dataRow in dataRows)
             {
-                var extenderDataRow = new ExtenderDataRow();
-                DataSet.Add(extenderDataRow);
-                _dataRowToExtenderMap.Add(dataRow, extenderDataRow);
-                extenderDataRow.Initialize(dataRow);
+                var extendedDataRow = new ExtendedDataRow();
+                DataSet.Add(extendedDataRow);
+                _extendedDataRows.Add(dataRow, extendedDataRow);
+                extendedDataRow.Initialize(dataRow);
             }
         }
 
         internal void OnDataRowAdding(DataRow dataRow)
         {
-            var extenderDataRow = new ExtenderDataRow();
-            DataSet.Add(extenderDataRow);
-            _dataRowToExtenderMap.Add(dataRow, extenderDataRow);
+            var extendedDataRow = new ExtendedDataRow();
+            DataSet.Add(extendedDataRow);
+            _extendedDataRows.Add(dataRow, extendedDataRow);
         }
 
         internal void OnDataRowAdded(DataRow dataRow)
         {
-            Debug.Assert(_dataRowToExtenderMap.ContainsKey(dataRow));
-            var extenderDataRow = _dataRowToExtenderMap[dataRow];
-            extenderDataRow.Initialize(dataRow);
+            Debug.Assert(_extendedDataRows.ContainsKey(dataRow));
+            var extendedDataRow = _extendedDataRows[dataRow];
+            extendedDataRow.Initialize(dataRow);
         }
 
         internal void OnDataRowRemoved(DataRow dataRow)
         {
-            Debug.Assert(_dataRowToExtenderMap.ContainsKey(dataRow));
-            var extenderDataRow = _dataRowToExtenderMap[dataRow];
-            DataSet.Remove(extenderDataRow);
-            _dataRowToExtenderMap.Remove(dataRow);
+            Debug.Assert(_extendedDataRows.ContainsKey(dataRow));
+            var extendedDataRow = _extendedDataRows[dataRow];
+            DataSet.Remove(extendedDataRow);
+            _extendedDataRows.Remove(dataRow);
         }
     }
 }

@@ -256,7 +256,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             InitializeMappings();
             InitializeRowPresenters();
-            ExtenderModel?.Initialize(GetDataRows());
+            ExtendedModel?.Initialize(GetDataRows());
         }
 
         /// <summary>Mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/></summary>
@@ -418,7 +418,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowInserting(DataRow dataRow)
         {
-            ExtenderModel?.OnDataRowAdding(dataRow);
+            ExtendedModel?.OnDataRowAdding(dataRow);
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
@@ -429,7 +429,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowInserted(DataRow dataRow)
         {
-            ExtenderModel?.OnDataRowAdded(dataRow);
+            ExtendedModel?.OnDataRowAdded(dataRow);
             if (_insertingDataRows.Peek() != dataRow)
                 return;
             Add(dataRow);
@@ -534,7 +534,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            ExtenderModel?.OnDataRowRemoved(dataRow);
+            ExtendedModel?.OnDataRowRemoved(dataRow);
             var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
@@ -689,21 +689,19 @@ namespace DevZest.Windows.Data.Primitives
         {
         }
 
-        private Dictionary<DataRow, DataRow> _extenderDataRows;
-
-        internal ExtenderModel ExtenderModel
+        internal ExtendedModel ExtendedModel
         {
-            get { return Template.ExtenderModel; }
+            get { return Template.ExtendedModel; }
         }
 
         DataRow IDataRowProxy.Translate(DataRow dataRow)
         {
-            return ExtenderModel.GetExtenderDataRow(dataRow) ?? dataRow;
+            return ExtendedModel.GetExtendedDataRow(dataRow) ?? dataRow;
         }
 
         IEnumerable<DataRow> IDataRowProxy.GetDataRows(Model parentModel)
         {
-            Debug.Assert(parentModel == ExtenderModel);
+            Debug.Assert(parentModel == ExtendedModel);
             return GetDataRows();
         }
 
@@ -728,7 +726,7 @@ namespace DevZest.Windows.Data.Primitives
 
         DataRow IDataRowProxy.GetDataRow(Model parentModel, DataRow parentDataRow, int index)
         {
-            Debug.Assert(parentModel == ExtenderModel);
+            Debug.Assert(parentModel == ExtendedModel);
             var dataSet = GetDataSet(parentDataRow);
             return dataSet[index];
         }
@@ -738,7 +736,7 @@ namespace DevZest.Windows.Data.Primitives
             if (parentDataRow == null)
                 return DataSet;
 
-            if (!IsRecursive || ExtenderModel.GetExtenderDataRow(parentDataRow) == null)
+            if (!IsRecursive || ExtendedModel.GetExtendedDataRow(parentDataRow) == null)
                 throw new ArgumentException(Strings.RowMapper_InvalidParentDataRow, nameof(parentDataRow));
             var childModel = GetChildDataSet(parentDataRow.Model).Model;
             return parentDataRow[childModel];

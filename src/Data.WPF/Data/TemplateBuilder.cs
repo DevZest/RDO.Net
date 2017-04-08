@@ -301,9 +301,9 @@ namespace DevZest.Windows.Data
             return this;
         }
 
-        public Column<T> AddExtenderColumn<T>(Func<T, bool> isNullChecker = null)
+        public Column<T> AddExtendedColumn<T>(Func<T, bool> isNullChecker = null)
         {
-            return Template.AddExtenderColumn<T>(isNullChecker);
+            return Template.AddExtendedColumn<T>(isNullChecker);
         }
     }
 }

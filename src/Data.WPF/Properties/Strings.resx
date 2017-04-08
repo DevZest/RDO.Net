@@ -211,7 +211,7 @@
     <value>The child row is invalid.</value>
   </data>
   <data name="RowPresenter_VerifyColumn" xml:space="preserve">
-    <value>The column is invalid. It must belong to the DataSet, or be a valid extender column.</value>
+    <value>The column is invalid. It must belong to the DataSet, or be a valid extended column.</value>
   </data>
   <data name="RowPresenter_VerifyIsCurrent" xml:space="preserve">
     <value>RowPresenter.IsCurrent must be true to allow this operation.</value>

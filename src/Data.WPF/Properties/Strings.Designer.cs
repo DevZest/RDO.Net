@@ -260,7 +260,7 @@ namespace DevZest.Windows
         }
 
         /// <summary>
-        /// The column is invalid. It must belong to the DataSet, or be a valid extender column.
+        /// The column is invalid. It must belong to the DataSet, or be a valid extended column.
         /// </summary>
         public static string RowPresenter_VerifyColumn
         {
