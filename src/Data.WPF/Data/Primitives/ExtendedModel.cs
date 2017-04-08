@@ -40,11 +40,6 @@ namespace DevZest.Windows.Data.Primitives
             {
                 throw new NotImplementedException();
             }
-
-            protected override IDataRowProxy DataRowProxy
-            {
-                get { return ((ExtendedModel)this.GetParentModel()).Template.RowManager; }
-            }
         }
 
         private sealed class ExtendedDataRow : DataRow
@@ -126,6 +121,11 @@ namespace DevZest.Windows.Data.Primitives
             var extendedDataRow = _extendedDataRows[dataRow];
             DataSet.Remove(extendedDataRow);
             _extendedDataRows.Remove(dataRow);
+        }
+
+        protected override IDataRowProxy DataRowProxy
+        {
+            get { return RowManager; }
         }
 
         protected override bool RefreshComputation<T>(Column<T> column, DataRow dataRow)
