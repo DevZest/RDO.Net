@@ -53,11 +53,11 @@ namespace DevZest.Windows.Data.Primitives
             {
             }
 
-            public DataRow DataRow { get; private set; }
+            public DataRow Origin { get; private set; }
 
-            public void Initialize(DataRow dataRow)
+            public void Initialize(DataRow origin)
             {
-                DataRow = dataRow;
+                Origin = origin;
             }
         }
 
