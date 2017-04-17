@@ -1024,15 +1024,5 @@ namespace DevZest.Data
                 _computationManager = ComputationManager.Empty;
             _computationManager = _computationManager.Merge(model);
         }
-
-        protected internal virtual bool RefreshComputation<T>(Column<T> column, DataRow dataRow)
-        {
-            return column.InternalRefreshComputation(dataRow);
-        }
-
-        protected internal virtual IDataRowProxy DataRowProxy
-        {
-            get { return DefaultDataRowProxy.Singleton; }
-        }
     }
 }

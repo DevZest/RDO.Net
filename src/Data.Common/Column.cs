@@ -473,6 +473,6 @@ namespace DevZest.Data
 
         internal abstract void EnsureConcrete();
 
-        public abstract bool RefreshComputation(DataRow dataRow);
+        internal abstract bool RefreshComputation(DataRow dataRow);
     }
 }

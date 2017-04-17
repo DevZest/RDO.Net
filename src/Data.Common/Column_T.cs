@@ -38,8 +38,8 @@ namespace DevZest.Data
                 Debug.Assert(column.IsExpression && column.IsConcrete);
                 var result = new ComputationValueManager(column);
                 var expression = column.Expression;
-                var dataRows = column.DataRowProxy.GetDataRows(column.ParentModel);
-                foreach (var dataRow in dataRows)
+                var dataSet = column.ParentModel.DataSet;
+                foreach (var dataRow in dataSet)
                     result.Add(expression[dataRow]);
                 return result;
             }
@@ -179,13 +179,13 @@ namespace DevZest.Data
             {
                 if (ParentModel == null && Expression != null)
                     return Expression[dataRow];
-                var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow));
+                var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow), true);
                 return InternalGetValue(dataRow, translatedDataRow);
             }
             set
             {
-                var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow));
-                InternalSetValue(translatedDataRow, value);
+                VerifyDataRow(dataRow, nameof(dataRow), false);
+                InternalSetValue(dataRow, value);
             }
         }
 
@@ -199,57 +199,66 @@ namespace DevZest.Data
                 return _valueManager[translatedDataRow.Ordinal];
         }
 
-        private void InternalSetValue(DataRow translatedDataRow, T value)
+        private void InternalSetValue(DataRow dataRow, T value)
         {
-            Debug.Assert(translatedDataRow != null);
-            if (InternalIsReadOnly(translatedDataRow))
+            Debug.Assert(dataRow != null);
+            if (InternalIsReadOnly(dataRow))
                 throw new InvalidOperationException(Strings.Column_SetReadOnlyValue(this));
 
-            SetValueCore(translatedDataRow, value);
+            SetValueCore(dataRow, value);
         }
 
-        private void SetValueCore(DataRow translattedDataRow, T value)
+        private void SetValueCore(DataRow dataRow, T value)
         {
-            if (translattedDataRow == ParentModel.EditingRow)
+            if (dataRow == ParentModel.EditingRow)
                 _editingValue = value;
             else
-                UpdateValue(translattedDataRow, value);
+                UpdateValue(dataRow, value);
         }
 
-        private bool UpdateValue(DataRow translatedDataRow, T value)
+        private bool UpdateValue(DataRow dataRow, T value)
         {
-            var ordinal = translatedDataRow.Ordinal;
+            var ordinal = dataRow.Ordinal;
             bool areEqual = AreEqual(_valueManager[ordinal], value);
             if (!areEqual)
             {
                 _valueManager[ordinal] = value;
-                translatedDataRow.OnUpdated(this);
+                dataRow.OnUpdated(this);
             }
             return !areEqual;
         }
 
-        private DataRow VerifyDataRow(DataRow dataRow, string paramName)
+        private DataRow VerifyDataRow(DataRow dataRow, string paramName, bool allowTranslate)
         {
             Check.NotNull(dataRow, paramName);
             if (ParentModel == null)
                 throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
 
-            var translatedDataRow = Translate(dataRow);
-            if (translatedDataRow == null)
-                throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
-            return translatedDataRow;
+            if (dataRow == ParentModel.EditingRow)
+                return dataRow;
+
+            if (allowTranslate)
+            {
+                var translatedDataRow = Translate(dataRow);
+                if (translatedDataRow == null)
+                    throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
+                return translatedDataRow;
+            }
+            else
+            {
+                if (dataRow.Model != ParentModel)
+                    throw new ArgumentException(Strings.Column_InvalidDataRow, paramName);
+                return dataRow;
+            }
         }
 
         private DataRow Translate(DataRow dataRow)
         {
             Debug.Assert(ParentModel != null);
-            var translatedDataRow = DataRowProxy.Translate(dataRow);
-            if (translatedDataRow == ParentModel.EditingRow)
-                return translatedDataRow;
 
-            // If current model is ancestor of translated DataRow model, returns the ancestor DataRow.
+            // If current model is ancestor of DataRow model, returns the ancestor DataRow.
             // This allows direct reference of ancestor column as expression.
-            for (var result = translatedDataRow; result != null; result = result.ParentDataRow)
+            for (var result = dataRow; result != null; result = result.ParentDataRow)
             {
                 if (result.Model == ParentModel)
                     return result;
@@ -262,15 +271,15 @@ namespace DevZest.Data
         /// <returns><see langword="true"/> if this column is readonly for provided <paramref name="dataRow"/>, otherwise <see langword="false"/>.</returns>
         public bool IsReadOnly(DataRow dataRow)
         {
-            var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow));
-            return InternalIsReadOnly(translatedDataRow);
+            VerifyDataRow(dataRow, nameof(dataRow), false);
+            return InternalIsReadOnly(dataRow);
         }
 
-        private bool InternalIsReadOnly(DataRow translatedDataRow)
+        private bool InternalIsReadOnly(DataRow dataRow)
         {
             if (IsExpression)
                 return true;
-            return IsPrimaryKey ? translatedDataRow.IsPrimaryKeySealed : false;
+            return IsPrimaryKey ? dataRow.IsPrimaryKeySealed : false;
         }
 
         /// <summary>Gets or sets the value of this column from provided <see cref="DataRow"/> ordinal.</summary>
@@ -289,14 +298,25 @@ namespace DevZest.Data
         {
             get
             {
-                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, index);
-                return InternalGetValue(dataRow, Translate(dataRow));
+                var dataRow = GetDataRow(ParentModel, parentDataRow, index);
+                return InternalGetValue(dataRow, dataRow);
             }
             set
             {
-                var dataRow = DataRowProxy.GetDataRow(ParentModel, parentDataRow, index);
+                var dataRow = GetDataRow(ParentModel, parentDataRow, index);
                 InternalSetValue(dataRow, value);
             }
+        }
+
+        private static DataRow GetDataRow(Model model, DataRow parentDataRow, int index)
+        {
+            var dataSet = GetDataSet(model, parentDataRow);
+            return dataSet[index];
+        }
+
+        private static DataSet GetDataSet(Model parentModel, DataRow parentDataRow)
+        {
+            return parentDataRow == null ? parentModel.DataSet : parentDataRow[parentModel];
         }
 
         internal sealed override void InsertRow(DataRow dataRow)
@@ -527,23 +547,17 @@ namespace DevZest.Data
             }
         }
 
-        public sealed override bool RefreshComputation(DataRow dataRow)
-        {
-            return ParentModel == null ? InternalRefreshComputation(dataRow) : ParentModel.RefreshComputation(this, dataRow);
-        }
-
-        internal bool InternalRefreshComputation(DataRow dataRow)
+        internal sealed override bool RefreshComputation(DataRow dataRow)
         {
             if (Expression == null)
                 return false;
             if (_valueManager == null)
                 return true;
 
-            var translatedDataRow = VerifyDataRow(dataRow, nameof(dataRow));
-            if (translatedDataRow == ParentModel.EditingRow)
+            if (dataRow == ParentModel.EditingRow)
                 return false;
             var computationValue = Expression[dataRow];
-            return UpdateValue(translatedDataRow, computationValue);
+            return UpdateValue(dataRow, computationValue);
         }
 
         private bool _isDbComputed;
@@ -582,15 +596,13 @@ namespace DevZest.Data
         private T _editingValue;
         internal sealed override void BeginEdit(DataRow dataRow)
         {
-            var translatedDataRow = DataRowProxy.Translate(dataRow);
-            _editingValue = translatedDataRow == DataRow.Placeholder || _valueManager == null ? GetDefaultValue() : _valueManager[translatedDataRow.Ordinal];
+            _editingValue = dataRow == DataRow.Placeholder || _valueManager == null ? GetDefaultValue() : _valueManager[dataRow.Ordinal];
         }
 
         internal sealed override void EndEdit(DataRow dataRow)
         {
-            var translatedDataRow = DataRowProxy.Translate(dataRow);
             if (_valueManager != null)
-                UpdateValue(translatedDataRow, _editingValue);
+                UpdateValue(dataRow, _editingValue);
         }
 
         public sealed override int Compare(DataRow x, DataRow y)
@@ -601,11 +613,6 @@ namespace DevZest.Data
         protected virtual IComparer<T> Comparer
         {
             get { return Comparer<T>.Default; }
-        }
-
-        private IDataRowProxy DataRowProxy
-        {
-            get { return ParentModel == null ? DefaultDataRowProxy.Singleton : ParentModel.DataRowProxy; }
         }
     }
 }
