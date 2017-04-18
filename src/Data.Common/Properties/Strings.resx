@@ -441,4 +441,7 @@
   <data name="DataRow_UpdateInDataRowChangedEventNotAllowed" xml:space="preserve">
     <value>Update in DataRowChanged event handler is not allowed.</value>
   </data>
+  <data name="DataSetContainer_ResumeComputationWithoutSuspendComputation" xml:space="preserve">
+    <value>SuspendComputation and ResumeComputation must be called in tandem.</value>
+  </data>
 </root>

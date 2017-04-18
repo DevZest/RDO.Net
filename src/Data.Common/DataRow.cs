@@ -11,7 +11,7 @@ namespace DevZest.Data
     /// </summary>
     public class DataRow
     {
-        internal static readonly DataRow Placeholder = new DataRow();
+        internal static readonly DataRow Placeholder = new DataRow() { ValueChangedSuspended = true };
 
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
         public DataRow()
@@ -348,7 +348,9 @@ namespace DevZest.Data
             if (Model == null || Model.EditingRow != this)
                 return false;
 
+            Model.DataSetContainer.SuspendComputation();
             Model.EndEdit(this);
+            Model.DataSetContainer.ResumeComputation();
             return true;
         }
 
@@ -370,45 +372,23 @@ namespace DevZest.Data
             return dataRow;
         }
 
-        private int _suspendUpdatedCount;
-        private IColumnSet _pendingUpdatedColumns = ColumnSet.Empty;
-        private IColumnSet _pendingComputationColumns = ColumnSet.Empty;
-        private IColumnSet _handledColumns = ColumnSet.Empty;
-        private bool _isFiringEvent;
-
-        public void SuspendUpdated()
+        private bool _valueChangedSuspended;
+        internal bool ValueChangedSuspended
         {
-            if (this == Placeholder)
-                return;
-            _suspendUpdatedCount++;
-        }
-
-        public void ResumeUpdated()
-        {
-            if (this == Placeholder)
-                return;
-            if (_suspendUpdatedCount == 1)
-                HandlesUpdated();
-            _suspendUpdatedCount--;
-        }
-
-        internal void ResetUpdated()
-        {
-            _pendingUpdatedColumns = _pendingComputationColumns = _handledColumns = ColumnSet.Empty;
-            _suspendUpdatedCount = 0;
-        }
-
-        private void HandlesUpdated()
-        {
-            for (var pendingColumns = HandlePendingColumns(); pendingColumns.Count > 0; pendingColumns = HandlePendingColumns())
-                Model.HandlesDataRowUpdated(this, pendingColumns);
-
-            if (_handledColumns.Count > 0)
+            get { return _valueChangedSuspended; }
+            set
             {
-                UpdateDataSetRevision();
-                var updatedColumns = FireUpdatedEvent();
-                RefreshNonsiblingComputationColumns(updatedColumns);
+                Debug.Assert(_valueChangedSuspended != value);
+                _valueChangedSuspended = value;
             }
+        }
+
+        internal void OnValueChanged(Column column)
+        {
+            if (ValueChangedSuspended)
+                return;
+            UpdateDataSetRevision();
+            Model.HandlesValueChanged(this, column);
         }
 
         private void UpdateDataSetRevision()
@@ -416,113 +396,6 @@ namespace DevZest.Data
             BaseDataSet.UpdateRevision();
             if (DataSet != BaseDataSet)
                 DataSet.UpdateRevision();
-        }
-
-        private IColumnSet FireUpdatedEvent()
-        {
-            Debug.Assert(_handledColumns.Count > 0);
-            _isFiringEvent = true;
-            var result = _handledColumns.Seal();
-            _handledColumns = ColumnSet.Empty;
-            try
-            {
-                Model.OnDataRowUpdated(this, result);
-            }
-            finally
-            {
-                _isFiringEvent = false;
-            }
-            return result;
-        }
-
-        private void RefreshNonsiblingComputationColumns(IColumnSet baseColumns)
-        {
-            var computationColumns = Model.ComputationManager.GetNonSiblingComputationColumns(baseColumns);
-            if (computationColumns.Count == 0)
-                return;
-            foreach (var keyValuePair in computationColumns)
-            {
-                var model = keyValuePair.Key;
-                Debug.Assert(model.Depth != Model.Depth);
-                var columns = keyValuePair.Value;
-                if (model.Depth < Model.Depth)
-                    AncestorOf(Model.Depth - model.Depth).RefreshComputations(columns);
-                else
-                    RefreshDescendentComputations(model, columns);
-            }
-        }
-
-        private void RefreshDescendentComputations(Model decendent, IColumnSet columnSet)
-        {
-            var childModel = ChildAncestorOf(decendent);
-            var childDataSet = this[childModel];
-            if (childModel == decendent)
-            {
-                for (int i = 0; i < childDataSet.Count; i++)
-                    childDataSet[i].RefreshComputations(columnSet);
-            }
-            else
-            {
-                for (int i = 0; i < childDataSet.Count; i++)
-                    childDataSet[i].RefreshDescendentComputations(decendent, columnSet);
-            }
-        }
-
-        private Model ChildAncestorOf(Model decendent)
-        {
-            for (; decendent != null; decendent = decendent.ParentModel)
-            {
-                if (decendent.ParentModel == Model)
-                    return decendent;
-            }
-            return null;
-        }
-
-        private IColumnSet HandlePendingColumns()
-        {
-            var result = ColumnSet.Empty.Union(_pendingUpdatedColumns).Union(_pendingComputationColumns).Seal();
-            _handledColumns = _handledColumns.Union(result);
-            _pendingUpdatedColumns = _pendingComputationColumns = ColumnSet.Empty;
-            return result;
-        }
-
-        internal void OnUpdated(Column column)
-        {
-            if (_isFiringEvent)
-                throw new InvalidOperationException(Strings.DataRow_UpdateInDataRowChangedEventNotAllowed);
-
-            SuspendUpdated();
-            _pendingUpdatedColumns = _pendingUpdatedColumns.Add(column);
-            ResumeUpdated();
-        }
-
-        internal void RefreshComputations(IColumnSet computationColumns)
-        {
-            Debug.Assert(computationColumns != null);
-            if (computationColumns.Count == 0)
-                return;
-            SuspendUpdated();
-            foreach (var computationColumn in computationColumns)
-            {
-                if (computationColumn.RefreshComputation(this))
-                    _pendingComputationColumns = _pendingComputationColumns.Add(computationColumn);
-            }
-            ResumeUpdated();
-        }
-
-        public void Update(Action<DataRow> updateAction)
-        {
-            Check.NotNull(updateAction, nameof(updateAction));
-
-            SuspendUpdated();
-            try
-            {
-                updateAction(this);
-            }
-            finally
-            {
-                ResumeUpdated();
-            }
         }
 
         public bool IsPrimaryKeySealed { get; set; }

@@ -317,9 +317,9 @@ namespace DevZest.Data
             var salesOrders = DataSet<SalesOrder>.New();
             var _ = salesOrders._;
             var dataRowInsertedCount = 0;
-            _.DataRowInserted += delegate { dataRowInsertedCount++; };
+            _.AfterDataRowInserted += delegate { dataRowInsertedCount++; };
             var dataRowUpdatedCount = 0;
-            _.DataRowUpdated += delegate { dataRowUpdatedCount++; };
+            _.ValueChanged += delegate { dataRowUpdatedCount++; };
             salesOrders.Add(new DataRow(), x =>
             {
                 _.SalesOrderID[x] = 12345;
@@ -337,7 +337,7 @@ namespace DevZest.Data
             var _ = salesOrders._;
             var dataRowUpdatedCount = 0;
             var changedColumns = ColumnSet.Empty;
-            _.DataRowUpdated += (dataRow, updatedColumns) =>
+            _.ValueChanged += (dataRow, updatedColumns) =>
             {
                 dataRowUpdatedCount++;
                 changedColumns = changedColumns.Union(updatedColumns);
@@ -346,7 +346,7 @@ namespace DevZest.Data
             _.SalesOrderID[0] = 12345;
 
             Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
-            Assert.AreEqual(1, dataRowUpdatedCount);
+            Assert.AreEqual(2, dataRowUpdatedCount);
             Assert.IsTrue(changedColumns.SetEquals(ColumnSet.Empty.Add(_.SalesOrderID).Add(_.SalesOrderNumber)));
         }
 

@@ -875,6 +875,14 @@ namespace DevZest.Data
             get { return GetString("DataRow_UpdateInDataRowChangedEventNotAllowed"); }
         }
 
+        /// <summary>
+        /// SuspendComputation and ResumeComputation must be called in tandem.
+        /// </summary>
+        public static string DataSetContainer_ResumeComputationWithoutSuspendComputation
+        {
+            get { return GetString("DataSetContainer_ResumeComputationWithoutSuspendComputation"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

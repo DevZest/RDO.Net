@@ -92,7 +92,6 @@ namespace DevZest.Data
 
             InternalInsert(index, dataRow);
 
-            Model.HandlesDataRowInserting(dataRow);
             Model.HandlesDataRowInserted(dataRow, updateAction);
         }
 
@@ -132,9 +131,7 @@ namespace DevZest.Data
             var baseDataSet = dataRow.BaseDataSet;
             var ordinal = dataRow.Ordinal;
             var dataSet = dataRow.DataSet;
-            dataRow.SuspendUpdated();
             InnerRemoveAt(index);
-            dataRow.ResetUpdated();
             Model.HandlesDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
         }
 

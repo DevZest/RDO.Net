@@ -216,16 +216,15 @@ namespace DevZest.Data
                 UpdateValue(dataRow, value);
         }
 
-        private bool UpdateValue(DataRow dataRow, T value)
+        private void UpdateValue(DataRow dataRow, T value)
         {
             var ordinal = dataRow.Ordinal;
             bool areEqual = AreEqual(_valueManager[ordinal], value);
             if (!areEqual)
             {
                 _valueManager[ordinal] = value;
-                dataRow.OnUpdated(this);
+                dataRow.OnValueChanged(this);
             }
-            return !areEqual;
         }
 
         private DataRow VerifyDataRow(DataRow dataRow, string paramName, bool allowTranslate)
@@ -547,17 +546,18 @@ namespace DevZest.Data
             }
         }
 
-        internal sealed override bool RefreshComputation(DataRow dataRow)
+        internal sealed override void RefreshComputation(DataRow dataRow)
         {
-            if (Expression == null)
-                return false;
+            Debug.Assert(Expression != null);
+            Debug.Assert(dataRow != ParentModel.EditingRow);
             if (_valueManager == null)
-                return true;
+            {
+                dataRow.OnValueChanged(this);
+                return;
+            }
 
-            if (dataRow == ParentModel.EditingRow)
-                return false;
             var computationValue = Expression[dataRow];
-            return UpdateValue(dataRow, computationValue);
+            UpdateValue(dataRow, computationValue);
         }
 
         private bool _isDbComputed;

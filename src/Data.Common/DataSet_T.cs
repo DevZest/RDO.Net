@@ -303,12 +303,5 @@ namespace DevZest.Data
         {
             return Insert(Count, updateAction);
         }
-
-        public DataRow Update(int index, Action<T, DataRow> updateAction)
-        {
-            var dataRow = this[index];
-            dataRow.Update(GetUpdateAction(updateAction));
-            return dataRow;
-        }
     }
 }

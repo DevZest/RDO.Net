@@ -315,12 +315,12 @@ namespace DevZest.Data
             var child = dataSet._.Child;
             var childDataSet = dataSet[0][child];
             int childUpdated = 0;
-            childDataSet.Model.DataRowUpdated += (dataRow, columns) => { childUpdated++; };
+            childDataSet.Model.ValueChanged += (dataRow, columns) => { childUpdated++; };
 
             var grandChild = child.Child;
             var grandChildSet = childDataSet[0][grandChild];
             int grandChildUpdated = 0;
-            grandChildSet.Model.DataRowUpdated += (dataRow, columns) => { grandChildUpdated++; };
+            grandChildSet.Model.ValueChanged += (dataRow, columns) => { grandChildUpdated++; };
 
             dataSet._.InheritedValue[0] = 5;
 
@@ -337,14 +337,14 @@ namespace DevZest.Data
             Assert.AreEqual(3, dataSet._.ChildCount[0]);
 
             int rowUpdated = 0;
-            dataSet.Model.DataRowUpdated += (dataRow, columns) => { rowUpdated++; };
+            dataSet.Model.ValueChanged += (dataRow, columns) => { rowUpdated++; };
 
             var child = dataSet._.Child;
 
             var grandChild = child.Child;
             var childDataSet = dataSet[0][child];
             int childRowUpdated = 0;
-            childDataSet.Model.DataRowUpdated += (dataRow, columns) => { childRowUpdated++; };
+            childDataSet.Model.ValueChanged += (dataRow, columns) => { childRowUpdated++; };
             var grandChildSet = childDataSet[0][grandChild];
 
             grandChildSet.RemoveAt(0);

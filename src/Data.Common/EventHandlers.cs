@@ -6,5 +6,5 @@
 
     public delegate void DataRowRemovedEventHandler(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index);
 
-    public delegate void DataRowUpdatedEventHandler(DataRow dataRow, IColumnSet columns);
+    public delegate void ValueChangedEventHandler(DataRow dataRow, Column column);
 }

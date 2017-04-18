@@ -312,8 +312,8 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                ProcessChildModelsInitialized();
-                RootModel.MergeComputations(this);
+                OnBeforeChildModelsInitialized();
+                DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
@@ -322,13 +322,14 @@ namespace DevZest.Data
             OnChildModelsInitialized();
         }
 
-        protected virtual void ProcessChildModelsInitialized()
+        protected virtual void OnBeforeChildModelsInitialized()
         {
+            BeforeChildModelsInitialized(this);
         }
 
         protected virtual void OnChildModelsInitialized()
         {
-            ChildModelsInitialized(this);
+            AfterChildModelsInitialized(this);
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
@@ -411,6 +412,8 @@ namespace DevZest.Data
             DataSource = dataSource;
             DataSet = dataSource as DataSet;
             Columns.InitDbColumnNames();
+            if (DataSet != null && RootModel == this)
+                _dataSetContainer = new DataSetContainer();
         }
 
         protected internal sealed override bool DesignMode
@@ -824,12 +827,11 @@ namespace DevZest.Data
         {
             Debug.Assert(EditingRow != null);
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
+            Debug.Assert(dataRow.ValueChangedSuspended);
 
-            dataRow.SuspendUpdated();
             foreach (var column in Columns)
                 column.EndEdit(dataRow);
             EditingRow = null;
-            dataRow.ResumeUpdated();
         }
 
         internal void CancelEdit()
@@ -857,59 +859,29 @@ namespace DevZest.Data
             return result;
         }
 
-        private IColumnSet _computationColumns;
-        internal IColumnSet ComputationColumns
-        {
-            get
-            {
-                if (_computationColumns == null)
-                {
-                    _computationColumns = ColumnSet.Empty;
-                    for (int i = 0; i < Columns.Count; i++)
-                    {
-                        var column = Columns[i];
-                        if (column.IsExpression)
-                            _computationColumns = _computationColumns.Add(column);
-                    }
-                    _computationColumns.Seal();
-                }
-                return _computationColumns;
-            }
-        }
-
-        internal IColumnSet GetAggregateComputedColumns(IModelSet decendentModelSet)
-        {
-            if (ComputationColumns.Count == 0)
-                return ColumnSet.Empty;
-
-            var result = ColumnSet.Empty;
-            foreach (var computation in ComputationColumns)
-            {
-                if (computation.GetExpression().AggregateSourceModels.ContainsAny(decendentModelSet))
-                    result = result.Add(computation);
-            }
-
-            return result.Seal();
-        }
-
-        private IReadOnlyDictionary<Model, IColumnSet> _aggregateComputationColumns;
-        private IReadOnlyDictionary<Model, IColumnSet> AggregateComputationColumns
-        {
-            get { return _aggregateComputationColumns ?? (_aggregateComputationColumns = ComputationManager.GetAggregateComputationColumns(this)); }
-        }
-
-        public event ModelEventHandler ChildModelsInitialized = delegate { };
+        public event ModelEventHandler BeforeChildModelsInitialized = delegate { };
+        public event ModelEventHandler AfterChildModelsInitialized = delegate { };
         public event DataRowEventHandler DataRowInserting = delegate { };
-        public event DataRowEventHandler ProcessDataRowInserted = delegate { };
-        public event DataRowEventHandler DataRowInserted = delegate { };
+        public event DataRowEventHandler BeforeDataRowInserted = delegate { };
+        public event DataRowEventHandler AfterDataRowInserted = delegate { };
         public event DataRowEventHandler DataRowRemoving = delegate { };
         public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
-        public event DataRowUpdatedEventHandler ProcessDataRowUpdated = delegate { };
-        public event DataRowUpdatedEventHandler DataRowUpdated = delegate { };
+        public event ValueChangedEventHandler ValueChanged = delegate { };
 
-        internal void HandlesDataRowInserting(DataRow dataRow)
+        internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
         {
+            dataRow.ValueChangedSuspended = true;
             OnDataRowInserting(dataRow);
+            DataSetContainer.OnDataRowInserting(dataRow);
+            if (updateAction != null)
+                updateAction(dataRow);
+            OnBeforeDataRowInserted(dataRow);
+            DataSetContainer.OnBeforeDataRowInserted(dataRow);
+            dataRow.ValueChangedSuspended = false;
+            DataSetContainer.SuspendComputation();
+            OnDataRowInserted(dataRow);
+            DataSetContainer.OnAfterDataRowInserted(dataRow);
+            DataSetContainer.ResumeComputation();
         }
 
         protected virtual void OnDataRowInserting(DataRow dataRow)
@@ -917,57 +889,21 @@ namespace DevZest.Data
             DataRowInserting(dataRow);
         }
 
-        protected virtual void OnProcessDataRowInserted(DataRow dataRow)
+        protected virtual void OnBeforeDataRowInserted(DataRow dataRow)
         {
-            ProcessDataRowInserted(dataRow);
+            BeforeDataRowInserted(dataRow);
         }
 
         protected virtual void OnDataRowInserted(DataRow dataRow)
         {
-            DataRowInserted(dataRow);
-        }
-
-        internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
-        {
-            dataRow.SuspendUpdated();
-            try
-            {
-                if (updateAction != null)
-                    updateAction(dataRow);
-
-                dataRow.RefreshComputations(ComputationColumns);
-                OnProcessDataRowInserted(dataRow);
-            }
-            finally
-            {
-                dataRow.ResetUpdated();
-            }
-            OnDataRowInserted(dataRow);
-
-            RefreshAggregateComputationColumns(dataRow, false);
-        }
-
-        private void RefreshAggregateComputationColumns(DataRow dataRow, bool isParent)
-        {
-            var aggregateAffectedColumns = AggregateComputationColumns;
-            if (aggregateAffectedColumns.Count == 0)
-                return;
-
-            foreach (var keyValuePair in aggregateAffectedColumns)
-            {
-                var aggregateModel = keyValuePair.Key;
-                var aggregateColumns = keyValuePair.Value;
-                var ancestorLevel = Depth - aggregateModel.Depth;
-                if (isParent)
-                    ancestorLevel--;
-                var aggregateDataRow = dataRow.AncestorOf(ancestorLevel);
-                aggregateDataRow.RefreshComputations(aggregateColumns);
-            }
+            AfterDataRowInserted(dataRow);
         }
 
         internal void HandlesDataRowRemoving(DataRow dataRow)
         {
+            dataRow.ValueChangedSuspended = true;
             OnDataRowRemoving(dataRow);
+            DataSetContainer.OnDataRowRemoving(dataRow);
         }
 
         protected virtual void OnDataRowRemoving(DataRow dataRow)
@@ -975,54 +911,40 @@ namespace DevZest.Data
             DataRowRemoving(dataRow);
         }
 
-        protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
-        {
-            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-        }
-
         internal void HandlesDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
             if (EditingRow == dataRow)
                 CancelEdit();
 
+            dataRow.ValueChangedSuspended = false;
+            DataSetContainer.SuspendComputation();
             OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-
-            var parentDataRow = dataSet.ParentDataRow;
-            if (parentDataRow != null)
-                RefreshAggregateComputationColumns(parentDataRow, true);
+            DataSetContainer.OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            DataSetContainer.ResumeComputation();
         }
 
-        protected virtual void OnProcessDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            ProcessDataRowUpdated(dataRow, updatedColumns);
+            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
         }
 
-        internal void HandlesDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        internal void HandlesValueChanged(DataRow dataRow, Column column)
         {
-            OnProcessDataRowUpdated(dataRow, updatedColumns);
-            var siblingComputationColumns = ComputationManager.GetSiblingComputationColumns(updatedColumns);
-            if (siblingComputationColumns.Count > 0)
-                dataRow.RefreshComputations(siblingComputationColumns);
+            DataSetContainer.SuspendComputation();
+            OnValueChanged(dataRow, column);
+            DataSetContainer.OnValueChanged(dataRow, column);
+            DataSetContainer.ResumeComputation();
         }
 
-        protected internal virtual void OnDataRowUpdated(DataRow dataRow, IColumnSet updatedColumns)
+        protected virtual void OnValueChanged(DataRow dataRow, Column column)
         {
-            DataRowUpdated(dataRow, updatedColumns);
+            ValueChanged(dataRow, column);
         }
 
-        private ComputationManager _computationManager;
-        protected internal ComputationManager ComputationManager
+        private DataSetContainer _dataSetContainer;
+        public DataSetContainer DataSetContainer
         {
-            get { return RootModel._computationManager; }
-        }
-
-        private void MergeComputations(Model model)
-        {
-            Debug.Assert(RootModel == this);
-            Debug.Assert(model.RootModel == this);
-            if (_computationManager == null)
-                _computationManager = ComputationManager.Empty;
-            _computationManager = _computationManager.Merge(model);
+            get { return RootModel._dataSetContainer; }
         }
     }
 }
