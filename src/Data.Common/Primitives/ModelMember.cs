@@ -13,15 +13,15 @@ namespace DevZest.Data.Primitives
         }
 
         /// <summary>Gets the parent model of this member. </summary>
-        internal Model ParentModel { get; private set; }
+        internal Model ParentModel { get; set; }
 
         /// <summary>Gets the type which owns this member.</summary>
         /// <remarks>The <see cref="OwnerType"/> can differ from type of <see cref="ParentModel"/> when the member
         /// is registered as attached.</remarks>
-        internal Type OwnerType { get; private set; }
+        internal Type OwnerType { get; set; }
 
         /// <summary>Gets the name of the member.</summary>
-        internal string Name { get; private set; }
+        internal string Name { get; set; }
 
         internal virtual void ConstructModelMember(Model parentModel, Type ownerType, string name)
         {

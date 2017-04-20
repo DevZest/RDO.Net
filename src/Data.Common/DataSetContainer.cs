@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class DataSetContainer
+    public sealed partial class DataSetContainer
     {
         private sealed class ComputationManager
         {
@@ -39,6 +39,7 @@ namespace DevZest.Data
                 if (isDirect)
                 {
                     AddDependency(_directDependencies, baseColumn, computationColumn);
+                    baseColumn.TryMakeConcrete();
                     AddComputationColumn(_computationColumns, computationColumn.ParentModel, computationColumn);
                     if (computationColumn.ParentModel.Depth < baseColumn.ParentModel.Depth)
                         AddComputationColumn(_aggregateColumns, baseColumn.ParentModel, computationColumn);

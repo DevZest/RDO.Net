@@ -17,9 +17,8 @@ namespace DevZest.Data
             bool IsPrimaryKey { get; }
             bool ShouldSerialize { get; }
             T this[int ordinal] { get; set; }
-            void Add(DataRow dataRow);
-            void Remove(DataRow dataRow);
-            void Clear();
+            void Insert(int ordinal, T value);
+            void RemoveAt(int ordinal);
         }
 
         private abstract class ValueManager : List<T>, IValueManager
@@ -98,20 +97,6 @@ namespace DevZest.Data
             public abstract bool IsPrimaryKey { get; }
 
             public abstract bool ShouldSerialize { get; }
-
-
-            public void Add(DataRow dataRow)
-            {
-                Debug.Assert(Model == dataRow.Model);
-                Insert(dataRow.Ordinal, _column.GetDefaultValue());
-            }
-
-            public void Remove(DataRow dataRow)
-            {
-                Debug.Assert(dataRow != null);
-                Debug.Assert(dataRow.Model == Model);
-                RemoveAt(dataRow.Ordinal);
-            }
         }
 
         /// <summary>
@@ -321,19 +306,19 @@ namespace DevZest.Data
         internal sealed override void InsertRow(DataRow dataRow)
         {
             if (_valueManager != null)
-                _valueManager.Add(dataRow);
+                InsertRow(dataRow, GetDefaultValue());
+        }
+
+        internal void InsertRow(DataRow dataRow, T value)
+        {
+            Debug.Assert(_valueManager != null);
+            _valueManager.Insert(dataRow.Ordinal, value);
         }
 
         internal sealed override void RemoveRow(DataRow dataRow)
         {
             if (_valueManager != null)
-                _valueManager.Remove(dataRow);
-        }
-
-        internal override void ClearRows()
-        {
-            if (_valueManager != null)
-                _valueManager.Clear();
+                _valueManager.RemoveAt(dataRow.Ordinal);
         }
 
         /// <inheritdoc/>
@@ -530,15 +515,20 @@ namespace DevZest.Data
             _isDbComputed = isDbComputed;
         }
 
-        private bool _isConcrete;
-        public sealed override bool IsConcrete
+        private bool? _isConcrete;
+        internal void SetIsConcrete(bool? value)
         {
-            get { return Expression == null ? true : _isConcrete; }
+            _isConcrete = value;
         }
 
-        internal sealed override void EnsureConcrete()
+        public sealed override bool IsConcrete
         {
-            if (!IsConcrete)
+            get { return Expression == null ? true : _isConcrete == true; }
+        }
+
+        internal sealed override void TryMakeConcrete()
+        {
+            if (!IsConcrete && !_isConcrete.HasValue)
             {
                 _isConcrete = true;
                 Debug.Assert(_valueManager == null);

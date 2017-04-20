@@ -444,4 +444,10 @@
   <data name="DataSetContainer_ResumeComputationWithoutSuspendComputation" xml:space="preserve">
     <value>SuspendComputation and ResumeComputation must be called in tandem.</value>
   </data>
+  <data name="DataSetContainer_InvalidLocalColumnExpression" xml:space="preserve">
+    <value>The expression must be static.</value>
+  </data>
+  <data name="DataSetContainer_InvalidLocalColumnModel" xml:space="preserve">
+    <value>DataSetContainer does not contain this model.</value>
+  </data>
 </root>

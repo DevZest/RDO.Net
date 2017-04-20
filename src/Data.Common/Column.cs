@@ -87,6 +87,7 @@ namespace DevZest.Data
 
         internal void Initialize(Model parentModel, Type ownerType, string name, ColumnKind kind, Action<Column> initializer)
         {
+            Debug.Assert(parentModel != null);
             ConstructModelMember(parentModel, ownerType, name);
             Kind = kind;
             if (OriginalOwnerType == null)
@@ -95,19 +96,16 @@ namespace DevZest.Data
                 OriginalName = name;
 
             _initializer = initializer;
-            if (parentModel != null)
-            {
-                var columns = ParentModel.Columns;
-                Ordinal = columns.Count;
-                columns.Add(this);
-            }
+            var columns = ParentModel.Columns;
+            Ordinal = columns.Count;
+            columns.Add(this);
 
             if (_initializer != null)
                 _initializer(this);
         }
 
         /// <summary>Gets the <see cref="ColumnKind"/> of this column.</summary>
-        public ColumnKind Kind { get; private set; }
+        public ColumnKind Kind { get; internal set; }
 
         /// <summary>Gets a value indicates whether this is a system column.</summary>
         /// <value><see langword="true"/> if this is a system column, otherwise <see langword="false"/>.</value>
@@ -131,8 +129,6 @@ namespace DevZest.Data
         internal abstract void InsertRow(DataRow dataRow);
 
         internal abstract void RemoveRow(DataRow dataRow);
-
-        internal abstract void ClearRows();
 
         /// <inheritdoc/>
         public override string ToString()
@@ -471,7 +467,7 @@ namespace DevZest.Data
 
         public abstract bool IsConcrete { get; }
 
-        internal abstract void EnsureConcrete();
+        internal abstract void TryMakeConcrete();
 
         internal abstract void RefreshComputation(DataRow dataRow);
     }

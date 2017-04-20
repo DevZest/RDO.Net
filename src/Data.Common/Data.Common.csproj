@@ -60,12 +60,14 @@
     <Compile Include="Column.cs" />
     <Compile Include="ColumnCollection.cs" />
     <Compile Include="DataSetContainer.cs" />
+    <Compile Include="DataSetContainer.LocalColumn.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="IValidationMessageGroup.cs" />
     <Compile Include="IValidationResult.cs" />
     <Compile Include="AbstractValidationMessageGroup.cs" />
     <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
+    <Compile Include="LocalColumnBuilder.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />

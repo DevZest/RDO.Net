@@ -883,6 +883,22 @@ namespace DevZest.Data
             get { return GetString("DataSetContainer_ResumeComputationWithoutSuspendComputation"); }
         }
 
+        /// <summary>
+        /// The expression must be static.
+        /// </summary>
+        public static string DataSetContainer_InvalidLocalColumnExpression
+        {
+            get { return GetString("DataSetContainer_InvalidLocalColumnExpression"); }
+        }
+
+        /// <summary>
+        /// DataSetContainer does not contain this model.
+        /// </summary>
+        public static string DataSetContainer_InvalidLocalColumnModel
+        {
+            get { return GetString("DataSetContainer_InvalidLocalColumnModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
