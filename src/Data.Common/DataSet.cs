@@ -421,5 +421,10 @@ namespace DevZest.Data
             Model.CancelEdit();
             return true;
         }
+
+        public DataSetContainer Container
+        {
+            get { return Model.DataSetContainer; }
+        }
     }
 }

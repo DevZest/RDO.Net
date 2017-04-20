@@ -83,6 +83,7 @@
     <Compile Include="BinaryTests.cs" />
     <Compile Include="CaseTests.cs" />
     <Compile Include="DataRowTests.cs" />
+    <Compile Include="DataSetContainerTests.cs" />
     <Compile Include="DbTableDeleteTests.cs" />
     <Compile Include="Helpers\DbSessionExtensions.cs" />
     <Compile Include="Helpers\DbTableExtensions.cs" />

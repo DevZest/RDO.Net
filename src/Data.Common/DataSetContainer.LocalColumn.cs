@@ -26,8 +26,11 @@ namespace DevZest.Data
 
             private void Initialize(Model model, ColumnExpression<T> expression)
             {
-                ParentModel = model;
-                OwnerType = model.GetType();
+                if (model != null)
+                {
+                    ParentModel = model;
+                    OwnerType = model.GetType();
+                }
                 Kind = ColumnKind.User;
                 Expression = expression;
                 if (string.IsNullOrEmpty(Name))
@@ -55,8 +58,11 @@ namespace DevZest.Data
 
             private void WireEvents()
             {
-                ParentModel.DataRowInserting += OnDataRowInserting;
-                ParentModel.DataRowRemoving += OnDataRowRemoving;
+                if (ParentModel != null)
+                {
+                    ParentModel.DataRowInserting += OnDataRowInserting;
+                    ParentModel.DataRowRemoving += OnDataRowRemoving;
+                }
             }
 
             private void OnDataRowInserting(DataRow dataRow)
@@ -87,7 +93,7 @@ namespace DevZest.Data
 
             protected internal override Column<T> CreateConst(T value)
             {
-                throw new NotSupportedException();
+                return new LocalColumn<T>(null, new LocalColumnExpression<T>(dataRow => value), null);
             }
 
             protected internal override T DeserializeValue(JsonValue value)
@@ -701,7 +707,7 @@ namespace DevZest.Data
             return AddLocalColumn(result);
         }
 
-        public Column<T> CreateLocalColumn<T>(Model model, Func<DataRow, T> expression, Action<LocalColumnBuilder<T>> builder)
+        public Column<T> CreateLocalColumn<T>(Model model, Func<DataRow, T> expression, Action<LocalColumnBuilder<T>> builder = null)
         {
             VerifyModel(model, nameof(model));
             VerifyExpression(expression, nameof(expression));
@@ -709,7 +715,7 @@ namespace DevZest.Data
             return AddLocalColumn(result);
         }
 
-        public Column<T> CreateLocalColumn<T1, T>(Model model, T1 column, Func<DataRow, T1, T> expression, Action<LocalColumnBuilder<T>> builder)
+        public Column<T> CreateLocalColumn<T1, T>(Model model, T1 column, Func<DataRow, T1, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
         {
             VerifyModel(model, nameof(model));
@@ -719,7 +725,7 @@ namespace DevZest.Data
             return AddLocalColumn(result);
         }
 
-        public Column<T> CreateLocalColumn<T1, T2, T>(Model model, T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, Action<LocalColumnBuilder<T>> builder)
+        public Column<T> CreateLocalColumn<T1, T2, T>(Model model, T1 column1, T2 column2, Func<DataRow, T1, T2, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
         {
@@ -732,7 +738,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T>(Model model, T1 column1, T2 column2, T3 column3,
-            Func<DataRow, T1, T2, T3, T> expression, Action<LocalColumnBuilder<T>> builder)
+            Func<DataRow, T1, T2, T3, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -747,7 +753,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4,
-            Func<DataRow, T1, T2, T3, T4, T> expression, Action<LocalColumnBuilder<T>> builder)
+            Func<DataRow, T1, T2, T3, T4, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -764,7 +770,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5,
-            Func<DataRow, T1, T2, T3, T4, T5, T> expression, Action<LocalColumnBuilder<T>> builder)
+            Func<DataRow, T1, T2, T3, T4, T5, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -783,7 +789,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T> expression, Action<LocalColumnBuilder<T>> builder)
+            Func<DataRow, T1, T2, T3, T4, T5, T6, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -804,7 +810,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T> expression, Action<LocalColumnBuilder<T>> builder)
+            T7 column7, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -828,7 +834,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T> expression, Action<LocalColumnBuilder<T>> builder)
+            T7 column7, T8 column8, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -854,7 +860,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, T9 column9, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T> expression, Action<LocalColumnBuilder<T>> builder)
+            T7 column7, T8 column8, T9 column9, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -882,7 +888,7 @@ namespace DevZest.Data
         }
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
-            T7 column7, T8 column8, T9 column9, T10 column10, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> expression, Action<LocalColumnBuilder<T>> builder)
+            T7 column7, T8 column8, T9 column9, T10 column10, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -913,7 +919,7 @@ namespace DevZest.Data
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4, T5 column5, T6 column6,
             T7 column7, T8 column8, T9 column9, T10 column10, T11 column11, Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T> expression,
-            Action<LocalColumnBuilder<T>> builder)
+            Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
@@ -946,7 +952,7 @@ namespace DevZest.Data
 
         public Column<T> CreateLocalColumn<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(Model model, T1 column1, T2 column2, T3 column3, T4 column4,
             T5 column5, T6 column6, T7 column7, T8 column8, T9 column9, T10 column10, T11 column11, T12 column12,
-            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T> expression, Action<LocalColumnBuilder<T>> builder)
+            Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T> expression, Action<LocalColumnBuilder<T>> builder = null)
             where T1 : Column
             where T2 : Column
             where T3 : Column
