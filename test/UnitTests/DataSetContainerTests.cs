@@ -260,7 +260,7 @@ namespace DevZest.Data
             _Int32 id8, _Int32 id9, _Int32 id10, _Int32 id11)
         {
             return id1[dataRow].Value + id2[dataRow].Value + id3[dataRow].Value + id4[dataRow].Value + id5[dataRow].Value + id6[dataRow].Value
-                + id7[dataRow].Value + id8[dataRow].Value + id9[dataRow].Value + id10[dataRow].Value + id10[dataRow].Value;
+                + id7[dataRow].Value + id8[dataRow].Value + id9[dataRow].Value + id10[dataRow].Value + id11[dataRow].Value;
         }
 
         [TestMethod]
@@ -282,7 +282,7 @@ namespace DevZest.Data
             _Int32 id8, _Int32 id9, _Int32 id10, _Int32 id11, _Int32 id12)
         {
             return id1[dataRow].Value + id2[dataRow].Value + id3[dataRow].Value + id4[dataRow].Value + id5[dataRow].Value + id6[dataRow].Value
-                + id7[dataRow].Value + id8[dataRow].Value + id9[dataRow].Value + id10[dataRow].Value + id10[dataRow].Value + id12[dataRow].Value;
+                + id7[dataRow].Value + id8[dataRow].Value + id9[dataRow].Value + id10[dataRow].Value + id11[dataRow].Value + id12[dataRow].Value;
         }
     }
 }
