@@ -65,14 +65,14 @@ namespace DevZest.Data
                 }
             }
 
-            private void OnDataRowInserting(DataRow dataRow)
+            private void OnDataRowInserting(object sender, DataRowEventArgs e)
             {
-                InsertRow(dataRow);
+                InsertRow(e.DataRow);
             }
 
-            private void OnDataRowRemoving(DataRow dataRow)
+            private void OnDataRowRemoving(object sender, DataRowEventArgs e)
             {
-                RemoveRow(dataRow);
+                RemoveRow(e.DataRow);
             }
 
             private bool _designMode = true;

@@ -304,6 +304,7 @@ namespace DevZest.Data
                 return;
 
             Initialize(s_childModelManager);
+            var e = new ModelEventArgs(this);
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
                 foreach (var model in ChildModels)
@@ -312,24 +313,26 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnBeforeChildModelsInitialized();
+                OnBeforeChildModelsInitialized(e);
+                DataSetContainer.OnBeforeChildModelsInitialized(e);
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
             AreChildModelsInitialized = true;
 
-            OnChildModelsInitialized();
+            OnAfterChildModelsInitialized(e);
+            DataSetContainer?.OnAfterChildModelsInitialized(e);
         }
 
-        protected virtual void OnBeforeChildModelsInitialized()
+        protected virtual void OnBeforeChildModelsInitialized(ModelEventArgs e)
         {
-            BeforeChildModelsInitialized(this);
+            BeforeChildModelsInitialized(this, e);
         }
 
-        protected virtual void OnChildModelsInitialized()
+        protected virtual void OnAfterChildModelsInitialized(ModelEventArgs e)
         {
-            AfterChildModelsInitialized(this);
+            AfterChildModelsInitialized(this, e);
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
@@ -859,56 +862,58 @@ namespace DevZest.Data
             return result;
         }
 
-        public event ModelEventHandler BeforeChildModelsInitialized = delegate { };
-        public event ModelEventHandler AfterChildModelsInitialized = delegate { };
-        public event DataRowEventHandler DataRowInserting = delegate { };
-        public event DataRowEventHandler BeforeDataRowInserted = delegate { };
-        public event DataRowEventHandler AfterDataRowInserted = delegate { };
-        public event DataRowEventHandler DataRowRemoving = delegate { };
-        public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
-        public event ValueChangedEventHandler ValueChanged = delegate { };
+        public event EventHandler<ModelEventArgs> BeforeChildModelsInitialized = delegate { };
+        public event EventHandler<ModelEventArgs> AfterChildModelsInitialized = delegate { };
+        public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
+        public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
+        public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
+        public event EventHandler<DataRowEventArgs> DataRowRemoving = delegate { };
+        public event EventHandler<DataRowRemovedEventArgs> DataRowRemoved = delegate { };
+        public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
         internal void HandlesDataRowInserted(DataRow dataRow, Action<DataRow> updateAction)
         {
             dataRow.ValueChangedSuspended = true;
-            OnDataRowInserting(dataRow);
-            DataSetContainer.OnDataRowInserting(dataRow);
+            var e = new DataRowEventArgs(dataRow);
+            OnDataRowInserting(e);
+            DataSetContainer.OnDataRowInserting(e);
             if (updateAction != null)
                 updateAction(dataRow);
-            OnBeforeDataRowInserted(dataRow);
-            DataSetContainer.OnBeforeDataRowInserted(dataRow);
+            OnBeforeDataRowInserted(e);
+            DataSetContainer.OnBeforeDataRowInserted(e);
             dataRow.ValueChangedSuspended = false;
             DataSetContainer.SuspendComputation();
-            OnDataRowInserted(dataRow);
-            DataSetContainer.OnAfterDataRowInserted(dataRow);
+            OnDataRowInserted(e);
+            DataSetContainer.OnAfterDataRowInserted(e);
             DataSetContainer.ResumeComputation();
         }
 
-        protected virtual void OnDataRowInserting(DataRow dataRow)
+        protected virtual void OnDataRowInserting(DataRowEventArgs e)
         {
-            DataRowInserting(dataRow);
+            DataRowInserting(this, e);
         }
 
-        protected virtual void OnBeforeDataRowInserted(DataRow dataRow)
+        protected virtual void OnBeforeDataRowInserted(DataRowEventArgs e)
         {
-            BeforeDataRowInserted(dataRow);
+            BeforeDataRowInserted(this, e);
         }
 
-        protected virtual void OnDataRowInserted(DataRow dataRow)
+        protected virtual void OnDataRowInserted(DataRowEventArgs e)
         {
-            AfterDataRowInserted(dataRow);
+            AfterDataRowInserted(this, e);
         }
 
         internal void HandlesDataRowRemoving(DataRow dataRow)
         {
             dataRow.ValueChangedSuspended = true;
-            OnDataRowRemoving(dataRow);
-            DataSetContainer.OnDataRowRemoving(dataRow);
+            var e = new DataRowEventArgs(dataRow);
+            OnDataRowRemoving(e);
+            DataSetContainer.OnDataRowRemoving(e);
         }
 
-        protected virtual void OnDataRowRemoving(DataRow dataRow)
+        protected virtual void OnDataRowRemoving(DataRowEventArgs e)
         {
-            DataRowRemoving(dataRow);
+            DataRowRemoving(this, e);
         }
 
         internal void HandlesDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
@@ -918,27 +923,29 @@ namespace DevZest.Data
 
             dataRow.ValueChangedSuspended = false;
             DataSetContainer.SuspendComputation();
-            OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-            DataSetContainer.OnDataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            var e = new DataRowRemovedEventArgs(dataRow, baseDataSet, ordinal, dataSet, index);
+            OnDataRowRemoved(e);
+            DataSetContainer.OnDataRowRemoved(e);
             DataSetContainer.ResumeComputation();
         }
 
-        protected virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        protected virtual void OnDataRowRemoved(DataRowRemovedEventArgs e)
         {
-            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
+            DataRowRemoved(this, e);
         }
 
         internal void HandlesValueChanged(DataRow dataRow, Column column)
         {
             DataSetContainer.SuspendComputation();
-            OnValueChanged(dataRow, column);
-            DataSetContainer.OnValueChanged(dataRow, column);
+            var e = new ValueChangedEventArgs(dataRow, column);
+            OnValueChanged(e);
+            DataSetContainer.OnValueChanged(e);
             DataSetContainer.ResumeComputation();
         }
 
-        protected virtual void OnValueChanged(DataRow dataRow, Column column)
+        protected virtual void OnValueChanged(ValueChangedEventArgs e)
         {
-            ValueChanged(dataRow, column);
+            ValueChanged(this, e);
         }
 
         private DataSetContainer _dataSetContainer;

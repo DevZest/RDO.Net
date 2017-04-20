@@ -280,12 +280,14 @@ namespace DevZest.Data
             }
         }
 
-        public event DataRowEventHandler DataRowInserting = delegate { };
-        public event DataRowEventHandler BeforeDataRowInserted = delegate { };
-        public event DataRowEventHandler AfterDataRowInserted = delegate { };
-        public event DataRowEventHandler DataRowRemoving = delegate { };
-        public event DataRowRemovedEventHandler DataRowRemoved = delegate { };
-        public event ValueChangedEventHandler ValueChanged = delegate { };
+        public event EventHandler<ModelEventArgs> BeforeChildModelsInitialized = delegate { };
+        public event EventHandler<ModelEventArgs> AfterChildModelsInitialized = delegate { };
+        public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
+        public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
+        public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
+        public event EventHandler<DataRowEventArgs> DataRowRemoving = delegate { };
+        public event EventHandler<DataRowRemovedEventArgs> DataRowRemoved = delegate { };
+        public event EventHandler<ValueChangedEventArgs> ValueChanged = delegate { };
 
         private ComputationManager _computationManager;
 
@@ -342,38 +344,48 @@ namespace DevZest.Data
             _computationManager?.ResumeComputation();
         }
 
-        internal void OnDataRowInserting(DataRow dataRow)
+        internal void OnBeforeChildModelsInitialized(ModelEventArgs e)
         {
-            DataRowInserting(dataRow);
+            BeforeChildModelsInitialized(this, e);
         }
 
-        internal void OnBeforeDataRowInserted(DataRow dataRow)
+        internal void OnAfterChildModelsInitialized(ModelEventArgs e)
         {
-            _computationManager?.OnBeforeDataRowInserted(dataRow);
-            BeforeDataRowInserted(dataRow);
+            AfterChildModelsInitialized(this, e);
         }
 
-        internal void OnAfterDataRowInserted(DataRow dataRow)
+        internal void OnDataRowInserting(DataRowEventArgs e)
         {
-            AfterDataRowInserted(dataRow);
-            _computationManager?.OnAfterDataRowInserted(dataRow);
+            DataRowInserting(this, e);
         }
 
-        internal void OnValueChanged(DataRow dataRow, Column column)
+        internal void OnBeforeDataRowInserted(DataRowEventArgs e)
         {
-            ValueChanged(dataRow, column);
-            _computationManager?.OnValueChanged(dataRow, column);
+            _computationManager?.OnBeforeDataRowInserted(e.DataRow);
+            BeforeDataRowInserted(this, e);
         }
 
-        internal void OnDataRowRemoving(DataRow dataRow)
+        internal void OnAfterDataRowInserted(DataRowEventArgs e)
         {
-            DataRowRemoving(dataRow);
+            AfterDataRowInserted(this, e);
+            _computationManager?.OnAfterDataRowInserted(e.DataRow);
         }
 
-        internal void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        internal void OnValueChanged(ValueChangedEventArgs e)
         {
-            DataRowRemoved(dataRow, baseDataSet, ordinal, dataSet, index);
-            _computationManager?.OnDataRowRemoved(dataSet);
+            ValueChanged(this, e);
+            _computationManager?.OnValueChanged(e.DataRow, e.Column);
+        }
+
+        internal void OnDataRowRemoving(DataRowEventArgs e)
+        {
+            DataRowRemoving(this, e);
+        }
+
+        internal void OnDataRowRemoved(DataRowRemovedEventArgs e)
+        {
+            DataRowRemoved(this, e);
+            _computationManager?.OnDataRowRemoved(e.DataSet);
         }
     }
 }

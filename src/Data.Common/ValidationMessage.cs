@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
@@ -36,16 +37,19 @@ namespace DevZest.Data
 
         #region IValidationMessageGroup
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IValidationMessageGroup.Count
         {
             get { return 1; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<ValidationMessage>.Count
         {
             get { return 1; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         ValidationMessage IReadOnlyList<ValidationMessage>.this[int index]
         {
             get
@@ -56,6 +60,7 @@ namespace DevZest.Data
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         ValidationMessage IValidationMessageGroup.this[int index]
         {
             get
@@ -66,27 +71,32 @@ namespace DevZest.Data
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IValidationMessageGroup IValidationMessageGroup.Seal()
         {
             return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IValidationMessageGroup IValidationMessageGroup.Add(ValidationMessage value)
         {
             Check.NotNull(value, nameof(value));
             return ValidationMessageGroup.New(this, value);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<ValidationMessage> IEnumerable<ValidationMessage>.GetEnumerator()
         {
             yield return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<ValidationMessage> IValidationMessageGroup.GetEnumerator()
         {
             yield return this;

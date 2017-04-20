@@ -22,7 +22,7 @@ namespace DevZest.Data.Helpers
                 Validators.Add(Validator.Create(MESSAGE_ID, ValidationSeverity.Error, Id, Id % 2 == 0, "The Id must be even."));
             }
 
-            protected override void OnBeforeChildModelsInitialized()
+            protected override void OnBeforeChildModelsInitialized(ModelEventArgs e)
             {
                 ChildCount.ComputedAs(Child.Id.CountRows(), false);
             }
@@ -38,12 +38,12 @@ namespace DevZest.Data.Helpers
                 var log = new StringBuilder();
                 for (var _ = this; (depth--) >= 0; _ = _.Child)
                 {
-                    _.DataRowInserting += dataRow => LogDataRowInserting(log, dataRow);
-                    _.BeforeDataRowInserted += dataRow => LogBeforeDataRowInserted(log, dataRow);
-                    _.AfterDataRowInserted += dataRow => LogAfterDataRowInserted(log, dataRow);
-                    _.DataRowRemoving += (dataRow) => LogDataRowRemoving(log, dataRow);
-                    _.DataRowRemoved += (dataRow, baseDataSet, ordinal, parentDataSet, index) => LogDataRowRemoved(log, baseDataSet, ordinal);
-                    _.ValueChanged += (dataRow, columns) => LogValueChanged(log, dataRow, columns);
+                    _.DataRowInserting += (sender, e) => LogDataRowInserting(log, e.DataRow);
+                    _.BeforeDataRowInserted += (sender, e) => LogBeforeDataRowInserted(log, e.DataRow);
+                    _.AfterDataRowInserted += (sender, e) => LogAfterDataRowInserted(log, e.DataRow);
+                    _.DataRowRemoving += (sender, e) => LogDataRowRemoving(log, e.DataRow);
+                    _.DataRowRemoved += (sender, e) => LogDataRowRemoved(log, e.BaseDataSet, e.Ordinal);
+                    _.ValueChanged += (sender, e) => LogValueChanged(log, e.DataRow, e.Column);
                 }
                 return log;
             }

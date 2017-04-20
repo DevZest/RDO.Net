@@ -337,10 +337,10 @@ namespace DevZest.Data
             var _ = salesOrders._;
             var dataRowUpdatedCount = 0;
             var changedColumns = ColumnSet.Empty;
-            _.ValueChanged += (dataRow, updatedColumns) =>
+            _.ValueChanged += (sender, e) =>
             {
                 dataRowUpdatedCount++;
-                changedColumns = changedColumns.Union(updatedColumns);
+                changedColumns = changedColumns.Add(e.Column);
             };
             salesOrders.Add(new DataRow());
             _.SalesOrderID[0] = 12345;
