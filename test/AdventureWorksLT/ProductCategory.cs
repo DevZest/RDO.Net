@@ -15,9 +15,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductCategoryID { get; private set; }
         }
 
-        public static readonly Accessor<ProductCategory, _Int32> ProductCategoryIDAccessor = RegisterColumn((ProductCategory x) => x.ProductCategoryID);
-        public static readonly Accessor<ProductCategory, _Int32> ParentProductCategoryIDAccessor = RegisterColumn((ProductCategory x) => x.ParentProductCategoryID);
-        public static readonly Accessor<ProductCategory, _String> NameAccessor = RegisterColumn((ProductCategory x) => x.Name, x => { x.AsNVarChar(50); });
+        public static readonly Property<_Int32> _ProductCategoryID = RegisterColumn((ProductCategory x) => x.ProductCategoryID);
+        public static readonly Property<_Int32> _ParentProductCategoryID = RegisterColumn((ProductCategory x) => x.ParentProductCategoryID);
+        public static readonly Property<_String> _Name = RegisterColumn((ProductCategory x) => x.Name, x => { x.AsNVarChar(50); });
 
         static ProductCategory()
         {

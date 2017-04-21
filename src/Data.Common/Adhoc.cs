@@ -37,17 +37,16 @@ namespace DevZest.Data
             return ColumnList.Add(column, inheritColumnKey, initializer);
         }
 
-        /// <summary>Adds a new column to this adhoc model, from existing column accessor.</summary>
-        /// <typeparam name="TModel">The model type of the existing column accessor.</typeparam>
+        /// <summary>Adds a new column to this adhoc model, from existing column property.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
-        /// <param name="accessor">The existing column accessor.</param>
-        /// <param name="inheritColumnKey">A value indicates whether the newly added column should inherit <see cref="ColumnKey"/> from the existing column accessor.</param>
+        /// <param name="property">The existing column property.</param>
+        /// <param name="inheritColumnKey">A value indicates whether the newly added column should inherit <see cref="ColumnKey"/> from the existing column property.</param>
         /// <param name="initializer">The additional column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T AddColumn<TModel, T>(Accessor<TModel, T> accessor, bool inheritColumnKey = false, Action<T> initializer = null)
+        public T AddColumn<T>(Property<T> property, bool inheritColumnKey = false, Action<T> initializer = null)
             where T : Column, new()
         {
-            return ColumnList.Add(accessor, inheritColumnKey, initializer);
+            return ColumnList.Add(property, inheritColumnKey, initializer);
         }
 
         /// <summary>Gets the column at specified index.</summary>

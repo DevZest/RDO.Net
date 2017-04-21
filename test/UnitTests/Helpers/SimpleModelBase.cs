@@ -11,9 +11,9 @@ namespace DevZest.Data.Helpers
             ParentKey = new SimpleModelKey(ParentId);
         }
 
-        public static readonly Accessor<SimpleModelBase, _Int32> IdAccessor = RegisterColumn((SimpleModelBase x) => x.Id);
+        public static readonly Property<_Int32> _Id = RegisterColumn((SimpleModelBase x) => x.Id);
 
-        public static readonly Accessor<SimpleModelBase, _Int32> ParentIdAccessor = RegisterColumn((SimpleModelBase x) => x.ParentId);
+        public static readonly Property<_Int32> _ParentId = RegisterColumn((SimpleModelBase x) => x.ParentId);
 
         [Required]
         public _Int32 Id { get; private set; }

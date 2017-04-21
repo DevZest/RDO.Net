@@ -9,11 +9,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class AccessorManager<TTarget, TProperty>
+    internal sealed class PropertyManager<TTarget, TProperty>
     {
         private struct Key
         {
-            public Key(IAccessor<TTarget, TProperty> item)
+            public Key(IProperty<TTarget, TProperty> item)
             {
                 OwnerType = item.OwnerType;
                 Name = item.Name;
@@ -95,18 +95,18 @@ namespace DevZest.Data.Primitives
             public readonly Expression<Func<TDerivedTarget, TDerivedProperty>> Getter;
         }
 
-        private abstract class AccessorImplBase<TDerivedTarget, TDerivedProperty> : Accessor<TDerivedTarget, TDerivedProperty>, IAccessor<TTarget, TProperty>
+        private abstract class PropertyImplBase<TDerivedTarget, TDerivedProperty> : Property<TDerivedTarget, TDerivedProperty>, IProperty<TTarget, TProperty>
             where TDerivedTarget : TTarget
             where TDerivedProperty : TProperty
         {
-            protected AccessorImplBase()
+            protected PropertyImplBase()
             {
             }
 
             protected void Init(string name,
                 Func<TDerivedTarget, TDerivedProperty> getter,
                 Action<TDerivedTarget, TDerivedProperty> setter,
-                Func<Accessor<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 _name = name;
@@ -146,22 +146,22 @@ namespace DevZest.Data.Primitives
                 get { return _initializer; }
             }
 
-            TProperty IAccessor<TTarget, TProperty>.GetProperty(TTarget target)
+            TProperty IProperty<TTarget, TProperty>.GetInstance(TTarget target)
             {
                 return this.GetProperty((TDerivedTarget)target);
             }
 
-            TProperty IAccessor<TTarget, TProperty>.Construct(TTarget target)
+            TProperty IProperty<TTarget, TProperty>.Construct(TTarget target)
             {
                 return this.Construct((TDerivedTarget)target);
             }
         }
-        private sealed class AccessorImpl<TDerivedTarget, TDerivedProperty> : AccessorImplBase<TDerivedTarget, TDerivedProperty>
+        private sealed class PropertyImpl<TDerivedTarget, TDerivedProperty> : PropertyImplBase<TDerivedTarget, TDerivedProperty>
             where TDerivedTarget : TTarget
             where TDerivedProperty : TProperty
         {
-            public AccessorImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
-                Func<Accessor<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            public PropertyImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
+                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 Debug.Assert(constructor != null);
@@ -169,7 +169,7 @@ namespace DevZest.Data.Primitives
                 var name = propertyInfo.Name;
                 var setter = GetSetter(name);
                 if (setter == null)
-                    throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(propertyInfo));
+                    throw new ArgumentException(Strings.Property_InvalidGetter, nameof(propertyInfo));
                 Init(name, propertyInfo.Getter.Compile(), setter, constructor, initializer);
             }
 
@@ -197,7 +197,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private sealed class AttachedAccessorImpl<TDerivedTarget, TDerivedProperty> : AccessorImplBase<TDerivedTarget, TDerivedProperty>
+        private sealed class AttachedPropertyImpl<TDerivedTarget, TDerivedProperty> : PropertyImplBase<TDerivedTarget, TDerivedProperty>
             where TDerivedTarget : class, TTarget
             where TDerivedProperty : class, TProperty
         {
@@ -213,8 +213,8 @@ namespace DevZest.Data.Primitives
                 _storage.Add(target, value);
             }
 
-            public AttachedAccessorImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
-                Func<Accessor<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            public AttachedPropertyImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
+                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 Init(propertyInfo.Name, GetStoredProperty, SetStoredProperty, constructor, initializer);
@@ -228,20 +228,20 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private sealed class RegistrationCollection : KeyedCollection<Key, IAccessor<TTarget, TProperty>>
+        private sealed class RegistrationCollection : KeyedCollection<Key, IProperty<TTarget, TProperty>>
         {
-            protected override Key GetKeyForItem(IAccessor<TTarget, TProperty> item)
+            protected override Key GetKeyForItem(IProperty<TTarget, TProperty> item)
             {
                 return new Key(item);
             }
         }
 
         private Dictionary<Type, RegistrationCollection> _registrations = new Dictionary<Type, RegistrationCollection>();
-        private Dictionary<Type, ReadOnlyCollection<IAccessor<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, ReadOnlyCollection<IAccessor<TTarget, TProperty>>>();
+        private Dictionary<Type, ReadOnlyCollection<IProperty<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, ReadOnlyCollection<IProperty<TTarget, TProperty>>>();
 
-        public Accessor<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
+        public Property<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
             Expression<Func<TDerivedTarget, TDerivedProperty>> getter,
-            Func<Accessor<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
             Action<TDerivedProperty> initializer = null)
             where TDerivedTarget : class, TTarget
             where TDerivedProperty : class, TProperty
@@ -249,30 +249,30 @@ namespace DevZest.Data.Primitives
             Debug.Assert(getter != null);
             var propertyInfo = PropertyInfo<TDerivedTarget, TDerivedProperty>.FromGetter(getter);
             if (propertyInfo == null)
-                throw new ArgumentException(Strings.Accessor_InvalidGetter);
+                throw new ArgumentException(Strings.Property_InvalidGetter);
 
             var info = propertyInfo.Value;
             if (info.IsAttached)
             {
-                var result = new AttachedAccessorImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+                var result = new AttachedPropertyImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
                 Register(result);
                 return result;
             }
             else
             {
-                var result = new AccessorImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+                var result = new PropertyImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
                 Register(result);
                 return result;
             }
         }
 
-        private void Register(IAccessor<TTarget, TProperty> item)
+        private void Register(IProperty<TTarget, TProperty> item)
         {
             Type targetType = item.ParentType;
             lock (_resultRegistrations) // ensure thread safety
             {
                 if (_resultRegistrations.ContainsKey(targetType))
-                    throw new InvalidOperationException(Strings.Accessor_RegisterAfterUse(targetType.FullName));
+                    throw new InvalidOperationException(Strings.Property_RegisterAfterUse(targetType.FullName));
 
                 RegistrationCollection registrations;
                 if (!_registrations.TryGetValue(targetType, out registrations))
@@ -282,36 +282,36 @@ namespace DevZest.Data.Primitives
                 }
 
                 if (registrations.Contains(new Key(item)))
-                    throw new InvalidOperationException(Strings.Accessor_RegisterDuplicate(item.OwnerType.FullName, item.Name));
+                    throw new InvalidOperationException(Strings.Property_RegisterDuplicate(item.OwnerType.FullName, item.Name));
 
                 registrations.Add(item);
             }
         }
 
-        public ReadOnlyCollection<IAccessor<TTarget, TProperty>> GetAll(Type targetType)
+        public ReadOnlyCollection<IProperty<TTarget, TProperty>> GetAll(Type targetType)
         {
-            ReadOnlyCollection<IAccessor<TTarget, TProperty>> result;
+            ReadOnlyCollection<IProperty<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 
             return SyncGetAll(targetType);
         }
 
-        private ReadOnlyCollection<IAccessor<TTarget, TProperty>> SyncGetAll(Type targetType)
+        private ReadOnlyCollection<IProperty<TTarget, TProperty>> SyncGetAll(Type targetType)
         {
             lock (_resultRegistrations) // ensure thread safety
             {
-                return GetAccessors(targetType);
+                return GetProperties(targetType);
             }
         }
 
-        private static readonly ReadOnlyCollection<IAccessor<TTarget, TProperty>> Empty =
-            new ReadOnlyCollection<IAccessor<TTarget, TProperty>>(new IAccessor<TTarget, TProperty>[0]);
-        private ReadOnlyCollection<IAccessor<TTarget, TProperty>> GetAccessors(Type targetType)
+        private static readonly ReadOnlyCollection<IProperty<TTarget, TProperty>> Empty =
+            new ReadOnlyCollection<IProperty<TTarget, TProperty>>(new IProperty<TTarget, TProperty>[0]);
+        private ReadOnlyCollection<IProperty<TTarget, TProperty>> GetProperties(Type targetType)
         {
             Debug.Assert(targetType != null);
 
-            ReadOnlyCollection<IAccessor<TTarget, TProperty>> result;
+            ReadOnlyCollection<IProperty<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 
@@ -320,7 +320,7 @@ namespace DevZest.Data.Primitives
             if (_registrations.TryGetValue(targetType, out registrations))
             {
                 _registrations.Remove(targetType);
-                result = new ReadOnlyCollection<IAccessor<TTarget, TProperty>>(registrations);
+                result = new ReadOnlyCollection<IProperty<TTarget, TProperty>>(registrations);
             }
             else
                 result = Empty;
@@ -329,9 +329,9 @@ namespace DevZest.Data.Primitives
             if (baseType != null)
             {
                 if (baseType.GetTypeInfo().IsAbstract)
-                    result = result.Concat(GetAccessors(baseType));
+                    result = result.Concat(GetProperties(baseType));
                 else
-                    result = GetAccessors(baseType).Concat(result);
+                    result = GetProperties(baseType).Concat(result);
             }
             _resultRegistrations.Add(targetType, result);
             return result;

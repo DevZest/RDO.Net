@@ -19,13 +19,13 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public static readonly Accessor<SalesOrderDetail, _Int32> SalesOrderIDAccessor = RegisterColumn((SalesOrderDetail x) => x.SalesOrderID);
-        public static readonly Accessor<SalesOrderDetail, _Int32> SalesOrderDetailIDAccessor = RegisterColumn((SalesOrderDetail x) => x.SalesOrderDetailID);
-        public static readonly Accessor<SalesOrderDetail, _Int16> OrderQtyAccessor = RegisterColumn((SalesOrderDetail x) => x.OrderQty);
-        public static readonly Accessor<SalesOrderDetail, _Int32> ProductIDAccessor = RegisterColumn((SalesOrderDetail x) => x.ProductID);
-        public static readonly Accessor<SalesOrderDetail, _Decimal> UnitPriceAccessor = RegisterColumn((SalesOrderDetail x) => x.UnitPrice);
-        public static readonly Accessor<SalesOrderDetail, _Decimal> UnitPriceDiscountAccessor = RegisterColumn((SalesOrderDetail x) => x.UnitPriceDiscount, x => x.DefaultValue(0));
-        public static readonly Accessor<SalesOrderDetail, _Decimal> LineTotalAccessor = RegisterColumn((SalesOrderDetail x) => x.LineTotal);
+        public static readonly Property<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail x) => x.SalesOrderID);
+        public static readonly Property<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail x) => x.SalesOrderDetailID);
+        public static readonly Property<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail x) => x.OrderQty);
+        public static readonly Property<_Int32> _ProductID = RegisterColumn((SalesOrderDetail x) => x.ProductID);
+        public static readonly Property<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail x) => x.UnitPrice);
+        public static readonly Property<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail x) => x.UnitPriceDiscount, x => x.DefaultValue(0));
+        public static readonly Property<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail x) => x.LineTotal);
 
         public SalesOrderDetail()
         {

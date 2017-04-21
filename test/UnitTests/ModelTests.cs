@@ -12,9 +12,9 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Accessor<SimpleModel, _Int32> Column1Accessor = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
+            public static readonly Property<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
 
-            public static readonly Accessor<SimpleModel, _Int32> Column2Accessor = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
+            public static readonly Property<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
 
             [Required]
             public _Int32 Column1 { get; private set; }
@@ -25,11 +25,9 @@ namespace DevZest.Data
 
         private class RefSimpleModel : Model
         {
-            public static readonly Accessor<RefSimpleModel, _Int32> Column1Accessor = RegisterColumn(
-                (RefSimpleModel x) => x.Col1, SimpleModel.Column1Accessor);
+            public static readonly Property<_Int32> _Column1 = RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
 
-            public static readonly Accessor<RefSimpleModel, _Int32> Column2Accessor = RegisterColumn(
-                (RefSimpleModel x) => x.Col2, SimpleModel.Column2Accessor);
+            public static readonly Property<_Int32> _Column2 = RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
 
             public _Int32 Col1 { get; private set; }
 
@@ -38,11 +36,9 @@ namespace DevZest.Data
 
         private class RefSimpleModel2 : Model
         {
-            public static readonly Accessor<RefSimpleModel2, _Int32> Column1Accessor = RegisterColumn(
-                (RefSimpleModel2 x) => x.Col1, RefSimpleModel.Column1Accessor);
+            public static readonly Property<_Int32> _Column1 = RegisterColumn((RefSimpleModel2 x) => x.Col1, RefSimpleModel._Column1);
 
-            public static readonly Accessor<RefSimpleModel2, _Int32> Column2Accessor = RegisterColumn(
-                (RefSimpleModel2 x) => x.Col2, RefSimpleModel.Column2Accessor);
+            public static readonly Property<_Int32> _Column2 = RegisterColumn((RefSimpleModel2 x) => x.Col2, RefSimpleModel._Column2);
 
             public _Int32 Col1 { get; private set; }
 
@@ -51,12 +47,12 @@ namespace DevZest.Data
 
         private class ColumnListModel : Model
         {
-            public static readonly Accessor<ColumnListModel, ColumnList<_Int32>> ColumnsAccessor = RegisterColumnList((ColumnListModel x) => x.Cols);
+            public static readonly Property<ColumnList<_Int32>> _Cols = RegisterColumnList((ColumnListModel x) => x.Cols);
 
             public ColumnListModel()
             {
                 Cols.Add<_Int32>();
-                Cols.Add(SimpleModel.Column1Accessor, true);
+                Cols.Add(SimpleModel._Column1, true);
             }
 
             public ColumnList<_Int32> Cols { get; private set; }
@@ -71,7 +67,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Model_RegisterColumn_reference_to_existing_accessor()
+        public void Model_RegisterColumn_reference_to_existing_property()
         {
             var model = new RefSimpleModel();
             model.Col1.Verify(model, typeof(RefSimpleModel), "Col1", typeof(SimpleModel), "Column1");
@@ -79,7 +75,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Model_RegisterColumn_reference_to_existing_accessor_two_levels()
+        public void Model_RegisterColumn_reference_to_existing_property_two_levels()
         {
             var model = new RefSimpleModel2();
             model.Col1.Verify(model, typeof(RefSimpleModel2), "Col1", typeof(SimpleModel), "Column1");
@@ -100,8 +96,7 @@ namespace DevZest.Data
 
         private class RecursiveModel : SimpleModelBase
         {
-            public static readonly Accessor<RecursiveModel, RecursiveModel> ChildModelAccessor = RegisterChildModel((RecursiveModel x) => x.ChildModel,
-                x => x.ParentKey);
+            public static readonly Property<RecursiveModel> _ChildModel = RegisterChildModel((RecursiveModel x) => x.ChildModel, x => x.ParentKey);
 
             public RecursiveModel ChildModel { get; private set; }
         }
@@ -135,10 +130,9 @@ namespace DevZest.Data
 
         private class CloneModel : SimpleModelBase
         {
-            public static Accessor<CloneModel, ColumnList<_Int32>> ColumnListAccessor = RegisterColumnList((CloneModel x) => x.ColumnList);
+            public static Property<ColumnList<_Int32>> _ColumnList = RegisterColumnList((CloneModel x) => x.ColumnList);
 
-            public static readonly Accessor<CloneModel, CloneModel> ChildModelAccessor = RegisterChildModel((CloneModel x) => x.ChildModel,
-                x => x.ParentKey);
+            public static readonly Property<CloneModel> _ChildModel = RegisterChildModel((CloneModel x) => x.ChildModel, x => x.ParentKey);
 
             public ColumnList<_Int32> ColumnList { get; private set; }
 
@@ -196,10 +190,10 @@ namespace DevZest.Data
                 public _Int32 Id { get; private set; }
             }
 
-            public static readonly Accessor<TempModel, _Int32> IdAccessor = RegisterColumn((TempModel x) => x.Id);
-            public static readonly Accessor<TempModel, _String> NameAccessor = RegisterColumn((TempModel x) => x.Name);
-            public static readonly Accessor<TempModel, _Int32> Unique1Accessor = RegisterColumn((TempModel x) => x.Unique1);
-            public static readonly Accessor<TempModel, _Int32> Unique2Accessor = RegisterColumn((TempModel x) => x.Unique2);
+            public static readonly Property<_Int32> _Id = RegisterColumn((TempModel x) => x.Id);
+            public static readonly Property<_String> _Name = RegisterColumn((TempModel x) => x.Name);
+            public static readonly Property<_Int32> _Unique1 = RegisterColumn((TempModel x) => x.Unique1);
+            public static readonly Property<_Int32> _Unique2 = RegisterColumn((TempModel x) => x.Unique2);
 
             public TempModel()
             {

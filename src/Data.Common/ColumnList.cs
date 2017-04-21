@@ -97,23 +97,22 @@ namespace DevZest.Data
                 return Add(x => CreateColumn(x, null, null, baseInitializer, initializer));
         }
 
-        /// <summary>Add a new column into this column list, from existing column accessor.</summary>
-        /// <typeparam name="TModel">The type of the accessor model.</typeparam>
+        /// <summary>Add a new column into this column list, from existing column property.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
-        /// <param name="fromAccessor">The existing column accessor.</param>
-        /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnKey"/> from existing column accessor,
+        /// <param name="fromProperty">The existing column property.</param>
+        /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnKey"/> from existing column property,
         /// otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T Add<TModel, T>(Accessor<TModel, T> fromAccessor, bool inheritColumnKey = false, Action<T> initializer = null)
+        public T Add<T>(Property<T> fromProperty, bool inheritColumnKey = false, Action<T> initializer = null)
             where T : TColumn, new()
         {
             VerifyDesignMode();
-            Check.NotNull(fromAccessor, nameof(fromAccessor));
+            Check.NotNull(fromProperty, nameof(fromProperty));
             if (inheritColumnKey)
-                return Add(x => CreateColumn(x, fromAccessor.OriginalOwnerType, fromAccessor.OriginalName, fromAccessor.Initializer, initializer));
+                return Add(x => CreateColumn(x, fromProperty.OriginalOwnerType, fromProperty.OriginalName, fromProperty.Initializer, initializer));
             else
-                return Add(x => CreateColumn(x, null, null, fromAccessor.Initializer, initializer));
+                return Add(x => CreateColumn(x, null, null, fromProperty.Initializer, initializer));
         }
 
         private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalOwnerType, string originalName, Action<T> baseInitializer, Action<T> initializer)

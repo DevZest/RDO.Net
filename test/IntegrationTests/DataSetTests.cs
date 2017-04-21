@@ -74,8 +74,8 @@ namespace DevZest.Data
 
                 var dataSet = DataSet<Adhoc>.ParseJson(json, (Adhoc adhoc) =>
                 {
-                    adhoc.AddColumn(SalesOrder.SalesOrderIDAccessor);
-                    adhoc.AddColumn(SalesOrder.SalesOrderNumberAccessor);
+                    adhoc.AddColumn(SalesOrder._SalesOrderID);
+                    adhoc.AddColumn(SalesOrder._SalesOrderNumber);
                 });
 
                 Assert.AreEqual(json.Trim(), dataSet.ToString().Trim());

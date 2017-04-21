@@ -19,8 +19,8 @@ namespace DevZest.Data
                 public _Int32 Id { get; private set; }
             }
 
-            public static Accessor<MyTable, _Int32> IdAccessor = RegisterColumn((MyTable x) => x.Id);
-            public static Accessor<MyTable, _Boolean> IsActiveAccessor = RegisterColumn((MyTable x) => x.IsActive, c => c.DefaultValue(true));
+            public static Property<_Int32> _Id = RegisterColumn((MyTable x) => x.Id);
+            public static Property<_Boolean> _IsActive = RegisterColumn((MyTable x) => x.IsActive, c => c.DefaultValue(true));
 
             public MyTable()
             {

@@ -51,7 +51,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Accessor.cs" />
+    <Compile Include="Property.cs" />
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
     <Compile Include="ByteEnum.cs" />
@@ -169,7 +169,7 @@
     <Compile Include="ModelSet.cs" />
     <Compile Include="Model_T.cs" />
     <Compile Include="RequiredAttribute.cs" />
-    <Compile Include="Primitives\AccessorManager.cs" />
+    <Compile Include="Primitives\PropertyManager.cs" />
     <Compile Include="Primitives\AggregateFunctionExpression.cs" />
     <Compile Include="Primitives\BinaryExpression.cs" />
     <Compile Include="Primitives\BinaryExpressionKind.cs" />
@@ -221,7 +221,7 @@
     <Compile Include="Primitives\ForeignKeyConstraint.cs" />
     <Compile Include="Primitives\FunctionExpression.cs" />
     <Compile Include="Primitives\FunctionKey.cs" />
-    <Compile Include="Primitives\IAccessor.cs" />
+    <Compile Include="Primitives\IProperty.cs" />
     <Compile Include="Primitives\IColumn.cs" />
     <Compile Include="Primitives\IColumnValidator.cs" />
     <Compile Include="Primitives\IDbConnectionInterceptor.cs" />

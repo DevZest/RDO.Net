@@ -20,20 +20,19 @@ namespace DevZest.Data
 
         private class SimpleModel : SimpleModelBase
         {
-            public static readonly Accessor<SimpleModel, SimpleModel> ChildAccessor = RegisterChildModel((SimpleModel x) => x.Child,
-                x => x.ParentKey);
+            public static readonly Property<SimpleModel> _Child = RegisterChildModel((SimpleModel x) => x.Child, x => x.ParentKey);
 
-            public static readonly Accessor<SimpleModel, _Int32> Int32ColumnAccessor = RegisterColumn((SimpleModel x) => x.Int32Column);
+            public static readonly Property<_Int32> _Int32Column = RegisterColumn((SimpleModel x) => x.Int32Column);
 
-            public static readonly Accessor<SimpleModel, _Int64> Int64ColumnAccessor = RegisterColumn((SimpleModel x) => x.Int64Column);
+            public static readonly Property<_Int64> _Int64Column = RegisterColumn((SimpleModel x) => x.Int64Column);
 
-            public static readonly Accessor<SimpleModel, _Decimal> DecimalColumnAccessor = RegisterColumn((SimpleModel x) => x.DecimalColumn);
+            public static readonly Property<_Decimal> _DecimalColumn = RegisterColumn((SimpleModel x) => x.DecimalColumn);
 
-            public static readonly Accessor<SimpleModel, _Double> DoubleColumnAccessor = RegisterColumn((SimpleModel x) => x.DoubleColumn);
+            public static readonly Property<_Double> _DoubleColumn = RegisterColumn((SimpleModel x) => x.DoubleColumn);
 
-            public static readonly Accessor<SimpleModel, _Single> SingleColumnAccessor = RegisterColumn((SimpleModel x) => x.SingleColumn);
+            public static readonly Property<_Single> _SingleColumn = RegisterColumn((SimpleModel x) => x.SingleColumn);
 
-            public static readonly Accessor<SimpleModel, _String> StringColumnAccessor = RegisterColumn((SimpleModel x) => x.StringColumn);
+            public static readonly Property<_String> _StringColumn = RegisterColumn((SimpleModel x) => x.StringColumn);
 
             public SimpleModel Child { get; private set; }
 

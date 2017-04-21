@@ -3,23 +3,11 @@ using System.Threading;
 
 namespace DevZest.Data
 {
-    /// <summary>Represents a property accessor registered with a class.</summary>
-    /// <typeparam name="TParent">The type of the parent.</typeparam>
-    /// <typeparam name="TProperty">The type of the property.</typeparam>
-    /// <threadsafety static="true" instance="true"/>
-    public abstract class Accessor<TParent, TProperty>
+    public abstract class Property<T>
     {
-        internal Accessor()
-        {
-        }
+        internal abstract Func<T> Constructor { get; }
 
-        internal abstract Func<TParent, TProperty> Getter { get; }
-
-        internal abstract Action<TParent, TProperty> Setter { get; }
-
-        internal abstract Func<TProperty> Constructor { get; }
-
-        internal abstract Action<TProperty> Initializer { get; }
+        internal abstract Action<T> Initializer { get; }
 
         Type _originalOwnerType;
         internal Type OriginalOwnerType
@@ -35,22 +23,40 @@ namespace DevZest.Data
             set { _originalName = value; }
         }
 
-        /// <summary>Gets the type which declares this accessor.</summary>
+        /// <summary>Gets the type which declares this property.</summary>
         public abstract Type OwnerType { get; }
 
         /// <summary>Gets the name of the property.</summary>
         public abstract string Name { get; }
 
         /// <summary>Gets the type which the property is member of.</summary>
-        public Type ParentType
-        {
-            get { return typeof(TParent); }
-        }
+        public abstract Type ParentType { get; }
 
         /// <summary>Gets the type of the property.</summary>
         public Type PropertyType
         {
-            get { return typeof(TProperty); }
+            get { return typeof(T); }
+        }
+    }
+
+    /// <summary>Represents a property registered with a class.</summary>
+    /// <typeparam name="TParent">The type of the parent.</typeparam>
+    /// <typeparam name="TProperty">The type of the property.</typeparam>
+    /// <threadsafety static="true" instance="true"/>
+    internal abstract class Property<TParent, TProperty> : Property<TProperty>
+    {
+        internal Property()
+        {
+        }
+
+        internal abstract Func<TParent, TProperty> Getter { get; }
+
+        internal abstract Action<TParent, TProperty> Setter { get; }
+
+        /// <summary>Gets the type which the property is member of.</summary>
+        public sealed override Type ParentType
+        {
+            get { return typeof(TParent); }
         }
 
         static ThreadLocal<TParent> s_parent = new ThreadLocal<TParent>(() => default(TParent));

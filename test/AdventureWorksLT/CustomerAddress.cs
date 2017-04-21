@@ -18,9 +18,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public static readonly Accessor<CustomerAddress, _Int32> CustomerIDAccessor = RegisterColumn((CustomerAddress x) => x.CustomerID);
-        public static readonly Accessor<CustomerAddress, _Int32> AddressIDAccessor = RegisterColumn((CustomerAddress x) => x.AddressID);
-        public static readonly Accessor<CustomerAddress, _String> AddressTypeAccessor = RegisterColumn((CustomerAddress x) => x.AddressType);
+        public static readonly Property<_Int32> _CustomerID = RegisterColumn((CustomerAddress x) => x.CustomerID);
+        public static readonly Property<_Int32> _AddressID = RegisterColumn((CustomerAddress x) => x.AddressID);
+        public static readonly Property<_String> _AddressType = RegisterColumn((CustomerAddress x) => x.AddressType);
 
         public CustomerAddress()
         {

@@ -11,7 +11,7 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Accessor<SimpleModel, _Int32> Column1Accessor = RegisterColumn((SimpleModel x) => x.Column1);
+            public static readonly Property<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
 
             public _Int32 Column1 { get; private set; }
         }

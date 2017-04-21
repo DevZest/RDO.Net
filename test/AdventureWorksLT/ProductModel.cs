@@ -15,9 +15,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public static readonly Accessor<ProductModel, _Int32> ProductModelIDAccessor = RegisterColumn((ProductModel x) => x.ProductModelID);
-        public static readonly Accessor<ProductModel, _String> NameAccessor = RegisterColumn((ProductModel x) => x.Name);
-        public static readonly Accessor<ProductModel, _SqlXml> CatalogDescriptionAccessor = RegisterColumn((ProductModel x) => x.CatalogDescription);
+        public static readonly Property<_Int32> _ProductModelID = RegisterColumn((ProductModel x) => x.ProductModelID);
+        public static readonly Property<_String> _Name = RegisterColumn((ProductModel x) => x.Name);
+        public static readonly Property<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel x) => x.CatalogDescription);
 
         public ProductModel()
         {

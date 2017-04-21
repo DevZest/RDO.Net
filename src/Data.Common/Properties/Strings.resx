@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Accessor_InvalidGetter" xml:space="preserve">
+  <data name="Property_InvalidGetter" xml:space="preserve">
     <value>The provided getter expression is invalid.</value>
   </data>
-  <data name="Accessor_RegisterAfterUse" xml:space="preserve">
-    <value>Cannot register accessor for type '{type}' after an instance of this type or its derived type has been created.</value>
+  <data name="Property_RegisterAfterUse" xml:space="preserve">
+    <value>Cannot register property for type '{type}' after an instance of this type or its derived type has been created.</value>
   </data>
-  <data name="Accessor_RegisterDuplicate" xml:space="preserve">
-    <value>The accessor with OwnerType '{ownerType}' and Name '{name}' has been registered already.</value>
+  <data name="Property_RegisterDuplicate" xml:space="preserve">
+    <value>The property with OwnerType '{ownerType}' and Name '{name}' has been registered already.</value>
   </data>
   <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
     <value>The argument '{argumentName}' cannot be null, empty or contain only white space.</value>

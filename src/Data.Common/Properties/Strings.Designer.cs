@@ -14,25 +14,25 @@ namespace DevZest.Data
         /// <summary>
         /// The provided getter expression is invalid.
         /// </summary>
-        public static string Accessor_InvalidGetter
+        public static string Property_InvalidGetter
         {
-            get { return GetString("Accessor_InvalidGetter"); }
+            get { return GetString("Property_InvalidGetter"); }
         }
 
         /// <summary>
-        /// Cannot register accessor for type '{type}' after an instance of this type or its derived type has been created.
+        /// Cannot register property for type '{type}' after an instance of this type or its derived type has been created.
         /// </summary>
-        public static string Accessor_RegisterAfterUse(object type)
+        public static string Property_RegisterAfterUse(object type)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterAfterUse", "type"), type);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Property_RegisterAfterUse", "type"), type);
         }
 
         /// <summary>
-        /// The accessor with OwnerType '{ownerType}' and Name '{name}' has been registered already.
+        /// The property with OwnerType '{ownerType}' and Name '{name}' has been registered already.
         /// </summary>
-        public static string Accessor_RegisterDuplicate(object ownerType, object name)
+        public static string Property_RegisterDuplicate(object ownerType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Accessor_RegisterDuplicate", "ownerType", "name"), ownerType, name);
+            return string.Format(CultureInfo.CurrentCulture, GetString("Property_RegisterDuplicate", "ownerType", "name"), ownerType, name);
         }
 
         /// <summary>

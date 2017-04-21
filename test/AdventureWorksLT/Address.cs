@@ -16,13 +16,13 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public static readonly Accessor<Address, _Int32> AddressIDAccessor = RegisterColumn((Address x) => x.AddressID);
-        public static readonly Accessor<Address, _String> AddressLine1Accessor = RegisterColumn((Address x) => x.AddressLine1);
-        public static readonly Accessor<Address, _String> AddressLine2Accessor = RegisterColumn((Address x) => x.AddressLine2);
-        public static readonly Accessor<Address, _String> CityAccessor = RegisterColumn((Address x) => x.City);
-        public static readonly Accessor<Address, _String> StateProvinceAccessor = RegisterColumn((Address x) => x.StateProvince);
-        public static readonly Accessor<Address, _String> CountryRegionAccessor = RegisterColumn((Address x) => x.CountryRegion);
-        public static readonly Accessor<Address, _String> PostalCodeAccessor = RegisterColumn((Address x) => x.PostalCode);
+        public static readonly Property<_Int32> _AddressID = RegisterColumn((Address x) => x.AddressID);
+        public static readonly Property<_String> _AddressLine1 = RegisterColumn((Address x) => x.AddressLine1);
+        public static readonly Property<_String> _AddressLine2 = RegisterColumn((Address x) => x.AddressLine2);
+        public static readonly Property<_String> _City = RegisterColumn((Address x) => x.City);
+        public static readonly Property<_String> _StateProvince = RegisterColumn((Address x) => x.StateProvince);
+        public static readonly Property<_String> _CountryRegion = RegisterColumn((Address x) => x.CountryRegion);
+        public static readonly Property<_String> _PostalCode = RegisterColumn((Address x) => x.PostalCode);
 
         public Address()
         {

@@ -7,7 +7,7 @@ namespace DevZest.Data
     {
         private class MyModel : Model
         {
-            public static readonly Accessor<MyModel, _Int32> ColumnAccessor = RegisterColumn((MyModel x) => x.Column);
+            public static readonly Property<_Int32> _Column = RegisterColumn((MyModel x) => x.Column);
 
             [IgnoreColumn]
             public _Int32 Column { get; private set; }

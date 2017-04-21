@@ -15,19 +15,19 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 CustomerID { get; private set; }
         }
 
-        public static readonly Accessor<Customer, _Int32> CustomerIDAccessor = RegisterColumn((Customer x) => x.CustomerID);
-        public static readonly Accessor<Customer, _Boolean> NameStyleAccessor = RegisterColumn((Customer x) => x.NameStyle);
-        public static readonly Accessor<Customer, _String> TitleAccessor = RegisterColumn((Customer x) => x.Title);
-        public static readonly Accessor<Customer, _String> FirstNameAccessor = RegisterColumn((Customer x) => x.FirstName);
-        public static readonly Accessor<Customer, _String> MiddleNameAccessor = RegisterColumn((Customer x) => x.MiddleName);
-        public static readonly Accessor<Customer, _String> LastNameAccessor = RegisterColumn((Customer x) => x.LastName);
-        public static readonly Accessor<Customer, _String> SuffixAccessor = RegisterColumn((Customer x) => x.Suffix);
-        public static readonly Accessor<Customer, _String> CompanyNameAccessor = RegisterColumn((Customer x) => x.CompanyName);
-        public static readonly Accessor<Customer, _String> SalesPersionAccessor = RegisterColumn((Customer x) => x.SalesPerson);
-        public static readonly Accessor<Customer, _String> EmailAddressAccessor = RegisterColumn((Customer x) => x.EmailAddress);
-        public static readonly Accessor<Customer, _String> PhoneAccessor = RegisterColumn((Customer x) => x.Phone);
-        public static readonly Accessor<Customer, _String> PasswordHashAccessor = RegisterColumn((Customer x) => x.PasswordHash);
-        public static readonly Accessor<Customer, _String> PasswordSaltAccessor = RegisterColumn((Customer x) => x.PasswordSalt);
+        public static readonly Property<_Int32> _CustomerID = RegisterColumn((Customer x) => x.CustomerID);
+        public static readonly Property<_Boolean> _NameStyle = RegisterColumn((Customer x) => x.NameStyle);
+        public static readonly Property<_String> _Title = RegisterColumn((Customer x) => x.Title);
+        public static readonly Property<_String> _FirstName = RegisterColumn((Customer x) => x.FirstName);
+        public static readonly Property<_String> _MiddleName = RegisterColumn((Customer x) => x.MiddleName);
+        public static readonly Property<_String> _LastName = RegisterColumn((Customer x) => x.LastName);
+        public static readonly Property<_String> _Suffix = RegisterColumn((Customer x) => x.Suffix);
+        public static readonly Property<_String> _CompanyName = RegisterColumn((Customer x) => x.CompanyName);
+        public static readonly Property<_String> _SalesPersion = RegisterColumn((Customer x) => x.SalesPerson);
+        public static readonly Property<_String> _EmailAddress = RegisterColumn((Customer x) => x.EmailAddress);
+        public static readonly Property<_String> _Phone = RegisterColumn((Customer x) => x.Phone);
+        public static readonly Property<_String> _PasswordHash = RegisterColumn((Customer x) => x.PasswordHash);
+        public static readonly Property<_String> _PasswordSalt = RegisterColumn((Customer x) => x.PasswordSalt);
 
         public Customer()
         {

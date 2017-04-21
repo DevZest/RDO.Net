@@ -18,7 +18,7 @@ namespace DevZest.Data
     {
         #region RegisterColumn
 
-        static AccessorManager<Model, Column> s_columnManager = new AccessorManager<Model, Column>();
+        static PropertyManager<Model, Column> s_columnManager = new PropertyManager<Model, Column>();
 
         /// <summary>
         /// Registers a new column which has a default constructor.
@@ -27,10 +27,10 @@ namespace DevZest.Data
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
         /// <param name="initializer">The additional initializer.</param>
-        /// <returns>Accessor of the column.</returns>
+        /// <returns>Property of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static Accessor<TModel, TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Action<TColumn> initializer = null)
+        public static Property<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Action<TColumn> initializer = null)
             where TModel : Model
             where TColumn : Column, new()
         {
@@ -40,32 +40,30 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Registers a column from existing column accessor, without inheriting its <see cref="ColumnKey"/> value.
+        /// Registers a column from existing column property, without inheriting its <see cref="ColumnKey"/> value.
         /// </summary>
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
-        /// <typeparam name="TFromModel">The type of the existing accessor's model.</typeparam>
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
-        /// <param name="fromAccessor">The existing accessor.</param>
+        /// <param name="fromProperty">The existing column property.</param>
         /// <param name="initializer">The additional initializer.</param>
-        /// <returns>Accessor of the column.</returns>
+        /// <returns>Property of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="fromAccessor"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fromProperty"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="initializer"/> is null.</exception>
-        public static Accessor<TModel, TColumn> RegisterColumn<TModel, TFromModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
-            Accessor<TFromModel, TColumn> fromAccessor,
+        public static Property<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
+            Property<TColumn> fromProperty,
             Action<TColumn> initializer = null)
             where TModel : Model
-            where TFromModel : Model
             where TColumn : Column, new()
         {
             var columnAttributes = VerifyPropertyGetter(getter);
-            Utilities.Check.NotNull(fromAccessor, nameof(fromAccessor));
+            Utilities.Check.NotNull(fromProperty, nameof(fromProperty));
 
-            var result = s_columnManager.Register(getter, a => CreateColumn(a, fromAccessor, initializer, columnAttributes));
-            result.OriginalOwnerType = fromAccessor.OriginalOwnerType;
-            result.OriginalName = fromAccessor.OriginalName;
+            var result = s_columnManager.Register(getter, a => CreateColumn(a, fromProperty, initializer, columnAttributes));
+            result.OriginalOwnerType = fromProperty.OriginalOwnerType;
+            result.OriginalName = fromProperty.OriginalName;
             return result;
         }
 
@@ -74,21 +72,21 @@ namespace DevZest.Data
             Utilities.Check.NotNull(getter, nameof(getter));
             var memberExpr = getter.Body as MemberExpression;
             if (memberExpr == null)
-                throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(getter));
+                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
 
             var propertyInfo = typeof(TModel).GetProperty(memberExpr.Member.Name, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo == null)
-                throw new ArgumentException(Strings.Accessor_InvalidGetter, nameof(getter));
+                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
 
             return propertyInfo.GetCustomAttributes<ColumnAttribute>();
         }
 
-        private static T CreateColumn<TModel, T>(Accessor<TModel, T> accessor, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Property<TModel, T> property, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(accessor.OwnerType, accessor.Name);
-            result.Construct(accessor.Parent, accessor.OwnerType, accessor.Name, ColumnKind.User, null, GetColumnInitializer(initializer, columnAttributes));
+            var result = Column.Create<T>(property.OwnerType, property.Name);
+            result.Construct(property.Parent, property.OwnerType, property.Name, ColumnKind.User, null, GetColumnInitializer(initializer, columnAttributes));
             return result;
         }
 
@@ -122,12 +120,12 @@ namespace DevZest.Data
             }
         }
 
-        private static T CreateColumn<TModel, TModelFrom, T>(Accessor<TModel, T> accessor, Accessor<TModelFrom, T> fromAccessor, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Property<TModel, T> property, Property<T> fromProperty, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(fromAccessor.OriginalOwnerType, fromAccessor.OriginalName);
-            result.Construct(accessor.Parent, accessor.OwnerType, accessor.Name, ColumnKind.User, fromAccessor.Initializer, GetColumnInitializer(initializer, columnAttributes));
+            var result = Column.Create<T>(fromProperty.OriginalOwnerType, fromProperty.OriginalName);
+            result.Construct(property.Parent, property.OwnerType, property.Name, ColumnKind.User, fromProperty.Initializer, GetColumnInitializer(initializer, columnAttributes));
             return result;
         }
 
@@ -135,7 +133,7 @@ namespace DevZest.Data
 
         #region RegisterColumnList
 
-        static AccessorManager<Model, ColumnList> s_columnListManager = new AccessorManager<Model, ColumnList>();
+        static PropertyManager<Model, ColumnList> s_columnListManager = new PropertyManager<Model, ColumnList>();
 
         /// <summary>
         /// Registers a column list.
@@ -143,10 +141,10 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
         /// <typeparam name="T">The type of the column contained by the column list.</typeparam>
         /// <param name="getter">The lambda expression of the column list getter.</param>
-        /// <returns>Accessor of the column list.</returns>
+        /// <returns>Property of the column list.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static Accessor<TModel, ColumnList<T>> RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
+        public static Property<ColumnList<T>> RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
             where TModel : Model
             where T : Column
         {
@@ -155,12 +153,12 @@ namespace DevZest.Data
             return s_columnListManager.Register(getter, a => CreateColumnList(a), null);
         }
 
-        private static ColumnList<T> CreateColumnList<TModel, T>(Accessor<TModel, ColumnList<T>> accessor)
+        private static ColumnList<T> CreateColumnList<TModel, T>(Property<TModel, ColumnList<T>> property)
             where TModel : Model
             where T : Column
         {
             var result = new ColumnList<T>();
-            result.ConstructModelMember(accessor.Parent, accessor.OwnerType, accessor.Name);
+            result.ConstructModelMember(property.Parent, property.OwnerType, property.Name);
             return result;
         }
 
@@ -168,7 +166,7 @@ namespace DevZest.Data
 
         #region RegisterChildModel
 
-        static AccessorManager<Model, Model> s_childModelManager = new AccessorManager<Model, Model>();
+        static PropertyManager<Model, Model> s_childModelManager = new PropertyManager<Model, Model>();
 
         /// <summary>
         /// Registers a child model.
@@ -177,11 +175,11 @@ namespace DevZest.Data
         /// <typeparam name="TChildModel">The type of the child model.</typeparam>
         /// <param name="getter">The lambda expression of the child model getter.</param>
         /// <param name="childRefGetter">The relationship between child model and parent model.</param>
-        /// <returns>Accessor of the child model.</returns>
+        /// <returns>Property of the child model.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="childRefGetter"/> is <see langword="null"/>.</exception>
-        public static Accessor<TModel, TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
+        public static Property<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
             Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
             where TModel : Model<TModelKey>
             where TModelKey : ModelKey
@@ -193,17 +191,17 @@ namespace DevZest.Data
             return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, childRefGetter, childColumnsBuilder), null);
         }
 
-        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Accessor<TModel, TChildModel> accessor,
+        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Property<TModel, TChildModel> property,
             Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
             where TModel : Model<TModelKey>
             where TModelKey : ModelKey
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
-            var parentModel = accessor.Parent;
+            var parentModel = property.Parent;
             var parentRelationship = childRefGetter(result).GetRelationship(parentModel.PrimaryKey);
             var parentMappings = GetParentMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
-            result.Construct(parentModel, accessor.OwnerType, accessor.Name, parentRelationship, parentMappings);
+            result.Construct(parentModel, property.OwnerType, property.Name, parentRelationship, parentMappings);
             return result;
         }
 
@@ -352,12 +350,12 @@ namespace DevZest.Data
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
         }
 
-        private void Initialize<T>(AccessorManager<Model, T> accessorManager)
+        private void Initialize<T>(PropertyManager<Model, T> propertyManager)
             where T : class
         {
-            var accessors = accessorManager.GetAll(this.GetType());
-            foreach (var accessor in accessors)
-                accessor.Construct(this);
+            var properties = propertyManager.GetAll(this.GetType());
+            foreach (var property in properties)
+                property.Construct(this);
         }
 
         protected internal ColumnCollection Columns { get; private set; }
@@ -535,11 +533,11 @@ namespace DevZest.Data
 
         private void InitializeColumnLists(Model prototype)
         {
-            var accessors = s_columnListManager.GetAll(this.GetType());
-            foreach (var accessor in accessors)
+            var properties = s_columnListManager.GetAll(this.GetType());
+            foreach (var property in properties)
             {
-                var columnList = accessor.GetProperty(this);
-                var sourceColumnList = accessor.GetProperty(prototype);
+                var columnList = property.GetInstance(this);
+                var sourceColumnList = property.GetInstance(prototype);
                 columnList.Initialize(sourceColumnList);
             }
         }
