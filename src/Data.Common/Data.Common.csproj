@@ -69,7 +69,6 @@
     <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="LocalColumnBuilder.cs" />
-    <Compile Include="ModelEventArgs.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
     <Compile Include="Primitives\CaseOnWhen.cs" />
     <Compile Include="Primitives\CaseWhen.cs" />

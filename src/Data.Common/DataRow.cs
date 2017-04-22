@@ -77,7 +77,7 @@ namespace DevZest.Data
             Model = model;
             Ordinal = ordinal;
 
-            model.EnsureChildModelsInitialized();
+            model.EnsureInitialized();
             var childModels = model.ChildModels;
             _childDataSets = childModels.Count == 0 ? Array<DataSet>.Empty : new DataSet[childModels.Count];
             for (int i = 0; i < childModels.Count; i++)

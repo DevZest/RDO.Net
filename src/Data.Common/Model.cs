@@ -285,24 +285,23 @@ namespace DevZest.Data
         /// </summary>
         /// <remarks>Unlike <see cref="Column"/> and <see cref="ColumnList"/>,
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
-        /// <see cref="EnsureChildModelsInitialized"/> will be called automatically when creating the first <see cref="DataRow"/> the query builder.
+        /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/> the query builder.
         /// </remarks>
-        internal bool AreChildModelsInitialized { get; private set; }
+        internal bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Ensures child models are initialized.
         /// </summary>
         /// <remarks>Unlike <see cref="Column"/> and <see cref="ColumnList"/>,
         /// child models are not initialized by default. This design decision is to deal with the situation when recursive child models registered.
-        /// <see cref="EnsureChildModelsInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
+        /// <see cref="EnsureInitialized"/> will be called automatically when creating the first <see cref="DataRow"/>.
         /// </remarks>
-        public void EnsureChildModelsInitialized()
+        public void EnsureInitialized()
         {
-            if (AreChildModelsInitialized)
+            if (IsInitialized)
                 return;
 
             Initialize(s_childModelManager);
-            var e = new ModelEventArgs(this);
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
                 foreach (var model in ChildModels)
@@ -311,26 +310,24 @@ namespace DevZest.Data
                     var invoker = s_createDataSetInvokers.GetOrAdd(modelType, t => BuildCreateDataSetInvoker(t));
                     invoker(model);
                 }
-                OnBeforeChildModelsInitialized(e);
-                DataSetContainer.OnBeforeChildModelsInitialized(e);
+                OnInitializing();
                 DataSetContainer.MergeComputations(this);
                 foreach (var column in Columns)
                     column.InitValueManager();
             }
-            AreChildModelsInitialized = true;
+            IsInitialized = true;
 
-            OnAfterChildModelsInitialized(e);
-            DataSetContainer?.OnAfterChildModelsInitialized(e);
+            OnInitialized();
         }
 
-        protected virtual void OnBeforeChildModelsInitialized(ModelEventArgs e)
+        protected virtual void OnInitializing()
         {
-            BeforeChildModelsInitialized(this, e);
+            Initializing(this, EventArgs.Empty);
         }
 
-        protected virtual void OnAfterChildModelsInitialized(ModelEventArgs e)
+        protected virtual void OnInitialized()
         {
-            AfterChildModelsInitialized(this, e);
+            Initialized(this, EventArgs.Empty);
         }
 
         private static ConcurrentDictionary<Type, Action<Model>> s_createDataSetInvokers = new ConcurrentDictionary<Type, Action<Model>>();
@@ -425,7 +422,7 @@ namespace DevZest.Data
                     return true;
                 if (DataSource.Kind != DataSourceKind.DataSet)
                     return false;
-                return !AreChildModelsInitialized;
+                return !IsInitialized;
             }
         }
 
@@ -818,7 +815,7 @@ namespace DevZest.Data
         internal void BeginEdit(DataRow dataRow)
         {
             Debug.Assert(EditingRow == null && dataRow != null);
-            EnsureChildModelsInitialized();
+            EnsureInitialized();
             EditingRow = dataRow;
             foreach (var column in Columns)
                 column.BeginEdit(dataRow);
@@ -860,8 +857,8 @@ namespace DevZest.Data
             return result;
         }
 
-        public event EventHandler<ModelEventArgs> BeforeChildModelsInitialized = delegate { };
-        public event EventHandler<ModelEventArgs> AfterChildModelsInitialized = delegate { };
+        public event EventHandler<EventArgs> Initializing = delegate { };
+        public event EventHandler<EventArgs> Initialized = delegate { };
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
         public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };

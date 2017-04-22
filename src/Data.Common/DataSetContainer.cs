@@ -280,8 +280,6 @@ namespace DevZest.Data
             }
         }
 
-        public event EventHandler<ModelEventArgs> BeforeChildModelsInitialized = delegate { };
-        public event EventHandler<ModelEventArgs> AfterChildModelsInitialized = delegate { };
         public event EventHandler<DataRowEventArgs> DataRowInserting = delegate { };
         public event EventHandler<DataRowEventArgs> BeforeDataRowInserted = delegate { };
         public event EventHandler<DataRowEventArgs> AfterDataRowInserted = delegate { };
@@ -342,16 +340,6 @@ namespace DevZest.Data
         public void ResumeComputation()
         {
             _computationManager?.ResumeComputation();
-        }
-
-        internal void OnBeforeChildModelsInitialized(ModelEventArgs e)
-        {
-            BeforeChildModelsInitialized(this, e);
-        }
-
-        internal void OnAfterChildModelsInitialized(ModelEventArgs e)
-        {
-            AfterChildModelsInitialized(this, e);
         }
 
         internal void OnDataRowInserting(DataRowEventArgs e)

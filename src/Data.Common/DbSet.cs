@@ -165,7 +165,7 @@ namespace DevZest.Data
                 throw new InvalidOperationException(Strings.DbSet_VerifyCreateChild_InvalidDataSourceKind);
             Check.NotNull(getChildModel, nameof(getChildModel));
 
-            _.EnsureChildModelsInitialized();
+            _.EnsureInitialized();
             var childModel = getChildModel(_);
             if (childModel == null || childModel.ParentModel != _)
                 throw new ArgumentException(Strings.InvalidChildModelGetter, nameof(getChildModel));

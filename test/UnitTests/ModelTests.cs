@@ -106,11 +106,11 @@ namespace DevZest.Data
         {
             var model = new RecursiveModel();
             
-            Assert.IsFalse(model.AreChildModelsInitialized);
+            Assert.IsFalse(model.IsInitialized);
             Assert.IsNull(model.ChildModel);
 
-            model.EnsureChildModelsInitialized();
-            Assert.IsTrue(model.AreChildModelsInitialized);
+            model.EnsureInitialized();
+            Assert.IsTrue(model.IsInitialized);
 
             var childModel = model.ChildModel;
 
@@ -155,7 +155,7 @@ namespace DevZest.Data
         {
             model.ColumnList.Add<_Int32>();
             model.ColumnList.Add<_Int32>();
-            model.EnsureChildModelsInitialized();
+            model.EnsureInitialized();
             model.SetDataSource(ds);
         }
 
