@@ -124,6 +124,61 @@ namespace DevZest.Data
             model.ChildModels.Verify(childModel);
         }
 
+        private sealed class LocalModel : Model
+        {
+            static LocalModel()
+            {
+                RegisterChildModel((LocalModel x) => x.Child);
+            }
+
+            public Column<int> Column { get; private set; }
+
+            public ChildLocalModel Child { get; private set; }
+
+            protected override void OnInitializing()
+            {
+                Column = DataSetContainer.CreateLocalColumn<int>(this);
+                Child.Initialize(this);
+                base.OnInitializing();
+            }
+        }
+        
+        private sealed class ChildLocalModel : Model
+        {
+            public Column<int> Column1 { get; private set; }
+            public Column<int> Column2 { get; private set; }
+
+            internal void Initialize(LocalModel localModel)
+            {
+                Column1 = DataSetContainer.CreateLocalColumn(this, localModel.Column, GetColumn1Value);
+                Column2 = DataSetContainer.CreateLocalColumn(this, Column1, GetColumn2Value);
+            }
+
+            private static int GetColumn1Value(DataRow dataRow, Column<int> column)
+            {
+                return column[dataRow];
+            }
+
+            private static int GetColumn2Value(DataRow dataRow, Column<int> column1)
+            {
+                return column1[dataRow] * 2;
+            }
+        }
+
+        [TestMethod]
+        public void Model_RegisterChildMolde_local()
+        {
+            var dataSet = DataSet<LocalModel>.New();
+            var _ = dataSet._;
+            dataSet.AddRow();
+            _.Column[0] = 3;
+            var children = dataSet[0].Children(_.Child);
+            children.AddRow();
+            children.AddRow();
+            Assert.AreEqual(3, _.Child.Column1[children[0]]);
+            Assert.AreEqual(6, _.Child.Column2[children[1]]);
+        }
+
         #endregion
 
         #region Clone
@@ -325,7 +380,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void Model_DataRowUpdated()
+        public void Model_ValueChanged()
         {
             var salesOrders = DataSet<SalesOrder>.New();
             var _ = salesOrders._;

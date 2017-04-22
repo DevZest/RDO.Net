@@ -168,6 +168,25 @@ namespace DevZest.Data
 
         static PropertyManager<Model, Model> s_childModelManager = new PropertyManager<Model, Model>();
 
+        public static Property<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter)
+            where TModel : Model, new()
+            where TChildModel : Model, new()
+        {
+            Utilities.Check.NotNull(getter, nameof(getter));
+            return s_childModelManager.Register(getter, CreateChildModel, null);
+        }
+
+        private static ReadOnlyCollection<ColumnMapping> s_emptyColumnMapping = new ReadOnlyCollection<ColumnMapping>(Array<ColumnMapping>.Empty);
+        private static TChildModel CreateChildModel<TModel, TChildModel>(Property<TModel, TChildModel> property)
+            where TModel : Model, new()
+            where TChildModel : Model, new()
+        {
+            TChildModel result = new TChildModel();
+            var parentModel = property.Parent;
+            result.Construct(parentModel, property.OwnerType, property.Name, s_emptyColumnMapping, s_emptyColumnMapping);
+            return result;
+        }
+
         /// <summary>
         /// Registers a child model.
         /// </summary>
