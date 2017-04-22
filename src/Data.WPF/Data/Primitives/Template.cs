@@ -534,14 +534,5 @@ namespace DevZest.Windows.Data.Primitives
                 return _blockPresenter;
             }
         }
-
-        internal ExtendedModel ExtendedModel { get; private set; }
-
-        internal Column<T> AddExtendedColumn<T>(Func<T, bool> isNullChecker)
-        {
-            if (ExtendedModel == null)
-                ExtendedModel = DataSet<ExtendedModel>.New(x => x.Initialize(this))._;
-            return ExtendedModel.AddColumn(isNullChecker);
-        }
     }
 }

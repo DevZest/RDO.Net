@@ -9,7 +9,7 @@ using System;
 namespace DevZest.Windows.Data.Primitives
 {
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
-    internal abstract class RowMapper : IDataCriteria, IDataRowProxy
+    internal abstract class RowMapper : IDataCriteria
     {
         private abstract class Normalized<T> : IReadOnlyList<T>
             where T : class
@@ -150,8 +150,10 @@ namespace DevZest.Windows.Data.Primitives
         private void WireDataChangedEvents(Model model)
         {
             model.DataRowInserting += OnDataRowInserting;
+            model.ProcessDataRowInserted += ProcessDataRowInserted;
             model.DataRowInserted += OnDataRowInserted;
             model.DataRowRemoved += OnDataRowRemoved;
+            model.ProcessDataRowUpdated += ProcessDataRowUpdated;
             model.DataRowUpdated += OnDataRowUpdated;
         }
 
@@ -256,7 +258,6 @@ namespace DevZest.Windows.Data.Primitives
         {
             InitializeMappings();
             InitializeRowPresenters();
-            ExtendedModel?.Initialize(GetDataRows());
         }
 
         /// <summary>Mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/></summary>
@@ -418,23 +419,29 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowInserting(DataRow dataRow)
         {
-            ExtendedModel?.OnOriginalDataRowAdding(dataRow);
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
                 WireDataChangedEvents(childDataSet.Model);
             }
             _insertingDataRows.Push(dataRow);
+            DataPresenter?.OnDataRowInserting(dataRow);
+        }
+
+        private void ProcessDataRowInserted(DataRow dataRow)
+        {
+            DataPresenter?.ProcessDataRowInserted(dataRow);
         }
 
         private void OnDataRowInserted(DataRow dataRow)
         {
-            ExtendedModel?.OnOriginalDataRowAdded(dataRow);
-            if (_insertingDataRows.Peek() != dataRow)
-                return;
-            Add(dataRow);
-            Debug.Assert(_insertingDataRows.Peek() == dataRow);
-            _insertingDataRows.Pop();
+            if (_insertingDataRows.Peek() == dataRow)
+            {
+                Add(dataRow);
+                Debug.Assert(_insertingDataRows.Peek() == dataRow);
+                _insertingDataRows.Pop();
+            }
+            DataPresenter?.OnDataRowInserted(dataRow);
         }
 
         private void Add(DataRow dataRow)
@@ -534,7 +541,6 @@ namespace DevZest.Windows.Data.Primitives
 
         private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
         {
-            ExtendedModel?.OnOriginalDataRowRemoved(dataRow);
             var row = this[dataRow, index];
             if (row != null)
                 Remove(row);
@@ -595,6 +601,11 @@ namespace DevZest.Windows.Data.Primitives
                     return i;
             }
             return -1;
+        }
+
+        private void ProcessDataRowUpdated(DataRow dataRow, IColumnSet columns)
+        {
+            DataPresenter?.ProcessDataRowUpdated(dataRow, columns);
         }
 
         private void OnDataRowUpdated(DataRow dataRow, IColumnSet columns)
@@ -689,22 +700,6 @@ namespace DevZest.Windows.Data.Primitives
         {
         }
 
-        internal ExtendedModel ExtendedModel
-        {
-            get { return Template.ExtendedModel; }
-        }
-
-        DataRow IDataRowProxy.Translate(DataRow dataRow)
-        {
-            return ExtendedModel.GetExtendedDataRow(dataRow) ?? dataRow;
-        }
-
-        IEnumerable<DataRow> IDataRowProxy.GetDataRows(Model parentModel)
-        {
-            Debug.Assert(parentModel == ExtendedModel);
-            return GetDataRows();
-        }
-
         private IEnumerable<DataRow> GetDataRows()
         {
             return IsRecursive ? GetDataRowsRecursively(DataSet) : DataSet;
@@ -722,24 +717,6 @@ namespace DevZest.Windows.Data.Primitives
                 foreach (var childDataRow in GetDataRowsRecursively(childDataSet))
                     yield return childDataRow;
             }
-        }
-
-        DataRow IDataRowProxy.GetDataRow(Model parentModel, DataRow parentDataRow, int index)
-        {
-            Debug.Assert(parentModel == ExtendedModel);
-            var dataSet = GetDataSet(parentDataRow);
-            return dataSet[index];
-        }
-
-        private DataSet GetDataSet(DataRow parentDataRow)
-        {
-            if (parentDataRow == null)
-                return DataSet;
-
-            if (!IsRecursive || ExtendedModel.GetExtendedDataRow(parentDataRow) == null)
-                throw new ArgumentException(Strings.RowMapper_InvalidParentDataRow, nameof(parentDataRow));
-            var childModel = GetChildDataSet(parentDataRow.Model).Model;
-            return parentDataRow[childModel];
         }
     }
 }

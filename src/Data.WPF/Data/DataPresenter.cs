@@ -232,11 +232,15 @@ namespace DevZest.Windows.Data
             get { yield break; }
         }
 
-        protected internal virtual void OnDataRowAdding(DataRow dataRow)
+        protected internal virtual void OnDataRowInserting(DataRow dataRow)
         {
         }
 
-        protected internal virtual void OnDataRowAdded(DataRow dataRow)
+        protected internal virtual void ProcessDataRowInserted(DataRow dataRow)
+        {
+        }
+
+        protected internal virtual void OnDataRowInserted(DataRow dataRow)
         {
         }
 
@@ -245,6 +249,10 @@ namespace DevZest.Windows.Data
         }
 
         protected internal virtual void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        {
+        }
+
+        protected internal virtual void ProcessDataRowUpdated(DataRow dataRow, IColumnSet columns)
         {
         }
 

@@ -174,7 +174,6 @@ namespace DevZest.Windows.Data.Primitives
             {
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
-                rowManager.ExtendedModel?.DataSet.BeginAdd();
             }
 
             protected sealed override void CancelEdit(RowManager rowManager)
@@ -182,14 +181,12 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(rowManager.CurrentRow.IsVirtual);
                 rowManager.CurrentRow.DataRow = null;
                 GetDataSet(rowManager).CancelAdd();
-                rowManager.ExtendedModel?.DataSet.CancelAdd();
             }
 
             protected sealed override void EndEdit(RowManager rowManager)
             {
                 rowManager.CurrentRow.DataRow = null;
                 var dataRow = GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
-                rowManager.ExtendedModel?.DataSet.EndAdd();
             }
 
             public override void OnRowsChanged(RowManager rowManager)

@@ -300,10 +300,5 @@ namespace DevZest.Windows.Data
             Template.AddGridLine(gridLine);
             return this;
         }
-
-        public Column<T> AddExtendedColumn<T>(Func<T, bool> isNullChecker = null)
-        {
-            return Template.AddExtendedColumn<T>(isNullChecker);
-        }
     }
 }

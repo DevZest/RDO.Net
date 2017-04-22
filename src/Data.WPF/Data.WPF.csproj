@@ -62,7 +62,6 @@
     <Compile Include="Data\InputError.cs" />
     <Compile Include="Data\IRowInput.cs" />
     <Compile Include="Data\Primitives\DataRowExtensions.cs" />
-    <Compile Include="Data\Primitives\ExtendedModel.cs" />
     <Compile Include="Data\Primitives\IScrollable.cs" />
     <Compile Include="Data\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
     <Compile Include="Data\ScalarPresenter.cs" />
