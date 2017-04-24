@@ -127,14 +127,15 @@ namespace DevZest.Windows.Data.Primitives
             Assert.AreEqual("Name-3-2", rows[2].GetValue(_.Name));
             Assert.AreEqual("Name-3-1", rows[3].GetValue(_.Name));
 
-            dataSet.SubCategories(2).Update(0, (__, x) => __.Name[x] = "Name-3-4");
+            var subCategories = dataSet.SubCategories(2);
+            subCategories._.Name[subCategories[0]] = "Name-3-4";
             VerifyDepths(rows, 0, 1, 1, 1, 0, 0);
             Assert.AreEqual("Name-3-4", rows[1].GetValue(_.Name));
             Assert.AreEqual("Name-3-3", rows[2].GetValue(_.Name));
             Assert.AreEqual("Name-3-2", rows[3].GetValue(_.Name));
 
             rows[0].Collapse();
-            dataSet.SubCategories(2).Update(1, (__, x) => __.Name[x] = "Name-3-5");
+            subCategories._.Name[subCategories[1]] = "Name-3-5";
             VerifyDepths(rows, 0, 0, 0);
         }
     }

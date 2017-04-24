@@ -150,11 +150,11 @@ namespace DevZest.Windows.Data.Primitives
         private void WireDataChangedEvents(Model model)
         {
             model.DataRowInserting += OnDataRowInserting;
-            model.ProcessDataRowInserted += ProcessDataRowInserted;
-            model.DataRowInserted += OnDataRowInserted;
+            model.BeforeDataRowInserted += OnBeforeDataRowInserted;
+            model.AfterDataRowInserted += OnAfterDataRowInserted;
+            model.DataRowRemoving += OnDataRowRemoving;
             model.DataRowRemoved += OnDataRowRemoved;
-            model.ProcessDataRowUpdated += ProcessDataRowUpdated;
-            model.DataRowUpdated += OnDataRowUpdated;
+            model.ValueChanged += OnValueChanged;
         }
 
         private readonly Template _template;
@@ -417,31 +417,33 @@ namespace DevZest.Windows.Data.Primitives
 
         private Stack<DataRow> _insertingDataRows = new Stack<DataRow>();
 
-        private void OnDataRowInserting(DataRow dataRow)
+        private void OnDataRowInserting(object sender, DataRowEventArgs e)
         {
+            var dataRow = e.DataRow;
             if (IsRecursive && GetDepth(dataRow) == _maxDepth)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
                 WireDataChangedEvents(childDataSet.Model);
             }
             _insertingDataRows.Push(dataRow);
-            DataPresenter?.OnDataRowInserting(dataRow);
+            DataPresenter?.OnDataRowInserting(e);
         }
 
-        private void ProcessDataRowInserted(DataRow dataRow)
+        private void OnBeforeDataRowInserted(object sender, DataRowEventArgs e)
         {
-            DataPresenter?.ProcessDataRowInserted(dataRow);
+            DataPresenter?.OnBeforeDataRowInserted(e);
         }
 
-        private void OnDataRowInserted(DataRow dataRow)
+        private void OnAfterDataRowInserted(object sender, DataRowEventArgs e)
         {
+            var dataRow = e.DataRow;
             if (_insertingDataRows.Peek() == dataRow)
             {
                 Add(dataRow);
                 Debug.Assert(_insertingDataRows.Peek() == dataRow);
                 _insertingDataRows.Pop();
             }
-            DataPresenter?.OnDataRowInserted(dataRow);
+            DataPresenter?.OnAfterDataRowInserted(e);
         }
 
         private void Add(DataRow dataRow)
@@ -539,11 +541,17 @@ namespace DevZest.Windows.Data.Primitives
             return x.Index > y.Index;
         }
 
-        private void OnDataRowRemoved(DataRow dataRow, DataSet baseDataSet, int ordinal, DataSet dataSet, int index)
+        private void OnDataRowRemoving(object sender, DataRowEventArgs e)
         {
-            var row = this[dataRow, index];
+            DataPresenter?.OnDataRowRemoving(e);
+        }
+
+        private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
+        {
+            var row = this[e.DataRow, e.Index];
             if (row != null)
                 Remove(row);
+            DataPresenter?.OnDataRowRemoved(e);
         }
 
         private RowPresenter this[DataRow dataRow, int index]
@@ -603,29 +611,26 @@ namespace DevZest.Windows.Data.Primitives
             return -1;
         }
 
-        private void ProcessDataRowUpdated(DataRow dataRow, IColumnSet columns)
+        private void OnValueChanged(object sender, ValueChangedEventArgs e)
         {
-            DataPresenter?.ProcessDataRowUpdated(dataRow, columns);
-        }
-
-        private void OnDataRowUpdated(DataRow dataRow, IColumnSet columns)
-        {
+            var dataRow= e.DataRow;
+            var column = e.Column;
             var row = this[dataRow];
             if (row == null)
                 Add(dataRow);
             else if (!PassesFilter(dataRow))
                 Remove(row);
             else
-                Update(row, columns);
+                Update(row, column);
         }
 
-        private void Update(RowPresenter row, IColumnSet columns)
+        private void Update(RowPresenter row, Column column)
         {
             var oldIndex = IndexOf(row);
             var newIndex = GetIndex(row, oldIndex);
             if (oldIndex == newIndex)
             {
-                HandlesRowUpdated(row, columns);
+                HandlesRowUpdated(row, column);
                 return;
             }
 
@@ -690,9 +695,8 @@ namespace DevZest.Windows.Data.Primitives
             get { return Template.DataPresenter; }
         }
 
-        protected void HandlesRowUpdated(RowPresenter row, IColumnSet columns)
+        protected void HandlesRowUpdated(RowPresenter row, Column column)
         {
-            DataPresenter?.OnRowUpdated(row, columns);
             OnRowUpdated(row);
         }
 

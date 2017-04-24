@@ -171,7 +171,7 @@ namespace DevZest.Windows.Data.Primitives
                 {
                     rowMoved = true;
                 });
-            dataSet.Update(0, (_, x) => _.Name[x] = "Updated Name");
+            dataSet._.Name[0] = "Updated Name";
 
             var rows = rowMapper.Rows;
             Assert.AreEqual(3, rows.Count);
@@ -346,7 +346,8 @@ namespace DevZest.Windows.Data.Primitives
             var orderBy = new ColumnSort[] { _.Name.Desc() };
             var rowMapper = CreateRecursiveRowMapper(dataSet, 0, where, orderBy);
 
-            dataSet.SubCategories(0).Update(0, (__, x) => __.Name[x] = "Name-1-4");
+            var subCategories = dataSet.SubCategories(0);
+            subCategories._.Name[subCategories[0]] = "Name-1-4";
 
             var rows = rowMapper.Rows;
             Assert.AreEqual(1, rows.Count);
@@ -355,13 +356,13 @@ namespace DevZest.Windows.Data.Primitives
             Assert.AreEqual("Name-1-4", rows[0].Children[0].GetValue(_.Name));
             Assert.AreEqual("Name-1-2", rows[0].Children[1].GetValue(_.Name));
 
-            dataSet.SubCategories(0).Update(0, (__, x) => __.Name[x] = "Name-1-5");
+            subCategories._.Name[subCategories[0]] = "Name-1-5";
             Assert.AreEqual(1, rows.Count);
             Assert.AreEqual("Name-1", rows[0].GetValue(_.Name));
             Assert.AreEqual(1, rows[0].Children.Count);
             Assert.AreEqual("Name-1-2", rows[0].Children[0].GetValue(_.Name));
 
-            dataSet.SubCategories(0).Update(2, (__, x) => __.Name[x] = "Name-1-4");
+            subCategories._.Name[subCategories[2]] = "Name-1-4";
             Assert.AreEqual(1, rows.Count);
             Assert.AreEqual("Name-1", rows[0].GetValue(_.Name));
             Assert.AreEqual(2, rows[0].Children.Count);
