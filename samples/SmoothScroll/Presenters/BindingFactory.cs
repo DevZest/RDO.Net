@@ -12,7 +12,7 @@ namespace SmoothScroll.Presenters
         private static void Refresh(TextBlock element, Foo _, RowPresenter rowPresenter)
         {
             element.Text = rowPresenter.GetValue(_.Text);
-            if (rowPresenter.GetValue(_.IsSectionHeader).Value)
+            if (rowPresenter.GetValue(_.IsSectionHeader))
             {
                 element.Foreground = Brushes.White;
                 element.Background = Brushes.Black;
@@ -21,9 +21,9 @@ namespace SmoothScroll.Presenters
             }
             else
             {
-                var r = rowPresenter.GetValue(_.BackgroundR).Value;
-                var g = rowPresenter.GetValue(_.BackgroundG).Value;
-                var b = rowPresenter.GetValue(_.BackgroundB).Value;
+                var r = rowPresenter.GetValue(_.BackgroundR);
+                var g = rowPresenter.GetValue(_.BackgroundG);
+                var b = rowPresenter.GetValue(_.BackgroundB);
                 element.Foreground = Brushes.Black;
                 element.Background = new SolidColorBrush(Color.FromArgb(255, r, g, b));
                 element.Padding = new Thickness(10);

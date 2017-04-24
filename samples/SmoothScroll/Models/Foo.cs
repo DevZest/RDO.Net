@@ -4,20 +4,24 @@ namespace SmoothScroll.Models
 {
     public class Foo : Model
     {
-        public static readonly Property<_String> TextAccessor = RegisterColumn((Foo x) => x.Text);
-        public static readonly Property<_Boolean> IsSectionAccessor = RegisterColumn((Foo x) => x.IsSectionHeader);
-        public static readonly Property<_Byte> BackgroundRAccessor = RegisterColumn((Foo x) => x.BackgroundR);
-        public static readonly Property<_Byte> BackgroundGAccessor = RegisterColumn((Foo x) => x.BackgroundG);
-        public static readonly Property<_Byte> BackgroundBAccessor = RegisterColumn((Foo x) => x.BackgroundB);
+        public Column<string> Text { get; private set; }
 
-        public _String Text { get; private set; }
+        public Column<bool> IsSectionHeader { get; private set; }
 
-        public _Boolean IsSectionHeader { get; private set; }
+        public Column<byte> BackgroundR { get; private set; }
 
-        public _Byte BackgroundR { get; private set; }
+        public Column<byte> BackgroundG { get; private set; }
 
-        public _Byte BackgroundG { get; private set; }
+        public Column<byte> BackgroundB { get; private set; }
 
-        public _Byte BackgroundB { get; private set; }
+        protected override void OnInitializing()
+        {
+            Text = DataSetContainer.CreateLocalColumn<string>(this);
+            IsSectionHeader = DataSetContainer.CreateLocalColumn<bool>(this);
+            BackgroundR = DataSetContainer.CreateLocalColumn<byte>(this);
+            BackgroundG = DataSetContainer.CreateLocalColumn<byte>(this);
+            BackgroundB = DataSetContainer.CreateLocalColumn<byte>(this);
+            base.OnInitializing();
+        }
     }
 }
