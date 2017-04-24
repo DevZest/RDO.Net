@@ -237,7 +237,7 @@ namespace DevZest.Windows.Data.Primitives
             if (Rows.Count > 0)
             {
                 _currentRow = Rows[0];
-                InitInitialSelection();
+                InitSelection();
             }
         }
 
@@ -365,7 +365,7 @@ namespace DevZest.Windows.Data.Primitives
                 if (Rows.Count > 0)
                 {
                     CurrentRow = Rows[0];
-                    InitInitialSelection();
+                    InitSelection();
                 }
             }
             else if (CurrentRow.IsDisposed)
@@ -379,10 +379,10 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private void InitInitialSelection()
+        private void InitSelection()
         {
             if (Template.SelectionMode == SelectionMode.Single || Template.SelectionMode == SelectionMode.Extended)
-                Select(CurrentRow, SelectionMode.Single, null);
+                SelectCore(CurrentRow, SelectionMode.Single, null);
         }
 
         private RowPresenter _currentRow;
@@ -413,6 +413,12 @@ namespace DevZest.Windows.Data.Primitives
         private RowPresenter _lastExtnedSelection;
         public void Select(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
         {
+            SelectCore(value, selectionMode, oldCurrentRow);
+            OnSelectedRowsChanged();
+        }
+
+        private void SelectCore(RowPresenter value, SelectionMode selectionMode, RowPresenter oldCurrentRow)
+        {
             switch (selectionMode)
             {
                 case SelectionMode.Single:
@@ -434,8 +440,6 @@ namespace DevZest.Windows.Data.Primitives
                         _selectedRows.Add(Rows[i]);
                     break;
             }
-
-            OnSelectedRowsChanged();
         }
 
         private _EditHandler _editHandler;

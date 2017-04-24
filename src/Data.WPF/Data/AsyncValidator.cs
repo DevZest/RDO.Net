@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using DevZest.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Windows.Data
 {
@@ -352,17 +353,21 @@ namespace DevZest.Windows.Data
                 Reset();
         }
 
-#region IAsyncValidatorGroup
+        #region IAsyncValidatorGroup
+
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IAsyncValidatorGroup.IsSealed
         {
             get { return true; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<AsyncValidator>.Count
         {
             get { return 1; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         AsyncValidator IReadOnlyList<AsyncValidator>.this[int index]
         {
             get
@@ -373,12 +378,13 @@ namespace DevZest.Windows.Data
             }
         }
 
-
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IAsyncValidatorGroup IAsyncValidatorGroup.Seal()
         {
             return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IAsyncValidatorGroup IAsyncValidatorGroup.Add(AsyncValidator value)
         {
             if (value == null)
@@ -386,11 +392,13 @@ namespace DevZest.Windows.Data
             return AsyncValidatorGroup.New(this, value);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator<AsyncValidator> IEnumerable<AsyncValidator>.GetEnumerator()
         {
             yield return this;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this;
