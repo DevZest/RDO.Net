@@ -231,29 +231,5 @@ namespace DevZest.Windows.Data
         {
             get { yield break; }
         }
-
-        protected internal virtual void OnDataRowInserting(DataRowEventArgs e)
-        {
-        }
-
-        protected internal virtual void OnBeforeDataRowInserted(DataRowEventArgs e)
-        {
-        }
-
-        protected internal virtual void OnAfterDataRowInserted(DataRowEventArgs e)
-        {
-        }
-
-        protected internal virtual void OnDataRowRemoving(DataRowEventArgs e)
-        {
-        }
-
-        protected internal virtual void OnDataRowRemoved(DataRowRemovedEventArgs e)
-        {
-        }
-
-        protected internal virtual void OnValueChanged(ValueChangedEventArgs e)
-        {
-        }
     }
 }

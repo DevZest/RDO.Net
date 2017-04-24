@@ -150,9 +150,7 @@ namespace DevZest.Windows.Data.Primitives
         private void WireDataChangedEvents(Model model)
         {
             model.DataRowInserting += OnDataRowInserting;
-            model.BeforeDataRowInserted += OnBeforeDataRowInserted;
             model.AfterDataRowInserted += OnAfterDataRowInserted;
-            model.DataRowRemoving += OnDataRowRemoving;
             model.DataRowRemoved += OnDataRowRemoved;
             model.ValueChanged += OnValueChanged;
         }
@@ -426,12 +424,6 @@ namespace DevZest.Windows.Data.Primitives
                 WireDataChangedEvents(childDataSet.Model);
             }
             _insertingDataRows.Push(dataRow);
-            DataPresenter?.OnDataRowInserting(e);
-        }
-
-        private void OnBeforeDataRowInserted(object sender, DataRowEventArgs e)
-        {
-            DataPresenter?.OnBeforeDataRowInserted(e);
         }
 
         private void OnAfterDataRowInserted(object sender, DataRowEventArgs e)
@@ -443,7 +435,6 @@ namespace DevZest.Windows.Data.Primitives
                 Debug.Assert(_insertingDataRows.Peek() == dataRow);
                 _insertingDataRows.Pop();
             }
-            DataPresenter?.OnAfterDataRowInserted(e);
         }
 
         private void Add(DataRow dataRow)
@@ -541,17 +532,11 @@ namespace DevZest.Windows.Data.Primitives
             return x.Index > y.Index;
         }
 
-        private void OnDataRowRemoving(object sender, DataRowEventArgs e)
-        {
-            DataPresenter?.OnDataRowRemoving(e);
-        }
-
         private void OnDataRowRemoved(object sender, DataRowRemovedEventArgs e)
         {
             var row = this[e.DataRow, e.Index];
             if (row != null)
                 Remove(row);
-            DataPresenter?.OnDataRowRemoved(e);
         }
 
         private RowPresenter this[DataRow dataRow, int index]
