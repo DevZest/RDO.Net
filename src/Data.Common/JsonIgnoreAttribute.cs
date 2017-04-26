@@ -1,10 +1,10 @@
 ﻿namespace DevZest.Data
 {
-    public sealed class IgnoreColumnAttribute : ColumnAttribute
+    public sealed class JsonIgnoreAttribute : ColumnAttribute
     {
         protected internal override void Initialize(Column column)
         {
-            column.IgnoreColumn();
+            column.JsonIgnore();
         }
     }
 }

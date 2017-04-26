@@ -83,7 +83,7 @@
     <Compile Include="Column_T.ConverterBase.cs" />
     <Compile Include="IColumnSet.cs" />
     <Compile Include="IColumnValidator.cs" />
-    <Compile Include="IgnoreColumnAttribute.cs" />
+    <Compile Include="JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
     <Compile Include="IAbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />

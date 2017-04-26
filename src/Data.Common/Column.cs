@@ -171,15 +171,15 @@ namespace DevZest.Data
 
         internal abstract void InitValueManager();
 
-        private bool _ignoreColumn = false;
-        internal void IgnoreColumn()
+        private bool _jsonIgnore = false;
+        internal void JsonIgnore()
         {
-            _ignoreColumn = true;
+            _jsonIgnore = true;
         }
 
         internal bool ShouldSerialize
         {
-            get { return _ignoreColumn ? false : ShouldSerializeOverride; }
+            get { return _jsonIgnore ? false : ShouldSerializeOverride; }
         }
 
         internal abstract bool ShouldSerializeOverride { get; }
