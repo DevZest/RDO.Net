@@ -1,13 +1,22 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace DevZest.Data
 {
     partial class DataSetContainer
     {
-        private sealed class LocalColumn<T> : Column<T>
+        private interface ILocalColumn
+        {
+            void OnDataRowInserting(DataRow dataRow);
+            void OnDataRowRemoving(DataRow dataRow);
+        }
+
+        private sealed class LocalColumn<T> : Column<T>, ILocalColumn
         {
             public LocalColumn(Model model, ColumnExpression<T> expression, Action<LocalColumnBuilder<T>> initializer)
             {
@@ -21,20 +30,30 @@ namespace DevZest.Data
                 }
                 InitValues();
                 _designMode = false;
-                WireEvents();
+            }
+
+            public override bool IsLocal
+            {
+                get { return true; }
             }
 
             private void Initialize(Model model, ColumnExpression<T> expression)
             {
                 if (model != null)
                 {
+                    List<Column> localColumns = model.LocalColumnList;
+                    if (localColumns == null)
+                        model.LocalColumnList = localColumns = new List<Column>();
                     ParentModel = model;
-                    OwnerType = model.GetType();
+                    OriginalOwnerType = OwnerType = model.GetType();
+                    Ordinal = model.LocalColumnList.Count;
+                    OriginalName = Name = "LocalColumn" + localColumns.Count.ToString(CultureInfo.InvariantCulture);
+                    model.LocalColumnList.Add(this);
                 }
+                else
+                    Name = "LocalColumn";
                 Kind = ColumnKind.User;
                 Expression = expression;
-                if (string.IsNullOrEmpty(Name))
-                    Name = "LocalColumn";
             }
 
             private void InitValues()
@@ -56,23 +75,14 @@ namespace DevZest.Data
                 }
             }
 
-            private void WireEvents()
+            public void OnDataRowInserting(DataRow dataRow)
             {
-                if (ParentModel != null)
-                {
-                    ParentModel.DataRowInserting += OnDataRowInserting;
-                    ParentModel.DataRowRemoving += OnDataRowRemoving;
-                }
+                InsertRow(dataRow);
             }
 
-            private void OnDataRowInserting(object sender, DataRowEventArgs e)
+            public void OnDataRowRemoving(DataRow dataRow)
             {
-                InsertRow(e.DataRow);
-            }
-
-            private void OnDataRowRemoving(object sender, DataRowEventArgs e)
-            {
-                RemoveRow(e.DataRow);
+                RemoveRow(dataRow);
             }
 
             private bool _designMode = true;

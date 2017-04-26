@@ -23,13 +23,13 @@ namespace DevZest.Data
         /// Gets the original owner type of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnKey"/> of this <see cref="Column"/>.</remarks>
-        public Type OriginalOwnerType { get; private set; }
+        public Type OriginalOwnerType { get; internal set; }
 
         /// <summary>
         /// Gets the original name of this <see cref="Column"/>.
         /// </summary>
         /// <remarks>This property forms <see cref="ColumnKey"/> of this <see cref="Column"/>.</remarks>
-        public string OriginalName { get; private set; }
+        public string OriginalName { get; internal set; }
 
         /// <summary>Gets the key of this <see cref="Column"/>, which uniquely identifies this <see cref="Column"/> of <see cref="Model"/>,
         /// and can be used for column mapping between different <see cref="Model"/> objects.</summary>
@@ -43,14 +43,9 @@ namespace DevZest.Data
         /// </summary>
         public abstract bool IsPrimaryKey { get; }
 
-        private int _ordinal = -1;
         /// <summary>Gets the zero-based position of the column in the <see cref="Model.Columns"/> collection.</summary>
         /// <remarks>If the column is not added to any <see cref="Model"/>, -1 is returned.</remarks>
-        public int Ordinal
-        {
-            get { return _ordinal; }
-            private set { _ordinal = value; }
-        }
+        public int Ordinal { get; internal set; } = -1;
 
         private string _dbColumnName;
         /// <summary>Gets or sets the column name in database.</summary>
@@ -470,5 +465,10 @@ namespace DevZest.Data
         internal abstract void TryMakeConcrete();
 
         internal abstract void RefreshComputation(DataRow dataRow);
+
+        public virtual bool IsLocal
+        {
+            get { return false; }
+        }
     }
 }

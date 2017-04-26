@@ -376,6 +376,19 @@ namespace DevZest.Data
 
         protected internal ColumnCollection Columns { get; private set; }
 
+        protected internal IReadOnlyList<Column> LocalColumns
+        {
+            get
+            {
+                if (LocalColumnList == null)
+                    return Array<Column>.Empty;
+                else
+                    return LocalColumnList;
+            }
+        }
+
+        internal List<Column> LocalColumnList { get; set; }
+
         protected internal ModelCollection ChildModels { get; private set; }
 
         private List<IValidator> _validators = new List<IValidator>();
