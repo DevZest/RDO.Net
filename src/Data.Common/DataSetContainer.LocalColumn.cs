@@ -1134,5 +1134,23 @@ namespace DevZest.Data
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12, expression), builder);
             return AddLocalColumn(result);
         }
+
+        public void CloneLocalColumns(Model model, Model fromModel)
+        {
+            VerifyModel(model, nameof(model));
+            Check.NotNull(fromModel, nameof(fromModel));
+            if (model.GetType() != fromModel.GetType())
+                throw new ArgumentException(Strings.DataSetContainer_InvalidCloneFromModel, nameof(fromModel));
+
+            if (model.LocalColumns.Count > 0)
+                throw new ArgumentException(Strings.DataSetContainer_AlreadyHasLocalColumnBeforeClone, nameof(model));
+
+            var localColumns = fromModel.LocalColumns;
+            for (int i = 0; i < localColumns.Count; i++)
+            {
+                var localColumn = localColumns[i];
+                ((ILocalColumn)localColumn).CloneTo(model);
+            }
+        }
     }
 }

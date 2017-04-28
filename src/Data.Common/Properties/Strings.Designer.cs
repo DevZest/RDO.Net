@@ -907,6 +907,22 @@ namespace DevZest.Data
             get { return GetString("DataSetContainer_InvalidBaseColumn"); }
         }
 
+        /// <summary>
+        /// The model must have no local column before clone.
+        /// </summary>
+        public static string DataSetContainer_AlreadyHasLocalColumnBeforeClone
+        {
+            get { return GetString("DataSetContainer_AlreadyHasLocalColumnBeforeClone"); }
+        }
+
+        /// <summary>
+        /// Model to clone from must be the same type.
+        /// </summary>
+        public static string DataSetContainer_InvalidCloneFromModel
+        {
+            get { return GetString("DataSetContainer_InvalidCloneFromModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

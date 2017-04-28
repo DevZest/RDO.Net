@@ -453,4 +453,10 @@
   <data name="DataSetContainer_InvalidBaseColumn" xml:space="preserve">
     <value>The base column is invalid, it belongs to a different DataSetContainer.</value>
   </data>
+  <data name="DataSetContainer_AlreadyHasLocalColumnBeforeClone" xml:space="preserve">
+    <value>The model must have no local column before clone.</value>
+  </data>
+  <data name="DataSetContainer_InvalidCloneFromModel" xml:space="preserve">
+    <value>Model to clone from must be the same type.</value>
+  </data>
 </root>
