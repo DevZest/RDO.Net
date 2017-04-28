@@ -899,6 +899,14 @@ namespace DevZest.Data
             get { return GetString("DataSetContainer_InvalidLocalColumnModel"); }
         }
 
+        /// <summary>
+        /// The base column is invalid, it belongs to a different DataSetContainer.
+        /// </summary>
+        public static string DataSetContainer_InvalidBaseColumn
+        {
+            get { return GetString("DataSetContainer_InvalidBaseColumn"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

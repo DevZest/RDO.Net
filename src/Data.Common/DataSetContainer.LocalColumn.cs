@@ -2,7 +2,6 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -14,15 +13,17 @@ namespace DevZest.Data
         {
             void OnDataRowInserting(DataRow dataRow);
             void OnDataRowRemoving(DataRow dataRow);
+            Column CloneTo(Model targetModel);
         }
 
         private sealed class LocalColumn<T> : Column<T>, ILocalColumn
         {
-            public LocalColumn(Model model, ColumnExpression<T> expression, Action<LocalColumnBuilder<T>> initializer)
+            public LocalColumn(Model model, LocalColumnExpressionBase<T> expression, Action<LocalColumnBuilder<T>> initializer)
             {
                 Initialize(model, expression);
                 if (initializer != null)
                 {
+                    _initializer = initializer;
                     using (var builder = new LocalColumnBuilder<T>(this))
                     {
                         initializer(builder);
@@ -31,6 +32,8 @@ namespace DevZest.Data
                 InitValues();
                 _designMode = false;
             }
+
+            private Action<LocalColumnBuilder<T>> _initializer;
 
             public override bool IsLocal
             {
@@ -41,12 +44,12 @@ namespace DevZest.Data
             {
                 if (model != null)
                 {
+                    ParentModel = model;
+                    OriginalOwnerType = OwnerType = model.GetType();
                     List<Column> localColumns = model.LocalColumnList;
                     if (localColumns == null)
                         model.LocalColumnList = localColumns = new List<Column>();
-                    ParentModel = model;
-                    OriginalOwnerType = OwnerType = model.GetType();
-                    Ordinal = model.LocalColumnList.Count;
+                    Ordinal = localColumns.Count;
                     OriginalName = Name = "LocalColumn" + localColumns.Count.ToString(CultureInfo.InvariantCulture);
                     model.LocalColumnList.Add(this);
                 }
@@ -54,6 +57,14 @@ namespace DevZest.Data
                     Name = "LocalColumn";
                 Kind = ColumnKind.User;
                 Expression = expression;
+            }
+
+            public Column CloneTo(Model targetModel)
+            {
+                var expression = Expression as LocalColumnExpressionBase<T>;
+                if (expression != null)
+                    expression = expression.Clone(this.ParentModel, targetModel);
+                return new LocalColumn<T>(targetModel, expression, _initializer);
             }
 
             private void InitValues()
@@ -146,6 +157,37 @@ namespace DevZest.Data
             {
                 throw new NotSupportedException();
             }
+
+            public abstract LocalColumnExpressionBase<TDataType> Clone(Model source, Model target);
+
+            protected TColumn Translate<TColumn>(TColumn column, Model source, Model target)
+                where TColumn : Column
+            {
+                if (column.ParentModel == null)
+                    return column;
+
+                var sourceRootModel = source.RootModel;
+                if (column.ParentModel.RootModel != sourceRootModel)
+                    return column;
+
+                var targetRootModel = target.RootModel;
+                return (TColumn)Translate(column, targetRootModel);
+            }
+
+            private Column Translate(Column column, Model targetRootModel)
+            {
+                var model = Translate(column.ParentModel, targetRootModel);
+                var ordinal = column.Ordinal;
+                return column.IsLocal ? model.LocalColumns[ordinal] : model.Columns[ordinal];
+            }
+
+            private Model Translate(Model source, Model targetRootModel)
+            {
+                if (source == source.RootModel)
+                    return targetRootModel;
+                else
+                    return Translate(source.ParentModel, targetRootModel).ChildModels[source.Ordinal];
+            }
         }
 
         [ExpressionConverterNonGenerics(typeof(Converter))]
@@ -165,6 +207,11 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return ColumnSet.Empty;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<TDataType>(_expression);
             }
         }
 
@@ -188,6 +235,11 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _column.BaseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, TDataType>(Translate(_column, source, target), _expression);
             }
         }
 
@@ -216,6 +268,12 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), _expression);
             }
         }
 
@@ -247,6 +305,12 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), _expression);
             }
         }
 
@@ -281,6 +345,12 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target), _expression);
             }
         }
 
@@ -319,6 +389,13 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target), 
+                    Translate(_column5, source, target), _expression);
             }
         }
 
@@ -360,6 +437,13 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), _expression);
             }
         }
 
@@ -405,6 +489,13 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target), _expression);
             }
         }
 
@@ -453,6 +544,14 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
+                    Translate(_column8, source, target), _expression);
             }
         }
 
@@ -505,6 +604,14 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
+                    Translate(_column8, source, target), Translate(_column9, source, target), _expression);
             }
         }
 
@@ -560,6 +667,14 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
+                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target), _expression);
             }
         }
 
@@ -618,6 +733,15 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
+            }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
+                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target),
+                    Translate(_column11, source, target), _expression);
             }
         }
 
@@ -680,6 +804,15 @@ namespace DevZest.Data
             {
                 return _baseColumns;
             }
+
+            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
+            {
+                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType>(Translate(_column1, source, target),
+                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
+                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
+                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target),
+                    Translate(_column11, source, target), Translate(_column12, source, target), _expression);
+            }
         }
 
         private void VerifyModel(Model model, string paramName)
@@ -687,6 +820,13 @@ namespace DevZest.Data
             Check.NotNull(model, paramName);
             if (model.DataSetContainer != this)
                 throw new ArgumentException(Strings.DataSetContainer_InvalidLocalColumnModel, paramName);
+        }
+
+        private void VerifyBaseColumn(Column column, string paramName)
+        {
+            Check.NotNull(column, paramName);
+            if (column.ParentModel != null && column.ParentModel.DataSetContainer != this)
+                throw new ArgumentException(Strings.DataSetContainer_InvalidBaseColumn, paramName);
         }
 
         private void VerifyExpression(Delegate expression, string paramName)
@@ -729,7 +869,7 @@ namespace DevZest.Data
             where T1 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column, nameof(column));
+            VerifyBaseColumn(column, nameof(column));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T>(column, expression), builder);
             return AddLocalColumn(result);
@@ -740,8 +880,8 @@ namespace DevZest.Data
             where T2 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T>(column1, column2, expression), builder);
             return AddLocalColumn(result);
@@ -754,9 +894,9 @@ namespace DevZest.Data
             where T3 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T>(column1, column2, column3, expression), builder);
             return AddLocalColumn(result);
@@ -770,10 +910,10 @@ namespace DevZest.Data
             where T4 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T>(column1, column2, column3, column4, expression), builder);
             return AddLocalColumn(result);
@@ -788,11 +928,11 @@ namespace DevZest.Data
             where T5 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T>(column1, column2, column3, column4, column5, expression), builder);
             return AddLocalColumn(result);
@@ -808,12 +948,12 @@ namespace DevZest.Data
             where T6 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T>(column1, column2, column3, column4, column5, column6, expression), builder);
             return AddLocalColumn(result);
@@ -830,13 +970,13 @@ namespace DevZest.Data
             where T7 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T>(
                 column1, column2, column3, column4, column5, column6, column7, expression), builder);
@@ -855,14 +995,14 @@ namespace DevZest.Data
             where T8 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
-            Check.NotNull(column8, nameof(column8));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
+            VerifyBaseColumn(column8, nameof(column8));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, expression), builder);
@@ -882,15 +1022,15 @@ namespace DevZest.Data
             where T9 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
-            Check.NotNull(column8, nameof(column8));
-            Check.NotNull(column9, nameof(column9));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
+            VerifyBaseColumn(column8, nameof(column8));
+            VerifyBaseColumn(column9, nameof(column9));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, expression), builder);
@@ -911,16 +1051,16 @@ namespace DevZest.Data
             where T10 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
-            Check.NotNull(column8, nameof(column8));
-            Check.NotNull(column9, nameof(column9));
-            Check.NotNull(column10, nameof(column10));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
+            VerifyBaseColumn(column8, nameof(column8));
+            VerifyBaseColumn(column9, nameof(column9));
+            VerifyBaseColumn(column10, nameof(column10));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, expression), builder);
@@ -943,17 +1083,17 @@ namespace DevZest.Data
             where T11 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
-            Check.NotNull(column8, nameof(column8));
-            Check.NotNull(column9, nameof(column9));
-            Check.NotNull(column10, nameof(column10));
-            Check.NotNull(column11, nameof(column11));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
+            VerifyBaseColumn(column8, nameof(column8));
+            VerifyBaseColumn(column9, nameof(column9));
+            VerifyBaseColumn(column10, nameof(column10));
+            VerifyBaseColumn(column11, nameof(column11));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, expression), builder);
@@ -977,18 +1117,18 @@ namespace DevZest.Data
             where T12 : Column
         {
             VerifyModel(model, nameof(model));
-            Check.NotNull(column1, nameof(column1));
-            Check.NotNull(column2, nameof(column2));
-            Check.NotNull(column3, nameof(column3));
-            Check.NotNull(column4, nameof(column4));
-            Check.NotNull(column5, nameof(column5));
-            Check.NotNull(column6, nameof(column6));
-            Check.NotNull(column7, nameof(column7));
-            Check.NotNull(column8, nameof(column8));
-            Check.NotNull(column9, nameof(column9));
-            Check.NotNull(column10, nameof(column10));
-            Check.NotNull(column11, nameof(column11));
-            Check.NotNull(column12, nameof(column12));
+            VerifyBaseColumn(column1, nameof(column1));
+            VerifyBaseColumn(column2, nameof(column2));
+            VerifyBaseColumn(column3, nameof(column3));
+            VerifyBaseColumn(column4, nameof(column4));
+            VerifyBaseColumn(column5, nameof(column5));
+            VerifyBaseColumn(column6, nameof(column6));
+            VerifyBaseColumn(column7, nameof(column7));
+            VerifyBaseColumn(column8, nameof(column8));
+            VerifyBaseColumn(column9, nameof(column9));
+            VerifyBaseColumn(column10, nameof(column10));
+            VerifyBaseColumn(column11, nameof(column11));
+            VerifyBaseColumn(column12, nameof(column12));
             VerifyExpression(expression, nameof(expression));
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12, expression), builder);
