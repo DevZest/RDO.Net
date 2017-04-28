@@ -457,6 +457,6 @@
     <value>The model must have no local column before clone.</value>
   </data>
   <data name="DataSetContainer_InvalidCloneFromModel" xml:space="preserve">
-    <value>Model to clone from must be the same type.</value>
+    <value>The models must have clone relationship.</value>
   </data>
 </root>

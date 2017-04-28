@@ -916,7 +916,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Model to clone from must be the same type.
+        /// The models must have clone relationship.
         /// </summary>
         public static string DataSetContainer_InvalidCloneFromModel
         {
