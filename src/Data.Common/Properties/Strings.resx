@@ -402,9 +402,6 @@
   <data name="Case_WhenThenNotMatch" xml:space="preserve">
     <value>Cannot match When and Then columns. They cannot be empty and must have identical size.</value>
   </data>
-  <data name="DataRow_VerifyPrototype" xml:space="preserve">
-    <value>The source DataRow and this DataRow must belong to DataSets which have clone relationship.</value>
-  </data>
   <data name="JsonWriter_EmptyStringBuilder" xml:space="preserve">
     <value>The StringBuilder is empty.</value>
   </data>
@@ -455,8 +452,5 @@
   </data>
   <data name="DataSetContainer_AlreadyHasLocalColumnBeforeClone" xml:space="preserve">
     <value>The model must have no local column before clone.</value>
-  </data>
-  <data name="DataSetContainer_InvalidCloneFromModel" xml:space="preserve">
-    <value>The models must have clone relationship.</value>
   </data>
 </root>

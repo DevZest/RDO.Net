@@ -538,12 +538,6 @@ namespace DevZest.Data
             return result;
         }
 
-        private Model _prototype;
-        internal Model Prototype
-        {
-            get { return _prototype == null ? this : _prototype.Prototype; }
-        }
-
         internal Model Clone(bool setDataSource)
         {
             Model result = (Model)Activator.CreateInstance(this.GetType());
@@ -554,7 +548,6 @@ namespace DevZest.Data
         private void InitializeClone(Model prototype, bool setDataSource)
         {
             Debug.Assert(prototype != null && prototype != this);
-            _prototype = prototype;
             InitializeColumnLists(prototype);
             if (setDataSource && prototype.DataSource != null)
                 SetDataSource(prototype.DataSource);

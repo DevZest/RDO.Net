@@ -1139,8 +1139,6 @@ namespace DevZest.Data
         {
             VerifyModel(model, nameof(model));
             Check.NotNull(fromModel, nameof(fromModel));
-            if (fromModel == null || model.Prototype != fromModel.Prototype)
-                throw new ArgumentException(Strings.DataSetContainer_InvalidCloneFromModel, nameof(fromModel));
 
             if (model.LocalColumns.Count > 0)
                 throw new ArgumentException(Strings.DataSetContainer_AlreadyHasLocalColumnBeforeClone, nameof(model));

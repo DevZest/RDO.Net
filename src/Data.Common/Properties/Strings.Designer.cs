@@ -772,14 +772,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The source DataRow and this DataRow must belong to DataSets which have clone relationship.
-        /// </summary>
-        public static string DataRow_VerifyPrototype
-        {
-            get { return GetString("DataRow_VerifyPrototype"); }
-        }
-
-        /// <summary>
         /// The StringBuilder is empty.
         /// </summary>
         public static string JsonWriter_EmptyStringBuilder
@@ -913,14 +905,6 @@ namespace DevZest.Data
         public static string DataSetContainer_AlreadyHasLocalColumnBeforeClone
         {
             get { return GetString("DataSetContainer_AlreadyHasLocalColumnBeforeClone"); }
-        }
-
-        /// <summary>
-        /// The models must have clone relationship.
-        /// </summary>
-        public static string DataSetContainer_InvalidCloneFromModel
-        {
-            get { return GetString("DataSetContainer_InvalidCloneFromModel"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

@@ -247,20 +247,22 @@ namespace DevZest.Data
         public void CopyValuesFrom(DataRow from, bool recursive = true)
         {
             Check.NotNull(from, nameof(from));
-            var fromPrototype = from.Model.Prototype;
-            var thisPrototype = this.Model.Prototype;
-            if (fromPrototype == null || fromPrototype != thisPrototype)
-                throw new ArgumentException(Strings.DataRow_VerifyPrototype, nameof(from));
-
             DoCopyValuesFrom(from, recursive);
         }
 
         private void DoCopyValuesFrom(DataRow from, bool recursive)
         {
-            var thisColumns = Model.Columns;
             var fromColumns = from.Model.Columns;
-            for (int i = 0; i < thisColumns.Count; i++)
+            var thisColumns = Model.Columns;
+            var count = Math.Min(fromColumns.Count, thisColumns.Count);
+            for (int i = 0; i < count; i++)
                 thisColumns[i].MapFrom(fromColumns[i]).CopyValue(from, this);
+
+            var fromLocalColumns = from.Model.LocalColumns;
+            var thisLocalColumns = Model.LocalColumns;
+            count = Math.Min(fromLocalColumns.Count, thisLocalColumns.Count);
+            for (int i = 0; i < fromLocalColumns.Count; i++)
+                thisLocalColumns[i].MapFrom(fromLocalColumns[i]).CopyValue(from, this);
 
             if (recursive)
                 CopyChildren(from);
