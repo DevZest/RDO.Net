@@ -246,5 +246,44 @@ AfterDataRowInserted: DataSet-0[0].
                 Assert.AreEqual(expectedLog, log.ToString());
             }
         }
+
+        [TestMethod]
+        public void DataRow_Move_with_local_column()
+        {
+            var dataSet = GetDataSet(3);
+            var localColumn0 = dataSet.Container.CreateLocalColumn<int>(dataSet._);
+            var localColumn1 = dataSet.Container.CreateLocalColumn<int>(dataSet._.ChildModels[0]);
+            var localColumn2 = dataSet.Container.CreateLocalColumn<int>(dataSet._.ChildModels[0].ChildModels[0]);
+
+            localColumn0[0] = 1;
+            localColumn1[0] = 2;
+            localColumn1[1] = 3;
+            localColumn1[2] = 4;
+            localColumn2[0] = 5;
+            localColumn2[1] = 6;
+            localColumn2[2] = 7;
+            localColumn2[3] = 8;
+            localColumn2[4] = 9;
+            localColumn2[5] = 10;
+            localColumn2[6] = 11;
+            localColumn2[7] = 12;
+            localColumn2[8] = 13;
+
+            dataSet[0].Move(2);
+
+            Assert.AreEqual(1, localColumn0[2]);
+            Assert.AreEqual(2, localColumn1[6]);
+            Assert.AreEqual(3, localColumn1[7]);
+            Assert.AreEqual(4, localColumn1[8]);
+            Assert.AreEqual(5, localColumn2[18]);
+            Assert.AreEqual(6, localColumn2[19]);
+            Assert.AreEqual(7, localColumn2[20]);
+            Assert.AreEqual(8, localColumn2[21]);
+            Assert.AreEqual(9, localColumn2[22]);
+            Assert.AreEqual(10, localColumn2[23]);
+            Assert.AreEqual(11, localColumn2[24]);
+            Assert.AreEqual(12, localColumn2[25]);
+            Assert.AreEqual(13, localColumn2[26]);
+        }
     }
 }

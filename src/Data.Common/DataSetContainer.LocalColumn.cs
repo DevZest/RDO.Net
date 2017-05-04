@@ -63,7 +63,7 @@ namespace DevZest.Data
             {
                 var expression = Expression as LocalColumnExpressionBase<T>;
                 if (expression != null)
-                    expression = expression.Clone(this.ParentModel, targetModel);
+                    expression = LocalColumnExpression<T>.Dummy;
                 return new LocalColumn<T>(targetModel, expression, _initializer);
             }
 
@@ -157,42 +157,22 @@ namespace DevZest.Data
             {
                 throw new NotSupportedException();
             }
-
-            public abstract LocalColumnExpressionBase<TDataType> Clone(Model source, Model target);
-
-            protected TColumn Translate<TColumn>(TColumn column, Model source, Model target)
-                where TColumn : Column
-            {
-                if (column.ParentModel == null)
-                    return column;
-
-                var sourceRootModel = source.RootModel;
-                if (column.ParentModel.RootModel != sourceRootModel)
-                    return column;
-
-                var targetRootModel = target.RootModel;
-                return (TColumn)Translate(column, targetRootModel);
-            }
-
-            private Column Translate(Column column, Model targetRootModel)
-            {
-                var model = Translate(column.ParentModel, targetRootModel);
-                var ordinal = column.Ordinal;
-                return column.IsLocal ? model.LocalColumns[ordinal] : model.Columns[ordinal];
-            }
-
-            private Model Translate(Model source, Model targetRootModel)
-            {
-                if (source == source.RootModel)
-                    return targetRootModel;
-                else
-                    return Translate(source.ParentModel, targetRootModel).ChildModels[source.Ordinal];
-            }
         }
 
         [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<TDataType> : LocalColumnExpressionBase<TDataType>
         {
+            private static LocalColumnExpression<TDataType> s_dummy;
+            public static LocalColumnExpression<TDataType> Dummy
+            {
+                get { return s_dummy ?? (s_dummy = new LocalColumnExpression<TDataType>(GetDefaultValue)); }
+            }
+
+            private static TDataType GetDefaultValue(DataRow dataRow)
+            {
+                return default(TDataType);
+            }
+
             public LocalColumnExpression(Func<DataRow, TDataType> expression)
             {
                 _expression = expression;
@@ -207,11 +187,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return ColumnSet.Empty;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<TDataType>(_expression);
             }
         }
 
@@ -235,11 +210,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _column.BaseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, TDataType>(Translate(_column, source, target), _expression);
             }
         }
 
@@ -268,12 +238,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), _expression);
             }
         }
 
@@ -305,12 +269,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), _expression);
             }
         }
 
@@ -345,12 +303,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target), _expression);
             }
         }
 
@@ -389,13 +341,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target), 
-                    Translate(_column5, source, target), _expression);
             }
         }
 
@@ -437,13 +382,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), _expression);
             }
         }
 
@@ -489,13 +427,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target), _expression);
             }
         }
 
@@ -544,14 +475,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
-                    Translate(_column8, source, target), _expression);
             }
         }
 
@@ -604,14 +527,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
-                    Translate(_column8, source, target), Translate(_column9, source, target), _expression);
             }
         }
 
@@ -667,14 +582,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
-                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target), _expression);
             }
         }
 
@@ -733,15 +640,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
-                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target),
-                    Translate(_column11, source, target), _expression);
             }
         }
 
@@ -803,15 +701,6 @@ namespace DevZest.Data
             protected override IColumnSet GetBaseColumns()
             {
                 return _baseColumns;
-            }
-
-            public override LocalColumnExpressionBase<TDataType> Clone(Model source, Model target)
-            {
-                return new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType>(Translate(_column1, source, target),
-                    Translate(_column2, source, target), Translate(_column3, source, target), Translate(_column4, source, target),
-                    Translate(_column5, source, target), Translate(_column6, source, target), Translate(_column7, source, target),
-                    Translate(_column8, source, target), Translate(_column9, source, target), Translate(_column10, source, target),
-                    Translate(_column11, source, target), Translate(_column12, source, target), _expression);
             }
         }
 
@@ -1135,14 +1024,8 @@ namespace DevZest.Data
             return AddLocalColumn(result);
         }
 
-        public void CloneLocalColumns(Model model, Model fromModel)
+        internal void CloneLocalColumns(Model model, Model fromModel)
         {
-            VerifyModel(model, nameof(model));
-            Check.NotNull(fromModel, nameof(fromModel));
-
-            if (model.LocalColumns.Count > 0)
-                throw new ArgumentException(Strings.DataSetContainer_AlreadyHasLocalColumnBeforeClone, nameof(model));
-
             var localColumns = fromModel.LocalColumns;
             for (int i = 0; i < localColumns.Count; i++)
             {

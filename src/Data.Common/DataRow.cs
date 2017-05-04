@@ -307,8 +307,6 @@ namespace DevZest.Data
 
         private Action<DataRow> Backup()
         {
-            var dataSet = DataSet;
-
             if (Model.EditingRow == null && !HasChild)
             {
                 Model.BeginEdit(this);
@@ -316,9 +314,31 @@ namespace DevZest.Data
             }
             else
             {
-                var savedDataSet = dataSet.Clone();
-                savedDataSet.AddRow(dataRow => dataRow.CopyValuesFrom(this));
-                return dataRow => dataRow.CopyValuesFrom(savedDataSet[0]);
+                var backupDataSet = CreateBackupDataSet(DataSet);
+                var backupDataRow = backupDataSet.AddRow(dataRow => dataRow.DoCopyValuesFrom(this, true));
+                return dataRow => dataRow.DoCopyValuesFrom(backupDataRow, true);
+            }
+        }
+
+        private static DataSet CreateBackupDataSet(DataSet dataSet)
+        {
+            var result = dataSet.Clone();
+            result.Model.EnsureInitialized();
+            InitializeBackupDataSetModels(dataSet.Model, result.Model);
+            return result;
+        }
+
+        private static void InitializeBackupDataSetModels(Model origin, Model backup)
+        {
+            if (origin.IsInitialized)
+            {
+                backup.EnsureInitialized();
+                backup.DataSetContainer.CloneLocalColumns(backup, origin);
+                var originChildModels = origin.ChildModels;
+                var backupChildModels = backup.ChildModels;
+                Debug.Assert(originChildModels.Count == backupChildModels.Count);
+                for (int i = 0; i < originChildModels.Count; i++)
+                    InitializeBackupDataSetModels(originChildModels[i], backupChildModels[i]);
             }
         }
 
