@@ -11,6 +11,75 @@ namespace DevZest.Data
     /// </summary>
     public class DataRow
     {
+        private sealed class BackupModel : Model
+        {
+            public static DataSet<BackupModel> Backup(Model origin)
+            {
+                var result = DataSet<BackupModel>.New();
+                result._.Initialize(origin);
+                return result;
+            }
+
+            private Model _origin;
+
+            private void Initialize(Model origin)
+            {
+                if (origin.IsInitialized)
+                {
+                    _origin = origin;
+                    var originChildModels = origin.ChildModels;
+                    for (int i = 0; i < originChildModels.Count; i++)
+                    {
+                        var childBackupModel = new BackupModel();
+                        childBackupModel.Construct(this, this.GetType(), "ChildModel" + i.ToString(CultureInfo.InvariantCulture));
+                        childBackupModel.Initialize(originChildModels[i]);
+                    }
+                }
+            }
+
+            protected override void OnInitializing()
+            {
+                if (_origin != null)
+                {
+                    MapColumnsFrom(_origin);
+                    _origin = null;
+                }
+                base.OnInitializing();
+            }
+
+            private void MapColumnsFrom(Model origin)
+            {
+                MapColumnsFrom(origin.Columns);
+                MapColumnsFrom(origin.LocalColumns);
+            }
+
+            private void MapColumnsFrom(IReadOnlyList<Column> columns)
+            {
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    var column = columns[i];
+                    if (!column.IsExpression)
+                    {
+                        var backupColumn = column.CreateBackup(this);
+                        _backupMappings.Add(backupColumn.MapFrom(column));
+                        _restoreMappings.Add(column.MapFrom(backupColumn));
+                    }
+                }
+            }
+
+            private List<ColumnMapping> _backupMappings = new List<ColumnMapping>();
+            public IReadOnlyList<ColumnMapping> BackupMappings
+            {
+                get { return _backupMappings; }
+            }
+
+            private List<ColumnMapping> _restoreMappings = new List<ColumnMapping>();
+            public IReadOnlyList<ColumnMapping> RestoreMappings
+            {
+                get { return _restoreMappings; }
+            }
+        }
+
         internal static readonly DataRow Placeholder = new DataRow() { ValueChangedSuspended = true };
 
         /// <summary>Initializes a new instance of <see cref="DataRow"/> object.</summary>
@@ -279,7 +348,7 @@ namespace DevZest.Data
             }
         }
 
-        public void CopyValuesFrom(DataRow from, IList<ColumnMapping> columnMappings)
+        public void CopyValuesFrom(DataRow from, IReadOnlyList<ColumnMapping> columnMappings)
         {
             Check.NotNull(from, nameof(from));
             Check.NotNull(columnMappings, nameof(columnMappings));
@@ -314,31 +383,45 @@ namespace DevZest.Data
             }
             else
             {
-                var backupDataSet = CreateBackupDataSet(DataSet);
-                var backupDataRow = backupDataSet.AddRow(dataRow => dataRow.DoCopyValuesFrom(this, true));
-                return dataRow => dataRow.DoCopyValuesFrom(backupDataRow, true);
+                var backupDataSet = BackupModel.Backup(Model);
+                var backupDataRow = backupDataSet.AddRow(dataRow => dataRow.Backup(this));
+                return dataRow => dataRow.Restore(backupDataRow);
             }
         }
 
-        private static DataSet CreateBackupDataSet(DataSet dataSet)
+        private void Backup(DataRow from)
         {
-            var result = dataSet.Clone();
-            result.Model.EnsureInitialized();
-            InitializeBackupDataSetModels(dataSet.Model, result.Model);
-            return result;
+            var backupModel = (BackupModel)Model;
+            CopyValuesFrom(from, backupModel.BackupMappings);
+            BackupChildren(from);
         }
 
-        private static void InitializeBackupDataSetModels(Model origin, Model backup)
+        private void BackupChildren(DataRow from)
         {
-            if (origin.IsInitialized)
+            for (int i = 0; i < _childDataSets.Length; i++)
             {
-                backup.EnsureInitialized();
-                backup.DataSetContainer.CloneLocalColumns(backup, origin);
-                var originChildModels = origin.ChildModels;
-                var backupChildModels = backup.ChildModels;
-                Debug.Assert(originChildModels.Count == backupChildModels.Count);
-                for (int i = 0; i < originChildModels.Count; i++)
-                    InitializeBackupDataSetModels(originChildModels[i], backupChildModels[i]);
+                var children = _childDataSets[i];
+                var fromChildren = from._childDataSets[i];
+                for (int j = 0; j < fromChildren.Count; j++)
+                    children.AddRow(x => x.Backup(fromChildren[j]));
+            }
+        }
+
+        private void Restore(DataRow from)
+        {
+            var backupModel = (BackupModel)from.Model;
+            CopyValuesFrom(from, backupModel.RestoreMappings);
+            RestoreChildren(from);
+        }
+
+        private void RestoreChildren(DataRow from)
+        {
+            for (int i = 0; i < _childDataSets.Length; i++)
+            {
+                var children = _childDataSets[i];
+                var fromChildren = from._childDataSets[i];
+                for (int j = 0; j < fromChildren.Count; j++)
+                    children.AddRow(x => x.Restore(fromChildren[j]));
             }
         }
 

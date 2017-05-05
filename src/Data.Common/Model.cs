@@ -183,8 +183,13 @@ namespace DevZest.Data
         {
             TChildModel result = new TChildModel();
             var parentModel = property.Parent;
-            result.Construct(parentModel, property.OwnerType, property.Name, s_emptyColumnMapping, s_emptyColumnMapping);
+            result.Construct(parentModel, property.OwnerType, property.Name);
             return result;
+        }
+
+        internal void Construct(Model parentModel, Type ownerType, string name)
+        {
+            Construct(parentModel, ownerType, name, s_emptyColumnMapping, s_emptyColumnMapping);
         }
 
         /// <summary>

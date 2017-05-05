@@ -13,7 +13,6 @@ namespace DevZest.Data
         {
             void OnDataRowInserting(DataRow dataRow);
             void OnDataRowRemoving(DataRow dataRow);
-            Column CloneTo(Model targetModel);
         }
 
         private sealed class LocalColumn<T> : Column<T>, ILocalColumn
@@ -57,14 +56,6 @@ namespace DevZest.Data
                     Name = "LocalColumn";
                 Kind = ColumnKind.User;
                 Expression = expression;
-            }
-
-            public Column CloneTo(Model targetModel)
-            {
-                var expression = Expression as LocalColumnExpressionBase<T>;
-                if (expression != null)
-                    expression = LocalColumnExpression<T>.Dummy;
-                return new LocalColumn<T>(targetModel, expression, _initializer);
             }
 
             private void InitValues()
@@ -162,12 +153,6 @@ namespace DevZest.Data
         [ExpressionConverterNonGenerics(typeof(Converter))]
         private sealed class LocalColumnExpression<TDataType> : LocalColumnExpressionBase<TDataType>
         {
-            private static LocalColumnExpression<TDataType> s_dummy;
-            public static LocalColumnExpression<TDataType> Dummy
-            {
-                get { return s_dummy ?? (s_dummy = new LocalColumnExpression<TDataType>(GetDefaultValue)); }
-            }
-
             private static TDataType GetDefaultValue(DataRow dataRow)
             {
                 return default(TDataType);
@@ -1022,16 +1007,6 @@ namespace DevZest.Data
             var result = new LocalColumn<T>(model, new LocalColumnExpression<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T>(
                 column1, column2, column3, column4, column5, column6, column7, column8, column9, column10, column11, column12, expression), builder);
             return AddLocalColumn(result);
-        }
-
-        internal void CloneLocalColumns(Model model, Model fromModel)
-        {
-            var localColumns = fromModel.LocalColumns;
-            for (int i = 0; i < localColumns.Count; i++)
-            {
-                var localColumn = localColumns[i];
-                ((ILocalColumn)localColumn).CloneTo(model);
-            }
         }
     }
 }

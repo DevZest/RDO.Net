@@ -470,5 +470,7 @@ namespace DevZest.Data
         {
             get { return false; }
         }
+
+        internal abstract Column CreateBackup(Model model);
     }
 }

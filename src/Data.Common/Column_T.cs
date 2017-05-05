@@ -604,5 +604,10 @@ namespace DevZest.Data
         {
             get { return Comparer<T>.Default; }
         }
+
+        internal sealed override Column CreateBackup(Model model)
+        {
+            return model.DataSetContainer.CreateLocalColumn<T>(model);
+        }
     }
 }
