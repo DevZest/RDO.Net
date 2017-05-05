@@ -842,8 +842,10 @@ namespace DevZest.Data
             Debug.Assert(EditingRow == null && dataRow != null);
             EnsureInitialized();
             EditingRow = dataRow;
-            foreach (var column in Columns)
-                column.BeginEdit(dataRow);
+            for (int i = 0; i < Columns.Count; i++)
+                Columns[i].BeginEdit(dataRow);
+            for (int i = 0; i < LocalColumns.Count; i++)
+                LocalColumns[i].BeginEdit(dataRow);
         }
 
         internal void EndEdit(DataRow dataRow)
@@ -852,8 +854,10 @@ namespace DevZest.Data
             Debug.Assert(EditingRow == DataRow.Placeholder || EditingRow == dataRow);
             Debug.Assert(dataRow.ValueChangedSuspended);
 
-            foreach (var column in Columns)
-                column.EndEdit(dataRow);
+            for (int i = 0; i < Columns.Count; i++)
+                Columns[i].EndEdit(dataRow);
+            for (int i = 0; i < LocalColumns.Count; i++)
+                LocalColumns[i].EndEdit(dataRow);
             EditingRow = null;
         }
 
