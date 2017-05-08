@@ -3,9 +3,8 @@ using System.Windows.Media;
 using System.Windows;
 using DevZest.Data;
 using DevZest.Windows.Data;
-using SmoothScroll.Models;
 
-namespace SmoothScroll.Presenters
+namespace SmoothScroll
 {
     internal static class BindingFactory
     {

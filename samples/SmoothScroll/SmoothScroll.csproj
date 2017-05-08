@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -63,11 +63,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data.cs" />
-    <Compile Include="Presenters\BindingFactory.cs" />
-    <Compile Include="Models\Foo.cs" />
-    <Compile Include="Presenters\FooList.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
+    <Compile Include="BindingFactory.cs" />
+    <Compile Include="Foo.cs" />
+    <Compile Include="_FooList.cs" />
+    <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -105,6 +104,9 @@
       <Project>{13148e98-0f1a-44d3-8def-99392773af3e}</Project>
       <Name>Data.WPF</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

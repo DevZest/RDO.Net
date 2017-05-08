@@ -1,10 +1,9 @@
 ﻿using DevZest.Windows.Data;
-using SmoothScroll.Models;
 using System.Windows.Controls;
 
-namespace SmoothScroll.Presenters
+namespace SmoothScroll
 {
-    internal class FooList : DataPresenter<Foo>
+    internal class _FooList : DataPresenter<Foo>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

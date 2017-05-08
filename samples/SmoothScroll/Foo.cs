@@ -1,11 +1,32 @@
 ﻿using DevZest.Data;
-using SmoothScroll.Models;
 using System;
 
 namespace SmoothScroll
 {
-    static class Data
+    public class Foo : Model
     {
+        public Column<string> Text { get; private set; }
+
+        public Column<bool> IsSectionHeader { get; private set; }
+
+        public Column<byte> BackgroundR { get; private set; }
+
+        public Column<byte> BackgroundG { get; private set; }
+
+        public Column<byte> BackgroundB { get; private set; }
+
+        protected override void OnInitializing()
+        {
+            Text = DataSetContainer.CreateLocalColumn<string>(this);
+            IsSectionHeader = DataSetContainer.CreateLocalColumn<bool>(this);
+            BackgroundR = DataSetContainer.CreateLocalColumn<byte>(this);
+            BackgroundG = DataSetContainer.CreateLocalColumn<byte>(this);
+            BackgroundB = DataSetContainer.CreateLocalColumn<byte>(this);
+            base.OnInitializing();
+        }
+
+        #region Mock
+
         private static void AddSectionHeader(DataSet<Foo> dataSet, int index)
         {
             var dataRow = new DataRow();
@@ -25,7 +46,7 @@ namespace SmoothScroll
             dataSet._.BackgroundB[dataRow] = b;
         }
 
-        public static DataSet<Foo> GetTestData(int count)
+        public static DataSet<Foo> Mock(int count)
         {
             var result = DataSet<Foo>.New();
 
@@ -60,5 +81,7 @@ ut labore et dolore magnam aliquam quaerat voluptatem.";
             }
             return result;
         }
+
+        #endregion
     }
 }
