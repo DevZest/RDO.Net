@@ -16,7 +16,7 @@ namespace DevZest.Windows.Data.Primitives
 
         internal static ContainerViewList Create(ElementManager elementManager)
         {
-            return new ContainerViewListImpl(elementManager);
+            return new ConcreteContainerViewList(elementManager);
         }
 
         private sealed class EmptyContainerViewList : ContainerViewList
@@ -72,9 +72,9 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private sealed class ContainerViewListImpl : ContainerViewList
+        private sealed class ConcreteContainerViewList : ContainerViewList
         {
-            internal ContainerViewListImpl(ElementManager elementManager)
+            internal ConcreteContainerViewList(ElementManager elementManager)
             {
                 Debug.Assert(elementManager != null);
                 _elementManager = elementManager;
