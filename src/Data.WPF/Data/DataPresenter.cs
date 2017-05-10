@@ -231,5 +231,15 @@ namespace DevZest.Windows.Data
         {
             get { yield break; }
         }
+
+        internal protected virtual void ToggleExpandState(RowPresenter rowPresenter)
+        {
+            rowPresenter.InternalToggleExpandState();
+        }
+
+        internal protected virtual bool HasChildren(RowPresenter rowPresenter)
+        {
+            return rowPresenter.InternalHasChildren;
+        }
     }
 }

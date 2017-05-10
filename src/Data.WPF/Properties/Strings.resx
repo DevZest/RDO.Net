@@ -222,9 +222,6 @@
   <data name="RowPresenter_VerifyNoPendingEdit" xml:space="preserve">
     <value>There is pending edit not completed.</value>
   </data>
-  <data name="RowPresenter_VerifyRecursive" xml:space="preserve">
-    <value>The row must be recursive.</value>
-  </data>
   <data name="ScalarBinding_FlowableNotAllowedByTemplate" xml:space="preserve">
     <value>Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).</value>
   </data>

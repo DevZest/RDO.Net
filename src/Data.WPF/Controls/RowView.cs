@@ -6,35 +6,35 @@ using System.Windows.Input;
 using DevZest.Windows.Controls.Primitives;
 using DevZest.Windows.Data;
 using System.Windows.Controls;
+using System;
 
 namespace DevZest.Windows.Controls
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public static RoutedUICommand ScrollUpCommand { get { return ComponentCommands.MoveFocusUp; } }
-        public static RoutedUICommand ScrollDownCommand { get { return ComponentCommands.MoveFocusDown; } }
-        public static RoutedUICommand ScrollLeftCommand { get { return ComponentCommands.MoveFocusBack; } }
-        public static RoutedUICommand ScrollRightCommand { get { return ComponentCommands.MoveFocusForward; } }
-        public static RoutedUICommand ScrollPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
-        public static RoutedUICommand ScrollPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
-        public static RoutedUICommand MoveUpCommand { get { return ComponentCommands.MoveUp; } }
-        public static RoutedUICommand MoveDownCommand { get { return ComponentCommands.MoveDown; } }
-        public static RoutedUICommand MoveLeftCommand { get { return ComponentCommands.MoveLeft; } }
-        public static RoutedUICommand MoveRightCommand { get { return ComponentCommands.MoveRight; } }
-        public static RoutedUICommand MoveToPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
-        public static RoutedUICommand MoveToPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
-        public static RoutedUICommand MoveToHomeCommand { get { return ComponentCommands.MoveToHome; } }
-        public static RoutedUICommand MoveToEndCommand { get { return ComponentCommands.MoveToEnd; } }
-        public static RoutedUICommand SelectExtendedUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
-        public static RoutedUICommand SelectExtendedDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
-        public static RoutedUICommand SelectiExtendedLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
-        public static RoutedUICommand SelectExtendedRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
-        public static readonly RoutedUICommand SelectExtendedHomeCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedEndCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageUpCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageDownCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ToggleSelectionCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand ToggleExpandStateCommand = new RoutedUICommand();
+
+        private static ResourceDictionary s_selectableRowView;
+        private static ResourceDictionary SelectableRowView
+        {
+            get { return s_selectableRowView ?? (s_selectableRowView = LoadResourceDictionary("pack://application:,,,/DevZest.Data.WPF;component/Resources/SelectableRowView.xaml")); }
+        }
+
+        public static Style SelectableStyle
+        {
+            get { return (Style)SelectableRowView["SelectableRowView"]; }
+        }
+
+        private static ResourceDictionary LoadResourceDictionary(string uriString)
+        {
+            return new ResourceDictionary
+            {
+                Source = new Uri(uriString, UriKind.RelativeOrAbsolute)
+            };
+        }
+
+        public event EventHandler<EventArgs> Refreshing = delegate { };
 
         static RowView()
         {
@@ -193,6 +193,51 @@ namespace DevZest.Windows.Controls
                 var element = Elements[i];
                 rowBinding.Refresh(element);
             }
+
+            EnsureCommandEntriesSetup();
+            Refreshing(this, EventArgs.Empty);
+        }
+
+        private bool _commandEntriesSetup;
+        private void EnsureCommandEntriesSetup()
+        {
+            if (_commandEntriesSetup)
+                return;
+
+            SetupCommandEntries();
+            _commandEntriesSetup = true;
+        }
+
+        private void SetupCommandEntries()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            this.SetupCommandEntries(dataPresenter.RowViewCommandEntries);
+        }
+
+        private bool _rowSelectorCommandEntriesSetup;
+        /// <remarks>
+        /// Adding CommandBinding into RowSelector's CommandBindings does not work. There is no way to figure out why.
+        /// I suspect it's because RowSelector is in ControlTemplate of RowView. Workaround this by adding into RowView (the root element)'s CommandBindings.
+        /// </remarks>
+        internal void EnsureRowSelectorCommandEntriesSetup()
+        {
+            if (_rowSelectorCommandEntriesSetup)
+                return;
+
+            SetupRowSelectorCommandEntries();
+            _rowSelectorCommandEntriesSetup = true;
+        }
+
+        private void SetupRowSelectorCommandEntries()
+        {
+            var dataPresenter = DataPresenter;
+            if (dataPresenter == null)
+                return;
+
+            this.SetupCommandEntries(dataPresenter.RowSelectorCommandEntries);
         }
 
         internal void Flush()
@@ -212,84 +257,6 @@ namespace DevZest.Windows.Controls
             }
         }
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            if (!e.Handled)
-                e.Handled = HandleMouseButtonDown(MouseButton.Left);
-            base.OnMouseLeftButtonDown(e);
-        }
-
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-        {
-            if (!e.Handled)
-                e.Handled = HandleMouseButtonDown(MouseButton.Right);
-            base.OnMouseRightButtonDown(e);
-        }
-
-        private bool HandleMouseButtonDown(MouseButton mouseButton)
-        {
-            var oldCurrentRow = ElementManager.CurrentRow;
-            var focusMoved = IsKeyboardFocusWithin ? true : MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-            var selected = Select(mouseButton, oldCurrentRow);
-            return focusMoved || selected;
-        }
-
-        private SelectionMode? TemplateSelectionMode
-        {
-            get { return ElementManager.Template.SelectionMode; }
-        }
-
-        private bool Select(MouseButton mouseButton, RowPresenter currentRow)
-        {
-            if (!TemplateSelectionMode.HasValue)
-                return false;
-
-            switch (TemplateSelectionMode.Value)
-            {
-                case SelectionMode.Single:
-                    Select((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control ? SelectionMode.Multiple : SelectionMode.Single, currentRow);
-                    return true;
-                case SelectionMode.Multiple:
-                    Select(SelectionMode.Multiple, currentRow);
-                    return true;
-                case SelectionMode.Extended:
-                    if (mouseButton != MouseButton.Left)
-                    {
-                        if (mouseButton == MouseButton.Right && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == ModifierKeys.None)
-                        {
-                            if (RowPresenter.IsSelected)
-                                return false;
-                            Select(SelectionMode.Single, currentRow);
-                            return true;
-                        }
-                        return false;
-                    }
-
-                    if (IsControlDown && IsShiftDown)
-                        return false;
-
-                    var selectionMode = IsShiftDown ? SelectionMode.Extended : (IsControlDown ? SelectionMode.Multiple : SelectionMode.Single);
-                    Select(selectionMode, currentRow);
-                    return true;
-            }
-            return false;
-        }
-
-        private bool IsControlDown
-        {
-            get { return (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control; }
-        }
-
-        private bool IsShiftDown
-        {
-            get { return (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; }
-        }
-
-        private void Select(SelectionMode selectionMode, RowPresenter oldCurrentRow)
-        {
-            ElementManager.Select(RowPresenter, selectionMode, oldCurrentRow);
-        }
-
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnIsKeyboardFocusWithinChanged(e);
@@ -305,17 +272,9 @@ namespace DevZest.Windows.Controls
             get { return RowPresenter.Index % RowPresenter.ElementManager.FlowCount; }
         }
 
-        private DataPresenter DataPresenter
+        public DataPresenter DataPresenter
         {
             get { return RowPresenter == null ? null : RowPresenter.DataPresenter; }
-        }
-
-        internal void SetupCommandEntries(DataPresenter dataPresenter)
-        {
-            if (dataPresenter == null)
-                return;
-
-            this.SetupCommandEntries(dataPresenter.RowViewCommandEntries);
         }
     }
 }

@@ -341,7 +341,6 @@ namespace DevZest.Windows.Data.Primitives
             var result = _rowViewConstructor == null ? new RowView() : _rowViewConstructor();
             if (_rowViewStyle != null)
                 result.Style = _rowViewStyle;
-            result.SetupCommandEntries(DataPresenter);
             return result;
         }
 

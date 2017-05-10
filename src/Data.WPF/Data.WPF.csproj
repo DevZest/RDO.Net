@@ -44,6 +44,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RowSelector.cs" />
+    <Compile Include="Controls\RowExpander.cs" />
+    <Compile Include="Controls\VisualStates.cs" />
     <Compile Include="Data\AsyncValidator.cs" />
     <Compile Include="Data\AsyncValidatorGroup.cs" />
     <Compile Include="Data\AsyncValidatorStatus.cs" />
@@ -53,7 +56,7 @@
     <Compile Include="Data\BindingFactory.TextBox.cs" />
     <Compile Include="Data\BlockPane_T.cs" />
     <Compile Include="Data\CommandEntry.cs" />
-    <Compile Include="Data\DataPresenter.RowViewCommands.cs" />
+    <Compile Include="Data\DataPresenter.Commands.cs" />
     <Compile Include="Data\DataPresenter_T.cs" />
     <Compile Include="Data\ExplicitTrigger.cs" />
     <Compile Include="Data\IAsyncValidatorGroup.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="Data\RowPane_T.cs" />
     <Compile Include="Data\ScalarPane_T.cs" />
     <Compile Include="Data\Scalar_T.cs" />
+    <Compile Include="Utilities\DependencyObject.FindAncestor.cs" />
     <Compile Include="Utilities\Double.IfZero.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="Utilities\EmptyReadOnlyDictionary.Singleton.cs" />
@@ -196,7 +200,19 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Resources\SelectableRowView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\BlockView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowExpander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\RowSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

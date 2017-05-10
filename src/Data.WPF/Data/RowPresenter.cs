@@ -184,6 +184,20 @@ namespace DevZest.Windows.Data
             get { return Parent == null ? 0 : RowMapper.GetDepth(Parent.DataRow) + 1; }
         }
 
+        public bool HasChildren
+        {
+            get
+            {
+                var dataPresenter = DataPresenter;
+                return dataPresenter != null ? dataPresenter.HasChildren(this) : InternalHasChildren;
+            }
+        }
+
+        internal bool InternalHasChildren
+        {
+            get { return Children.Count > 0; }
+        }
+
         private bool _isExpanded = false;
         public bool IsExpanded
         {
@@ -195,32 +209,41 @@ namespace DevZest.Windows.Data
             }
         }
 
-        public void Expand()
+        public void ToggleExpandState()
         {
-            VerifyRecursive();
+            var dataPresenter = DataPresenter;
+            if (dataPresenter != null)
+                dataPresenter.ToggleExpandState(this);
+            else
+                InternalToggleExpandState();
+        }
 
+        internal void InternalToggleExpandState()
+        {
+            if (IsExpanded)
+                Collapse();
+            else
+                Expand();
+        }
+
+        internal void Expand()
+        {
             if (IsExpanded)
                 return;
 
-            RowNormalizer.Expand(this);
+            if (IsRecursive)
+                RowNormalizer.Expand(this);
             IsExpanded = true;
         }
 
-        public void Collapse()
+        internal void Collapse()
         {
-            VerifyRecursive();
-
             if (!IsExpanded)
                 return;
 
-            RowNormalizer.Collapse(this);
+            if (IsRecursive)
+                RowNormalizer.Collapse(this);
             IsExpanded = false;
-        }
-
-        private void VerifyRecursive()
-        {
-            if (!IsRecursive)
-                throw new InvalidOperationException(Strings.RowPresenter_VerifyRecursive);
         }
 
         public bool IsCurrent

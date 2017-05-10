@@ -1,8 +1,6 @@
 ﻿using DevZest.Windows.Controls;
 using DevZest.Windows.Data.Primitives;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -14,37 +12,57 @@ namespace DevZest.Windows.Data
         {
             get
             {
+                yield return RowView.ToggleExpandStateCommand.CommandBinding(ToggleExpandState, CanToggleExpandState);
+            }
+        }
+
+        private void CanToggleExpandState(object sender, CanExecuteRoutedEventArgs e)
+        {
+            var rowView = (RowView)sender;
+            e.CanExecute = rowView.RowPresenter.HasChildren;
+        }
+
+        private void ToggleExpandState(object sender, ExecutedRoutedEventArgs e)
+        {
+            var rowView = (RowView)sender;
+            rowView.RowPresenter.ToggleExpandState();
+        }
+
+        protected internal virtual IEnumerable<CommandEntry> RowSelectorCommandEntries
+        {
+            get
+            {
                 if (Scrollable != null)
                 {
                     if (LayoutOrientation.HasValue)
                     {
-                        yield return RowView.ScrollUpCommand.CommandBinding(ScrollUp);
-                        yield return RowView.ScrollDownCommand.CommandBinding(ScrollDown);
-                        yield return RowView.ScrollLeftCommand.CommandBinding(ScrollLeft);
-                        yield return RowView.ScrollRightCommand.CommandBinding(ScrollRight);
-                        yield return RowView.ScrollPageUpCommand.CommandBinding(ScrollPageUp);
-                        yield return RowView.ScrollPageDownCommand.CommandBinding(ScrollPageDown);
-                        yield return RowView.MoveUpCommand.InputBinding(MoveUp, CanMoveUp, new KeyGesture(Key.Up));
-                        yield return RowView.MoveDownCommand.InputBinding(MoveDown, CanMoveDown, new KeyGesture(Key.Down));
-                        yield return RowView.MoveLeftCommand.InputBinding(MoveLeft, CanMoveLeft, new KeyGesture(Key.Left));
-                        yield return RowView.MoveRightCommand.InputBinding(MoveRight, CanMoveRight, new KeyGesture(Key.Right));
-                        yield return RowView.MoveToHomeCommand.InputBinding(MoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
-                        yield return RowView.MoveToEndCommand.InputBinding(MoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
-                        yield return RowView.MoveToPageUpCommand.InputBinding(MoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
-                        yield return RowView.MoveToPageDownCommand.InputBinding(MoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
+                        yield return RowSelector.ScrollUpCommand.CommandBinding(ScrollUp);
+                        yield return RowSelector.ScrollDownCommand.CommandBinding(ScrollDown);
+                        yield return RowSelector.ScrollLeftCommand.CommandBinding(ScrollLeft);
+                        yield return RowSelector.ScrollRightCommand.CommandBinding(ScrollRight);
+                        yield return RowSelector.ScrollPageUpCommand.CommandBinding(ScrollPageUp);
+                        yield return RowSelector.ScrollPageDownCommand.CommandBinding(ScrollPageDown);
+                        yield return RowSelector.MoveUpCommand.InputBinding(MoveUp, CanMoveUp, new KeyGesture(Key.Up));
+                        yield return RowSelector.MoveDownCommand.InputBinding(MoveDown, CanMoveDown, new KeyGesture(Key.Down));
+                        yield return RowSelector.MoveLeftCommand.InputBinding(MoveLeft, CanMoveLeft, new KeyGesture(Key.Left));
+                        yield return RowSelector.MoveRightCommand.InputBinding(MoveRight, CanMoveRight, new KeyGesture(Key.Right));
+                        yield return RowSelector.MoveToHomeCommand.InputBinding(MoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
+                        yield return RowSelector.MoveToEndCommand.InputBinding(MoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
+                        yield return RowSelector.MoveToPageUpCommand.InputBinding(MoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
+                        yield return RowSelector.MoveToPageDownCommand.InputBinding(MoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
                         if (Template.SelectionMode == SelectionMode.Extended)
                         {
-                            yield return RowView.SelectExtendedUpCommand.InputBinding(SelectExtendUp, CanMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedDownCommand.InputBinding(SelectExtendedDown, CanMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return RowView.SelectiExtendedLeftCommand.InputBinding(SelectiExtendedLeft, CanMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedRightCommand.InputBinding(SelectExtendedRight, CanMoveRight, new KeyGesture(Key.Right));
-                            yield return RowView.SelectExtendedHomeCommand.InputBinding(SelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedEndCommand.InputBinding(SelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedPageUpCommand.InputBinding(SelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                            yield return RowView.SelectExtendedPageDownCommand.InputBinding(SelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedUpCommand.InputBinding(SelectExtendUp, CanMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedDownCommand.InputBinding(SelectExtendedDown, CanMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                            yield return RowSelector.SelectiExtendedLeftCommand.InputBinding(SelectiExtendedLeft, CanMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedRightCommand.InputBinding(SelectExtendedRight, CanMoveRight, new KeyGesture(Key.Right));
+                            yield return RowSelector.SelectExtendedHomeCommand.InputBinding(SelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedEndCommand.InputBinding(SelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedPageUpCommand.InputBinding(SelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                            yield return RowSelector.SelectExtendedPageDownCommand.InputBinding(SelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                         }
                         if (Template.SelectionMode == SelectionMode.Multiple)
-                            yield return RowView.ToggleSelectionCommand.InputBinding(ToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
+                            yield return RowSelector.ToggleSelectionCommand.InputBinding(ToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
                     }
                 }
             }

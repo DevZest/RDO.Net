@@ -292,14 +292,6 @@ namespace DevZest.Windows
         }
 
         /// <summary>
-        /// The row must be recursive.
-        /// </summary>
-        public static string RowPresenter_VerifyRecursive
-        {
-            get { return GetString("RowPresenter_VerifyRecursive"); }
-        }
-
-        /// <summary>
         /// Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).
         /// </summary>
         public static string ScalarBinding_FlowableNotAllowedByTemplate(object index)

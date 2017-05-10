@@ -8,6 +8,11 @@ namespace SmoothScroll
 {
     internal static class BindingFactory
     {
+        private static void Setup(TextBlock element, RowPresenter rowPresenter)
+        {
+            element.Margin = new Thickness(10, 0, 0, 0);
+        }
+
         private static void Refresh(TextBlock element, Foo _, RowPresenter rowPresenter)
         {
             element.Text = rowPresenter.GetValue(_.Text);
@@ -32,23 +37,7 @@ namespace SmoothScroll
 
         public static RowBinding<TextBlock> TextBlock(this Foo _)
         {
-            return new RowBinding<TextBlock>((e, r) => Refresh(e, _, r));
-        }
-
-        private static void Setup(Border element, RowPresenter rowPresenter)
-        {
-            element.BorderBrush = Brushes.White;
-        }
-
-        private static void Refresh(Border element, RowPresenter rowPresenter)
-        {
-            var thickness = rowPresenter.View.IsKeyboardFocusWithin ? 4 : (rowPresenter.IsCurrent ? 1 : 0);
-            element.BorderThickness = new Thickness(rowPresenter.IsSelected ? 12 : thickness, thickness, thickness, thickness);
-        }
-
-        public static RowBinding<Border> BindBorder(this Model _)
-        {
-            return new RowBinding<Border>(Refresh, Setup, null);
+            return new RowBinding<TextBlock>(Setup, (e, r) => Refresh(e, _, r), null);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DevZest.Windows.Data;
+﻿using DevZest.Windows.Controls;
+using DevZest.Windows.Data;
 using System.Windows.Controls;
 
 namespace SmoothScroll
@@ -8,6 +9,7 @@ namespace SmoothScroll
         protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder
+                .RowView<RowView>(RowView.SelectableStyle)
                 /*** Vertical layout ***/
                 .GridColumns("*")
                 .GridRows("Auto")
@@ -17,8 +19,7 @@ namespace SmoothScroll
                 //.GridRows("Auto")
                 //.Layout(Orientation.Vertical, 2)
                 .WithSelectionMode(SelectionMode.Extended)
-                .AddBinding(0, 0, _.TextBlock())
-                .AddBinding(0, 0, _.BindBorder());
+                .AddBinding(0, 0, _.TextBlock());
         }
     }
 }
