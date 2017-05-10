@@ -9,15 +9,10 @@ namespace SmoothScroll
         protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder
-                .RowView<RowView>(RowView.SelectableStyle)
-                /*** Vertical layout ***/
                 .GridColumns("*")
                 .GridRows("Auto")
                 .Layout(Orientation.Vertical)
-                /*** Flowable vertical layout ***/
-                //.GridColumns("300")
-                //.GridRows("Auto")
-                //.Layout(Orientation.Vertical, 2)
+                .RowView<RowView>(RowView.SelectableStyle)
                 .WithSelectionMode(SelectionMode.Extended)
                 .AddBinding(0, 0, _.TextBlock());
         }
