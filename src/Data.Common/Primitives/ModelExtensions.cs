@@ -12,6 +12,11 @@ namespace DevZest.Data.Primitives
             return model.Columns;
         }
 
+        public static IReadOnlyList<Column> GetLocalColumns(this Model model)
+        {
+            return model.LocalColumns;
+        }
+
         public static string GetDbAlias(this Model model)
         {
             return model.DbAlias;
