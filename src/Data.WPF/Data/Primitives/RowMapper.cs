@@ -140,19 +140,18 @@ namespace DevZest.Windows.Data.Primitives
             if (IsRecursive)
             {
                 for (var childDataSet = GetChildDataSet(_dataSet); childDataSet != null; childDataSet = GetChildDataSet(childDataSet))
-                {
                     WireDataChangedEvents(childDataSet.Model);
-                    _maxDepth++;
-                }
             }
         }
 
         private void WireDataChangedEvents(Model model)
         {
+            Debug.Assert(_maxDepth == GetDepth(model));
             model.DataRowInserting += OnDataRowInserting;
             model.AfterDataRowInserted += OnAfterDataRowInserted;
             model.DataRowRemoved += OnDataRowRemoved;
             model.ValueChanged += OnValueChanged;
+            _maxDepth++;
         }
 
         private readonly Template _template;
@@ -418,7 +417,7 @@ namespace DevZest.Windows.Data.Primitives
         private void OnDataRowInserting(object sender, DataRowEventArgs e)
         {
             var dataRow = e.DataRow;
-            if (IsRecursive && GetDepth(dataRow) == _maxDepth)
+            if (IsRecursive && GetDepth(dataRow) == _maxDepth - 1)
             {
                 var childDataSet = GetChildDataSet(dataRow.Model);
                 WireDataChangedEvents(childDataSet.Model);

@@ -1,20 +1,19 @@
 ﻿<UserControl x:Class="FileExplorer.FolderView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FileExplorer"
-             mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="300"
-    Background="Transparent" Padding="1,0,0,0" Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="19" Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-    </Grid>
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:FileExplorer"
+    xmlns:dz="clr-namespace:DevZest.Windows.Controls;assembly=DevZest.Data.WPF"
+    mc:Ignorable="d" 
+    d:DesignHeight="20" d:DesignWidth="300">
+    <StackPanel Orientation="Horizontal">
+        <dz:RowExpander Name="_rowExpander" VerticalAlignment="Center" />
+        <dz:RowSelector>
+            <StackPanel Orientation="Horizontal">
+                <Image Name="_image" Width="20" Height="20" Stretch="Fill" />
+                <TextBlock Name="_textBlock" Margin="5,0" />
+            </StackPanel>
+        </dz:RowSelector>
+    </StackPanel>
 </UserControl>

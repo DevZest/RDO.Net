@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using System;
 using System.IO;
 
 namespace FileExplorer
@@ -28,14 +29,28 @@ namespace FileExplorer
             return result;
         }
 
-        public static void Expand(DataSet<Folder> folders, int ordinal)
+        public static void Expand(DataRow dataRow)
         {
-            var children = folders.Children(x => x.SubFolders, ordinal);
+            var folders = (DataSet<Folder>)dataRow.DataSet;
+            var children = dataRow.Children(folders._.SubFolders);
             if (children.Count == 1 && children._.Path[0] == null)
             {
+                var path = folders._.Path[dataRow];
                 children.Clear();
-                foreach (string s in Directory.GetDirectories(folders._.Path[ordinal]))
+                foreach (string s in GetSubDirectories(path))
                     AddRow(children, s);
+            }
+        }
+
+        private static string[] GetSubDirectories(string path)
+        {
+            try
+            {
+                return Directory.GetDirectories(path);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return new string[] { };
             }
         }
 

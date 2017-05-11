@@ -48,8 +48,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RowExpander}">
-                    <ToggleButton x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" ClickMode="Press" Command="{x:Static local:RowView.ToggleExpandStateCommand}"
-                        IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
+                    <ToggleButton x:Name="Expander" Style="{StaticResource ExpandCollapseToggleStyle}" ClickMode="Press" Command="{TemplateBinding ToggleExpandStateCommand}"
+                        IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasChildren" Value="false">
                             <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />

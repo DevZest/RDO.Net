@@ -46,22 +46,17 @@ namespace DevZest.Windows.Controls
         static RowSelector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
-            //FocusableProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(BooleanBoxes.True));
-        }
-
-        private static readonly DependencyProperty RowViewProperty = DependencyProperty.Register(nameof(RowView), typeof(RowView), typeof(RowSelector),
-            new FrameworkPropertyMetadata(null, OnRowViewChanged));
-
-        private static void OnRowViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((RowSelector)d).OnRowViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
         }
 
         public RowSelector()
         {
-            var binding = new System.Windows.Data.Binding();
-            binding.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(RowView), 1);
-            SetBinding(RowViewProperty, binding);
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (RowView != null)
+                UpdateVisualState();
         }
 
         private void OnRowViewChanged(RowView oldValue, RowView newValue)
@@ -71,6 +66,7 @@ namespace DevZest.Windows.Controls
             if (newValue != null)
             {
                 newValue.EnsureRowSelectorCommandEntriesSetup();
+                UpdateVisualState();
                 newValue.Refreshing += OnRefreshing;
             }
         }
@@ -82,12 +78,12 @@ namespace DevZest.Windows.Controls
 
         private RowView RowView
         {
-            get { return (RowView)GetValue(RowViewProperty); }
+            get { return RowView.GetCurrent(this); }
         }
 
         private RowPresenter RowPresenter
         {
-            get { return RowView == null ? null : RowView.RowPresenter; }
+            get { return RowView?.RowPresenter; }
         }
 
         private bool IsSelected
@@ -128,7 +124,9 @@ namespace DevZest.Windows.Controls
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
-            if (e.Property == IsMouseOverProperty || e.Property == IsEnabledProperty || e.Property == IsKeyboardFocusedProperty || e.Property == IsKeyboardFocusWithinProperty)
+            if (e.Property == RowView.CurrentProperty)
+                OnRowViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
+            else if (e.Property == IsMouseOverProperty || e.Property == IsEnabledProperty || e.Property == IsKeyboardFocusedProperty || e.Property == IsKeyboardFocusWithinProperty)
                 UpdateVisualState();
         }
 

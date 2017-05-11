@@ -275,7 +275,11 @@ namespace DevZest.Windows.Data
         public T GetValue<T>(Column<T> column)
         {
             if (Depth > 0)
-                column = (Column<T>)DataRow.Model.GetColumns()[column.Ordinal];
+            {
+                var model = DataRow.Model;
+                IReadOnlyList<Column> columns = column.IsLocal ? model.GetLocalColumns() : model.GetColumns();
+                column = (Column<T>)columns[column.Ordinal];
+            }
             return DataRow == null ? default(T) : column[DataRow];
         }
 

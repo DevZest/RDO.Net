@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Input;
 using DevZest.Windows.Controls.Primitives;
 using DevZest.Windows.Data;
-using System.Windows.Controls;
 using System;
 
 namespace DevZest.Windows.Controls
@@ -13,7 +12,8 @@ namespace DevZest.Windows.Controls
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public static readonly RoutedUICommand ToggleExpandStateCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand ExpandCommand = new RoutedUICommand();
+        public static readonly RoutedUICommand CollapseCommand = new RoutedUICommand();
 
         private static ResourceDictionary s_selectableRowView;
         private static ResourceDictionary SelectableRowView
@@ -34,11 +34,27 @@ namespace DevZest.Windows.Controls
             };
         }
 
+        private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
+            typeof(RowView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+        public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
+
+        public static RowView GetCurrent(DependencyObject target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+            return (RowView)target.GetValue(CurrentProperty);
+        }
+
         public event EventHandler<EventArgs> Refreshing = delegate { };
 
         static RowView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
+        }
+
+        public RowView()
+        {
+            SetValue(CurrentPropertyKey, this);
         }
 
         public RowPresenter RowPresenter { get; private set; }

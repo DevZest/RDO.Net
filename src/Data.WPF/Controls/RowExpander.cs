@@ -3,19 +3,54 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace DevZest.Windows.Controls
 {
     public class RowExpander : Control
     {
-        private static DependencyPropertyKey IsExpandedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsExpanded), typeof(bool), typeof(RowExpander),
+        private sealed class ToggleExpandCommand : ICommand
+        {
+            public ToggleExpandCommand(RowExpander rowExpander)
+            {
+                _rowExpander = rowExpander;
+            }
+
+            private readonly RowExpander _rowExpander;
+
+            private RowPresenter RowPresenter
+            {
+                get { return _rowExpander.RowPresenter; }
+            }
+
+            public event EventHandler CanExecuteChanged = delegate { };
+
+            public bool CanExecute(object parameter)
+            {
+                var rowPresenter = RowPresenter;
+                return rowPresenter != null && rowPresenter.HasChildren;
+            }
+
+            public void Execute(object parameter)
+            {
+                RowPresenter.ToggleExpandState();
+            }
+
+            public void RaiseCanExecutedChangedEvent()
+            {
+                CanExecuteChanged(this, EventArgs.Empty);
+            }
+        }
+
+        private static readonly DependencyPropertyKey IsExpandedPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsExpanded), typeof(bool), typeof(RowExpander),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty IsExpandedProperty = IsExpandedPropertyKey.DependencyProperty;
-        private static DependencyPropertyKey HasChildrenPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasChildren), typeof(bool), typeof(RowExpander),
+        private static readonly DependencyPropertyKey HasChildrenPropertyKey = DependencyProperty.RegisterReadOnly(nameof(HasChildren), typeof(bool), typeof(RowExpander),
             new FrameworkPropertyMetadata(BooleanBoxes.False));
         public static readonly DependencyProperty HasChildrenProperty = HasChildrenPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey ToggleExpandStateCommandPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ToggleExpandStateCommand), typeof(ICommand),
+            typeof(RowExpander), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty ToggleExpandStateCommandProperty = ToggleExpandStateCommandPropertyKey.DependencyProperty;
 
         static RowExpander()
         {
@@ -24,19 +59,23 @@ namespace DevZest.Windows.Controls
             KeyboardNavigation.IsTabStopProperty.OverrideMetadata(typeof(RowExpander), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
-        private static readonly DependencyProperty RowViewProperty = DependencyProperty.Register(nameof(RowView), typeof(RowView), typeof(RowExpander),
-            new FrameworkPropertyMetadata(null, OnRowViewChanged));
-
-        private static void OnRowViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((RowExpander)d).OnRowViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
-        }
-
         public RowExpander()
         {
-            var binding = new System.Windows.Data.Binding();
-            binding.RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor, typeof(RowView), 1);
-            SetBinding(RowViewProperty, binding);
+            ToggleExpandStateCommand = new ToggleExpandCommand(this);
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (RowView != null)
+                UpdateState();
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.Property == RowView.CurrentProperty)
+                OnRowViewChanged((RowView)e.OldValue, (RowView)e.NewValue);
         }
 
         private void OnRowViewChanged(RowView oldValue, RowView newValue)
@@ -44,7 +83,10 @@ namespace DevZest.Windows.Controls
             if (oldValue != null)
                 oldValue.Refreshing -= OnRefreshing;
             if (newValue != null)
+            {
                 newValue.Refreshing += OnRefreshing;
+                UpdateState();
+            }
         }
 
         private void OnRefreshing(object sender, EventArgs e)
@@ -64,9 +106,15 @@ namespace DevZest.Windows.Controls
             private set { SetValue(HasChildrenPropertyKey, BooleanBoxes.Box(value)); }
         }
 
+        public ICommand ToggleExpandStateCommand
+        {
+            get { return (ICommand)GetValue(ToggleExpandStateCommandProperty); }
+            private set { SetValue(ToggleExpandStateCommandPropertyKey, value); }
+        }
+
         private RowView RowView
         {
-            get { return this.FindAncestor<RowView>(); }
+            get { return RowView.GetCurrent(this); }
         }
 
         private RowPresenter RowPresenter
@@ -80,6 +128,7 @@ namespace DevZest.Windows.Controls
             var rowPresenter = RowPresenter;
             IsExpanded = rowPresenter.IsExpanded;
             HasChildren = rowPresenter.HasChildren;
+            ((ToggleExpandCommand)ToggleExpandStateCommand).RaiseCanExecutedChangedEvent();
         }
     }
 }

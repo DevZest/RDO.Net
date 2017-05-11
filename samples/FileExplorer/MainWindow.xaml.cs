@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DevZest.Windows.Controls;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +25,7 @@ namespace FileExplorer
         public MainWindow()
         {
             InitializeComponent();
+            new _FolderTree().Show(_foldersTreeView, Folder.GetLogicalDrives());
         }
     }
 }

@@ -184,7 +184,7 @@ namespace DevZest.Windows.Data
             return this;
         }
 
-        public TemplateBuilder Recurse(Model childModel)
+        public TemplateBuilder MakeRecursive(Model childModel)
         {
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));

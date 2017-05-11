@@ -12,20 +12,29 @@ namespace DevZest.Windows.Data
         {
             get
             {
-                yield return RowView.ToggleExpandStateCommand.CommandBinding(ToggleExpandState, CanToggleExpandState);
+                yield return RowView.ExpandCommand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
+                yield return RowView.CollapseCommand.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
             }
-        }
-
-        private void CanToggleExpandState(object sender, CanExecuteRoutedEventArgs e)
-        {
-            var rowView = (RowView)sender;
-            e.CanExecute = rowView.RowPresenter.HasChildren;
         }
 
         private void ToggleExpandState(object sender, ExecutedRoutedEventArgs e)
         {
             var rowView = (RowView)sender;
             rowView.RowPresenter.ToggleExpandState();
+        }
+
+        private void CanExpand(object sender, CanExecuteRoutedEventArgs e)
+        {
+            var rowView = (RowView)sender;
+            var rowPresenter = rowView.RowPresenter;
+            e.CanExecute = rowPresenter.HasChildren && !rowPresenter.IsExpanded;
+        }
+
+        private void CanCollapse(object sender, CanExecuteRoutedEventArgs e)
+        {
+            var rowView = (RowView)sender;
+            var rowPresenter = rowView.RowPresenter;
+            e.CanExecute = rowPresenter.HasChildren && rowPresenter.IsExpanded;
         }
 
         protected internal virtual IEnumerable<CommandEntry> RowSelectorCommandEntries
@@ -122,7 +131,7 @@ namespace DevZest.Windows.Data
             if (!CanSelect(orientation))
                 return null;
             var index = CurrentRow.Index + (LayoutOrientation == orientation ? FlowCount : 1);
-            return index < Rows.Count - 1 ? Rows[index] : null;
+            return index < Rows.Count ? Rows[index] : null;
         }
 
         private RowPresenter MoveUpRow

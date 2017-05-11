@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170505\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170511\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="_FolderTree.cs" />
     <Page Include="FolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -68,6 +69,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BindingFactory.cs" />
     <Compile Include="Folder.cs" />
     <Compile Include="FolderView.xaml.cs">
       <DependentUpon>FolderView.xaml</DependentUpon>
