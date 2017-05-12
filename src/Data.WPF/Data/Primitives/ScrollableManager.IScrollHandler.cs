@@ -111,7 +111,7 @@ namespace DevZest.Windows.Data.Primitives
 
         private void RefreshScrollOffset(double valueMain, double valueCross)
         {
-            bool invalidateScrollInfo = !ScrollOffsetMain.IsClose(valueMain) || !ScrollOffsetCross.IsClose(valueCross);
+            bool invalidateScrollInfo = !(_scrollOffsetMain.HasValue && _scrollOffsetMain.Value.IsClose(valueMain)) || !ScrollOffsetCross.IsClose(valueCross);
             _scrollOffsetMain = valueMain;
             ScrollOffsetCross = valueCross;
             SetScrollDeltaMain(0, false);
