@@ -401,7 +401,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        public virtual bool CanChangeCurrentRow
+        public bool CanChangeCurrentRow
         {
             get { return !IsEditing; }
         }

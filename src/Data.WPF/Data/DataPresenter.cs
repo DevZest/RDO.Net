@@ -58,7 +58,7 @@ namespace DevZest.Windows.Data
 
         public bool CanChangeCurrentRow
         {
-            get { return LayoutManager == null ? false : LayoutManager.CanChangeCurrentRow; }
+            get { return LayoutManager == null ? true : LayoutManager.CanChangeCurrentRow; }
         }
 
         public RowPresenter CurrentRow
