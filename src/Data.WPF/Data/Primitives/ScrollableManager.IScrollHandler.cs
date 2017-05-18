@@ -458,6 +458,7 @@ namespace DevZest.Windows.Data.Primitives
                 return false;
 
             AdjustScrollToMain(false);
+            ContainerViewList.VirtualizeAll();
             return true;
         }
 
