@@ -714,29 +714,6 @@ namespace DevZest.Windows.Data.Primitives
             return result;
         }
 
-        private double GetInitiallyFilledBackward()
-        {
-            LogicalMainTrack end;
-            double fraction;
-            var gridExtent = _scrollToMain.GridExtent;
-            if (gridExtent >= MaxGridExtentMain)
-            {
-                end = GetLogicalMainTrack(MaxGridExtentMain - 1);
-                fraction = 1;
-            }
-            else
-            {
-                end = GetLogicalMainTrack(gridExtent);
-                fraction = _scrollToMain.Fraction;
-            }
-
-            double result = 0;
-            if (end.IsContainer)
-                result += GetRelativePositionMain(ContainerViewList.GetContainerView(end.ContainerOrdinal), end.GridTrack, fraction);
-
-            return result;
-        }
-
         protected sealed override void PrepareMeasure()
         {
             base.PrepareMeasure();
