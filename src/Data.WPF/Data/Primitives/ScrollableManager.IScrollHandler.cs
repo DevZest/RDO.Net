@@ -296,6 +296,7 @@ namespace DevZest.Windows.Data.Primitives
             _scrollToMain = scrollTo;
             _scrollToMainPlacement = placement;
             SetScrollDeltaMain(0, false);
+            ContainerViewList.VirtualizeAll();
             InvalidateMeasure();
         }
 
