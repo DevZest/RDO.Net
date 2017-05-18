@@ -1,5 +1,6 @@
 ﻿using DevZest.Windows.Controls.Primitives;
 using System.Diagnostics;
+using DevZest.Windows.Controls;
 
 namespace DevZest.Windows.Data.Primitives
 {
@@ -237,6 +238,13 @@ namespace DevZest.Windows.Data.Primitives
             if (_variantLengthHandler != null)
                 _variantLengthHandler.ClearMeasuredLengths();
             base.VirtualizeAll();
+        }
+
+        protected sealed override void CoerceCurrentRowView(RowView oldValue)
+        {
+            base.CoerceCurrentRowView(oldValue);
+            if (_variantLengthHandler != null)
+                _variantLengthHandler.ClearMeasuredLengths();
         }
 
         internal sealed override void VirtualizeFirst()

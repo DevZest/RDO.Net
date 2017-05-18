@@ -94,15 +94,20 @@ namespace DevZest.Windows.Controls
             if (oldValue == newValue)
                 return;
 
-            CleanupElements(false);
-            oldValue.View = null;
+            RowPresenter.View = null;
+            Reload(newValue);
+        }
 
-            RowPresenter = newValue;
-            newValue.View = this;
+        internal void Reload(RowPresenter rowPresenter)
+        {
+            CleanupElements(false);
+
+            RowPresenter = rowPresenter;
+            rowPresenter.View = this;
             if (Elements != null)
             {
                 foreach (var element in Elements)
-                    element.SetRowPresenter(newValue);
+                    element.SetRowPresenter(rowPresenter);
             }
 
             SetupElements(false);
@@ -118,6 +123,8 @@ namespace DevZest.Windows.Controls
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
             rowPresenter.View = this;
+            if (ElementCollection == null)
+                ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
         }
 
@@ -143,12 +150,21 @@ namespace DevZest.Windows.Controls
                 Setup(panel);
         }
 
-        internal void Setup(FrameworkElement elementsPanel)
+        private void Setup(FrameworkElement elementsPanel)
         {
             if (ElementCollection != null)
             {
                 if (ElementCollection.Parent == elementsPanel)
                     return;
+
+                if (ElementCollection.Parent == null)
+                {
+                    var newElementCollection = ElementCollectionFactory.Create(elementsPanel);
+                    for (int i = 0; i < Elements.Count; i++)
+                        newElementCollection.Add(Elements[i]);
+                    ElementCollection = newElementCollection;
+                    return;
+                }
 
                 CleanupElements(true);
             }

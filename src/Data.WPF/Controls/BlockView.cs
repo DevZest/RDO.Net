@@ -26,6 +26,8 @@ namespace DevZest.Windows.Controls
         {
             _elementManager = elementManager;
             _ordinal = ordinal;
+            if (ElementCollection == null)
+                ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements();
         }
 
@@ -41,12 +43,22 @@ namespace DevZest.Windows.Controls
                 Setup(panel);
         }
 
-        internal void Setup(FrameworkElement elementsPanel)
+        private void Setup(FrameworkElement elementsPanel)
         {
+            Debug.Assert(elementsPanel != null);
             if (ElementCollection != null)
             {
                 if (ElementCollection.Parent == elementsPanel)
                     return;
+
+                if (ElementCollection.Parent == null)
+                {
+                    var newElementCollection = ElementCollectionFactory.Create(elementsPanel);
+                    for (int i = 0; i < Elements.Count; i++)
+                        newElementCollection.Add(Elements[i]);
+                    ElementCollection = newElementCollection;
+                    return;
+                }
 
                 CleanupElements();
             }
@@ -57,16 +69,34 @@ namespace DevZest.Windows.Controls
 
         private void SetupElements()
         {
-            if (ElementManager == null || ElementCollection == null)
-                return;
+            Debug.Assert(ElementManager != null);
+            Debug.Assert(ElementCollection != null);
 
-            AddElements();
+            var blockBindings = BlockBindings;
+
+            blockBindings.BeginSetup();
+
+            for (int i = 0; i < BlockBindingsSplit; i++)
+                AddElement(blockBindings[i]);
+
+            for (int i = 0; i < ElementManager.FlowCount; i++)
+            {
+                var success = AddRowView(i);
+                if (!success)   // Exceeded the total count of the rows
+                    break;
+            }
+
+            for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
+                AddElement(blockBindings[i]);
+
+            blockBindings.EndSetup();
         }
 
         internal sealed override void Cleanup()
         {
             CleanupElements();
             _elementManager = null;
+            _ordinal = -1;
         }
 
         private void CleanupElements()
@@ -80,7 +110,7 @@ namespace DevZest.Windows.Controls
             get { return _elementManager; }
         }
 
-        private int _ordinal;
+        private int _ordinal = -1;
         public int Ordinal
         {
             get { return _ordinal; }
@@ -133,38 +163,16 @@ namespace DevZest.Windows.Controls
             get { return ElementManager.Template.InternalBlockBindings; }
         }
 
-        private int BlockBindingsSplit
+        internal int BlockBindingsSplit
         {
             get { return ElementManager.Template.BlockBindingsSplit; }
         }
 
-        private IElementCollection ElementCollection { get; set; }
+        internal IElementCollection ElementCollection { get; private set; }
 
         internal IReadOnlyList<UIElement> Elements
         {
             get { return ElementCollection; }
-        }
-
-        private void AddElements()
-        {
-            var blockBindings = BlockBindings;
-
-            blockBindings.BeginSetup();
-
-            for (int i = 0; i < BlockBindingsSplit; i++)
-                AddElement(blockBindings[i]);
-
-            for (int i = 0; i < ElementManager.FlowCount; i++)
-            {
-                var success = AddRowView(i);
-                if (!success)   // Exceeded the total count of the rows
-                    break;
-            }
-
-            for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
-                AddElement(blockBindings[i]);
-
-            blockBindings.EndSetup();
         }
 
         private void AddElement(BlockBinding blockBinding)
