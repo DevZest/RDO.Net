@@ -900,10 +900,10 @@ namespace DevZest.Windows.Data.Primitives
             RefreshViewport(valueMain, valueCross);
         }
 
-        private static double CoerceViewport(IGridTrackCollection gridTracks, double maxOffset, double frozenHeadLength, double frozenTailLength)
+        private static double CoerceViewport(IGridTrackCollection gridTracks, double maxExtent, double frozenHeadLength, double frozenTailLength)
         {
             if (gridTracks.SizeToContent)
-                return maxOffset;
+                return maxExtent;
 
             var result = gridTracks.AvailableLength;
             var frozenLength = frozenHeadLength + frozenTailLength;
