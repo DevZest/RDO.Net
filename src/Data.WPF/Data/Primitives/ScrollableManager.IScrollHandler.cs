@@ -256,7 +256,7 @@ namespace DevZest.Windows.Data.Primitives
 
         public abstract void ScrollToY(int gridExtent, double fraction, GridPlacement placement);
 
-        protected void ScrollToMain(int gridExtent, double fraction, GridPlacement placement)
+        protected void ScrollToMain(int gridExtent, double fraction, GridPlacement placement, bool virtualizeAll)
         {
             VerifyLogicalExtent(gridExtent, fraction, MaxGridExtentMain);
             if (_scrollToMain.GridExtent == gridExtent && _scrollToMain.Fraction.IsClose(fraction)
@@ -264,7 +264,8 @@ namespace DevZest.Windows.Data.Primitives
                 && _scrollDeltaMain == 0)
                 return;
             ScrollToMain(new LogicalExtent(gridExtent, fraction), placement);
-            ContainerViewList.VirtualizeAll();
+            if (virtualizeAll)
+                ContainerViewList.VirtualizeAll();
         }
 
         private void VerifyLogicalExtent(int gridExtent, double fraction, int maxGridExtent)
@@ -986,7 +987,7 @@ namespace DevZest.Windows.Data.Primitives
             }
 
             if (enforceCurrent && isClipped)
-                ScrollToMain(startGridExtent, 0, GridPlacement.Head);
+                ScrollToMain(startGridExtent, 0, GridPlacement.Head, false);
             return containerOrdinal;
         }
 
@@ -1016,7 +1017,7 @@ namespace DevZest.Windows.Data.Primitives
             }
 
             if (enforceCurrent && isClipped)
-                ScrollToMain(endGridExtent - 1, 1, GridPlacement.Tail);
+                ScrollToMain(endGridExtent - 1, 1, GridPlacement.Tail, false);
             return containerOrdinal;
         }
 

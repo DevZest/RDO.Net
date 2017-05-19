@@ -118,7 +118,7 @@ namespace DevZest.Windows.Data.Primitives
 
         public sealed override void ScrollToX(int gridExtent, double fraction, GridPlacement placement)
         {
-            ScrollToMain(gridExtent, fraction, placement);
+            ScrollToMain(gridExtent, fraction, placement, true);
         }
 
         public sealed override void ScrollToY(int gridExtent, double fraction, GridPlacement placement)

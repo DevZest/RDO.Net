@@ -976,9 +976,9 @@ namespace DevZest.Windows.Data.Primitives
             if (isHeadClipped && isTailClipped)
                 return;
             else if (isHeadClipped)
-                ScrollToMain(startGridExtent, 0, GridPlacement.Head);
+                ScrollToMain(startGridExtent, 0, GridPlacement.Head, false);
             else if (isTailClipped)
-                ScrollToMain(startGridExtent, 1, GridPlacement.Tail);
+                ScrollToMain(startGridExtent, 1, GridPlacement.Tail, false);
         }
 
         private bool IsHeadClippedMain(int gridExtent)
