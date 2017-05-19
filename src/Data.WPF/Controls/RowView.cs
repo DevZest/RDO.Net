@@ -50,6 +50,7 @@ namespace DevZest.Windows.Controls
         static RowView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(typeof(RowView)));
+            FocusableProperty.OverrideMetadata(typeof(RowView), new FrameworkPropertyMetadata(BooleanBoxes.False));
         }
 
         public RowView()
