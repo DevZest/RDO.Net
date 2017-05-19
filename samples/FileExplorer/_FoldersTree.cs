@@ -5,7 +5,7 @@ using DevZest.Data;
 
 namespace FileExplorer
 {
-    public class _FolderTree : DataPresenter<Folder>
+    public class _FoldersTree : DataPresenter<Folder>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

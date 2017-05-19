@@ -63,7 +63,7 @@
       <DependentUpon>LargeIconView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32.cs" />
-    <Compile Include="_FolderTree.cs" />
+    <Compile Include="_FoldersTree.cs" />
     <Compile Include="_LargeIconsList.cs" />
     <Page Include="LargeIconView.xaml">
       <Generator>MSBuild:Compile</Generator>

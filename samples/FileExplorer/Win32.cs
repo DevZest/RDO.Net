@@ -73,7 +73,6 @@ namespace FileExplorer
         {
             using (Icon icon = Icon.FromHandle(intPtr))
             {
-                Debug.WriteLine(string.Format("IconSize={0}, {1}", icon.Width, icon.Height));
                 return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
             }
         }

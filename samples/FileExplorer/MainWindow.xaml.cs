@@ -1,19 +1,6 @@
-﻿using DevZest.Windows.Controls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FileExplorer
 {
@@ -22,11 +9,36 @@ namespace FileExplorer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private _FoldersTree _foldersTree = new _FoldersTree();
+        private _LargeIconsList _largeIconList;
+
         public MainWindow()
         {
             InitializeComponent();
-            new _FolderTree().Show(_foldersTreeView, Folder.GetLogicalDrives());
+            _foldersTree.ViewRefreshed += OnFolderTreeViewRefreshed;
+            _foldersTree.Show(_foldersTreeView, Folder.GetLogicalDrives());
             new _LargeIconsList().Show(_folderContentListView, FolderContent.GetFolderContents(@"C:\"));
+        }
+
+        private string _currentFolder;
+        private string CurrentFolder
+        {
+            get { return _currentFolder; }
+            set
+            {
+                if (_currentFolder == value)
+                    return;
+
+                _currentFolder = value;
+                Debug.WriteLine(string.Format("CurrentFolder={0}", CurrentFolder));
+            }
+        }
+
+        private void OnFolderTreeViewRefreshed(object sender, EventArgs e)
+        {
+            var currentRow = _foldersTree.CurrentRow;
+            var _ = _foldersTree._;
+            CurrentFolder = currentRow == null ? null : currentRow.GetValue(_.Path);
         }
     }
 }
