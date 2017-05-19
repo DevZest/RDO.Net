@@ -26,6 +26,7 @@ namespace FileExplorer
         {
             InitializeComponent();
             new _FolderTree().Show(_foldersTreeView, Folder.GetLogicalDrives());
+            new _LargeIconsList().Show(_folderContentListView, FolderContent.GetFolderContents(@"C:\"));
         }
     }
 }

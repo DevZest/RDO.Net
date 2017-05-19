@@ -44,6 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -56,7 +57,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FolderContent.cs" />
+    <Compile Include="FolderContentType.cs" />
+    <Compile Include="LargeIconView.xaml.cs">
+      <DependentUpon>LargeIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Win32.cs" />
     <Compile Include="_FolderTree.cs" />
+    <Compile Include="_LargeIconsList.cs" />
+    <Page Include="LargeIconView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="FolderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

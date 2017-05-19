@@ -443,7 +443,7 @@ namespace DevZest.Windows.Data.Primitives
             if (FlowCount != 0)
                 return FlowCount;
 
-            return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Horizontal
+            return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Vertical
                 ? CoerceFlowCount(SizeToContentX, AvailableWidth, InternalGridColumns)
                 : CoerceFlowCount(SizeToContentY, AvailableHeight, InternalGridRows);
         }

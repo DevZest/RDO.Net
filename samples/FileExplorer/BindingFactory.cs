@@ -1,4 +1,7 @@
-﻿using DevZest.Windows.Data;
+﻿using DevZest.Data;
+using DevZest.Windows.Data;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace FileExplorer
 {
@@ -18,6 +21,17 @@ namespace FileExplorer
         public static RowBinding<FolderView> FolderView(this Folder _)
         {
             return new RowBinding<FolderView>((e, r) => Refresh(e, _, r));
+        }
+
+        private static void Refresh(LargeIconView element, FolderContent _, RowPresenter rowPresenter)
+        {
+            element.ImageSource = rowPresenter.GetValue(_.LargeIcon);
+            element.Text = rowPresenter.GetValue(_.DisplayName);
+        }
+
+        public static RowBinding<LargeIconView> LargeIconView(this FolderContent _)
+        {
+            return new RowBinding<LargeIconView>((e, r) => Refresh(e, _, r));
         }
     }
 }

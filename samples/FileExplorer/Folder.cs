@@ -42,7 +42,7 @@ namespace FileExplorer
             }
         }
 
-        private static string[] GetSubDirectories(string path)
+        public static string[] GetSubDirectories(string path)
         {
             try
             {
