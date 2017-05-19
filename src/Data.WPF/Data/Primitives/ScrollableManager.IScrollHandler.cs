@@ -264,6 +264,7 @@ namespace DevZest.Windows.Data.Primitives
                 && _scrollDeltaMain == 0)
                 return;
             ScrollToMain(new LogicalExtent(gridExtent, fraction), placement);
+            ContainerViewList.VirtualizeAll();
         }
 
         private void VerifyLogicalExtent(int gridExtent, double fraction, int maxGridExtent)
@@ -296,7 +297,6 @@ namespace DevZest.Windows.Data.Primitives
             _scrollToMain = scrollTo;
             _scrollToMainPlacement = placement;
             SetScrollDeltaMain(0, false);
-            ContainerViewList.VirtualizeAll();
             InvalidateMeasure();
         }
 

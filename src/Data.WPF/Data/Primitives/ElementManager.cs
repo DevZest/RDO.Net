@@ -120,8 +120,9 @@ namespace DevZest.Windows.Data.Primitives
                     CurrentContainerView.ReloadCurrentRow(oldValue.RowPresenter);
                 else
                 {
-                    Swap(oldValue, CurrentRow.View);
-                    Cleanup(CurrentContainerView);
+                    var newValue = CurrentRow.View;
+                    Swap(oldValue, newValue);
+                    Cleanup(newValue);
                     var removalIndex = HeadScalarElementsCount;
                     if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
                         removalIndex += ContainerViewList.Count;
