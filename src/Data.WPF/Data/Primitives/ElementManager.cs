@@ -164,6 +164,8 @@ namespace DevZest.Windows.Data.Primitives
         {
             var oldRowPresenter = oldValue.RowPresenter;
             var newRowPresenter = newValue.RowPresenter;
+            var oldBlockView = oldValue.GetBlockView();
+            var newBlockView = newValue.GetBlockView();
 
             int oldIndex, newIndex;
             var oldCollection = GetPosition(oldValue, out oldIndex);
@@ -181,6 +183,8 @@ namespace DevZest.Windows.Data.Primitives
             }
             oldValue.Reload(newRowPresenter);
             newValue.Reload(oldRowPresenter);
+            newValue.SetBlockView(oldBlockView);
+            oldValue.SetBlockView(newBlockView);
             if (oldCollection == newCollection && newIndex < oldIndex)
             {
                 newCollection.Insert(newIndex, oldValue);

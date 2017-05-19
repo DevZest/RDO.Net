@@ -245,6 +245,7 @@ namespace DevZest.Windows.Data.Primitives
             base.CoerceCurrentRowView(oldValue);
             if (_variantLengthHandler != null)
                 _variantLengthHandler.ClearMeasuredLengths();
+            InvalidateMeasure();
         }
 
         internal sealed override void VirtualizeFirst()

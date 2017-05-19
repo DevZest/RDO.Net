@@ -84,15 +84,9 @@ namespace DevZest.Windows.Data
         internal static void SetBlockView(this UIElement element, BlockView value)
         {
             if (value == null)
-            {
-                Debug.Assert(element.GetBlockView() != null);
                 element.ClearValue(BlockViewProperty);
-            }
             else
-            {
-                Debug.Assert(element.GetBlockView() == null);
                 element.SetValue(BlockViewProperty, value);
-            }
         }
 
         private static readonly DependencyProperty RowPresenterProperty = DependencyProperty.RegisterAttached(nameof(RowPresenter),
