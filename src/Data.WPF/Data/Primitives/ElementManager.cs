@@ -410,15 +410,24 @@ namespace DevZest.Windows.Data.Primitives
                 scalarBindings[i].BeginSetup(0);
         }
 
+        internal virtual DataPresenter DataPresenter
+        {
+            get { return null; }
+        }
+
         private void RefreshView()
         {
             if (Elements == null || Elements.Count == 0)
                 return;
 
+            DataPresenter?.OnViewRefreshing();
+
             RefreshScalarElements();
             RefreshContainerViews();
 
             _isDirty = false;
+
+            DataPresenter?.OnViewRefreshed();
         }
 
         private void RefreshScalarElements()

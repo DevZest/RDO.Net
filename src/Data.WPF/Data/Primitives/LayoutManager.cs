@@ -16,7 +16,7 @@ namespace DevZest.Windows.Data.Primitives
         internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
         {
             var result = LayoutManager.Create(template, dataSet, where, orderBy);
-            result.DataPresenter = dataPresenter;
+            result._dataPresenter = dataPresenter;
             return result;
         }
 
@@ -35,7 +35,11 @@ namespace DevZest.Windows.Data.Primitives
         {
         }
 
-        internal DataPresenter DataPresenter { get; private set; }
+        private DataPresenter _dataPresenter;
+        internal override DataPresenter DataPresenter
+        {
+            get { return _dataPresenter; }
+        }
 
         protected RecapBindingCollection<ScalarBinding> ScalarBindings
         {

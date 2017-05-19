@@ -10,6 +10,19 @@ namespace DevZest.Windows.Data
 {
     public abstract partial class DataPresenter
     {
+        public event EventHandler ViewRefreshing = delegate { };
+        public event EventHandler ViewRefreshed = delegate { };
+
+        protected internal virtual void OnViewRefreshing()
+        {
+            ViewRefreshing(this, EventArgs.Empty);
+        }
+
+        protected internal virtual void OnViewRefreshed()
+        {
+            ViewRefreshed(this, EventArgs.Empty);
+        }
+
         public abstract DataView View { get; }
 
         internal abstract LayoutManager LayoutManager { get; }
