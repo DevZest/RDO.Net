@@ -482,8 +482,6 @@ namespace DevZest.Windows.Data.Primitives
         private void AssertAdjustedScrollToMain()
         {
             var scrollTo = GetLogicalMainTrack(_scrollToMain.GridExtent);
-            Debug.Assert(!scrollTo.IsEof);
-
             if (scrollTo.IsContainer)
                 Debug.Assert(ContainerViewList.GetContainerView(scrollTo.ContainerOrdinal) != null, "_scrollToMain must be realized ContainerView.");
         }
