@@ -25,14 +25,14 @@ namespace FileExplorer
 
         protected override void OnInitializing()
         {
-            Path = DataSetContainer.CreateLocalColumn<string>(this);
-            DisplayName = DataSetContainer.CreateLocalColumn<string>(this);
-            Type = DataSetContainer.CreateLocalColumn<FolderContentType>(this);
-            LastWriteTime = DataSetContainer.CreateLocalColumn<DateTime>(this);
-            SmallIcon = DataSetContainer.CreateLocalColumn<ImageSource>(this);
-            LargeIcon = DataSetContainer.CreateLocalColumn<ImageSource>(this);
-            FileType = DataSetContainer.CreateLocalColumn<string>(this);
-            FileSize = DataSetContainer.CreateLocalColumn<long>(this);
+            Path = CreateLocalColumn<string>();
+            DisplayName = CreateLocalColumn<string>();
+            Type = CreateLocalColumn<FolderContentType>();
+            LastWriteTime = CreateLocalColumn<DateTime>();
+            SmallIcon = CreateLocalColumn<ImageSource>();
+            LargeIcon = CreateLocalColumn<ImageSource>();
+            FileType = CreateLocalColumn<string>();
+            FileSize = CreateLocalColumn<long>();
             base.OnInitializing();
         }
 

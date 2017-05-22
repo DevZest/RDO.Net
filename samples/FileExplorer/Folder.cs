@@ -17,7 +17,7 @@ namespace FileExplorer
 
         protected override void OnInitializing()
         {
-            Path = DataSetContainer.CreateLocalColumn<string>(this);
+            Path = CreateLocalColumn<string>();
             base.OnInitializing();
         }
 

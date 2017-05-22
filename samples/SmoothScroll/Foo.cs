@@ -17,11 +17,11 @@ namespace SmoothScroll
 
         protected override void OnInitializing()
         {
-            Text = DataSetContainer.CreateLocalColumn<string>(this);
-            IsSectionHeader = DataSetContainer.CreateLocalColumn<bool>(this);
-            BackgroundR = DataSetContainer.CreateLocalColumn<byte>(this);
-            BackgroundG = DataSetContainer.CreateLocalColumn<byte>(this);
-            BackgroundB = DataSetContainer.CreateLocalColumn<byte>(this);
+            Text = CreateLocalColumn<string>();
+            IsSectionHeader = CreateLocalColumn<bool>();
+            BackgroundR = CreateLocalColumn<byte>();
+            BackgroundG = CreateLocalColumn<byte>();
+            BackgroundB = CreateLocalColumn<byte>();
             base.OnInitializing();
         }
 
@@ -29,21 +29,23 @@ namespace SmoothScroll
 
         private static void AddSectionHeader(DataSet<Foo> dataSet, int index)
         {
-            var dataRow = new DataRow();
-            dataSet.Add(dataRow);
-            dataSet._.Text[dataRow] = "Section " + index;
-            dataSet._.IsSectionHeader[dataRow] = true;
+            dataSet.AddRow((_, dataRow) =>
+            {
+                _.Text[dataRow] = "Section " + index;
+                _.IsSectionHeader[dataRow] = true;
+            });
         }
 
         private static void AddItem(DataSet<Foo> dataSet, string text, byte r, byte g, byte b)
         {
-            var dataRow = new DataRow();
-            dataSet.Add(dataRow);
-            dataSet._.Text[dataRow] = text;
-            dataSet._.IsSectionHeader[dataRow] = false;
-            dataSet._.BackgroundR[dataRow] = r;
-            dataSet._.BackgroundG[dataRow] = g;
-            dataSet._.BackgroundB[dataRow] = b;
+            dataSet.AddRow((_, dataRow) =>
+            {
+                _.Text[dataRow] = text;
+                _.IsSectionHeader[dataRow] = false;
+                _.BackgroundR[dataRow] = r;
+                _.BackgroundG[dataRow] = g;
+                _.BackgroundB[dataRow] = b;
+            });
         }
 
         public static DataSet<Foo> Mock(int count)
