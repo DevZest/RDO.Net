@@ -907,6 +907,22 @@ namespace DevZest.Data
             get { return GetString("DataSetContainer_AlreadyHasLocalColumnBeforeClone"); }
         }
 
+        /// <summary>
+        /// Cannot create local column when DataSetContainer is null.
+        /// </summary>
+        public static string Model_CreateLocalColumnNullDataSetContainer
+        {
+            get { return GetString("Model_CreateLocalColumnNullDataSetContainer"); }
+        }
+
+        /// <summary>
+        /// The child model is invalid.
+        /// </summary>
+        public static string Model_InvalidChildModel
+        {
+            get { return GetString("Model_InvalidChildModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
