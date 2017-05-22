@@ -42,16 +42,6 @@ namespace DevZest.Windows.Data
             get { return LayoutManager == null ? null : LayoutManager.DataSet; }
         }
 
-        public virtual _Boolean Where
-        {
-            get { return LayoutManager == null ? null : LayoutManager.Where; }
-        }
-
-        public virtual IReadOnlyList<ColumnSort> OrderBy
-        {
-            get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
-        }
-
         private LayoutManager RequireLayoutManager()
         {
             if (LayoutManager == null)

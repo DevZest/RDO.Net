@@ -227,7 +227,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        protected RowManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        protected RowManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
             : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;

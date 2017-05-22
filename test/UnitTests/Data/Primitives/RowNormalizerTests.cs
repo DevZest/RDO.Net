@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 
 namespace DevZest.Windows.Data.Primitives
@@ -10,7 +11,7 @@ namespace DevZest.Windows.Data.Primitives
     {
         private sealed class ConcreteRowNormalizer : RowNormalizer
         {
-            public ConcreteRowNormalizer(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            public ConcreteRowNormalizer(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
                 : base(template, dataSet, where, orderBy)
             {
             }
@@ -23,7 +24,8 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, _Boolean where = null, ColumnSort[] orderBy = null)
+        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0,
+            Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
@@ -31,7 +33,7 @@ namespace DevZest.Windows.Data.Primitives
             return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
         }
 
-        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
@@ -117,8 +119,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var orderBy = new ColumnSort[] { _.Name.Desc() };
-            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, orderBy);
+            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, x => new ColumnSort[] { ((ProductCategory)x).Name.Desc() });
             var rows = rowNormalizer.Rows;
 
             rows[0].Expand();

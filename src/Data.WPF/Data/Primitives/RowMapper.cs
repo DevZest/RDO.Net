@@ -11,23 +11,48 @@ namespace DevZest.Windows.Data.Primitives
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
     internal abstract class RowMapper : IDataCriteria
     {
-        private abstract class Normalized<T> : IReadOnlyList<T>
+        private sealed class Normalized<T> : IReadOnlyList<T>
             where T : class
         {
             private readonly RowMapper _rowMapper;
-            private string _sealizedString;
+            private readonly Func<Model, T> _generator;
+            private readonly List<bool> _generatedFlags;
             private readonly List<T> _list;
 
-            protected Normalized(RowMapper rowMapper, T firstValue)
+            public Normalized(RowMapper rowMapper, Func<Model, T> generator)
             {
+                Debug.Assert(rowMapper != null);
+                Debug.Assert(generator != null);
                 _rowMapper = rowMapper;
+                _generator = generator;
+                _generatedFlags = new List<bool>();
                 _list = new List<T>();
-                _list.Add(firstValue);
+                GenerateFirst();
+            }
+
+            private void GenerateFirst()
+            {
+                Debug.Assert(_generatedFlags.Count == 0 && _list.Count == 0);
+
+                var value = _generator(RootModel);
+                _generatedFlags.Add(true);
+                _list.Add(value);
+            }
+
+            private void Generate(int index)
+            {
+                Debug.Assert(_generatedFlags.Count == _list.Count);
+                Debug.Assert(index > 0 && index < _list.Count);
+                Debug.Assert(_generatedFlags[index] == false);
+
+                var value = _generator(GetChildModel(index));
+                _generatedFlags[index] = true;
+                _list[index] = value;
             }
 
             private Model RootModel
             {
-                get { return _rowMapper.DataSet.Model; }
+                get { return _rowMapper.RootModel; }
             }
 
             private int RecursiveModelOrdinal
@@ -40,14 +65,13 @@ namespace DevZest.Windows.Data.Primitives
                 get
                 {
                     for (int i = _list.Count; i <= index; i++)
-                        _list.Add(null);
-
-                    if (_list[index] == null)
                     {
-                        if (_sealizedString == null)
-                            _sealizedString = Serialize(RootModel, _list[0]);
-                        _list[index] = Deserialize(_sealizedString, GetChildModel(index));
+                        _generatedFlags.Add(false);
+                        _list.Add(null);
                     }
+
+                    if (_generatedFlags[index] == false)
+                        Generate(index);
 
                     return _list[index];
                 }
@@ -61,10 +85,6 @@ namespace DevZest.Windows.Data.Primitives
                     result = result.GetChildModels()[RecursiveModelOrdinal];
                 return result;
             }
-
-            protected abstract string Serialize(Model model, T first);
-
-            protected abstract T Deserialize(string serializedString, Model model);
 
             public int Count
             {
@@ -83,43 +103,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private sealed class NormalizedWhere : Normalized<_Boolean>
-        {
-            public NormalizedWhere(RowMapper rowMapper, _Boolean where)
-                : base(rowMapper, where)
-            {
-            }
-
-            protected override string Serialize(Model model, _Boolean first)
-            {
-                return first.ToJson(false);
-            }
-
-            protected override _Boolean Deserialize(string serializedString, Model model)
-            {
-                return Column.ParseJson<_Boolean>(model, serializedString);
-            }
-        }
-
-        private sealed class NormalizedOrderBy : Normalized<ColumnSort[]>
-        {
-            public NormalizedOrderBy(RowMapper rowMapper, ColumnSort[] orderBy)
-                : base(rowMapper, orderBy)
-            {
-            }
-
-            protected override string Serialize(Model model, ColumnSort[] first)
-            {
-                return first.ToJson(false);
-            }
-
-            protected override ColumnSort[] Deserialize(string serializedString, Model model)
-            {
-                return model.ParseOrderBy(serializedString).ToArray();
-            }
-        }
-
-        protected RowMapper(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        protected RowMapper(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
@@ -171,29 +155,35 @@ namespace DevZest.Windows.Data.Primitives
             get { return _dataSet; }
         }
 
-        private IReadOnlyList<_Boolean> _normalizedWhere;
-        public _Boolean Where
+        private Model RootModel
         {
-            get { return _normalizedWhere == null ? null : _normalizedWhere[0]; }
+            get { return DataSet.Model; }
         }
 
-        private bool SetWhere(_Boolean where)
+        private IReadOnlyList<Column<bool?>> _normalizedWhere;
+        public Column<bool?> GetWhere(int depth)
         {
-            if (Where == where)
-                return false;
+            if (depth < 0 || depth >= _maxDepth)
+                throw new ArgumentOutOfRangeException(nameof(depth));
 
+            return _normalizedWhere == null ? null : _normalizedWhere[depth];
+        }
+
+        private bool ApplyWhere(Func<Model, Column<bool?>> where)
+        {
+            var oldValue = _normalizedWhere;
             _normalizedWhere = Normalize(where);
-            return true;
+            return _normalizedWhere != oldValue;
         }
 
-        private IReadOnlyList<_Boolean> Normalize(_Boolean where)
+        private IReadOnlyList<Column<bool?>> Normalize(Func<Model, Column<bool?>> where)
         {
             if (where == null)
                 return null;
             else if (IsRecursive)
-                return new NormalizedWhere(this, where);
+                return new Normalized<Column<bool?>>(this, where);
             else
-                return new _Boolean[] { where };
+                return new Column<bool?>[] { where(RootModel) };
         }
 
         private bool IsQuery
@@ -203,45 +193,34 @@ namespace DevZest.Windows.Data.Primitives
 
         private IReadOnlyList<ColumnSort[]> _normalizedOrderBy;
 
-        public ColumnSort[] OrderBy
+        public ColumnSort[] GetOrderBy(int depth)
         {
-            get { return _normalizedOrderBy == null ? null : _normalizedOrderBy[0]; }
+            if (depth < 0 || depth >= _maxDepth)
+                throw new ArgumentOutOfRangeException(nameof(depth));
+            return _normalizedOrderBy == null ? null : _normalizedOrderBy[depth];
         }
 
-        private bool SetOrderBy(ColumnSort[] orderBy)
+        private bool ApplyOrderBy(Func<Model, ColumnSort[]> orderBy)
         {
-            if (Equals(orderBy, OrderBy))
-                return false;
-
+            var oldValue = _normalizedOrderBy;
             _normalizedOrderBy = Normalize(orderBy);
-            return true;
+            return _normalizedOrderBy != oldValue;
         }
 
-        private static bool Equals(ColumnSort[] x, ColumnSort[] y)
+        private IReadOnlyList<ColumnSort[]> Normalize(Func<Model, ColumnSort[]> orderBy)
         {
-            if (x == y)
-                return true;
-
-            if (x == null && y.Length == 0)
-                return true;
-
-            return false;
-        }
-
-        private IReadOnlyList<ColumnSort[]> Normalize(ColumnSort[] orderBy)
-        {
-            if (orderBy == null || orderBy.Length == 0)
+            if (orderBy == null)
                 return null;
             else if (IsRecursive)
-                return new NormalizedOrderBy(this, orderBy);
+                return new Normalized<ColumnSort[]>(this, orderBy);
             else
-                return new ColumnSort[][] { orderBy };
+                return new ColumnSort[][] { orderBy(RootModel) };
         }
 
-        public void Apply(_Boolean where, ColumnSort[] orderBy)
+        public void Apply(Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
         {
-            var whereChanged = SetWhere(where);
-            var orderByChanged = SetOrderBy(orderBy);
+            var whereChanged = ApplyWhere(where);
+            var orderByChanged = ApplyOrderBy(orderBy);
             if (whereChanged || orderByChanged)
                 Reload();
         }

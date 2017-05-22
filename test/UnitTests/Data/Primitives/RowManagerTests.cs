@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DevZest.Windows.Data.Primitives
 {
@@ -9,7 +10,7 @@ namespace DevZest.Windows.Data.Primitives
     {
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+            public ConcreteRowManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
                 : base(template, dataSet, where, orderBy)
             {
             }

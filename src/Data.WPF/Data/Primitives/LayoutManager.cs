@@ -13,14 +13,14 @@ namespace DevZest.Windows.Data.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
         {
             var result = LayoutManager.Create(template, dataSet, where, orderBy);
             result._dataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+        internal static LayoutManager Create(Template template, DataSet dataSet, Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
         {
             if (!template.Orientation.HasValue)
                 return new LayoutZManager(template, dataSet, where, orderBy);
@@ -30,7 +30,7 @@ namespace DevZest.Windows.Data.Primitives
                 return new LayoutYManager(template, dataSet, where, orderBy);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
+        protected LayoutManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
         }

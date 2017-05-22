@@ -9,7 +9,7 @@ namespace DevZest.Windows.Data.Primitives
     {
         private sealed class ConcreteRowMapper : RowMapper
         {
-            public ConcreteRowMapper(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy)
+            public ConcreteRowMapper(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
                 : base(template, dataSet, where, orderBy)
             {
             }
@@ -67,19 +67,20 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, _Boolean where = null, ColumnSort[] orderBy = null)
+        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, Func<T, Column<bool?>> where = null, Func<T, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
-            return new ConcreteRowMapper(template, dataSet, where, orderBy);
+            return new ConcreteRowMapper(template, dataSet, DataPresenter<T>.Wrap(where), DataPresenter<T>.Wrap(orderBy));
         }
 
-        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, _Boolean where = null, ColumnSort[] orderBy = null)
+        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, Func<T, Column<bool?>> where = null,
+            Func<T, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
             template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
-            return new ConcreteRowMapper(template, dataSet, where, orderBy);
+            return new ConcreteRowMapper(template, dataSet, DataPresenter<T>.Wrap(where), DataPresenter<T>.Wrap(orderBy));
         }
 
         private void Verify(RowPresenter row, DataRow dataRow, DataSet childDataSet = null, params int[] childIndexes)
@@ -284,9 +285,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var where = _.Name == "Name-1-1" | _.Name == "Name-1-2";
-            var orderBy = new ColumnSort[] { _.Name.Desc() };
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, where, orderBy);
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, x => x.Name == "Name-1-1" | x.Name == "Name-1-2", x => new ColumnSort[] { x.Name.Desc() });
 
             var rows = rowMapper.Rows;
             Assert.AreEqual(1, rows.Count);
@@ -301,9 +300,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var where = _.Name == "Name-1-1" | _.Name == "Name-1-2" | _.Name == "Name-1-4";
-            var orderBy = new ColumnSort[] { _.Name.Desc() };
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, where, orderBy);
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, x => x.Name == "Name-1-1" | x.Name == "Name-1-2" | x.Name == "Name-1-4", x => new ColumnSort[] { x.Name.Desc() });
 
             dataSet.SubCategories(0).AddRow((__, x) => __.Name[x] = "Name-1-4");
 
@@ -321,9 +318,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var where = _.Name == "Name-1-1" | _.Name == "Name-1-2";
-            var orderBy = new ColumnSort[] { _.Name.Desc() };
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, where, orderBy);
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, x => x.Name == "Name-1-1" | x.Name == "Name-1-2", x => new ColumnSort[] { x.Name.Desc() });
 
             dataSet.SubCategories(0).RemoveAt(1);
 
@@ -342,9 +337,7 @@ namespace DevZest.Windows.Data.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var where = _.Name == "Name-1-1" | _.Name == "Name-1-2" | _.Name == "Name-1-4";
-            var orderBy = new ColumnSort[] { _.Name.Desc() };
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, where, orderBy);
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, x => x.Name == "Name-1-1" | x.Name == "Name-1-2" | x.Name == "Name-1-4", x => new ColumnSort[] { x.Name.Desc() });
 
             var subCategories = dataSet.SubCategories(0);
             subCategories._.Name[subCategories[0]] = "Name-1-4";

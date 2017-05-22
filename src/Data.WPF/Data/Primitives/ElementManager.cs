@@ -12,7 +12,7 @@ namespace DevZest.Windows.Data.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
+        internal ElementManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy)
         {
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);

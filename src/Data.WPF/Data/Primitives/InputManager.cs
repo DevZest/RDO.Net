@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -16,7 +17,7 @@ namespace DevZest.Windows.Data.Primitives
             }
         }
 
-        protected InputManager(Template template, DataSet dataSet, _Boolean where, ColumnSort[] orderBy, bool emptyContainerViewList)
+        protected InputManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             Progress = new ValidationProgress(this);
