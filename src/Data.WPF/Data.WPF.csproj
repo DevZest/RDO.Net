@@ -59,13 +59,11 @@
     <Compile Include="DataPresenter.Commands.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
-    <Compile Include="DataRowFilter.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="BlockPresenter.cs" />
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />
-    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Primitives\DataRowExtensions.cs" />
     <Compile Include="Primitives\IScrollable.cs" />
     <Compile Include="Primitives\ScrollableManager.LogicalCrossTrack.cs" />
@@ -173,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170522\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170524\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
