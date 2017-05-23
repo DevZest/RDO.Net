@@ -11,7 +11,7 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowNormalizer : RowNormalizer
         {
-            public ConcreteRowNormalizer(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
+            public ConcreteRowNormalizer(Template template, DataSet dataSet, Filter where, Func<Model, ColumnSort[]> orderBy)
                 : base(template, dataSet, where, orderBy)
             {
             }
@@ -24,8 +24,7 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0,
-            Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
+        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, Filter where = null, Func<Model, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
@@ -33,7 +32,7 @@ namespace DevZest.Windows.Primitives
             return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
         }
 
-        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
+        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, Filter where = null, Func<Model, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();

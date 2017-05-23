@@ -17,7 +17,7 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        protected InputManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy, bool emptyContainerViewList)
+        protected InputManager(Template template, DataSet dataSet, Filter where, Func<Model, ColumnSort[]> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             Progress = new ValidationProgress(this);

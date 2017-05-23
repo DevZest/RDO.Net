@@ -189,6 +189,9 @@
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>
   </data>
+  <data name="ModelExtensions_ExpressionMustBeStatic" xml:space="preserve">
+    <value>The expression must be static.</value>
+  </data>
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>
   </data>

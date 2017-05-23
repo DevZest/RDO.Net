@@ -40,7 +40,7 @@ namespace DevZest.Windows
 
         private sealed class ConcreteElementManager : ElementManager
         {
-            public ConcreteElementManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where = null,
+            public ConcreteElementManager(Template template, DataSet dataSet, Filter where = null,
                 Func<Model, ColumnSort[]> orderBy = null, bool emptyBlockViewList = false)
                 : base(template, dataSet, where, orderBy, emptyBlockViewList)
             {
@@ -54,8 +54,7 @@ namespace DevZest.Windows
 
         private sealed class ConcreteInputManager : InputManager
         {
-            public ConcreteInputManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where = null,
-                Func<Model, ColumnSort[]> orderBy = null, bool emptyBlockViewList = false)
+            public ConcreteInputManager(Template template, DataSet dataSet, Filter where = null, Func<Model, ColumnSort[]> orderBy = null, bool emptyBlockViewList = false)
                 : base(template, dataSet, where, orderBy, emptyBlockViewList)
             {
             }

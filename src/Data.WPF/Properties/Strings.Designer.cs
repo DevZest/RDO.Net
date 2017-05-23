@@ -204,6 +204,14 @@ namespace DevZest.Windows
         }
 
         /// <summary>
+        /// The expression must be static.
+        /// </summary>
+        public static string ModelExtensions_ExpressionMustBeStatic
+        {
+            get { return GetString("ModelExtensions_ExpressionMustBeStatic"); }
+        }
+
+        /// <summary>
         /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
         public static string RowBinding_OutOfRowRange(object index)

@@ -103,13 +103,13 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        protected RowMapper(Template template, DataSet dataSet, Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
+        protected RowMapper(Template template, DataSet dataSet, Filter where, Func<Model, ColumnSort[]> orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
-            _normalizedWhere = Normalize(where);
+            Where = where;
             _normalizedOrderBy = Normalize(orderBy);
             Initialize();
             WireDataChangedEvents();
@@ -160,20 +160,13 @@ namespace DevZest.Windows.Primitives
             get { return DataSet.Model; }
         }
 
-        private IReadOnlyList<Column<bool?>> _normalizedWhere;
-        public Column<bool?> GetWhere(int depth)
-        {
-            if (depth < 0 || depth >= _maxDepth)
-                throw new ArgumentOutOfRangeException(nameof(depth));
+        public Filter Where { get; private set; }
 
-            return _normalizedWhere == null ? null : _normalizedWhere[depth];
-        }
-
-        private bool ApplyWhere(Func<Model, Column<bool?>> where)
+        private bool ApplyFilter(Filter value)
         {
-            var oldValue = _normalizedWhere;
-            _normalizedWhere = Normalize(where);
-            return _normalizedWhere != oldValue;
+            var oldValue = Where;
+            Where = value;
+            return value != oldValue;
         }
 
         private IReadOnlyList<Column<bool?>> Normalize(Func<Model, Column<bool?>> where)
@@ -188,7 +181,7 @@ namespace DevZest.Windows.Primitives
 
         private bool IsQuery
         {
-            get { return _normalizedWhere != null || _normalizedOrderBy != null; }
+            get { return Where != null || _normalizedOrderBy != null; }
         }
 
         private IReadOnlyList<ColumnSort[]> _normalizedOrderBy;
@@ -217,9 +210,9 @@ namespace DevZest.Windows.Primitives
                 return new ColumnSort[][] { orderBy(RootModel) };
         }
 
-        public void Apply(Func<Model, Column<bool?>> where, Func<Model, ColumnSort[]> orderBy)
+        public void Apply(Filter where, Func<Model, ColumnSort[]> orderBy)
         {
-            var whereChanged = ApplyWhere(where);
+            var whereChanged = ApplyFilter(where);
             var orderByChanged = ApplyOrderBy(orderBy);
             if (whereChanged || orderByChanged)
                 Reload();
@@ -249,7 +242,7 @@ namespace DevZest.Windows.Primitives
             if (IsRecursive || IsQuery)
                 _mappings = new Dictionary<DataRow, RowPresenter>();
 
-            if (!IsRecursive || _normalizedWhere == null)
+            if (!IsRecursive || Where == null)
                 return;
 
             //If any child row fulfills the WHERE predicates, all the rows along the parent chain should be kept
@@ -257,7 +250,7 @@ namespace DevZest.Windows.Primitives
             {
                 foreach (var dataRow in dataSet)
                 {
-                    if (ApplyWhere(dataRow))
+                    if (EvaluateWhere(dataRow))
                         EnsureAncestorsCreated(dataRow);
                 }
             }
@@ -323,13 +316,12 @@ namespace DevZest.Windows.Primitives
 
         private IEnumerable<DataRow> Filter(IEnumerable<DataRow> dataRows)
         {
-            return _normalizedWhere == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : ApplyWhere(x));
+            return Where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : EvaluateWhere(x));
         }
 
-        private bool ApplyWhere(DataRow dataRow)
+        private bool EvaluateWhere(DataRow dataRow)
         {
-            var result = _normalizedWhere[GetDepth(dataRow)][dataRow];
-            return result.HasValue && result.GetValueOrDefault();
+            return Where.Evaluate(dataRow);
         }
 
         private IEnumerable<DataRow> Sort(IEnumerable<DataRow> dataRows, int depth)
@@ -388,7 +380,7 @@ namespace DevZest.Windows.Primitives
 
         private bool PassesFilter(DataRow dataRow)
         {
-            return _normalizedWhere == null || ApplyWhere(dataRow);
+            return Where == null || EvaluateWhere(dataRow);
         }
 
         private Stack<DataRow> _insertingDataRows = new Stack<DataRow>();

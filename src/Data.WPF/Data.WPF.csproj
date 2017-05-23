@@ -59,11 +59,13 @@
     <Compile Include="DataPresenter.Commands.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
+    <Compile Include="Filter.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="BlockPresenter.cs" />
     <Compile Include="IDataCriteria.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />
+    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Primitives\DataRowExtensions.cs" />
     <Compile Include="Primitives\IScrollable.cs" />
     <Compile Include="Primitives\ScrollableManager.LogicalCrossTrack.cs" />

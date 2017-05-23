@@ -10,7 +10,7 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(Template template, DataSet dataSet, Func<Model, Column<bool?>> where = null, Func<Model, ColumnSort[]> orderBy = null)
+            public ConcreteRowManager(Template template, DataSet dataSet, Filter where = null, Func<Model, ColumnSort[]> orderBy = null)
                 : base(template, dataSet, where, orderBy)
             {
             }
