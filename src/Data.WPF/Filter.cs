@@ -19,6 +19,8 @@ namespace DevZest.Windows
 
         internal abstract bool Evaluate(DataRow dataRow);
 
+        public abstract Type ModelType { get; }
+
         private sealed class FuncFilter<T> : Filter
             where T : Model
         {
@@ -33,6 +35,11 @@ namespace DevZest.Windows
             internal override bool Evaluate(DataRow dataRow)
             {
                 return _condition((T)dataRow.Model, dataRow);
+            }
+
+            public override Type ModelType
+            {
+                get { return typeof(T); }
             }
         }
     }
