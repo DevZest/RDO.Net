@@ -595,14 +595,19 @@ namespace DevZest.Data
                 UpdateValue(dataRow, _editingValue);
         }
 
-        public sealed override int Compare(DataRow x, DataRow y)
+        public int Compare(DataRow x, DataRow y, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
-            return Comparer.Compare(this[x], this[y]);
+            if (comparer == null)
+                comparer = Comparer<T>.Default;
+            var result = comparer.Compare(this[x], this[y]);
+            if (direction == SortDirection.Descending)
+                result *= -1;
+            return result;
         }
 
-        protected virtual IComparer<T> Comparer
+        public sealed override int Compare(DataRow x, DataRow y)
         {
-            get { return Comparer<T>.Default; }
+            return Compare(x, y, SortDirection.Ascending, null);
         }
 
         internal sealed override Column CreateBackup(Model model)

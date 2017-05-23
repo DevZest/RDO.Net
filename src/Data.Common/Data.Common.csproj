@@ -51,7 +51,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Filter.cs" />
+    <Compile Include="DataRowCompared.cs" />
+    <Compile Include="DataRowComparing.cs" />
+    <Compile Include="DataRowFilter.cs" />
     <Compile Include="ModelExtensions.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Adhoc.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Primitives\JsonValidationEntry.cs" />
     <Compile Include="Primitives\JsonValidationMessage.cs" />
     <Compile Include="Primitives\JsonValidationResult.cs" />
+    <Compile Include="DataRowSort.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarExtensions.cs" />
     <Compile Include="Scalar.cs" />
