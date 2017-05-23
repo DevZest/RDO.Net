@@ -1,5 +1,5 @@
-﻿using DevZest.Windows.Controls;
-using DevZest.Windows.Data;
+﻿using DevZest.Windows;
+using DevZest.Windows.Controls;
 using System.Windows.Controls;
 
 namespace SmoothScroll

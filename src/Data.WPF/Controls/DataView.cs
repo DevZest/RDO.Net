@@ -1,6 +1,6 @@
 ﻿using DevZest.Windows.Controls.Primitives;
-using DevZest.Windows.Data;
-using DevZest.Windows.Data.Primitives;
+using DevZest.Windows;
+using DevZest.Windows.Primitives;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;

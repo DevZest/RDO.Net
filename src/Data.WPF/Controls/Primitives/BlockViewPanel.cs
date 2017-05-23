@@ -1,4 +1,4 @@
-﻿using DevZest.Windows.Data.Primitives;
+﻿using DevZest.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Windows;

@@ -1,5 +1,5 @@
 ﻿using System;
-using DevZest.Windows.Data;
+using DevZest.Windows;
 using System.Windows.Controls;
 using DevZest.Windows.Controls;
 

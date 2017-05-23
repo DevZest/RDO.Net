@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows;
 using DevZest.Data;
-using DevZest.Windows.Data;
+using DevZest.Windows;
 
 namespace SmoothScroll
 {

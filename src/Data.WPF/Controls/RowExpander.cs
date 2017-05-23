@@ -1,4 +1,4 @@
-﻿using DevZest.Windows.Data;
+﻿using DevZest.Windows;
 using System;
 using System.Diagnostics;
 using System.Windows;

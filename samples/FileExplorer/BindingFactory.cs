@@ -1,5 +1,5 @@
 ﻿using DevZest.Data;
-using DevZest.Windows.Data;
+using DevZest.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 

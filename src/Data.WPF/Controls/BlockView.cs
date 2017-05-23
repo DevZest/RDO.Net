@@ -1,10 +1,10 @@
-﻿using DevZest.Windows.Data.Primitives;
+﻿using DevZest.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Collections;
-using DevZest.Windows.Data;
+using DevZest.Windows;
 using DevZest.Windows.Controls.Primitives;
 
 namespace DevZest.Windows.Controls
