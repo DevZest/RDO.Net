@@ -49,9 +49,21 @@ namespace DevZest.Windows
             return LayoutManager;
         }
 
-        public virtual IDataCriteria Criteria
+        public DataRowFilter Where
         {
-            get { return LayoutManager; }
+            get { return LayoutManager == null ? null : LayoutManager.Where; }
+            set { Apply(value, OrderBy); }
+        }
+        
+        public DataRowSort OrderBy
+        {
+            get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
+            set { Apply(Where, value); }
+        }
+
+        public void Apply(DataRowFilter where, DataRowSort orderBy)
+        {
+            RequireLayoutManager().Apply(where, orderBy);
         }
 
         public IReadOnlyList<RowPresenter> Rows

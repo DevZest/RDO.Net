@@ -10,7 +10,7 @@ namespace DevZest.Windows
     public abstract class DataPresenter<T> : DataPresenter
         where T : Model, new()
     {
-        public void Show(DataView dataView, DataSet<T> dataSet, DataRowFilter where = null, Func<T, ColumnSort[]> orderBy = null)
+        public void Show(DataView dataView, DataSet<T> dataSet, DataRowFilter where = null, DataRowSort orderBy = null)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));
@@ -28,15 +28,8 @@ namespace DevZest.Windows
             {
                 BuildTemplate(builder);
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, where, Wrap(orderBy));
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
             AttachView(dataView);
-        }
-
-        internal static Func<Model, TResult> Wrap<TResult>(Func<T, TResult> func)
-        {
-            if (func == null)
-                return null;
-            return _ => func((T)_);
         }
 
         private void DetachView()

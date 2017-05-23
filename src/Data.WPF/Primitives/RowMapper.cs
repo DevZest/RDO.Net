@@ -4,113 +4,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System;
 
 namespace DevZest.Windows.Primitives
 {
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
-    internal abstract class RowMapper : IDataCriteria
+    internal abstract class RowMapper : IComparer<DataRow>
     {
-        private sealed class Normalized<T> : IReadOnlyList<T>
-            where T : class
-        {
-            private readonly RowMapper _rowMapper;
-            private readonly Func<Model, T> _generator;
-            private readonly List<bool> _generatedFlags;
-            private readonly List<T> _list;
-
-            public Normalized(RowMapper rowMapper, Func<Model, T> generator)
-            {
-                Debug.Assert(rowMapper != null);
-                Debug.Assert(generator != null);
-                _rowMapper = rowMapper;
-                _generator = generator;
-                _generatedFlags = new List<bool>();
-                _list = new List<T>();
-                GenerateFirst();
-            }
-
-            private void GenerateFirst()
-            {
-                Debug.Assert(_generatedFlags.Count == 0 && _list.Count == 0);
-
-                var value = _generator(RootModel);
-                _generatedFlags.Add(true);
-                _list.Add(value);
-            }
-
-            private void Generate(int index)
-            {
-                Debug.Assert(_generatedFlags.Count == _list.Count);
-                Debug.Assert(index > 0 && index < _list.Count);
-                Debug.Assert(_generatedFlags[index] == false);
-
-                var value = _generator(GetChildModel(index));
-                _generatedFlags[index] = true;
-                _list[index] = value;
-            }
-
-            private Model RootModel
-            {
-                get { return _rowMapper.RootModel; }
-            }
-
-            private int RecursiveModelOrdinal
-            {
-                get { return _rowMapper.Template.RecursiveModelOrdinal; }
-            }
-
-            public T this[int index]
-            {
-                get
-                {
-                    for (int i = _list.Count; i <= index; i++)
-                    {
-                        _generatedFlags.Add(false);
-                        _list.Add(null);
-                    }
-
-                    if (_generatedFlags[index] == false)
-                        Generate(index);
-
-                    return _list[index];
-                }
-            }
-
-            private Model GetChildModel(int index)
-            {
-                Debug.Assert(index > 0);
-                var result = _rowMapper.DataSet.Model;
-                for (int i = 1; i <= index; i++)
-                    result = result.GetChildModels()[RecursiveModelOrdinal];
-                return result;
-            }
-
-            public int Count
-            {
-                get { return _list.Count; }
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                for (int i = 0; i < Count; i++)
-                    yield return this[i];
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-        }
-
-        protected RowMapper(Template template, DataSet dataSet, DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
+        protected RowMapper(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
             Where = where;
-            _normalizedOrderBy = Normalize(orderBy);
+            OrderBy = orderBy;
             Initialize();
             WireDataChangedEvents();
         }
@@ -169,48 +76,27 @@ namespace DevZest.Windows.Primitives
             return value != oldValue;
         }
 
-        private IReadOnlyList<Column<bool?>> Normalize(Func<Model, Column<bool?>> where)
-        {
-            if (where == null)
-                return null;
-            else if (IsRecursive)
-                return new Normalized<Column<bool?>>(this, where);
-            else
-                return new Column<bool?>[] { where(RootModel) };
-        }
-
         private bool IsQuery
         {
-            get { return Where != null || _normalizedOrderBy != null; }
+            get { return Where != null || OrderBy != null; }
         }
 
-        private IReadOnlyList<ColumnSort[]> _normalizedOrderBy;
+        public DataRowSort OrderBy { get; private set; }
 
-        public ColumnSort[] GetOrderBy(int depth)
+        private bool ApplyOrderBy(DataRowSort orderBy)
         {
-            if (depth < 0 || depth >= _maxDepth)
-                throw new ArgumentOutOfRangeException(nameof(depth));
-            return _normalizedOrderBy == null ? null : _normalizedOrderBy[depth];
+            var oldValue = OrderBy;
+            OrderBy = orderBy;
+            return OrderBy != oldValue;
         }
 
-        private bool ApplyOrderBy(Func<Model, ColumnSort[]> orderBy)
+        public int Compare(DataRow x, DataRow y)
         {
-            var oldValue = _normalizedOrderBy;
-            _normalizedOrderBy = Normalize(orderBy);
-            return _normalizedOrderBy != oldValue;
+            Debug.Assert(OrderBy != null);
+            return OrderBy.Evaluate(x, y);
         }
 
-        private IReadOnlyList<ColumnSort[]> Normalize(Func<Model, ColumnSort[]> orderBy)
-        {
-            if (orderBy == null)
-                return null;
-            else if (IsRecursive)
-                return new Normalized<ColumnSort[]>(this, orderBy);
-            else
-                return new ColumnSort[][] { orderBy(RootModel) };
-        }
-
-        public void Apply(DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
+        public void Apply(DataRowFilter where, DataRowSort orderBy)
         {
             var whereChanged = ApplyFilter(where);
             var orderByChanged = ApplyOrderBy(orderBy);
@@ -326,20 +212,7 @@ namespace DevZest.Windows.Primitives
 
         private IEnumerable<DataRow> Sort(IEnumerable<DataRow> dataRows, int depth)
         {
-            if (_normalizedOrderBy == null)
-                return dataRows;
-
-            var orderBy = _normalizedOrderBy[depth];
-            var column = orderBy[0].Column;
-            var direction = orderBy[0].Direction;
-            IOrderedEnumerable<DataRow> result = direction == SortDirection.Descending ? dataRows.OrderByDescending(x => x, column) : dataRows.OrderBy(x => x, column);
-            for (int i = 1; i < orderBy.Length; i++)
-            {
-                column = orderBy[i].Column;
-                direction = orderBy[i].Direction;
-                result = direction == SortDirection.Descending ? result.ThenByDescending(x => x, column) : result.ThenBy(x => x, column);
-            }
-            return result;
+            return OrderBy == null ? dataRows : dataRows.OrderBy(x => x, this);
         }
 
         internal int GetDepth(DataRow dataRow)
@@ -483,21 +356,8 @@ namespace DevZest.Windows.Primitives
         {
             Debug.Assert(GetDepth(x) == GetDepth(y));
 
-            if (_normalizedOrderBy != null)
-            {
-                var orderBy = _normalizedOrderBy[GetDepth(x)];
-                for (int i = 0; i < orderBy.Length; i++)
-                {
-                    var columnSort = orderBy[i];
-                    var compare = columnSort.Column.Compare(x, y);
-                    if (compare == 0)
-                        continue;
-
-                    if (columnSort.Direction == SortDirection.Descending)
-                        compare = compare * -1;
-                    return compare == 1;
-                }
-            }
+            if (OrderBy != null && OrderBy.Evaluate(x, y) == 1)
+                    return true;
 
             return x.Index > y.Index;
         }

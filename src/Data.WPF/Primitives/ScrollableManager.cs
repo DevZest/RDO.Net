@@ -29,7 +29,7 @@ namespace DevZest.Windows.Primitives
     {
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
             Justification = "Derived classes are limited to class LayoutXManager/LayoutYManager, and the overrides do not rely on completion of its constructor.")]
-        protected ScrollableManager(Template template, DataSet dataSet, DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
+        protected ScrollableManager(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
             : base(template, dataSet, where, orderBy, false)
         {
             _scrollToMain = MinScrollToMain;

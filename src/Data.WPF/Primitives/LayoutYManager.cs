@@ -6,7 +6,7 @@ namespace DevZest.Windows.Primitives
 {
     internal sealed class LayoutYManager : ScrollableManager
     {
-        public LayoutYManager(Template template, DataSet dataSet, DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
+        public LayoutYManager(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
             : base(template, dataSet, where, orderBy)
         {
         }
