@@ -5,7 +5,7 @@ namespace DevZest.Windows
 {
     public static class ModelExtensions
     {
-        public static Filter Where<T>(this T _, Func<T, DataRow, bool> condition)
+        public static DataRowFilter Where<T>(this T _, Func<T, DataRow, bool> condition)
             where T : Model
         {
             if (condition == null)
@@ -13,7 +13,7 @@ namespace DevZest.Windows
             if (condition.Target != null)
                 throw new ArgumentException(Strings.ModelExtensions_ExpressionMustBeStatic, nameof(condition));
 
-            return Filter.Create(condition);
+            return DataRowFilter.Create(condition);
         }
     }
 }

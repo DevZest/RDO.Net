@@ -4,16 +4,16 @@ using System.Diagnostics;
 
 namespace DevZest.Windows
 {
-    public abstract class Filter
+    public abstract class DataRowFilter
     {
-        internal static Filter Create<T>(Func<T, DataRow, bool> condition)
+        internal static DataRowFilter Create<T>(Func<T, DataRow, bool> condition)
             where T : Model
         {
             Debug.Assert(condition != null && condition.Target == null);
             return new FuncFilter<T>(condition);
         }
 
-        private Filter()
+        private DataRowFilter()
         {
         }
 
@@ -21,7 +21,7 @@ namespace DevZest.Windows
 
         public abstract Type ModelType { get; }
 
-        private sealed class FuncFilter<T> : Filter
+        private sealed class FuncFilter<T> : DataRowFilter
             where T : Model
         {
             public FuncFilter(Func<T, DataRow, bool> condition)

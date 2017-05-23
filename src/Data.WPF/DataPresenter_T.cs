@@ -10,7 +10,7 @@ namespace DevZest.Windows
     public abstract class DataPresenter<T> : DataPresenter
         where T : Model, new()
     {
-        public void Show(DataView dataView, DataSet<T> dataSet, Filter where = null, Func<T, ColumnSort[]> orderBy = null)
+        public void Show(DataView dataView, DataSet<T> dataSet, DataRowFilter where = null, Func<T, ColumnSort[]> orderBy = null)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));

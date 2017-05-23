@@ -59,7 +59,7 @@
     <Compile Include="DataPresenter.Commands.cs" />
     <Compile Include="DataPresenter_T.cs" />
     <Compile Include="ExplicitTrigger.cs" />
-    <Compile Include="Filter.cs" />
+    <Compile Include="DataRowFilter.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="BlockPresenter.cs" />
     <Compile Include="IDataCriteria.cs" />

@@ -103,7 +103,7 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        protected RowMapper(Template template, DataSet dataSet, Filter where, Func<Model, ColumnSort[]> orderBy)
+        protected RowMapper(Template template, DataSet dataSet, DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
@@ -160,9 +160,9 @@ namespace DevZest.Windows.Primitives
             get { return DataSet.Model; }
         }
 
-        public Filter Where { get; private set; }
+        public DataRowFilter Where { get; private set; }
 
-        private bool ApplyFilter(Filter value)
+        private bool ApplyFilter(DataRowFilter value)
         {
             var oldValue = Where;
             Where = value;
@@ -210,7 +210,7 @@ namespace DevZest.Windows.Primitives
                 return new ColumnSort[][] { orderBy(RootModel) };
         }
 
-        public void Apply(Filter where, Func<Model, ColumnSort[]> orderBy)
+        public void Apply(DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
         {
             var whereChanged = ApplyFilter(where);
             var orderByChanged = ApplyOrderBy(orderBy);

@@ -5,8 +5,8 @@ namespace DevZest.Windows
 {
     public interface IDataCriteria
     {
-        Filter Where { get; }
+        DataRowFilter Where { get; }
         ColumnSort[] GetOrderBy(int depth);
-        void Apply(Filter where, Func<Model, ColumnSort[]> orderBy);
+        void Apply(DataRowFilter where, Func<Model, ColumnSort[]> orderBy);
     }
 }

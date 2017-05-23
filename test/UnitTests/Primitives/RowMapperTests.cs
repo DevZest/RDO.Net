@@ -10,7 +10,7 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowMapper : RowMapper
         {
-            public ConcreteRowMapper(Template template, DataSet dataSet, Filter where, Func<Model, ColumnSort[]> orderBy)
+            public ConcreteRowMapper(Template template, DataSet dataSet, DataRowFilter where, Func<Model, ColumnSort[]> orderBy)
                 : base(template, dataSet, where, orderBy)
             {
             }
@@ -68,14 +68,14 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, Filter where = null, Func<T, ColumnSort[]> orderBy = null)
+        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, DataRowFilter where = null, Func<T, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
             return new ConcreteRowMapper(template, dataSet, where, DataPresenter<T>.Wrap(orderBy));
         }
 
-        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, Filter where = null,
+        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, DataRowFilter where = null,
             Func<T, ColumnSort[]> orderBy = null)
             where T : Model, new()
         {
