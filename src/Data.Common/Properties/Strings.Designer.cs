@@ -923,6 +923,14 @@ namespace DevZest.Data
             get { return GetString("Model_InvalidChildModel"); }
         }
 
+        /// <summary>
+        /// The expression must be static.
+        /// </summary>
+        public static string ModelExtensions_ExpressionMustBeStatic
+        {
+            get { return GetString("ModelExtensions_ExpressionMustBeStatic"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

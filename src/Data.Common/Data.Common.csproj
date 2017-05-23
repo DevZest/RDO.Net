@@ -51,6 +51,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Filter.cs" />
+    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
