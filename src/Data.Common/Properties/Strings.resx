@@ -459,7 +459,7 @@
   <data name="Model_InvalidChildModel" xml:space="preserve">
     <value>The child model is invalid.</value>
   </data>
-  <data name="ModelExtensions_ExpressionMustBeStatic" xml:space="preserve">
+  <data name="DataRowCriteria_ExpressionMustBeStatic" xml:space="preserve">
     <value>The expression must be static.</value>
   </data>
 </root>

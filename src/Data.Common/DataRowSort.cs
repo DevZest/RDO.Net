@@ -1,22 +1,27 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class DataRowSort
+    public abstract class DataRowSort : DataRowCriteria
     {
-        internal static DataRowSort Create<T>(Func<T, DataRow, DataRow, int> comparer)
+        public static DataRowSort Create<T>(Func<T, DataRow, DataRow, int> comparer)
             where T : Model
         {
-            Debug.Assert(comparer != null && comparer.Target == null);
+            Check.NotNull(comparer, nameof(comparer));
+            if (comparer.Target != null)
+                throw new ArgumentException(Strings.DataRowCriteria_ExpressionMustBeStatic, nameof(comparer));
             return new DelegateSort<T>(comparer);
         }
 
-        internal static DataRowSort Create<T>(Func<DataRowComparing, T, DataRowCompared> comparer)
+        public static DataRowSort Create<T>(Func<DataRowComparing, T, DataRowCompared> comparer)
             where T : Model
         {
-            Debug.Assert(comparer != null && comparer.Target == null);
+            Check.NotNull(comparer, nameof(comparer));
+            if (comparer.Target != null)
+                throw new ArgumentException(Strings.DataRowCriteria_ExpressionMustBeStatic, nameof(comparer));
             return new FluentDelegateSort<T>(comparer);
         }
 
@@ -25,8 +30,6 @@ namespace DevZest.Data
         }
 
         public abstract int Evaluate(DataRow x, DataRow y);
-
-        public abstract Type ModelType { get; }
 
         private sealed class DelegateSort<T> : DataRowSort
             where T : Model

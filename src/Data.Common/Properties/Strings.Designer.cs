@@ -926,9 +926,9 @@ namespace DevZest.Data
         /// <summary>
         /// The expression must be static.
         /// </summary>
-        public static string ModelExtensions_ExpressionMustBeStatic
+        public static string DataRowCriteria_ExpressionMustBeStatic
         {
-            get { return GetString("ModelExtensions_ExpressionMustBeStatic"); }
+            get { return GetString("DataRowCriteria_ExpressionMustBeStatic"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

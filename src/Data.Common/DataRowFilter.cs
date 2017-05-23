@@ -1,15 +1,18 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public abstract class DataRowFilter
+    public abstract class DataRowFilter : DataRowCriteria
     {
-        internal static DataRowFilter Create<T>(Func<T, DataRow, bool> condition)
+        public static DataRowFilter Create<T>(Func<T, DataRow, bool> condition)
             where T : Model
         {
-            Debug.Assert(condition != null && condition.Target == null);
+            Check.NotNull(condition, nameof(condition));
+            if (condition.Target != null)
+                throw new ArgumentException(Strings.DataRowCriteria_ExpressionMustBeStatic, nameof(condition));
             return new FuncFilter<T>(condition);
         }
 
@@ -18,8 +21,6 @@ namespace DevZest.Data
         }
 
         public abstract bool Evaluate(DataRow dataRow);
-
-        public abstract Type ModelType { get; }
 
         private sealed class FuncFilter<T> : DataRowFilter
             where T : Model

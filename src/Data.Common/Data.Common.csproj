@@ -54,7 +54,8 @@
     <Compile Include="DataRowCompared.cs" />
     <Compile Include="DataRowComparing.cs" />
     <Compile Include="DataRowFilter.cs" />
-    <Compile Include="ModelExtensions.cs" />
+    <Compile Include="Primitives\DataRowCriteria.cs" />
+    <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
@@ -243,7 +244,6 @@
     <Compile Include="Primitives\InterceptableExtensions.cs" />
     <Compile Include="Primitives\InterceptableInvoker.cs" />
     <Compile Include="Primitives\JsonParser.cs" />
-    <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Primitives\ModelMember.cs" />
     <Compile Include="Primitives\ModelMemberExtensions.cs" />
     <Compile Include="Primitives\NotNull.cs" />
