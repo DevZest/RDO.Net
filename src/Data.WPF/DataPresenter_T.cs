@@ -77,5 +77,20 @@ namespace DevZest.Windows
         {
             get { return DataSet == null ? null : DataSet._; }
         }
+
+        public DataRowFilter NewFilter(Func<T, DataRow, bool> predict)
+        {
+            return DataRowFilter.Create(predict);
+        }
+
+        public DataRowSort NewSort(Func<T, DataRow, DataRow, int> comparer)
+        {
+            return DataRowSort.Create(comparer);
+        }
+
+        public DataRowSort NewSort(Func<DataRowComparing, T, DataRowCompared> comparer)
+        {
+            return DataRowSort.Create(comparer);
+        }
     }
 }
