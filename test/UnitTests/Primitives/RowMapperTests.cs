@@ -285,7 +285,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, _.Where(Condition1), _.OrderBy(OrderByNameDesc));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRowFilter.Create<ProductCategory>(Condition1), DataRowSort.Create<ProductCategory>(OrderByNameDesc));
 
             var rows = rowMapper.Rows;
             Assert.AreEqual(1, rows.Count);
@@ -310,7 +310,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, _.Where(Condition2), _.OrderBy(OrderByNameDesc));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRowFilter.Create<ProductCategory>(Condition2), DataRowSort.Create<ProductCategory>(OrderByNameDesc));
 
             dataSet.SubCategories(0).AddRow((__, x) => __.Name[x] = "Name-1-4");
 
@@ -333,7 +333,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, _.Where(Condition1), _.OrderBy(OrderByNameDesc));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRowFilter.Create<ProductCategory>(Condition1), DataRowSort.Create<ProductCategory>(OrderByNameDesc));
 
             dataSet.SubCategories(0).RemoveAt(1);
 
@@ -352,7 +352,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, _.Where(Condition2), _.OrderBy(OrderByNameDesc));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRowFilter.Create<ProductCategory>(Condition2), DataRowSort.Create<ProductCategory>(OrderByNameDesc));
 
             var subCategories = dataSet.SubCategories(0);
             subCategories._.Name[subCategories[0]] = "Name-1-4";
