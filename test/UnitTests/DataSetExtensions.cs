@@ -40,8 +40,8 @@ namespace DevZest.Windows
 
         private sealed class ConcreteElementManager : ElementManager
         {
-            public ConcreteElementManager(Template template, DataSet dataSet, DataRowFilter where = null, DataRowSort orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
+            public ConcreteElementManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null, bool emptyBlockViewList = false)
+                : base(template, dataSet, filter, sort, emptyBlockViewList)
             {
             }
         }
@@ -53,8 +53,8 @@ namespace DevZest.Windows
 
         private sealed class ConcreteInputManager : InputManager
         {
-            public ConcreteInputManager(Template template, DataSet dataSet, DataRowFilter where = null, DataRowSort orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
+            public ConcreteInputManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null, bool emptyBlockViewList = false)
+                : base(template, dataSet, filter, sort, emptyBlockViewList)
             {
             }
         }

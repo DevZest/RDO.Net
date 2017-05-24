@@ -12,8 +12,8 @@ namespace DevZest.Windows.Primitives
 {
     internal abstract class ElementManager : RowManager
     {
-        internal ElementManager(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, where, orderBy)
+        internal ElementManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort, bool emptyContainerViewList)
+            : base(template, dataSet, filter, sort)
         {
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }

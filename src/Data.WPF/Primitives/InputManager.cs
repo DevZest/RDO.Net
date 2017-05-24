@@ -17,8 +17,8 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        protected InputManager(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, where, orderBy, emptyContainerViewList)
+        protected InputManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort, bool emptyContainerViewList)
+            : base(template, dataSet, filter, sort, emptyContainerViewList)
         {
             Progress = new ValidationProgress(this);
             if (ValidationMode == ValidationMode.Implicit)

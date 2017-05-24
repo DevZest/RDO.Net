@@ -10,14 +10,14 @@ namespace DevZest.Windows.Primitives
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
     internal abstract class RowMapper : IComparer<DataRow>
     {
-        protected RowMapper(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
+        protected RowMapper(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
-            Where = where;
-            OrderBy = orderBy;
+            Filter = filter;
+            Sort = sort;
             Initialize();
             WireDataChangedEvents();
         }
@@ -67,39 +67,39 @@ namespace DevZest.Windows.Primitives
             get { return DataSet.Model; }
         }
 
-        public DataRowFilter Where { get; private set; }
+        public DataRowFilter Filter { get; private set; }
 
         private bool ApplyFilter(DataRowFilter value)
         {
-            var oldValue = Where;
-            Where = value;
+            var oldValue = Filter;
+            Filter = value;
             return value != oldValue;
         }
 
         private bool IsQuery
         {
-            get { return Where != null || OrderBy != null; }
+            get { return Filter != null || Sort != null; }
         }
 
-        public DataRowSort OrderBy { get; private set; }
+        public DataRowSort Sort { get; private set; }
 
         private bool ApplyOrderBy(DataRowSort orderBy)
         {
-            var oldValue = OrderBy;
-            OrderBy = orderBy;
-            return OrderBy != oldValue;
+            var oldValue = Sort;
+            Sort = orderBy;
+            return Sort != oldValue;
         }
 
         public int Compare(DataRow x, DataRow y)
         {
-            Debug.Assert(OrderBy != null);
-            return OrderBy.Evaluate(x, y);
+            Debug.Assert(Sort != null);
+            return Sort.Evaluate(x, y);
         }
 
-        public void Apply(DataRowFilter where, DataRowSort orderBy)
+        public void Apply(DataRowFilter filter, DataRowSort sort)
         {
-            var whereChanged = ApplyFilter(where);
-            var orderByChanged = ApplyOrderBy(orderBy);
+            var whereChanged = ApplyFilter(filter);
+            var orderByChanged = ApplyOrderBy(sort);
             if (whereChanged || orderByChanged)
                 Reload();
         }
@@ -128,7 +128,7 @@ namespace DevZest.Windows.Primitives
             if (IsRecursive || IsQuery)
                 _mappings = new Dictionary<DataRow, RowPresenter>();
 
-            if (!IsRecursive || Where == null)
+            if (!IsRecursive || Filter == null)
                 return;
 
             //If any child row fulfills the WHERE predicates, all the rows along the parent chain should be kept
@@ -136,7 +136,7 @@ namespace DevZest.Windows.Primitives
             {
                 foreach (var dataRow in dataSet)
                 {
-                    if (EvaluateWhere(dataRow))
+                    if (EvaluateFilter(dataRow))
                         EnsureAncestorsCreated(dataRow);
                 }
             }
@@ -186,8 +186,8 @@ namespace DevZest.Windows.Primitives
         {
             var parentDataRow = parent.DataRow;
             IEnumerable<DataRow> childDataRows = parentDataRow[Template.RecursiveModelOrdinal];
-            childDataRows = Filter(childDataRows);
-            childDataRows = Sort(childDataRows, GetDepth(parentDataRow) + 1);
+            childDataRows = EvaluateFilter(childDataRows);
+            childDataRows = EvaluateSort(childDataRows);
             List<RowPresenter> result = null;
             foreach (var childDataRow in childDataRows)
             {
@@ -200,19 +200,19 @@ namespace DevZest.Windows.Primitives
             return result;
         }
 
-        private IEnumerable<DataRow> Filter(IEnumerable<DataRow> dataRows)
+        private IEnumerable<DataRow> EvaluateFilter(IEnumerable<DataRow> dataRows)
         {
-            return Where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : EvaluateWhere(x));
+            return Filter == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : EvaluateFilter(x));
         }
 
-        private bool EvaluateWhere(DataRow dataRow)
+        private bool EvaluateFilter(DataRow dataRow)
         {
-            return Where.Evaluate(dataRow);
+            return Filter.Evaluate(dataRow);
         }
 
-        private IEnumerable<DataRow> Sort(IEnumerable<DataRow> dataRows, int depth)
+        private IEnumerable<DataRow> EvaluateSort(IEnumerable<DataRow> dataRows)
         {
-            return OrderBy == null ? dataRows : dataRows.OrderBy(x => x, this);
+            return Sort == null ? dataRows : dataRows.OrderBy(x => x, this);
         }
 
         internal int GetDepth(DataRow dataRow)
@@ -235,8 +235,8 @@ namespace DevZest.Windows.Primitives
         private void InitializeRowPresenters()
         {
             _rows = new List<RowPresenter>();
-            var dataRows = Filter(DataSet);
-            dataRows = Sort(dataRows, 0);
+            var dataRows = EvaluateFilter(DataSet);
+            dataRows = EvaluateSort(dataRows);
             foreach (var dataRow in dataRows)
             {
                 var row = _mappings == null ? CreateRowPresenter(dataRow) : GetOrCreate(dataRow);
@@ -253,7 +253,7 @@ namespace DevZest.Windows.Primitives
 
         private bool PassesFilter(DataRow dataRow)
         {
-            return Where == null || EvaluateWhere(dataRow);
+            return Filter == null || EvaluateFilter(dataRow);
         }
 
         private Stack<DataRow> _insertingDataRows = new Stack<DataRow>();
@@ -356,7 +356,7 @@ namespace DevZest.Windows.Primitives
         {
             Debug.Assert(GetDepth(x) == GetDepth(y));
 
-            if (OrderBy != null && OrderBy.Evaluate(x, y) == 1)
+            if (Sort != null && Sort.Evaluate(x, y) == 1)
                     return true;
 
             return x.Index > y.Index;

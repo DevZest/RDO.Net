@@ -10,8 +10,8 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowMapper : RowMapper
         {
-            public ConcreteRowMapper(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
-                : base(template, dataSet, where, orderBy)
+            public ConcreteRowMapper(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
+                : base(template, dataSet, filter, sort)
             {
             }
 
@@ -68,19 +68,19 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, DataRowFilter where = null, DataRowSort orderBy = null)
+        private static ConcreteRowMapper CreateRowMapper<T>(DataSet<T> dataSet, DataRowFilter filter = null, DataRowSort sort = null)
             where T : Model, new()
         {
             var template = new Template();
-            return new ConcreteRowMapper(template, dataSet, where, orderBy);
+            return new ConcreteRowMapper(template, dataSet, filter, sort);
         }
 
-        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, DataRowFilter where = null, DataRowSort orderBy = null)
+        private static ConcreteRowMapper CreateRecursiveRowMapper<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, DataRowFilter filter = null, DataRowSort sort = null)
             where T : Model, new()
         {
             var template = new Template();
             template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
-            return new ConcreteRowMapper(template, dataSet, where, orderBy);
+            return new ConcreteRowMapper(template, dataSet, filter, sort);
         }
 
         private void Verify(RowPresenter row, DataRow dataRow, DataSet childDataSet = null, params int[] childIndexes)

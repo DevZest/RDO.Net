@@ -8,8 +8,8 @@ namespace DevZest.Windows.Primitives
     /// <summary>Normalizes rows if recursive.</summary>
     internal abstract class RowNormalizer : RowMapper
     {
-        protected RowNormalizer(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
-            : base(template, dataSet, where, orderBy)
+        protected RowNormalizer(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
+            : base(template, dataSet, filter, sort)
         {
             Initialize();
         }

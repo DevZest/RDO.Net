@@ -13,25 +13,25 @@ namespace DevZest.Windows.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
         {
-            var result = LayoutManager.Create(template, dataSet, where, orderBy);
+            var result = LayoutManager.Create(template, dataSet, filter, sort);
             result._dataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet, DataRowFilter where = null, DataRowSort orderBy = null)
+        internal static LayoutManager Create(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutZManager(template, dataSet, where, orderBy);
+                return new LayoutZManager(template, dataSet, filter, sort);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutXManager(template, dataSet, where, orderBy);
+                return new LayoutXManager(template, dataSet, filter, sort);
             else
-                return new LayoutYManager(template, dataSet, where, orderBy);
+                return new LayoutYManager(template, dataSet, filter, sort);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, DataRowFilter where, DataRowSort orderBy, bool emptyContainerViewList)
-            : base(template, dataSet, where, orderBy, emptyContainerViewList)
+        protected LayoutManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort, bool emptyContainerViewList)
+            : base(template, dataSet, filter, sort, emptyContainerViewList)
         {
         }
 

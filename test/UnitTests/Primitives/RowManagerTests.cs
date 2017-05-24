@@ -10,8 +10,8 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(Template template, DataSet dataSet, DataRowFilter where = null, DataRowSort orderBy = null)
-                : base(template, dataSet, where, orderBy)
+            public ConcreteRowManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null)
+                : base(template, dataSet, filter, sort)
             {
             }
         }

@@ -49,21 +49,21 @@ namespace DevZest.Windows
             return LayoutManager;
         }
 
-        public DataRowFilter Where
+        public DataRowFilter Filter
         {
-            get { return LayoutManager == null ? null : LayoutManager.Where; }
-            set { Apply(value, OrderBy); }
+            get { return LayoutManager == null ? null : LayoutManager.Filter; }
+            set { Apply(value, Sort); }
         }
         
-        public DataRowSort OrderBy
+        public DataRowSort Sort
         {
-            get { return LayoutManager == null ? null : LayoutManager.OrderBy; }
-            set { Apply(Where, value); }
+            get { return LayoutManager == null ? null : LayoutManager.Sort; }
+            set { Apply(Filter, value); }
         }
 
-        public void Apply(DataRowFilter where, DataRowSort orderBy)
+        public void Apply(DataRowFilter filter, DataRowSort sort)
         {
-            RequireLayoutManager().Apply(where, orderBy);
+            RequireLayoutManager().Apply(filter, sort);
         }
 
         public IReadOnlyList<RowPresenter> Rows
