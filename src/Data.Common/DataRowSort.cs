@@ -27,7 +27,7 @@ namespace DevZest.Data
             return new FluentDelegateSort<T>(comparer);
         }
 
-        public static DataRowSort Create(Column column)
+        public static DataRowSort Create(Column column, SortDirection direction = SortDirection.Ascending)
         {
             Check.NotNull(column, nameof(column));
             if (column.ScalarSourceModels.Count != 1)
@@ -36,12 +36,12 @@ namespace DevZest.Data
             if (column.ParentModel != null)
             {
                 if (column.IsLocal)
-                    return new LocalColumnSort(column);
+                    return new LocalColumnSort(column, direction);
                 else
-                    return new SimpleColumnSort(column);
+                    return new SimpleColumnSort(column, direction);
             }
             else
-                return new ExpressionColumnSort(column);
+                return new ExpressionColumnSort(column, direction);
         }
 
         private DataRowSort()
@@ -112,11 +112,14 @@ namespace DevZest.Data
         {
             private readonly Type _modelType;
 
-            protected ColumnSort(Column column)
+            protected ColumnSort(Column column, SortDirection direction)
             {
                 Debug.Assert(column.ScalarSourceModels.Count == 1);
                 _modelType = ((Model)column.ScalarSourceModels).GetType();
+                _direction = direction;
             }
+
+            private readonly SortDirection _direction;
 
             protected abstract Column GetColumn(Model model);
 
@@ -127,14 +130,17 @@ namespace DevZest.Data
 
             protected sealed override int EvaluateCore(Model model, DataRow x, DataRow y)
             {
-                return GetColumn(model).Compare(x, y);
+                var result = GetColumn(model).Compare(x, y);
+                if (_direction == SortDirection.Descending)
+                    result *= -1;
+                return result;
             }
         }
 
         private abstract class MemberColumnSort : ColumnSort
         {
-            public MemberColumnSort(Column column)
-                : base(column)
+            public MemberColumnSort(Column column, SortDirection direction)
+                : base(column, direction)
             {
                 _ordinal = column.Ordinal;
             }
@@ -151,8 +157,8 @@ namespace DevZest.Data
 
         private sealed class SimpleColumnSort : MemberColumnSort
         {
-            public SimpleColumnSort(Column column)
-                : base(column)
+            public SimpleColumnSort(Column column, SortDirection direction)
+                : base(column, direction)
             {
             }
 
@@ -164,8 +170,8 @@ namespace DevZest.Data
 
         private sealed class LocalColumnSort : MemberColumnSort
         {
-            public LocalColumnSort(Column column)
-                : base(column)
+            public LocalColumnSort(Column column, SortDirection direction)
+                : base(column, direction)
             {
             }
 
@@ -177,8 +183,8 @@ namespace DevZest.Data
 
         private sealed class ExpressionColumnSort : ColumnSort
         {
-            public ExpressionColumnSort(Column column)
-                : base(column)
+            public ExpressionColumnSort(Column column, SortDirection direction)
+                : base(column, direction)
             {
                 _json = column.ToJson(false);
             }
