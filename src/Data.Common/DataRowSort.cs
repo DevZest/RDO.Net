@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace DevZest.Data
 {
@@ -25,11 +27,40 @@ namespace DevZest.Data
             return new FluentDelegateSort<T>(comparer);
         }
 
+        public static DataRowSort Create(Column column)
+        {
+            Check.NotNull(column, nameof(column));
+            if (column.ScalarSourceModels.Count != 1)
+                throw new ArgumentException(Strings.DataRowSort_InvalidColumnScalarSourceModels, nameof(column));
+
+            if (column.ParentModel != null)
+            {
+                if (column.IsLocal)
+                    return new LocalColumnSort(column);
+                else
+                    return new SimpleColumnSort(column);
+            }
+            else
+                return new ExpressionColumnSort(column);
+        }
+
         private DataRowSort()
         {
         }
 
-        public abstract int Evaluate(DataRow x, DataRow y);
+        public int Evaluate(DataRow x, DataRow y)
+        {
+            Check.NotNull(x, nameof(x));
+            Check.NotNull(y, nameof(y));
+            var model = x.Model;
+            if (model == null || model.GetType() != ModelType)
+                throw new ArgumentException(Strings.DataRowSort_InvalidDataRowModel, nameof(x));
+            if (y.Model != model)
+                throw new ArgumentException(Strings.DataRowSort_DifferentDataRowModel, nameof(y));
+            return EvaluateCore(model, x, y);
+        }
+
+        protected abstract int EvaluateCore(Model model, DataRow x, DataRow y);
 
         private sealed class DelegateSort<T> : DataRowSort
             where T : Model
@@ -42,12 +73,9 @@ namespace DevZest.Data
 
             private readonly Func<T, DataRow, DataRow, int> _comparer;
 
-            public override int Evaluate(DataRow x, DataRow y)
+            protected override int EvaluateCore(Model model, DataRow x, DataRow y)
             {
-                Check.NotNull(x, nameof(x));
-                Check.NotNull(y, nameof(y));
-
-                var _ = (T)x.Model;
+                var _ = (T)model;
                 return _comparer(_, x, y);
             }
 
@@ -68,18 +96,104 @@ namespace DevZest.Data
 
             private readonly Func<DataRowComparing, T, DataRowCompared> _comparer;
 
-            public override int Evaluate(DataRow x, DataRow y)
+            protected override int EvaluateCore(Model model, DataRow x, DataRow y)
             {
-                Check.NotNull(x, nameof(x));
-                Check.NotNull(y, nameof(y));
-
-                var _ = (T)x.Model;
+                var _ = (T)model;
                 return _comparer(new DataRowComparing(x, y), _).Result;
             }
 
             public override Type ModelType
             {
                 get { return typeof(T); }
+            }
+        }
+
+        private abstract class ColumnSort : DataRowSort
+        {
+            private readonly Type _modelType;
+
+            protected ColumnSort(Column column)
+            {
+                Debug.Assert(column.ScalarSourceModels.Count == 1);
+                _modelType = ((Model)column.ScalarSourceModels).GetType();
+            }
+
+            protected abstract Column GetColumn(Model model);
+
+            public sealed override Type ModelType
+            {
+                get { return _modelType; }
+            }
+
+            protected sealed override int EvaluateCore(Model model, DataRow x, DataRow y)
+            {
+                return GetColumn(model).Compare(x, y);
+            }
+        }
+
+        private abstract class MemberColumnSort : ColumnSort
+        {
+            public MemberColumnSort(Column column)
+                : base(column)
+            {
+                _ordinal = column.Ordinal;
+            }
+
+            private readonly int _ordinal;
+
+            protected abstract IReadOnlyList<Column> GetColumnList(Model model);
+
+            protected sealed override Column GetColumn(Model model)
+            {
+                return GetColumnList(model)[_ordinal];
+            }
+        }
+
+        private sealed class SimpleColumnSort : MemberColumnSort
+        {
+            public SimpleColumnSort(Column column)
+                : base(column)
+            {
+            }
+
+            protected override IReadOnlyList<Column> GetColumnList(Model model)
+            {
+                return model.Columns;
+            }
+        }
+
+        private sealed class LocalColumnSort : MemberColumnSort
+        {
+            public LocalColumnSort(Column column)
+                : base(column)
+            {
+            }
+
+            protected override IReadOnlyList<Column> GetColumnList(Model model)
+            {
+                return model.LocalColumns;
+            }
+        }
+
+        private sealed class ExpressionColumnSort : ColumnSort
+        {
+            public ExpressionColumnSort(Column column)
+                : base(column)
+            {
+                _json = column.ToJson(false);
+            }
+
+            private readonly string _json;
+            private readonly ConditionalWeakTable<Model, Column> _columnsByModel = new ConditionalWeakTable<Model, Column>();
+
+            protected override Column GetColumn(Model model)
+            {
+                return _columnsByModel.GetValue(model, CreateColumn);
+            }
+
+            private Column CreateColumn(Model model)
+            {
+                return Column.ParseJson<Column>(model, _json);
             }
         }
     }

@@ -931,6 +931,30 @@ namespace DevZest.Data
             get { return GetString("DataRowCriteria_ExpressionMustBeStatic"); }
         }
 
+        /// <summary>
+        /// The Model of comparing DataRows must be identical.
+        /// </summary>
+        public static string DataRowSort_DifferentDataRowModel
+        {
+            get { return GetString("DataRowSort_DifferentDataRowModel"); }
+        }
+
+        /// <summary>
+        /// The column is invalid. It must have single source model.
+        /// </summary>
+        public static string DataRowSort_InvalidColumnScalarSourceModels
+        {
+            get { return GetString("DataRowSort_InvalidColumnScalarSourceModels"); }
+        }
+
+        /// <summary>
+        /// The DataRow.Model is invalid. It cannot be null and it's type must be ModelType.
+        /// </summary>
+        public static string DataRowSort_InvalidDataRowModel
+        {
+            get { return GetString("DataRowSort_InvalidDataRowModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
