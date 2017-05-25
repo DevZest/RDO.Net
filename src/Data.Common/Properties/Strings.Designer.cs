@@ -940,6 +940,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// All ModelType of the composite DataRowSort items must be identical.
+        /// </summary>
+        public static string DataRowSort_DifferentSortModelType
+        {
+            get { return GetString("DataRowSort_DifferentSortModelType"); }
+        }
+
+        /// <summary>
+        /// The order by list is empty.
+        /// </summary>
+        public static string DataRowSort_EmptyOrderBy
+        {
+            get { return GetString("DataRowSort_EmptyOrderBy"); }
+        }
+
+        /// <summary>
         /// The column is invalid. It must have single source model.
         /// </summary>
         public static string DataRowSort_InvalidColumnScalarSourceModels
@@ -953,6 +969,14 @@ namespace DevZest.Data
         public static string DataRowSort_InvalidDataRowModel
         {
             get { return GetString("DataRowSort_InvalidDataRowModel"); }
+        }
+
+        /// <summary>
+        /// Column cannot be null.
+        /// </summary>
+        public static string DataRowSort_NullColumn
+        {
+            get { return GetString("DataRowSort_NullColumn"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

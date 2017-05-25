@@ -3,6 +3,7 @@ using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace DevZest.Data
@@ -29,19 +30,57 @@ namespace DevZest.Data
 
         public static DataRowSort Create(Column column, SortDirection direction = SortDirection.Ascending)
         {
-            Check.NotNull(column, nameof(column));
-            if (column.ScalarSourceModels.Count != 1)
-                throw new ArgumentException(Strings.DataRowSort_InvalidColumnScalarSourceModels, nameof(column));
+            Verify(column, nameof(column));
+            return InternalCreate(column, direction);
+        }
 
+        private static DataRowSort InternalCreate(Column column, SortDirection direction = SortDirection.Ascending)
+        {
             if (column.ParentModel != null)
             {
                 if (column.IsLocal)
-                    return new LocalColumnSort(column, direction);
+                    return new SortByLocalColumn(column, direction);
                 else
-                    return new SimpleColumnSort(column, direction);
+                    return new SortBySimpleColumn(column, direction);
             }
             else
-                return new ExpressionColumnSort(column, direction);
+                return new SortByExpressionColumn(column, direction);
+        }
+
+        private static void Verify(Column column, string paramName, int index = -1)
+        {
+            if (column == null)
+            {
+                if (index == -1)
+                    throw new ArgumentNullException(paramName);
+                else
+                    throw new ArgumentException(Strings.DataRowSort_NullColumn, GetParamName(paramName, index));
+            }
+            if (column.ScalarSourceModels.Count != 1)
+                throw new ArgumentException(Strings.DataRowSort_InvalidColumnScalarSourceModels, GetParamName(paramName, index));
+        }
+
+        private static string GetParamName(string paramName, int index)
+        {
+            return index == -1 ? paramName : string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", paramName, index);
+        }
+
+        public static DataRowSort Create(params ColumnSort[] orderBy)
+        {
+            Check.NotNull(orderBy, nameof(orderBy));
+            if (orderBy.Length == 0)
+                throw new ArgumentException(Strings.DataRowSort_EmptyOrderBy, nameof(orderBy));
+
+            var sortItems = new DataRowSort[orderBy.Length];
+            for (int i = 0; i < orderBy.Length; i++)
+            {
+                var columnSort = orderBy[i];
+                Verify(columnSort.Column, nameof(orderBy), i);
+                sortItems[i] = InternalCreate(columnSort.Column, columnSort.Direction);
+                if (i > 0 && sortItems[i].ModelType != sortItems[0].ModelType)
+                    throw new ArgumentException(Strings.DataRowSort_DifferentSortModelType, GetParamName(nameof(orderBy), i));
+            }
+            return new CompositeSort(sortItems);
         }
 
         private DataRowSort()
@@ -108,11 +147,11 @@ namespace DevZest.Data
             }
         }
 
-        private abstract class ColumnSort : DataRowSort
+        private abstract class SortByColumn : DataRowSort
         {
             private readonly Type _modelType;
 
-            protected ColumnSort(Column column, SortDirection direction)
+            protected SortByColumn(Column column, SortDirection direction)
             {
                 Debug.Assert(column.ScalarSourceModels.Count == 1);
                 _modelType = ((Model)column.ScalarSourceModels).GetType();
@@ -137,9 +176,9 @@ namespace DevZest.Data
             }
         }
 
-        private abstract class MemberColumnSort : ColumnSort
+        private abstract class SortByMemberColumn : SortByColumn
         {
-            public MemberColumnSort(Column column, SortDirection direction)
+            public SortByMemberColumn(Column column, SortDirection direction)
                 : base(column, direction)
             {
                 _ordinal = column.Ordinal;
@@ -155,9 +194,9 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class SimpleColumnSort : MemberColumnSort
+        private sealed class SortBySimpleColumn : SortByMemberColumn
         {
-            public SimpleColumnSort(Column column, SortDirection direction)
+            public SortBySimpleColumn(Column column, SortDirection direction)
                 : base(column, direction)
             {
             }
@@ -168,9 +207,9 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class LocalColumnSort : MemberColumnSort
+        private sealed class SortByLocalColumn : SortByMemberColumn
         {
-            public LocalColumnSort(Column column, SortDirection direction)
+            public SortByLocalColumn(Column column, SortDirection direction)
                 : base(column, direction)
             {
             }
@@ -181,9 +220,9 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class ExpressionColumnSort : ColumnSort
+        private sealed class SortByExpressionColumn : SortByColumn
         {
-            public ExpressionColumnSort(Column column, SortDirection direction)
+            public SortByExpressionColumn(Column column, SortDirection direction)
                 : base(column, direction)
             {
                 _json = column.ToJson(false);
@@ -200,6 +239,32 @@ namespace DevZest.Data
             private Column CreateColumn(Model model)
             {
                 return Column.ParseJson<Column>(model, _json);
+            }
+        }
+
+        private sealed class CompositeSort : DataRowSort
+        {
+            public CompositeSort(DataRowSort[] sortItems)
+            {
+                _sortItems = sortItems;
+            }
+
+            private readonly DataRowSort[] _sortItems;
+
+            protected sealed override int EvaluateCore(Model model, DataRow x, DataRow y)
+            {
+                for (int i = 0; i < _sortItems.Length; i++)
+                {
+                    var result = _sortItems[i].EvaluateCore(model, x, y);
+                    if (result != 0)
+                        return result;
+                }
+                return 0;
+            }
+
+            public override Type ModelType
+            {
+                get { return _sortItems[0].GetType(); }
             }
         }
     }

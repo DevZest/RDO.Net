@@ -465,10 +465,19 @@
   <data name="DataRowSort_DifferentDataRowModel" xml:space="preserve">
     <value>The Model of comparing DataRows must be identical.</value>
   </data>
+  <data name="DataRowSort_DifferentSortModelType" xml:space="preserve">
+    <value>All ModelType of the composite DataRowSort items must be identical.</value>
+  </data>
+  <data name="DataRowSort_EmptyOrderBy" xml:space="preserve">
+    <value>The order by list is empty.</value>
+  </data>
   <data name="DataRowSort_InvalidColumnScalarSourceModels" xml:space="preserve">
     <value>The column is invalid. It must have single source model.</value>
   </data>
   <data name="DataRowSort_InvalidDataRowModel" xml:space="preserve">
     <value>The DataRow.Model is invalid. It cannot be null and it's type must be ModelType.</value>
+  </data>
+  <data name="DataRowSort_NullColumn" xml:space="preserve">
+    <value>Column cannot be null.</value>
   </data>
 </root>
