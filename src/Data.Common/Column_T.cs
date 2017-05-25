@@ -595,6 +595,11 @@ namespace DevZest.Data
                 UpdateValue(dataRow, _editingValue);
         }
 
+        public sealed override bool HasDefaultComparer
+        {
+            get { return Comparer<T>.Default != null; }
+        }
+
         public int Compare(DataRow x, DataRow y, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
             if (comparer == null)
@@ -605,9 +610,9 @@ namespace DevZest.Data
             return result;
         }
 
-        public sealed override int Compare(DataRow x, DataRow y)
+        public sealed override int Compare(DataRow x, DataRow y, SortDirection direction)
         {
-            return Compare(x, y, SortDirection.Ascending, null);
+            return Compare(x, y, direction, null);
         }
 
         internal sealed override Column CreateBackup(Model model)

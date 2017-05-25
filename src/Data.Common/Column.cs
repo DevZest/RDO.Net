@@ -456,7 +456,14 @@ namespace DevZest.Data
             _displayPromptGetter = displayPromptGetter;
         }
 
-        public abstract int Compare(DataRow x, DataRow y);
+        public abstract bool HasDefaultComparer { get; }
+
+        public int Compare(DataRow x, DataRow y)
+        {
+            return Compare(x, y, SortDirection.Ascending);
+        }
+
+        public abstract int Compare(DataRow x, DataRow y, SortDirection direction);
 
         internal abstract void InitAsChild(Column parentColumn);
 
