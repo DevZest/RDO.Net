@@ -86,5 +86,53 @@ namespace DevZest.Data
             var columnFromJson = Column.ParseJson<_Int32>(salesOrder, json);
             Assert.AreEqual(5, columnFromJson.Eval());
         }
+
+        private class SimpleModel : Model
+        {
+            private static readonly Property<_Int32> _Column = RegisterColumn((SimpleModel x) => x.Column);
+
+            public _Int32 Column { get; private set; }
+
+            public Column<int> LocalColumn { get; private set; }
+
+            protected override void OnInitializing()
+            {
+                LocalColumn = CreateLocalColumn<int>();
+                base.OnInitializing();
+            }
+        }
+
+        [TestMethod]
+        public void Column_ToComparer()
+        {
+            {
+                var comparer = new SimpleModel().Column.ToComparer(SortDirection.Descending);
+                var dataSet = DataSet<SimpleModel>.New();
+                dataSet.AddRow((_, x) => _.Column[x] = 1);
+                dataSet.AddRow((_, x) => _.Column[x] = 2);
+                Assert.AreEqual(typeof(SimpleModel), comparer.ModelType);
+                Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+
+            {
+                var simpleModel = new SimpleModel();
+                var condition = (simpleModel.Column == 1);
+                var comparer = condition.ToComparer(SortDirection.Descending);
+                var dataSet = DataSet<SimpleModel>.New();
+                dataSet.AddRow((_, x) => _.Column[x] = 1);
+                dataSet.AddRow((_, x) => _.Column[x] = 2);
+                Assert.AreEqual(typeof(SimpleModel), comparer.ModelType);
+                Assert.AreEqual(-1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+
+            {
+                var dataSet = DataSet<SimpleModel>.New();
+                dataSet.AddRow((_, x) => _.LocalColumn[x] = 1);
+                dataSet.AddRow((_, x) => _.LocalColumn[x] = 2);
+                var comparer = dataSet._.LocalColumn.ToComparer(SortDirection.Descending);
+                Assert.AreEqual(typeof(SimpleModel), comparer.ModelType);
+                Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+        }
     }
 }
