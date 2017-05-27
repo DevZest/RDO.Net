@@ -13,25 +13,25 @@ namespace DevZest.Windows.Primitives
 {
     internal abstract partial class LayoutManager : InputManager
     {
-        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
+        internal static LayoutManager Create(DataPresenter dataPresenter, Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
-            var result = LayoutManager.Create(template, dataSet, filter, sort);
+            var result = LayoutManager.Create(template, dataSet, where, orderBy);
             result._dataPresenter = dataPresenter;
             return result;
         }
 
-        internal static LayoutManager Create(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null)
+        internal static LayoutManager Create(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
         {
             if (!template.Orientation.HasValue)
-                return new LayoutZManager(template, dataSet, filter, sort);
+                return new LayoutZManager(template, dataSet, where, orderBy);
             else if (template.Orientation.GetValueOrDefault() == Orientation.Horizontal)
-                return new LayoutXManager(template, dataSet, filter, sort);
+                return new LayoutXManager(template, dataSet, where, orderBy);
             else
-                return new LayoutYManager(template, dataSet, filter, sort);
+                return new LayoutYManager(template, dataSet, where, orderBy);
         }
 
-        protected LayoutManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort, bool emptyContainerViewList)
-            : base(template, dataSet, filter, sort, emptyContainerViewList)
+        protected LayoutManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
+            : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
         }
 

@@ -2,6 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Windows.Primitives
 {
@@ -10,8 +11,8 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowManager : RowManager
         {
-            public ConcreteRowManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null)
-                : base(template, dataSet, filter, sort)
+            public ConcreteRowManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
+                : base(template, dataSet, where, orderBy)
             {
             }
         }

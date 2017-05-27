@@ -1,5 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Primitives;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,16 +9,16 @@ using System.Linq;
 namespace DevZest.Windows.Primitives
 {
     /// <summary>Handles mapping between <see cref="DataRow"/> and <see cref="RowPresenter"/>, with filtering and sorting.</summary>
-    internal abstract class RowMapper : IComparer<DataRow>
+    internal abstract class RowMapper
     {
-        protected RowMapper(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
+        protected RowMapper(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             Debug.Assert(template != null && template.RowManager == null);
             Debug.Assert(dataSet != null);
             _template = template;
             _dataSet = dataSet;
-            Filter = filter;
-            Sort = sort;
+            Where = where;
+            OrderBy = orderBy;
             Initialize();
             WireDataChangedEvents();
         }
@@ -67,39 +68,33 @@ namespace DevZest.Windows.Primitives
             get { return DataSet.Model; }
         }
 
-        public DataRowFilter Filter { get; private set; }
+        public Predicate<DataRow> Where { get; private set; }
 
-        private bool ApplyFilter(DataRowFilter value)
+        private bool ApplyWhere(Predicate<DataRow> where)
         {
-            var oldValue = Filter;
-            Filter = value;
-            return value != oldValue;
+            var oldValue = Where;
+            Where = where;
+            return where != oldValue;
         }
 
         private bool IsQuery
         {
-            get { return Filter != null || Sort != null; }
+            get { return Where != null || OrderBy != null; }
         }
 
-        public DataRowSort Sort { get; private set; }
+        public IComparer<DataRow> OrderBy { get; private set; }
 
-        private bool ApplyOrderBy(DataRowSort orderBy)
+        private bool ApplyOrderBy(IComparer<DataRow> orderBy)
         {
-            var oldValue = Sort;
-            Sort = orderBy;
-            return Sort != oldValue;
+            var oldValue = OrderBy;
+            OrderBy = orderBy;
+            return OrderBy != oldValue;
         }
 
-        public int Compare(DataRow x, DataRow y)
+        public void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
-            Debug.Assert(Sort != null);
-            return Sort.Evaluate(x, y);
-        }
-
-        public void Apply(DataRowFilter filter, DataRowSort sort)
-        {
-            var whereChanged = ApplyFilter(filter);
-            var orderByChanged = ApplyOrderBy(sort);
+            var whereChanged = ApplyWhere(where);
+            var orderByChanged = ApplyOrderBy(orderBy);
             if (whereChanged || orderByChanged)
                 Reload();
         }
@@ -128,7 +123,7 @@ namespace DevZest.Windows.Primitives
             if (IsRecursive || IsQuery)
                 _mappings = new Dictionary<DataRow, RowPresenter>();
 
-            if (!IsRecursive || Filter == null)
+            if (!IsRecursive || Where == null)
                 return;
 
             //If any child row fulfills the WHERE predicates, all the rows along the parent chain should be kept
@@ -202,17 +197,17 @@ namespace DevZest.Windows.Primitives
 
         private IEnumerable<DataRow> EvaluateFilter(IEnumerable<DataRow> dataRows)
         {
-            return Filter == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : EvaluateFilter(x));
+            return Where == null ? dataRows : dataRows.Where(x => IsRecursive && _mappings.ContainsKey(x) ? true : EvaluateFilter(x));
         }
 
         private bool EvaluateFilter(DataRow dataRow)
         {
-            return Filter.Evaluate(dataRow);
+            return Where(dataRow);
         }
 
         private IEnumerable<DataRow> EvaluateSort(IEnumerable<DataRow> dataRows)
         {
-            return Sort == null ? dataRows : dataRows.OrderBy(x => x, this);
+            return OrderBy == null ? dataRows : dataRows.OrderBy(x => x, OrderBy);
         }
 
         internal int GetDepth(DataRow dataRow)
@@ -253,7 +248,7 @@ namespace DevZest.Windows.Primitives
 
         private bool PassesFilter(DataRow dataRow)
         {
-            return Filter == null || EvaluateFilter(dataRow);
+            return Where == null || EvaluateFilter(dataRow);
         }
 
         private Stack<DataRow> _insertingDataRows = new Stack<DataRow>();
@@ -356,8 +351,8 @@ namespace DevZest.Windows.Primitives
         {
             Debug.Assert(GetDepth(x) == GetDepth(y));
 
-            if (Sort != null && Sort.Evaluate(x, y) == 1)
-                    return true;
+            if (OrderBy != null && OrderBy.Compare(x, y) == 1)
+                return true;
 
             return x.Index > y.Index;
         }

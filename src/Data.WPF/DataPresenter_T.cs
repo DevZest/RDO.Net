@@ -15,10 +15,10 @@ namespace DevZest.Windows
             if (resetCriteria)
                 Show(dataView, dataSet, null, null);
             else
-                Show(dataView, dataSet, Filter, Sort);
+                Show(dataView, dataSet, Where, OrderBy);
         }
 
-        public void Show(DataView dataView, DataSet<T> dataSet, DataRowFilter filter, DataRowSort sort)
+        public void Show(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));
@@ -36,7 +36,7 @@ namespace DevZest.Windows
             {
                 BuildTemplate(builder);
             }
-            _layoutManager = LayoutManager.Create(this, template, dataSet, filter, sort);
+            _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
             AttachView(dataView);
         }
 
@@ -78,19 +78,36 @@ namespace DevZest.Windows
             get { return DataSet == null ? null : DataSet._; }
         }
 
-        public DataRowFilter NewFilter(Func<T, DataRow, bool> predict)
+        private sealed class DataRowFilter
         {
-            return DataRowFilter.Create(predict);
+            public DataRowFilter(Func<T, DataRow, bool> where)
+            {
+                Debug.Assert(where != null);
+                _where = where;
+            }
+
+            private readonly Func<T, DataRow, bool> _where;
+
+            private bool Evaluate(DataRow dataRow)
+            {
+                return _where((T)dataRow.Model, dataRow);
+            }
+
+            public Predicate<DataRow> ToPredicate()
+            {
+                return Evaluate;
+            }
         }
 
-        public DataRowSort NewSort(Func<T, DataRow, DataRow, int> comparer)
+        public static Predicate<DataRow> ToPredicate(Func<T, DataRow, bool> predicate, bool ensureStatic = true)
         {
-            return DataRowSort.Create(comparer);
-        }
+            if (predicate == null)
+                return null;
 
-        public DataRowSort NewSort(Func<DataRowComparing, T, DataRowCompared> comparer)
-        {
-            return DataRowSort.Create(comparer);
+            if (ensureStatic && predicate.Target != null)
+                throw new ArgumentException(Strings.DataPresenter_ExpressionMustBeStatic, nameof(predicate));
+
+            return new DataRowFilter(predicate).ToPredicate();
         }
     }
 }

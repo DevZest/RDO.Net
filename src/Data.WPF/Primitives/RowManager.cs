@@ -227,8 +227,8 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        protected RowManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
-            : base(template, dataSet, filter, sort)
+        protected RowManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, where, orderBy)
         {
             Template.RowManager = this;
             var coercedVirtualRowIndex = CoercedVirtualRowIndex;

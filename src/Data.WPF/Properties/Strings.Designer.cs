@@ -100,6 +100,14 @@ namespace DevZest.Windows
         }
 
         /// <summary>
+        /// The expression must be static.
+        /// </summary>
+        public static string DataPresenter_ExpressionMustBeStatic
+        {
+            get { return GetString("DataPresenter_ExpressionMustBeStatic"); }
+        }
+
+        /// <summary>
         /// The DataView is invalid. It has been associated with another DataPresenter.
         /// </summary>
         public static string DataPresenter_InvalidDataView

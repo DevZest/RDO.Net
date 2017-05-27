@@ -2,6 +2,7 @@
 using DevZest.Windows.Controls;
 using DevZest.Windows.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace DevZest.Windows
@@ -40,8 +41,8 @@ namespace DevZest.Windows
 
         private sealed class ConcreteElementManager : ElementManager
         {
-            public ConcreteElementManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, filter, sort, emptyBlockViewList)
+            public ConcreteElementManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
+                : base(template, dataSet, where, orderBy, emptyBlockViewList)
             {
             }
         }
@@ -53,8 +54,8 @@ namespace DevZest.Windows
 
         private sealed class ConcreteInputManager : InputManager
         {
-            public ConcreteInputManager(Template template, DataSet dataSet, DataRowFilter filter = null, DataRowSort sort = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, filter, sort, emptyBlockViewList)
+            public ConcreteInputManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
+                : base(template, dataSet, where, orderBy, emptyBlockViewList)
             {
             }
         }

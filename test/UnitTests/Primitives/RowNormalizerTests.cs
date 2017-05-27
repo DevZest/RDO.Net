@@ -11,8 +11,8 @@ namespace DevZest.Windows.Primitives
     {
         private sealed class ConcreteRowNormalizer : RowNormalizer
         {
-            public ConcreteRowNormalizer(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
-                : base(template, dataSet, filter, sort)
+            public ConcreteRowNormalizer(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+                : base(template, dataSet, where, orderBy)
             {
             }
 
@@ -24,19 +24,20 @@ namespace DevZest.Windows.Primitives
             }
         }
 
-        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0, DataRowFilter filter = null, DataRowSort sort = null)
+        private static RowNormalizer CreateRowNormalizer<T>(DataSet<T> dataSet, int hierarchicalModelOrdinal = 0,
+            Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
             template.RecursiveModelOrdinal = hierarchicalModelOrdinal;
-            return new ConcreteRowNormalizer(template, dataSet, filter, sort);
+            return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
         }
 
-        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, DataRowFilter filter = null, DataRowSort sort = null)
+        private static RowNormalizer CreateSimpleRowNormalizer<T>(DataSet<T> dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null)
             where T : Model, new()
         {
             var template = new Template();
-            return new ConcreteRowNormalizer(template, dataSet, filter, sort);
+            return new ConcreteRowNormalizer(template, dataSet, where, orderBy);
         }
 
 
@@ -118,7 +119,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, DataRowSort.Create<ProductCategory>(OrderByNameDesc));
+            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, _.Name.ToComparer(SortDirection.Descending));
             var rows = rowNormalizer.Rows;
 
             rows[0].Expand();
@@ -137,11 +138,6 @@ namespace DevZest.Windows.Primitives
             rows[0].Collapse();
             subCategories._.Name[subCategories[1]] = "Name-3-5";
             VerifyDepths(rows, 0, 0, 0);
-        }
-
-        private static DataRowCompared OrderByNameDesc(DataRowComparing comparing, ProductCategory _)
-        {
-            return comparing.OrderBy(_.Name, SortDirection.Descending);
         }
     }
 }

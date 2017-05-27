@@ -10,8 +10,8 @@ namespace DevZest.Windows.Primitives
 {
     internal sealed class LayoutZManager : LayoutManager
     {
-        internal LayoutZManager(Template template, DataSet dataSet, DataRowFilter filter, DataRowSort sort)
-            : base(template, dataSet, filter, sort, true)
+        internal LayoutZManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+            : base(template, dataSet, where, orderBy, true)
         {
         }
 
