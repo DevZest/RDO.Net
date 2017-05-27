@@ -602,12 +602,22 @@ namespace DevZest.Data
 
         public int Compare(DataRow x, DataRow y, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
-            if (comparer == null)
-                comparer = Comparer<T>.Default;
+            comparer = Verify(comparer, nameof(comparer));
             var result = comparer.Compare(this[x], this[y]);
             if (direction == SortDirection.Descending)
                 result *= -1;
             return result;
+        }
+
+        private IComparer<T> Verify(IComparer<T> comparer, string paramName)
+        {
+            if (comparer == null)
+            {
+                comparer = Comparer<T>.Default;
+                if (comparer == null)
+                    throw new ArgumentNullException(paramName, Strings.Column_NoDefaultComparer);
+            }
+            return comparer;
         }
 
         public sealed override int Compare(DataRow x, DataRow y, SortDirection direction)
@@ -618,6 +628,13 @@ namespace DevZest.Data
         internal sealed override Column CreateBackup(Model model)
         {
             return model.DataSetContainer.CreateLocalColumn<T>(model);
+        }
+
+        public IDataRowComparer ToComparer(SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
+        {
+            VerifySingleSourceModel();
+            comparer = Verify(comparer, nameof(comparer));
+            return DataRowComparer.Create(this, direction, comparer);
         }
     }
 }

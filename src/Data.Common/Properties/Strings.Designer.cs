@@ -924,59 +924,43 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The expression must be static.
-        /// </summary>
-        public static string DataRowCriteria_ExpressionMustBeStatic
-        {
-            get { return GetString("DataRowCriteria_ExpressionMustBeStatic"); }
-        }
-
-        /// <summary>
         /// The Model of comparing DataRows must be identical.
         /// </summary>
-        public static string DataRowSort_DifferentDataRowModel
+        public static string DataRowComparer_DifferentDataRowModel
         {
-            get { return GetString("DataRowSort_DifferentDataRowModel"); }
+            get { return GetString("DataRowComparer_DifferentDataRowModel"); }
         }
 
         /// <summary>
-        /// All ModelType of the composite DataRowSort items must be identical.
+        /// Only single source model column can be converted to static DataRow comparer.
         /// </summary>
-        public static string DataRowSort_DifferentSortModelType
+        public static string Column_MustBeSingleSourceModel
         {
-            get { return GetString("DataRowSort_DifferentSortModelType"); }
+            get { return GetString("Column_MustBeSingleSourceModel"); }
         }
 
         /// <summary>
-        /// The order by list is empty.
+        /// The DataRow.Model is invalid for the comparer.
         /// </summary>
-        public static string DataRowSort_EmptyOrderBy
+        public static string DataRowComparer_InvalidDataRowModel
         {
-            get { return GetString("DataRowSort_EmptyOrderBy"); }
+            get { return GetString("DataRowComparer_InvalidDataRowModel"); }
         }
 
         /// <summary>
-        /// The column is invalid. It must have single source model.
+        /// The comparer cannot be null because there is no default comparer for this column.
         /// </summary>
-        public static string DataRowSort_InvalidColumnScalarSourceModels
+        public static string Column_NoDefaultComparer
         {
-            get { return GetString("DataRowSort_InvalidColumnScalarSourceModels"); }
+            get { return GetString("Column_NoDefaultComparer"); }
         }
 
         /// <summary>
-        /// The DataRow.Model is invalid. It cannot be null and it's type must be ModelType.
+        /// The comparer's ModelType is invalid.
         /// </summary>
-        public static string DataRowSort_InvalidDataRowModel
+        public static string Model_InvalidComparerModelType
         {
-            get { return GetString("DataRowSort_InvalidDataRowModel"); }
-        }
-
-        /// <summary>
-        /// Column cannot be null.
-        /// </summary>
-        public static string DataRowSort_NullColumn
-        {
-            get { return GetString("DataRowSort_NullColumn"); }
+            get { return GetString("Model_InvalidComparerModelType"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)
