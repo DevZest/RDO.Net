@@ -285,5 +285,67 @@ AfterDataRowInserted: DataSet-0[0].
             Assert.AreEqual(12, localColumn2[25]);
             Assert.AreEqual(13, localColumn2[26]);
         }
+
+        private class OrderByModel : Model
+        {
+            private static readonly Property<_Int32> _Column = RegisterColumn((OrderByModel x) => x.Column);
+
+            public _Int32 Column { get; private set; }
+
+            public Column<int> LocalColumn { get; private set; }
+
+            protected override void OnInitializing()
+            {
+                LocalColumn = CreateLocalColumn<int>();
+                base.OnInitializing();
+            }
+        }
+
+        [TestMethod]
+        public void DataRow_OrderBy()
+        {
+            {
+                var comparer = DataRow.OrderBy(new OrderByModel().Column, SortDirection.Descending);
+                var dataSet = DataSet<OrderByModel>.New();
+                dataSet.AddRow((_, x) => _.Column[x] = 1);
+                dataSet.AddRow((_, x) => _.Column[x] = 2);
+                Assert.AreEqual(typeof(OrderByModel), comparer.ModelType);
+                Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+
+            {
+                var simpleModel = new OrderByModel();
+                var condition = (simpleModel.Column == 1);
+                var comparer = DataRow.OrderBy(condition, SortDirection.Descending);
+                var dataSet = DataSet<OrderByModel>.New();
+                dataSet.AddRow((_, x) => _.Column[x] = 1);
+                dataSet.AddRow((_, x) => _.Column[x] = 2);
+                Assert.AreEqual(typeof(OrderByModel), comparer.ModelType);
+                Assert.AreEqual(-1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+
+            {
+                var dataSet = DataSet<OrderByModel>.New();
+                dataSet.AddRow((_, x) => _.LocalColumn[x] = 1);
+                dataSet.AddRow((_, x) => _.LocalColumn[x] = 2);
+                var comparer = DataRow.OrderBy(dataSet._.LocalColumn, SortDirection.Descending);
+                Assert.AreEqual(typeof(OrderByModel), comparer.ModelType);
+                Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+
+            {
+                var dataSet = DataSet<OrderByModel>.New();
+                var _ = dataSet._;
+                dataSet.AddRow();
+                dataSet.AddRow();
+                _.Column[0] = 1;
+                _.Column[1] = 1;
+                _.LocalColumn[0] = 1;
+                _.LocalColumn[1] = 2;
+                var comparer = DataRow.OrderBy(_.Column).ThenBy(_.LocalColumn, SortDirection.Descending);
+                Assert.AreEqual(_.GetType(), comparer.ModelType);
+                Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
+            }
+        }
     }
 }

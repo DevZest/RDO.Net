@@ -411,21 +411,5 @@ namespace DevZest.Data
             salesOrders.Remove(salesOrders[0]);
             Assert.AreEqual(1, dataRowRemovedCount);
         }
-
-        [TestMethod]
-        public void Model_ToComparer()
-        {
-            var dataSet = DataSet<SimpleModel>.New();
-            var _ = dataSet._;
-            var comparer = _.ToComparer(_.Column1.ToComparer(), _.Column2.ToComparer(SortDirection.Descending));
-            dataSet.AddRow();
-            dataSet.AddRow();
-            _.Column1[0] = 1;
-            _.Column1[1] = 1;
-            _.Column2[0] = 1;
-            _.Column2[1] = 2;
-            Assert.AreEqual(_.GetType(), comparer.ModelType);
-            Assert.AreEqual(1, comparer.Compare(dataSet[0], dataSet[1]));
-        }
     }
 }

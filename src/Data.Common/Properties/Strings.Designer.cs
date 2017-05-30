@@ -932,11 +932,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Only single source model column can be converted to static DataRow comparer.
+        /// Order by column must be single source model.
         /// </summary>
-        public static string Column_MustBeSingleSourceModel
+        public static string DataRow_OrderByColumnMustBeSingleSourceModel
         {
-            get { return GetString("Column_MustBeSingleSourceModel"); }
+            get { return GetString("DataRow_OrderByColumnMustBeSingleSourceModel"); }
         }
 
         /// <summary>
@@ -961,6 +961,14 @@ namespace DevZest.Data
         public static string Model_InvalidComparerModelType
         {
             get { return GetString("Model_InvalidComparerModelType"); }
+        }
+
+        /// <summary>
+        /// The expression must be static.
+        /// </summary>
+        public static string DataRow_WhereExpressionMustBeStatic
+        {
+            get { return GetString("DataRow_WhereExpressionMustBeStatic"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

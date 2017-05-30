@@ -462,8 +462,8 @@
   <data name="DataRowComparer_DifferentDataRowModel" xml:space="preserve">
     <value>The Model of comparing DataRows must be identical.</value>
   </data>
-  <data name="Column_MustBeSingleSourceModel" xml:space="preserve">
-    <value>Only single source model column can be converted to static DataRow comparer.</value>
+  <data name="DataRow_OrderByColumnMustBeSingleSourceModel" xml:space="preserve">
+    <value>Order by column must be single source model.</value>
   </data>
   <data name="DataRowComparer_InvalidDataRowModel" xml:space="preserve">
     <value>The DataRow.Model is invalid for the comparer.</value>
@@ -473,5 +473,11 @@
   </data>
   <data name="Model_InvalidComparerModelType" xml:space="preserve">
     <value>The comparer's ModelType is invalid.</value>
+  </data>
+  <data name="DataRow_WhereExpressionMustBeStatic" xml:space="preserve">
+    <value>The expression must be static.</value>
+  </data>
+  <data name="DataRowComparer_DifferentModelType" xml:space="preserve">
+    <value>The model type must be identical.</value>
   </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -504,5 +505,58 @@ namespace DevZest.Data
         }
 
         public bool IsPrimaryKeySealed { get; set; }
+
+        private sealed class DataRowFilter<T>
+            where T : Model
+        {
+            public DataRowFilter(Func<T, DataRow, bool> where)
+            {
+                Debug.Assert(where != null);
+                _where = where;
+            }
+
+            private readonly Func<T, DataRow, bool> _where;
+
+            private bool Evaluate(DataRow dataRow)
+            {
+                return _where((T)dataRow.Model, dataRow);
+            }
+
+            public Predicate<DataRow> ToPredicate()
+            {
+                return Evaluate;
+            }
+        }
+
+        public static Predicate<DataRow> Where<T>(Func<T, DataRow, bool> predicate, bool ensureStatic = true)
+            where T : Model
+        {
+            if (predicate == null)
+                return null;
+
+            if (ensureStatic && predicate.Target != null)
+                throw new ArgumentException(Strings.DataRow_WhereExpressionMustBeStatic, nameof(predicate));
+
+            return new DataRowFilter<T>(predicate).ToPredicate();
+        }
+
+        public static IDataRowComparer OrderBy(Column column, SortDirection direction = SortDirection.Ascending)
+        {
+            VerifyOrderBy(column, nameof(column));
+            return column.ToComparer(direction);
+        }
+
+        public static IDataRowComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
+        {
+            VerifyOrderBy(column, nameof(column));
+            return column.ToComparer(direction, comparer);
+        }
+
+        private static void VerifyOrderBy(Column column, string paramName)
+        {
+            Check.NotNull(column, paramName);
+            if (column.ScalarSourceModels.Count != 1)
+                throw new ArgumentException(Strings.DataRow_OrderByColumnMustBeSingleSourceModel, paramName);
+        }
     }
 }

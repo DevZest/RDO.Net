@@ -1334,26 +1334,5 @@ namespace DevZest.Data
             return DataSetContainer.CreateLocalColumn(childModel, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10,
                 column11, column12, expression, builder);
         }
-
-        public IDataRowComparer ToComparer(params IDataRowComparer[] comparers)
-        {
-            if (comparers == null || comparers.Length == 0)
-                return null;
-
-            var modelType = this.GetType();
-            for (int i = 0; i < comparers.Length; i++)
-            {
-                var comparer = comparers[i];
-                if (comparer == null)
-                    throw new ArgumentNullException(string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(comparers), i));
-                if (comparer.ModelType != modelType)
-                    throw new ArgumentException(Strings.Model_InvalidComparerModelType, string.Format(CultureInfo.InvariantCulture, "{0}[{1}]", nameof(comparers), i));
-            }
-
-            if (comparers.Length == 1)
-                return comparers[0];
-            else
-                return DataRowComparer.Create(comparers);
-        }
     }
 }

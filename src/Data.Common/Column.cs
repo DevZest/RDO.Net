@@ -480,16 +480,6 @@ namespace DevZest.Data
 
         internal abstract Column CreateBackup(Model model);
 
-        public IDataRowComparer ToComparer(SortDirection direction = SortDirection.Ascending)
-        {
-            VerifySingleSourceModel();
-            return DataRowComparer.Create(this, direction);
-        }
-
-        internal void VerifySingleSourceModel()
-        {
-            if (ScalarSourceModels.Count != 1)
-                throw new InvalidOperationException(Strings.Column_MustBeSingleSourceModel);
-        }
+        internal abstract IDataRowComparer ToComparer(SortDirection direction);
     }
 }
