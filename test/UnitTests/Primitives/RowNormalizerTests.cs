@@ -119,7 +119,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, _.Name.ToComparer(SortDirection.Descending));
+            var rowNormalizer = CreateRowNormalizer(dataSet, 0, null, DataRow.OrderBy(_.Name, SortDirection.Descending));
             var rows = rowNormalizer.Rows;
 
             rows[0].Expand();

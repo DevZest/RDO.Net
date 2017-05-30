@@ -51,15 +51,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170527\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170530\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DevZest.Data.SqlServer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.SqlServer.1.0.0-rc-20170527\lib\net451\DevZest.Data.SqlServer.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.SqlServer.1.0.0-rc-20170530\lib\net451\DevZest.Data.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DevZest.Samples.AdventureWorksLT, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Samples.AdventureWorksLT.1.0.0-rc-20170527\lib\net451\DevZest.Samples.AdventureWorksLT.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Samples.AdventureWorksLT.1.0.0-rc-20170530\lib\net451\DevZest.Samples.AdventureWorksLT.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

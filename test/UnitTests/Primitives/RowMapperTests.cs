@@ -287,7 +287,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataPresenter<ProductCategory>.ToPredicate(Condition1), _.Name.ToComparer(SortDirection.Descending));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRow.Where<ProductCategory>(Condition1), DataRow.OrderBy(_.Name, SortDirection.Descending));
 
             var rows = rowMapper.Rows;
             Assert.AreEqual(1, rows.Count);
@@ -307,7 +307,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataPresenter<ProductCategory>.ToPredicate(Condition2), _.Name.ToComparer(SortDirection.Descending));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRow.Where<ProductCategory>(Condition2), DataRow.OrderBy(_.Name, SortDirection.Descending));
 
             dataSet.SubCategories(0).AddRow((__, x) => __.Name[x] = "Name-1-4");
 
@@ -330,7 +330,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataPresenter<ProductCategory>.ToPredicate(Condition1), _.Name.ToComparer(SortDirection.Descending));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRow.Where<ProductCategory>(Condition1), DataRow.OrderBy(_.Name, SortDirection.Descending));
 
             dataSet.SubCategories(0).RemoveAt(1);
 
@@ -349,7 +349,7 @@ namespace DevZest.Windows.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3);
             var _ = dataSet._;
-            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataPresenter<ProductCategory>.ToPredicate(Condition2), _.Name.ToComparer(SortDirection.Descending));
+            var rowMapper = CreateRecursiveRowMapper(dataSet, 0, DataRow.Where<ProductCategory>(Condition2), DataRow.OrderBy(_.Name, SortDirection.Descending));
 
             var subCategories = dataSet.SubCategories(0);
             subCategories._.Name[subCategories[0]] = "Name-1-4";

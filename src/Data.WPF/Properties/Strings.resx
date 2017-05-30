@@ -150,9 +150,6 @@
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
   </data>
-  <data name="DataPresenter_ExpressionMustBeStatic" xml:space="preserve">
-    <value>The expression must be static.</value>
-  </data>
   <data name="DataPresenter_InvalidDataView" xml:space="preserve">
     <value>The DataView is invalid. It has been associated with another DataPresenter.</value>
   </data>

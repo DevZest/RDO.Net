@@ -77,37 +77,5 @@ namespace DevZest.Windows
         {
             get { return DataSet == null ? null : DataSet._; }
         }
-
-        private sealed class DataRowFilter
-        {
-            public DataRowFilter(Func<T, DataRow, bool> where)
-            {
-                Debug.Assert(where != null);
-                _where = where;
-            }
-
-            private readonly Func<T, DataRow, bool> _where;
-
-            private bool Evaluate(DataRow dataRow)
-            {
-                return _where((T)dataRow.Model, dataRow);
-            }
-
-            public Predicate<DataRow> ToPredicate()
-            {
-                return Evaluate;
-            }
-        }
-
-        public static Predicate<DataRow> ToPredicate(Func<T, DataRow, bool> predicate, bool ensureStatic = true)
-        {
-            if (predicate == null)
-                return null;
-
-            if (ensureStatic && predicate.Target != null)
-                throw new ArgumentException(Strings.DataPresenter_ExpressionMustBeStatic, nameof(predicate));
-
-            return new DataRowFilter(predicate).ToPredicate();
-        }
     }
 }
