@@ -54,12 +54,33 @@ namespace DevZest.Windows.Controls
                 Debug.Assert((value == null) != (DataPresenter == null));
 
                 _dataPresenter = value;
-                if (value != null)
-                    Scrollable = value.Template.Orientation.HasValue;
-                else
+                if (value == null)
                     ClearValue(ScrollablePropertyKey);
-                SetElementsPanel();
+                DataLoadState = DataLoadState.NotLoaded;
+                DataLoadError = null;
             }
+        }
+
+        internal void OnDataLoading()
+        {
+            DataLoadState = DataLoadState.Loading;
+            DataLoadError = null;
+        }
+
+        internal void OnDataLoaded()
+        {
+            Debug.Assert(DataPresenter != null);
+            DataLoadState = DataLoadState.Loaded;
+            DataLoadError = null;
+            Scrollable = DataPresenter.Template.Orientation.HasValue;
+            SetElementsPanel();
+            this.SetupCommandEntries(DataPresenter.DataViewCommandEntries);
+        }
+
+        internal void OnDataLoadFailed(string dataLoadError)
+        {
+            DataLoadState = DataLoadState.Failed;
+            DataLoadError = dataLoadError;
         }
 
         private LayoutManager LayoutManager
@@ -114,15 +135,6 @@ namespace DevZest.Windows.Controls
         {
             get { return (double)GetValue(ScrollLineWidthProperty); }
             set { SetValue(ScrollLineWidthProperty, value); }
-        }
-
-        internal void SetupCommandEntries()
-        {
-            var dataPresenter = DataPresenter;
-            if (dataPresenter == null)
-                return;
-
-            this.SetupCommandEntries(dataPresenter.DataViewCommandEntries);
         }
 
         public DataLoadState DataLoadState

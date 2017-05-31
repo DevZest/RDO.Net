@@ -242,11 +242,6 @@ namespace DevZest.Windows
             get { return LayoutManager as ScrollableManager; }
         }
 
-        protected internal virtual IEnumerable<CommandEntry> DataViewCommandEntries
-        {
-            get { yield break; }
-        }
-
         internal protected virtual void ToggleExpandState(RowPresenter rowPresenter)
         {
             rowPresenter.InternalToggleExpandState();

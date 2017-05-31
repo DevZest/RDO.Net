@@ -8,6 +8,28 @@ namespace DevZest.Windows
 {
     partial class DataPresenter
     {
+        protected internal virtual IEnumerable<CommandEntry> DataViewCommandEntries
+        {
+            get
+            {
+                yield return DataView.RefreshCommand.CommandBinding(Refresh, CanRefresh);
+            }
+        }
+
+        private void Refresh(object sender, ExecutedRoutedEventArgs e)
+        {
+            Reload();
+        }
+
+        internal abstract void Reload();
+
+        private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = CanReload;
+        }
+
+        internal abstract bool CanReload { get; }
+
         protected internal virtual IEnumerable<CommandEntry> RowViewCommandEntries
         {
             get
