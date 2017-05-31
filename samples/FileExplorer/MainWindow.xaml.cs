@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DevZest.Data;
+using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FileExplorer
@@ -29,19 +31,31 @@ namespace FileExplorer
                     return;
 
                 _currentFolder = value;
-                ShowCurrentFolderContents();
+                ShowCurrentFolderContentsAsync();
             }
         }
 
-        private void ShowCurrentFolderContents()
+        private bool _isShowingCurrentFolderContents;
+        private async void ShowCurrentFolderContentsAsync()
+        {
+            if (_isShowingCurrentFolderContents)
+                return;
+            _isShowingCurrentFolderContents = true;
+            await _largeIconsList.ShowAsync(_folderContentListView, GetCurrentFolderContentsAsync);
+            _isShowingCurrentFolderContents = false;
+        }
+
+        private async Task<DataSet<FolderContent>> GetCurrentFolderContentsAsync()
         {
             string currentFolder;
+            DataSet<FolderContent> result;
             do
             {
                 currentFolder = CurrentFolder;
-                _largeIconsList.ShowAsync(_folderContentListView, () => FolderContent.GetFolderContentsAsync(currentFolder));
+                result = await FolderContent.GetFolderContentsAsync(currentFolder);
             }
             while (currentFolder != CurrentFolder);
+            return result;
         }
 
         private void OnFolderTreeViewRefreshed(object sender, EventArgs e)

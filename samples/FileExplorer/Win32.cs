@@ -60,18 +60,28 @@ namespace FileExplorer
             return shinfo.szTypeName;
         }
 
-        public static ImageSource GetIcon(string fullpath, bool isSmall)
+        public static ImageSource GetDirectoryIcon(string fullPath, bool isSmall)
         {
             IntPtr hResult;
             SHFILEINFO shinfo = new SHFILEINFO();
 
-            hResult = SHGetFileInfo(fullpath, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | (isSmall ? SHGFI_SMALLICON : SHGFI_LARGEICON));
+            hResult = SHGetFileInfo(fullPath, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | (isSmall ? SHGFI_SMALLICON : SHGFI_LARGEICON));
             return GetIcon(shinfo.hIcon);
         }
 
         private static ImageSource GetIcon(IntPtr intPtr)
         {
             using (Icon icon = Icon.FromHandle(intPtr))
+            {
+                var result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
+                result.Freeze();    //image must be frozen for cross thread use
+                return result;
+            }
+        }
+
+        public static ImageSource GetFileIcon(string fullPath, bool isSmall)
+        {
+            using (Icon icon = Icon.ExtractAssociatedIcon(fullPath))
             {
                 var result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
                 result.Freeze();    //image must be frozen for cross thread use

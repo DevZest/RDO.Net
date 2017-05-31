@@ -57,8 +57,8 @@ namespace FileExplorer
                     _.DisplayName[x] = directoryInfo.Name;
                     _.Type[x] = FolderContentType.Folder;
                     _.LastWriteTime[x] = directoryInfo.LastWriteTime;
-                    _.SmallIcon[x] = Win32.GetIcon(folder, true);
-                    _.LargeIcon[x] = Win32.GetIcon(folder, false);
+                    _.SmallIcon[x] = Win32.GetDirectoryIcon(folder, true);
+                    _.LargeIcon[x] = Win32.GetDirectoryIcon(folder, false);
                 });
             }
 
@@ -71,8 +71,8 @@ namespace FileExplorer
                     _.DisplayName[x] = fileInfo.Name;
                     _.Type[x] = FolderContentType.File;
                     _.LastWriteTime[x] = fileInfo.LastWriteTime;
-                    _.SmallIcon[x] = Win32.GetIcon(file, true);
-                    _.LargeIcon[x] = Win32.GetIcon(file, false);
+                    _.SmallIcon[x] = Win32.GetFileIcon(file, true);
+                    _.LargeIcon[x] = Win32.GetFileIcon(file, false);
                     _.FileType[x] = Win32.GetFileType(file);
                     _.FileSize[x] = Win32.GetFileSize(file);
                 });
