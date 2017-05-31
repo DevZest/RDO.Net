@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace FileExplorer
 {
@@ -19,6 +20,11 @@ namespace FileExplorer
         {
             Path = CreateLocalColumn<string>();
             base.OnInitializing();
+        }
+
+        public static async Task<DataSet<Folder>> GetLogicalDrivesAsync()
+        {
+            return await Task.Run(() => GetLogicalDrives());
         }
 
         public static DataSet<Folder> GetLogicalDrives()

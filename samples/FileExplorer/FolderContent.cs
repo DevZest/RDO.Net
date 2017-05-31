@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace FileExplorer
@@ -36,9 +37,16 @@ namespace FileExplorer
             base.OnInitializing();
         }
 
+        public static async Task<DataSet<FolderContent>> GetFolderContentsAsync(string path)
+        {
+            return await Task.Run(() => GetFolderContents(path));
+        }
+
         public static DataSet<FolderContent> GetFolderContents(string path)
         {
             var result = DataSet<FolderContent>.New();
+            if (string.IsNullOrEmpty(path))
+                return result;
 
             foreach (var folder in Folder.GetSubDirectories(path))
             {

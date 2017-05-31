@@ -10,14 +10,13 @@ namespace FileExplorer
     public partial class MainWindow : Window
     {
         private _FoldersTree _foldersTree = new _FoldersTree();
-        private _LargeIconsList _largeIconList;
+        private _LargeIconsList _largeIconsList = new _LargeIconsList();
 
         public MainWindow()
         {
             InitializeComponent();
             _foldersTree.ViewRefreshed += OnFolderTreeViewRefreshed;
-            _foldersTree.Show(_foldersTreeView, Folder.GetLogicalDrives());
-            new _LargeIconsList().Show(_folderContentListView, FolderContent.GetFolderContents(@"C:\"));
+            _foldersTree.ShowAsync(_foldersTreeView, Folder.GetLogicalDrivesAsync);
         }
 
         private string _currentFolder;
@@ -30,8 +29,19 @@ namespace FileExplorer
                     return;
 
                 _currentFolder = value;
-                Debug.WriteLine(string.Format("CurrentFolder={0}", CurrentFolder));
+                ShowCurrentFolderContents();
             }
+        }
+
+        private void ShowCurrentFolderContents()
+        {
+            string currentFolder;
+            do
+            {
+                currentFolder = CurrentFolder;
+                _largeIconsList.ShowAsync(_folderContentListView, () => FolderContent.GetFolderContentsAsync(currentFolder));
+            }
+            while (currentFolder != CurrentFolder);
         }
 
         private void OnFolderTreeViewRefreshed(object sender, EventArgs e)

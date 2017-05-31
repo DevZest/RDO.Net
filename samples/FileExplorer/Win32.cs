@@ -73,7 +73,9 @@ namespace FileExplorer
         {
             using (Icon icon = Icon.FromHandle(intPtr))
             {
-                return Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
+                var result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, new Int32Rect(0, 0, icon.Width, icon.Height), BitmapSizeOptions.FromEmptyOptions());
+                result.Freeze();    //image must be frozen for cross thread use
+                return result;
             }
         }
     }
