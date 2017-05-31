@@ -10,7 +10,7 @@
     <dz:RowSelector Margin="5, 5, 0, 0" VerticalAlignment="Top">
         <StackPanel Orientation="Vertical">
             <Image Name="_image" Width="80" Stretch="None" />
-            <TextBlock Name="_textBlock" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+            <TextBlock Name="_textBlock" TextAlignment="Center" TextWrapping="Wrap" />
         </StackPanel>
     </dz:RowSelector>
 </UserControl>
