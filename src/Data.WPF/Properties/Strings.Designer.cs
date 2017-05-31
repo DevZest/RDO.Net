@@ -84,14 +84,6 @@ namespace DevZest.Windows
         }
 
         /// <summary>
-        /// DataElementPanel must be element of DataView's control template to implement IScrollInfo.
-        /// </summary>
-        public static string DataElementPanel_NullScrollHandler
-        {
-            get { return GetString("DataElementPanel_NullScrollHandler"); }
-        }
-
-        /// <summary>
         /// The CurrentRow is editing.
         /// </summary>
         public static string DataPresenter_CurrentRowIsEditing

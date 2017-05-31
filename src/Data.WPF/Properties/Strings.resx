@@ -144,9 +144,6 @@
   <data name="BlockBinding_OutOfVerticalRowRange" xml:space="preserve">
     <value>BlockBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
-  <data name="DataElementPanel_NullScrollHandler" xml:space="preserve">
-    <value>DataElementPanel must be element of DataView's control template to implement IScrollInfo.</value>
-  </data>
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
   </data>

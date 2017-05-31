@@ -72,113 +72,178 @@ namespace DevZest.Windows.Controls.Primitives
 
         double IScrollInfo.ExtentWidth
         {
-            get { return ScrollHandler.ExtentWidth; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.ExtentWidth : 0;
+            }
         }
 
         double IScrollInfo.ExtentHeight
         {
-            get { return ScrollHandler.ExtentHeight; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.ExtentHeight : 0;
+            }
         }
 
         double IScrollInfo.ViewportWidth
         {
-            get { return ScrollHandler.ViewportWidth; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.ViewportWidth : 0;
+            }
         }
 
         double IScrollInfo.ViewportHeight
         {
-            get { return ScrollHandler.ViewportHeight; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.ViewportHeight : 0;
+            }
         }
 
         double IScrollInfo.HorizontalOffset
         {
-            get { return ScrollHandler.HorizontalOffset; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.HorizontalOffset : 0;
+            }
         }
 
         double IScrollInfo.VerticalOffset
         {
-            get { return ScrollHandler.VerticalOffset; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.VerticalOffset : 0;
+            }
         }
 
         ScrollViewer IScrollInfo.ScrollOwner
         {
-            get { return ScrollHandler.ScrollOwner; }
-            set { ScrollHandler.ScrollOwner = value; }
+            get
+            {
+                var scrollHandler = ScrollHandler;
+                return scrollHandler != null ? scrollHandler.ScrollOwner : null;
+            }
+            set
+            {
+                var scrollHandler = ScrollHandler;
+                if (scrollHandler != null)
+                    scrollHandler.ScrollOwner = value;
+            }
         }
 
         void IScrollInfo.LineUp()
         {
-            ScrollHandler.ScrollBy(0, -ScrollLineHeight);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0, -ScrollLineHeight);
         }
 
         void IScrollInfo.LineDown()
         {
-            ScrollHandler.ScrollBy(0, ScrollLineHeight);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0, ScrollLineHeight);
         }
 
         void IScrollInfo.LineLeft()
         {
-            ScrollHandler.ScrollBy(-ScrollLineWidth, 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(-ScrollLineWidth, 0);
         }
 
         void IScrollInfo.LineRight()
         {
-            ScrollHandler.ScrollBy(ScrollLineWidth, 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(ScrollLineWidth, 0);
         }
 
         void IScrollInfo.PageUp()
         {
-            ScrollHandler.ScrollBy(0, -ScrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0, -scrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
         }
 
         void IScrollInfo.PageDown()
         {
-            ScrollHandler.ScrollBy(0, ScrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0, scrollHandler.ScrollableHeight.IfZero(ScrollLineHeight));
         }
 
         void IScrollInfo.PageLeft()
         {
-            ScrollHandler.ScrollBy(-ScrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(-scrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
         }
 
         void IScrollInfo.PageRight()
         {
-            ScrollHandler.ScrollBy(ScrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(scrollHandler.ScrollableWidth.IfZero(ScrollLineWidth), 0);
         }
 
         void IScrollInfo.MouseWheelUp()
         {
-            ScrollHandler.ScrollBy(0,  -ScrollLineHeight * SystemParameters.WheelScrollLines);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0,  -ScrollLineHeight * SystemParameters.WheelScrollLines);
         }
 
         void IScrollInfo.MouseWheelDown()
         {
-            ScrollHandler.ScrollBy(0, ScrollLineHeight * SystemParameters.WheelScrollLines);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(0, ScrollLineHeight * SystemParameters.WheelScrollLines);
         }
 
         void IScrollInfo.MouseWheelLeft()
         {
-            ScrollHandler.ScrollBy(-ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(-ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
         }
 
         void IScrollInfo.MouseWheelRight()
         {
-            ScrollHandler.ScrollBy(ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollBy(ScrollLineWidth * SystemParameters.WheelScrollLines, 0);
         }
 
         void IScrollInfo.SetHorizontalOffset(double offset)
         {
-            ScrollHandler.ScrollTo(offset, ScrollHandler.VerticalOffset);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollTo(offset, scrollHandler.VerticalOffset);
         }
 
         void IScrollInfo.SetVerticalOffset(double offset)
         {
-            ScrollHandler.ScrollTo(ScrollHandler.HorizontalOffset, offset);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                scrollHandler.ScrollTo(scrollHandler.HorizontalOffset, offset);
         }
 
         Rect IScrollInfo.MakeVisible(Visual visual, Rect rectangle)
         {
-            return ScrollHandler.MakeVisible(visual, rectangle);
+            var scrollHandler = ScrollHandler;
+            if (scrollHandler != null)
+                return scrollHandler.MakeVisible(visual, rectangle);
+            else
+                return new Rect();
         }
 
         #endregion
@@ -218,13 +283,7 @@ namespace DevZest.Windows.Controls.Primitives
 
         private IScrollHandler ScrollHandler
         {
-            get
-            {
-                var result = LayoutManager as IScrollHandler;
-                if (result == null)
-                    throw new InvalidOperationException(Strings.DataElementPanel_NullScrollHandler);
-                return result;
-            }
+            get { return LayoutManager as IScrollHandler; }
         }
 
         internal IReadOnlyList<UIElement> Elements
