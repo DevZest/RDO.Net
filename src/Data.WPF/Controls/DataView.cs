@@ -13,11 +13,6 @@ namespace DevZest.Windows.Controls
     {
         public static RoutedUICommand RefreshCommand { get { return NavigationCommands.Refresh; } }
 
-        private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
-            typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnDataPresenterChanged));
-
-        public static readonly DependencyProperty DataPresenterProperty = DataPresenterPropertyKey.DependencyProperty;
-
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -50,29 +45,26 @@ namespace DevZest.Windows.Controls
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
         }
 
+        private DataPresenter _dataPresenter;
         public DataPresenter DataPresenter
         {
-            get { return (DataPresenter)GetValue(DataPresenterProperty); }
+            get { return _dataPresenter; }
             internal set
             {
                 Debug.Assert((value == null) != (DataPresenter == null));
 
-                SetValue(DataPresenterPropertyKey, value);
+                _dataPresenter = value;
                 if (value != null)
                     Scrollable = value.Template.Orientation.HasValue;
                 else
                     ClearValue(ScrollablePropertyKey);
+                SetElementsPanel();
             }
         }
 
         private LayoutManager LayoutManager
         {
             get { return DataPresenter == null ? null : DataPresenter.LayoutManager; }
-        }
-
-        private static void OnDataPresenterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((DataView)d).SetElementsPanel();
         }
 
         public override void OnApplyTemplate()
