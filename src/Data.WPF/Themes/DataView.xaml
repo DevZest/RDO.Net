@@ -24,7 +24,41 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type local:DataView}">
-                            <primitives:DataViewPanel />
+                            <primitives:DataViewPanel x:Name="PART_Panel" RenderOptions.EdgeMode="Aliased" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Loading">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <primitives:LoadingAnimation VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Failed">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                    <TextBlock TextWrapping="Wrap">
+                                        <Run>We're sorry, an error occured while loading data.</Run>
+                                        <LineBreak />
+                                        <Run>Please </Run>
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.RefreshCommand}">retry</Hyperlink>
+                                        <Run>.</Run>
+                                    </TextBlock>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <TextBlock>Detailed Error Message</TextBlock>
+                                        </Expander.Header>
+                                        <TextBox TextWrapping="Wrap" Text="{TemplateBinding DataLoadError}" />
+                                    </Expander>
+                                </StackPanel>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>

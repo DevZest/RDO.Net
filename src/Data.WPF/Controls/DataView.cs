@@ -11,6 +11,8 @@ namespace DevZest.Windows.Controls
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
+        public static RoutedUICommand RefreshCommand { get { return NavigationCommands.Refresh; } }
+
         private static readonly DependencyPropertyKey DataPresenterPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataPresenter),
             typeof(DataPresenter), typeof(DataView), new FrameworkPropertyMetadata(null, OnDataPresenterChanged));
 
@@ -32,6 +34,13 @@ namespace DevZest.Windows.Controls
 
         public static readonly DependencyProperty ScrollLineWidthProperty = DependencyProperty.Register(nameof(ScrollLineWidth),
             typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
+
+        private static readonly DependencyPropertyKey DataLoadStatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadState), typeof(DataLoadState), typeof(DataView),
+            new FrameworkPropertyMetadata(DataLoadState.NotLoaded));
+        public static readonly DependencyProperty DataLoadStateProperty = DataLoadStatePropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey DataLoadErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadError), typeof(string), typeof(DataView),
+            new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty DataLoadErrorProperty = DataLoadErrorPropertyKey.DependencyProperty;
 
         static DataView()
         {
@@ -122,6 +131,18 @@ namespace DevZest.Windows.Controls
                 return;
 
             this.SetupCommandEntries(dataPresenter.DataViewCommandEntries);
+        }
+
+        public DataLoadState DataLoadState
+        {
+            get { return (DataLoadState)GetValue(DataLoadStateProperty); }
+            internal set { SetValue(DataLoadStatePropertyKey, value); }
+        }
+
+        public string DataLoadError
+        {
+            get { return (string)GetValue(DataLoadErrorProperty); }
+            internal set { SetValue(DataLoadErrorPropertyKey, value); }
         }
     }
 }
