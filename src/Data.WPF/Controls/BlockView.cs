@@ -278,7 +278,7 @@ namespace DevZest.Windows.Controls
             if (Elements == null)
                 return;
 
-            Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.CurrentContainerViewPlacement == CurrentContainerViewPlacement.Alone);
+            Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.IsCurrentContainerViewIsolated);
 
             var newValue = ElementManager.CurrentRow;
             _ordinal = newValue.Index / ElementManager.FlowCount; // FillMissingRowViews relies on updated _ordinal
