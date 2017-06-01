@@ -85,7 +85,7 @@ namespace DevZest.Windows.Primitives
             return index;
         }
 
-        internal void Collapse(RowPresenter row)
+        internal virtual void Collapse(RowPresenter row)
         {
             Debug.Assert(IsRecursive && row.IsExpanded);
 

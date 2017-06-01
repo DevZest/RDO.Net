@@ -119,6 +119,19 @@ namespace DevZest.Windows
 
         public RowPresenter Parent { get; internal set; }
 
+        internal bool IsDescendantOf(RowPresenter rowPresenter)
+        {
+            if (rowPresenter == null)
+                return false;
+
+            for (var parent = Parent; parent != null; parent = parent.Parent)
+            {
+                if (parent == rowPresenter)
+                    return true;
+            }
+            return false;
+        }
+
         private List<RowPresenter> _children;
 
         public IReadOnlyList<RowPresenter> Children

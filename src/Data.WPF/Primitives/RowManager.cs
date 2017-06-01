@@ -401,6 +401,17 @@ namespace DevZest.Windows.Primitives
             }
         }
 
+        internal override void Collapse(RowPresenter row)
+        {
+            if (CurrentRow.IsDescendantOf(row))
+            {
+                CurrentRow = row;
+                if (Template.SelectionMode == SelectionMode.Single)
+                    Select(row, SelectionMode.Single, row);
+            }
+            base.Collapse(row);
+        }
+
         public bool CanChangeCurrentRow
         {
             get { return !IsEditing; }
