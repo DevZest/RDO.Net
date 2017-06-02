@@ -122,10 +122,10 @@ namespace DevZest.Windows.Primitives
                 {
                     var newValue = CurrentRow.View;
                     Swap(oldValue, newValue);
-                    Cleanup(newValue);
                     var removalIndex = HeadScalarElementsCount;
                     if (CurrentContainerViewPlacement == CurrentContainerViewPlacement.AfterList)
                         removalIndex += ContainerViewList.Count;
+                    Cleanup((ContainerView)Elements[removalIndex]);
                     ElementCollection.RemoveAt(removalIndex);
                 }
             }
