@@ -11,7 +11,7 @@ namespace DevZest.Windows.Controls
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
-        public static RoutedUICommand RefreshCommand { get { return NavigationCommands.Refresh; } }
+        public static RoutedUICommand ReloadCommand { get { return NavigationCommands.Refresh; } }
 
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
@@ -54,10 +54,15 @@ namespace DevZest.Windows.Controls
                 Debug.Assert((value == null) != (DataPresenter == null));
 
                 _dataPresenter = value;
-                if (value == null)
-                    ClearValue(ScrollablePropertyKey);
                 DataLoadState = DataLoadState.NotLoaded;
                 DataLoadError = null;
+                if (value == null)
+                {
+                    ClearValue(ScrollablePropertyKey);
+                    this.CleanupCommandEntries();
+                }
+                else
+                    this.SetupCommandEntries(DataPresenter.DataViewCommandEntries);
             }
         }
 
@@ -74,7 +79,6 @@ namespace DevZest.Windows.Controls
             DataLoadError = null;
             Scrollable = DataPresenter.Template.Orientation.HasValue;
             SetElementsPanel();
-            this.SetupCommandEntries(DataPresenter.DataViewCommandEntries);
         }
 
         internal void OnDataLoadFailed(string dataLoadError)

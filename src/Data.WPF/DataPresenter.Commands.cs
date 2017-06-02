@@ -12,18 +12,18 @@ namespace DevZest.Windows
         {
             get
             {
-                yield return DataView.RefreshCommand.CommandBinding(Refresh, CanRefresh);
+                yield return DataView.ReloadCommand.CommandBinding(ReloadData, CanReloadData);
             }
         }
 
-        private void Refresh(object sender, ExecutedRoutedEventArgs e)
+        private void ReloadData(object sender, ExecutedRoutedEventArgs e)
         {
             Reload();
         }
 
         internal abstract void Reload();
 
-        private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
+        private void CanReloadData(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = CanReload;
         }

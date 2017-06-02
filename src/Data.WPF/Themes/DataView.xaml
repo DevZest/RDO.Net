@@ -48,7 +48,7 @@
                                         <Run>We're sorry, an error occured while loading data.</Run>
                                         <LineBreak />
                                         <Run>Please </Run>
-                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.RefreshCommand}">retry</Hyperlink>
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.ReloadCommand}">retry</Hyperlink>
                                         <Run>.</Run>
                                     </TextBlock>
                                     <Expander>
