@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace SmoothScroll
 {
-    internal class _FooList : DataPresenter<Foo>
+    internal class FooList : DataPresenter<Foo>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

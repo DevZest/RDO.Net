@@ -11,7 +11,7 @@ namespace SmoothScroll
         {
             InitializeComponent();
 
-            new _FooList().Show(dataView, Foo.Mock(10000));
+            new FooList().Show(dataView, Foo.Mock(10000));
         }
     }
 }
