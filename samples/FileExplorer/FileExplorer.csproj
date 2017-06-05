@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="DetailsListItem.cs" />
     <Compile Include="EnumToBooleanConverter.cs" />
+    <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="FolderContent.cs" />
     <Compile Include="FolderContentType.cs" />
     <Compile Include="DetailsList.cs" />

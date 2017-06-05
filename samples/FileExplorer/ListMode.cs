@@ -2,7 +2,7 @@
 {
     public enum ListMode
     {
-        LargeIcon,
+        LargeIcon = 1,
         Details
     }
 }

@@ -6,7 +6,9 @@ namespace DevZest
     {
         internal static string ToString(this object value, string format, IFormatProvider formatProvider)
         {
-            if (string.IsNullOrEmpty(format))
+            if (value == null)
+                return string.Empty;
+            else if (string.IsNullOrEmpty(format))
                 return value.ToString();
             else if (formatProvider == null)
                 return string.Format(format, value);

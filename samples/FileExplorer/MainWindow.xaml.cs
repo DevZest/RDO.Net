@@ -121,15 +121,39 @@ namespace FileExplorer
             }
         }
 
+        public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register(nameof(ListMode), typeof(ListMode),
+            typeof(MainWindow), new FrameworkPropertyMetadata(OnListModeChanged));
+
         private FolderTree _folderTree = new FolderTree();
-        private ListManager _listManager = ListManager.Create(null, ListMode.LargeIcon);
+        private ListManager _listManager;
 
         public MainWindow()
         {
             InitializeComponent();
+            ListMode = ListMode.LargeIcon;
+            Debug.Assert(_listManager != null);
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
             _folderTree.ViewRefreshed += OnFolderTreeViewRefreshed;
             _folderTree.ShowAsync(_foldersTreeView, Folder.GetLogicalDrivesAsync);
+        }
+
+        public ListMode ListMode
+        {
+            get { return (ListMode)GetValue(ListModeProperty); }
+            set { SetValue(ListModeProperty, value); }
+        }
+
+        private static void OnListModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((MainWindow)d).SetListManager((ListMode)e.NewValue);
+        }
+
+        private void SetListManager(ListMode value)
+        {
+            bool loadData = _listManager != null;
+            _listManager = ListManager.Create(_listManager, value);
+            if (loadData)
+                _listManager.ShowAsync(_folderContentListView, CurrentFolder);
         }
 
         private void ExecuteCloseCommand(object sener, ExecutedRoutedEventArgs e)

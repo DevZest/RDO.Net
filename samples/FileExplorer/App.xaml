@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:FileExplorer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="{x:Type TextBlock}" TargetType="TextBlock">
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Margin" Value="2,0" />
+        </Style>
+        <Style x:Key="{x:Static local:DetailsList.FileSizeTextBlockStyleKey}" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="10,0,2,0" />
+        </Style>
     </Application.Resources>
 </Application>

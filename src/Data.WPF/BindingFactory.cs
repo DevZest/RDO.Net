@@ -3,6 +3,7 @@ using DevZest.Windows.Controls;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace DevZest.Windows
 {
@@ -132,6 +133,16 @@ namespace DevZest.Windows
                 {
                     e.AsyncValidators = AsyncValidatorGroup.Empty;
                 });
+        }
+
+        public static RowBinding<Image> Image(this Column<ImageSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            return new RowBinding<Image>(onRefresh: (e, row) =>
+            {
+                e.Source = row.GetValue(source);
+            });
         }
     }
 }
