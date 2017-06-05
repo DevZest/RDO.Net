@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class _FoldersTree : DataPresenter<Folder>
+    public class FolderTree : DataPresenter<Folder>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

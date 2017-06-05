@@ -20,15 +20,15 @@ namespace FileExplorer
             return new RowBinding<FolderView>((e, r) => Refresh(e, _, r));
         }
 
-        private static void Refresh(LargeIconView element, FolderContent _, RowPresenter rowPresenter)
+        private static void Refresh(LargeIconListItemView element, LargeIconListItem _, RowPresenter rowPresenter)
         {
             element.ImageSource = rowPresenter.GetValue(_.LargeIcon);
             element.Text = rowPresenter.GetValue(_.DisplayName);
         }
 
-        public static RowBinding<LargeIconView> LargeIconView(this FolderContent _)
+        public static RowBinding<LargeIconListItemView> LargeIconView(this LargeIconListItem _)
         {
-            return new RowBinding<LargeIconView>((e, r) => Refresh(e, _, r));
+            return new RowBinding<LargeIconListItemView>((e, r) => Refresh(e, _, r));
         }
     }
 }

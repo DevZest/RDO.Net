@@ -57,15 +57,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DetailListItem.cs" />
     <Compile Include="FolderContent.cs" />
     <Compile Include="FolderContentType.cs" />
-    <Compile Include="LargeIconView.xaml.cs">
-      <DependentUpon>LargeIconView.xaml</DependentUpon>
+    <Compile Include="LargeIconListItem.cs" />
+    <Compile Include="LargeIconListItemView.xaml.cs">
+      <DependentUpon>LargeIconListItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Win32.cs" />
-    <Compile Include="_FoldersTree.cs" />
-    <Compile Include="_LargeIconsList.cs" />
-    <Page Include="LargeIconView.xaml">
+    <Compile Include="FolderTree.cs" />
+    <Compile Include="LargeIconList.cs" />
+    <Page Include="LargeIconListItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

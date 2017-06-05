@@ -11,8 +11,8 @@ namespace FileExplorer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private _FoldersTree _foldersTree = new _FoldersTree();
-        private _LargeIconsList _largeIconsList = new _LargeIconsList();
+        private FolderTree _foldersTree = new FolderTree();
+        private LargeIconList _largeIconsList = new LargeIconList();
 
         public MainWindow()
         {
@@ -41,18 +41,19 @@ namespace FileExplorer
             if (_isShowingCurrentFolderContents)
                 return;
             _isShowingCurrentFolderContents = true;
-            await _largeIconsList.ShowAsync(_folderContentListView, GetCurrentFolderContentsAsync);
+            await _largeIconsList.ShowAsync(_folderContentListView, GetCurrentFolderContentsAsync<LargeIconListItem>);
             _isShowingCurrentFolderContents = false;
         }
 
-        private async Task<DataSet<FolderContent>> GetCurrentFolderContentsAsync()
+        private async Task<DataSet<T>> GetCurrentFolderContentsAsync<T>()
+            where T : FolderContent, new()
         {
             string currentFolder;
-            DataSet<FolderContent> result;
+            DataSet<T> result;
             do
             {
                 currentFolder = CurrentFolder;
-                result = await FolderContent.GetFolderContentsAsync(currentFolder);
+                result = await FolderContent.GetFolderContentsAsync<T>(currentFolder);
             }
             while (currentFolder != CurrentFolder);
             return result;

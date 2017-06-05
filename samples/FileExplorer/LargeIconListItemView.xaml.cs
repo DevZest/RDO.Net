@@ -3,11 +3,11 @@
 namespace FileExplorer
 {
     /// <summary>
-    /// Interaction logic for LargeIconView.xaml
+    /// Interaction logic for LargeIconListItemView.xaml
     /// </summary>
-    public partial class LargeIconView
+    public partial class LargeIconListItemView
     {
-        public LargeIconView()
+        public LargeIconListItemView()
         {
             InitializeComponent();
         }

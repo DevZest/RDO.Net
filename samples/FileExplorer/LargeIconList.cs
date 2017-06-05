@@ -1,11 +1,9 @@
-﻿using System;
-using DevZest.Windows;
+﻿using DevZest.Windows;
 using System.Windows.Controls;
-using DevZest.Windows.Controls;
 
 namespace FileExplorer
 {
-    public class _LargeIconsList : DataPresenter<FolderContent>
+    public class LargeIconList : DataPresenter<LargeIconListItem>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

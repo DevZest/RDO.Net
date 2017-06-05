@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace FileExplorer
 {
-    public class FolderContent : Model
+    public abstract class FolderContent : Model
     {
         public Column<string> Path { get; private set; }
 
@@ -14,68 +14,56 @@ namespace FileExplorer
 
         public Column<FolderContentType> Type { get; private set; }
 
-        public Column<DateTime> LastWriteTime { get; private set; }
+        protected sealed override void OnInitializing()
+        {
+            CreateLocalColumns();
+            base.OnInitializing();
+        }
 
-        public Column<ImageSource> SmallIcon { get; private set; }
-
-        public Column<ImageSource> LargeIcon { get; private set; }
-
-        public Column<string> FileType { get; private set; }
-
-        public Column<long> FileSize { get; private set; }
-
-        protected override void OnInitializing()
+        protected virtual void CreateLocalColumns()
         {
             Path = CreateLocalColumn<string>();
             DisplayName = CreateLocalColumn<string>();
             Type = CreateLocalColumn<FolderContentType>();
-            LastWriteTime = CreateLocalColumn<DateTime>();
-            SmallIcon = CreateLocalColumn<ImageSource>();
-            LargeIcon = CreateLocalColumn<ImageSource>();
-            FileType = CreateLocalColumn<string>();
-            FileSize = CreateLocalColumn<long>();
-            base.OnInitializing();
         }
 
-        public static async Task<DataSet<FolderContent>> GetFolderContentsAsync(string path)
+        protected virtual void Initialize(DataRow x, DirectoryInfo directoryInfo)
         {
-            return await Task.Run(() => GetFolderContents(path));
+            Path[x] = directoryInfo.FullName;
+            DisplayName[x] = directoryInfo.Name;
+            Type[x] = FolderContentType.Folder;
         }
 
-        public static DataSet<FolderContent> GetFolderContents(string path)
+        protected virtual void Initialize(DataRow x, FileInfo fileInfo)
         {
-            var result = DataSet<FolderContent>.New();
+            Path[x] = fileInfo.FullName;
+            DisplayName[x] = fileInfo.Name;
+            Type[x] = FolderContentType.File;
+        }
+
+        public static async Task<DataSet<T>> GetFolderContentsAsync<T>(string path)
+            where T : FolderContent, new()
+        {
+            return await Task.Run(() => GetFolderContents<T>(path));
+        }
+
+        public static DataSet<T> GetFolderContents<T>(string path)
+            where T : FolderContent, new()
+        {
+            var result = DataSet<T>.New();
             if (string.IsNullOrEmpty(path))
                 return result;
 
             foreach (var folder in Folder.GetSubDirectories(path))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
-                result.AddRow((_, x) =>
-                {
-                    _.Path[x] = folder;
-                    _.DisplayName[x] = directoryInfo.Name;
-                    _.Type[x] = FolderContentType.Folder;
-                    _.LastWriteTime[x] = directoryInfo.LastWriteTime;
-                    _.SmallIcon[x] = Win32.GetDirectoryIcon(folder, true);
-                    _.LargeIcon[x] = Win32.GetDirectoryIcon(folder, false);
-                });
+                result.AddRow((_, x) => _.Initialize(x, directoryInfo));
             }
 
             foreach (var file in GetFiles(path))
             {
                 FileInfo fileInfo = new FileInfo(file);
-                result.AddRow((_, x) =>
-                {
-                    _.Path[x] = file;
-                    _.DisplayName[x] = fileInfo.Name;
-                    _.Type[x] = FolderContentType.File;
-                    _.LastWriteTime[x] = fileInfo.LastWriteTime;
-                    _.SmallIcon[x] = Win32.GetFileIcon(file, true);
-                    _.LargeIcon[x] = Win32.GetFileIcon(file, false);
-                    _.FileType[x] = Win32.GetFileType(file);
-                    _.FileSize[x] = Win32.GetFileSize(file);
-                });
+                result.AddRow((_, x) => _.Initialize(x, fileInfo));
             }
 
             return result;
