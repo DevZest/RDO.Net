@@ -46,25 +46,6 @@ namespace DevZest.Windows
             dataView.OnDataLoaded();
         }
 
-        private void DetachView()
-        {
-            Debug.Assert(_view != null);
-            _view.CleanupCommandEntries();
-            _layoutManager.ClearElements();
-            _view.DataPresenter = null;
-            _view = null;
-        }
-
-        private void AttachView(DataView value)
-        {
-            if (View != null)
-                DetachView();
-
-            Debug.Assert(View == null && value != null);
-            _view = value;
-            _view.DataPresenter = this;
-        }
-
         public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
@@ -137,10 +118,11 @@ namespace DevZest.Windows
 
         public new DataSet<T> DataSet { get; private set; }
 
-        private DataView _view;
-        public sealed override DataView View
+        public sealed override void DetachView()
         {
-            get { return _view; }
+            base.DetachView();
+            _layoutManager.ClearElements();
+            _layoutManager = null;
         }
 
         private LayoutManager _layoutManager;

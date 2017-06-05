@@ -57,13 +57,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DetailListItem.cs" />
+    <Compile Include="DetailsListItem.cs" />
+    <Compile Include="EnumToBooleanConverter.cs" />
     <Compile Include="FolderContent.cs" />
     <Compile Include="FolderContentType.cs" />
+    <Compile Include="DetailsList.cs" />
     <Compile Include="LargeIconListItem.cs" />
     <Compile Include="LargeIconListItemView.xaml.cs">
       <DependentUpon>LargeIconListItemView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ListMode.cs" />
     <Compile Include="Win32.cs" />
     <Compile Include="FolderTree.cs" />
     <Compile Include="LargeIconList.cs" />

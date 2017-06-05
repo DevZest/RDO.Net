@@ -8,19 +8,30 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="File Explorer">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Close" Command="Close" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Details" />
+                <MenuItem Header="_Large Icons" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="2*" />
-        </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
 
-        <dz:DataView x:Name="_foldersTreeView" Grid.Column="0" />
-        <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" />
-        <dz:DataView x:Name="_folderContentListView" Grid.Column="2" />
-    </Grid>
+            <dz:DataView x:Name="_foldersTreeView" Grid.Column="0" />
+            <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" />
+            <dz:DataView x:Name="_folderContentListView" Grid.Column="2" />
+        </Grid>
+    </DockPanel>
 </Window>

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using DevZest.Data;
 using DevZest.Windows.Controls;
 using DevZest.Windows.Controls.Primitives;
+using System.Diagnostics;
 
 namespace DevZest.Windows
 {
@@ -23,7 +24,26 @@ namespace DevZest.Windows
             ViewRefreshed(this, EventArgs.Empty);
         }
 
-        public abstract DataView View { get; }
+        public DataView View { get; private set; }
+
+        public virtual void DetachView()
+        {
+            if (View == null)
+                return;
+            View.CleanupCommandEntries();
+            View.DataPresenter = null;
+            View = null;
+        }
+
+        internal void AttachView(DataView value)
+        {
+            if (View != null)
+                DetachView();
+
+            Debug.Assert(View == null && value != null);
+            View = value;
+            View.DataPresenter = this;
+        }
 
         internal abstract LayoutManager LayoutManager { get; }
 

@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace FileExplorer
 {
-    public sealed class DetailListItem : FolderContent
+    public sealed class DetailsListItem : FolderContent
     {
         public Column<DateTime> LastWriteTime { get; private set; }
 
