@@ -135,14 +135,6 @@ namespace DevZest.Windows
                 get { return _dataPresenter._dataLoader != this; }
             }
 
-            public Task Retry()
-            {
-                Debug.Assert(State == DataLoadState.Cancelled || State == DataLoadState.Failed);
-                Debug.Assert(_runningTask == null);
-                _runningTask = Run();
-                return _runningTask;
-            }
-
             public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
             {
                 return ShowAsync(dataView, ct => getDataSet(), false, getWhere, getOrderBy);
@@ -181,6 +173,25 @@ namespace DevZest.Windows
             public bool CanRetry
             {
                 get { return State == DataLoadState.Failed || State == DataLoadState.Cancelled; }
+            }
+
+            public Task Retry()
+            {
+                Debug.Assert(State == DataLoadState.Cancelled || State == DataLoadState.Failed);
+                Debug.Assert(_runningTask == null);
+                _runningTask = Run();
+                return _runningTask;
+            }
+
+            public bool CanCancel
+            {
+                get { return _cts != null && State == DataLoadState.Loading; }
+            }
+
+            public void Cancel()
+            {
+                DataView.OnDataLoadCancelling();
+                _cts.Cancel();
             }
 
             private async Task Run()
@@ -255,6 +266,17 @@ namespace DevZest.Windows
         {
             Debug.Assert(CanReload);
             _dataLoader.Retry();
+        }
+
+        internal sealed override bool CanCancelLoad
+        {
+            get { return _dataLoader != null && _dataLoader.CanCancel; }
+        }
+
+        internal sealed override void CancelLoad()
+        {
+            Debug.Assert(CanCancelLoad);
+            _dataLoader.Cancel();
         }
 
         public new DataSet<T> DataSet { get; private set; }

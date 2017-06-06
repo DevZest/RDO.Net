@@ -33,7 +33,50 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type local:DataView}">
-                            <primitives:LoadingAnimation VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <primitives:LoadingAnimation />
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock x:Name="_loading" Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">Loading...</TextBlock>
+                                    <TextBlock x:Name="_cancel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.DataLoadCancelCommand}">Cancel</Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="DataLoadCancellable" Value="true">
+                                    <Setter TargetName="_loading" Property="Visibility" Value="Collapsed" />
+                                    <Setter TargetName="_cancel" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Cancelling">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <primitives:LoadingAnimation />
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">Cancelling...</TextBlock>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="DataLoadState" Value="Cancelled">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type local:DataView}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                    <TextBlock TextWrapping="Wrap">
+                                        <Run>The operation has been cancelled.</Run>
+                                        <LineBreak />
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.DataLoadRetryCommand}">Retry</Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -48,7 +91,7 @@
                                         <Run>We're sorry, an error occured while loading data.</Run>
                                         <LineBreak />
                                         <Run>Please </Run>
-                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.ReloadCommand}">retry</Hyperlink>
+                                        <Hyperlink CommandTarget="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}}" Command="{x:Static local:DataView.DataLoadRetryCommand}">retry</Hyperlink>
                                         <Run>.</Run>
                                     </TextBlock>
                                     <Expander>

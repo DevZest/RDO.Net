@@ -12,7 +12,8 @@ namespace DevZest.Windows
         {
             get
             {
-                yield return DataView.ReloadCommand.CommandBinding(ReloadData, CanReloadData);
+                yield return DataView.DataLoadCancelCommand.CommandBinding(CancelLoadData, CanCancelLoadData);
+                yield return DataView.DataLoadRetryCommand.CommandBinding(ReloadData, CanReloadData);
             }
         }
 
@@ -29,6 +30,20 @@ namespace DevZest.Windows
         }
 
         internal abstract bool CanReload { get; }
+
+        private void CancelLoadData(object sender, ExecutedRoutedEventArgs e)
+        {
+            CancelLoad();
+        }
+
+        internal abstract void CancelLoad();
+
+        private void CanCancelLoadData(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = CanCancelLoad;
+        }
+
+        internal abstract bool CanCancelLoad { get; }
 
         protected internal virtual IEnumerable<CommandEntry> RowViewCommandEntries
         {

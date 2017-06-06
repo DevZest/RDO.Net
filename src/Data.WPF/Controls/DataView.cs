@@ -12,8 +12,8 @@ namespace DevZest.Windows.Controls
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
-        public static RoutedUICommand ReloadCommand { get { return NavigationCommands.Refresh; } }
-        public static readonly RoutedUICommand CancelLoadingCommand = new RoutedUICommand();
+        public static RoutedUICommand DataLoadRetryCommand { get { return NavigationCommands.Refresh; } }
+        public static readonly RoutedUICommand DataLoadCancelCommand = new RoutedUICommand();
 
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));

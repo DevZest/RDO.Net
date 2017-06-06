@@ -376,7 +376,6 @@
     </UserControl.Triggers>
 
     <Canvas x:Name="LayoutRoot" VerticalAlignment="Top" Height="88" Width="88">
-        <TextBlock Text="Loading..." TextWrapping="Wrap" Canvas.Left="20.069" Canvas.Top="36.214"/>
         <Grid Width="10.734" Height="10.004" Canvas.Left="38.614" Canvas.Top="0.331">
             <local:LoadingAnimationBlock x:Name="block" RenderTransformOrigin="0.5,4.3689" OpacityMask="#00000000" VerticalAlignment="Top" Height="10.004">
                 <local:LoadingAnimationBlock.RenderTransform>
