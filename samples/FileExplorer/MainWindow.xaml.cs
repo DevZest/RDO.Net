@@ -134,7 +134,7 @@ namespace FileExplorer
             Debug.Assert(_listManager != null);
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, ExecuteCloseCommand));
             _folderTree.ViewRefreshed += OnFolderTreeViewRefreshed;
-            _folderTree.ShowAsync(_foldersTreeView, Folder.GetLogicalDrivesAsync);
+            _folderTree.Show(_foldersTreeView, Folder.GetLogicalDrives());
         }
 
         public ListMode ListMode

@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -44,10 +45,22 @@ namespace FileExplorer
         public static async Task<DataSet<T>> GetFolderContentsAsync<T>(string path)
             where T : FolderContent, new()
         {
-            return await Task.Run(() => GetFolderContents<T>(path));
+            return await Task.Run(() => GetFolderContents<T>(path, CancellationToken.None));
+        }
+
+        public static async Task<DataSet<T>> GetFolderContentsAsync<T>(string path, CancellationToken ct)
+            where T : FolderContent, new()
+        {
+            return await Task.Run(() => GetFolderContents<T>(path, ct));
         }
 
         public static DataSet<T> GetFolderContents<T>(string path)
+            where T : FolderContent, new()
+        {
+            return GetFolderContents<T>(path, CancellationToken.None);
+        }
+
+        private static DataSet<T> GetFolderContents<T>(string path, CancellationToken ct)
             where T : FolderContent, new()
         {
             var result = DataSet<T>.New();
@@ -58,12 +71,14 @@ namespace FileExplorer
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(folder);
                 result.AddRow((_, x) => _.Initialize(x, directoryInfo));
+                ct.ThrowIfCancellationRequested();
             }
 
             foreach (var file in GetFiles(path))
             {
                 FileInfo fileInfo = new FileInfo(file);
                 result.AddRow((_, x) => _.Initialize(x, fileInfo));
+                ct.ThrowIfCancellationRequested();
             }
 
             return result;

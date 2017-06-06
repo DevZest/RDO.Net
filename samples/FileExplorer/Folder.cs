@@ -22,11 +22,6 @@ namespace FileExplorer
             base.OnInitializing();
         }
 
-        public static async Task<DataSet<Folder>> GetLogicalDrivesAsync()
-        {
-            return await Task.Run(() => GetLogicalDrives());
-        }
-
         public static DataSet<Folder> GetLogicalDrives()
         {
             var result = DataSet<Folder>.New();
