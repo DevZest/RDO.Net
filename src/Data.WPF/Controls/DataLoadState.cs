@@ -2,9 +2,11 @@
 {
     public enum DataLoadState
     {
-        NotLoaded,
+        Idle,
         Loading,
-        Loaded,
-        Failed
+        Succeeded,
+        Failed,
+        Cancelling,
+        Cancelled
     }
 }

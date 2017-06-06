@@ -4,6 +4,7 @@ using DevZest.Windows.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevZest.Windows
@@ -29,12 +30,15 @@ namespace DevZest.Windows
             if (dataView.DataPresenter != null && dataView.DataPresenter != this)
                 throw new ArgumentException(Strings.DataPresenter_InvalidDataView, nameof(dataView));
 
+            if (_dataLoader != null)
+                _dataLoader.Reset();
             AttachView(dataView);
             Mount(dataView, dataSet, where, orderBy);
         }
 
         private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
+            dataSet._.EnsureInitialized();
             DataSet = dataSet;
             var template = new Template();
             using (var builder = new TemplateBuilder(template, DataSet.Model))
@@ -42,7 +46,6 @@ namespace DevZest.Windows
                 BuildTemplate(builder);
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
-            _dataReloader = null;
             dataView.OnDataLoaded();
         }
 
@@ -54,72 +57,212 @@ namespace DevZest.Windows
                 return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
         }
 
-        public async Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
 
-            AttachView(dataView);
-            dataView.OnDataLoading();
-            DataSet<T> dataSet;
-            try
-            {
-                dataSet = await getDataSet();
-            }
-            catch (Exception ex)
-            {
-                dataView.OnDataLoadFailed(ex.ToString());
-                _dataReloader = new DataReloader(getDataSet, getWhere, getOrderBy);
-                return;
-            }
-
-            if (dataSet == null)
-                dataSet = DataSet<T>.New();
-            Predicate<DataRow> where = getWhere == null ? null : getWhere(dataSet._);
-            IComparer<DataRow> orderBy = getOrderBy == null ? null : getOrderBy(dataSet._);
-            Mount(dataView, dataSet, where, orderBy);
-            _dataReloader = new DataReloader(getDataSet, _ => Where, _ => OrderBy);
+            if (_dataLoader == null)
+                _dataLoader = new DataLoader(this);
+            return _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
         }
 
-        private sealed class DataReloader
+        public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
-            public DataReloader(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            if (resetCriteria)
+                return ShowAsync(dataView, getDataSet, null, null);
+            else
+                return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
+        }
+
+        public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        {
+            if (dataView == null)
+                throw new ArgumentNullException(nameof(dataView));
+            if (getDataSet == null)
+                throw new ArgumentNullException(nameof(getDataSet));
+
+            if (_dataLoader == null)
+                _dataLoader = new DataLoader(this);
+            return _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
+        }
+
+        private sealed class DataLoader
+        {
+            public DataLoader(DataPresenter<T> dataPresenter)
             {
+                Debug.Assert(dataPresenter != null);
+                _dataPresenter = dataPresenter;
+            }
+
+            private readonly DataPresenter<T> _dataPresenter;
+            private int _revision;
+            private Func<CancellationToken, Task<DataSet<T>>> _getDataSet;
+            private bool _cancellable;
+            private Func<T, Predicate<DataRow>> _getWhere;
+            private Func<T, IComparer<DataRow>> _getOrderBy;
+            private Task _runningTask;
+            private CancellationTokenSource _cts;
+
+            public DataView DataView
+            {
+                get { return _dataPresenter.View; }
+            }
+
+            public void Reset()
+            {
+                if (_cts != null)
+                    _cts.Cancel();
+
+                _getDataSet = null;
+                _getWhere = null;
+                _getOrderBy = null;
+
+                DataView.ResetDataLoadState();
+                if (_runningTask == null)
+                    Dispose();
+            }
+
+            private void Dispose()
+            {
+                _dataPresenter._dataLoader = null;
+            }
+
+            private bool IsDisposed
+            {
+                get { return _dataPresenter._dataLoader != this; }
+            }
+
+            public Task Retry()
+            {
+                Debug.Assert(State == DataLoadState.Cancelled || State == DataLoadState.Failed);
+                Debug.Assert(_runningTask == null);
+                _runningTask = Run();
+                return _runningTask;
+            }
+
+            public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            {
+                return ShowAsync(dataView, ct => getDataSet(), false, getWhere, getOrderBy);
+            }
+
+            public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            {
+                return ShowAsync(dataView, getDataSet, true, getWhere, getOrderBy);
+            }
+
+            public DataLoadState? State
+            {
+                get { return DataView?.DataLoadState; }
+            }
+
+            private Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool cancellable, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            {
+                Debug.Assert(dataView != null);
+
+                if (dataView != DataView)
+                    _dataPresenter.AttachView(dataView);
+
+                _revision++;
                 _getDataSet = getDataSet;
+                _cancellable = cancellable;
                 _getWhere = getWhere;
                 _getOrderBy = getOrderBy;
+
+                if (_runningTask == null)
+                    _runningTask = Run();
+                else if (_cts != null)
+                    _cts.Cancel();
+                return _runningTask;
             }
 
-            private readonly Func<Task<DataSet<T>>> _getDataSet;
-            private readonly Func<T, Predicate<DataRow>> _getWhere;
-            private readonly Func<T, IComparer<DataRow>> _getOrderBy;
-
-            public Task Run(DataPresenter<T> dataPresenter, DataView dataView)
+            public bool CanRetry
             {
-                return dataPresenter.ShowAsync(dataView, _getDataSet, _getWhere, _getOrderBy);
+                get { return State == DataLoadState.Failed || State == DataLoadState.Cancelled; }
+            }
+
+            private async Task Run()
+            {
+                Debug.Assert(DataView != null && _runningTask == null);
+
+                DataSet<T> dataSet = null;
+                int revision;
+                DataLoadState state;
+                string errorMessage = null;
+                do
+                {
+                    revision = _revision;
+                    try
+                    {
+                        if (_cancellable)
+                        {
+                            using (_cts = new CancellationTokenSource())
+                            {
+                                DataView.OnDataLoading(true);
+                                dataSet = await (_getDataSet(_cts.Token));
+                            }
+                            _cts = null;
+                        }
+                        else
+                        {
+                            DataView.OnDataLoading(false);
+                            dataSet = await _getDataSet(CancellationToken.None);
+                        }
+                        state = DataLoadState.Succeeded;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        state = DataLoadState.Cancelled;
+                    }
+                    catch (Exception ex)
+                    {
+                        state = DataLoadState.Failed;
+                        errorMessage = ex.ToString();
+                    }
+                }
+                while (revision != _revision && _getDataSet != null);
+
+                _runningTask = null;
+
+                if (_getDataSet == null)
+                    Dispose();
+                else if (state == DataLoadState.Succeeded)
+                {
+                    if (dataSet == null)
+                        dataSet = DataSet<T>.New();
+                    Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
+                    IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
+                    _dataPresenter.Mount(DataView, dataSet, where, orderBy);
+                    Dispose();
+                }
+                else if (state == DataLoadState.Cancelled)
+                    DataView.OnDataLoadCancelled();
+                else
+                    DataView.OnDataLoadFailed(errorMessage);
             }
         }
 
-        private DataReloader _dataReloader;
+        private DataLoader _dataLoader;
 
         internal sealed override bool CanReload
         {
-            get { return _dataReloader != null; }
+            get { return _dataLoader != null && _dataLoader.CanRetry; }
         }
 
         internal sealed override void Reload()
         {
-            var dataReloader = _dataReloader;
-            _dataReloader = null;
-            dataReloader.Run(this, View);
+            Debug.Assert(CanReload);
+            _dataLoader.Retry();
         }
 
         public new DataSet<T> DataSet { get; private set; }
 
         public sealed override void DetachView()
         {
+            if (_dataLoader != null)
+                _dataLoader.Reset();
             base.DetachView();
             _layoutManager.ClearElements();
             _layoutManager = null;

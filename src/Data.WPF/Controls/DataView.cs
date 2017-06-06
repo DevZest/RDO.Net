@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Threading;
 
 namespace DevZest.Windows.Controls
 {
@@ -12,6 +13,7 @@ namespace DevZest.Windows.Controls
     public class DataView : Control
     {
         public static RoutedUICommand ReloadCommand { get { return NavigationCommands.Refresh; } }
+        public static readonly RoutedUICommand CancelLoadingCommand = new RoutedUICommand();
 
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
@@ -31,11 +33,14 @@ namespace DevZest.Windows.Controls
             typeof(double), typeof(DataView), new FrameworkPropertyMetadata(20.0d));
 
         private static readonly DependencyPropertyKey DataLoadStatePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadState), typeof(DataLoadState), typeof(DataView),
-            new FrameworkPropertyMetadata(DataLoadState.NotLoaded));
+            new FrameworkPropertyMetadata(DataLoadState.Idle));
         public static readonly DependencyProperty DataLoadStateProperty = DataLoadStatePropertyKey.DependencyProperty;
         private static readonly DependencyPropertyKey DataLoadErrorPropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadError), typeof(string), typeof(DataView),
             new FrameworkPropertyMetadata(null));
         public static readonly DependencyProperty DataLoadErrorProperty = DataLoadErrorPropertyKey.DependencyProperty;
+        private static readonly DependencyPropertyKey DataLoadCancellablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(DataLoadCancellable), typeof(bool),
+            typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty dataLoadCancellableProperty = DataLoadCancellablePropertyKey.DependencyProperty;
 
         static DataView()
         {
@@ -54,7 +59,7 @@ namespace DevZest.Windows.Controls
                 Debug.Assert((value == null) != (DataPresenter == null));
 
                 _dataPresenter = value;
-                DataLoadState = DataLoadState.NotLoaded;
+                DataLoadState = DataLoadState.Idle;
                 DataLoadError = null;
                 if (value == null)
                 {
@@ -66,25 +71,48 @@ namespace DevZest.Windows.Controls
             }
         }
 
-        internal void OnDataLoading()
+        internal void ResetDataLoadState()
+        {
+            DataLoadState = DataLoadState.Idle;
+            DataLoadError = null;
+            DataLoadCancellable = false;
+        }
+
+        internal void OnDataLoading(bool cancellable)
         {
             DataLoadState = DataLoadState.Loading;
             DataLoadError = null;
+            DataLoadCancellable = cancellable;
         }
 
         internal void OnDataLoaded()
         {
             Debug.Assert(DataPresenter != null);
-            DataLoadState = DataLoadState.Loaded;
+            DataLoadState = DataLoadState.Succeeded;
             DataLoadError = null;
             Scrollable = DataPresenter.Template.Orientation.HasValue;
             SetElementsPanel();
+        }
+
+        internal void OnDataLoadCancelling()
+        {
+            DataLoadState = DataLoadState.Cancelling;
+            DataLoadError = null;
+            DataLoadCancellable = false;
+        }
+
+        internal void OnDataLoadCancelled()
+        {
+            DataLoadState = DataLoadState.Cancelled;
+            DataLoadError = null;
+            DataLoadCancellable = false;
         }
 
         internal void OnDataLoadFailed(string dataLoadError)
         {
             DataLoadState = DataLoadState.Failed;
             DataLoadError = dataLoadError;
+            DataLoadCancellable = false;
         }
 
         private LayoutManager LayoutManager
@@ -151,6 +179,12 @@ namespace DevZest.Windows.Controls
         {
             get { return (string)GetValue(DataLoadErrorProperty); }
             internal set { SetValue(DataLoadErrorPropertyKey, value); }
+        }
+
+        public bool DataLoadCancellable
+        {
+            get { return (bool)GetValue(dataLoadCancellableProperty); }
+            set { SetValue(DataLoadCancellablePropertyKey, BooleanBoxes.Box(value)); }
         }
     }
 }

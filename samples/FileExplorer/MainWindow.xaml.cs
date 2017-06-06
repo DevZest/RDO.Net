@@ -3,6 +3,7 @@ using DevZest.Windows;
 using DevZest.Windows.Controls;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -34,28 +35,13 @@ namespace FileExplorer
                     throw new ArgumentException("Invalid ListMode", nameof(mode));
             }
 
-            protected DataView DataView { get; private set; }
-            protected string CurrentFolder { get; private set; }
-
             public abstract ListMode ListMode { get; }
 
-            public async void ShowAsync(DataView dataView, string currentFolder)
-            {
-                CurrentFolder = currentFolder;
-                if (DataView == dataView)
-                    return;
-
-                Debug.Assert(DataView == null);
-                DataView = dataView;
-                await ShowCurrentFolder();
-                DataView = null;
-            }
+            public abstract Task ShowAsync(DataView dataView, string currentFolder);
 
             public abstract FolderContent _ { get; }
 
             public abstract DataPresenter DataPresenter { get; }
-
-            protected abstract Task ShowCurrentFolder();
 
             private abstract class ListManagerBase<T> : ListManager
                 where T : FolderContent, new()
@@ -72,22 +58,9 @@ namespace FileExplorer
 
                 protected abstract DataPresenter<T> GetDataPresenter();
 
-                protected sealed override async Task ShowCurrentFolder()
+                public sealed override Task ShowAsync(DataView dataView, string currentFolder)
                 {
-                    await GetDataPresenter().ShowAsync(DataView, GetCurrentFolderContentsAsync);
-                }
-
-                private async Task<DataSet<T>> GetCurrentFolderContentsAsync()
-                {
-                    string currentFolder;
-                    DataSet<T> result;
-                    do
-                    {
-                        currentFolder = CurrentFolder;
-                        result = await FolderContent.GetFolderContentsAsync<T>(currentFolder);
-                    }
-                    while (currentFolder != CurrentFolder);
-                    return result;
+                    return GetDataPresenter().ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
                 }
             }
 
