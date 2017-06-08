@@ -238,17 +238,31 @@ namespace DevZest.Windows
                 _runningTask = null;
 
                 if (_getDataSet == null)
-                    Dispose();
-                else if (state == DataLoadState.Succeeded)
                 {
-                    if (dataSet == null)
-                        dataSet = DataSet<T>.New();
-                    Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
-                    IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
-                    _dataPresenter.Mount(DataView, dataSet, where, orderBy);
                     Dispose();
+                    return;
                 }
-                else if (state == DataLoadState.Cancelled)
+
+                if (state == DataLoadState.Succeeded)
+                {
+                    try
+                    {
+                        if (dataSet == null)
+                            dataSet = DataSet<T>.New();
+                        Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
+                        IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
+                        _dataPresenter.Mount(DataView, dataSet, where, orderBy);
+                        Dispose();
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        state = DataLoadState.Failed;
+                        errorMessage = ex.ToString();
+                    }
+                }
+
+                if (state == DataLoadState.Cancelled)
                     DataView.OnDataLoadCancelled();
                 else
                     DataView.OnDataLoadFailed(errorMessage);
