@@ -203,11 +203,27 @@ namespace DevZest.Windows
             return this;
         }
 
+        public TemplateBuilder BlockView<T>(StyleKey styleKey)
+            where T : BlockView, new()
+        {
+            if (styleKey == null)
+                throw new ArgumentNullException(nameof(styleKey));
+            return BlockView<T>(styleKey.Style);
+        }
+
         public TemplateBuilder RowView<T>(Style style = null)
             where T : RowView, new()
         {
             Template.RowView<T>(style);
             return this;
+        }
+
+        public TemplateBuilder RowView<T>(StyleKey styleKey)
+            where T : RowView, new()
+        {
+            if (styleKey == null)
+                throw new ArgumentNullException(nameof(styleKey));
+            return RowView<T>(styleKey.Style);
         }
 
         public TemplateBuilder AddBinding(int column, int row, ScalarBinding scalarBinding)

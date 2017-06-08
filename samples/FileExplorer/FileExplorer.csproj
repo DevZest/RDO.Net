@@ -71,6 +71,10 @@
     <Compile Include="Win32.cs" />
     <Compile Include="FolderTree.cs" />
     <Compile Include="LargeIconList.cs" />
+    <Page Include="DetailsList.Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LargeIconListItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

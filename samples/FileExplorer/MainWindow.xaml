@@ -35,7 +35,14 @@
 
             <dz:DataView x:Name="_foldersTreeView" Grid.Column="0" />
             <GridSplitter Grid.Column="1" Width="5" ResizeBehavior="PreviousAndNext" />
-            <dz:DataView x:Name="_folderContentListView" Grid.Column="2" />
+            <dz:DataView x:Name="_folderContentListView" Grid.Column="2">
+                <dz:DataView.Resources>
+                    <Style x:Key="{x:Type TextBlock}" TargetType="TextBlock">
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                        <Setter Property="Margin" Value="2,0" />
+                    </Style>
+                </dz:DataView.Resources>
+            </dz:DataView>
         </Grid>
     </DockPanel>
 </Window>

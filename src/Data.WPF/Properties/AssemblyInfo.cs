@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using DevZest.Windows;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Markup;
@@ -27,4 +28,5 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows")]
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows.Primitives")]
+[assembly: DefaultNamespace(typeof(DataPresenter))]
 

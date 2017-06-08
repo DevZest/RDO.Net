@@ -15,24 +15,7 @@ namespace DevZest.Windows.Controls
         public static readonly RoutedUICommand ExpandCommand = new RoutedUICommand();
         public static readonly RoutedUICommand CollapseCommand = new RoutedUICommand();
 
-        private static ResourceDictionary s_selectableRowView;
-        private static ResourceDictionary SelectableRowView
-        {
-            get { return s_selectableRowView ?? (s_selectableRowView = LoadResourceDictionary("pack://application:,,,/DevZest.Data.WPF;component/Resources/SelectableRowView.xaml")); }
-        }
-
-        public static Style SelectableStyle
-        {
-            get { return (Style)SelectableRowView["SelectableRowView"]; }
-        }
-
-        private static ResourceDictionary LoadResourceDictionary(string uriString)
-        {
-            return new ResourceDictionary
-            {
-                Source = new Uri(uriString, UriKind.RelativeOrAbsolute)
-            };
-        }
+        public static readonly StyleKey SelectableStyleKey = new StyleKey(typeof(RowView));
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
             typeof(RowView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));

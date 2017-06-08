@@ -12,7 +12,7 @@ namespace SmoothScroll
                 .GridColumns("*")
                 .GridRows("Auto")
                 .Layout(Orientation.Vertical)
-                .RowView<RowView>(RowView.SelectableStyle)
+                .RowView<RowView>(RowView.SelectableStyleKey)
                 .WithSelectionMode(SelectionMode.Extended)
                 .AddBinding(0, 0, _.AsTextBlock());
         }

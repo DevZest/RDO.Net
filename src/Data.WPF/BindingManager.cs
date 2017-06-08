@@ -18,6 +18,14 @@ namespace DevZest.Windows
             return binding;
         }
 
+        public static T WithStyle<T>(this T binding, StyleKey value)
+            where T : Binding
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            return binding.WithStyle<T>(value.Style);
+        }
+
         public static T WithAutoSizeOrder<T>(this T binding, int value)
             where T : Binding
         {

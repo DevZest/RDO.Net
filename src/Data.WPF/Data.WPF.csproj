@@ -65,6 +65,7 @@
     <Compile Include="CommandEntry.cs" />
     <Compile Include="DataPresenter.Commands.cs" />
     <Compile Include="DataPresenter_T.cs" />
+    <Compile Include="DefaultNamespaceAttribute.cs" />
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="BlockPresenter.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="RowPane_T.cs" />
     <Compile Include="ScalarPane_T.cs" />
     <Compile Include="Scalar_T.cs" />
+    <Compile Include="StyleKey.cs" />
     <Compile Include="Utilities\DependencyObject.FindAncestor.cs" />
     <Compile Include="Utilities\Double.IfZero.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
@@ -214,7 +216,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\SelectableRowView.xaml">
+    <Page Include="Controls\RowView.Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
