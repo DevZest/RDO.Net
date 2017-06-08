@@ -49,15 +49,15 @@ namespace DevZest.Windows
             dataView.OnDataLoaded();
         }
 
-        public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        public void ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
-                return ShowAsync(dataView, getDataSet, null, null);
+                ShowAsync(dataView, getDataSet, null, null);
             else
-                return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
+                ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
         }
 
-        public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        public void ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));
@@ -66,18 +66,18 @@ namespace DevZest.Windows
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
-            return _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
+            _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
         }
 
-        public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        public void ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
-                return ShowAsync(dataView, getDataSet, null, null);
+                ShowAsync(dataView, getDataSet, null, null);
             else
-                return ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
+                ShowAsync(dataView, getDataSet, _ => Where, _ => OrderBy);
         }
 
-        public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        public void ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (dataView == null)
                 throw new ArgumentNullException(nameof(dataView));
@@ -86,7 +86,7 @@ namespace DevZest.Windows
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
-            return _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
+            _dataLoader.ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
         }
 
         private sealed class DataLoader

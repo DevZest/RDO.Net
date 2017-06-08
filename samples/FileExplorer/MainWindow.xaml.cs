@@ -37,7 +37,7 @@ namespace FileExplorer
 
             public abstract ListMode ListMode { get; }
 
-            public abstract Task ShowAsync(DataView dataView, string currentFolder);
+            public abstract void ShowAsync(DataView dataView, string currentFolder);
 
             public abstract FolderContent _ { get; }
 
@@ -58,9 +58,9 @@ namespace FileExplorer
 
                 protected abstract DataPresenter<T> GetDataPresenter();
 
-                public sealed override Task ShowAsync(DataView dataView, string currentFolder)
+                public sealed override void ShowAsync(DataView dataView, string currentFolder)
                 {
-                    return GetDataPresenter().ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
+                    GetDataPresenter().ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
                 }
             }
 
