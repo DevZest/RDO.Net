@@ -214,7 +214,6 @@ namespace DevZest.Windows
                                 DataView.OnDataLoading(true);
                                 dataSet = await (_getDataSet(_cts.Token));
                             }
-                            _cts = null;
                         }
                         else
                         {
@@ -232,6 +231,7 @@ namespace DevZest.Windows
                         state = DataLoadState.Failed;
                         errorMessage = ex.ToString();
                     }
+                    finally { _cts = null; }
                 }
                 while (revision != _revision && _getDataSet != null);
 
@@ -300,8 +300,11 @@ namespace DevZest.Windows
             if (_dataLoader != null)
                 _dataLoader.Reset();
             base.DetachView();
-            _layoutManager.ClearElements();
-            _layoutManager = null;
+            if (_layoutManager != null)
+            {
+                _layoutManager.ClearElements();
+                _layoutManager = null;
+            }
         }
 
         private LayoutManager _layoutManager;
