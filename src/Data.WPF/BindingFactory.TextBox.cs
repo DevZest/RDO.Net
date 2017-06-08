@@ -37,19 +37,19 @@ namespace DevZest.Windows
             return null;
         }
 
-        public static RowBinding<TextBox> TextBox(this _String source, UpdateSourceTrigger updateSourceTrigger)
+        public static RowBinding<TextBox> AsTextBox(this _String source, UpdateSourceTrigger updateSourceTrigger)
         {
-            var trigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var trigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source);
             }).WithInput(trigger, source, e => string.IsNullOrEmpty(e.Text) ? null : e.Text);
         }
 
-        public static RowBinding<TextBox> TextBox(this _Int16 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int16 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source).ToString();
@@ -72,10 +72,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static RowBinding<TextBox> TextBox(this _Int32 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int32 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source).ToString();
@@ -98,10 +98,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static RowBinding<TextBox> TextBox(this _Int64 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Int64 source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source).ToString();
@@ -124,10 +124,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static RowBinding<TextBox> TextBox(this _Single source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Single source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source).ToString();
@@ -150,10 +150,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static RowBinding<TextBox> TextBox(this _Double source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static RowBinding<TextBox> AsTextBox(this _Double source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new RowBinding<TextBox>(onRefresh: (e, r) =>
             {
                 e.Text = r.GetValue(source).ToString();
@@ -176,19 +176,19 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<String> source, UpdateSourceTrigger updateSourceTrigger)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source, UpdateSourceTrigger updateSourceTrigger)
         {
-            var trigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var trigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value;
             }).WithInput(trigger, source, e => e.Text);
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int16?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -211,10 +211,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int32?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -237,10 +237,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int64?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -263,10 +263,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Single?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -289,10 +289,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Double?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double?> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -315,10 +315,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int16> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -336,10 +336,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int32> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int32> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -357,10 +357,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Int64> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int64> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -378,10 +378,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Single> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Single> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();
@@ -399,10 +399,10 @@ namespace DevZest.Windows
             .EndInput();
         }
 
-        public static ScalarBinding<TextBox> TextBox(this Scalar<Double> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
+        public static ScalarBinding<TextBox> AsTextBox(this Scalar<Double> source, UpdateSourceTrigger updateSourceTrigger, string inputErrorId = null, string inputErrorDescription = null)
         {
-            var flushTrigger = System.Windows.Controls.TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(System.Windows.Controls.TextBox.TextProperty);
+            var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
+            var inputValidationTrigger = new PropertyChangedTrigger<TextBox>(TextBox.TextProperty);
             return new ScalarBinding<TextBox>(onRefresh: e =>
             {
                 e.Text = source.Value.ToString();

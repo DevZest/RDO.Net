@@ -34,7 +34,7 @@ namespace SmoothScroll
             }
         }
 
-        public static RowBinding<TextBlock> TextBlock(this Foo _)
+        public static RowBinding<TextBlock> AsTextBlock(this Foo _)
         {
             return new RowBinding<TextBlock>(Setup, (e, r) => Refresh(e, _, r), null);
         }

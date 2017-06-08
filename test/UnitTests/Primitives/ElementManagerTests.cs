@@ -18,10 +18,10 @@ namespace DevZest.Windows.Primitives
             ScalarBinding<ColumnHeader> columnHeader2 = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                columnHeader1 = _.Name.ColumnHeader();
+                columnHeader1 = _.Name.AsColumnHeader();
                 blockHeader = _.BlockHeader();
-                textBlock = _.Name.TextBlock();
-                columnHeader2 = _.Name.ColumnHeader().WithFlowable(true);
+                textBlock = _.Name.AsTextBlock();
+                columnHeader2 = _.Name.AsColumnHeader().WithFlowable(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)
@@ -434,7 +434,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                textBlock = _.Name.TextBlock();
+                textBlock = _.Name.AsTextBlock();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBlock);
             });
 
@@ -456,7 +456,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<RowHeader> rowHeader = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                rowHeader = _.RowHeader();
+                rowHeader = _.AsRowHeader();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, rowHeader);
             });
 
@@ -494,7 +494,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<RowHeader> rowHeader = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                rowHeader = _.RowHeader();
+                rowHeader = _.AsRowHeader();
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, rowHeader);
             });

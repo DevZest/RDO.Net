@@ -17,8 +17,8 @@ namespace DevZest.Windows
             RowPane<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.TextBlock();
-                label = _.Name.Label(textBlock);
+                textBlock = _.Name.AsTextBlock();
+                label = _.Name.AsLabel(textBlock);
                 pane = new RowPane<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(textBlock, XamlPane.NAME_RIGHT);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });
@@ -45,8 +45,8 @@ namespace DevZest.Windows
             RowPane<CodePane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.TextBlock();
-                label = _.Name.Label(textBlock);
+                textBlock = _.Name.AsTextBlock();
+                label = _.Name.AsLabel(textBlock);
                 pane = new RowPane<CodePane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(textBlock, XamlPane.NAME_RIGHT);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });

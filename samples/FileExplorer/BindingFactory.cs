@@ -15,7 +15,7 @@ namespace FileExplorer
             element.Text = text;
         }
 
-        public static RowBinding<FolderView> FolderView(this Folder _)
+        public static RowBinding<FolderView> AsFolderView(this Folder _)
         {
             return new RowBinding<FolderView>((e, r) => Refresh(e, _, r));
         }
@@ -26,7 +26,7 @@ namespace FileExplorer
             element.Text = rowPresenter.GetValue(_.DisplayName);
         }
 
-        public static RowBinding<LargeIconListItemView> LargeIconView(this LargeIconListItem _)
+        public static RowBinding<LargeIconListItemView> AsLargeIconView(this LargeIconListItem _)
         {
             return new RowBinding<LargeIconListItemView>((e, r) => Refresh(e, _, r));
         }

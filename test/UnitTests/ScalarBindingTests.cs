@@ -17,7 +17,7 @@ namespace DevZest.Windows
             ScalarBinding<ColumnHeader> columnHeader = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.ColumnHeader();
+                columnHeader = _.Name.AsColumnHeader();
                 label = _.Name.ScalarLabel(columnHeader);
                 builder.GridColumns("100", "100", "100").GridRows("100").RowRange(2, 0, 2, 0)
                     .AddBinding(0, 0, label)
@@ -43,12 +43,12 @@ namespace DevZest.Windows
             ScalarBinding<ColumnHeader> columnHeader = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.ColumnHeader().WithFlowable(true);
+                columnHeader = _.Name.AsColumnHeader().WithFlowable(true);
                 label = _.Name.FlowableLabel(columnHeader);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100", "100").GridRows("100", "100")
                     .AddBinding(0, 0, label)
-                    .AddBinding(0, 1, 1, 1, _.Name.TextBlock())
+                    .AddBinding(0, 1, 1, 1, _.Name.AsTextBlock())
                     .AddBinding(1, 0, columnHeader);
             });
 

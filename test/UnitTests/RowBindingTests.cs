@@ -15,8 +15,8 @@ namespace DevZest.Windows
             RowBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                textBlock = _.Name.TextBlock();
-                label = _.Name.Label(textBlock);
+                textBlock = _.Name.AsTextBlock();
+                label = _.Name.AsLabel(textBlock);
                 builder.GridColumns("100", "100").GridRows("100")
                     .AddBinding(0, 0, label)
                     .AddBinding(1, 0, textBlock);

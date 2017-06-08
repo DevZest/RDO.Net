@@ -21,7 +21,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = _.ParentProductCategoryID.TextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.ParentProductCategoryID.AsTextBox(UpdateSourceTrigger.PropertyChanged);
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -95,8 +95,8 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBlock> textBlock = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = scalar.TextBox(UpdateSourceTrigger.PropertyChanged);
-                textBlock = _.Name.TextBlock(); // to avoid empty RowRange
+                textBox = scalar.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBlock = _.Name.AsTextBlock(); // to avoid empty RowRange
                 builder.GridColumns("100").GridRows("100", "100").AddBinding(0, 0, textBox).AddBinding(0, 1, textBlock);
             });
 
@@ -144,7 +144,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -187,7 +187,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
             });
 
@@ -226,8 +226,8 @@ namespace DevZest.Windows.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
-                validationView = textBox.Input.ValidationView();
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
@@ -298,8 +298,8 @@ namespace DevZest.Windows.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
-                validationView = textBox.Input.ValidationView();
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
@@ -347,8 +347,8 @@ namespace DevZest.Windows.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
-                validationView = textBox.Input.ValidationView();
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
                     .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
@@ -393,7 +393,7 @@ namespace DevZest.Windows.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.TextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
             });
 

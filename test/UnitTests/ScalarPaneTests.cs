@@ -18,13 +18,13 @@ namespace DevZest.Windows
             ScalarPane<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.ColumnHeader();
+                columnHeader = _.Name.AsColumnHeader();
                 label = _.Name.ScalarLabel(columnHeader);
                 pane = new ScalarPane<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
-                    .AddBinding(0, 1, _.Name.TextBlock());
+                    .AddBinding(0, 1, _.Name.AsTextBlock());
             });
 
             Assert.IsNull(label.SettingUpElement);
@@ -47,14 +47,14 @@ namespace DevZest.Windows
             ScalarPane<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.ColumnHeader().WithFlowable(true);
+                columnHeader = _.Name.AsColumnHeader().WithFlowable(true);
                 label = _.Name.FlowableLabel(columnHeader);
                 pane = new ScalarPane<XamlPane>().WithFlowable(true)
                     .AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
-                    .AddBinding(0, 1, _.Name.TextBlock());
+                    .AddBinding(0, 1, _.Name.AsTextBlock());
             });
 
             elementManager.FlowCount = 2;

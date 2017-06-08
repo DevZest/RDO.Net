@@ -14,7 +14,7 @@ namespace SmoothScroll
                 .Layout(Orientation.Vertical)
                 .RowView<RowView>(RowView.SelectableStyle)
                 .WithSelectionMode(SelectionMode.Extended)
-                .AddBinding(0, 0, _.TextBlock());
+                .AddBinding(0, 0, _.AsTextBlock());
         }
     }
 }

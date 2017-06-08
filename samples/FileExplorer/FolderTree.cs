@@ -13,7 +13,7 @@ namespace FileExplorer
                 .GridRows("Auto")
                 .Layout(Orientation.Vertical)
                 .WithSelectionMode(SelectionMode.Single)
-                .AddBinding(0, 0, _.FolderView());
+                .AddBinding(0, 0, _.AsFolderView());
         }
 
         protected override void ToggleExpandState(RowPresenter rowPresenter)

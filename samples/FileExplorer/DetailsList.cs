@@ -17,15 +17,15 @@ namespace FileExplorer
                 .RowView<RowView>(RowView.SelectableStyle)
                 .Layout(Orientation.Vertical)
                 .WithSelectionMode(SelectionMode.Single)
-                .AddBinding(0, 0, 1, 0, _.DisplayName.ColumnHeader())
-                .AddBinding(2, 0, _.FileSize.ColumnHeader())
-                .AddBinding(3, 0, _.FileType.ColumnHeader())
-                .AddBinding(4, 0, _.DateModified.ColumnHeader())
-                .AddBinding(0, 1, _.SmallIcon.Image())
-                .AddBinding(1, 1, _.DisplayName.TextBlock())
-                .AddBinding(2, 1, _.DateModified.TextBlock("{0:g}"))
-                .AddBinding(3, 1, _.FileType.TextBlock())
-                .AddBinding(4, 1, _.FileSize.TextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle((Style)App.Current.FindResource(FileSizeTextBlockStyleKey)));
+                .AddBinding(0, 0, 1, 0, _.DisplayName.AsColumnHeader())
+                .AddBinding(2, 0, _.FileSize.AsColumnHeader())
+                .AddBinding(3, 0, _.FileType.AsColumnHeader())
+                .AddBinding(4, 0, _.DateModified.AsColumnHeader())
+                .AddBinding(0, 1, _.SmallIcon.AsImage())
+                .AddBinding(1, 1, _.DisplayName.AsTextBlock())
+                .AddBinding(2, 1, _.DateModified.AsTextBlock("{0:g}"))
+                .AddBinding(3, 1, _.FileType.AsTextBlock())
+                .AddBinding(4, 1, _.FileSize.AsTextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle((Style)App.Current.FindResource(FileSizeTextBlockStyleKey)));
         }
     }
 }

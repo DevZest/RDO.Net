@@ -9,7 +9,7 @@ namespace DevZest.Windows
 {
     public static partial class BindingFactory
     {
-        public static ScalarBinding<ColumnHeader> ColumnHeader(this Column source)
+        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source)
         {
             return new ScalarBinding<ColumnHeader>(
                 onRefresh: e =>
@@ -18,7 +18,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<Label> Label<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
             where TTarget : UIElement, new()
         {
             if (source == null)
@@ -39,7 +39,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<RowHeader> RowHeader(this Model source)
+        public static RowBinding<RowHeader> AsRowHeader(this Model source)
         {
             return new RowBinding<RowHeader>(
                 onRefresh: (e, r) =>
@@ -50,7 +50,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static ScalarBinding<TextBlock> TextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static ScalarBinding<TextBlock> AsTextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -62,7 +62,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<TextBlock> TextBlock<T>(this Column<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<TextBlock> AsTextBlock<T>(this Column<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -74,7 +74,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<ValidationView> ValidationView<T>(this RowInput<T> source)
+        public static RowBinding<ValidationView> AsValidationView<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
             if (source == null)
@@ -98,7 +98,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<ValidationView> ValidationView(this Model source)
+        public static RowBinding<ValidationView> AsValidationView(this Model source)
         {
             return new RowBinding<ValidationView>(
                 onSetup: (e, r) =>
@@ -115,7 +115,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static ScalarBinding<ValidationView> ValidationView(this DataPresenter source)
+        public static ScalarBinding<ValidationView> AsValidationView(this DataPresenter source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -135,7 +135,7 @@ namespace DevZest.Windows
                 });
         }
 
-        public static RowBinding<Image> Image(this Column<ImageSource> source)
+        public static RowBinding<Image> AsImage(this Column<ImageSource> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
