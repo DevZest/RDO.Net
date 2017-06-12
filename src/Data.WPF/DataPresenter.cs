@@ -271,5 +271,40 @@ namespace DevZest.Windows
         {
             return rowPresenter.InternalHasChildren;
         }
+
+        private Dictionary<Type, IDataPresenterService> _services;
+
+        public IDataPresenterService this[Type type]
+        {
+            get
+            {
+                if (_services == null || type == null)
+                    return null;
+                IDataPresenterService result;
+                return _services.TryGetValue(type, out result) ? result : null;
+            }
+            set
+            {
+                if (type == null)
+                    throw new ArgumentNullException(nameof(type));
+                if (value == null)
+                {
+                    if (_services != null && _services.ContainsKey(type))
+                        _services.Remove(type);
+                }
+                else
+                {
+                    if (_services == null)
+                        _services = new Dictionary<Type, IDataPresenterService>();
+                    _services[type] = value;
+                }
+            }
+        }
+
+        public T GetService<T>(Type type)
+            where T : IDataPresenterService
+        {
+            return (T)this[type];
+        }
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="ExplicitTrigger.cs" />
     <Compile Include="IAsyncValidatorGroup.cs" />
     <Compile Include="BlockPresenter.cs" />
+    <Compile Include="IDataPresenterService.cs" />
     <Compile Include="InputError.cs" />
     <Compile Include="IRowInput.cs" />
     <Compile Include="Primitives\DataRowExtensions.cs" />
