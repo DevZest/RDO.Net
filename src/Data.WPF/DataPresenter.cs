@@ -287,6 +287,12 @@ namespace DevZest.Windows
             {
                 if (type == null)
                     throw new ArgumentNullException(nameof(type));
+                IDataPresenterService oldValue;
+                if (_services == null)
+                    oldValue = null;
+                else
+                    _services.TryGetValue(type, out oldValue);
+
                 if (value == null)
                 {
                     if (_services != null && _services.ContainsKey(type))
@@ -298,6 +304,11 @@ namespace DevZest.Windows
                         _services = new Dictionary<Type, IDataPresenterService>();
                     _services[type] = value;
                 }
+
+                if (oldValue != null)
+                    oldValue.DataPresenter = null;
+                if (value != null)
+                    value.DataPresenter = this;
             }
         }
 
