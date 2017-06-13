@@ -7,6 +7,14 @@ namespace DevZest.Windows
 {
     public class ColumnSortDescriptor
     {
+        public static ColumnSortDescriptor Create(Column column, SortDirection direction = SortDirection.Unspecified)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            return new ColumnSortDescriptor(column, direction);
+        }
+
         public static ColumnSortDescriptor Create<T>(Column<T> column, SortDirection direction = SortDirection.Unspecified, IComparer<T> comparer = null)
         {
             if (column == null)
