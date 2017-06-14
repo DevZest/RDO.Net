@@ -10,26 +10,32 @@ namespace DevZest.Windows
     {
         public static ColumnComparer Create(Column column)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-
+            VerifyColumn(column, nameof(column));
             return new ColumnComparer(column);
         }
 
         public static ColumnComparer Create<T>(Column<T> column, IComparer<T> comparer = null)
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-
+            VerifyColumn(column, nameof(column));
             return new TypedColumnComparer<T>(column, comparer);
+        }
+
+        private static void VerifyColumn(Column column, string paramName)
+        {
+            if (column == null)
+                throw new ArgumentNullException(paramName);
+            if (column.GetParentModel() == null)
+                throw new ArgumentException(Strings.ColumnComparer_InvalidColumn, paramName);
         }
 
         private ColumnComparer(Column column)
         {
+            _modelType = column.GetParentModel().GetType();
             _columnOrdinal = column.Ordinal;
             _isLocalColumn = column.IsLocal;
         }
 
+        private readonly Type _modelType;
         private readonly int _columnOrdinal;
         private readonly bool _isLocalColumn;
 
@@ -37,6 +43,14 @@ namespace DevZest.Windows
         {
             Debug.Assert(model != null);
             return _isLocalColumn ? model.GetLocalColumns()[_columnOrdinal] : model.GetColumns()[_columnOrdinal];
+        }
+
+        public bool Contains(Column column)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            return column.GetParentModel().GetType() == _modelType && column.Ordinal == _columnOrdinal && column.IsLocal == _isLocalColumn;
         }
 
         public ColumnSort GetColumnSort(Model model, SortDirection direction)
@@ -61,6 +75,8 @@ namespace DevZest.Windows
         {
             if (model == null)
                 throw new ArgumentNullException(paramName);
+            if (model.GetType() != _modelType)
+                throw new ArgumentException(Strings.ColumnComparer_InvalidModelType(_modelType), paramName);
         }
 
         private sealed class TypedColumnComparer<T> : ColumnComparer

@@ -144,6 +144,12 @@
   <data name="BlockBinding_OutOfVerticalRowRange" xml:space="preserve">
     <value>BlockBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
+  <data name="ColumnComparer_InvalidColumn" xml:space="preserve">
+    <value>Invalid column: the column must be a member of Model.</value>
+  </data>
+  <data name="ColumnComparer_InvalidModelType" xml:space="preserve">
+    <value>Invalid Model type, it must be type: {type}.</value>
+  </data>
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
   </data>

@@ -84,6 +84,22 @@ namespace DevZest.Windows
         }
 
         /// <summary>
+        /// Invalid column: the column must be a member of Model.
+        /// </summary>
+        public static string ColumnComparer_InvalidColumn
+        {
+            get { return GetString("ColumnComparer_InvalidColumn"); }
+        }
+
+        /// <summary>
+        /// Invalid Model type, it must be type: {type}.
+        /// </summary>
+        public static string ColumnComparer_InvalidModelType(object type)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnComparer_InvalidModelType", "type"), type);
+        }
+
+        /// <summary>
         /// The CurrentRow is editing.
         /// </summary>
         public static string DataPresenter_CurrentRowIsEditing
