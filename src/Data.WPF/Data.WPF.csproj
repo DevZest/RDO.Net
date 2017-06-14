@@ -44,7 +44,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="ColumnSortDescriptor.cs" />
+    <Compile Include="ColumnComparer.cs" />
+    <Compile Include="ColumnSortDescription.cs" />
     <Compile Include="Controls\DataLoadState.cs" />
     <Compile Include="Controls\Primitives\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>

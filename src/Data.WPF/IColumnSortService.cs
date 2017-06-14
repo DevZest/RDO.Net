@@ -4,6 +4,6 @@ namespace DevZest.Windows
 {
     public interface IColumnSortService : IDataPresenterService
     {
-        IReadOnlyList<ColumnSortDescriptor> Descriptors { get; set; }
+        IReadOnlyList<ColumnSortDescription> SortDescriptions { get; set; }
     }
 }
