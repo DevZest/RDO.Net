@@ -971,6 +971,14 @@ namespace DevZest.Data
             get { return GetString("DataRow_WhereExpressionMustBeStatic"); }
         }
 
+        /// <summary>
+        /// The model type must be identical.
+        /// </summary>
+        public static string DataRowComparer_DifferentModelType
+        {
+            get { return GetString("DataRowComparer_DifferentModelType"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

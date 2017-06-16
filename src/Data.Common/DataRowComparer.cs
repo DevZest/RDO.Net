@@ -8,7 +8,7 @@ namespace DevZest.Data
 {
     public static class DataRowComparer
     {
-        internal static IDataRowComparer Create<T>(Column<T> column, SortDirection direction, IComparer<T> comparer)
+        internal static IColumnComparer Create<T>(Column<T> column, SortDirection direction, IComparer<T> comparer)
         {
             return ComparerBase.Create(column, direction, comparer);
         }
@@ -38,7 +38,7 @@ namespace DevZest.Data
                 return new CompositeComparer(comparer1, comparer2);
             }
 
-            public static IDataRowComparer Create<T>(Column<T> column, SortDirection direction, IComparer<T> comparer)
+            public static IColumnComparer Create<T>(Column<T> column, SortDirection direction, IComparer<T> comparer)
             {
                 if (column.ParentModel != null)
                 {
@@ -95,13 +95,13 @@ namespace DevZest.Data
                 }
             }
 
-            private abstract class ColumnComparer<T> : ComparerBase
+            private abstract class ColumnComparer<T> : ComparerBase, IColumnComparer
             {
                 protected ColumnComparer(Column<T> column, SortDirection direction, IComparer<T> comparer)
                 {
                     Debug.Assert(column.ScalarSourceModels.Count == 1);
                     _modelType = ((Model)column.ScalarSourceModels).GetType();
-                    Direction = direction;
+                    _direction = direction;
                     _comparer = comparer;
                 }
 
@@ -111,15 +111,27 @@ namespace DevZest.Data
                     get { return _modelType; }
                 }
 
-                protected SortDirection Direction { get; private set; }
-                private readonly IComparer<T> _comparer;
+                private readonly SortDirection _direction;
+                public SortDirection Direction
+                {
+                    get { return _direction; }
+                }
 
-                protected abstract Column<T> GetColumn(Model model);
+                private readonly IComparer<T> _comparer;
+                public Column GetColumn(Model model)
+                {
+                    Check.NotNull(model, nameof(model));
+                    if (model.GetType() != ModelType)
+                        throw new ArgumentException(Strings.DataRowComparer_DifferentModelType, nameof(model));
+                    return GetTypedColumn(model);
+                }
+
+                protected abstract Column<T> GetTypedColumn(Model model);
 
                 public sealed override int Compare(DataRow x, DataRow y)
                 {
                     var model = Verify(x, y);
-                    var result = GetColumn(model).Compare(x, y, Direction, _comparer);
+                    var result = GetTypedColumn(model).Compare(x, y, Direction, _comparer);
                     return result;
                 }
             }
@@ -136,7 +148,7 @@ namespace DevZest.Data
 
                 protected abstract IReadOnlyList<Column> GetColumnList(Model model);
 
-                protected sealed override Column<T> GetColumn(Model model)
+                protected sealed override Column<T> GetTypedColumn(Model model)
                 {
                     return (Column<T>)GetColumnList(model)[_ordinal];
                 }
@@ -179,7 +191,7 @@ namespace DevZest.Data
                 private readonly string _json;
                 private readonly ConditionalWeakTable<Model, Column<T>> _columnsByModel = new ConditionalWeakTable<Model, Column<T>>();
 
-                protected override Column<T> GetColumn(Model model)
+                protected override Column<T> GetTypedColumn(Model model)
                 {
                     return _columnsByModel.GetValue(model, CreateColumn);
                 }

@@ -630,14 +630,14 @@ namespace DevZest.Data
             return model.DataSetContainer.CreateLocalColumn<T>(model);
         }
 
-        internal IDataRowComparer ToComparer(SortDirection direction, IComparer<T> comparer)
+        internal IColumnComparer ToComparer(SortDirection direction, IComparer<T> comparer)
         {
             Debug.Assert(ScalarSourceModels.Count == 1);
             comparer = Verify(comparer, nameof(comparer));
             return DataRowComparer.Create(this, direction, comparer);
         }
 
-        internal sealed override IDataRowComparer ToComparer(SortDirection direction)
+        internal sealed override IColumnComparer ToComparer(SortDirection direction)
         {
             return ToComparer(direction, null);
         }

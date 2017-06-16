@@ -480,6 +480,6 @@ namespace DevZest.Data
 
         internal abstract Column CreateBackup(Model model);
 
-        internal abstract IDataRowComparer ToComparer(SortDirection direction);
+        internal abstract IColumnComparer ToComparer(SortDirection direction);
     }
 }

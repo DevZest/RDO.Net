@@ -540,13 +540,13 @@ namespace DevZest.Data
             return new DataRowFilter<T>(predicate).ToPredicate();
         }
 
-        public static IDataRowComparer OrderBy(Column column, SortDirection direction = SortDirection.Ascending)
+        public static IColumnComparer OrderBy(Column column, SortDirection direction = SortDirection.Ascending)
         {
             VerifyOrderBy(column, nameof(column));
             return column.ToComparer(direction);
         }
 
-        public static IDataRowComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
+        public static IColumnComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
         {
             VerifyOrderBy(column, nameof(column));
             return column.ToComparer(direction, comparer);
