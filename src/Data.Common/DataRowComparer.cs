@@ -13,6 +13,15 @@ namespace DevZest.Data
             return ComparerBase.Create(column, direction, comparer);
         }
 
+        public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, IDataRowComparer thenBy)
+        {
+            Check.NotNull(orderBy, nameof(orderBy));
+            Check.NotNull(thenBy, nameof(thenBy));
+            if (orderBy.ModelType != thenBy.ModelType)
+                throw new ArgumentException(Strings.DataRowComparer_DifferentDataRowModel, nameof(thenBy));
+            return ComparerBase.Create(orderBy, thenBy);
+        }
+
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, Column column, SortDirection direction = SortDirection.Ascending)
         {
             Check.NotNull(orderBy, nameof(orderBy));
