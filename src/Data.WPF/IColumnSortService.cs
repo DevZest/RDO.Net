@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using DevZest.Data;
+using System.Collections.Generic;
 
 namespace DevZest.Windows
 {
     public interface IColumnSortService : IDataPresenterService
     {
-        IReadOnlyList<ColumnSortDescription> SortDescriptions { get; set; }
+        IReadOnlyList<ColumnSort> OrderBy { get; set; }
     }
 }
