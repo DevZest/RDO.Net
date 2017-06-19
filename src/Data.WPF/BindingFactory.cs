@@ -11,10 +11,18 @@ namespace DevZest.Windows
     {
         public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source)
         {
+            return source.AsColumnHeader(source.DisplayName);
+        }
+
+        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source, object title)
+        {
             return new ScalarBinding<ColumnHeader>(
-                onRefresh: e =>
+                onRefresh: null,
+                onCleanup: null,
+                onSetup: e =>
                 {
                     e.Column = source;
+                    e.Content = title;
                 });
         }
 

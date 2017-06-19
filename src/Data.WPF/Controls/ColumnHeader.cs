@@ -1,4 +1,6 @@
 ﻿using DevZest.Data;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -14,9 +16,6 @@ namespace DevZest.Windows.Controls
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase
     {
-        public static readonly DependencyProperty ColumnProperty = DependencyProperty.Register(nameof(Column), typeof(Column),
-            typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
-
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
@@ -28,11 +27,7 @@ namespace DevZest.Windows.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
         }
 
-        public Column Column
-        {
-            get { return (Column)GetValue(ColumnProperty); }
-            set { SetValue(ColumnProperty, value); }
-        }
+        public Column Column { get; set; }
 
         public Brush SeparatorBrush
         {
