@@ -44,6 +44,7 @@ namespace DevZest.Data.Presenters
             using (var builder = new TemplateBuilder(template, DataSet.Model))
             {
                 BuildTemplate(builder);
+                builder.Seal();
             }
             _layoutManager = LayoutManager.Create(this, template, dataSet, where, orderBy);
             dataView.OnDataLoaded();

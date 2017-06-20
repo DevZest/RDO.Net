@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Linq;
-using DevZest.Data;
 using DevZest.Data.Views;
 
 namespace DevZest.Data.Presenters
@@ -23,9 +22,13 @@ namespace DevZest.Data.Presenters
             _model = model;
         }
 
-        public void Dispose()
+        internal void Seal()
         {
             Template.Seal();
+        }
+
+        public void Dispose()
+        {
             Template = null;
         }
 

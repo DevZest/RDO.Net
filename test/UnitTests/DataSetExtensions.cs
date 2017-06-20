@@ -33,6 +33,7 @@ namespace DevZest.Data.Presenters
             {
                 buildTemplateAction(templateBuilder);
                 templateBuilder.BlockView<AutoInitBlockView>().RowView<AutoInitRowView>();
+                templateBuilder.Seal();
             }
             var result = createFunc(template, dataSet);
             result.InitializeElements(null);
