@@ -1,10 +1,10 @@
-﻿<dz:Pane x:Class="DevZest.Windows.Controls.XamlPane"
+﻿<dz:Pane x:Class="DevZest.Data.Views.XamlPane"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:DevZest.Windows"
-    xmlns:dz="clr-namespace:DevZest.Windows.Controls;assembly=DevZest.Data.Wpf"
+    xmlns:local="clr-namespace:DevZest.Data.Presenters"
+    xmlns:dz="clr-namespace:DevZest.Data.Views;assembly=DevZest.Data.Wpf"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300">
     <Grid>

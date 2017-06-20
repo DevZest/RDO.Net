@@ -1,12 +1,12 @@
-﻿using DevZest.Windows.Controls;
-using DevZest.Windows.Controls.Primitives;
+﻿using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace DevZest.Windows.Primitives
+namespace DevZest.Data.Presenters.Primitives
 {
     [TestClass]
     public class ScrollableManagerTests : LayoutManagerTestsBase

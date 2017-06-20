@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileExplorer"
-        xmlns:dz="clr-namespace:DevZest.Windows.Controls;assembly=DevZest.Data.WPF"
+        xmlns:dz="clr-namespace:DevZest.Data.Views;assembly=DevZest.Data.WPF"
         mc:Ignorable="d"
         WindowState="Maximized"
         x:Name="_mainWindow"

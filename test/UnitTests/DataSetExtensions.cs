@@ -1,11 +1,11 @@
 ﻿using DevZest.Data;
-using DevZest.Windows.Controls;
-using DevZest.Windows.Primitives;
+using DevZest.Data.Views;
+using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace DevZest.Windows
+namespace DevZest.Data.Presenters
 {
     internal static class DataSetExtensions
     {

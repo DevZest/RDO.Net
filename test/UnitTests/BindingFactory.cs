@@ -1,10 +1,10 @@
 ﻿using DevZest.Data;
-using DevZest.Windows.Controls;
+using DevZest.Data.Views;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Windows
+namespace DevZest.Data.Presenters
 {
     internal static class BindingFactory
     {

@@ -3,7 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Windows.Primitives
+namespace DevZest.Data.Presenters.Primitives
 {
     [TestClass]
     public class IScrollableTests

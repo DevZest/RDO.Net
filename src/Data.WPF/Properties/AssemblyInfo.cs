@@ -1,4 +1,4 @@
-﻿using DevZest.Windows;
+﻿using DevZest.Data.Presenters;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -26,7 +26,7 @@ using System.Windows.Markup;
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
-[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows")]
-[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Windows.Primitives")]
+[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Presenters")]
+[assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Presenters.Primitives")]
 [assembly: DefaultNamespace(typeof(DataPresenter))]
 

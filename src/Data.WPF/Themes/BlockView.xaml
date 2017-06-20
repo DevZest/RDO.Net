@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:DevZest.Windows.Controls"
-    xmlns:primitives="clr-namespace:DevZest.Windows.Controls.Primitives">
+    xmlns:local="clr-namespace:DevZest.Data.Views"
+    xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives">
     
     <Style TargetType="{x:Type local:BlockView}">
         <Setter Property="Template">

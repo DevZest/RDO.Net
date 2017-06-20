@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace DevZest.Windows.Primitives
+namespace DevZest.Data.Presenters.Primitives
 {
     [TestClass]
     public class LayoutZManagerTests : LayoutManagerTestsBase

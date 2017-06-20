@@ -1,5 +1,5 @@
-﻿using DevZest.Windows;
-using DevZest.Windows.Controls;
+﻿using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using System.Windows;
 using System.Windows.Controls;
 

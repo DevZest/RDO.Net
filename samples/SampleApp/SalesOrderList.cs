@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DevZest.Windows;
+using DevZest.Data.Presenters;
 
 namespace SampleApp
 {

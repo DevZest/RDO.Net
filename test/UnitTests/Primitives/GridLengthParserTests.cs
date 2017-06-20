@@ -2,7 +2,7 @@
 using System;
 using System.Windows;
 
-namespace DevZest.Windows.Primitives
+namespace DevZest.Data.Presenters.Primitives
 {
     [TestClass]
     public class GridLengthParserTests

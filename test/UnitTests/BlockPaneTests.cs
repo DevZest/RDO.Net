@@ -1,8 +1,8 @@
-﻿using DevZest.Windows.Controls;
+﻿using DevZest.Data.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
 
-namespace DevZest.Windows
+namespace DevZest.Data.Presenters
 {
     [TestClass]
     public class BlockPaneTests

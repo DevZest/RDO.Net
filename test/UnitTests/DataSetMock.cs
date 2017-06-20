@@ -2,7 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using System.Globalization;
 
-namespace DevZest.Windows
+namespace DevZest.Data.Presenters
 {
     internal static class DataSetMock
     {

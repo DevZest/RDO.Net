@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Windows.Controls
+namespace DevZest.Data.Views
 {
     public class CodePane : Pane
     {

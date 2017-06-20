@@ -1,4 +1,4 @@
-﻿namespace DevZest.Windows.Controls
+﻿namespace DevZest.Data.Views
 {
     /// <summary>
     /// Interaction logic for XamlPane.xaml

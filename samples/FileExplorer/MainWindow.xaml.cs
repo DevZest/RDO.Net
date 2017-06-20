@@ -1,6 +1,6 @@
 ﻿using DevZest.Data;
-using DevZest.Windows;
-using DevZest.Windows.Controls;
+using DevZest.Data.Presenters;
+using DevZest.Data.Views;
 using System;
 using System.Diagnostics;
 using System.Threading;

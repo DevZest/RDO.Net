@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace DevZest.Windows
+namespace DevZest.Data.Presenters
 {
     [TestClass]
     public class ValidationViewTests
