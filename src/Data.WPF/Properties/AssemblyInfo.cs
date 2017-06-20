@@ -28,5 +28,5 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Views")]
 [assembly: XmlnsDefinition("http://schemas.devzest.com/data/windows", "DevZest.Data.Views.Primitives")]
-[assembly: DefaultNamespace(nameof(DevZest.Data))]
+[assembly: DefaultNamespace("DevZest.Data")]
 
