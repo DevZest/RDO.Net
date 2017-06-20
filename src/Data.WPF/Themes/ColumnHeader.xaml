@@ -10,6 +10,14 @@
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="SeparatorBrush" Value="#FFC9CACA" />
         <Setter Property="Padding" Value="4" />
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Command="{x:Static local:ColumnHeader.SortEditCommand}"
+                              CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ColumnHeader">

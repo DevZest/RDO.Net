@@ -1,9 +1,7 @@
 ﻿using DevZest.Data;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DevZest.Windows.Controls
@@ -16,6 +14,8 @@ namespace DevZest.Windows.Controls
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase
     {
+        public static readonly RoutedUICommand SortEditCommand = new RoutedUICommand(Strings.CommandText_SortEdit, nameof(SortEditCommand), typeof(ColumnHeader));
+
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
