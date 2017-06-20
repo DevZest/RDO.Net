@@ -1,4 +1,4 @@
-﻿namespace DevZest.Data.Presenters
+﻿namespace DevZest.Data.Presenters.Services
 {
     public interface IDataPresenterService
     {

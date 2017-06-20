@@ -2,10 +2,10 @@
 using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Windows.Controls;
-using DevZest.Data;
 using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
+using DevZest.Data.Presenters.Services;
 
 namespace DevZest.Data.Presenters
 {
