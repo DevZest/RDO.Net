@@ -32,10 +32,10 @@ namespace DevZest.Data.Presenters
             if (result.Length == 0)
                 return result;
 
-            var defaultNamespace = DefaultNamespaceAttribute.GetDefaultNamespace(type.Assembly);
+            var relativeTo = StyleKeyRelativeToAttribute.GetStyleKeyRelativeTo(type.Assembly);
 
-            if (result.StartsWith(defaultNamespace))
-                result = result.Substring(defaultNamespace.Length, result.Length - defaultNamespace.Length);
+            if (result.StartsWith(relativeTo))
+                result = result.Substring(relativeTo.Length, result.Length - relativeTo.Length);
 
             if (result.StartsWith("."))
                 result = result.Substring(1, result.Length - 1);

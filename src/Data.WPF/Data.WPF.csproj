@@ -65,7 +65,7 @@
     <Compile Include="Presenters\CommandEntry.cs" />
     <Compile Include="Presenters\DataPresenter.Commands.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
-    <Compile Include="Presenters\DefaultNamespaceAttribute.cs" />
+    <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />
     <Compile Include="Presenters\ExplicitTrigger.cs" />
     <Compile Include="Presenters\IAsyncValidatorGroup.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
