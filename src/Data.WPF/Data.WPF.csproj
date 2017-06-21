@@ -44,6 +44,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
+    <Compile Include="Presenters\Services\ISortEditorService.cs" />
+    <Compile Include="Presenters\Services\ServiceBase.cs" />
+    <Compile Include="Presenters\Services\SortDescription.cs" />
+    <Compile Include="Presenters\Services\SortEditor.cs" />
+    <Compile Include="Presenters\Services\SortService.cs" />
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
@@ -181,7 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevZest.Data.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b1c651e6085f55a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170619\lib\net451\DevZest.Data.Common.dll</HintPath>
+      <HintPath>..\..\packages\DevZest.Data.Common.1.0.0-rc-20170621\lib\net451\DevZest.Data.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
