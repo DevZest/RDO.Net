@@ -311,7 +311,7 @@ namespace DevZest.Data
 
         public IValidationMessageGroup Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
-            return Model.Validate(this, severity);
+            return Model.Validate(this, severity).Seal();
         }
 
         public void CopyValuesFrom(DataRow from, bool recursive = true)

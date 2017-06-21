@@ -402,7 +402,7 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        internal IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
+        protected internal virtual IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
         {
             var result = ValidationMessageGroup.Empty;
             foreach (var validator in Validators)
@@ -416,7 +416,7 @@ namespace DevZest.Data
                 result = result.Add(validationMessage);
             }
 
-            return result.Seal();
+            return result;
         }
 
         private static ValidationMessage Validate(IValidator validator, DataRow dataRow)
