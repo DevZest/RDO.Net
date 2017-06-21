@@ -333,7 +333,7 @@ namespace DevZest.Data
             return Validate(ValidationResult.Empty, this, ValidationEntriesCounter.Create(maxErrorEntries, maxWarningEntries), recursive);
         }
 
-        public IValidationResult Validate(ValidationSeverity severity = ValidationSeverity.Error, bool recursive = true, int maxEntries = 100)
+        public IValidationResult Validate(ValidationSeverity severity, bool recursive = true, int maxEntries = 100)
         {
             return Validate(ValidationResult.Empty, this, ValidationEntriesCounter.Create(severity, maxEntries), recursive);
         }

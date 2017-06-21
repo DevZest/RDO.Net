@@ -162,7 +162,7 @@ namespace DevZest.Data
             var dataSet = GetDataSet(3);
             Assert.IsTrue(dataSet.Model.Validators.Count == 2);
 
-            var validationResult = dataSet.Validate(maxEntries:6);
+            var validationResult = dataSet.Validate(ValidationSeverity.Error, maxEntries:6);
             Assert.IsFalse(validationResult.IsValid());
             var expectedJson =
 @"[
