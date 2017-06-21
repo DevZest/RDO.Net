@@ -272,22 +272,25 @@ namespace DevZest.Data.Presenters
             return rowPresenter.InternalHasChildren;
         }
 
-        private Dictionary<Type, IDataPresenterService> _services;
+        private Dictionary<Type, IService> _services;
 
-        public IDataPresenterService this[Type type]
+        public virtual IService this[Type type]
         {
             get
             {
-                if (_services == null || type == null)
+                if (type == null)
+                    throw new ArgumentNullException(nameof(type));
+
+                if (_services == null)
                     return null;
-                IDataPresenterService result;
+                IService result;
                 return _services.TryGetValue(type, out result) ? result : null;
             }
             set
             {
                 if (type == null)
                     throw new ArgumentNullException(nameof(type));
-                IDataPresenterService oldValue;
+                IService oldValue;
                 if (_services == null)
                     oldValue = null;
                 else
@@ -301,7 +304,7 @@ namespace DevZest.Data.Presenters
                 else
                 {
                     if (_services == null)
-                        _services = new Dictionary<Type, IDataPresenterService>();
+                        _services = new Dictionary<Type, IService>();
                     _services[type] = value;
                 }
 
@@ -312,10 +315,22 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public T GetService<T>(Type type)
-            where T : IDataPresenterService
+        public T GetService<T>(Func<T> createIfNull = null)
+            where T : IService
         {
-            return (T)this[type];
+            var type = typeof(T);
+            var result = (T)this[type];
+
+            if (createIfNull == null)
+                return result;
+
+            if (result == null)
+            {
+                result = createIfNull();
+                this[type] = result;
+            }
+
+            return result;
         }
     }
 }

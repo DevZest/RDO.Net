@@ -69,8 +69,8 @@
     <Compile Include="Presenters\ExplicitTrigger.cs" />
     <Compile Include="Presenters\IAsyncValidatorGroup.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
-    <Compile Include="Presenters\Services\IColumnSortService.cs" />
-    <Compile Include="Presenters\Services\IDataPresenterService.cs" />
+    <Compile Include="Presenters\Services\ISortService.cs" />
+    <Compile Include="Presenters\Services\IService.cs" />
     <Compile Include="Presenters\InputError.cs" />
     <Compile Include="Presenters\IRowInput.cs" />
     <Compile Include="Presenters\Primitives\DataRowExtensions.cs" />

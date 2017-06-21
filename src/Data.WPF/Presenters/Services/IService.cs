@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Presenters.Services
 {
-    public interface IDataPresenterService
+    public interface IService
     {
         DataPresenter DataPresenter { set; }
     }
