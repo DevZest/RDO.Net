@@ -115,6 +115,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Placeholder.cs" />
     <Compile Include="Presenters\ValidationViewTests.cs" />
+    <Compile Include="Views\RowViewTests.cs" />
     <Compile Include="Views\XamlCompositeView.xaml.cs">
       <DependentUpon>XamlCompositeView.xaml</DependentUpon>
     </Compile>

@@ -4,7 +4,7 @@
     xmlns:local="clr-namespace:DevZest.Data.Views"
     xmlns:primitives="clr-namespace:DevZest.Data.Views.Primitives">
     
-    <Style x:Key="SelectableRowView" TargetType="{x:Type local:RowView}">
+    <Style x:Key="{x:Static local:RowView.SelectableStyleKey}" TargetType="{x:Type local:RowView}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RowView}">

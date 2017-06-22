@@ -7,6 +7,13 @@ namespace DevZest.Data.Presenters
 {
     public class StyleKey
     {
+        static StyleKey()
+        {
+            // Workaround UriFormatException: Invalid URI: Invalid port specified
+            // https://stackoverflow.com/questions/6005398/uriformatexception-invalid-uri-invalid-port-specified
+            var currentApp = Application.Current;
+        }
+
         public StyleKey(Type type)
         {
             if (type == null)
@@ -18,7 +25,15 @@ namespace DevZest.Data.Presenters
         private Style _style;
         public Style Style
         {
-            get { return _style ?? (_style = (Style)(LoadResourceDictionary(_uriString)[this])); }
+            get { return _style ?? (_style = LoadStyle()); }
+        }
+
+        private Style LoadStyle()
+        {
+            var result = (Style)(LoadResourceDictionary(_uriString)[this]);
+            if (result == null)
+                throw new InvalidOperationException(Strings.StyleKey_StyleNotFound);
+            return result;
         }
 
         private static string GetUriString(Type type)

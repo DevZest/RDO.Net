@@ -348,6 +348,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Cannot find Style in the ResourceDictionary.
+        /// </summary>
+        public static string StyleKey_StyleNotFound
+        {
+            get { return GetString("StyleKey_StyleNotFound"); }
+        }
+
+        /// <summary>
         /// Conflict between Template.ValidationScope and AsyncValidation.Scope detected.
         /// </summary>
         public static string TemplateBuilder_AsyncValidatorScopeConflict
