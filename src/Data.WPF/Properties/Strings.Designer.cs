@@ -100,14 +100,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// _Sort...
-        /// </summary>
-        public static string CommandText_SortEdit
-        {
-            get { return GetString("CommandText_SortEdit"); }
-        }
-
-        /// <summary>
         /// The CurrentRow is editing.
         /// </summary>
         public static string DataPresenter_CurrentRowIsEditing

@@ -50,6 +50,14 @@
     <Compile Include="Presenters\Services\SortDescription.cs" />
     <Compile Include="Presenters\Services\SortEditor.cs" />
     <Compile Include="Presenters\Services\SortService.cs" />
+    <Compile Include="Presenters\Services\SortEditorWindow.xaml.cs">
+      <DependentUpon>SortEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UIText.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UIText.resx</DependentUpon>
+    </Compile>
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\Primitives\ICompositeView.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
@@ -205,6 +213,10 @@
       <LogicalName>DevZest.Data.Strings.resources</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UIText.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -217,6 +229,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Presenters\Services\SortEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Primitives\LoadingAnimation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

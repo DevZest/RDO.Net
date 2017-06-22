@@ -150,9 +150,6 @@
   <data name="ColumnComparer_InvalidModelType" xml:space="preserve">
     <value>Invalid Model type, it must be type: {type}.</value>
   </data>
-  <data name="CommandText_SortEdit" xml:space="preserve">
-    <value>_Sort...</value>
-  </data>
   <data name="DataPresenter_CurrentRowIsEditing" xml:space="preserve">
     <value>The CurrentRow is editing.</value>
   </data>

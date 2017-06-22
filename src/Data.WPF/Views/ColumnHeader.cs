@@ -14,7 +14,7 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase
     {
-        public static readonly RoutedUICommand SortEditCommand = new RoutedUICommand(Strings.CommandText_SortEdit, nameof(SortEditCommand), typeof(ColumnHeader));
+        public static readonly RoutedUICommand SortEditCommand = new RoutedUICommand(UIText.SortEditCommand, nameof(SortEditCommand), typeof(ColumnHeader));
 
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
