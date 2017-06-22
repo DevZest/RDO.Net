@@ -117,10 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SortEditCommand" xml:space="preserve">
+  <data name="ColumnHeader_SortEditCommandText" xml:space="preserve">
     <value>_Sort...</value>
   </data>
-  <data name="SortEditorWindowTitle" xml:space="preserve">
+  <data name="SortDescription_Column" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="SortDescription_Direction" xml:space="preserve">
+    <value>Direction</value>
+  </data>
+  <data name="SortDescription_InputRequired" xml:space="preserve">
+    <value>{input} is required.</value>
+  </data>
+  <data name="SortEditorWindow_Title" xml:space="preserve">
     <value>Sort</value>
   </data>
 </root>

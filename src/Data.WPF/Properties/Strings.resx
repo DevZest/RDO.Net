@@ -243,15 +243,6 @@
   <data name="ScalarBinding_OutOfVerticalRowRange" xml:space="preserve">
     <value>Flowable ScalarBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
-  <data name="SortDescription_Column" xml:space="preserve">
-    <value>Column</value>
-  </data>
-  <data name="SortDescription_Direction" xml:space="preserve">
-    <value>Direction</value>
-  </data>
-  <data name="SortDescription_InputRequired" xml:space="preserve">
-    <value>{input} is required.</value>
-  </data>
   <data name="TemplateBuilder_AsyncValidatorScopeConflict" xml:space="preserve">
     <value>Conflict between Template.ValidationScope and AsyncValidation.Scope detected.</value>
   </data>

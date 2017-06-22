@@ -348,30 +348,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Column
-        /// </summary>
-        public static string SortDescription_Column
-        {
-            get { return GetString("SortDescription_Column"); }
-        }
-
-        /// <summary>
-        /// Direction
-        /// </summary>
-        public static string SortDescription_Direction
-        {
-            get { return GetString("SortDescription_Direction"); }
-        }
-
-        /// <summary>
-        /// {input} is required.
-        /// </summary>
-        public static string SortDescription_InputRequired(object input)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("SortDescription_InputRequired", "input"), input);
-        }
-
-        /// <summary>
         /// Conflict between Template.ValidationScope and AsyncValidation.Scope detected.
         /// </summary>
         public static string TemplateBuilder_AsyncValidatorScopeConflict

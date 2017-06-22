@@ -14,17 +14,41 @@ namespace DevZest.Data
         /// <summary>
         /// _Sort...
         /// </summary>
-        public static string SortEditCommand
+        public static string ColumnHeader_SortEditCommandText
         {
-            get { return GetString("SortEditCommand"); }
+            get { return GetString("ColumnHeader_SortEditCommandText"); }
+        }
+
+        /// <summary>
+        /// Column
+        /// </summary>
+        public static string SortDescription_Column
+        {
+            get { return GetString("SortDescription_Column"); }
+        }
+
+        /// <summary>
+        /// Direction
+        /// </summary>
+        public static string SortDescription_Direction
+        {
+            get { return GetString("SortDescription_Direction"); }
+        }
+
+        /// <summary>
+        /// {input} is required.
+        /// </summary>
+        public static string SortDescription_InputRequired(object input)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("SortDescription_InputRequired", "input"), input);
         }
 
         /// <summary>
         /// Sort
         /// </summary>
-        public static string SortEditorWindowTitle
+        public static string SortEditorWindow_Title
         {
-            get { return GetString("SortEditorWindowTitle"); }
+            get { return GetString("SortEditorWindow_Title"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

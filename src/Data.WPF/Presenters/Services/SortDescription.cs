@@ -10,8 +10,8 @@ namespace DevZest.Data.Presenters.Services
 
         protected override void OnInitializing()
         {
-            Column = CreateLocalColumn<Column>(builder => builder.DisplayName = Strings.SortDescription_Column);
-            Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = Strings.SortDescription_Direction);
+            Column = CreateLocalColumn<Column>(builder => builder.DisplayName = UIText.SortDescription_Column);
+            Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UIText.SortDescription_Direction);
             base.OnInitializing();
         }
 
@@ -22,9 +22,9 @@ namespace DevZest.Data.Presenters.Services
                 return result;
 
             if (Column[dataRow] == null)
-                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, Strings.SortDescription_InputRequired(Column.DisplayName), Column));
+                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortDescription_InputRequired(Column.DisplayName), Column));
             if (Direction[dataRow] == SortDirection.Unspecified)
-                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, Strings.SortDescription_InputRequired(Direction.DisplayName), Direction));
+                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortDescription_InputRequired(Direction.DisplayName), Direction));
 
             return result;
         }
