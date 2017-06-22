@@ -1,17 +1,24 @@
-﻿using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
-namespace DevZest.Data.Views
+namespace DevZest.Data.Presenters.Primitives
 {
-    [ContentPropertyAttribute(nameof(Pane.Content))]
-    public class Pane : ContentPresenter
+    public sealed class CompositeBinding
     {
-        private List<UIElement> _children = new List<UIElement>();
+        public CompositeBinding(ICompositeView view)
+        {
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
+            _view = view;
+        }
+
+        private readonly ICompositeView _view;
+
+        private readonly List<UIElement> _children = new List<UIElement>();
         public IReadOnlyList<UIElement> Children
         {
             get { return _children; }
@@ -21,19 +28,14 @@ namespace DevZest.Data.Views
 
         private void AddChild(UIElement child, string name)
         {
-            var placeholder = GetPlaceholder(name);
+            var placeholder = _view.GetPlaceholder(name);
             if (placeholder == null)
                 throw new InvalidOperationException();
             _children.Add(child);
             placeholder.Content = child;
         }
 
-        protected virtual ContentPresenter GetPlaceholder(string name)
-        {
-            return FindName(name) as ContentPresenter;
-        }
-
-        internal Pane InitChildren(IReadOnlyList<Binding> bindings, IReadOnlyList<string> names)
+        internal ICompositeView InitChildren(IReadOnlyList<Binding> bindings, IReadOnlyList<string> names)
         {
             Debug.Assert(bindings.Count == names.Count);
             for (int i = 0; i < bindings.Count; i++)
@@ -44,18 +46,17 @@ namespace DevZest.Data.Views
                 AddChild(binding.GetSettingUpElement(), name);
             }
             IsNew = true;
-            return this;
+            return _view;
         }
 
-        internal Pane BeginSetup(IReadOnlyList<Binding> bindings)
+        internal void BeginSetup(IReadOnlyList<Binding> bindings)
         {
             Debug.Assert(bindings.Count == Children.Count);
             if (IsNew)
-                return this;
+                return;
 
             for (int i = 0; i < bindings.Count; i++)
                 bindings[i].BeginSetup(Children[i]);
-            return this;
         }
 
         internal void Refresh(IReadOnlyList<Binding> bindings)

@@ -1,14 +1,13 @@
-﻿using System;
-using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
 using System.Windows;
-using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowPane<T> : RowPane
-        where T : Pane, new()
+    public sealed class CompositeRowBinding<T> : CompositeRowBinding
+        where T : UIElement, ICompositeView, new()
     {
-        internal override Pane CreatePane()
+        internal override ICompositeView CreateView()
         {
             return new T();
         }
@@ -18,7 +17,7 @@ namespace DevZest.Data.Presenters
             get { return (T)base[rowPresenter]; }
         }
 
-        public RowPane<T> AddChild<TChild>(RowBinding<TChild> binding, string name)
+        public CompositeRowBinding<T> AddChild<TChild>(RowBinding<TChild> binding, string name)
             where TChild : UIElement, new()
         {
             InternalAddChild(binding, name);

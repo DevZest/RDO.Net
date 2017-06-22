@@ -1,14 +1,13 @@
-﻿using System;
-using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Presenters.Primitives;
 using System.Windows;
-using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarPane<T> : ScalarPane
-        where T : Pane, new()
+    public sealed class CompositeScalarBinding<T> : CompositeScalarBinding
+        where T : UIElement, ICompositeView, new()
     {
-        internal override Pane CreatePane()
+        internal override ICompositeView CreateView()
         {
             return new T();
         }
@@ -18,7 +17,7 @@ namespace DevZest.Data.Presenters
             get { return (T)base[flowIndex]; }
         }
 
-        public ScalarPane<T> AddChild<TChild>(ScalarBinding<TChild> binding, string name)
+        public CompositeScalarBinding<T> AddChild<TChild>(ScalarBinding<TChild> binding, string name)
             where TChild : UIElement, new()
         {
             InternalAddChild(binding, name);

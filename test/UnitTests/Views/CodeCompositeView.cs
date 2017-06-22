@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Views
 {
-    public class CodePane : Pane
+    public class CodeCompositeView : CompositeView
     {
         public const string NAME_LEFT = "LEFT";
         public const string NAME_RIGHT = "RIGHT";
@@ -11,7 +11,7 @@ namespace DevZest.Data.Views
         ContentPresenter _left;
         ContentPresenter _right;
 
-        public CodePane()
+        public CodeCompositeView()
         {
             var grid = new Grid();
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Auto) });
@@ -28,7 +28,7 @@ namespace DevZest.Data.Views
             Content = grid;
         }
 
-        protected override ContentPresenter GetPlaceholder(string name)
+        public override ContentPresenter GetPlaceholder(string name)
         {
             switch (name)
             {

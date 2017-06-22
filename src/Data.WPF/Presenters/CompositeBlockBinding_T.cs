@@ -1,13 +1,14 @@
 ﻿using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System.Windows;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class BlockPane<T> : BlockPane
-        where T : Pane, new()
+    public sealed class CompositeBlockBinding<T> : CompositeBlockBinding
+        where T : UIElement, ICompositeView, new()
     {
-        internal override Pane CreatePane()
+        internal override ICompositeView CreateView()
         {
             return new T();
         }
@@ -17,7 +18,7 @@ namespace DevZest.Data.Presenters
             get { return (T)base[blockOrdinal]; }
         }
 
-        public BlockPane<T> AddChild<TChild>(BlockBinding<TChild> binding, string name)
+        public CompositeBlockBinding<T> AddChild<TChild>(BlockBinding<TChild> binding, string name)
             where TChild : UIElement, new()
         {
             InternalAddChild(binding, name);

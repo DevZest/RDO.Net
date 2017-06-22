@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,14 +51,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         #endregion
 
-        public ScalarPane Parent { get; private set; }
+        public CompositeScalarBinding Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(ScalarPane parent, int ordinal)
+        internal void Seal(CompositeScalarBinding parent, int ordinal)
         {
             Parent = parent;
             Ordinal = ordinal;
@@ -147,7 +148,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return null;
 
                 if (Parent != null)
-                    return ((Pane)Parent[flowIndex]).Children[Ordinal];
+                    return ((ICompositeView)Parent[flowIndex]).CompositeBinding.Children[Ordinal];
 
                 if (flowIndex < 0 || flowIndex >= FlowCount)
                     throw new ArgumentOutOfRangeException(nameof(flowIndex));

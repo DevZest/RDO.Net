@@ -15,12 +15,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<ColumnHeader> columnHeader = null;
-            ScalarPane<XamlPane> pane = null;
+            CompositeScalarBinding<XamlCompositeView> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader();
                 label = _.Name.ScalarLabel(columnHeader);
-                pane = new ScalarPane<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
+                pane = new CompositeScalarBinding<XamlCompositeView>().AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(columnHeader, XamlCompositeView.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
@@ -44,13 +44,13 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<ColumnHeader> columnHeader = null;
-            ScalarPane<XamlPane> pane = null;
+            CompositeScalarBinding<XamlCompositeView> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader().WithFlowable(true);
                 label = _.Name.FlowableLabel(columnHeader);
-                pane = new ScalarPane<XamlPane>().WithFlowable(true)
-                    .AddChild(label, XamlPane.NAME_LEFT).AddChild(columnHeader, XamlPane.NAME_RIGHT);
+                pane = new CompositeScalarBinding<XamlCompositeView>().WithFlowable(true)
+                    .AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(columnHeader, XamlCompositeView.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)

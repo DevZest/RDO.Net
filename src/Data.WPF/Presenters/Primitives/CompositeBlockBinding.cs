@@ -2,10 +2,11 @@
 using System.Windows;
 using System.Collections.Generic;
 using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class BlockPane : BlockBinding
+    public abstract class CompositeBlockBinding : BlockBinding
     {
         private List<BlockBinding> _bindings = new List<BlockBinding>();
         private List<string> _names = new List<string>();
@@ -24,49 +25,49 @@ namespace DevZest.Data.Presenters.Primitives
             binding.Seal(this, _bindings.Count - 1);
         }
 
-        internal abstract Pane CreatePane();
+        internal abstract ICompositeView CreateView();
 
-        private Pane Create()
+        private ICompositeView Create()
         {
-            return CreatePane().InitChildren(_bindings, _names);
+            return CreateView().CompositeBinding.InitChildren(_bindings, _names);
         }
 
-        private Pane _settingUpPane;
-        private List<Pane> _cachedPanes;
+        private ICompositeView _settingUpView;
+        private List<ICompositeView> _cachedViews;
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            return _settingUpPane;
+            return (UIElement)_settingUpView;
         }
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            _settingUpPane = value == null ? Create() : (Pane)value;
-            _settingUpPane.BeginSetup(_bindings);
+            _settingUpView = value == null ? Create() : (ICompositeView)value;
+            _settingUpView.CompositeBinding.BeginSetup(_bindings);
         }
 
         internal sealed override UIElement Setup(BlockView blockView)
         {
             for (int i = 0; i < _bindings.Count; i++)
                 _bindings[i].Setup(blockView);
-            return _settingUpPane;
+            return (UIElement)_settingUpView;
         }
 
         internal sealed override void Refresh(UIElement element)
         {
-            ((Pane)element).Refresh(_bindings);
+            ((ICompositeView)element).CompositeBinding.Refresh(_bindings);
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
-            var pane = (Pane)element;
-            pane.Cleanup(_bindings);
+            var view = (ICompositeView)element;
+            view.CompositeBinding.Cleanup(_bindings);
         }
 
         internal sealed override void EndSetup()
         {
-            _settingUpPane.EndSetup(_bindings);
-            _settingUpPane = null;
+            _settingUpView.CompositeBinding.EndSetup(_bindings);
+            _settingUpView = null;
         }
     }
 }

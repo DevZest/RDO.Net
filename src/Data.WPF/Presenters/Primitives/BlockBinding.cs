@@ -1,4 +1,5 @@
 ﻿using DevZest.Data.Views;
+using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,14 +50,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         #endregion
 
-        public BlockPane Parent { get; private set; }
+        public CompositeBlockBinding Parent { get; private set; }
 
         public sealed override Binding ParentBinding
         {
             get { return Parent; }
         }
 
-        internal void Seal(BlockPane parent, int ordinal)
+        internal void Seal(CompositeBlockBinding parent, int ordinal)
         {
             Parent = parent;
             Ordinal = ordinal;
@@ -100,8 +101,8 @@ namespace DevZest.Data.Presenters.Primitives
 
                 if (Parent != null)
                 {
-                    var pane = (Pane)Parent[blockOrdinal];
-                    return pane == null ? null : pane.Children[Ordinal];
+                    var view = (ICompositeView)Parent[blockOrdinal];
+                    return view == null ? null : view.CompositeBinding.Children[Ordinal];
                 }
 
                 if (ElementManager == null)
