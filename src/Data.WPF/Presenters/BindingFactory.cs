@@ -1,6 +1,7 @@
 ﻿using DevZest.Data;
 using DevZest.Data.Views;
 using System;
+using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -9,6 +10,28 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        public static RowBinding<ComboBox> AsComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
+        {
+            return new RowBinding<ComboBox>(
+                onSetup: (e, r) =>
+                {
+                    e.ItemsSource = selectionData;
+                    e.SelectedValuePath = selectedValuePath;
+                    e.DisplayMemberPath = displayMemberPath;
+                },
+                onRefresh: (e, r) =>
+                {
+                    e.SelectedValue = r.GetValue(source);
+                },
+                onCleanup: (e, r) =>
+                {
+                    e.ItemsSource = null;
+                    e.SelectedValuePath = null;
+                    e.DisplayMemberPath = null;
+                }
+                ).WithInput(new PropertyChangedTrigger<ComboBox>(ComboBox.SelectedValueProperty), source, e => (T)e.SelectedValue);
+        }
+
         public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source)
         {
             return source.AsColumnHeader(source.DisplayName);
