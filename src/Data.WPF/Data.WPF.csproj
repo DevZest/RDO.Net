@@ -211,7 +211,10 @@
       <LogicalName>DevZest.Data.Strings.resources</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\UIText.resx" />
+    <EmbeddedResource Include="Properties\UIText.resx">
+      <LogicalName>DevZest.Data.UIText.resources</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
