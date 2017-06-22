@@ -5,10 +5,10 @@ using System.Windows.Controls;
 namespace DevZest.Data.Presenters
 {
     [TestClass]
-    public class BlockPaneTests
+    public class CompositeBlockBindingTests
     {
         [TestMethod]
-        public void BlockPane_XAML()
+        public void CompositeBlockBinding_XAML()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;

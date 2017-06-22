@@ -1,15 +1,14 @@
 ﻿using DevZest.Data.Views;
-using DevZest.Data.Presenters.Primitives;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters
 {
     [TestClass]
-    public class ScalarPaneTests
+    public class CompositeScalarBindingTests
     {
         [TestMethod]
-        public void ScalarPane()
+        public void CompositeScalarBinding()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
@@ -38,7 +37,7 @@ namespace DevZest.Data.Presenters
         }
 
         [TestMethod]
-        public void ScalarPane_flowable()
+        public void CompositeScalarBinding_flowable()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;

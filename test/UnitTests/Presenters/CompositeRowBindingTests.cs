@@ -5,10 +5,10 @@ using System.Windows.Controls;
 namespace DevZest.Data.Presenters
 {
     [TestClass]
-    public class RowPaneTests
+    public class CompositeRowBindingTests
     {
         [TestMethod]
-        public void RowPane_XAML()
+        public void CompositeRowBinding_XAML()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters
         }
 
         [TestMethod]
-        public void RowPane_code()
+        public void CompositeRowBinding_code()
         {
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;

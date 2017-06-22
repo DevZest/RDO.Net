@@ -86,7 +86,7 @@
   <ItemGroup>
     <Compile Include="Presenters\BlockBindingTests.cs" />
     <Compile Include="Views\BlockLabel.cs" />
-    <Compile Include="Presenters\BlockPaneTests.cs" />
+    <Compile Include="Presenters\CompositeBlockBindingTests.cs" />
     <Compile Include="Views\CodeCompositeView.cs" />
     <Compile Include="Presenters\DataSetExtensions.cs" />
     <Compile Include="Presenters\BindingFactory.cs" />
@@ -102,9 +102,9 @@
     <Compile Include="Presenters\Primitives\RowMapperTests.cs" />
     <Compile Include="Presenters\Primitives\RowNormalizerTests.cs" />
     <Compile Include="Presenters\RowBindingTests.cs" />
-    <Compile Include="Presenters\RowPaneTests.cs" />
+    <Compile Include="Presenters\CompositeRowBindingTests.cs" />
     <Compile Include="Presenters\ScalarBindingTests.cs" />
-    <Compile Include="Presenters\ScalarPaneTests.cs" />
+    <Compile Include="Presenters\CompositeScalarBindingTests.cs" />
     <Compile Include="StringRes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
