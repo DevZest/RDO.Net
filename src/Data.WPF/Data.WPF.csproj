@@ -53,11 +53,6 @@
     <Compile Include="Presenters\Services\SortEditorWindow.xaml.cs">
       <DependentUpon>SortEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UIText.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UIText.resx</DependentUpon>
-    </Compile>
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\Primitives\ICompositeView.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">
@@ -182,6 +177,9 @@
     <Compile Include="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\UIText.Designer.cs">
+      <DependentUpon>UIText.resx</DependentUpon>
+    </Compile>
     <Compile Include="Presenters\Primitives\ScalarBinding.cs" />
     <Compile Include="Presenters\Primitives\Binding.cs" />
     <Compile Include="Utilities\ConcatList.cs" />
@@ -213,10 +211,7 @@
       <LogicalName>DevZest.Data.Strings.resources</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UIText.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\UIText.resx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
