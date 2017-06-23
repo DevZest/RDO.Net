@@ -454,7 +454,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (sizeToContent)
                 return 1;
 
-            return FlowCount > 0 ? FlowCount : (int)(availableLength / gridTracks.TotalAbsoluteLength);
+            return FlowCount > 0 ? FlowCount : Math.Max(1, (int)(availableLength / gridTracks.TotalAbsoluteLength));
         }
 
         [DefaultValue(0)]

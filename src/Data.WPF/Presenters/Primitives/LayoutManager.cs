@@ -154,10 +154,12 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in scalarBindings)
             {
-                Debug.Assert(scalarBinding.FlowCount == 1, "Auto size is not allowed with flowable ScalarBinding.");
-                var element = scalarBinding[0];
-                element.Measure(scalarBinding.AvailableAutoSize);
-                UpdateAutoSize(null, scalarBinding, element.DesiredSize);
+                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                {
+                    var element = scalarBinding[i];
+                    element.Measure(scalarBinding.AvailableAutoSize);
+                    UpdateAutoSize(null, scalarBinding, element.DesiredSize);
+                }
             }
         }
 
