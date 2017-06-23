@@ -84,11 +84,35 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Delete Level
+        /// </summary>
+        public static string SortEditorWindow_DeleteLevel
+        {
+            get { return GetString("SortEditorWindow_DeleteLevel"); }
+        }
+
+        /// <summary>
         /// Sort
         /// </summary>
         public static string SortEditorWindow_Title
         {
             get { return GetString("SortEditorWindow_Title"); }
+        }
+
+        /// <summary>
+        /// Cancel
+        /// </summary>
+        public static string _Cancel
+        {
+            get { return GetString("_Cancel"); }
+        }
+
+        /// <summary>
+        /// OK
+        /// </summary>
+        public static string _OK
+        {
+            get { return GetString("_OK"); }
         }
 
         private static string GetString(string name, params string[] formatterNames)

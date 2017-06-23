@@ -144,7 +144,16 @@
   <data name="SortDescription_InputRequired" xml:space="preserve">
     <value>{input} is required.</value>
   </data>
+  <data name="SortEditorWindow_DeleteLevel" xml:space="preserve">
+    <value>Delete Level</value>
+  </data>
   <data name="SortEditorWindow_Title" xml:space="preserve">
     <value>Sort</value>
+  </data>
+  <data name="_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="_OK" xml:space="preserve">
+    <value>OK</value>
   </data>
 </root>
