@@ -96,8 +96,8 @@ namespace DevZest.Data.Presenters.Primitives
             ScalarPresenter.SetFlowIndex(0);
         }
 
-        private bool _flowable = true;
-        [DefaultValue(true)]
+        private bool _flowable;
+        [DefaultValue(false)]
         public bool Flowable
         {
             get { return Parent != null ? Parent.Flowable : _flowable; }

@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public static T WithFlowable<T>(this T scalarBinding, bool value)
             where T : ScalarBinding
         {
