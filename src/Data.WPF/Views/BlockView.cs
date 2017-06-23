@@ -79,7 +79,7 @@ namespace DevZest.Data.Views
             for (int i = 0; i < BlockBindingsSplit; i++)
                 AddElement(blockBindings[i]);
 
-            for (int i = 0; i < ElementManager.FlowCount; i++)
+            for (int i = 0; i < ElementManager.FlowRepeatCount; i++)
             {
                 var success = AddRowView(i);
                 if (!success)   // Exceeded the total count of the rows
@@ -129,10 +129,10 @@ namespace DevZest.Data.Views
                 if (ElementManager == null)
                     return 0;
 
-                var flowCount = ElementManager.FlowCount;
-                var nextBlockFirstRowOrdinal = (ContainerOrdinal + 1) * flowCount;
+                var flowRepeatCount = ElementManager.FlowRepeatCount;
+                var nextBlockFirstRowOrdinal = (ContainerOrdinal + 1) * flowRepeatCount;
                 var rowCount = ElementManager.Rows.Count;
-                return nextBlockFirstRowOrdinal <= rowCount ? flowCount : flowCount - (nextBlockFirstRowOrdinal - rowCount);
+                return nextBlockFirstRowOrdinal <= rowCount ? flowRepeatCount : flowRepeatCount - (nextBlockFirstRowOrdinal - rowCount);
             }
         }
 
@@ -143,7 +143,7 @@ namespace DevZest.Data.Views
                 if (index < 0 || index >= Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                return ElementManager.Rows[ContainerOrdinal * ElementManager.FlowCount + index];
+                return ElementManager.Rows[ContainerOrdinal * ElementManager.FlowRepeatCount + index];
             }
         }
 
@@ -184,7 +184,7 @@ namespace DevZest.Data.Views
         private bool AddRowView(int offset)
         {
             var rows = ElementManager.Rows;
-            var rowIndex = ContainerOrdinal * ElementManager.FlowCount + offset;
+            var rowIndex = ContainerOrdinal * ElementManager.FlowRepeatCount + offset;
             if (rowIndex >= rows.Count)
                 return false;
             var row = rows[rowIndex];
@@ -198,13 +198,13 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 return;
 
-            int flowCount = Elements.Count - BlockBindings.Count;
+            int flowRepeatCount = Elements.Count - BlockBindings.Count;
 
             var blockBindings = BlockBindings;
             for (int i = BlockBindings.Count - 1; i >= BlockBindingsSplit; i--)
                 RemoveLastElement(blockBindings[i]);
 
-            for (int i = flowCount - 1; i >= 0; i--)
+            for (int i = flowRepeatCount - 1; i >= 0; i--)
                 RemoveRowViewAt(Elements.Count - 1);
 
             for (int i = BlockBindingsSplit - 1; i >= 0 ; i--)
@@ -237,13 +237,13 @@ namespace DevZest.Data.Views
                 return;
 
             var blockBindings = BlockBindings;
-            int flowCount = Elements.Count - blockBindings.Count;
+            int flowRepeatCount = Elements.Count - blockBindings.Count;
             var index = 0;
 
             for (int i = 0; i < BlockBindingsSplit; i++)
                 Refresh(blockBindings[i], index++);
 
-            for (int i = 0; i < flowCount; i++)
+            for (int i = 0; i < flowRepeatCount; i++)
                 ((RowView)Elements[index++]).Refresh();
 
             for (int i = BlockBindingsSplit; i < BlockBindings.Count; i++)
@@ -281,7 +281,7 @@ namespace DevZest.Data.Views
             Debug.Assert(ElementManager.CurrentContainerView == this && ElementManager.IsCurrentContainerViewIsolated);
 
             var newValue = ElementManager.CurrentRow;
-            _ordinal = newValue.Index / ElementManager.FlowCount; // FillMissingRowViews relies on updated _ordinal
+            _ordinal = newValue.Index / ElementManager.FlowRepeatCount; // FillMissingRowViews relies on updated _ordinal
 
             var currentRowView = RemoveAllRowViewsExcept(oldValue);
             currentRowView.ReloadCurrentRow(oldValue);
@@ -296,10 +296,10 @@ namespace DevZest.Data.Views
                 if (Elements == null)
                     return false;
 
-                var startRowIndex = ContainerOrdinal * ElementManager.FlowCount;
+                var startRowIndex = ContainerOrdinal * ElementManager.FlowRepeatCount;
                 var startIndex = BlockBindingsSplit;
-                int flowCount = Elements.Count - BlockBindings.Count;
-                for (int i = 0; i < flowCount; i++)
+                int flowRepeatCount = Elements.Count - BlockBindings.Count;
+                for (int i = 0; i < flowRepeatCount; i++)
                 {
                     var index = startIndex + i;
                     var rowView = (RowView)Elements[index];
@@ -314,8 +314,8 @@ namespace DevZest.Data.Views
         {
             RowView result = null;
             var startIndex = BlockBindingsSplit;
-            int flowCount = Elements.Count - BlockBindings.Count;
-            for (int i = flowCount - 1; i >= 0; i--)
+            int flowRepeatCount = Elements.Count - BlockBindings.Count;
+            for (int i = flowRepeatCount - 1; i >= 0; i--)
             {
                 var index = startIndex + i;
                 var rowView = (RowView)Elements[index];
@@ -331,13 +331,13 @@ namespace DevZest.Data.Views
         private void FillMissingRowViews(RowView currentRowView)
         {
             var currentRowIndex = currentRowView.RowPresenter.Index;
-            var flowCount = ElementManager.FlowCount;
-            var offset = currentRowIndex % flowCount;
+            var flowRepeatCount = ElementManager.FlowRepeatCount;
+            var offset = currentRowIndex % flowRepeatCount;
 
             for (int i = 0; i < offset; i++)
                 AddRowView(i);
 
-            for (int i = offset + 1; i < flowCount; i++)
+            for (int i = offset + 1; i < flowRepeatCount; i++)
             {
                 var success = AddRowView(i);
                 if (!success)   // Exceeded the total count of the rows

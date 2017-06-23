@@ -308,11 +308,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).
+        /// FlowRepeatable ScalarBindings[{index}] is not allowed by Template(Template.FlowRepeatCount = 1).
         /// </summary>
-        public static string ScalarBinding_FlowableNotAllowedByTemplate(object index)
+        public static string ScalarBinding_FlowRepeatableNotAllowedByTemplate(object index)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_FlowableNotAllowedByTemplate", "index"), index);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ScalarBinding_FlowRepeatableNotAllowedByTemplate", "index"), index);
         }
 
         /// <summary>

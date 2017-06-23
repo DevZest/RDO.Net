@@ -111,9 +111,9 @@ namespace DevZest.Data.Presenters
             get { return RequireLayoutManager().CurrentContainerView; }
         }
 
-        public int FlowCount
+        public int FlowRepeatCount
         {
-            get { return LayoutManager == null ? 1 : LayoutManager.FlowCount; }
+            get { return LayoutManager == null ? 1 : LayoutManager.FlowRepeatCount; }
         }
 
         private void VerifyRowPresenter(RowPresenter value, string paramName)

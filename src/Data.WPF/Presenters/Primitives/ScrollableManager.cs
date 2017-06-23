@@ -168,8 +168,8 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 var result = GridTracksCross.GetMeasuredLength(Template.Range());
-                if (FlowCount > 1)
-                    result += FlowLength * (FlowCount - 1);
+                if (FlowRepeatCount > 1)
+                    result += FlowLength * (FlowRepeatCount - 1);
                 return result;
             }
         }
@@ -303,13 +303,13 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var gridRange = scalarBinding.GridRange;
             var startPosition = GetStartPositionCross(gridRange, 0);
-            var endPosition = GetEndPositionCross(gridRange, ShouldStretchCross(scalarBinding) ? FlowCount - 1 : 0);
+            var endPosition = GetEndPositionCross(gridRange, ShouldStretchCross(scalarBinding) ? FlowRepeatCount - 1 : 0);
             return endPosition - startPosition;
         }
 
         private bool ShouldStretchCross(ScalarBinding scalarBinding)
         {
-            if (FlowCount > 1 && !scalarBinding.Flowable)
+            if (FlowRepeatCount > 1 && !scalarBinding.FlowRepeatable)
             {
                 var rowSpan = GridTracksCross.GetGridSpan(Template.RowRange);
                 var scalarBindingSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);
@@ -381,7 +381,7 @@ namespace DevZest.Data.Presenters.Primitives
         private bool IsFrozenTailCross(GridTrack gridTrack, int? flowIndex)
         {
             Debug.Assert(gridTrack.Owner == GridTracksCross);
-            return !flowIndex.HasValue ? gridTrack.IsFrozenTail : flowIndex.Value == FlowCount - 1 && gridTrack.IsFrozenTail;
+            return !flowIndex.HasValue ? gridTrack.IsFrozenTail : flowIndex.Value == FlowRepeatCount - 1 && gridTrack.IsFrozenTail;
         }
 
         internal override Thickness GetClip(ScalarBinding scalarBinding, int flowIndex)
@@ -440,7 +440,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double GetContainerEndPositionCross()
         {
-            return GetEndPositionCross(Template.ContainerRange, FlowCount - 1);
+            return GetEndPositionCross(Template.ContainerRange, FlowRepeatCount - 1);
         }
 
         protected override Size GetSize(ContainerView containerView)
@@ -525,12 +525,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         private double GetStartPositionCross(BlockView blockView, BlockBinding blockBinding)
         {
-            return GetStartPositionCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : FlowCount - 1);
+            return GetStartPositionCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : FlowRepeatCount - 1);
         }
 
         private double GetEndPositionCross(BlockView blockView, BlockBinding blockBinding)
         {
-            return GetEndPositionCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : FlowCount - 1);
+            return GetEndPositionCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : FlowRepeatCount - 1);
         }
 
         private Clip GetClipCross(BlockView blockView, BlockBinding blockBinding)
@@ -544,7 +544,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var rowRange = Template.RowRange;
             var result = GetStartPositionCross(rowRange, flowIndex);
-            if (flowIndex == FlowCount - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
+            if (flowIndex == FlowRepeatCount - 1 && GridTracksCross.GetGridSpan(rowRange).EndTrack.IsFrozenTail)
                 result = Math.Min(ViewportCross - FrozenTailLengthCross, result);
             return result;
         }
@@ -777,7 +777,7 @@ namespace DevZest.Data.Presenters.Primitives
                 var first = 0;
                 if (beforeRepeat)
                     first += 1;
-                var last = FlowCount - 1;
+                var last = FlowRepeatCount - 1;
                 if (afterRepeat)
                     last -= 1;
                 for (int i = first; i <= last; i++)
@@ -834,7 +834,7 @@ namespace DevZest.Data.Presenters.Primitives
             else
             {
                 gridTrack = prevGridTrack;
-                return GetEndPositionCross(gridTrack, gridTrack.IsRow ? FlowCount - 1 : 0);
+                return GetEndPositionCross(gridTrack, gridTrack.IsRow ? FlowRepeatCount - 1 : 0);
             }
         }
 
@@ -853,7 +853,7 @@ namespace DevZest.Data.Presenters.Primitives
             var startTrackCross = GridTracksCross[startGridPointCross];
             var endTrackCross = GridTracksCross[endGridPointCross - 1];
             var startPositionCross = GetStartPositionCross(startTrackCross, 0);
-            var endPositionCross = GetEndPositionCross(endTrackCross, endTrackCross.IsContainer ? FlowCount - 1 : 0);
+            var endPositionCross = GetEndPositionCross(endTrackCross, endTrackCross.IsContainer ? FlowRepeatCount - 1 : 0);
             if (endPositionCross <= startPositionCross)
                 return new Span();
 
@@ -1046,7 +1046,7 @@ namespace DevZest.Data.Presenters.Primitives
                 var scalarBinding = binding as ScalarBinding;
                 if (scalarBinding != null)
                 {
-                    for (int i = 0; i < scalarBinding.FlowCount; i++)
+                    for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                     {
                         if (visual == scalarBinding[i])
                         {
@@ -1089,7 +1089,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void EnsureVisibleCross(ScalarBinding scalarBinding, int flowIndex)
         {
             var gridSpan = GridTracksCross.GetGridSpan(scalarBinding.GridRange);
-            var endFlowIndex = ShouldStretchCross(scalarBinding) ? FlowCount - 1 : flowIndex;
+            var endFlowIndex = ShouldStretchCross(scalarBinding) ? FlowRepeatCount - 1 : flowIndex;
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, endFlowIndex);
         }
 
@@ -1149,7 +1149,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void EnsureVisibleCross(BlockView blockView, BlockBinding blockBinding)
         {
             var gridSpan = GridTracksCross.GetGridSpan(blockBinding.GridRange);
-            var flowIndex = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? FlowCount : 0;
+            var flowIndex = gridSpan.EndTrack.Ordinal > GridTracksCross.GetGridSpan(Template.RowRange).EndTrack.Ordinal ? FlowRepeatCount : 0;
             EnsureVisibleCross(gridSpan.StartTrack, flowIndex, gridSpan.EndTrack, flowIndex);
         }
     }

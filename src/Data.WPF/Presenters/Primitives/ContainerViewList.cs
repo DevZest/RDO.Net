@@ -107,14 +107,14 @@ namespace DevZest.Data.Presenters.Primitives
                 get { return _elementManager.Rows; }
             }
 
-            private int FlowCount
+            private int FlowRepeatCount
             {
-                get { return _elementManager.FlowCount; }
+                get { return _elementManager.FlowRepeatCount; }
             }
 
             public override int MaxCount
             {
-                get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / FlowCount + 1; }
+                get { return Rows.Count == 0 ? 0 : (Rows.Count - 1) / FlowRepeatCount + 1; }
             }
 
             private int _count;

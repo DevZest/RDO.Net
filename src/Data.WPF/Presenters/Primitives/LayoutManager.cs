@@ -133,7 +133,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal Size Measure(Size availableSize)
         {
             Template.InitMeasure(availableSize);
-            FlowCount = Template.CoerceFlowCount();
+            FlowRepeatCount = Template.CoerceFlowRepeatCount();
             PrepareMeasure();
             var result = FinalizeMeasure();
             return result;
@@ -154,7 +154,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
                     element.Measure(scalarBinding.AvailableAutoSize);
@@ -169,7 +169,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
                     element.Measure(GetSize(scalarBinding));
@@ -297,7 +297,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             foreach (var scalarBinding in ScalarBindings)
             {
-                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
                     var rect = GetRect(scalarBinding, i);

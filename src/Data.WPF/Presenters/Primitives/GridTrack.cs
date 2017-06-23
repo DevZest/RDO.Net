@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(Length.IsStar && Template.Orientation.HasValue);
 
             var layoutOrientation = Template.Orientation.Value;
-            if (Orientation == layoutOrientation || Template.FlowCount != 1)
+            if (Orientation == layoutOrientation || Template.FlowRepeatCount != 1)
                 throw new InvalidOperationException(InvalidStarLengthMessage);
         }
 

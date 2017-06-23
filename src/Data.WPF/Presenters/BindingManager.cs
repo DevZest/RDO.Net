@@ -44,11 +44,11 @@ namespace DevZest.Data.Presenters
         }
 
         [DefaultValue(false)]
-        public static T WithFlowable<T>(this T scalarBinding, bool value)
+        public static T WithFlowRepeatable<T>(this T scalarBinding, bool value)
             where T : ScalarBinding
         {
             scalarBinding.VerifyNotSealed();
-            scalarBinding.Flowable = value;
+            scalarBinding.FlowRepeatable = value;
             return scalarBinding;
         }
 

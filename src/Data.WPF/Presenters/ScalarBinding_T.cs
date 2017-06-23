@@ -48,10 +48,10 @@ namespace DevZest.Data.Presenters
         {
             _settingUpStartOffset = startOffset;
 
-            if (startOffset == FlowCount)
+            if (startOffset == FlowRepeatCount)
                 return Array<T>.Empty;
 
-            int count = FlowCount - startOffset;
+            int count = FlowRepeatCount - startOffset;
             var result = new T[count];
             for (int i = 0; i < count; i++)
             {
@@ -81,13 +81,13 @@ namespace DevZest.Data.Presenters
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            Debug.Assert(Parent != null || !Flowable);
+            Debug.Assert(Parent != null || !FlowRepeatable);
             return SettingUpElement;
         }
 
         internal sealed override void BeginSetup(int startOffset)
         {
-            if (Flowable)
+            if (FlowRepeatable)
                 _settingUpElements = Create(startOffset);
             else if (startOffset == 0)
                 SettingUpElement = Create();
@@ -95,7 +95,7 @@ namespace DevZest.Data.Presenters
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            Debug.Assert(Parent != null || !Flowable);
+            Debug.Assert(Parent != null || !FlowRepeatable);
             SettingUpElement = value == null ? Create() : (T)value;
         }
 
@@ -115,7 +115,7 @@ namespace DevZest.Data.Presenters
 
         internal sealed override void PrepareSettingUpElement(int flowIndex)
         {
-            if (Flowable)
+            if (FlowRepeatable)
             {
                 Debug.Assert(SettingUpElements != null);
                 SettingUpElement = SettingUpElements[flowIndex - _settingUpStartOffset];
@@ -124,7 +124,7 @@ namespace DevZest.Data.Presenters
 
         internal override void ClearSettingUpElement()
         {
-            if (Flowable)
+            if (FlowRepeatable)
                 SettingUpElement = null;
         }
 

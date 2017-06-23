@@ -76,7 +76,7 @@ namespace DevZest.Data.Presenters
                         e.Target = target.SettingUpElement;
                 },
                 onRefresh: null,
-                onCleanup: null).WithFlowable(true);
+                onCleanup: null).WithFlowRepeatable(true);
         }
 
         public static ScalarBinding<Placeholder> ScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)

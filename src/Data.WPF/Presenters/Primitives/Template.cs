@@ -55,18 +55,18 @@ namespace DevZest.Data.Presenters.Primitives
 
         public Orientation? Orientation { get; private set; }
 
-        public int FlowCount { get; private set; } = 1;
+        public int FlowRepeatCount { get; private set; } = 1;
 
         internal ContainerKind ContainerKind
         {
-            get { return BlockBindings.Count > 0 || (Orientation.HasValue && FlowCount != 1) ? ContainerKind.Block : ContainerKind.Row; }
+            get { return BlockBindings.Count > 0 || (Orientation.HasValue && FlowRepeatCount != 1) ? ContainerKind.Block : ContainerKind.Row; }
         }
 
-        internal void Layout(Orientation orientation, int flowCount = 1)
+        internal void Layout(Orientation orientation, int flowRepeatCount = 1)
         {
-            Debug.Assert(flowCount >= 0);
+            Debug.Assert(flowRepeatCount >= 0);
             Orientation = orientation;
-            FlowCount = flowCount;
+            FlowRepeatCount = flowRepeatCount;
         }
 
         internal GridColumnCollection InternalGridColumns { get; private set; }
@@ -211,7 +211,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal bool Flowable(Orientation orientation)
         {
-            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && FlowCount != 1;
+            return !Orientation.HasValue ? false : Orientation.GetValueOrDefault() != orientation && FlowRepeatCount != 1;
         }
 
         internal int ScalarBindingsSplit { get; private set; }
@@ -435,26 +435,26 @@ namespace DevZest.Data.Presenters.Primitives
             get { return double.IsPositiveInfinity(_availableHeight); }
         }
 
-        internal int CoerceFlowCount()
+        internal int CoerceFlowRepeatCount()
         {
-            if (!Orientation.HasValue || FlowCount == 1)
+            if (!Orientation.HasValue || FlowRepeatCount == 1)
                 return 1;
 
-            if (FlowCount != 0)
-                return FlowCount;
+            if (FlowRepeatCount != 0)
+                return FlowRepeatCount;
 
             return Orientation.GetValueOrDefault() == System.Windows.Controls.Orientation.Vertical
-                ? CoerceFlowCount(SizeToContentX, AvailableWidth, InternalGridColumns)
-                : CoerceFlowCount(SizeToContentY, AvailableHeight, InternalGridRows);
+                ? CoerceFlowRepeatCount(SizeToContentX, AvailableWidth, InternalGridColumns)
+                : CoerceFlowRepeatCount(SizeToContentY, AvailableHeight, InternalGridRows);
         }
 
-        private int CoerceFlowCount<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
+        private int CoerceFlowRepeatCount<T>(bool sizeToContent, double availableLength, GridTrackCollection<T> gridTracks)
             where T : GridTrack, IConcatList<T>
         {
             if (sizeToContent)
                 return 1;
 
-            return FlowCount > 0 ? FlowCount : Math.Max(1, (int)(availableLength / gridTracks.TotalAbsoluteLength));
+            return FlowRepeatCount > 0 ? FlowRepeatCount : Math.Max(1, (int)(availableLength / gridTracks.TotalAbsoluteLength));
         }
 
         [DefaultValue(0)]

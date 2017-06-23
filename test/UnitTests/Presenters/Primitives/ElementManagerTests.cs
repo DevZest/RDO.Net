@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters.Primitives
                 columnHeader1 = _.Name.AsColumnHeader();
                 blockHeader = _.BlockHeader();
                 textBlock = _.Name.AsTextBlock();
-                columnHeader2 = _.Name.AsColumnHeader().WithFlowable(true);
+                columnHeader2 = _.Name.AsColumnHeader().WithFlowRepeatable(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)
@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Assert.AreEqual(columnHeader2[0], elements[2]);
                 }
 
-                elementManager.FlowCount = 3;
+                elementManager.FlowRepeatCount = 3;
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(5, elements.Count);
@@ -244,7 +244,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Assert.AreEqual(columnHeader2[2], elements[6]);
                 }
 
-                elementManager.FlowCount = 2;
+                elementManager.FlowRepeatCount = 2;
                 {
                     var elements = elementManager.Elements;
                     Assert.AreEqual(4, elements.Count);

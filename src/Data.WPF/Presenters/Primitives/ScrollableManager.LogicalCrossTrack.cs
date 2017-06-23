@@ -78,9 +78,9 @@ namespace DevZest.Data.Presenters.Primitives
                 get { return ScrollableManager.GridTracksCross; }
             }
 
-            private int FlowCount
+            private int FlowRepeatCount
             {
-                get { return ScrollableManager.FlowCount; }
+                get { return ScrollableManager.FlowRepeatCount; }
             }
 
             private double FlowLength
@@ -96,8 +96,8 @@ namespace DevZest.Data.Presenters.Primitives
 
                     var result = GridTrack.StartOffset;
 
-                    if (GridTrack.IsTail && FlowCount > 1)
-                        result += (FlowCount - 1) * FlowLength;
+                    if (GridTrack.IsTail && FlowRepeatCount > 1)
+                        result += (FlowRepeatCount - 1) * FlowLength;
                     else if (GridTrack.IsContainer && FlowIndex > 0)
                         result += FlowIndex * FlowLength;
 
@@ -128,7 +128,7 @@ namespace DevZest.Data.Presenters.Primitives
 
                     result -= ScrollableManager.ScrollOffsetCross;
 
-                    if (FlowIndex == FlowCount - 1 && GridTrack.IsFrozenTail)
+                    if (FlowIndex == FlowRepeatCount - 1 && GridTrack.IsFrozenTail)
                     {
                         double max = ScrollableManager.ViewportCross - (GridTracksCross.LastOf().EndOffset - GridTrack.StartOffset);
                         if (result > max)
@@ -162,7 +162,7 @@ namespace DevZest.Data.Presenters.Primitives
                     else
                     {
                         Debug.Assert(IsTail);
-                        return GridTrack.Ordinal + (FlowCount - 1) * ContainerTracksCount;
+                        return GridTrack.Ordinal + (FlowRepeatCount - 1) * ContainerTracksCount;
                     }
                 }
             }
@@ -210,7 +210,7 @@ namespace DevZest.Data.Presenters.Primitives
             index += beforeRowGridExtent;
             gridExtent -= beforeRowGridExtent;
             var rowTracksCount = GridTracksCross.RowTracksCount;
-            var rowGridExtent = rowTracksCount * FlowCount;
+            var rowGridExtent = rowTracksCount * FlowRepeatCount;
             if (gridExtent < rowGridExtent)
                 return new LogicalCrossTrack(GridTracksCross[index + gridExtent % rowTracksCount], gridExtent / rowTracksCount);
 

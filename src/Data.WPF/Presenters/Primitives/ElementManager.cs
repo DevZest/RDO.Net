@@ -56,7 +56,7 @@ namespace DevZest.Data.Presenters.Primitives
         private ContainerView Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(rowPresenter.View == null);
-            return Setup(rowPresenter.Index / FlowCount);
+            return Setup(rowPresenter.Index / FlowRepeatCount);
         }
 
         private ContainerView Setup(int ordinal)
@@ -151,7 +151,7 @@ namespace DevZest.Data.Presenters.Primitives
         private CurrentContainerViewPlacement GetContainerViewPlacement(RowPresenter row)
         {
             Debug.Assert(ContainerViewList.Count > 0);
-            var containerOrdinal = row.Index / FlowCount;
+            var containerOrdinal = row.Index / FlowRepeatCount;
             if (containerOrdinal < ContainerViewList.First.ContainerOrdinal)
                 return CurrentContainerViewPlacement.BeforeList;
             else if (containerOrdinal > ContainerViewList.Last.ContainerOrdinal)
@@ -216,7 +216,7 @@ namespace DevZest.Data.Presenters.Primitives
             else
             {
                 var blockView = rowView.GetBlockView();
-                index = blockView.BlockBindingsSplit + (rowView.RowPresenter.Index % FlowCount);
+                index = blockView.BlockBindingsSplit + (rowView.RowPresenter.Index % FlowRepeatCount);
                 return blockView.ElementCollection;
             }
         }
@@ -435,7 +435,7 @@ namespace DevZest.Data.Presenters.Primitives
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
                     scalarBinding.Refresh(element);
@@ -464,12 +464,12 @@ namespace DevZest.Data.Presenters.Primitives
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
-                scalarBinding.CumulativeFlowCountDelta = 0;
-                int count = scalarBinding.Flowable ? FlowCount : 1;
+                scalarBinding.CumulativeFlowRepeatCountDelta = 0;
+                int count = scalarBinding.FlowRepeatable ? FlowRepeatCount : 1;
                 RemoveScalarElementsAfter(scalarBinding, -1, count);
             }
             Debug.Assert(Elements.Count == 0);
-            _flowCount = 1;
+            _flowRepeatCount = 1;
             ElementCollection = null;
         }
 
@@ -477,7 +477,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             for (int i = 0; i < count; i++)
             {
-                var element = scalarBinding.Setup(scalarBinding.FlowCount - count + i);
+                var element = scalarBinding.Setup(scalarBinding.FlowRepeatCount - count + i);
                 ElementCollection.Insert(index + i + 1, element);
             }
             return index + count;
@@ -494,34 +494,34 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private int _flowCount = 1;
-        internal int FlowCount
+        private int _flowRepeatCount = 1;
+        internal int FlowRepeatCount
         {
-            get { return _flowCount; }
+            get { return _flowRepeatCount; }
             set
             {
                 Debug.Assert(value >= 1);
 
-                if (_flowCount == value)
+                if (_flowRepeatCount == value)
                     return;
 
-                var delta = value - _flowCount;
-                _flowCount = value;
-                OnFlowCountChanged(delta);
+                var delta = value - _flowRepeatCount;
+                _flowRepeatCount = value;
+                OnFlowRepeatCountChanged(delta);
             }
         }
 
-        private void OnFlowCountChanged(int flowCountDelta)
+        private void OnFlowRepeatCountChanged(int flowRepeatCountDelta)
         {
-            Debug.Assert(flowCountDelta != 0);
+            Debug.Assert(flowRepeatCountDelta != 0);
 
             ContainerViewList.VirtualizeAll();
 
             var index = -1;
             var delta = 0;
             var scalarBindings = Template.InternalScalarBindings;
-            if (flowCountDelta > 0)
-                BeginSetup(scalarBindings, flowCountDelta);
+            if (flowRepeatCountDelta > 0)
+                BeginSetup(scalarBindings, flowRepeatCountDelta);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -529,24 +529,24 @@ namespace DevZest.Data.Presenters.Primitives
                     index += 1;
                 var scalarBinding = scalarBindings[i];
 
-                var prevCumulativeFlowCountDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeFlowCountDelta;
-                if (!scalarBinding.Flowable)
+                var prevCumulativeFlowRepeatCountDelta = i == 0 ? 0 : scalarBindings[i - 1].CumulativeFlowRepeatCountDelta;
+                if (!scalarBinding.FlowRepeatable)
                 {
-                    scalarBinding.CumulativeFlowCountDelta = prevCumulativeFlowCountDelta + (FlowCount - 1);
+                    scalarBinding.CumulativeFlowRepeatCountDelta = prevCumulativeFlowRepeatCountDelta + (FlowRepeatCount - 1);
                     continue;
                 }
-                scalarBinding.CumulativeFlowCountDelta = prevCumulativeFlowCountDelta;
+                scalarBinding.CumulativeFlowRepeatCountDelta = prevCumulativeFlowRepeatCountDelta;
 
                 if (i < Template.ScalarBindingsSplit)
-                    delta += flowCountDelta;
+                    delta += flowRepeatCountDelta;
 
-                if (flowCountDelta > 0)
-                    index = InsertScalarElementsAfter(scalarBinding, index + FlowCount - flowCountDelta - 1, flowCountDelta);
+                if (flowRepeatCountDelta > 0)
+                    index = InsertScalarElementsAfter(scalarBinding, index + FlowRepeatCount - flowRepeatCountDelta - 1, flowRepeatCountDelta);
                 else
-                    RemoveScalarElementsAfter(scalarBinding, index += FlowCount - 1, -flowCountDelta);
+                    RemoveScalarElementsAfter(scalarBinding, index += FlowRepeatCount - 1, -flowRepeatCountDelta);
             }
 
-            if (flowCountDelta > 0)
+            if (flowRepeatCountDelta > 0)
                 scalarBindings.EndSetup();
 
             HeadScalarElementsCount += delta;
@@ -555,13 +555,13 @@ namespace DevZest.Data.Presenters.Primitives
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
-        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int flowCountDelta)
+        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int flowRepeatCountDelta)
         {
-            Debug.Assert(flowCountDelta > 0);
+            Debug.Assert(flowRepeatCountDelta > 0);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
-                int startOffset = scalarBinding.Flowable ? FlowCount - flowCountDelta : 1;
+                int startOffset = scalarBinding.FlowRepeatable ? FlowRepeatCount - flowRepeatCountDelta : 1;
                 scalarBinding.BeginSetup(startOffset);
             }
         }

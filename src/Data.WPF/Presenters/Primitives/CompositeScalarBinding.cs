@@ -32,10 +32,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             _settingUpStartOffset = startOffset;
 
-            if (startOffset == FlowCount)
+            if (startOffset == FlowRepeatCount)
                 return Array<ICompositeView>.Empty;
 
-            var count = FlowCount - startOffset;
+            var count = FlowRepeatCount - startOffset;
             var result = new ICompositeView[count];
             for (int i = 0; i < count; i++)
                 result[i] = CreateView(startOffset + i);
@@ -65,13 +65,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override UIElement GetSettingUpElement()
         {
-            Debug.Assert(!Flowable);
+            Debug.Assert(!FlowRepeatable);
             return (UIElement)SettingUpView;
         }
 
         internal sealed override void BeginSetup(int startOffset)
         {
-            if (Flowable)
+            if (FlowRepeatable)
             {
                 _settingUpViews = Create(startOffset);
                 for (int i = 0; i < SettingUpViews.Count; i++)
@@ -86,14 +86,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            Debug.Assert(!Flowable);
+            Debug.Assert(!FlowRepeatable);
             SettingUpView = value == null ? CreateView(0) : (ICompositeView)value;
             SettingUpView.CompositeBinding.BeginSetup(_bindings);
         }
 
         internal sealed override void PrepareSettingUpElement(int flowIndex)
         {
-            if (Flowable)
+            if (FlowRepeatable)
             {
                 Debug.Assert(SettingUpViews != null);
                 SettingUpView = SettingUpViews[flowIndex - _settingUpStartOffset];
@@ -102,7 +102,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override void ClearSettingUpElement()
         {
-            if (Flowable)
+            if (FlowRepeatable)
                 SettingUpView = null;
         }
 
@@ -132,7 +132,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void EndSetup()
         {
-            if (Flowable)
+            if (FlowRepeatable)
             {
                 for (int i = 0; i < SettingUpViews.Count; i++)
                     SettingUpViews[i].CompositeBinding.EndSetup(_bindings);

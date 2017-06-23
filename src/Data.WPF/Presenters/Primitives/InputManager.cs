@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters.Primitives
             var scalarBindings = Template.ScalarBindings;
             foreach (var scalarBinding in scalarBindings)
             {
-                for (int i = 0; i < scalarBinding.FlowCount; i++)
+                for (int i = 0; i < scalarBinding.FlowRepeatCount; i++)
                 {
                     var element = scalarBinding[i];
                     scalarBinding.FlushInput(element);

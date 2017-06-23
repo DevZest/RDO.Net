@@ -60,12 +60,12 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder Layout(Orientation orientation, int flowCount = 1)
+        public TemplateBuilder Layout(Orientation orientation, int flowRepeatCount = 1)
         {
-            if (flowCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(flowCount));
+            if (flowRepeatCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(flowRepeatCount));
 
-            Template.Layout(orientation, flowCount);
+            Template.Layout(orientation, flowRepeatCount);
             return this;
         }
 

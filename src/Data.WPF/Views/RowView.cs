@@ -45,7 +45,7 @@ namespace DevZest.Data.Views
 
         public sealed override int ContainerOrdinal
         {
-            get { return RowPresenter == null ? -1 : RowPresenter.Index / RowPresenter.ElementManager.FlowCount; }
+            get { return RowPresenter == null ? -1 : RowPresenter.Index / RowPresenter.ElementManager.FlowRepeatCount; }
         }
 
         internal sealed override ElementManager ElementManager
@@ -285,7 +285,7 @@ namespace DevZest.Data.Views
 
         internal int FlowIndex
         {
-            get { return RowPresenter.Index % RowPresenter.ElementManager.FlowCount; }
+            get { return RowPresenter.Index % RowPresenter.ElementManager.FlowRepeatCount; }
         }
 
         public DataPresenter DataPresenter

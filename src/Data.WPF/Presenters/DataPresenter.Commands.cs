@@ -149,7 +149,7 @@ namespace DevZest.Data.Presenters
             if (CurrentRow == null || !LayoutOrientation.HasValue)
                 return false;
 
-            if (LayoutOrientation != orientation && FlowCount == 1)
+            if (LayoutOrientation != orientation && FlowRepeatCount == 1)
                 return false;
 
             return true;
@@ -159,7 +159,7 @@ namespace DevZest.Data.Presenters
         {
             if (!CanSelect(orientation))
                 return null;
-            var index = CurrentRow.Index - (LayoutOrientation == orientation ? FlowCount : 1);
+            var index = CurrentRow.Index - (LayoutOrientation == orientation ? FlowRepeatCount : 1);
             return index >= 0 ? Rows[index] : null;
         }
 
@@ -167,7 +167,7 @@ namespace DevZest.Data.Presenters
         {
             if (!CanSelect(orientation))
                 return null;
-            var index = CurrentRow.Index + (LayoutOrientation == orientation ? FlowCount : 1);
+            var index = CurrentRow.Index + (LayoutOrientation == orientation ? FlowRepeatCount : 1);
             return index < Rows.Count ? Rows[index] : null;
         }
 

@@ -96,26 +96,26 @@ namespace DevZest.Data.Presenters.Primitives
             ScalarPresenter.SetFlowIndex(0);
         }
 
-        private bool _flowable;
+        private bool _flowRepeatable;
         [DefaultValue(false)]
-        public bool Flowable
+        public bool FlowRepeatable
         {
-            get { return Parent != null ? Parent.Flowable : _flowable; }
+            get { return Parent != null ? Parent.FlowRepeatable : _flowRepeatable; }
             set
             {
                 VerifyNotSealed();
-                _flowable = value;
+                _flowRepeatable = value;
             }
         }
 
-        internal int CumulativeFlowCountDelta { get; set; }
+        internal int CumulativeFlowRepeatCountDelta { get; set; }
 
         internal override void VerifyRowRange(GridRange rowRange)
         {
             if (GridRange.IntersectsWith(rowRange))
                 throw new InvalidOperationException(Strings.ScalarBinding_IntersectsWithRowRange(Ordinal));
 
-            if (!Flowable)
+            if (!FlowRepeatable)
                 return;
 
             if (Template.Flowable(Orientation.Horizontal))
@@ -129,7 +129,7 @@ namespace DevZest.Data.Presenters.Primitives
                     throw new InvalidOperationException(Strings.ScalarBinding_OutOfVerticalRowRange(Ordinal));
             }
             else
-                throw new InvalidOperationException(Strings.ScalarBinding_FlowableNotAllowedByTemplate(Ordinal));
+                throw new InvalidOperationException(Strings.ScalarBinding_FlowRepeatableNotAllowedByTemplate(Ordinal));
         }
 
         private ElementManager ElementManager
@@ -137,9 +137,9 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.ElementManager; }
         }
 
-        public int FlowCount
+        public int FlowRepeatCount
         {
-            get { return Parent != null ? Parent.FlowCount : (Flowable ? ElementManager.FlowCount : 1); }
+            get { return Parent != null ? Parent.FlowRepeatCount : (FlowRepeatable ? ElementManager.FlowRepeatCount : 1); }
         }
 
         public UIElement this[int flowIndex]
@@ -152,12 +152,12 @@ namespace DevZest.Data.Presenters.Primitives
                 if (Parent != null)
                     return ((ICompositeView)Parent[flowIndex]).CompositeBinding.Children[Ordinal];
 
-                if (flowIndex < 0 || flowIndex >= FlowCount)
+                if (flowIndex < 0 || flowIndex >= FlowRepeatCount)
                     throw new ArgumentOutOfRangeException(nameof(flowIndex));
 
                 var ordinal = Ordinal;
-                int prevCumulativeFlowCountDelta = ordinal == 0 ? 0 : Template.ScalarBindings[ordinal - 1].CumulativeFlowCountDelta;
-                var elementIndex = ordinal * FlowCount - prevCumulativeFlowCountDelta + flowIndex;
+                int prevCumulativeFlowRepeatCountDelta = ordinal == 0 ? 0 : Template.ScalarBindings[ordinal - 1].CumulativeFlowRepeatCountDelta;
+                var elementIndex = ordinal * FlowRepeatCount - prevCumulativeFlowRepeatCountDelta + flowIndex;
                 if (ordinal >= Template.ScalarBindingsSplit)
                 {
                     elementIndex += ElementManager.ContainerViewList.Count;

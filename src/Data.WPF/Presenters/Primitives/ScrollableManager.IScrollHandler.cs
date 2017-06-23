@@ -140,7 +140,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 return HeadTracksCountCross + TailTracksCountCross
-                  + FlowCount * RowTracksCountCross + (ContainerTracksCountCross - RowTracksCountCross);
+                  + FlowRepeatCount * RowTracksCountCross + (ContainerTracksCountCross - RowTracksCountCross);
             }
         }
 
@@ -964,7 +964,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(CurrentRow != null);
             var delta = containerOrdinal - CurrentContainerView.ContainerOrdinal;
-            var index = Math.Min(Rows.Count - 1, CurrentRow.Index + delta * FlowCount);
+            var index = Math.Min(Rows.Count - 1, CurrentRow.Index + delta * FlowRepeatCount);
             return Rows[index];
         }
 

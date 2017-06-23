@@ -228,8 +228,8 @@
   <data name="RowPresenter_VerifyNoPendingEdit" xml:space="preserve">
     <value>There is pending edit not completed.</value>
   </data>
-  <data name="ScalarBinding_FlowableNotAllowedByTemplate" xml:space="preserve">
-    <value>Flowable ScalarBindings[{index}] is not allowed by Template(Template.FlowCount = 1).</value>
+  <data name="ScalarBinding_FlowRepeatableNotAllowedByTemplate" xml:space="preserve">
+    <value>FlowRepeatable ScalarBindings[{index}] is not allowed by Template(Template.FlowRepeatCount = 1).</value>
   </data>
   <data name="ScalarBinding_IntersectsWithRowRange" xml:space="preserve">
     <value>ScalarBindings[{index}] intersects with RowRange.</value>
