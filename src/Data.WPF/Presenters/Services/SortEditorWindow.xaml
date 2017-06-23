@@ -6,6 +6,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:res="clr-namespace:DevZest.Data"
         xmlns:v="clr-namespace:DevZest.Data.Views"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
         Title="{x:Static res:UIText.SortEditorWindow_Title}"
         Width="300" Height="250">
     <Window.Resources>
