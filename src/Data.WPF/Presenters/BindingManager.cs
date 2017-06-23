@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.ComponentModel;
 
 namespace DevZest.Data.Presenters
 {
@@ -42,6 +43,7 @@ namespace DevZest.Data.Presenters
             return binding;
         }
 
+        [DefaultValue(true)]
         public static T WithFlowable<T>(this T scalarBinding, bool value)
             where T : ScalarBinding
         {

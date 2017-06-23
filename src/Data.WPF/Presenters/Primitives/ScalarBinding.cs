@@ -3,6 +3,7 @@ using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -95,7 +96,8 @@ namespace DevZest.Data.Presenters.Primitives
             ScalarPresenter.SetFlowIndex(0);
         }
 
-        private bool _flowable;
+        private bool _flowable = true;
+        [DefaultValue(true)]
         public bool Flowable
         {
             get { return Parent != null ? Parent.Flowable : _flowable; }
