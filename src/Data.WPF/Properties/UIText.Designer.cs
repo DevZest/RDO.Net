@@ -20,6 +20,46 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Cancel
+        /// </summary>
+        public static string DataView_DataLoadCancelCommandText
+        {
+            get { return GetString("DataView_DataLoadCancelCommandText"); }
+        }
+
+        /// <summary>
+        /// The operation has been cancelled.
+        /// </summary>
+        public static string DataView_DataLoadCancelled
+        {
+            get { return GetString("DataView_DataLoadCancelled"); }
+        }
+
+        /// <summary>
+        /// Cancelling...
+        /// </summary>
+        public static string DataView_DataLoadCancelling
+        {
+            get { return GetString("DataView_DataLoadCancelling"); }
+        }
+
+        /// <summary>
+        /// We're sorry, an error occured while loading data.
+        /// </summary>
+        public static string DataView_DataLoadFailed
+        {
+            get { return GetString("DataView_DataLoadFailed"); }
+        }
+
+        /// <summary>
+        /// Retry
+        /// </summary>
+        public static string DataView_DataLoadRetryCommandText
+        {
+            get { return GetString("DataView_DataLoadRetryCommandText"); }
+        }
+
+        /// <summary>
         /// Column
         /// </summary>
         public static string SortDescription_Column
