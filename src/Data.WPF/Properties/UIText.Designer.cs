@@ -14,9 +14,9 @@ namespace DevZest.Data
         /// <summary>
         /// _Sort...
         /// </summary>
-        public static string ColumnHeader_SortEditCommandText
+        public static string ColumnHeader_ShowSortWindowCommandText
         {
-            get { return GetString("ColumnHeader_SortEditCommandText"); }
+            get { return GetString("ColumnHeader_ShowSortWindowCommandText"); }
         }
 
         /// <summary>
@@ -62,41 +62,41 @@ namespace DevZest.Data
         /// <summary>
         /// Column
         /// </summary>
-        public static string SortDescription_Column
+        public static string SortModel_Column
         {
-            get { return GetString("SortDescription_Column"); }
+            get { return GetString("SortModel_Column"); }
         }
 
         /// <summary>
         /// Direction
         /// </summary>
-        public static string SortDescription_Direction
+        public static string SortModel_Direction
         {
-            get { return GetString("SortDescription_Direction"); }
+            get { return GetString("SortModel_Direction"); }
         }
 
         /// <summary>
         /// {input} is required.
         /// </summary>
-        public static string SortDescription_InputRequired(object input)
+        public static string SortModel_InputRequired(object input)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("SortDescription_InputRequired", "input"), input);
+            return string.Format(CultureInfo.CurrentCulture, GetString("SortModel_InputRequired", "input"), input);
         }
 
         /// <summary>
         /// Delete Level
         /// </summary>
-        public static string SortEditorWindow_DeleteLevel
+        public static string SortWindow_DeleteLevel
         {
-            get { return GetString("SortEditorWindow_DeleteLevel"); }
+            get { return GetString("SortWindow_DeleteLevel"); }
         }
 
         /// <summary>
         /// Sort
         /// </summary>
-        public static string SortEditorWindow_Title
+        public static string SortWindow_Title
         {
-            get { return GetString("SortEditorWindow_Title"); }
+            get { return GetString("SortWindow_Title"); }
         }
 
         /// <summary>

@@ -45,13 +45,13 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\Primitives\CompositeBinding.cs" />
-    <Compile Include="Presenters\Services\ISortEditorService.cs" />
+    <Compile Include="Presenters\Services\ISortWindowService.cs" />
     <Compile Include="Presenters\Services\ServiceBase.cs" />
-    <Compile Include="Presenters\Services\SortDescription.cs" />
-    <Compile Include="Presenters\Services\SortEditor.cs" />
+    <Compile Include="Presenters\Services\SortModel.cs" />
+    <Compile Include="Presenters\Services\SortPresenter.cs" />
     <Compile Include="Presenters\Services\SortService.cs" />
-    <Compile Include="Presenters\Services\SortEditorWindow.xaml.cs">
-      <DependentUpon>SortEditorWindow.xaml</DependentUpon>
+    <Compile Include="Presenters\Services\SortWindow.xaml.cs">
+      <DependentUpon>SortWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\Primitives\ICompositeView.cs" />
@@ -228,7 +228,7 @@
     <EmbeddedResource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Presenters\Services\SortEditorWindow.xaml">
+    <Page Include="Presenters\Services\SortWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

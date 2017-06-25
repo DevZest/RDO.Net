@@ -3,15 +3,15 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters.Services
 {
-    internal sealed class SortDescription : Model
+    internal sealed class SortModel : Model
     {
         public Column<Column> Column { get; private set; }
         public Column<SortDirection> Direction { get; private set; }
 
         protected override void OnInitializing()
         {
-            Column = CreateLocalColumn<Column>(builder => builder.DisplayName = UIText.SortDescription_Column);
-            Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UIText.SortDescription_Direction);
+            Column = CreateLocalColumn<Column>(builder => builder.DisplayName = UIText.SortModel_Column);
+            Direction = CreateLocalColumn<SortDirection>(builder => builder.DisplayName = UIText.SortModel_Direction);
             base.OnInitializing();
         }
 
@@ -22,16 +22,16 @@ namespace DevZest.Data.Presenters.Services
                 return result;
 
             if (Column[dataRow] == null)
-                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortDescription_InputRequired(Column.DisplayName), Column));
+                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortModel_InputRequired(Column.DisplayName), Column));
             if (Direction[dataRow] == SortDirection.Unspecified)
-                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortDescription_InputRequired(Direction.DisplayName), Direction));
+                result = result.Add(new ValidationMessage(null, ValidationSeverity.Error, UIText.SortModel_InputRequired(Direction.DisplayName), Direction));
 
             return result;
         }
 
-        public static DataSet<SortDescription> Convert(IReadOnlyList<ColumnSort> orderBy)
+        public static DataSet<SortModel> Convert(IReadOnlyList<ColumnSort> orderBy)
         {
-            var result = DataSet<SortDescription>.New();
+            var result = DataSet<SortModel>.New();
             if (orderBy == null || orderBy.Count == 0)
                 return result;
 
@@ -48,7 +48,7 @@ namespace DevZest.Data.Presenters.Services
             return result;
         }
 
-        public static IReadOnlyList<ColumnSort> Convert(DataSet<SortDescription> sortDescriptions)
+        public static IReadOnlyList<ColumnSort> Convert(DataSet<SortModel> sortDescriptions)
         {
             if (sortDescriptions == null || sortDescriptions.Count == 0)
                 return Array<ColumnSort>.Empty;

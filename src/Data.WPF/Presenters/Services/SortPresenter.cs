@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Presenters.Services
 {
-    internal sealed class SortEditor : DataPresenter<SortDescription>
+    internal sealed class SortPresenter : DataPresenter<SortModel>
     {
         protected override void BuildTemplate(TemplateBuilder builder)
         {

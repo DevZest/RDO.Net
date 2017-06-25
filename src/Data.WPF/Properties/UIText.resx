@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ColumnHeader_SortEditCommandText" xml:space="preserve">
+  <data name="ColumnHeader_ShowSortWindowCommandText" xml:space="preserve">
     <value>_Sort...</value>
   </data>
   <data name="DataView_DataLoadCancelCommandText" xml:space="preserve">
@@ -135,19 +135,19 @@
   <data name="DataView_DataLoadRetryCommandText" xml:space="preserve">
     <value>Retry</value>
   </data>
-  <data name="SortDescription_Column" xml:space="preserve">
+  <data name="SortModel_Column" xml:space="preserve">
     <value>Column</value>
   </data>
-  <data name="SortDescription_Direction" xml:space="preserve">
+  <data name="SortModel_Direction" xml:space="preserve">
     <value>Direction</value>
   </data>
-  <data name="SortDescription_InputRequired" xml:space="preserve">
+  <data name="SortModel_InputRequired" xml:space="preserve">
     <value>{input} is required.</value>
   </data>
-  <data name="SortEditorWindow_DeleteLevel" xml:space="preserve">
+  <data name="SortWindow_DeleteLevel" xml:space="preserve">
     <value>Delete Level</value>
   </data>
-  <data name="SortEditorWindow_Title" xml:space="preserve">
+  <data name="SortWindow_Title" xml:space="preserve">
     <value>Sort</value>
   </data>
   <data name="_Cancel" xml:space="preserve">

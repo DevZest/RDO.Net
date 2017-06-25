@@ -3,11 +3,11 @@
 namespace DevZest.Data.Presenters.Services
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for SortWindow.xaml
     /// </summary>
-    internal partial class SortEditorWindow : Window
+    internal partial class SortWindow : Window
     {
-        public SortEditorWindow()
+        public SortWindow()
         {
             InitializeComponent();
         }
