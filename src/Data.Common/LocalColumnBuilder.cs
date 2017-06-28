@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevZest.Data
@@ -86,6 +87,12 @@ namespace DevZest.Data
         {
             get { return Column.IsConcrete; }
             set { Column.SetIsConcrete(value); }
+        }
+
+        public IComparer<T> ValueComparer
+        {
+            get { return Column.ValueComparer; }
+            set { Column.ValueComparer = value; }
         }
     }
 }
