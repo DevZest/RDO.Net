@@ -645,12 +645,17 @@ namespace DevZest.Data
         private IComparer<T> _valueComparer;
         public IComparer<T> ValueComparer
         {
-            get { return _valueComparer; }
+            get { return _valueComparer ?? Comparer<T>.Default; }
             set
             {
                 VerifyDesignMode();
                 _valueComparer = value;
             }
+        }
+
+        public sealed override bool HasValueComparer
+        {
+            get { return ValueComparer != null; }
         }
     }
 }

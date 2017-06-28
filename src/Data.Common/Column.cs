@@ -481,5 +481,7 @@ namespace DevZest.Data
         internal abstract Column CreateBackup(Model model);
 
         internal abstract IColumnComparer ToColumnComparer(SortDirection direction);
+
+        public abstract bool HasValueComparer { get; }
     }
 }
