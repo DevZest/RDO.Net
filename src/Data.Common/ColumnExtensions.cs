@@ -1,5 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace DevZest.Data
 {
@@ -46,6 +47,90 @@ namespace DevZest.Data
             Check.NotNull(expression, nameof(expression));
 
             column.AddOrUpdateInterceptor(expression.CreateDefault());
+        }
+
+        public static T WithDefault<T>(this T column, T expression)
+            where T : Column, new()
+        {
+            column.Default(expression);
+            return column;
+        }
+
+        public static TColumn WithDefaultValue<TColumn, TValue>(this TColumn column, TValue value)
+            where TColumn : Column<TValue>, new()
+        {
+            column.DefaultValue(value);
+            return column;
+        }
+
+        public static T WithDisplayDescription<T>(this T column, string value)
+            where T : Column, new()
+        {
+            column.DisplayDescription = value;
+            return column;
+        }
+
+        public static T WithDisplayDescription<T>(this T column, Func<string> displayDescriptionGetter)
+            where T : Column, new()
+        {
+            column.SetDisplayDescription(displayDescriptionGetter);
+            return column;
+        }
+
+        public static T WithDisplayName<T>(this T column, string value)
+            where T : Column, new()
+        {
+            column.DisplayName = value;
+            return column;
+        }
+
+        public static T WithDisplayName<T>(this T column, Func<string> displayNameGetter)
+            where T : Column, new()
+        {
+            column.SetDisplayName(displayNameGetter);
+            return column;
+        }
+
+        public static T WithDisplayPrompt<T>(this T column, string value)
+            where T : Column, new()
+        {
+            column.DisplayPrompt = value;
+            return column;
+        }
+
+        public static T WithDisplayPrompt<T>(this T column, Func<string> displayPromptGetter)
+            where T : Column, new()
+        {
+            column.SetDisplayPrompt(displayPromptGetter);
+            return column;
+        }
+
+        public static T WithDisplayShortName<T>(this T column, string value)
+            where T : Column, new()
+        {
+            column.DisplayShortName = value;
+            return column;
+        }
+
+        public static T WithDisplayShortName<T>(this T column, Func<string> displayShortNameGetter)
+            where T : Column, new()
+        {
+            column.SetDisplayShortName(displayShortNameGetter);
+            return column;
+        }
+
+        public static T WithName<T>(this T column, string value)
+            where T : Column, new()
+        {
+            column.Name = value;
+            return column;
+        }
+
+        public static TColumn WithValueComparer<TColumn, TValue>(this TColumn column, IComparer<TValue> value)
+            where TColumn : Column<TValue>, new()
+        {
+            column.ValueComparer = value;
+            return column;
         }
     }
 }

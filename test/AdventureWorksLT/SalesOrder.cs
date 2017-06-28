@@ -17,8 +17,8 @@ namespace DevZest.Samples.AdventureWorksLT
         }
 
         public static readonly Property<_Int32> _SalesOrderID = RegisterColumn((SalesOrder x) => x.SalesOrderID);
-        public static readonly Property<_Byte> _RevisionNumber = RegisterColumn((SalesOrder x) => x.RevisionNumber, x => x.DefaultValue(0));
-        public static readonly Property<_DateTime> _OrderDate = RegisterColumn((SalesOrder x) => x.OrderDate, x => x.Default(DevZest.Data.Functions.GetDate()));
+        public static readonly Property<_Byte> _RevisionNumber = RegisterColumn((SalesOrder x) => x.RevisionNumber, x => x.WithDefaultValue((byte?)0));
+        public static readonly Property<_DateTime> _OrderDate = RegisterColumn((SalesOrder x) => x.OrderDate, x => x.WithDefault(Functions.GetDate()));
         public static readonly Property<_DateTime> _DueDate = RegisterColumn((SalesOrder x) => x.DueDate);
         public static readonly Property<_DateTime> _ShipDate = RegisterColumn((SalesOrder x) => x.ShipDate);
         public static readonly Property<_SalesOrderStatus> _Status = RegisterColumn((SalesOrder x) => x.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
