@@ -4,7 +4,6 @@ namespace DevZest.Data.Presenters.Services
 {
     public interface ISortService : IService
     {
-        void Apply(IReadOnlyList<IColumnComparer> orderBy);
-        IReadOnlyList<ColumnSort> OrderBy { get; set; }
+        IReadOnlyList<IColumnComparer> OrderBy { get; set; }
     }
 }

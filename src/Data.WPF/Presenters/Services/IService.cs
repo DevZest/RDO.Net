@@ -2,6 +2,6 @@
 {
     public interface IService
     {
-        DataPresenter DataPresenter { set; }
+        DataPresenter DataPresenter { get; set; }
     }
 }

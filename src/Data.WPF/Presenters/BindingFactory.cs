@@ -2,6 +2,7 @@
 using DevZest.Data.Views;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,21 +33,22 @@ namespace DevZest.Data.Presenters
                 ).WithInput(new PropertyChangedTrigger<ComboBox>(ComboBox.SelectedValueProperty), source, e => (T)e.SelectedValue);
         }
 
-        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source)
-        {
-            return source.AsColumnHeader(source.DisplayName);
-        }
-
-        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column source, object title)
+        public static ScalarBinding<ColumnHeader> AsColumnHeader(this Column column, object title = null)
         {
             return new ScalarBinding<ColumnHeader>(
                 onRefresh: null,
                 onCleanup: null,
-                onSetup: e =>
-                {
-                    e.Column = source;
-                    e.Content = title;
-                });
+                onSetup: e => e.Setup(column, title ?? column.DisplayName)
+                );
+        }
+
+        public static ScalarBinding<ColumnHeader> AsColumnHeader<T>(this Column<T> column, IComparer<T> comparer, object title = null)
+        {
+            return new ScalarBinding<ColumnHeader>(
+                onRefresh: null,
+                onCleanup: null,
+                onSetup: e => e.Setup(column, comparer, title ?? column.DisplayName)
+                );
         }
 
         public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
