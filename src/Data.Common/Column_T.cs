@@ -630,16 +630,27 @@ namespace DevZest.Data
             return model.DataSetContainer.CreateLocalColumn<T>(model);
         }
 
-        internal IColumnComparer ToComparer(SortDirection direction, IComparer<T> comparer)
+        internal IColumnComparer ToColumnComparer(SortDirection direction, IComparer<T> valueComparer)
         {
             Debug.Assert(ScalarSourceModels.Count == 1);
-            comparer = Verify(comparer, nameof(comparer));
-            return DataRowComparer.Create(this, direction, comparer);
+            valueComparer = Verify(valueComparer, nameof(valueComparer));
+            return DataRowComparer.Create(this, direction, valueComparer);
         }
 
-        internal sealed override IColumnComparer ToComparer(SortDirection direction)
+        internal sealed override IColumnComparer ToColumnComparer(SortDirection direction)
         {
-            return ToComparer(direction, null);
+            return ToColumnComparer(direction, ValueComparer);
+        }
+
+        private IComparer<T> _valueComparer;
+        public IComparer<T> ValueComparer
+        {
+            get { return _valueComparer; }
+            set
+            {
+                VerifyDesignMode();
+                _valueComparer = value;
+            }
         }
     }
 }

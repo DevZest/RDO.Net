@@ -543,13 +543,13 @@ namespace DevZest.Data
         public static IColumnComparer OrderBy(Column column, SortDirection direction = SortDirection.Ascending)
         {
             VerifyOrderBy(column, nameof(column));
-            return column.ToComparer(direction);
+            return column.ToColumnComparer(direction);
         }
 
-        public static IColumnComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> comparer = null)
+        public static IColumnComparer OrderBy<T>(Column<T> column, SortDirection direction = SortDirection.Ascending, IComparer<T> valueComparer = null)
         {
             VerifyOrderBy(column, nameof(column));
-            return column.ToComparer(direction, comparer);
+            return column.ToColumnComparer(direction, valueComparer);
         }
 
         private static void VerifyOrderBy(Column column, string paramName)
