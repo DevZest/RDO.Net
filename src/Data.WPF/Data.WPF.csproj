@@ -45,8 +45,10 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\Primitives\CompositeBinding.cs" />
+    <Compile Include="Presenters\Services\CommandExtensions.cs" />
     <Compile Include="Presenters\Services\DataViewCommands.cs" />
     <Compile Include="Presenters\Services\ISortWindowService.cs" />
+    <Compile Include="Presenters\Services\RowSelectorCommands.cs" />
     <Compile Include="Presenters\Services\RowViewCommands.cs" />
     <Compile Include="Presenters\Services\ServiceBase.cs" />
     <Compile Include="Presenters\Services\SortModel.cs" />
@@ -74,7 +76,7 @@
     <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Presenters\BindingFactory.TextBox.cs" />
     <Compile Include="Presenters\CompositeBlockBinding_T.cs" />
-    <Compile Include="Presenters\CommandEntry.cs" />
+    <Compile Include="Presenters\Services\CommandEntry.cs" />
     <Compile Include="Presenters\DataPresenter.Commands.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
     <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />

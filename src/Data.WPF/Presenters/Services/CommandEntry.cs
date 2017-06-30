@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace DevZest.Data.Presenters
+namespace DevZest.Data.Presenters.Services
 {
     public struct CommandEntry
     {

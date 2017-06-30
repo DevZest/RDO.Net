@@ -251,7 +251,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.RowSelectorCommandEntries);
+            this.SetupCommandEntries(dataPresenter.GetService<RowSelectorCommands>(() => new RowSelectorCommands()).CommandEntries);
         }
 
         internal void Flush()

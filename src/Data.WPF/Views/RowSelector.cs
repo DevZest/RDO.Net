@@ -19,30 +19,6 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSelection, Name = VisualStates.StateUnselected)]
     public class RowSelector : ContentControl
     {
-        public static RoutedUICommand ScrollUpCommand { get { return ComponentCommands.MoveFocusUp; } }
-        public static RoutedUICommand ScrollDownCommand { get { return ComponentCommands.MoveFocusDown; } }
-        public static RoutedUICommand ScrollLeftCommand { get { return ComponentCommands.MoveFocusBack; } }
-        public static RoutedUICommand ScrollRightCommand { get { return ComponentCommands.MoveFocusForward; } }
-        public static RoutedUICommand ScrollPageUpCommand { get { return ComponentCommands.MoveFocusPageUp; } }
-        public static RoutedUICommand ScrollPageDownCommand { get { return ComponentCommands.MoveFocusPageDown; } }
-        public static RoutedUICommand MoveUpCommand { get { return ComponentCommands.MoveUp; } }
-        public static RoutedUICommand MoveDownCommand { get { return ComponentCommands.MoveDown; } }
-        public static RoutedUICommand MoveLeftCommand { get { return ComponentCommands.MoveLeft; } }
-        public static RoutedUICommand MoveRightCommand { get { return ComponentCommands.MoveRight; } }
-        public static RoutedUICommand MoveToPageUpCommand { get { return ComponentCommands.MoveToPageUp; } }
-        public static RoutedUICommand MoveToPageDownCommand { get { return ComponentCommands.MoveToPageDown; } }
-        public static RoutedUICommand MoveToHomeCommand { get { return ComponentCommands.MoveToHome; } }
-        public static RoutedUICommand MoveToEndCommand { get { return ComponentCommands.MoveToEnd; } }
-        public static RoutedUICommand SelectExtendedUpCommand { get { return ComponentCommands.ExtendSelectionUp; } }
-        public static RoutedUICommand SelectExtendedDownCommand { get { return ComponentCommands.ExtendSelectionDown; } }
-        public static RoutedUICommand SelectiExtendedLeftCommand { get { return ComponentCommands.ExtendSelectionLeft; } }
-        public static RoutedUICommand SelectExtendedRightCommand { get { return ComponentCommands.ExtendSelectionRight; } }
-        public static readonly RoutedUICommand SelectExtendedHomeCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedEndCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageUpCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand SelectExtendedPageDownCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand ToggleSelectionCommand = new RoutedUICommand();
-
         static RowSelector()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowSelector), new FrameworkPropertyMetadata(typeof(RowSelector)));
