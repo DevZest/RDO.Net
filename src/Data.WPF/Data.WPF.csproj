@@ -77,7 +77,6 @@
     <Compile Include="Presenters\BindingFactory.TextBox.cs" />
     <Compile Include="Presenters\CompositeBlockBinding_T.cs" />
     <Compile Include="Presenters\Services\CommandEntry.cs" />
-    <Compile Include="Presenters\DataPresenter.Commands.cs" />
     <Compile Include="Presenters\DataPresenter_T.cs" />
     <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />
     <Compile Include="Presenters\ExplicitTrigger.cs" />
