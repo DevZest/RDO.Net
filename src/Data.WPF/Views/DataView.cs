@@ -6,15 +6,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Threading;
+using DevZest.Data.Presenters.Services;
 
 namespace DevZest.Data.Views
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
-        public static readonly RoutedUICommand DataLoadRetryCommand = new RoutedUICommand(UIText.DataView_DataLoadRetryCommandText, "DataLoadRetry", typeof(DataView));
-        public static readonly RoutedUICommand DataLoadCancelCommand = new RoutedUICommand(UIText.DataView_DataLoadCancelCommandText, "DataLoadCancel", typeof(DataView));
-
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -67,7 +65,7 @@ namespace DevZest.Data.Views
                     this.CleanupCommandEntries();
                 }
                 else
-                    this.SetupCommandEntries(DataPresenter.DataViewCommandEntries);
+                    this.SetupCommandEntries(DataPresenter.GetService<DataViewCommands>(() => new DataViewCommands()).CommandEntries);
             }
         }
 

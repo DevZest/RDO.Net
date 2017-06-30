@@ -120,8 +120,11 @@
   <data name="ColumnHeader_ShowSortWindowCommandText" xml:space="preserve">
     <value>_Sort...</value>
   </data>
-  <data name="DataView_DataLoadCancelCommandText" xml:space="preserve">
+  <data name="DataViewCommands_CancelDataLoadCommandText" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="DataViewCommands_RetryDataLoadCommandText" xml:space="preserve">
+    <value>Retry</value>
   </data>
   <data name="DataView_DataLoadCancelled" xml:space="preserve">
     <value>The operation has been cancelled.</value>
@@ -131,9 +134,6 @@
   </data>
   <data name="DataView_DataLoadFailed" xml:space="preserve">
     <value>We're sorry, an error occured while loading data.</value>
-  </data>
-  <data name="DataView_DataLoadRetryCommandText" xml:space="preserve">
-    <value>Retry</value>
   </data>
   <data name="SortModel_Column" xml:space="preserve">
     <value>Column</value>

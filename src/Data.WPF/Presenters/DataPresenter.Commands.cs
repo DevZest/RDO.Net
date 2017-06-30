@@ -8,43 +8,6 @@ namespace DevZest.Data.Presenters
 {
     partial class DataPresenter
     {
-        protected internal virtual IEnumerable<CommandEntry> DataViewCommandEntries
-        {
-            get
-            {
-                yield return DataView.DataLoadCancelCommand.CommandBinding(CancelLoadData, CanCancelLoadData);
-                yield return DataView.DataLoadRetryCommand.CommandBinding(ReloadData, CanReloadData);
-            }
-        }
-
-        private void ReloadData(object sender, ExecutedRoutedEventArgs e)
-        {
-            Reload();
-        }
-
-        internal abstract void Reload();
-
-        private void CanReloadData(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = CanReload;
-        }
-
-        internal abstract bool CanReload { get; }
-
-        private void CancelLoadData(object sender, ExecutedRoutedEventArgs e)
-        {
-            CancelLoad();
-        }
-
-        internal abstract void CancelLoad();
-
-        private void CanCancelLoadData(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = CanCancelLoad;
-        }
-
-        internal abstract bool CanCancelLoad { get; }
-
         protected internal virtual IEnumerable<CommandEntry> RowViewCommandEntries
         {
             get

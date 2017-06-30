@@ -332,5 +332,13 @@ namespace DevZest.Data.Presenters
 
             return result;
         }
+
+        internal abstract void Reload();
+
+        internal abstract bool CanReload { get; }
+
+        internal abstract void CancelLoading();
+
+        internal abstract bool CanCancelLoading { get; }
     }
 }

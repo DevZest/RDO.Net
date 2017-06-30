@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\Primitives\CompositeBinding.cs" />
+    <Compile Include="Presenters\Services\DataViewCommands.cs" />
     <Compile Include="Presenters\Services\ISortWindowService.cs" />
     <Compile Include="Presenters\Services\ServiceBase.cs" />
     <Compile Include="Presenters\Services\SortModel.cs" />

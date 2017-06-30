@@ -283,14 +283,14 @@ namespace DevZest.Data.Presenters
             _dataLoader.Retry();
         }
 
-        internal sealed override bool CanCancelLoad
+        internal sealed override bool CanCancelLoading
         {
             get { return _dataLoader != null && _dataLoader.CanCancel; }
         }
 
-        internal sealed override void CancelLoad()
+        internal sealed override void CancelLoading()
         {
-            Debug.Assert(CanCancelLoad);
+            Debug.Assert(CanCancelLoading);
             _dataLoader.Cancel();
         }
 
