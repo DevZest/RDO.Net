@@ -60,6 +60,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Collapse
+        /// </summary>
+        public static string RowViewCommands_CollapseCommandText
+        {
+            get { return GetString("RowViewCommands_CollapseCommandText"); }
+        }
+
+        /// <summary>
+        /// Expand
+        /// </summary>
+        public static string RowViewCommands_ExpandCommandText
+        {
+            get { return GetString("RowViewCommands_ExpandCommandText"); }
+        }
+
+        /// <summary>
         /// Column
         /// </summary>
         public static string SortModel_Column

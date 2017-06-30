@@ -8,35 +8,6 @@ namespace DevZest.Data.Presenters
 {
     partial class DataPresenter
     {
-        protected internal virtual IEnumerable<CommandEntry> RowViewCommandEntries
-        {
-            get
-            {
-                yield return RowView.ExpandCommand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
-                yield return RowView.CollapseCommand.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
-            }
-        }
-
-        private void ToggleExpandState(object sender, ExecutedRoutedEventArgs e)
-        {
-            var rowView = (RowView)sender;
-            rowView.RowPresenter.ToggleExpandState();
-        }
-
-        private void CanExpand(object sender, CanExecuteRoutedEventArgs e)
-        {
-            var rowView = (RowView)sender;
-            var rowPresenter = rowView.RowPresenter;
-            e.CanExecute = rowPresenter.HasChildren && !rowPresenter.IsExpanded;
-        }
-
-        private void CanCollapse(object sender, CanExecuteRoutedEventArgs e)
-        {
-            var rowView = (RowView)sender;
-            var rowPresenter = rowView.RowPresenter;
-            e.CanExecute = rowPresenter.HasChildren && rowPresenter.IsExpanded;
-        }
-
         protected internal virtual IEnumerable<CommandEntry> RowSelectorCommandEntries
         {
             get

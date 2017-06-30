@@ -135,6 +135,12 @@
   <data name="DataView_DataLoadFailed" xml:space="preserve">
     <value>We're sorry, an error occured while loading data.</value>
   </data>
+  <data name="RowViewCommands_CollapseCommandText" xml:space="preserve">
+    <value>Collapse</value>
+  </data>
+  <data name="RowViewCommands_ExpandCommandText" xml:space="preserve">
+    <value>Expand</value>
+  </data>
   <data name="SortModel_Column" xml:space="preserve">
     <value>Column</value>
   </data>

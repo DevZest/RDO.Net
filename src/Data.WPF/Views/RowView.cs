@@ -6,15 +6,13 @@ using System.Windows.Input;
 using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
+using DevZest.Data.Presenters.Services;
 
 namespace DevZest.Data.Views
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(RowViewPanel))]
     public class RowView : ContainerView
     {
-        public static readonly RoutedUICommand ExpandCommand = new RoutedUICommand();
-        public static readonly RoutedUICommand CollapseCommand = new RoutedUICommand();
-
         public static readonly StyleKey SelectableStyleKey = new StyleKey(typeof(RowView));
 
         private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(RowView),
@@ -230,7 +228,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.RowViewCommandEntries);
+            this.SetupCommandEntries(dataPresenter.GetService<RowViewCommands>(() => new RowViewCommands()).CommandEntries);
         }
 
         private bool _rowSelectorCommandEntriesSetup;
