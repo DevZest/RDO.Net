@@ -34,6 +34,7 @@ namespace DevZest.Data.Presenters
                 _dataLoader.Reset();
             AttachView(dataView);
             Mount(dataView, dataSet, where, orderBy);
+            OnViewChanged();
         }
 
         private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
@@ -155,8 +156,12 @@ namespace DevZest.Data.Presenters
             {
                 Debug.Assert(dataView != null);
 
+                bool dataViewChanged = false;
                 if (dataView != DataView)
+                {
                     _dataPresenter.AttachView(dataView);
+                    dataViewChanged = true;
+                }
 
                 _revision++;
                 _getDataSet = getDataSet;
@@ -168,6 +173,9 @@ namespace DevZest.Data.Presenters
                     _runningTask = Run();
                 else if (_cts != null)
                     _cts.Cancel();
+
+                if (dataViewChanged)
+                    _dataPresenter.OnViewChanged();
                 return _runningTask;
             }
 
@@ -306,6 +314,7 @@ namespace DevZest.Data.Presenters
                 _layoutManager.ClearElements();
                 _layoutManager = null;
             }
+            OnViewChanged();
         }
 
         private LayoutManager _layoutManager;

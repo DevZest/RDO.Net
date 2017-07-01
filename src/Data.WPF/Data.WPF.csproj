@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\Primitives\CompositeBinding.cs" />
+    <Compile Include="Presenters\Services\ColumnHeaderCommands.cs" />
     <Compile Include="Presenters\Services\CommandExtensions.cs" />
     <Compile Include="Presenters\Services\DataViewCommands.cs" />
     <Compile Include="Presenters\Services\ISortWindowService.cs" />

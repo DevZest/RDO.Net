@@ -45,6 +45,13 @@ namespace DevZest.Data.Presenters
             View.DataPresenter = this;
         }
 
+        public event EventHandler<EventArgs> ViewChanged = delegate { };
+
+        protected virtual void OnViewChanged()
+        {
+            ViewChanged(this, EventArgs.Empty);
+        }
+
         internal abstract LayoutManager LayoutManager { get; }
 
         public Template Template
