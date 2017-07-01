@@ -7,12 +7,24 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Threading;
 using DevZest.Data.Presenters.Services;
+using System;
 
 namespace DevZest.Data.Views
 {
     [TemplatePart(Name = "PART_Panel", Type = typeof(DataViewPanel))]
     public class DataView : Control
     {
+        private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(DataView),
+            typeof(DataView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+        public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
+
+        public static DataView GetCurrent(DependencyObject target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+            return (DataView)target.GetValue(CurrentProperty);
+        }
+
         private static readonly DependencyPropertyKey ScrollablePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Scrollable),
             typeof(bool), typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -46,6 +58,11 @@ namespace DevZest.Data.Views
             FocusableProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(BooleanBoxes.False));
             KeyboardNavigation.TabNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.Once));
             KeyboardNavigation.DirectionalNavigationProperty.OverrideMetadata(typeof(DataView), new FrameworkPropertyMetadata(KeyboardNavigationMode.None));
+        }
+
+        public DataView()
+        {
+            SetValue(CurrentPropertyKey, this);
         }
 
         private DataPresenter _dataPresenter;

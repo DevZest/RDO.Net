@@ -12,6 +12,17 @@ namespace DevZest.Data.Views
     [TemplatePart(Name = "PART_Panel", Type = typeof(BlockViewPanel))]
     public class BlockView : ContainerView, IReadOnlyList<RowPresenter>
     {
+        private static readonly DependencyPropertyKey CurrentPropertyKey = DependencyProperty.RegisterAttachedReadOnly("Current", typeof(BlockView),
+            typeof(BlockView), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+        public static readonly DependencyProperty CurrentProperty = CurrentPropertyKey.DependencyProperty;
+
+        public static BlockView GetCurrent(DependencyObject target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+            return (BlockView)target.GetValue(CurrentProperty);
+        }
+
         static BlockView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BlockView), new FrameworkPropertyMetadata(typeof(BlockView)));
@@ -20,6 +31,7 @@ namespace DevZest.Data.Views
 
         public BlockView()
         {
+            SetValue(CurrentPropertyKey, this);
         }
 
         internal sealed override void Setup(ElementManager elementManager, int ordinal)
