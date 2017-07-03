@@ -128,8 +128,6 @@ namespace DevZest.Data.Views
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
             var dataPresenter = scalarPresenter.DataPresenter;
-            if (dataPresenter == null)  // this only happens in unit tests.
-                return;
             var commands = GetCommands(dataPresenter);
             EnsureCommandEntriesSetup(commands);
             commands.EnsureCommandEntriesSetup(dataPresenter.View);

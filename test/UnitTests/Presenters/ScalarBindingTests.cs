@@ -14,24 +14,24 @@ namespace DevZest.Data.Presenters
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
-            ScalarBinding<ColumnHeader> columnHeader = null;
+            ScalarBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.AsColumnHeader();
-                label = _.Name.AsScalarLabel(columnHeader);
+                textBlock = _.Name.AsScalarTextBlock();
+                label = _.Name.AsScalarLabel(textBlock);
                 builder.GridColumns("100", "100", "100").GridRows("100").RowRange(2, 0, 2, 0)
                     .AddBinding(0, 0, label)
-                    .AddBinding(1, 0, columnHeader);
+                    .AddBinding(1, 0, textBlock);
             });
 
             Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(columnHeader.SettingUpElement);
+            Assert.IsNull(textBlock.SettingUpElement);
 
             Assert.AreEqual(1, label.FlowRepeatCount);
             Assert.AreEqual(_.Name.DisplayName, label[0].Content);
-            Assert.AreEqual(1, columnHeader.FlowRepeatCount);
-            Assert.AreEqual(_.Name, columnHeader[0].Column);
-            Assert.AreEqual(columnHeader[0], label[0].Target);
+            Assert.AreEqual(1, textBlock.FlowRepeatCount);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[0].Text);
+            Assert.AreEqual(textBlock[0], label[0].Target);
         }
 
         [TestMethod]
@@ -40,35 +40,35 @@ namespace DevZest.Data.Presenters
             var dataSet = DataSetMock.ProductCategories(1);
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
-            ScalarBinding<ColumnHeader> columnHeader = null;
+            ScalarBinding<TextBlock> textBlock = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
-                columnHeader = _.Name.AsColumnHeader().WithFlowRepeatable(true);
-                label = _.Name.AsFlowRepeatableScalarLabel(columnHeader);
+                textBlock = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
+                label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100", "100").GridRows("100", "100")
                     .AddBinding(0, 0, label)
                     .AddBinding(0, 1, 1, 1, _.Name.AsTextBlock())
-                    .AddBinding(1, 0, columnHeader);
+                    .AddBinding(1, 0, textBlock);
             });
 
             elementManager.FlowRepeatCount = 2;
 
             Assert.IsNull(label.SettingUpElement);
-            Assert.IsNull(columnHeader.SettingUpElement);
+            Assert.IsNull(textBlock.SettingUpElement);
 
             Assert.AreEqual(2, label.FlowRepeatCount);
             Assert.AreEqual("0. " + _.Name.DisplayName, label[0].Content);
             Assert.AreEqual("1. " + _.Name.DisplayName, label[1].Content);
             Assert.AreEqual(0, label[0].GetScalarFlowIndex());
             Assert.AreEqual(1, label[1].GetScalarFlowIndex());
-            Assert.AreEqual(2, columnHeader.FlowRepeatCount);
-            Assert.AreEqual(_.Name, columnHeader[0].Column);
-            Assert.AreEqual(_.Name, columnHeader[1].Column);
-            Assert.AreEqual(0, columnHeader[0].GetScalarFlowIndex());
-            Assert.AreEqual(1, columnHeader[1].GetScalarFlowIndex());
-            Assert.AreEqual(columnHeader[0], label[0].Target);
-            Assert.AreEqual(columnHeader[1], label[1].Target);
+            Assert.AreEqual(2, textBlock.FlowRepeatCount);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[0].Text);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[1].Text);
+            Assert.AreEqual(0, textBlock[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, textBlock[1].GetScalarFlowIndex());
+            Assert.AreEqual(textBlock[0], label[0].Target);
+            Assert.AreEqual(textBlock[1], label[1].Target);
 
             elementManager.FlowRepeatCount = 3;
             Assert.AreEqual(3, label.FlowRepeatCount);
@@ -78,16 +78,16 @@ namespace DevZest.Data.Presenters
             Assert.AreEqual(0, label[0].GetScalarFlowIndex());
             Assert.AreEqual(1, label[1].GetScalarFlowIndex());
             Assert.AreEqual(2, label[2].GetScalarFlowIndex());
-            Assert.AreEqual(3, columnHeader.FlowRepeatCount);
-            Assert.AreEqual(_.Name, columnHeader[0].Column);
-            Assert.AreEqual(_.Name, columnHeader[1].Column);
-            Assert.AreEqual(_.Name, columnHeader[2].Column);
-            Assert.AreEqual(0, columnHeader[0].GetScalarFlowIndex());
-            Assert.AreEqual(1, columnHeader[1].GetScalarFlowIndex());
-            Assert.AreEqual(2, columnHeader[2].GetScalarFlowIndex());
-            Assert.AreEqual(columnHeader[0], label[0].Target);
-            Assert.AreEqual(columnHeader[1], label[1].Target);
-            Assert.AreEqual(columnHeader[2], label[2].Target);
+            Assert.AreEqual(3, textBlock.FlowRepeatCount);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[0].Text);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[1].Text);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[2].Text);
+            Assert.AreEqual(0, textBlock[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, textBlock[1].GetScalarFlowIndex());
+            Assert.AreEqual(2, textBlock[2].GetScalarFlowIndex());
+            Assert.AreEqual(textBlock[0], label[0].Target);
+            Assert.AreEqual(textBlock[1], label[1].Target);
+            Assert.AreEqual(textBlock[2], label[2].Target);
 
             elementManager.FlowRepeatCount = 2;
             Assert.AreEqual(2, label.FlowRepeatCount);
@@ -95,13 +95,13 @@ namespace DevZest.Data.Presenters
             Assert.AreEqual("1. " + _.Name.DisplayName, label[1].Content);
             Assert.AreEqual(0, label[0].GetScalarFlowIndex());
             Assert.AreEqual(1, label[1].GetScalarFlowIndex());
-            Assert.AreEqual(2, columnHeader.FlowRepeatCount);
-            Assert.AreEqual(_.Name, columnHeader[0].Column);
-            Assert.AreEqual(_.Name, columnHeader[1].Column);
-            Assert.AreEqual(0, columnHeader[0].GetScalarFlowIndex());
-            Assert.AreEqual(1, columnHeader[1].GetScalarFlowIndex());
-            Assert.AreEqual(columnHeader[0], label[0].Target);
-            Assert.AreEqual(columnHeader[1], label[1].Target);
+            Assert.AreEqual(2, textBlock.FlowRepeatCount);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[0].Text);
+            Assert.AreEqual(_.Name.DisplayName, textBlock[1].Text);
+            Assert.AreEqual(0, textBlock[0].GetScalarFlowIndex());
+            Assert.AreEqual(1, textBlock[1].GetScalarFlowIndex());
+            Assert.AreEqual(textBlock[0], label[0].Target);
+            Assert.AreEqual(textBlock[1], label[1].Target);
         }
     }
 }

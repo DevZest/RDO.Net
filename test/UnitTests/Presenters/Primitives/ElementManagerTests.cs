@@ -12,16 +12,16 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(8, false);
             var _ = dataSet._;
-            ScalarBinding<ColumnHeader> columnHeader1 = null;
+            ScalarBinding<TextBlock> columnHeader1 = null;
             BlockBinding<BlockHeader> blockHeader = null;
             RowBinding<TextBlock> textBlock = null;
-            ScalarBinding<ColumnHeader> columnHeader2 = null;
+            ScalarBinding<TextBlock> columnHeader2 = null;
             var elementManager = dataSet.CreateElementManager((builder) =>
             {
-                columnHeader1 = _.Name.AsColumnHeader();
+                columnHeader1 = _.Name.AsScalarTextBlock();
                 blockHeader = _.BlockHeader();
                 textBlock = _.Name.AsTextBlock();
-                columnHeader2 = _.Name.AsColumnHeader().WithFlowRepeatable(true);
+                columnHeader2 = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
                 builder.GridColumns("100", "100")
                     .GridRows("100", "100", "100")
                     .Layout(Orientation.Vertical, 0)

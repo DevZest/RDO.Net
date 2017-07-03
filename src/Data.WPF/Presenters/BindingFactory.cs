@@ -66,23 +66,6 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static ScalarBinding<Label> AsScalarLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
-            where TTarget : UIElement, new()
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new ScalarBinding<Label>(
-                onSetup: e =>
-                {
-                    e.Content = source.DisplayName.ToString(format, formatProvider);
-                    if (target != null)
-                        e.Target = target.SettingUpElement;
-                },
-                onRefresh: null,
-                onCleanup: null);
-        }
-
         public static RowBinding<RowHeader> AsRowHeader(this Model source)
         {
             return new RowBinding<RowHeader>(
