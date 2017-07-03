@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Primitives;
 using DevZest.Data.Views;
 using DevZest.Data.Presenters.Primitives;
 using System;
@@ -8,7 +7,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class RowPresenter
+    public sealed class RowPresenter : ElementPresenter
     {
         internal RowPresenter(RowMapper rowMapper, DataRow dataRow)
             : this(rowMapper, dataRow, -1)
@@ -86,16 +85,7 @@ namespace DevZest.Data.Presenters
             get { return !IsVirtual && Template.IsRecursive; }
         }
 
-        public DataPresenter DataPresenter
-        {
-            get
-            {
-                var layoutManager = LayoutManager;
-                return layoutManager == null ? null : layoutManager.DataPresenter;
-            }
-        }
-
-        public Template Template
+        public sealed override Template Template
         {
             get { return IsDisposed ? null : _rowMapper.Template; }
         }

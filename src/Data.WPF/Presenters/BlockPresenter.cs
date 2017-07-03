@@ -1,14 +1,22 @@
-﻿using DevZest.Data.Views;
+﻿using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class BlockPresenter : IReadOnlyList<RowPresenter>
+    public sealed class BlockPresenter : ElementPresenter, IReadOnlyList<RowPresenter>
     {
-        internal BlockPresenter()
+        internal BlockPresenter(Template template)
         {
+            _template = template;
+        }
+
+        private readonly Template _template;
+        public sealed override Template Template
+        {
+            get { return _template; }
         }
 
         internal BlockView BlockView { get; set; }

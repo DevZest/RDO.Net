@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\Primitives\CompositeBinding.cs" />
+    <Compile Include="Presenters\Primitives\ElementPresenter.cs" />
     <Compile Include="Presenters\Primitives\IBlockElement.cs" />
     <Compile Include="Presenters\Primitives\IRowElement.cs" />
     <Compile Include="Presenters\Primitives\IScalarElement.cs" />

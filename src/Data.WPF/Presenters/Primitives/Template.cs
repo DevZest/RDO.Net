@@ -518,7 +518,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_scalarPresenter == null)
-                    _scalarPresenter = new ScalarPresenter();
+                    _scalarPresenter = new ScalarPresenter(this);
                 return _scalarPresenter;
             }
         }
@@ -529,7 +529,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_blockPresenter == null)
-                    _blockPresenter = new BlockPresenter();
+                    _blockPresenter = new BlockPresenter(this);
                 return _blockPresenter;
             }
         }

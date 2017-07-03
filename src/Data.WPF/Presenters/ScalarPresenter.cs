@@ -1,9 +1,19 @@
-﻿namespace DevZest.Data.Presenters
+﻿using System;
+using DevZest.Data.Presenters.Primitives;
+
+namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarPresenter
+    public sealed class ScalarPresenter : ElementPresenter
     {
-        internal ScalarPresenter()
+        internal ScalarPresenter(Template template)
         {
+            _template = template;
+        }
+
+        private readonly Template _template;
+        public sealed override Template Template
+        {
+            get { return _template; }
         }
 
         public int FlowIndex { get; private set; } = -1;
