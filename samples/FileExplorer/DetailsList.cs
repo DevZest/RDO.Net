@@ -1,7 +1,9 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Views;
-using System.Windows;
 using System.Windows.Controls;
+using DevZest.Data;
+using System;
+using System.Collections.Generic;
 
 namespace FileExplorer
 {
@@ -27,6 +29,20 @@ namespace FileExplorer
                 .AddBinding(2, 1, _.DateModified.AsTextBlock("{0:g}"))
                 .AddBinding(3, 1, _.FileType.AsTextBlock())
                 .AddBinding(4, 1, _.FileSize.AsTextBlock("{0:KB}", FileSizeFormatProvider.Singleton).WithStyle(FileSizeTextBlockStyleKey));
+        }
+
+        public override void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        {
+            base.Apply(where, InsertOrderByType(orderBy));
+        }
+
+        private IComparer<DataRow> InsertOrderByType(IComparer<DataRow> orderBy)
+        {
+            if (orderBy == null || orderBy == OrderBy)
+                return orderBy;
+
+            IComparer<DataRow> result = DataRow.OrderBy(_.Type, SortDirection.Ascending);
+            return result.ThenBy(orderBy);
         }
     }
 }

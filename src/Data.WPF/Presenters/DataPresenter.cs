@@ -93,7 +93,7 @@ namespace DevZest.Data.Presenters
             set { Apply(Where, value); }
         }
 
-        public void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        public virtual void Apply(Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             RequireLayoutManager().Apply(where, orderBy);
         }
