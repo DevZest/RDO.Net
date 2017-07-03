@@ -45,7 +45,7 @@ namespace DevZest.Data.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            UpdateVisualState();
+            UpdateVisualState(DataPresenter);
         }
 
         public Column Column { get; set; }
@@ -80,18 +80,18 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
         {
-            UpdateVisualState();
+            UpdateVisualState(scalarPresenter.DataPresenter);
         }
 
-        private void UpdateVisualState()
+        private void UpdateVisualState(DataPresenter dataPresenter)
         {
-            UpdateVisualState(true);
+            UpdateVisualState(dataPresenter, true);
         }
 
-        private void UpdateVisualState(bool useTransitions)
+        private void UpdateVisualState(DataPresenter dataPresenter, bool useTransitions)
         {
-            SortDirection = GetSortDirection();
-            if (!IsLoaded)
+            SortDirection = GetSortDirection(dataPresenter);
+            if (!IsLoaded)  // First call of VisualStateManager.GotoState must after control loaded.
                 return;
             if (SortDirection == SortDirection.Ascending)
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateSortAscending);
@@ -106,13 +106,12 @@ namespace DevZest.Data.Views
             get { return DataView.GetCurrent(this)?.DataPresenter; }
         }
 
-        private SortDirection GetSortDirection()
+        private SortDirection GetSortDirection(DataPresenter dataPresenter)
         {
             if (!CanSort)
                 return SortDirection.Unspecified;
 
-            var dataPresenter = DataPresenter;
-            var orderBy = dataPresenter?.GetService<ISortService>()?.OrderBy;
+            var orderBy = dataPresenter.GetService<ISortService>()?.OrderBy;
             if (orderBy == null || orderBy.Count == 0)
                 return SortDirection.Unspecified;
 
