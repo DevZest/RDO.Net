@@ -12,7 +12,6 @@ namespace DevZest.Data.Presenters.Services
             {
                 _orderBy = value;
                 DataPresenter.OrderBy = GetOrderBy(_orderBy);
-                DataPresenter.InvalidateView();
             }
         }
 

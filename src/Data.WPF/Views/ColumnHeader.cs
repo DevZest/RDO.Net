@@ -23,12 +23,7 @@ namespace DevZest.Data.Views
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
         private static readonly DependencyPropertyKey SortDirectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SortDirection), typeof(SortDirection),
-            typeof(ColumnHeader), new FrameworkPropertyMetadata(SortDirection.Unspecified, new PropertyChangedCallback(OnSortDirectionChanged)));
-
-        private static void OnSortDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ColumnHeader)d).UpdateVisualState(true);
-        }
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(SortDirection.Unspecified));
 
         public static readonly DependencyProperty SortDirectionProperty = SortDirectionPropertyKey.DependencyProperty;
 
@@ -41,6 +36,16 @@ namespace DevZest.Data.Views
         static ColumnHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
+        }
+
+        public ColumnHeader()
+        {
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateVisualState();
         }
 
         public Column Column { get; set; }
@@ -75,21 +80,23 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
         {
-            Refresh();
+            UpdateVisualState();
         }
 
-        private void Refresh()
+        private void UpdateVisualState()
         {
-            SortDirection = GetSortDirection();
+            UpdateVisualState(true);
         }
 
         private void UpdateVisualState(bool useTransitions)
         {
-            var sortDirection = GetSortDirection();
-            if (sortDirection == SortDirection.Ascending)
-                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortAscending, VisualStates.StateUnsorted);
-            else if (sortDirection == SortDirection.Descending)
-                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortDescending, VisualStates.StateUnsorted);
+            SortDirection = GetSortDirection();
+            if (!IsLoaded)
+                return;
+            if (SortDirection == SortDirection.Ascending)
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortAscending);
+            else if (SortDirection == SortDirection.Descending)
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortDescending);
             else
                 VisualStates.GoToState(this, useTransitions, VisualStates.StateUnsorted);
         }
