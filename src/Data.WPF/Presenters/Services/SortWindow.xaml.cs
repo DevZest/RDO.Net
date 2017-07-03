@@ -68,7 +68,7 @@ namespace DevZest.Data.Presenters.Services
                 for (int i = 0; i < bindings.Count; i++)
                 {
                     var columnHeader = bindings[i][0] as ColumnHeader;
-                    if (columnHeader != null && columnHeader.Column != null)
+                    if (columnHeader != null && columnHeader.Column != null && columnHeader.CanSort)
                     {
                         if (result == null)
                             result = new List<ColumnHeader>();

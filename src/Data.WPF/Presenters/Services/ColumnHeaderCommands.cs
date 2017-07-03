@@ -56,7 +56,22 @@ namespace DevZest.Data.Presenters.Services
 
         private void CanExecSort(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            e.CanExecute = CanShowSortWindow;
+        }
+
+        private bool CanShowSortWindow
+        {
+            get
+            {
+                var bindings = DataPresenter.Template.ScalarBindings;
+                for (int i = 0; i < bindings.Count; i++)
+                {
+                    var columnHeader = bindings[i][0] as ColumnHeader;
+                    if (columnHeader != null && columnHeader.Column != null && columnHeader.CanSort)
+                        return true;
+                }
+                return false;
+            }
         }
 
         private void ExecSort(object sender, ExecutedRoutedEventArgs e)
