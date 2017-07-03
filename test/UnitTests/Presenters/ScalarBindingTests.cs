@@ -18,7 +18,7 @@ namespace DevZest.Data.Presenters
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader();
-                label = _.Name.ScalarLabel(columnHeader);
+                label = _.Name.AsScalarLabel(columnHeader);
                 builder.GridColumns("100", "100", "100").GridRows("100").RowRange(2, 0, 2, 0)
                     .AddBinding(0, 0, label)
                     .AddBinding(1, 0, columnHeader);
@@ -44,7 +44,7 @@ namespace DevZest.Data.Presenters
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader().WithFlowRepeatable(true);
-                label = _.Name.FlowableLabel(columnHeader);
+                label = _.Name.AsFlowRepeatableScalarLabel(columnHeader);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100", "100").GridRows("100", "100")
                     .AddBinding(0, 0, label)

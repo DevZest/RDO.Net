@@ -18,7 +18,7 @@ namespace DevZest.Data.Presenters
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader();
-                label = _.Name.ScalarLabel(columnHeader);
+                label = _.Name.AsScalarLabel(columnHeader);
                 pane = new CompositeScalarBinding<XamlCompositeView>().AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(columnHeader, XamlCompositeView.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
@@ -47,7 +47,7 @@ namespace DevZest.Data.Presenters
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 columnHeader = _.Name.AsColumnHeader().WithFlowRepeatable(true);
-                label = _.Name.FlowableLabel(columnHeader);
+                label = _.Name.AsFlowRepeatableScalarLabel(columnHeader);
                 pane = new CompositeScalarBinding<XamlCompositeView>().WithFlowRepeatable(true)
                     .AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(columnHeader, XamlCompositeView.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)

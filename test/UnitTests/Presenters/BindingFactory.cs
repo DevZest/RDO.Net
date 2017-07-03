@@ -45,40 +45,6 @@ namespace DevZest.Data.Presenters
             element.DesiredHeight = desiredHeight;
         }
 
-        public static ScalarBinding<Label> ScalarLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
-            where TTarget : UIElement, new()
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new ScalarBinding<Label>(
-                onSetup: e =>
-                {
-                    e.Content = source.DisplayName.ToString(format, formatProvider);
-                    if (target != null)
-                        e.Target = target.SettingUpElement;
-                },
-                onRefresh: null,
-                onCleanup: null);
-        }
-
-        public static ScalarBinding<Label> FlowableLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
-            where TTarget : UIElement, new()
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new ScalarBinding<Label>(
-                onSetup: (e, sp) =>
-                {
-                    e.Content = string.Format("{0}. {1}", sp.FlowIndex, source.DisplayName.ToString(format, formatProvider));
-                    if (target != null)
-                        e.Target = target.SettingUpElement;
-                },
-                onRefresh: null,
-                onCleanup: null).WithFlowRepeatable(true);
-        }
-
         public static ScalarBinding<Placeholder> ScalarPlaceholder(this Model _, double desiredWidth = 0, double desiredHeight = 0)
         {
             return new ScalarBinding<Placeholder>(null, e => Setup(e, desiredWidth, desiredHeight), null);
@@ -101,5 +67,23 @@ namespace DevZest.Data.Presenters
         {
             return new RowBinding<Placeholder>((e, r) => Refresh(e, r, desiredWidth, desiredHeight, onRefresh));
         }
+
+        public static ScalarBinding<Label> AsFlowRepeatableScalarLabel<TTarget>(this Column source, ScalarBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
+            where TTarget : UIElement, new()
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new ScalarBinding<Label>(
+                onSetup: (e, sp) =>
+                {
+                    e.Content = string.Format("{0}. {1}", sp.FlowIndex, source.DisplayName.ToString(format, formatProvider));
+                    if (target != null)
+                        e.Target = target.SettingUpElement;
+                },
+                onRefresh: null,
+                onCleanup: null).WithFlowRepeatable(true);
+        }
+
     }
 }
