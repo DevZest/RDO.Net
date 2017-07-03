@@ -13,6 +13,31 @@ namespace DevZest.Data
             return ComparerBase.Create(column, direction, comparer);
         }
 
+        private sealed class CompositeComparer : IComparer<DataRow>
+        {
+            public CompositeComparer(IComparer<DataRow> comparer1, IComparer<DataRow> comparer2)
+            {
+                _comparer1 = comparer1;
+                _comparer2 = comparer2;
+            }
+
+            private readonly IComparer<DataRow> _comparer1;
+            private readonly IComparer<DataRow> _comparer2;
+
+            public int Compare(DataRow x, DataRow y)
+            {
+                var result = _comparer1.Compare(x, y);
+                return result != 0 ? result : _comparer2.Compare(x, y);
+            }
+        }
+
+        public static IComparer<DataRow> ThenBy(this IComparer<DataRow> orderBy, IComparer<DataRow> thenBy)
+        {
+            Check.NotNull(orderBy, nameof(orderBy));
+            Check.NotNull(thenBy, nameof(thenBy));
+            return new CompositeComparer(orderBy, thenBy);
+        }
+
         public static IDataRowComparer ThenBy(this IDataRowComparer orderBy, IDataRowComparer thenBy)
         {
             Check.NotNull(orderBy, nameof(orderBy));
