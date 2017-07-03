@@ -18,6 +18,18 @@ namespace DevZest.Data.Presenters.Primitives
             ContainerViewList = emptyContainerViewList ? Primitives.ContainerViewList.Empty : Primitives.ContainerViewList.Create(this);
         }
 
+        protected override void Reload()
+        {
+            base.Reload();
+            var elementCollection = ElementCollection;
+            ClearElements();
+            ElementCollection = elementCollection;
+            if (ElementCollection != null)
+                InitializeElements();
+            if (ContainerViewList != Primitives.ContainerViewList.Empty)
+                ContainerViewList = Primitives.ContainerViewList.Create(this);
+        }
+
         List<ContainerView> _cachedContainerViews;
         List<RowView> _cachedRowViews;
 
@@ -393,7 +405,11 @@ namespace DevZest.Data.Presenters.Primitives
             Debug.Assert(ElementCollection == null);
 
             ElementCollection = ElementCollectionFactory.Create(elementsPanel);
+            InitializeElements();
+        }
 
+        private void InitializeElements()
+        {
             var scalarBindings = Template.InternalScalarBindings;
             BeginSetup(scalarBindings);
             for (int i = 0; i < scalarBindings.Count; i++)

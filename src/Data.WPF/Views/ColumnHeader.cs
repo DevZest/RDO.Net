@@ -75,6 +75,11 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
         {
+            Refresh();
+        }
+
+        private void Refresh()
+        {
             SortDirection = GetSortDirection();
         }
 
