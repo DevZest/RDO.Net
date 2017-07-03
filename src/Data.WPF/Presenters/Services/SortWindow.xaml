@@ -40,7 +40,7 @@
             </Button>
             <Button>
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="12" Source="/Resources/Cancel.ico" />
+                    <Image Width="12" Source="/DevZest.Data.WPF;component/Resources/Cancel.ico" />
                     <TextBlock Text="{x:Static res:UIText.SortWindow_DeleteLevel}" />
                 </StackPanel>
             </Button>

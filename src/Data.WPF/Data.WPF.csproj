@@ -229,7 +229,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
     </Content>
-    <EmbeddedResource Include="Resources\Cancel.ico" />
+    <Resource Include="Resources\Cancel.ico" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Presenters\Services\SortWindow.xaml">
