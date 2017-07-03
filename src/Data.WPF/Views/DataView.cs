@@ -82,7 +82,7 @@ namespace DevZest.Data.Views
                     this.CleanupCommandEntries();
                 }
                 else
-                    this.SetupCommandEntries(DataPresenter.GetService<DataViewCommands>(() => new DataViewCommands()).CommandEntries);
+                    this.SetupCommandEntries(DataPresenter.GetService<DataViewCommands>(() => new DataViewCommands()).GetCommandEntries(this));
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Presenters.Primitives;
+using DevZest.Data.Presenters.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,57 +17,20 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateUnsorted)]
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortAscending)]
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
-    public class ColumnHeader : ButtonBase
+    public class ColumnHeader : ButtonBase, IScalarElement
     {
-        private interface IColumnSource
+        public static readonly DependencyProperty CanSortProperty = DependencyProperty.Register(nameof(CanSort), typeof(bool),
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.True));
+
+        private static readonly DependencyPropertyKey SortDirectionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(SortDirection), typeof(SortDirection),
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(SortDirection.Unspecified, new PropertyChangedCallback(OnSortDirectionChanged)));
+
+        private static void OnSortDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Column Column { get; }
-            IColumnComparer GetColumnComparer(SortDirection direction);
+            ((ColumnHeader)d).UpdateVisualState(true);
         }
 
-        private sealed class ColumnSource<T> : IColumnSource
-        {
-            public ColumnSource(Column<T> column, IComparer<T> comparer)
-            {
-                _column = column;
-                _comparer = comparer;
-            }
-
-            private readonly Column<T> _column;
-            private readonly IComparer<T> _comparer;
-
-            public Column Column
-            {
-                get { return _column; }
-            }
-
-            public IColumnComparer GetColumnComparer(SortDirection direction)
-            {
-                return DataRow.OrderBy(_column, direction, _comparer);
-            }
-        }
-
-        private sealed class ColumnSource : IColumnSource
-        {
-            public ColumnSource(Column column)
-            {
-                _column = column;
-            }
-
-            private readonly Column _column;
-
-            public Column Column
-            {
-                get { return _column; }
-            }
-
-            public IColumnComparer GetColumnComparer(SortDirection direction)
-            {
-                return DataRow.OrderBy(_column, direction);
-            }
-        }
-
-        public static readonly RoutedUICommand ShowSortWindowCommand = new RoutedUICommand(UIText.ColumnHeader_ShowSortWindowCommandText, nameof(ShowSortWindowCommand), typeof(ColumnHeader));
+        public static readonly DependencyProperty SortDirectionProperty = SortDirectionPropertyKey.DependencyProperty;
 
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
@@ -78,55 +43,18 @@ namespace DevZest.Data.Views
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ColumnHeader), new FrameworkPropertyMetadata(typeof(ColumnHeader)));
         }
 
-        private IColumnSource _columnSource;
+        public Column Column { get; set; }
 
-        public Column Column
+        public bool CanSort
         {
-            get { return _columnSource?.Column; }
+            get { return (bool)GetValue(CanSortProperty); }
+            set { SetValue(CanSortProperty, BooleanBoxes.Box(value)); }
         }
 
-        public void Setup(Column column, object title)
+        public SortDirection SortDirection
         {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            _columnSource = new ColumnSource(column);
-            Content = title;
-        }
-
-        public void Setup<T>(Column<T> column, IComparer<T> comparer, object title)
-        {
-            if (column == null)
-                throw new ArgumentNullException(nameof(column));
-            _columnSource = new ColumnSource<T>(column, comparer);
-            Content = title;
-        }
-
-        public IColumnComparer GetColumnComparer(SortDirection direction)
-        {
-            return _columnSource?.GetColumnComparer(direction);
-        }
-
-        public static IReadOnlyList<ColumnHeader> GetColumnHeaders(DataPresenter dataPresenter)
-        {
-            Debug.Assert(dataPresenter != null);
-
-            List<ColumnHeader> result = null;
-            var bindings = dataPresenter.Template.ScalarBindings;
-            for (int i = 0; i < bindings.Count; i++)
-            {
-                var columnHeader = bindings[i][0] as ColumnHeader;
-                if (columnHeader != null && columnHeader.Column != null)
-                {
-                    if (result == null)
-                        result = new List<ColumnHeader>();
-                    result.Add(columnHeader);
-                }
-            }
-
-            if (result == null)
-                return Array<ColumnHeader>.Empty;
-            else
-                return result;
+            get { return (SortDirection)GetValue(SortDirectionProperty); }
+            private set { SetValue(SortDirectionPropertyKey, value); }
         }
 
         public Brush SeparatorBrush
@@ -139,6 +67,86 @@ namespace DevZest.Data.Views
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
+        }
+
+        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
+        {
+            SortDirection = GetSortDirection();
+        }
+
+        private void UpdateVisualState(bool useTransitions)
+        {
+            var sortDirection = GetSortDirection();
+            if (sortDirection == SortDirection.Ascending)
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortAscending, VisualStates.StateUnsorted);
+            else if (sortDirection == SortDirection.Descending)
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateSortDescending, VisualStates.StateUnsorted);
+            else
+                VisualStates.GoToState(this, useTransitions, VisualStates.StateUnsorted);
+        }
+
+        private DataPresenter DataPresenter
+        {
+            get { return DataView.GetCurrent(this)?.DataPresenter; }
+        }
+
+        private SortDirection GetSortDirection()
+        {
+            if (!CanSort)
+                return SortDirection.Unspecified;
+
+            var dataPresenter = DataPresenter;
+            var orderBy = dataPresenter?.GetService<ISortService>()?.OrderBy;
+            if (orderBy == null || orderBy.Count == 0)
+                return SortDirection.Unspecified;
+
+            for (int i = 0; i < orderBy.Count; i++)
+            {
+                var columnComparer = orderBy[i];
+                if (columnComparer.GetColumn(dataPresenter.DataSet.Model) == Column)
+                    return columnComparer.Direction;
+            }
+            return SortDirection.Unspecified;
+        }
+
+        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+            if (e.Property == DataView.CurrentProperty)
+                OnDataViewChanged((DataView)e.NewValue);
+        }
+
+        private void OnDataViewChanged(DataView newValue)
+        {
+            if (!CanSort || newValue == null)
+                return;
+            EnsureCommandEntriesSetup();
+        }
+
+        private bool _commandEntriesSetup;
+        private void EnsureCommandEntriesSetup()
+        {
+            if (_commandEntriesSetup)
+                return;
+
+            SetupCommandEntries();
+            _commandEntriesSetup = true;
+        }
+
+        private void SetupCommandEntries()
+        {
+            var dataPresenter = DataPresenter;
+            Debug.Assert(dataPresenter != null);
+
+            this.SetupCommandEntries(dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands()).GetCommandEntries(this));
         }
     }
 }

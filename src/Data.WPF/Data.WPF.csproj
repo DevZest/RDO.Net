@@ -55,8 +55,6 @@
     <Compile Include="Presenters\Services\RowSelectorCommands.cs" />
     <Compile Include="Presenters\Services\RowViewCommands.cs" />
     <Compile Include="Presenters\Services\ServiceBase.cs" />
-    <Compile Include="Presenters\Services\SortModel.cs" />
-    <Compile Include="Presenters\Services\SortPresenter.cs" />
     <Compile Include="Presenters\Services\SortService.cs" />
     <Compile Include="Presenters\Services\SortWindow.xaml.cs">
       <DependentUpon>SortWindow.xaml</DependentUpon>

@@ -34,42 +34,39 @@ namespace DevZest.Data.Presenters.Services
 
         public DataPresenter DataPresenter { get; set; }
 
-        protected internal virtual IEnumerable<CommandEntry> CommandEntries
+        protected internal virtual IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
         {
-            get
+            if (DataPresenter.Scrollable != null)
             {
-                if (DataPresenter.Scrollable != null)
+                if (DataPresenter.LayoutOrientation.HasValue)
                 {
-                    if (DataPresenter.LayoutOrientation.HasValue)
+                    yield return ScrollUp.CommandBinding(ExecScrollUp);
+                    yield return ScrollDown.CommandBinding(ExecScrollDown);
+                    yield return ScrollLeft.CommandBinding(ExecScrollLeft);
+                    yield return ScrollRight.CommandBinding(ExecScrollRight);
+                    yield return ScrollPageUp.CommandBinding(ExecScrollPageUp);
+                    yield return ScrollPageDown.CommandBinding(ExecScrollPageDown);
+                    yield return MoveUp.InputBinding(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
+                    yield return MoveDown.InputBinding(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
+                    yield return MoveLeft.InputBinding(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
+                    yield return MoveRight.InputBinding(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                    yield return MoveToHome.InputBinding(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
+                    yield return MoveToEnd.InputBinding(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
+                    yield return MoveToPageUp.InputBinding(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
+                    yield return MoveToPageDown.InputBinding(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
+                    if (Template.SelectionMode == SelectionMode.Extended)
                     {
-                        yield return ScrollUp.CommandBinding(ExecScrollUp);
-                        yield return ScrollDown.CommandBinding(ExecScrollDown);
-                        yield return ScrollLeft.CommandBinding(ExecScrollLeft);
-                        yield return ScrollRight.CommandBinding(ExecScrollRight);
-                        yield return ScrollPageUp.CommandBinding(ExecScrollPageUp);
-                        yield return ScrollPageDown.CommandBinding(ExecScrollPageDown);
-                        yield return MoveUp.InputBinding(ExecMoveUp, CanExecMoveUp, new KeyGesture(Key.Up));
-                        yield return MoveDown.InputBinding(ExecMoveDown, CanExecMoveDown, new KeyGesture(Key.Down));
-                        yield return MoveLeft.InputBinding(ExecMoveLeft, CanExecMoveLeft, new KeyGesture(Key.Left));
-                        yield return MoveRight.InputBinding(ExecMoveRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                        yield return MoveToHome.InputBinding(ExecMoveToHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home));
-                        yield return MoveToEnd.InputBinding(ExecMoveToEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End));
-                        yield return MoveToPageUp.InputBinding(ExecMoveToPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp));
-                        yield return MoveToPageDown.InputBinding(ExecMoveToPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown));
-                        if (Template.SelectionMode == SelectionMode.Extended)
-                        {
-                            yield return SelectExtendedUp.InputBinding(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
-                            yield return SelectExtendedDown.InputBinding(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
-                            yield return SelectiExtendedLeft.InputBinding(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
-                            yield return SelectExtendedRight.InputBinding(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
-                            yield return SelectExtendedHome.InputBinding(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
-                            yield return SelectExtendedEnd.InputBinding(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
-                            yield return SelectExtendedPageUp.InputBinding(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
-                            yield return SelectExtendedPageDown.InputBinding(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
-                        }
-                        if (Template.SelectionMode == SelectionMode.Multiple)
-                            yield return ToggleSelection.InputBinding(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
+                        yield return SelectExtendedUp.InputBinding(ExecSelectExtendUp, CanExecMoveUp, new KeyGesture(Key.Up, ModifierKeys.Shift));
+                        yield return SelectExtendedDown.InputBinding(ExecSelectExtendedDown, CanExecMoveDown, new KeyGesture(Key.Down, ModifierKeys.Shift));
+                        yield return SelectiExtendedLeft.InputBinding(ExecSelectiExtendedLeft, CanExecMoveLeft, new KeyGesture(Key.Left, ModifierKeys.Shift));
+                        yield return SelectExtendedRight.InputBinding(ExecSelectExtendedRight, CanExecMoveRight, new KeyGesture(Key.Right));
+                        yield return SelectExtendedHome.InputBinding(ExecSelectExtendedHome, CanExecuteByKeyGesture, new KeyGesture(Key.Home, ModifierKeys.Shift));
+                        yield return SelectExtendedEnd.InputBinding(ExecSelectExtendedEnd, CanExecuteByKeyGesture, new KeyGesture(Key.End, ModifierKeys.Shift));
+                        yield return SelectExtendedPageUp.InputBinding(ExecSelectExtendedPageUp, CanExecuteByKeyGesture, new KeyGesture(Key.PageUp, ModifierKeys.Shift));
+                        yield return SelectExtendedPageDown.InputBinding(ExecSelectExtendedPageDown, CanExecuteByKeyGesture, new KeyGesture(Key.PageDown, ModifierKeys.Shift));
                     }
+                    if (Template.SelectionMode == SelectionMode.Multiple)
+                        yield return ToggleSelection.InputBinding(ExecToggleSelection, CanExecuteByKeyGesture, new KeyGesture(Key.Space));
                 }
             }
         }

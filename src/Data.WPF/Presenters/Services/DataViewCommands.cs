@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DevZest.Data.Views;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace DevZest.Data.Presenters.Services
@@ -10,13 +11,10 @@ namespace DevZest.Data.Presenters.Services
 
         public DataPresenter DataPresenter { get; set; }
 
-        protected internal virtual IEnumerable<CommandEntry> CommandEntries
+        protected internal virtual IEnumerable<CommandEntry> GetCommandEntries(DataView dataView)
         {
-            get
-            {
-                yield return CancelDataLoad.CommandBinding(CancelLoadData, CanCancelLoadData);
-                yield return RetryDataLoad.CommandBinding(ReloadData, CanReloadData);
-            }
+            yield return CancelDataLoad.CommandBinding(CancelLoadData, CanCancelLoadData);
+            yield return RetryDataLoad.CommandBinding(ReloadData, CanReloadData);
         }
 
         private void ReloadData(object sender, ExecutedRoutedEventArgs e)

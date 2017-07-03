@@ -38,17 +38,11 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ColumnHeader>(
                 onRefresh: null,
                 onCleanup: null,
-                onSetup: e => e.Setup(column, title ?? column.DisplayName)
-                );
-        }
-
-        public static ScalarBinding<ColumnHeader> AsColumnHeader<T>(this Column<T> column, IComparer<T> comparer, object title = null)
-        {
-            return new ScalarBinding<ColumnHeader>(
-                onRefresh: null,
-                onCleanup: null,
-                onSetup: e => e.Setup(column, comparer, title ?? column.DisplayName)
-                );
+                onSetup: e =>
+                {
+                    e.Column = column;
+                    e.Content = title ?? column.DisplayName;
+                });
         }
 
         public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)

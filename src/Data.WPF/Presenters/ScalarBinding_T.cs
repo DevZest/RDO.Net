@@ -137,31 +137,31 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onSetup;
         private void Setup(T element, ScalarPresenter scalarPresenter)
         {
+            if (_onSetup != null)
+                _onSetup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Setup(scalarPresenter);
-            if (_onSetup != null)
-                _onSetup(element, scalarPresenter);
         }
 
         private Action<T, ScalarPresenter> _onRefresh;
         private void Refresh(T element, ScalarPresenter scalarPresenter)
         {
+            if (_onRefresh != null)
+                _onRefresh(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Refresh(scalarPresenter);
-            if (_onRefresh != null)
-                _onRefresh(element, scalarPresenter);
         }
 
         private Action<T, ScalarPresenter> _onCleanup;
         private void Cleanup(T element, ScalarPresenter scalarPresenter)
         {
-            if (_onCleanup != null)
-                _onCleanup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Cleanup(scalarPresenter);
+            if (_onCleanup != null)
+                _onCleanup(element, scalarPresenter);
         }
 
         private T Restore(UIElement element)

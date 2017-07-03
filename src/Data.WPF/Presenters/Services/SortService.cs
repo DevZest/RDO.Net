@@ -11,8 +11,21 @@ namespace DevZest.Data.Presenters.Services
             set
             {
                 _orderBy = value;
+                DataPresenter.OrderBy = GetOrderBy(_orderBy);
                 DataPresenter.InvalidateView();
             }
+        }
+
+        private static IComparer<DataRow> GetOrderBy(IReadOnlyList<IColumnComparer> orderBy)
+        {
+            if (orderBy == null || orderBy.Count == 0)
+                return null;
+
+            IDataRowComparer result = orderBy[0];
+            for (int i = 1; i < orderBy.Count; i++)
+                result = result.ThenBy(orderBy[i]);
+
+            return result;
         }
     }
 }

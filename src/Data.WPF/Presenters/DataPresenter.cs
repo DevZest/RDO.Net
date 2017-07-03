@@ -9,7 +9,7 @@ using DevZest.Data.Presenters.Services;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract partial class DataPresenter
+    public abstract class DataPresenter
     {
         public event EventHandler ViewRefreshing = delegate { };
         public event EventHandler ViewRefreshed = delegate { };
@@ -67,6 +67,11 @@ namespace DevZest.Data.Presenters
         public DataSet DataSet
         {
             get { return LayoutManager == null ? null : LayoutManager.DataSet; }
+        }
+
+        public bool IsRecursive
+        {
+            get { return LayoutManager == null ? false : LayoutManager.IsRecursive; }
         }
 
         private LayoutManager RequireLayoutManager()

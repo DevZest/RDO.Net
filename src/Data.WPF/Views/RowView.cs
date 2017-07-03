@@ -228,7 +228,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.GetService<RowViewCommands>(() => new RowViewCommands()).CommandEntries);
+            this.SetupCommandEntries(dataPresenter.GetService<RowViewCommands>(() => new RowViewCommands()).GetCommandEntries(this));
         }
 
         private bool _rowSelectorCommandEntriesSetup;
@@ -251,7 +251,7 @@ namespace DevZest.Data.Views
             if (dataPresenter == null)
                 return;
 
-            this.SetupCommandEntries(dataPresenter.GetService<RowSelectorCommands>(() => new RowSelectorCommands()).CommandEntries);
+            this.SetupCommandEntries(dataPresenter.GetService<RowSelectorCommands>(() => new RowSelectorCommands()).GetCommandEntries(this));
         }
 
         internal void Flush()

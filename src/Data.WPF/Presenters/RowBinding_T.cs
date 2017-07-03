@@ -72,31 +72,31 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onSetup;
         private void Setup(T element, RowPresenter rowPresenter)
         {
+            if (_onSetup != null)
+                _onSetup(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Setup(rowPresenter);
-            if (_onSetup != null)
-                _onSetup(element, rowPresenter);
         }
 
         private Action<T, RowPresenter> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
+            if (_onRefresh != null)
+                _onRefresh(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Refresh(rowPresenter);
-            if (_onRefresh != null)
-                _onRefresh(element, rowPresenter);
         }
 
         private Action<T, RowPresenter> _onCleanup;
         private void Cleanup(T element, RowPresenter rowPresenter)
         {
-            if (_onCleanup != null)
-                _onCleanup(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Cleanup(rowPresenter);
+            if (_onCleanup != null)
+                _onCleanup(element, rowPresenter);
         }
 
         internal sealed override void Refresh(UIElement element)

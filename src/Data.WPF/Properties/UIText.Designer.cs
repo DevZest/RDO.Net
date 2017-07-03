@@ -14,9 +14,9 @@ namespace DevZest.Data
         /// <summary>
         /// _Sort...
         /// </summary>
-        public static string ColumnHeader_ShowSortWindowCommandText
+        public static string ColumnHeaderCommands_SortCommandText
         {
-            get { return GetString("ColumnHeader_ShowSortWindowCommandText"); }
+            get { return GetString("ColumnHeaderCommands_SortCommandText"); }
         }
 
         /// <summary>

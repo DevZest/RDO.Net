@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:DevZest.Data.Views">
+    xmlns:local="clr-namespace:DevZest.Data.Views"
+    xmlns:svc="clr-namespace:DevZest.Data.Presenters.Services">
 
     <Style TargetType="local:ColumnHeader">
         <Setter Property="Foreground" Value="#FF000000" />
@@ -13,7 +14,7 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu>
-                    <MenuItem Command="{x:Static local:ColumnHeader.ShowSortWindowCommand}"
+                    <MenuItem Command="{x:Static svc:ColumnHeaderCommands.Sort}"
                               CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
                 </ContextMenu>
             </Setter.Value>

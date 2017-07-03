@@ -11,9 +11,9 @@ namespace DevZest.Data.Presenters.Services
 
         public DataPresenter DataPresenter { get; set; }
 
-        protected internal virtual IEnumerable<CommandEntry> CommandEntries
+        protected internal virtual IEnumerable<CommandEntry> GetCommandEntries(RowView rowView)
         {
-            get
+            if (DataPresenter.IsRecursive)
             {
                 yield return Expand.InputBinding(ToggleExpandState, CanExpand, new KeyGesture(Key.OemPlus));
                 yield return Collapse.InputBinding(ToggleExpandState, CanCollapse, new KeyGesture(Key.OemMinus));
