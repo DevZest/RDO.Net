@@ -127,47 +127,28 @@ namespace DevZest.Data.Views
 
         void IScalarElement.Setup(ScalarPresenter scalarPresenter)
         {
-        }
-
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            base.OnPropertyChanged(e);
-            if (e.Property == DataView.CurrentProperty)
-                OnDataViewChanged((DataView)e.NewValue);
-        }
-
-        private void OnDataViewChanged(DataView newValue)
-        {
-            if (newValue == null)
+            var dataPresenter = scalarPresenter.DataPresenter;
+            if (dataPresenter == null)  // this only happens in unit tests.
                 return;
-            Commands.EnsureCommandEntriesSetup(newValue);
-            EnsureCommandEntriesSetup();
+            var commands = GetCommands(dataPresenter);
+            EnsureCommandEntriesSetup(commands);
+            commands.EnsureCommandEntriesSetup(dataPresenter.View);
         }
 
         private bool _commandEntriesSetup;
-        private void EnsureCommandEntriesSetup()
+        private void EnsureCommandEntriesSetup(ColumnHeaderCommands commands)
         {
             if (_commandEntriesSetup)
                 return;
 
-            this.SetupCommandEntries(Commands.GetCommandEntries(this));
+            this.SetupCommandEntries(commands.GetCommandEntries(this));
             _commandEntriesSetup = true;
         }
 
-        private void SetupCommandEntries()
+        private static ColumnHeaderCommands GetCommands(DataPresenter dataPresenter)
         {
-            this.SetupCommandEntries(Commands.GetCommandEntries(this));
-        }
-
-        private ColumnHeaderCommands Commands
-        {
-            get
-            {
-                var dataPresenter = DataPresenter;
-                Debug.Assert(dataPresenter != null);
-
-                return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
-            }
+            Debug.Assert(dataPresenter != null);
+            return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
         }
     }
 }
