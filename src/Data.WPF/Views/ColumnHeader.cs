@@ -138,8 +138,9 @@ namespace DevZest.Data.Views
 
         private void OnDataViewChanged(DataView newValue)
         {
-            if (!CanSort || newValue == null)
+            if (newValue == null)
                 return;
+            Commands.EnsureCommandEntriesSetup(newValue);
             EnsureCommandEntriesSetup();
         }
 
@@ -149,16 +150,24 @@ namespace DevZest.Data.Views
             if (_commandEntriesSetup)
                 return;
 
-            SetupCommandEntries();
+            this.SetupCommandEntries(Commands.GetCommandEntries(this));
             _commandEntriesSetup = true;
         }
 
         private void SetupCommandEntries()
         {
-            var dataPresenter = DataPresenter;
-            Debug.Assert(dataPresenter != null);
+            this.SetupCommandEntries(Commands.GetCommandEntries(this));
+        }
 
-            this.SetupCommandEntries(dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands()).GetCommandEntries(this));
+        private ColumnHeaderCommands Commands
+        {
+            get
+            {
+                var dataPresenter = DataPresenter;
+                Debug.Assert(dataPresenter != null);
+
+                return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
+            }
         }
     }
 }

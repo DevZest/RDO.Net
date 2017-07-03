@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:res="clr-namespace:DevZest.Data"
         xmlns:v="clr-namespace:DevZest.Data.Views"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="Manual"
         WindowStyle="ToolWindow"
         Title="{x:Static res:UIText.SortWindow_Title}"
         Width="300" Height="250">
