@@ -2,8 +2,10 @@
 
 namespace DevZest.Data.Presenters.Services
 {
-    internal class SortService : ServiceBase, ISortService
+    internal class SortService : ISortService
     {
+        public DataPresenter DataPresenter { get; set; }
+
         private IReadOnlyList<IColumnComparer> _orderBy;
         public IReadOnlyList<IColumnComparer> OrderBy
         {
