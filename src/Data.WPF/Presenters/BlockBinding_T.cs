@@ -66,6 +66,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onSetup;
         private void Setup(T element, BlockPresenter blockPresenter)
         {
+            var blockElement = element as IBlockElement;
+            if (blockElement != null)
+                blockElement.Setup(blockPresenter);
             if (_onSetup != null)
                 _onSetup(element, blockPresenter);
         }
@@ -73,6 +76,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onRefresh;
         private void Refresh(T element, BlockPresenter blockPresenter)
         {
+            var blockElement = element as IBlockElement;
+            if (blockElement != null)
+                blockElement.Refresh(blockPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, blockPresenter);
         }
@@ -82,6 +88,9 @@ namespace DevZest.Data.Presenters
         {
             if (_onCleanup != null)
                 _onCleanup(element, blockPresenter);
+            var blockElement = element as IBlockElement;
+            if (blockElement != null)
+                blockElement.Cleanup(blockPresenter);
         }
 
         internal sealed override void Refresh(UIElement element)
