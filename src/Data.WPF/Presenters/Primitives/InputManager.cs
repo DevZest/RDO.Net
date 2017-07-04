@@ -342,7 +342,7 @@ namespace DevZest.Data.Presenters.Primitives
             Validate(rowPresenter.DataRow, out errors, out warnings);
             Errors = Errors.Add(rowPresenter, errors);
             Warnings = Warnings.Add(rowPresenter, warnings);
-       }
+        }
 
         private void Validate(DataRow dataRow, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
         {
@@ -350,15 +350,20 @@ namespace DevZest.Data.Presenters.Primitives
 
             if (MoreErrorsToValidate)
             {
-                errors = dataRow.Validate(ValidationSeverity.Error);
-                warnings = errors.Count > 0 || MoreWarningsToValidate ? dataRow.Validate(ValidationSeverity.Warning) : ValidationMessageGroup.Empty;
+                errors = Validate(dataRow, ValidationSeverity.Error);
+                warnings = errors.Count > 0 || MoreWarningsToValidate ? Validate(dataRow, ValidationSeverity.Warning) : ValidationMessageGroup.Empty;
             }
             else
             {
                 Debug.Assert(MoreWarningsToValidate);
-                warnings = dataRow.Validate(ValidationSeverity.Warning);
-                errors = warnings.Count > 0 || MoreErrorsToValidate ? dataRow.Validate(ValidationSeverity.Error) : ValidationMessageGroup.Empty;
+                warnings = Validate(dataRow, ValidationSeverity.Warning);
+                errors = warnings.Count > 0 || MoreErrorsToValidate ? Validate(dataRow, ValidationSeverity.Error) : ValidationMessageGroup.Empty;
             }
+        }
+
+        private IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
+        {
+            return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow(severity) : dataRow.Validate(severity);
         }
 
         protected override void OnCurrentRowChanged(RowPresenter oldValue)
