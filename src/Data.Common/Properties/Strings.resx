@@ -483,4 +483,7 @@
   <data name="DataSet_NullAddingRow" xml:space="preserve">
     <value>The AddingRow is null.</value>
   </data>
+  <data name="DataRow_NullModel" xml:space="preserve">
+    <value>The Model is null.</value>
+  </data>
 </root>

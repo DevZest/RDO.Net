@@ -311,12 +311,18 @@ namespace DevZest.Data
 
         public IValidationMessageGroup Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
+            if (Model == null)
+                throw new InvalidOperationException(Strings.DataRow_NullModel);
             return Model.Validate(this, severity).Seal();
         }
 
         public void CopyValuesFrom(DataRow from, bool recursive = true)
         {
             Check.NotNull(from, nameof(from));
+            if (from.Model == null)
+                throw new ArgumentException(Strings.DataRow_NullModel, nameof(from));
+            if (Model == null)
+                throw new InvalidOperationException(Strings.DataRow_NullModel);
             DoCopyValuesFrom(from, recursive);
         }
 

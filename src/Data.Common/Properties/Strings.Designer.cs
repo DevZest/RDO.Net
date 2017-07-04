@@ -987,6 +987,14 @@ namespace DevZest.Data
             get { return GetString("DataSet_NullAddingRow"); }
         }
 
+        /// <summary>
+        /// The Model is null.
+        /// </summary>
+        public static string DataRow_NullModel
+        {
+            get { return GetString("DataRow_NullModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);
