@@ -380,6 +380,14 @@ namespace DevZest.Data
             }
         }
 
+        public IValidationMessageGroup ValidateAddingRow(ValidationSeverity? severity = ValidationSeverity.Error)
+        {
+            var addingRow = AddingRow;
+            if (addingRow == null)
+                throw new InvalidOperationException(Strings.DataSet_NullAddingRow);
+            return Model.Validate(addingRow, severity).Seal();
+        }
+
         public DataRow BeginAdd()
         {
             if (IsReadOnly)

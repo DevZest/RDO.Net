@@ -979,6 +979,14 @@ namespace DevZest.Data
             get { return GetString("DataRowComparer_DifferentModelType"); }
         }
 
+        /// <summary>
+        /// The AddingRow is null.
+        /// </summary>
+        public static string DataSet_NullAddingRow
+        {
+            get { return GetString("DataSet_NullAddingRow"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

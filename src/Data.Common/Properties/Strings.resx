@@ -480,4 +480,7 @@
   <data name="DataRowComparer_DifferentModelType" xml:space="preserve">
     <value>The model type must be identical.</value>
   </data>
+  <data name="DataSet_NullAddingRow" xml:space="preserve">
+    <value>The AddingRow is null.</value>
+  </data>
 </root>
