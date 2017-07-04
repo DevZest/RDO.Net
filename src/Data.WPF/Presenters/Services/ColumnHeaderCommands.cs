@@ -84,7 +84,7 @@ namespace DevZest.Data.Presenters.Services
 
             sortWindow.Top = targetPoints.Y + Math.Max(0, (dataView.ActualHeight - sortWindow.Height) / 3);
             sortWindow.Left = targetPoints.X + Math.Max(0, (dataView.ActualWidth - sortWindow.Width) / 3);
-            sortWindow.ShowDialog();
+            sortWindow.Show(dataView.DataPresenter);
         }
 
         protected internal virtual IEnumerable<CommandEntry> GetCommandEntries(ColumnHeader columnHeader)

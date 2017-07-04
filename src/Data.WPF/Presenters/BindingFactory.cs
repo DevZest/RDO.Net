@@ -77,6 +77,18 @@ namespace DevZest.Data.Presenters
                 });
         }
 
+        public static ScalarBinding<TextBlock> AsScalarTextBlock(this string text)
+        {
+            return new ScalarBinding<TextBlock>(
+                onSetup: e =>
+                {
+                    e.Text = text;
+                },
+                onRefresh: null,
+                onCleanup: null);
+        }
+
+
         public static ScalarBinding<TextBlock> AsTextBlock<T>(this Scalar<T> source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
