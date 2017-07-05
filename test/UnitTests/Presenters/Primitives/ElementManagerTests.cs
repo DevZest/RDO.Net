@@ -471,7 +471,6 @@ namespace DevZest.Data.Presenters.Primitives
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
                 Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
-                Assert.IsTrue(rowHeader[rows[0]].IsCurrent);
             }
 
             elementManager.CurrentRow = rows[1];
@@ -482,7 +481,6 @@ namespace DevZest.Data.Presenters.Primitives
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
                 Assert.AreEqual(rowHeader[rows[1]], rowView.Elements[0]);
-                Assert.IsTrue(rowHeader[rows[1]].IsCurrent);
             }
         }
 
@@ -510,12 +508,10 @@ namespace DevZest.Data.Presenters.Primitives
                 var rowView = (RowView)elements[0];
                 Assert.AreEqual(1, rowView.Elements.Count);
                 Assert.AreEqual(rowHeader[rows[0]], rowView.Elements[0]);
-                Assert.IsFalse(rowHeader[rows[0]].IsEditing);
             }
 
             rows[0].BeginEdit();
             Assert.IsTrue(rows[0].IsEditing);
-            Assert.IsTrue(rowHeader[rows[0]].IsEditing);
         }
     }
 }

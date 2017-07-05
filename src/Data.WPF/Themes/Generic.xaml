@@ -10,5 +10,6 @@
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowExpander.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowView.xaml" />
         <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/ColumnHeader.xaml" />
+        <ResourceDictionary Source="DevZest.Data.WPF;component/Themes/RowHeader.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

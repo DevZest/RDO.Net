@@ -1,40 +1,35 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace DevZest.Data.Views
 {
-    public class RowHeader : Control
+    [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateNormal)]
+    [TemplateVisualState(GroupName = VisualStates.GroupCommon, Name = VisualStates.StateMouseOver)]
+    public class RowHeader : ButtonBase
     {
-        public static readonly DependencyProperty IsCurrentProperty = DependencyProperty.Register(nameof(IsCurrent), typeof(bool),
-            typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
+            typeof(RowHeader), new FrameworkPropertyMetadata(null));
 
-        public static readonly DependencyProperty IsEditingProperty = DependencyProperty.Register(nameof(IsEditing), typeof(bool),
-            typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
-
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool),
-            typeof(RowHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
+        public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register("SeparatorVisibility", typeof(Visibility),
+            typeof(RowHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
         static RowHeader()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RowHeader), new FrameworkPropertyMetadata(typeof(RowHeader)));
         }
 
-        public bool IsCurrent
+        public Brush SeparatorBrush
         {
-            get { return (bool)GetValue(IsCurrentProperty); }
-            set { SetValue(IsCurrentProperty, BooleanBoxes.Box(value)); }
+            get { return (Brush)GetValue(SeparatorBrushProperty); }
+            set { SetValue(SeparatorBrushProperty, value); }
         }
 
-        public bool IsEditing
+        public Visibility SeparatorVisibility
         {
-            get { return (bool)GetValue(IsEditingProperty); }
-            set { SetValue(IsEditingProperty, BooleanBoxes.Box(value)); }
-        }
-
-        public bool IsSelected
-        {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            set { SetValue(IsSelectedProperty, BooleanBoxes.Box(value)); }
+            get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
+            set { SetValue(SeparatorVisibilityProperty, value); }
         }
     }
 }

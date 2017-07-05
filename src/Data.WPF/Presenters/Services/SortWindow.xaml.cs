@@ -100,14 +100,15 @@ namespace DevZest.Data.Presenters.Services
             protected override void BuildTemplate(TemplateBuilder builder)
             {
                 builder
-                    .GridColumns("*", "100")
+                    .GridColumns("20", "*", "100")
                     .GridRows("Auto", "Auto")
                     .Layout(Orientation.Vertical)
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
-                    .AddBinding(0, 0, "Sort By".AsScalarTextBlock())
-                    .AddBinding(1, 0, "Order".AsScalarTextBlock())
-                    .AddBinding(0, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
-                    .AddBinding(1, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"));
+                    .AddBinding(1, 0, "Sort By".AsScalarTextBlock())
+                    .AddBinding(2, 0, "Order".AsScalarTextBlock())
+                    .AddBinding(0, 1, _.AsRowHeader())
+                    .AddBinding(1, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
+                    .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"));
             }
         }
 

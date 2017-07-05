@@ -68,13 +68,7 @@ namespace DevZest.Data.Presenters
 
         public static RowBinding<RowHeader> AsRowHeader(this Model source)
         {
-            return new RowBinding<RowHeader>(
-                onRefresh: (e, r) =>
-                {
-                    e.IsCurrent = r.IsCurrent;
-                    e.IsSelected = r.IsSelected;
-                    e.IsEditing = r.IsEditing;
-                });
+            return new RowBinding<RowHeader>(onRefresh: null);
         }
 
         public static ScalarBinding<TextBlock> AsScalarTextBlock(this string text)
