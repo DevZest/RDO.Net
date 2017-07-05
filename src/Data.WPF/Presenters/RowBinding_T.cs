@@ -79,14 +79,22 @@ namespace DevZest.Data.Presenters
                 rowElement.Setup(rowPresenter);
         }
 
+        private bool _isRefreshing;
+        internal override bool IsRefreshing
+        {
+            get { return _isRefreshing; }
+        }
+
         private Action<T, RowPresenter> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
+            _isRefreshing = true;
             if (_onRefresh != null)
                 _onRefresh(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Refresh(rowPresenter);
+            _isRefreshing = false;
         }
 
         private Action<T, RowPresenter> _onCleanup;

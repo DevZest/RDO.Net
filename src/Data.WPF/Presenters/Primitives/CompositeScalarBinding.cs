@@ -118,9 +118,17 @@ namespace DevZest.Data.Presenters.Primitives
             return (UIElement)result;
         }
 
+        private bool _isRefreshing;
+        internal sealed override bool IsRefreshing
+        {
+            get { return _isRefreshing; }
+        }
+
         internal sealed override void Refresh(UIElement element)
         {
+            _isRefreshing = true;
             ((ICompositeView)element).CompositeBinding.Refresh(_bindings);
+            _isRefreshing = false;
         }
 
         internal sealed override void Cleanup(UIElement element)

@@ -96,6 +96,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void Flush(T element)
         {
+            if (Binding.IsRefreshing)
+                return;
+
             ValidateInput(element);
             if (GetInputError(element) == null)
                 FlushCore(element);

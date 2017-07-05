@@ -144,14 +144,22 @@ namespace DevZest.Data.Presenters
                 scalarElement.Setup(scalarPresenter);
         }
 
+        private bool _isRefreshing;
+        internal override bool IsRefreshing
+        {
+            get { return _isRefreshing; }
+        }
+
         private Action<T, ScalarPresenter> _onRefresh;
         private void Refresh(T element, ScalarPresenter scalarPresenter)
         {
+            _isRefreshing = true;
             if (_onRefresh != null)
                 _onRefresh(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Refresh(scalarPresenter);
+            _isRefreshing = false;
         }
 
         private Action<T, ScalarPresenter> _onCleanup;
