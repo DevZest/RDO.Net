@@ -47,6 +47,10 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
                         <Rectangle x:Name="BackgroundRectangle" Stretch="Fill" Fill="#FF1F3B53" Grid.ColumnSpan="2" />
 
@@ -76,7 +80,9 @@
                             </Path>
                         </Grid>
 
-                        <Rectangle Name="VerticalSeparator" Grid.Column="1" Width="1" VerticalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
+                        <Rectangle Name="VerticalSeparator" Grid.Column="1" Grid.RowSpan="2" Width="1" VerticalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
+
+                        <Rectangle Name="HorizontalSeparator" Grid.Row="1" Grid.ColumnSpan="2" Height="1" HorizontalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
 
                         <!--<Thumb x:Name="PART_TopHeaderGripper" Style="{StaticResource RowHeaderGripperStyle}" VerticalAlignment="Top" />
                         <Thumb x:Name="PART_BottomHeaderGripper" Style="{StaticResource RowHeaderGripperStyle}" VerticalAlignment="Bottom" />-->
