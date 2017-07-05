@@ -86,8 +86,8 @@ namespace DevZest.Data.Presenters.Services
                 {
                     return new[]
                     {
-                        new { Value = SortDirection.Ascending, Display = "Ascending" },
-                        new { Value = SortDirection.Descending, Display = "Descending" }
+                        new { Value = SortDirection.Ascending, Display = UIText.SortWindow_EnumAscending },
+                        new { Value = SortDirection.Descending, Display = UIText.SortWindow_EnumDescending }
                     };
                 }
             }

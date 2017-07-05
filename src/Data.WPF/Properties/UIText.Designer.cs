@@ -108,6 +108,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Ascending
+        /// </summary>
+        public static string SortWindow_EnumAscending
+        {
+            get { return GetString("SortWindow_EnumAscending"); }
+        }
+
+        /// <summary>
+        /// Descending
+        /// </summary>
+        public static string SortWindow_EnumDescending
+        {
+            get { return GetString("SortWindow_EnumDescending"); }
+        }
+
+        /// <summary>
         /// Sort
         /// </summary>
         public static string SortWindow_Title
