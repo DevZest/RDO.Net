@@ -18,6 +18,8 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupRowIndicator, Name = VisualStates.StateNewEditingRow)]
     public class RowHeader : ButtonBase, IRowElement
     {
+        public static readonly StyleKey FlatStyleKey = new StyleKey(typeof(RowHeader));
+
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(RowHeader), new FrameworkPropertyMetadata(null));
 

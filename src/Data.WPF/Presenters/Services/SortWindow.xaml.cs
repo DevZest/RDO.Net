@@ -106,7 +106,7 @@ namespace DevZest.Data.Presenters.Services
                     .WithVirtualRowPlacement(VirtualRowPlacement.Tail)
                     .AddBinding(1, 0, "Sort By".AsScalarTextBlock())
                     .AddBinding(2, 0, "Order".AsScalarTextBlock())
-                    .AddBinding(0, 1, _.AsRowHeader())
+                    .AddBinding(0, 1, _.AsRowHeader().WithStyle(RowHeader.FlatStyleKey))
                     .AddBinding(1, 1, _.ColumnHeader.AsComboBox(ColumnHeaderSelection, "Value", "Display"))
                     .AddBinding(2, 1, _.Direction.AsComboBox(DirectionSelection, "Value", "Display"));
             }
