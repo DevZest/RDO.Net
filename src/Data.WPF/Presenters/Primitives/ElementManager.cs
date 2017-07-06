@@ -664,8 +664,8 @@ namespace DevZest.Data.Presenters.Primitives
 
             // when oldCurrentRow != CurrentRow, CurrentContainerView should have been reloaded in OnCurrentRowChanged override
             var oldCurrentRow = CurrentRow;
+            ContainerViewList.VirtualizeAll(); // must VirtualizeAll before calling base.OnRowChanged where CurrentRow might be changed.
             base.OnRowsChanged();
-            ContainerViewList.VirtualizeAll();
             if (CurrentContainerView != null && oldCurrentRow == CurrentRow && CurrentContainerView.AffectedOnRowsChanged)
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
