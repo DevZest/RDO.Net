@@ -455,7 +455,7 @@ namespace DevZest.Data.Presenters.Primitives
                 Validate(true);
                 var hasNoError = CurrentRowErrors.Count == 0;
                 if (hasNoError)
-                    CommitEdit();
+                    CurrentRow.EndEdit();
                 return hasNoError;
             }
         }
