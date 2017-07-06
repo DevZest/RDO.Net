@@ -442,12 +442,21 @@ namespace DevZest.Data.Presenters.Primitives
         {
             get
             {
-                var result = base.CanChangeCurrentRow;
-                if (result || ValidationScope == ValidationScope.AllRows)
-                    return result;
+                if (!IsEditing)
+                    return true;
 
-                Validate();
-                return CurrentRowErrors.Count == 0;
+                if (ValidationScope == ValidationScope.AllRows)
+                {
+                    if (IsEditing)
+                        CurrentRow.EndEdit();
+                    return true;
+                }
+
+                Validate(true);
+                var hasNoError = CurrentRowErrors.Count == 0;
+                if (hasNoError)
+                    CommitEdit();
+                return hasNoError;
             }
         }
     }
