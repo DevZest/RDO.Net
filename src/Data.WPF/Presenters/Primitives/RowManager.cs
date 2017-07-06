@@ -491,7 +491,7 @@ namespace DevZest.Data.Presenters.Primitives
             _EditHandler.EnterEditMode(this);
         }
 
-        internal virtual bool CommitEdit()
+        internal virtual bool EndEdit()
         {
             Debug.Assert(IsEditing);
             EditHandler.CommitEdit(this);

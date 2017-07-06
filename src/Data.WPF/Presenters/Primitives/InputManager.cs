@@ -440,20 +440,19 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        internal sealed override bool CommitEdit()
+        internal sealed override bool EndEdit()
         {
             if (ValidationScope == ValidationScope.AllRows)
-                return base.CommitEdit();
+                return base.EndEdit();
 
             Debug.Assert(ValidationScope == ValidationScope.CurrentRow);
             Validate(true);
-            var hasNoError = CurrentRowErrors.Count == 0;
-            if (hasNoError)
-            {
-                base.CommitEdit();
-                Progress.Reset();
-            }
-            return hasNoError;
+            var hasError = CurrentRowErrors.Count > 0;
+            if (hasError)
+                return false;
+
+            Progress.Reset();
+            return base.EndEdit();
         }
     }
 }

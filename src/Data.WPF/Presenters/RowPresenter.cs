@@ -388,7 +388,7 @@ namespace DevZest.Data.Presenters
             if (!IsEditing)
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
 
-            return RowManager.CommitEdit();
+            return RowManager.EndEdit();
         }
 
         public void BeginInsertBefore(RowPresenter child = null)

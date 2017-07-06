@@ -95,10 +95,10 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual("Name-1-1", rows[1].GetValue(dataSet._.Name));
 
             rows[0].EditValue(dataSet._.Name, "NewName-1");
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             rowManager.CurrentRow = rows[1];
             rows[1].EditValue(dataSet._.Name, "NewName-1-1");
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             Assert.AreEqual("NewName-1", rows[0].GetValue(dataSet._.Name));
             Assert.AreEqual("NewName-1-1", rows[1].GetValue(dataSet._.Name));
         }
@@ -115,10 +115,10 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual("Name-1-1", rows[1][dataSet._.Name]);
 
             rows[0][dataSet._.Name] = "NewName-1";
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             rowManager.CurrentRow = rows[1];
             rows[1][dataSet._.Name] = "NewName-1-1";
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             Assert.AreEqual("NewName-1", rows[0][dataSet._.Name]);
             Assert.AreEqual("NewName-1-1", rows[1][dataSet._.Name]);
         }
@@ -180,7 +180,7 @@ namespace DevZest.Data.Presenters.Primitives
             rowManager.BeginInsertBefore(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
             Assert.IsTrue(rows[0].IsVirtual);
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             Assert.AreEqual(3, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.AreEqual(dataSet[1], rows[1].DataRow);
@@ -205,7 +205,7 @@ namespace DevZest.Data.Presenters.Primitives
             rowManager.BeginInsertAfter(null, rows[0]);
             Assert.AreEqual(2, rows.Count);
             Assert.IsTrue(rows[1].IsVirtual);
-            rowManager.CommitEdit();
+            rowManager.EndEdit();
             Assert.AreEqual(3, rows.Count);
             Assert.AreEqual(dataSet[0], rows[0].DataRow);
             Assert.AreEqual(dataSet[1], rows[1].DataRow);

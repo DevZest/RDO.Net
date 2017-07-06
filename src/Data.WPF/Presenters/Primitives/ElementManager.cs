@@ -596,7 +596,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool CanChangeCurrentRow
         {
-            get { return IsEditing ? CommitEdit() : true; }
+            get { return IsEditing ? EndEdit() : true; }
         }
 
         private void PreventCurrentRowViewFromLosingFocus(RowView newFocusedRowView)
