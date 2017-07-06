@@ -48,6 +48,32 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows[i].RawIndex = i;
         }
 
+        private int _suspendRowsChanged;
+        internal void SuspendRowsChanged()
+        {
+            _suspendRowsChanged++;
+        }
+
+        internal void ResumeRowsChanged()
+        {
+            Debug.Assert(_suspendRowsChanged > 0);
+            _suspendRowsChanged--;
+            if (_suspendRowsChanged == 0 && _rowsChanged)
+            {
+                _rowsChanged = false;
+                OnRowsChanged();
+            }
+        }
+
+        private bool _rowsChanged;
+        private void RowsChanged()
+        {
+            if (_suspendRowsChanged > 0)
+                _rowsChanged = true;
+            else
+                OnRowsChanged();
+        }
+
         protected virtual void OnRowsChanged()
         {
         }
@@ -68,7 +94,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
 
             UpdateIndex(nextIndex);
-            OnRowsChanged();
+            RowsChanged();
         }
 
         private int InsertRecursively(int index, RowPresenter row)
@@ -96,7 +122,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             RemoveRange(nextIndex, count);
             UpdateIndex(nextIndex);
-            OnRowsChanged();
+            RowsChanged();
         }
 
         private int NextIndexOf(RowPresenter row)
@@ -138,7 +164,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.Insert(index, row);
             }
             UpdateIndex(index);
-            OnRowsChanged();
+            RowsChanged();
         }
 
         protected sealed override void OnRowRemoved(RowPresenter parent, int index)
@@ -155,7 +181,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.RemoveAt(index);
             }
             UpdateIndex(index);
-            OnRowsChanged();
+            RowsChanged();
         }
 
         protected sealed override void OnRowMoved(RowPresenter row, int oldIndex, int newIndex)
@@ -177,7 +203,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.Insert(newIndex, row);
             }
             UpdateIndex(Math.Min(oldIndex, newIndex), Math.Max(oldIndex, newIndex));
-            OnRowsChanged();
+            RowsChanged();
         }
     }
 }

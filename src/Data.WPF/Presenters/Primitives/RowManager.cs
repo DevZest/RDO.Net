@@ -30,21 +30,27 @@ namespace DevZest.Data.Presenters.Primitives
 
             protected void OpenEdit(RowManager rowManager)
             {
+                rowManager.SuspendRowsChanged();
                 rowManager.EditHandler = this;
                 BeginEdit(rowManager);
                 CoerceVirtualRowIndex(rowManager);
+                rowManager.ResumeRowsChanged();
             }
 
             public void RollbackEdit(RowManager rowManager)
             {
+                rowManager.SuspendRowsChanged();
                 CancelEdit(rowManager);
                 rowManager.EditHandler = null;
+                rowManager.ResumeRowsChanged();
             }
 
             public void CommitEdit(RowManager rowManager)
             {
+                rowManager.SuspendRowsChanged();
                 EndEdit(rowManager);
                 rowManager.EditHandler = null;
+                rowManager.ResumeRowsChanged();
             }
 
             protected abstract void BeginEdit(RowManager rowManager);

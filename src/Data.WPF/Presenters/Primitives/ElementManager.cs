@@ -582,14 +582,16 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
+        private RowView _focusTo;
         internal void OnFocused(RowView rowView)
         {
             if (rowView.RowPresenter != CurrentRow)
             {
+                _focusTo = rowView;
                 if (!CanChangeCurrentRow)
                     PreventCurrentRowViewFromLosingFocus(rowView);
-                else
-                    SetCurrentRowFromView(rowView);
+                else if (_focusTo != null)
+                    SetCurrentRowFromView();
             }
             InvalidateView();
         }
@@ -618,12 +620,12 @@ namespace DevZest.Data.Presenters.Primitives
                 return rowView.GetBlockView();
         }
 
-        private void SetCurrentRowFromView(RowView rowView)
+        private void SetCurrentRowFromView()
         {
-            UpdateCurrentContainerView(rowView);
-            _currentRowFromView = true;
-            CurrentRow = rowView.RowPresenter;
-            _currentRowFromView = false;
+            Debug.Assert(_focusTo != null);
+            UpdateCurrentContainerView(_focusTo);
+            CurrentRow = _focusTo.RowPresenter;
+            _focusTo = null;
         }
 
         private void UpdateCurrentContainerView(RowView rowView)
@@ -643,10 +645,9 @@ namespace DevZest.Data.Presenters.Primitives
             CurrentContainerView = GetContainerView(rowView);
         }
 
-        private bool _currentRowFromView;
         protected override void OnCurrentRowChanged(RowPresenter oldValue)
         {
-            if (ElementCollection != null && !_currentRowFromView)
+            if (ElementCollection != null && _focusTo == null)
                 CoerceCurrentContainerView(oldValue);
         }
 
@@ -658,6 +659,9 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected override void OnRowsChanged()
         {
+            if (_focusTo != null)
+                SetCurrentRowFromView();
+
             // when oldCurrentRow != CurrentRow, CurrentContainerView should have been reloaded in OnCurrentRowChanged override
             var oldCurrentRow = CurrentRow;
             base.OnRowsChanged();
