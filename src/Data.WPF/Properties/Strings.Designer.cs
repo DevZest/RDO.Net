@@ -244,11 +244,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Change current row is not allowed (CanChangeCurrentRow property is false).
+        /// Change editing row is not allowed.
         /// </summary>
-        public static string RowManager_ChangeCurrentRowNotAllowed
+        public static string RowManager_ChangeEditingRowNotAllowed
         {
-            get { return GetString("RowManager_ChangeCurrentRowNotAllowed"); }
+            get { return GetString("RowManager_ChangeEditingRowNotAllowed"); }
         }
 
         /// <summary>

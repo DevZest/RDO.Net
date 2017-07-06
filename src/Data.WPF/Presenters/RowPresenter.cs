@@ -383,12 +383,12 @@ namespace DevZest.Data.Presenters
             RowManager.RollbackEdit();
         }
 
-        public void EndEdit()
+        public bool EndEdit()
         {
             if (!IsEditing)
                 throw new InvalidOperationException(Strings.RowPresenter_VerifyIsEditing);
 
-            RowManager.CommitEdit();
+            return RowManager.CommitEdit();
         }
 
         public void BeginInsertBefore(RowPresenter child = null)

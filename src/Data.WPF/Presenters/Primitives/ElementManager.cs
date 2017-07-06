@@ -594,6 +594,11 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
+        private bool CanChangeCurrentRow
+        {
+            get { return IsEditing ? CommitEdit() : true; }
+        }
+
         private void PreventCurrentRowViewFromLosingFocus(RowView newFocusedRowView)
         {
             // Focus management is tricky, we choose not to manage focus at all:

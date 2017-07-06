@@ -340,8 +340,10 @@ namespace DevZest.Data.Presenters.Primitives
 
             IValidationMessageGroup errors, warnings;
             Validate(rowPresenter.DataRow, out errors, out warnings);
-            Errors = Errors.Add(rowPresenter, errors);
-            Warnings = Warnings.Add(rowPresenter, warnings);
+            if (errors != null && errors.Count > 0)
+                Errors = Errors.Add(rowPresenter, errors);
+            if (warnings != null && warnings.Count > 0)
+                Warnings = Warnings.Add(rowPresenter, warnings);
         }
 
         private void Validate(DataRow dataRow, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
@@ -438,26 +440,20 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        protected sealed override bool CanChangeCurrentRow
+        internal sealed override bool CommitEdit()
         {
-            get
+            if (ValidationScope == ValidationScope.AllRows)
+                return base.CommitEdit();
+
+            Debug.Assert(ValidationScope == ValidationScope.CurrentRow);
+            Validate(true);
+            var hasNoError = CurrentRowErrors.Count == 0;
+            if (hasNoError)
             {
-                if (!IsEditing)
-                    return true;
-
-                if (ValidationScope == ValidationScope.AllRows)
-                {
-                    if (IsEditing)
-                        CurrentRow.EndEdit();
-                    return true;
-                }
-
-                Validate(true);
-                var hasNoError = CurrentRowErrors.Count == 0;
-                if (hasNoError)
-                    CurrentRow.EndEdit();
-                return hasNoError;
+                base.CommitEdit();
+                Progress.Reset();
             }
+            return hasNoError;
         }
     }
 }

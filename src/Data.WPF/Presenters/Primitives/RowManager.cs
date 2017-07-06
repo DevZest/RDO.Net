@@ -394,8 +394,8 @@ namespace DevZest.Data.Presenters.Primitives
                 var oldValue = CurrentRow;
                 if (oldValue == value)
                     return;
-                if (!CanChangeCurrentRow)
-                    throw new InvalidOperationException(Strings.RowManager_ChangeCurrentRowNotAllowed);
+                if (IsEditing)
+                    throw new InvalidOperationException(Strings.RowManager_ChangeEditingRowNotAllowed);
                 _currentRow = value;
                 OnCurrentRowChanged(oldValue);
             }
@@ -410,11 +410,6 @@ namespace DevZest.Data.Presenters.Primitives
                     Select(row, SelectionMode.Single, row);
             }
             base.Collapse(row);
-        }
-
-        protected virtual bool CanChangeCurrentRow
-        {
-            get { return !IsEditing; }
         }
 
         protected virtual void OnCurrentRowChanged(RowPresenter oldValue)
@@ -496,10 +491,11 @@ namespace DevZest.Data.Presenters.Primitives
             _EditHandler.EnterEditMode(this);
         }
 
-        internal void CommitEdit()
+        internal virtual bool CommitEdit()
         {
             Debug.Assert(IsEditing);
             EditHandler.CommitEdit(this);
+            return true;
         }
 
         internal void RollbackEdit()
