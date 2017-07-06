@@ -109,7 +109,7 @@ namespace DevZest.Data.Presenters.Primitives
                 }
                 else if (oldValue != newValue)
                 {
-                    if (ContainerViewList.Count == 0)
+                    if (ContainerViewList.Count == 0 || oldValue.IsDisposed)
                         CurrentContainerView.ReloadCurrentRow(oldValue);
                     else
                         CoerceCurrentRowView(oldValue.View);

@@ -39,21 +39,31 @@ namespace DevZest.Data.Views
             SetValue(CurrentPropertyKey, this);
         }
 
-        public RowPresenter RowPresenter { get; private set; }
+        private RowPresenter _rowPresenter;
+        public RowPresenter RowPresenter
+        {
+            get { return _rowPresenter; }
+            private set
+            {
+                _rowPresenter = value;
+                _elementManager = _rowPresenter == null ? null : _rowPresenter.ElementManager;
+            }
+        }
 
         public sealed override int ContainerOrdinal
         {
             get { return RowPresenter == null ? -1 : RowPresenter.Index / RowPresenter.ElementManager.FlowRepeatCount; }
         }
 
+        private ElementManager _elementManager;
         internal sealed override ElementManager ElementManager
         {
-            get { return RowPresenter == null ? null : RowPresenter.ElementManager; }
+            get { return _elementManager; }
         }
 
         internal RowBindingCollection RowBindings
         {
-            get { return RowPresenter.RowBindings; }
+            get { return _elementManager == null ? null : _elementManager.Template.InternalRowBindings; }
         }
 
         private IElementCollection ElementCollection { get; set; }
