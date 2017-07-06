@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Views;
 using DevZest.Samples.AdventureWorksLT;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

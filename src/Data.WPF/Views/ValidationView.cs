@@ -1,9 +1,8 @@
-﻿using DevZest.Data;
-using DevZest.Data.Primitives;
+﻿using DevZest.Data.Presenters;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DevZest.Data.Presenters
+namespace DevZest.Data.Views
 {
     public class ValidationView : Control
     {

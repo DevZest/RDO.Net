@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Data.Views;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace DevZest.Data.Presenters

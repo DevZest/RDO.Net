@@ -194,7 +194,7 @@
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\ValidationProgress.cs" />
     <Compile Include="Presenters\ValidationScope.cs" />
-    <Compile Include="Presenters\ValidationView.cs" />
+    <Compile Include="Views\ValidationView.cs" />
     <Compile Include="Presenters\ViewInputError.cs" />
   </ItemGroup>
   <ItemGroup>
