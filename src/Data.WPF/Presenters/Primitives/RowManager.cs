@@ -412,7 +412,7 @@ namespace DevZest.Data.Presenters.Primitives
             base.Collapse(row);
         }
 
-        public bool CanChangeCurrentRow
+        protected virtual bool CanChangeCurrentRow
         {
             get { return !IsEditing; }
         }

@@ -437,5 +437,18 @@ namespace DevZest.Data.Presenters.Primitives
                 return _currentRowAsyncValidators;
             }
         }
+
+        protected sealed override bool CanChangeCurrentRow
+        {
+            get
+            {
+                var result = base.CanChangeCurrentRow;
+                if (result || ValidationScope == ValidationScope.AllRows)
+                    return result;
+
+                Validate();
+                return CurrentRowErrors.Count == 0;
+            }
+        }
     }
 }

@@ -103,11 +103,6 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.Rows; }
         }
 
-        public bool CanChangeCurrentRow
-        {
-            get { return LayoutManager == null ? true : LayoutManager.CanChangeCurrentRow; }
-        }
-
         public RowPresenter CurrentRow
         {
             get { return LayoutManager == null ? null : LayoutManager.CurrentRow; }
