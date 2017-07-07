@@ -54,10 +54,12 @@ namespace DevZest.Data.Presenters.Primitives
             _suspendRowsChanged++;
         }
 
-        internal void ResumeRowsChanged()
+        internal void ResumeRowsChanged(bool hasChange = false)
         {
             Debug.Assert(_suspendRowsChanged > 0);
             _suspendRowsChanged--;
+            if (hasChange)
+                _rowsChanged = true;
             if (_suspendRowsChanged == 0 && _rowsChanged)
             {
                 _rowsChanged = false;
