@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters.Primitives
                     Singleton.OpenEdit(rowManager);
             }
 
-            private static EditHandlerBase Singleton = new DataRowEditCommand();
+            private static EditHandlerBase Singleton = new EditHandler();
 
             protected EditHandlerBase()
             {
@@ -60,7 +60,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             public abstract void CoerceVirtualRowIndex(RowManager rowManager);
 
-            private sealed class DataRowEditCommand : EditHandlerBase
+            private sealed class EditHandler : EditHandlerBase
             {
                 protected override void BeginEdit(RowManager rowManager)
                 {
