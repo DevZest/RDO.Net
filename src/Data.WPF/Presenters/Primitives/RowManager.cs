@@ -93,10 +93,10 @@ namespace DevZest.Data.Presenters.Primitives
         {
             public static new void EnterEditMode(RowManager rowManager)
             {
-                GetEditCommand(rowManager.VirtualRowPlacement).OpenEdit(rowManager);
+                GetInsertHandler(rowManager.VirtualRowPlacement).OpenEdit(rowManager);
             }
 
-            private static InsertHandler GetEditCommand(VirtualRowPlacement virtualRowPlacement)
+            private static InsertHandler GetInsertHandler(VirtualRowPlacement virtualRowPlacement)
             {
                 if (virtualRowPlacement == VirtualRowPlacement.Head)
                     return Head;
