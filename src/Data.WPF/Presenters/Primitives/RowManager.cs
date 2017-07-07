@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
 using System.Windows.Controls;
-using DevZest.Data;
 
 namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class RowManager : RowNormalizer, IReadOnlyList<RowPresenter>
     {
-        private abstract class _EditHandler
+        private abstract class EditHandlerBase
         {
             public static void EnterEditMode(RowManager rowManager)
             {
@@ -20,9 +19,9 @@ namespace DevZest.Data.Presenters.Primitives
                     Singleton.OpenEdit(rowManager);
             }
 
-            private static _EditHandler Singleton = new DataRowEditCommand();
+            private static EditHandlerBase Singleton = new DataRowEditCommand();
 
-            protected _EditHandler()
+            protected EditHandlerBase()
             {
             }
 
@@ -61,7 +60,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             public abstract void CoerceVirtualRowIndex(RowManager rowManager);
 
-            private sealed class DataRowEditCommand : _EditHandler
+            private sealed class DataRowEditCommand : EditHandlerBase
             {
                 protected override void BeginEdit(RowManager rowManager)
                 {
@@ -90,7 +89,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private abstract class InsertHandler : _EditHandler
+        private abstract class InsertHandler : EditHandlerBase
         {
             public static new void EnterEditMode(RowManager rowManager)
             {
@@ -454,8 +453,8 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private _EditHandler _editHandler;
-        private _EditHandler EditHandler
+        private EditHandlerBase _editHandler;
+        private EditHandlerBase EditHandler
         {
             get { return _editHandler; }
             set
@@ -494,7 +493,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void BeginEdit(RowPresenter row)
         {
-            _EditHandler.EnterEditMode(this);
+            EditHandlerBase.EnterEditMode(this);
         }
 
         internal virtual bool EndEdit()
