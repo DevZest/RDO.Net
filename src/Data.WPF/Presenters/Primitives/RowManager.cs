@@ -8,7 +8,7 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class RowManager : RowNormalizer, IReadOnlyList<RowPresenter>
     {
-        private abstract class EditHandlerBase
+        private abstract class EditHandler
         {
             public static void EnterEditMode(RowManager rowManager)
             {
@@ -16,12 +16,10 @@ namespace DevZest.Data.Presenters.Primitives
                 if (currentRow.IsVirtual)
                     InsertHandler.EnterEditMode(rowManager);
                 else
-                    Singleton.OpenEdit(rowManager);
+                    EditCurrentHandler.Singleton.OpenEdit(rowManager);
             }
 
-            private static EditHandlerBase Singleton = new EditHandler();
-
-            protected EditHandlerBase()
+            protected EditHandler()
             {
             }
 
@@ -30,7 +28,7 @@ namespace DevZest.Data.Presenters.Primitives
             protected void OpenEdit(RowManager rowManager)
             {
                 rowManager.SuspendRowsChanged();
-                rowManager.EditHandler = this;
+                rowManager.Editing = this;
                 BeginEdit(rowManager);
                 CoerceVirtualRowIndex(rowManager);
                 rowManager.ResumeRowsChanged();
@@ -40,7 +38,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 rowManager.SuspendRowsChanged();
                 CancelEdit(rowManager);
-                rowManager.EditHandler = null;
+                rowManager.Editing = null;
                 rowManager.ResumeRowsChanged();
             }
 
@@ -48,7 +46,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 rowManager.SuspendRowsChanged();
                 EndEdit(rowManager);
-                rowManager.EditHandler = null;
+                rowManager.Editing = null;
                 rowManager.ResumeRowsChanged();
             }
 
@@ -60,8 +58,14 @@ namespace DevZest.Data.Presenters.Primitives
 
             public abstract void CoerceVirtualRowIndex(RowManager rowManager);
 
-            private sealed class EditHandler : EditHandlerBase
+            private sealed class EditCurrentHandler : EditHandler
             {
+                public static readonly EditCurrentHandler Singleton = new EditCurrentHandler();
+
+                private EditCurrentHandler()
+                {
+                }
+
                 protected override void BeginEdit(RowManager rowManager)
                 {
                     rowManager.CurrentRow.DataRow.BeginEdit();
@@ -89,7 +93,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private abstract class InsertHandler : EditHandlerBase
+        private abstract class InsertHandler : EditHandler
         {
             public static new void EnterEditMode(RowManager rowManager)
             {
@@ -453,16 +457,16 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private EditHandlerBase _editHandler;
-        private EditHandlerBase EditHandler
+        private EditHandler _editing;
+        private EditHandler Editing
         {
-            get { return _editHandler; }
+            get { return _editing; }
             set
             {
-                Debug.Assert(_editHandler != value);
+                Debug.Assert(_editing != value);
                 var oldIsEditing = IsEditing;
-                _editHandler = value;
-                if (_editHandler == null)
+                _editing = value;
+                if (_editing == null)
                     CoerceVirtualRow();
                 var newIsEditing = IsEditing;
                 if (oldIsEditing != newIsEditing)
@@ -476,7 +480,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public bool IsEditing
         {
-            get { return EditHandler != null; }
+            get { return Editing != null; }
         }
 
         internal void BeginInsertBefore(RowPresenter parent, RowPresenter child)
@@ -493,20 +497,20 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void BeginEdit(RowPresenter row)
         {
-            EditHandlerBase.EnterEditMode(this);
+            EditHandler.EnterEditMode(this);
         }
 
         internal virtual bool EndEdit()
         {
             Debug.Assert(IsEditing);
-            EditHandler.CommitEdit(this);
+            Editing.CommitEdit(this);
             return true;
         }
 
         internal void RollbackEdit()
         {
             Debug.Assert(IsEditing);
-            EditHandler.RollbackEdit(this);
+            Editing.RollbackEdit(this);
         }
 
         protected virtual void OnSelectedRowsChanged()
@@ -538,8 +542,8 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected override void OnRowsChanged()
         {
-            if (EditHandler != null)
-                EditHandler.OnRowsChanged(this);
+            if (Editing != null)
+                Editing.OnRowsChanged(this);
             else
                 CoerceVirtualRow();
             CoerceCurrentRow();
