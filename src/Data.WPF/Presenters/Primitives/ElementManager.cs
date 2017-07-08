@@ -583,15 +583,18 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private RowView _focusTo;
+        private bool _currentRowChangedByInsertSuspended;
         internal void OnFocused(RowView rowView)
         {
             if (rowView.RowPresenter != CurrentRow)
             {
+                _currentRowChangedByInsertSuspended = true;
                 _focusTo = rowView;
                 if (!CanChangeCurrentRow)
                     PreventCurrentRowViewFromLosingFocus(rowView);
                 else if (_focusTo != null)
                     SetCurrentRowFromView();
+                _currentRowChangedByInsertSuspended = false;
             }
             InvalidateView();
         }
@@ -742,6 +745,11 @@ namespace DevZest.Data.Presenters.Primitives
         private string GetContainerListDebugWriteString()
         {
             return string.Join(", ", ContainerViewList.Select(x => GetDebugWriteString(x)).ToArray());
+        }
+
+        protected sealed override bool CurrentRowChangeSuspended
+        {
+            get { return _currentRowChangedByInsertSuspended; }
         }
     }
 }

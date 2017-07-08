@@ -12,11 +12,35 @@ namespace DevZest.Data.Presenters.Primitives
         {
             public static void EnterEditMode(RowManager rowManager)
             {
+                GetCurrentRowEditHandler(rowManager).BeginEdit(rowManager);
+            }
+
+            private static EditHandler GetCurrentRowEditHandler(RowManager rowManager)
+            {
                 var currentRow = rowManager.CurrentRow;
                 if (currentRow.IsVirtual)
-                    InsertHandler.EnterEditMode(rowManager);
+                {
+                    var virtualRowPlacement = rowManager.VirtualRowPlacement;
+                    if (virtualRowPlacement == VirtualRowPlacement.Head)
+                        return new EditVirtualHeadHandler();
+                    else
+                    {
+                        Debug.Assert(virtualRowPlacement == VirtualRowPlacement.Tail);
+                        return new EditVirtualTailHandler();
+                    }
+                }
                 else
-                    EditCurrentHandler.Singleton.OpenEdit(rowManager);
+                    return EditCurrentHandler.Singleton;
+            }
+
+            public static void BeginInsertBefore(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            {
+                new InsertBeforeHandler(parent, child).BeginEdit(rowManager);
+            }
+
+            public static void BeginInsertAfter(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            {
+                new InsertAfterHandler(parent, child).BeginEdit(rowManager);
             }
 
             protected EditHandler()
@@ -25,38 +49,34 @@ namespace DevZest.Data.Presenters.Primitives
 
             public abstract void OnRowsChanged(RowManager rowManager);
 
-            protected void OpenEdit(RowManager rowManager)
+            public abstract RowPresenter InsertingRow { get; }
+
+            protected void BeginEdit(RowManager rowManager)
             {
-                rowManager.SuspendRowsChanged();
-                rowManager.Editing = this;
-                BeginEdit(rowManager);
-                CoerceVirtualRowIndex(rowManager);
-                rowManager.ResumeRowsChanged();
+                Debug.Assert(!rowManager.IsEditing);
+
+                OpenEdit(rowManager);
+                if (rowManager.Editing == null)
+                    rowManager.Editing = this;
             }
 
-            public void RollbackEdit(RowManager rowManager)
+            public void CancelEdit(RowManager rowManager)
             {
-                rowManager.SuspendRowsChanged();
-                CancelEdit(rowManager);
                 rowManager.Editing = null;
-                rowManager.ResumeRowsChanged();
+                RollbackEdit(rowManager);
             }
 
-            public void CommitEdit(RowManager rowManager)
+            public void EndEdit(RowManager rowManager)
             {
-                rowManager.SuspendRowsChanged();
-                EndEdit(rowManager);
                 rowManager.Editing = null;
-                rowManager.ResumeRowsChanged();
+                CommitEdit(rowManager);
             }
 
-            protected abstract void BeginEdit(RowManager rowManager);
+            protected abstract void OpenEdit(RowManager rowManager);
 
-            protected abstract void CancelEdit(RowManager rowManager);
+            protected abstract void RollbackEdit(RowManager rowManager);
 
-            protected abstract void EndEdit(RowManager rowManager);
-
-            public abstract void CoerceVirtualRowIndex(RowManager rowManager);
+            protected abstract void CommitEdit(RowManager rowManager);
 
             private sealed class EditCurrentHandler : EditHandler
             {
@@ -66,172 +86,222 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                 }
 
-                protected override void BeginEdit(RowManager rowManager)
+                public override RowPresenter InsertingRow
+                {
+                    get { return null; }
+                }
+
+                protected override void OpenEdit(RowManager rowManager)
                 {
                     rowManager.CurrentRow.DataRow.BeginEdit();
                 }
 
-                protected override void CancelEdit(RowManager rowManager)
+                protected override void RollbackEdit(RowManager rowManager)
                 {
                     rowManager.CurrentRow.DataRow.CancelEdit();
                 }
 
-                protected override void EndEdit(RowManager rowManager)
+                protected override void CommitEdit(RowManager rowManager)
                 {
                     rowManager.CurrentRow.DataRow.EndEdit();
-                }
-
-                public override void CoerceVirtualRowIndex(RowManager rowManager)
-                {
                 }
 
                 public override void OnRowsChanged(RowManager rowManager)
                 {
                     if (rowManager.CurrentRow.IsDisposed)
-                        RollbackEdit(rowManager);
+                        CancelEdit(rowManager);
                 }
             }
-        }
 
-        private abstract class InsertHandler : EditHandler
-        {
-            public static new void EnterEditMode(RowManager rowManager)
+            private abstract class InsertHandler : EditHandler
             {
-                GetInsertHandler(rowManager.VirtualRowPlacement).OpenEdit(rowManager);
-            }
-
-            private static InsertHandler GetInsertHandler(VirtualRowPlacement virtualRowPlacement)
-            {
-                if (virtualRowPlacement == VirtualRowPlacement.Head)
-                    return Head;
-                else if (virtualRowPlacement == VirtualRowPlacement.Tail)
-                    return Tail;
-                else
+                public override void OnRowsChanged(RowManager rowManager)
                 {
-                    Debug.Assert(virtualRowPlacement == VirtualRowPlacement.Exclusive);
-                    return Tail;
+                    if (!rowManager.IsRowsChangedSuspended)
+                        CoerceVirtualRows(rowManager);
+                }
+
+                protected RowPresenter _insertingRow;
+                public sealed override RowPresenter InsertingRow
+                {
+                    get { return _insertingRow; }
+                }
+
+                protected virtual DataSet GetDataSet(RowManager rowManager)
+                {
+                    return rowManager.DataSet;
+                }
+
+                protected abstract void CoerceVirtualRows(RowManager rowManager);
+
+                private void RollbackCurrentRow(RowManager rowManager)
+                {
+                    RollbackCurrentRow(rowManager, rowManager.VirtualRow);
+                }
+
+                protected virtual void RollbackCurrentRow(RowManager rowManager, RowPresenter newValue)
+                {
+                    rowManager.CurrentRow = newValue;
+                }
+
+                protected sealed override void RollbackEdit(RowManager rowManager)
+                {
+                    Debug.Assert(!rowManager.IsEditing);
+
+                    GetDataSet(rowManager).CancelAdd();
+                    RollbackCurrentRow(rowManager);
+                    DisposeInsertingRow(rowManager);
+                    rowManager.OnRowsChanged();
+                }
+
+                protected abstract int GetCommitEditIndex(RowManager rowManager);
+
+                protected sealed override void CommitEdit(RowManager rowManager)
+                {
+                    Debug.Assert(!rowManager.IsEditing);
+
+                    var newDataRow = GetDataSet(rowManager).EndAdd(GetCommitEditIndex(rowManager));
+                    var newCurrentRow = rowManager[newDataRow];
+                    if (!rowManager.CurrentRowChangeSuspended)
+                    {
+                        if (newCurrentRow != null)
+                            rowManager.CurrentRow = newCurrentRow;
+                        else
+                            RollbackCurrentRow(rowManager);
+                    }
+                    DisposeInsertingRow(rowManager);
+                    rowManager.OnRowsChanged();
+                }
+
+                private void DisposeInsertingRow(RowManager rowManager)
+                {
+                    var insertingRow = _insertingRow;
+                    _insertingRow = null;
+                    insertingRow.DataRow = null;
+                    insertingRow.RawIndex = -1;
+                    insertingRow.Dispose();
+                    rowManager.CoerceCurrentRow();
                 }
             }
 
-            public static void BeginInsertBefore(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            private abstract class EditVirtualHandler : InsertHandler
             {
-                BeginInsert(rowManager, GetInsertBeforeHandler(parent, child));
+                protected override void OpenEdit(RowManager rowManager)
+                {
+                    Debug.Assert(rowManager.VirtualRow != null);
+
+                    _insertingRow = rowManager.VirtualRow;
+                    _insertingRow.DataRow = GetDataSet(rowManager).BeginAdd();
+                    rowManager.VirtualRow = new RowPresenter(rowManager, -1);
+                    rowManager.Editing = this;
+                    rowManager.OnRowsChanged();
+                }
             }
 
-            private static InsertHandler GetInsertBeforeHandler(RowPresenter parent, RowPresenter child)
+            private sealed class EditVirtualHeadHandler : EditVirtualHandler
             {
-                return parent == null && child == null ? Tail : new InsertBeforeHandler(parent, child);
+                protected override int GetCommitEditIndex(RowManager rowManager)
+                {
+                    return 0;
+                }
+
+                protected override void CoerceVirtualRows(RowManager rowManager)
+                {
+                    Debug.Assert(rowManager.VirtualRow != null);
+
+                    if (InsertingRow != null)
+                        InsertingRow.RawIndex = 1;
+                }
             }
 
-            public static void BeginInsertAfter(RowManager rowManager, RowPresenter parent, RowPresenter child)
+            private sealed class EditVirtualTailHandler : EditVirtualHandler
             {
-                BeginInsert(rowManager, GetInsertAfterHandler(parent, child));
+                protected override int GetCommitEditIndex(RowManager rowManager)
+                {
+                    return rowManager.DataSet.Count;
+                }
+
+                protected override void CoerceVirtualRows(RowManager rowManager)
+                {
+                    Debug.Assert(rowManager.VirtualRow != null);
+
+                    if (InsertingRow != null)
+                    {
+                        InsertingRow.RawIndex = rowManager.DataSet.Count;
+                        rowManager.VirtualRow.RawIndex = InsertingRow.RawIndex + 1;
+                    }
+                    else
+                        rowManager.VirtualRow.RawIndex = rowManager.DataSet.Count;
+                }
             }
 
-            private static InsertHandler GetInsertAfterHandler(RowPresenter parent, RowPresenter child)
+            private abstract class ExplicitInsertHandler : InsertHandler
             {
-                return parent == null && child == null ? Tail : new InsertAfterHandler(parent, child);
+                protected ExplicitInsertHandler(RowPresenter parent, RowPresenter reference)
+                {
+                    Debug.Assert(reference != null);
+                    Parent = parent;
+                    Reference = reference;
+                }
+
+                public override void OnRowsChanged(RowManager rowManager)
+                {
+                    throw new NotImplementedException();
+                    //base.OnRowsChanged(rowManager);
+                }
+
+                protected sealed override void OpenEdit(RowManager rowManager)
+                {
+                    Debug.Assert(!rowManager.IsEditing);
+
+                    _insertingRow = new RowPresenter(rowManager, GetDataSet(rowManager).BeginAdd());
+                    rowManager.OnRowsChanged();
+                    rowManager.CurrentRow = _insertingRow;
+                }
+
+                protected RowPresenter Parent { get; private set; }
+
+                protected RowPresenter Reference { get; private set; }
+ 
+                protected override DataSet GetDataSet(RowManager rowManager)
+                {
+                    return Parent == null ? rowManager.DataSet : Parent.DataSet;
+                }
             }
 
-            private static void BeginInsert(RowManager rowManager, InsertHandler insertHandler)
-            {
-                if (rowManager.VirtualRow == null)
-                    rowManager.VirtualRow = new RowPresenter(rowManager, null);
-                insertHandler.CoerceVirtualRowIndex(rowManager);
-
-                if (rowManager.CurrentRow != rowManager.VirtualRow)
-                    rowManager.CurrentRow = rowManager.VirtualRow;
-
-                insertHandler.OpenEdit(rowManager);
-            }
-
-            private static readonly InsertHandler Head = new InsertBeforeHandler(null, null);
-            private static readonly InsertHandler Tail = new InsertAfterHandler(null, null);
-
-            protected InsertHandler(RowPresenter parent, RowPresenter reference)
-            {
-                _parent = parent;
-                Reference = reference;
-            }
-
-            private readonly RowPresenter _parent;
-            protected RowPresenter Parent { get; }
-
-            protected RowPresenter Reference { get; private set; }
-
-            public sealed override void CoerceVirtualRowIndex(RowManager rowManager)
-            {
-                rowManager.VirtualRow.RawIndex = GetVirtualRowIndex(rowManager);
-            }
-
-            protected abstract int GetVirtualRowIndex(RowManager rowManager);
-
-            private DataSet GetDataSet(RowManager rowManager)
-            {
-                return _parent == null ? rowManager.DataSet : _parent.DataSet;
-            }
-
-            private int GetInsertIndex(RowManager rowManager)
-            {
-                var result = GetVirtualRowIndex(rowManager);
-                if (Parent != null)
-                    result -= Parent.RawIndex + 1;
-                return result;
-            }
-
-            protected sealed override void BeginEdit(RowManager rowManager)
-            {
-                Debug.Assert(rowManager.CurrentRow.IsVirtual);
-                rowManager.CurrentRow.DataRow = GetDataSet(rowManager).BeginAdd();
-            }
-
-            protected sealed override void CancelEdit(RowManager rowManager)
-            {
-                Debug.Assert(rowManager.CurrentRow.IsVirtual);
-                rowManager.CurrentRow.DataRow = null;
-                GetDataSet(rowManager).CancelAdd();
-            }
-
-            protected sealed override void EndEdit(RowManager rowManager)
-            {
-                rowManager.CurrentRow.DataRow = null;
-                var dataRow = GetDataSet(rowManager).EndAdd(GetInsertIndex(rowManager));
-            }
-
-            public override void OnRowsChanged(RowManager rowManager)
-            {
-                CoerceVirtualRowIndex(rowManager);
-            }
-
-            private sealed class InsertBeforeHandler : InsertHandler
+            private sealed class InsertBeforeHandler : ExplicitInsertHandler
             {
                 public InsertBeforeHandler(RowPresenter parent, RowPresenter reference)
                     : base(parent, reference)
                 {
                 }
 
-                protected override int GetVirtualRowIndex(RowManager rowManager)
+                protected override void CoerceVirtualRows(RowManager rowManager)
                 {
-                    if (Reference != null)
-                        return Reference.RawIndex;
-                    else
-                        return Parent != null ? Parent.RawIndex + 1 : 0;
+                    throw new NotImplementedException();
+                }
+
+                protected override int GetCommitEditIndex(RowManager rowManager)
+                {
+                    throw new NotImplementedException();
                 }
             }
 
-            private sealed class InsertAfterHandler : InsertHandler
+            private sealed class InsertAfterHandler : ExplicitInsertHandler
             {
                 public InsertAfterHandler(RowPresenter parent, RowPresenter reference)
                     : base(parent, reference)
                 {
                 }
 
-                protected override int GetVirtualRowIndex(RowManager rowManager)
+                protected override void CoerceVirtualRows(RowManager rowManager)
                 {
-                    if (Reference != null)
-                        return Reference.RawIndex + 1;
-                    else
-                        return Parent != null ? Parent.RawIndex + Parent.Children.Count + 1 : rowManager.BaseRows.Count;
+                    throw new NotImplementedException();
+                }
+
+                protected override int GetCommitEditIndex(RowManager rowManager)
+                {
+                    throw new NotImplementedException();
                 }
             }
         }
@@ -252,9 +322,19 @@ namespace DevZest.Data.Presenters.Primitives
 
         public RowPresenter VirtualRow { get; private set; }
 
+        public RowPresenter InsertingRow
+        {
+            get { return _editing == null ? null : _editing.InsertingRow; }
+        }
+
         private int VirtualRowIndex
         {
             get { return VirtualRow == null ? -1 : VirtualRow.Index; }
+        }
+
+        private int InsertingRowIndex
+        {
+            get { return InsertingRow == null ? -1 : InsertingRow.Index; }
         }
 
         public sealed override IReadOnlyList<RowPresenter> Rows
@@ -276,6 +356,8 @@ namespace DevZest.Data.Presenters.Primitives
                 var result = base.Rows.Count;
                 if (VirtualRow != null)
                     result++;
+                if (InsertingRow != null)
+                    result++;
                 return result;
             }
         }
@@ -284,12 +366,20 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(index >= 0 && index < RowCount);
 
-            if (index == VirtualRowIndex)
+            var virtualRowIndex = VirtualRowIndex;
+            if (index == virtualRowIndex)
                 return VirtualRow;
 
-            if (VirtualRowIndex >= 0 && index > VirtualRowIndex)
-                index--;
-            return base.Rows[index];
+            var insertingRowIndex = InsertingRowIndex;
+            if (index == insertingRowIndex)
+                return InsertingRow;
+
+            var result = index;
+            if (virtualRowIndex >= 0 && result > virtualRowIndex)
+                result--;
+            if (insertingRowIndex >= 0 && result > insertingRowIndex)
+                result--;
+            return BaseRows[result];
         }
 
         int IReadOnlyCollection<RowPresenter>.Count
@@ -466,10 +556,9 @@ namespace DevZest.Data.Presenters.Primitives
                 Debug.Assert(_editing != value);
                 var oldIsEditing = IsEditing;
                 _editing = value;
-                if (_editing == null)
+                if (!IsEditing)
                     CoerceVirtualRow();
-                var newIsEditing = IsEditing;
-                if (oldIsEditing != newIsEditing)
+                if (oldIsEditing != IsEditing)
                     OnIsEditingChanged();
             }
         }
@@ -486,13 +575,13 @@ namespace DevZest.Data.Presenters.Primitives
         internal void BeginInsertBefore(RowPresenter parent, RowPresenter child)
         {
             Debug.Assert(!IsEditing);
-            InsertHandler.BeginInsertBefore(this, parent, child);
+            EditHandler.BeginInsertBefore(this, parent, child);
         }
 
         internal void BeginInsertAfter(RowPresenter parent, RowPresenter child)
         {
             Debug.Assert(!IsEditing);
-            InsertHandler.BeginInsertAfter(this, parent, child);
+            EditHandler.BeginInsertAfter(this, parent, child);
         }
 
         internal void BeginEdit(RowPresenter row)
@@ -503,14 +592,14 @@ namespace DevZest.Data.Presenters.Primitives
         internal virtual bool EndEdit()
         {
             Debug.Assert(IsEditing);
-            Editing.CommitEdit(this);
+            Editing.EndEdit(this);
             return true;
         }
 
         internal void RollbackEdit()
         {
             Debug.Assert(IsEditing);
-            Editing.RollbackEdit(this);
+            Editing.CancelEdit(this);
         }
 
         protected virtual void OnSelectedRowsChanged()
@@ -547,6 +636,11 @@ namespace DevZest.Data.Presenters.Primitives
             else
                 CoerceVirtualRow();
             CoerceCurrentRow();
+        }
+
+        protected virtual bool CurrentRowChangeSuspended
+        {
+            get { return false; }
         }
     }
 }

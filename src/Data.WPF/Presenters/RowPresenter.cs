@@ -94,12 +94,12 @@ namespace DevZest.Data.Presenters
 
         public bool IsVirtual
         {
-            get { return RowManager == null ? false : RowManager.VirtualRow == this; }
+            get { return RowManager == null ? false : (RowManager.VirtualRow == this || RowManager.InsertingRow == this); }
         }
 
         public bool IsEditing
         {
-            get { return RowManager.CurrentRow == this && RowManager.IsEditing; }
+            get { return RowManager == null ? false : (RowManager.CurrentRow == this && RowManager.IsEditing); }
         }
 
         public bool IsInserting
@@ -174,9 +174,17 @@ namespace DevZest.Data.Presenters
             {
                 if (IsDisposed)
                     return -1;
+
+                if (IsVirtual)
+                    return RawIndex;
+
                 var result = RawIndex;
+
                 var virtualRow = RowManager.VirtualRow;
-                if (virtualRow != null && virtualRow != this && result >= virtualRow.Index)
+                if (virtualRow != null && result >= virtualRow.Index)
+                    result++;
+                var insertingRow = RowManager.InsertingRow;
+                if (insertingRow != null && result >= insertingRow.Index)
                     result++;
                 return result;
             }
@@ -361,6 +369,8 @@ namespace DevZest.Data.Presenters
 
             VerifyIsCurrent();
             VerifyNoPendingEdit();
+            if (IsVirtual && RowManager.Template.VirtualRowPlacement == VirtualRowPlacement.Exclusive)
+                throw new InvalidOperationException(Strings.RowPresenter_BeginEditExclusiveVirtual);
             RowManager.BeginEdit(this);
         }
 

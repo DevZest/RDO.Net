@@ -210,6 +210,9 @@
   <data name="RowMapper_InvalidParentDataRow" xml:space="preserve">
     <value>The parent DataRow is invalid.</value>
   </data>
+  <data name="RowPresenter_BeginEditExclusiveVirtual" xml:space="preserve">
+    <value>Edit exclusive virtual row is not allowed.</value>
+  </data>
   <data name="RowPresenter_DeleteVirtualRow" xml:space="preserve">
     <value>The virtual row cannot be deleted.</value>
   </data>

@@ -49,22 +49,29 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private int _suspendRowsChanged;
-        internal void SuspendRowsChanged()
+        protected void SuspendRowsChanged()
         {
             _suspendRowsChanged++;
         }
 
-        internal void ResumeRowsChanged(bool hasChange = false)
+        protected bool IsRowsChangedSuspended
+        {
+            get { return _suspendRowsChanged > 0; }
+        }
+
+        protected void ResumeRowsChanged()
+        {
+            ResumeRowsChanged(true, true);
+        }
+
+        private void ResumeRowsChanged(bool invalidate, bool flush)
         {
             Debug.Assert(_suspendRowsChanged > 0);
             _suspendRowsChanged--;
-            if (hasChange)
+            if (invalidate)
                 _rowsChanged = true;
-            if (_suspendRowsChanged == 0 && _rowsChanged)
-            {
-                _rowsChanged = false;
-                OnRowsChanged();
-            }
+            if (_suspendRowsChanged == 0 || flush)
+                FlushRowsChanged();
         }
 
         private bool _rowsChanged;
@@ -74,6 +81,15 @@ namespace DevZest.Data.Presenters.Primitives
                 _rowsChanged = true;
             else
                 OnRowsChanged();
+        }
+
+        protected void FlushRowsChanged(bool invalidateRows = false)
+        {
+            if (_rowsChanged || invalidateRows)
+            {
+                _rowsChanged = false;
+                OnRowsChanged();
+            }
         }
 
         protected virtual void OnRowsChanged()

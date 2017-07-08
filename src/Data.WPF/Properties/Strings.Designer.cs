@@ -260,6 +260,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Edit exclusive virtual row is not allowed.
+        /// </summary>
+        public static string RowPresenter_BeginEditExclusiveVirtual
+        {
+            get { return GetString("RowPresenter_BeginEditExclusiveVirtual"); }
+        }
+
+        /// <summary>
         /// The virtual row cannot be deleted.
         /// </summary>
         public static string RowPresenter_DeleteVirtualRow
