@@ -153,13 +153,14 @@ namespace DevZest.Data.Presenters.Primitives
 
             row.EditValue(dataSet._.Status, SalesOrderStatus.InProcess);
             Assert.IsTrue(row.IsVirtual);
-            Assert.AreEqual(1, rows.Count);
+            Assert.AreEqual(2, rows.Count);
             Assert.AreEqual(SalesOrderStatus.InProcess, row.GetValue(dataSet._.Status));
             Assert.IsTrue(row.IsEditing);
             rowManager.RollbackEdit();
+            Assert.AreEqual(1, rows.Count);
+            row = rows[0];
             Assert.IsFalse(row.IsEditing);
             Assert.IsTrue(row.IsVirtual);
-            Assert.AreEqual(1, rows.Count);
         }
 
         [TestMethod]
