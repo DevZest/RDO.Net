@@ -48,50 +48,6 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows[i].RawIndex = i;
         }
 
-        private int _suspendRowsChanged;
-        protected void SuspendRowsChanged()
-        {
-            _suspendRowsChanged++;
-        }
-
-        protected bool IsRowsChangedSuspended
-        {
-            get { return _suspendRowsChanged > 0; }
-        }
-
-        protected void ResumeRowsChanged()
-        {
-            ResumeRowsChanged(true, true);
-        }
-
-        private void ResumeRowsChanged(bool invalidate, bool flush)
-        {
-            Debug.Assert(_suspendRowsChanged > 0);
-            _suspendRowsChanged--;
-            if (invalidate)
-                _rowsChanged = true;
-            if (_suspendRowsChanged == 0 || flush)
-                FlushRowsChanged();
-        }
-
-        private bool _rowsChanged;
-        private void RowsChanged()
-        {
-            if (_suspendRowsChanged > 0)
-                _rowsChanged = true;
-            else
-                OnRowsChanged();
-        }
-
-        protected void FlushRowsChanged(bool invalidateRows = false)
-        {
-            if (_rowsChanged || invalidateRows)
-            {
-                _rowsChanged = false;
-                OnRowsChanged();
-            }
-        }
-
         protected virtual void OnRowsChanged()
         {
         }
@@ -112,7 +68,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
 
             UpdateIndex(nextIndex);
-            RowsChanged();
+            OnRowsChanged();
         }
 
         private int InsertRecursively(int index, RowPresenter row)
@@ -140,7 +96,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             RemoveRange(nextIndex, count);
             UpdateIndex(nextIndex);
-            RowsChanged();
+            OnRowsChanged();
         }
 
         private int NextIndexOf(RowPresenter row)
@@ -182,7 +138,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.Insert(index, row);
             }
             UpdateIndex(index);
-            RowsChanged();
+            OnRowsChanged();
         }
 
         protected sealed override void OnRowRemoved(RowPresenter parent, int index)
@@ -199,7 +155,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.RemoveAt(index);
             }
             UpdateIndex(index);
-            RowsChanged();
+            OnRowsChanged();
         }
 
         protected sealed override void OnRowMoved(RowPresenter row, int oldIndex, int newIndex)
@@ -221,7 +177,7 @@ namespace DevZest.Data.Presenters.Primitives
                 _rows.Insert(newIndex, row);
             }
             UpdateIndex(Math.Min(oldIndex, newIndex), Math.Max(oldIndex, newIndex));
-            RowsChanged();
+            OnRowsChanged();
         }
     }
 }

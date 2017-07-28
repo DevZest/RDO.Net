@@ -115,12 +115,6 @@ namespace DevZest.Data.Presenters.Primitives
 
             private abstract class InsertHandler : EditHandler
             {
-                public override void OnRowsChanged(RowManager rowManager)
-                {
-                    if (!rowManager.IsRowsChangedSuspended)
-                        CoerceVirtualRows(rowManager);
-                }
-
                 protected RowPresenter _insertingRow;
                 public sealed override RowPresenter InsertingRow
                 {
@@ -131,8 +125,6 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     return rowManager.DataSet;
                 }
-
-                protected abstract void CoerceVirtualRows(RowManager rowManager);
 
                 private void RollbackCurrentRow(RowManager rowManager)
                 {
@@ -205,7 +197,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return 0;
                 }
 
-                protected override void CoerceVirtualRows(RowManager rowManager)
+                public override void OnRowsChanged(RowManager rowManager)
                 {
                     Debug.Assert(rowManager.VirtualRow != null);
 
@@ -221,7 +213,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return rowManager.DataSet.Count;
                 }
 
-                protected override void CoerceVirtualRows(RowManager rowManager)
+                public override void OnRowsChanged(RowManager rowManager)
                 {
                     Debug.Assert(rowManager.VirtualRow != null);
 
@@ -239,13 +231,18 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 protected ExplicitInsertHandler(RowPresenter parent, RowPresenter reference)
                 {
-                    Debug.Assert(reference != null);
                     Parent = parent;
                     Reference = reference;
                 }
 
                 public override void OnRowsChanged(RowManager rowManager)
                 {
+                    if (Parent != null && Parent.IsDisposed)
+                        CancelEdit(rowManager);
+
+                    if (Reference != null && Reference.IsDisposed)
+                        Reference = null;
+
                     throw new NotImplementedException();
                     //base.OnRowsChanged(rowManager);
                 }
@@ -276,11 +273,6 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                 }
 
-                protected override void CoerceVirtualRows(RowManager rowManager)
-                {
-                    throw new NotImplementedException();
-                }
-
                 protected override int GetCommitEditIndex(RowManager rowManager)
                 {
                     throw new NotImplementedException();
@@ -292,11 +284,6 @@ namespace DevZest.Data.Presenters.Primitives
                 public InsertAfterHandler(RowPresenter parent, RowPresenter reference)
                     : base(parent, reference)
                 {
-                }
-
-                protected override void CoerceVirtualRows(RowManager rowManager)
-                {
-                    throw new NotImplementedException();
                 }
 
                 protected override int GetCommitEditIndex(RowManager rowManager)
