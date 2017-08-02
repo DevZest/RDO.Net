@@ -8,7 +8,6 @@ namespace DevZest.Data.Views.Primitives
     public interface ICompositeView
     {
         ContentPresenter GetPlaceholder(string name);
-        CompositeBinding CompositeBinding { get; }
-        IReadOnlyList<UIElement> Children { get; }
+        CompositePresenter Presenter { get; }
     }
 }

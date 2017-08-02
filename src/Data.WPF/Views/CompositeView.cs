@@ -12,18 +12,13 @@ namespace DevZest.Data.Views
     {
         public CompositeView()
         {
-            _compositeBinding = new CompositeBinding(this);
+            _presenter = new CompositePresenter(this);
         }
 
-        private readonly CompositeBinding _compositeBinding;
-        public CompositeBinding CompositeBinding
+        private readonly CompositePresenter _presenter;
+        public CompositePresenter Presenter
         {
-            get { return _compositeBinding; }
-        }
-
-        public IReadOnlyList<UIElement> Children
-        {
-            get { return CompositeBinding.Children; }
+            get { return _presenter; }
         }
 
         public virtual ContentPresenter GetPlaceholder(string name)

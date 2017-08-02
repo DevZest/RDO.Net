@@ -28,8 +28,8 @@ namespace DevZest.Data.Presenters
             Assert.IsNull(pane.GetSettingUpElement());
 
             var currentRow = elementManager.Rows[0];
-            Assert.AreEqual(pane[currentRow].Children[0], label[currentRow]);
-            Assert.AreEqual(pane[currentRow].Children[1], textBlock[currentRow]);
+            Assert.AreEqual(pane[currentRow].Presenter.Children[0], label[currentRow]);
+            Assert.AreEqual(pane[currentRow].Presenter.Children[1], textBlock[currentRow]);
             Assert.AreEqual(_.Name.DisplayName, label[currentRow].Content);
             Assert.AreEqual(currentRow.GetValue(_.Name), textBlock[currentRow].Text);
             Assert.AreEqual(textBlock[currentRow], label[currentRow].Target);
@@ -52,8 +52,8 @@ namespace DevZest.Data.Presenters
             });
 
             var currentRow = elementManager.Rows[0];
-            Assert.AreEqual(pane[currentRow].Children[0], label[currentRow]);
-            Assert.AreEqual(pane[currentRow].Children[1], textBlock[currentRow]);
+            Assert.AreEqual(pane[currentRow].Presenter.Children[0], label[currentRow]);
+            Assert.AreEqual(pane[currentRow].Presenter.Children[1], textBlock[currentRow]);
             Assert.AreEqual(_.Name.DisplayName, label[currentRow].Content);
             Assert.AreEqual(currentRow.GetValue(_.Name), textBlock[currentRow].Text);
             Assert.AreEqual(textBlock[currentRow], label[currentRow].Target);

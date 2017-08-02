@@ -29,7 +29,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private ICompositeView Create()
         {
-            return CreateView().CompositeBinding.InitChildren(_bindings, _names);
+            return CreateView().Presenter.InitChildren(_bindings, _names);
         }
 
         private ICompositeView _settingUpView;
@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void BeginSetup(UIElement value)
         {
             _settingUpView = value == null ? Create() : (ICompositeView)value;
-            _settingUpView.CompositeBinding.BeginSetup(_bindings);
+            _settingUpView.Presenter.BeginSetup(_bindings);
         }
 
         internal sealed override UIElement Setup(BlockView blockView)
@@ -55,18 +55,18 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void Refresh(UIElement element)
         {
-            ((ICompositeView)element).CompositeBinding.Refresh(_bindings);
+            ((ICompositeView)element).Presenter.Refresh(_bindings);
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
             var view = (ICompositeView)element;
-            view.CompositeBinding.Cleanup(_bindings);
+            view.Presenter.Cleanup(_bindings);
         }
 
         internal sealed override void EndSetup()
         {
-            _settingUpView.CompositeBinding.EndSetup(_bindings);
+            _settingUpView.Presenter.EndSetup(_bindings);
             _settingUpView = null;
         }
     }

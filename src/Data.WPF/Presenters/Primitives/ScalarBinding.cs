@@ -150,7 +150,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return null;
 
                 if (Parent != null)
-                    return ((ICompositeView)Parent[flowIndex]).CompositeBinding.Children[Ordinal];
+                    return ((ICompositeView)Parent[flowIndex]).Presenter.Children[Ordinal];
 
                 if (flowIndex < 0 || flowIndex >= FlowRepeatCount)
                     throw new ArgumentOutOfRangeException(nameof(flowIndex));
