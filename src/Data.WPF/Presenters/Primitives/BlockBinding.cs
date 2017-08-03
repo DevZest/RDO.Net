@@ -102,7 +102,7 @@ namespace DevZest.Data.Presenters.Primitives
                 if (Parent != null)
                 {
                     var view = (ICompositeView)Parent[blockOrdinal];
-                    return view == null ? null : view.BindingManager.Children[Ordinal];
+                    return view == null ? null : view.BindingDispatcher.Children[Ordinal];
                 }
 
                 if (ElementManager == null)

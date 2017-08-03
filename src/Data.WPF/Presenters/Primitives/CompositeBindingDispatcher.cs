@@ -7,9 +7,9 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public sealed class CompositeBindingManager
+    public sealed class CompositeBindingDispatcher
     {
-        public CompositeBindingManager(ICompositeView view)
+        public CompositeBindingDispatcher(ICompositeView view)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));

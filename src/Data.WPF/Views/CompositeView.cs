@@ -10,13 +10,13 @@ namespace DevZest.Data.Views
     {
         public CompositeView()
         {
-            _bindingManager = new CompositeBindingManager(this);
+            _bindingDispatcher = new CompositeBindingDispatcher(this);
         }
 
-        private readonly CompositeBindingManager _bindingManager;
-        public CompositeBindingManager BindingManager
+        private readonly CompositeBindingDispatcher _bindingDispatcher;
+        public CompositeBindingDispatcher BindingDispatcher
         {
-            get { return _bindingManager; }
+            get { return _bindingDispatcher; }
         }
 
         public virtual ContentPresenter GetPlaceholder(string name)
