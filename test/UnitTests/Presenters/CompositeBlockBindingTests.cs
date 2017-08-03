@@ -30,8 +30,8 @@ namespace DevZest.Data.Presenters
             Assert.IsNull(pane.GetSettingUpElement());
 
             var currentRow = elementManager.Rows[0];
-            Assert.AreEqual(pane[0].Presenter.Children[0], blockLabel[0]);
-            Assert.AreEqual(pane[0].Presenter.Children[1], blockHeader[0]);
+            Assert.AreEqual(pane[0].BindingManager.Children[0], blockLabel[0]);
+            Assert.AreEqual(pane[0].BindingManager.Children[1], blockHeader[0]);
             Assert.AreEqual(_.Name.DisplayName, blockLabel[0].Content);
             Assert.AreEqual("0", blockHeader[0].Text);
             Assert.AreEqual(blockHeader[0], blockLabel[0].Target);

@@ -44,7 +44,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\Primitives\CompositePresenter.cs" />
+    <Compile Include="Presenters\Primitives\CompositeBindingManager.cs" />
     <Compile Include="Presenters\Primitives\ElementPresenter.cs" />
     <Compile Include="Presenters\Primitives\IBlockElement.cs" />
     <Compile Include="Presenters\Primitives\IRowElement.cs" />

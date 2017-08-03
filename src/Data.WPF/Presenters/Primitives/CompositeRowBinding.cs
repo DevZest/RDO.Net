@@ -28,7 +28,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private ICompositeView Create()
         {
-            return CreateView().Presenter.InitChildren(_bindings, _names);
+            return CreateView().BindingManager.InitChildren(_bindings, _names);
         }
 
         private ICompositeView _settingUpView;
@@ -41,7 +41,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void BeginSetup(UIElement value)
         {
             _settingUpView = value == null ? Create() : (ICompositeView)value;
-            _settingUpView.Presenter.BeginSetup(_bindings);
+            _settingUpView.BindingManager.BeginSetup(_bindings);
         }
 
         internal sealed override UIElement Setup(RowPresenter rowPresenter)
@@ -60,25 +60,25 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void Refresh(UIElement element)
         {
             _isRefreshing = true;
-            ((ICompositeView)element).Presenter.Refresh(_bindings);
+            ((ICompositeView)element).BindingManager.Refresh(_bindings);
             _isRefreshing = false;
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
             var view = (ICompositeView)element;
-            view.Presenter.Cleanup(_bindings);
+            view.BindingManager.Cleanup(_bindings);
         }
 
         internal sealed override void EndSetup()
         {
-            _settingUpView.Presenter.EndSetup(_bindings);
+            _settingUpView.BindingManager.EndSetup(_bindings);
             _settingUpView = null;
         }
 
         internal sealed override void FlushInput(UIElement element)
         {
-            ((ICompositeView)element).Presenter.FlushInput(_bindings);
+            ((ICompositeView)element).BindingManager.FlushInput(_bindings);
         }
     }
 }

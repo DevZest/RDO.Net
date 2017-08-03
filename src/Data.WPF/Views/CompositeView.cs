@@ -2,8 +2,6 @@
 using DevZest.Data.Views.Primitives;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using System.Collections.Generic;
-using System.Windows;
 
 namespace DevZest.Data.Views
 {
@@ -12,13 +10,13 @@ namespace DevZest.Data.Views
     {
         public CompositeView()
         {
-            _presenter = new CompositePresenter(this);
+            _bindingManager = new CompositeBindingManager(this);
         }
 
-        private readonly CompositePresenter _presenter;
-        public CompositePresenter Presenter
+        private readonly CompositeBindingManager _bindingManager;
+        public CompositeBindingManager BindingManager
         {
-            get { return _presenter; }
+            get { return _bindingManager; }
         }
 
         public virtual ContentPresenter GetPlaceholder(string name)

@@ -72,10 +72,10 @@ namespace DevZest.Data.Presenters
             Assert.AreEqual(1, textBlock[1].GetScalarFlowIndex());
             Assert.AreEqual(textBlock[0], label[0].Target);
             Assert.AreEqual(textBlock[1], label[1].Target);
-            Assert.AreEqual(pane[0].Presenter.Children[0], label[0]);
-            Assert.AreEqual(pane[0].Presenter.Children[1], textBlock[0]);
-            Assert.AreEqual(pane[1].Presenter.Children[0], label[1]);
-            Assert.AreEqual(pane[1].Presenter.Children[1], textBlock[1]);
+            Assert.AreEqual(pane[0].BindingManager.Children[0], label[0]);
+            Assert.AreEqual(pane[0].BindingManager.Children[1], textBlock[0]);
+            Assert.AreEqual(pane[1].BindingManager.Children[0], label[1]);
+            Assert.AreEqual(pane[1].BindingManager.Children[1], textBlock[1]);
 
             elementManager.FlowRepeatCount = 3;
             Assert.AreEqual(3, pane.FlowRepeatCount);
@@ -99,12 +99,12 @@ namespace DevZest.Data.Presenters
             Assert.AreEqual(textBlock[0], label[0].Target);
             Assert.AreEqual(textBlock[1], label[1].Target);
             Assert.AreEqual(textBlock[2], label[2].Target);
-            Assert.AreEqual(pane[0].Presenter.Children[0], label[0]);
-            Assert.AreEqual(pane[0].Presenter.Children[1], textBlock[0]);
-            Assert.AreEqual(pane[1].Presenter.Children[0], label[1]);
-            Assert.AreEqual(pane[1].Presenter.Children[1], textBlock[1]);
-            Assert.AreEqual(pane[2].Presenter.Children[0], label[2]);
-            Assert.AreEqual(pane[2].Presenter.Children[1], textBlock[2]);
+            Assert.AreEqual(pane[0].BindingManager.Children[0], label[0]);
+            Assert.AreEqual(pane[0].BindingManager.Children[1], textBlock[0]);
+            Assert.AreEqual(pane[1].BindingManager.Children[0], label[1]);
+            Assert.AreEqual(pane[1].BindingManager.Children[1], textBlock[1]);
+            Assert.AreEqual(pane[2].BindingManager.Children[0], label[2]);
+            Assert.AreEqual(pane[2].BindingManager.Children[1], textBlock[2]);
 
             elementManager.FlowRepeatCount = 2;
             Assert.AreEqual(2, pane.FlowRepeatCount);
@@ -122,10 +122,10 @@ namespace DevZest.Data.Presenters
             Assert.AreEqual(1, textBlock[1].GetScalarFlowIndex());
             Assert.AreEqual(textBlock[0], label[0].Target);
             Assert.AreEqual(textBlock[1], label[1].Target);
-            Assert.AreEqual(pane[0].Presenter.Children[0], label[0]);
-            Assert.AreEqual(pane[0].Presenter.Children[1], textBlock[0]);
-            Assert.AreEqual(pane[1].Presenter.Children[0], label[1]);
-            Assert.AreEqual(pane[1].Presenter.Children[1], textBlock[1]);
+            Assert.AreEqual(pane[0].BindingManager.Children[0], label[0]);
+            Assert.AreEqual(pane[0].BindingManager.Children[1], textBlock[0]);
+            Assert.AreEqual(pane[1].BindingManager.Children[0], label[1]);
+            Assert.AreEqual(pane[1].BindingManager.Children[1], textBlock[1]);
         }
     }
 }

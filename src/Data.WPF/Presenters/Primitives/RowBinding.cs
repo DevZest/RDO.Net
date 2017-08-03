@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters.Primitives
                 if (Parent != null)
                 {
                     var view = (ICompositeView)Parent[rowPresenter];
-                    return view == null ? null : view.Presenter.Children[Ordinal];
+                    return view == null ? null : view.BindingManager.Children[Ordinal];
                 }
 
                 if (rowPresenter == null || rowPresenter.Template != Template)

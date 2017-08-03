@@ -8,6 +8,6 @@ namespace DevZest.Data.Views.Primitives
     public interface ICompositeView
     {
         ContentPresenter GetPlaceholder(string name);
-        CompositePresenter Presenter { get; }
+        CompositeBindingManager BindingManager { get; }
     }
 }
