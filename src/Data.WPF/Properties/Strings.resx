@@ -195,6 +195,9 @@
   <data name="ModelExtensions_ExpressionMustBeStatic" xml:space="preserve">
     <value>The expression must be static.</value>
   </data>
+  <data name="Pane_NullPalceholder" xml:space="preserve">
+    <value>Placeholder '{name}' is null.</value>
+  </data>
   <data name="RowBinding_OutOfRowRange" xml:space="preserve">
     <value>RowBindings[{index}] is out of the RowRange.</value>
   </data>

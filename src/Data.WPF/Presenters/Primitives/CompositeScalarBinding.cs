@@ -7,10 +7,20 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class CompositeScalarBinding : ScalarBinding
+    public abstract class CompositeScalarBinding : ScalarBinding, ICompositeBinding
     {
         private List<ScalarBinding> _bindings = new List<ScalarBinding>();
         private List<string> _names = new List<string>();
+
+        IReadOnlyList<Binding> ICompositeBinding.Bindings
+        {
+            get { return _bindings; }
+        }
+
+        IReadOnlyList<string> ICompositeBinding.Names
+        {
+            get { return _names; }
+        }
 
         internal void InternalAddChild<T>(ScalarBinding<T> binding, string name)
             where T : UIElement, new()

@@ -220,6 +220,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// Placeholder '{name}' is null.
+        /// </summary>
+        public static string Pane_NullPalceholder(object name)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("Pane_NullPalceholder", "name"), name);
+        }
+
+        /// <summary>
         /// RowBindings[{index}] is out of the RowRange.
         /// </summary>
         public static string RowBinding_OutOfRowRange(object index)

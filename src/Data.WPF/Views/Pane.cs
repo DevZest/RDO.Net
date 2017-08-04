@@ -36,7 +36,7 @@ namespace DevZest.Data.Views
             {
                 var placeholder = _view.GetPlaceholder(name);
                 if (placeholder == null)
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException(Strings.Pane_NullPalceholder(name));
                 _children.Add(child);
                 placeholder.Content = child;
             }

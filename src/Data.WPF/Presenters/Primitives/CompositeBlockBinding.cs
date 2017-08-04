@@ -6,10 +6,20 @@ using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class CompositeBlockBinding : BlockBinding
+    public abstract class CompositeBlockBinding : BlockBinding, ICompositeBinding
     {
         private List<BlockBinding> _bindings = new List<BlockBinding>();
         private List<string> _names = new List<string>();
+
+        IReadOnlyList<Binding> ICompositeBinding.Bindings
+        {
+            get { return _bindings; }
+        }
+
+        IReadOnlyList<string> ICompositeBinding.Names
+        {
+            get { return _names; }
+        }
 
         internal void InternalAddChild<T>(BlockBinding<T> binding, string name)
             where T : UIElement, new()

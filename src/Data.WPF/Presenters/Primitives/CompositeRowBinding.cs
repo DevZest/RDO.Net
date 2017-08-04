@@ -5,10 +5,20 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public abstract class CompositeRowBinding : RowBinding
+    public abstract class CompositeRowBinding : RowBinding, ICompositeBinding
     {
         private List<RowBinding> _bindings = new List<RowBinding>();
         private List<string> _names = new List<string>();
+
+        IReadOnlyList<Binding> ICompositeBinding.Bindings
+        {
+            get { return _bindings; }
+        }
+
+        IReadOnlyList<string> ICompositeBinding.Names
+        {
+            get { return _names; }
+        }
 
         internal void InternalAddChild<T>(RowBinding<T> binding, string name)
             where T : UIElement, new()
