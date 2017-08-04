@@ -58,7 +58,7 @@ namespace DevZest.Data.Presenters.Primitives
             var resultElement = (UIElement)result;
             resultElement.SetScalarFlowIndex(flowIndex);
             ScalarPresenter.SetFlowIndex(flowIndex);
-            result.BindingDispatcher.InitChildren(_bindings, _names);
+            result.BindingDispatcher.Initialize(this);
             OnCreated(resultElement);
             ScalarPresenter.SetFlowIndex(-1);
             return result;
@@ -85,12 +85,12 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 _settingUpViews = Create(startOffset);
                 for (int i = 0; i < SettingUpViews.Count; i++)
-                    SettingUpViews[i].BindingDispatcher.BeginSetup(_bindings);
+                    SettingUpViews[i].BindingDispatcher.BeginSetup();
             }
             else if (startOffset == 0)
             {
                 SettingUpView = CreateView(0);
-                SettingUpView.BindingDispatcher.BeginSetup(_bindings);
+                SettingUpView.BindingDispatcher.BeginSetup();
             }
         }
 
@@ -98,7 +98,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(!FlowRepeatable);
             SettingUpView = value == null ? CreateView(0) : (ICompositeView)value;
-            SettingUpView.BindingDispatcher.BeginSetup(_bindings);
+            SettingUpView.BindingDispatcher.BeginSetup();
         }
 
         internal sealed override void PrepareSettingUpElement(int flowIndex)
@@ -137,14 +137,14 @@ namespace DevZest.Data.Presenters.Primitives
         internal sealed override void Refresh(UIElement element)
         {
             _isRefreshing = true;
-            ((ICompositeView)element).BindingDispatcher.Refresh(_bindings);
+            ((ICompositeView)element).BindingDispatcher.Refresh();
             _isRefreshing = false;
         }
 
         internal sealed override void Cleanup(UIElement element)
         {
             var view = (ICompositeView)element;
-            view.BindingDispatcher.Cleanup(_bindings);
+            view.BindingDispatcher.Cleanup();
             element.SetScalarFlowIndex(0);
         }
 
@@ -153,17 +153,17 @@ namespace DevZest.Data.Presenters.Primitives
             if (FlowRepeatable)
             {
                 for (int i = 0; i < SettingUpViews.Count; i++)
-                    SettingUpViews[i].BindingDispatcher.EndSetup(_bindings);
+                    SettingUpViews[i].BindingDispatcher.EndSetup();
             }
             else
-                SettingUpView.BindingDispatcher.EndSetup(_bindings);
+                SettingUpView.BindingDispatcher.EndSetup();
             _settingUpViews = null;
             SettingUpView = null;
         }
 
         internal sealed override void FlushInput(UIElement element)
         {
-            ((ICompositeView)element).BindingDispatcher.FlushInput(_bindings);
+            ((ICompositeView)element).BindingDispatcher.FlushInput();
         }
     }
 }

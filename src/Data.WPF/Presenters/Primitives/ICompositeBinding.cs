@@ -2,7 +2,7 @@
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public interface ICompositeBinding
+    internal interface ICompositeBinding
     {
         IReadOnlyList<Binding> Bindings { get; }
         IReadOnlyList<string> Names { get; }
