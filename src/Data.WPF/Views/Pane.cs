@@ -12,9 +12,9 @@ namespace DevZest.Data.Views
     [ContentPropertyAttribute(nameof(Pane.Content))]
     public class Pane : ContentPresenter, ICompositeView
     {
-        private sealed class PaneBindingDispatcher : CompositeBindingDispatcher
+        private sealed class BindingDispatcher : CompositeBindingDispatcher
         {
-            public PaneBindingDispatcher(Pane view)
+            public BindingDispatcher(Pane view)
             {
                 Debug.Assert(view != null);
                 _view = view;
@@ -44,11 +44,11 @@ namespace DevZest.Data.Views
 
         public Pane()
         {
-            _bindingDispatcher = new PaneBindingDispatcher(this);
+            _bindingDispatcher = new BindingDispatcher(this);
         }
 
-        private readonly PaneBindingDispatcher _bindingDispatcher;
-        public CompositeBindingDispatcher BindingDispatcher
+        private readonly BindingDispatcher _bindingDispatcher;
+        CompositeBindingDispatcher ICompositeView.BindingDispatcher
         {
             get { return _bindingDispatcher; }
         }
@@ -56,6 +56,11 @@ namespace DevZest.Data.Views
         public virtual ContentPresenter GetPlaceholder(string name)
         {
             return FindName(name) as ContentPresenter;
+        }
+
+        public IReadOnlyList<UIElement> Children
+        {
+            get { return _bindingDispatcher.Children; }
         }
     }
 }
