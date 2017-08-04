@@ -14,12 +14,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             RowBinding<Label> label = null;
             RowBinding<TextBlock> textBlock = null;
-            CompositeRowBinding<XamlCompositeView> pane = null;
+            CompositeRowBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsTextBlock();
                 label = _.Name.AsLabel(textBlock);
-                pane = new CompositeRowBinding<XamlCompositeView>().AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(textBlock, XamlCompositeView.NAME_RIGHT);
+                pane = new CompositeRowBinding<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(textBlock, XamlPane.NAME_RIGHT);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });
 
@@ -42,12 +42,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             RowBinding<Label> label = null;
             RowBinding<TextBlock> textBlock = null;
-            CompositeRowBinding<CodeCompositeView> pane = null;
+            CompositeRowBinding<CodePane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsTextBlock();
                 label = _.Name.AsLabel(textBlock);
-                pane = new CompositeRowBinding<CodeCompositeView>().AddChild(label, CodeCompositeView.NAME_LEFT).AddChild(textBlock, CodeCompositeView.NAME_RIGHT);
+                pane = new CompositeRowBinding<CodePane>().AddChild(label, CodePane.NAME_LEFT).AddChild(textBlock, CodePane.NAME_RIGHT);
                 builder.GridRows("100").GridColumns("100").AddBinding(0, 0, pane);
             });
 

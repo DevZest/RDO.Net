@@ -87,7 +87,7 @@
     <Compile Include="Presenters\BlockBindingTests.cs" />
     <Compile Include="Views\BlockLabel.cs" />
     <Compile Include="Presenters\CompositeBlockBindingTests.cs" />
-    <Compile Include="Views\CodeCompositeView.cs" />
+    <Compile Include="Views\CodePane.cs" />
     <Compile Include="Presenters\DataSetExtensions.cs" />
     <Compile Include="Presenters\BindingFactory.cs" />
     <Compile Include="Views\BlockHeader.cs" />
@@ -116,8 +116,8 @@
     <Compile Include="Views\Placeholder.cs" />
     <Compile Include="Presenters\ValidationViewTests.cs" />
     <Compile Include="Views\RowViewTests.cs" />
-    <Compile Include="Views\XamlCompositeView.xaml.cs">
-      <DependentUpon>XamlCompositeView.xaml</DependentUpon>
+    <Compile Include="Views\XamlPane.xaml.cs">
+      <DependentUpon>XamlPane.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +136,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\XamlCompositeView.xaml">
+    <Page Include="Views\XamlPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

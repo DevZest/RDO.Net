@@ -1,14 +1,14 @@
 ﻿namespace DevZest.Data.Views
 {
     /// <summary>
-    /// Interaction logic for XamlCompositeView.xaml
+    /// Interaction logic for XamlPane.xaml
     /// </summary>
-    public partial class XamlCompositeView : CompositeView
+    public partial class XamlPane : Pane
     {
         public const string NAME_LEFT = "LEFT";
         public const string NAME_RIGHT = "LEFT";
 
-        public XamlCompositeView()
+        public XamlPane()
         {
             InitializeComponent();
         }

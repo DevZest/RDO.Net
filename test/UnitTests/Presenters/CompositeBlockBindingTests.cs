@@ -14,12 +14,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             BlockBinding<BlockLabel> blockLabel = null;
             BlockBinding<BlockHeader> blockHeader = null;
-            CompositeBlockBinding<XamlCompositeView> pane = null;
+            CompositeBlockBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 blockHeader = _.BlockHeader();
                 blockLabel = _.Name.BlockLabel(blockHeader);
-                pane = new CompositeBlockBinding<XamlCompositeView>().AddChild(blockLabel, XamlCompositeView.NAME_LEFT).AddChild(blockHeader, XamlCompositeView.NAME_RIGHT);
+                pane = new CompositeBlockBinding<XamlPane>().AddChild(blockLabel, XamlPane.NAME_LEFT).AddChild(blockHeader, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 2)
                     .GridColumns("100", "100").GridRows("100").RowRange(1, 0, 1, 0)
                     .AddBinding(0, 0, pane);

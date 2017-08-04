@@ -1,4 +1,4 @@
-﻿<dz:CompositeView x:Class="DevZest.Data.Views.XamlCompositeView"
+﻿<dz:Pane x:Class="DevZest.Data.Views.XamlPane"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -26,4 +26,4 @@
             </ContentPresenter.Content>
         </ContentPresenter>
     </Grid>
-</dz:CompositeView>
+</dz:Pane>

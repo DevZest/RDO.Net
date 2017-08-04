@@ -94,7 +94,7 @@
     <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
     <Compile Include="Presenters\ScalarPresenter.cs" />
     <Compile Include="Presenters\IValidationDictionary.cs" />
-    <Compile Include="Views\CompositeView.cs" />
+    <Compile Include="Views\Pane.cs" />
     <Compile Include="Presenters\Primitives\CompositeBlockBinding.cs" />
     <Compile Include="Presenters\Primitives\CompositeRowBinding.cs" />
     <Compile Include="Presenters\Primitives\CompositeScalarBinding.cs" />

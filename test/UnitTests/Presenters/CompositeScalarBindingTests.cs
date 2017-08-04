@@ -14,12 +14,12 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<TextBlock> textBlock = null;
-            CompositeScalarBinding<XamlCompositeView> pane = null;
+            CompositeScalarBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsScalarTextBlock();
                 label = _.Name.AsScalarLabel(textBlock);
-                pane = new CompositeScalarBinding<XamlCompositeView>().AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(textBlock, XamlCompositeView.NAME_RIGHT);
+                pane = new CompositeScalarBinding<XamlPane>().AddChild(label, XamlPane.NAME_LEFT).AddChild(textBlock, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)
@@ -43,13 +43,13 @@ namespace DevZest.Data.Presenters
             var _ = dataSet._;
             ScalarBinding<Label> label = null;
             ScalarBinding<TextBlock> textBlock = null;
-            CompositeScalarBinding<XamlCompositeView> pane = null;
+            CompositeScalarBinding<XamlPane> pane = null;
             var elementManager = dataSet.CreateElementManager(builder =>
             {
                 textBlock = _.Name.AsScalarTextBlock().WithFlowRepeatable(true);
                 label = _.Name.AsFlowRepeatableScalarLabel(textBlock);
-                pane = new CompositeScalarBinding<XamlCompositeView>().WithFlowRepeatable(true)
-                    .AddChild(label, XamlCompositeView.NAME_LEFT).AddChild(textBlock, XamlCompositeView.NAME_RIGHT);
+                pane = new CompositeScalarBinding<XamlPane>().WithFlowRepeatable(true)
+                    .AddChild(label, XamlPane.NAME_LEFT).AddChild(textBlock, XamlPane.NAME_RIGHT);
                 builder.Layout(Orientation.Vertical, 0)
                     .GridColumns("100").GridRows("100", "100")
                     .AddBinding(0, 0, pane)

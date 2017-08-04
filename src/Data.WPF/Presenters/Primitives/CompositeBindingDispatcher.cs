@@ -7,33 +7,19 @@ using System.Windows.Controls;
 
 namespace DevZest.Data.Presenters.Primitives
 {
-    public sealed class CompositeBindingDispatcher
+    public abstract class CompositeBindingDispatcher
     {
-        public CompositeBindingDispatcher(ICompositeView view)
+        protected CompositeBindingDispatcher()
         {
-            if (view == null)
-                throw new ArgumentNullException(nameof(view));
-            _view = view;
         }
 
-        private readonly ICompositeView _view;
+        protected abstract ICompositeView View { get; }
 
-        private readonly List<UIElement> _children = new List<UIElement>();
-        public IReadOnlyList<UIElement> Children
-        {
-            get { return _children; }
-        }
+        public abstract IReadOnlyList<UIElement> Children { get; }
 
         private bool IsNew { get; set; }
 
-        private void AddChild(UIElement child, string name)
-        {
-            var placeholder = _view.GetPlaceholder(name);
-            if (placeholder == null)
-                throw new InvalidOperationException();
-            _children.Add(child);
-            placeholder.Content = child;
-        }
+        protected abstract void AddChild(UIElement child, string name);
 
         internal ICompositeView InitChildren(IReadOnlyList<Binding> bindings, IReadOnlyList<string> names)
         {
@@ -46,7 +32,7 @@ namespace DevZest.Data.Presenters.Primitives
                 AddChild(binding.GetSettingUpElement(), name);
             }
             IsNew = true;
-            return _view;
+            return View;
         }
 
         internal void BeginSetup(IReadOnlyList<Binding> bindings)
