@@ -123,7 +123,6 @@
     <Compile Include="Presenters\ScalarBinding_T.cs" />
     <Compile Include="Presenters\Primitives\Trigger.cs" />
     <Compile Include="Views\RowHeader.cs" />
-    <Compile Include="Presenters\GlobalSuppressions.cs" />
     <Compile Include="Presenters\Primitives\CurrentContainerViewPlacement.cs" />
     <Compile Include="Presenters\Primitives\GridLine.cs" />
     <Compile Include="Presenters\GridPlacement.cs" />
