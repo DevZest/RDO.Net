@@ -38,7 +38,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract ICompositeView CreateView();
 
-        private ICompositeView[] Create(int startOffset)
+        private ICompositeView[] InitializeFrom(int startOffset)
         {
             _settingUpStartOffset = startOffset;
 
@@ -48,11 +48,11 @@ namespace DevZest.Data.Presenters.Primitives
             var count = FlowRepeatCount - startOffset;
             var result = new ICompositeView[count];
             for (int i = 0; i < count; i++)
-                result[i] = CreateView(startOffset + i);
+                result[i] = InitializeAt(startOffset + i);
             return result;
         }
 
-        private ICompositeView CreateView(int flowIndex)
+        private ICompositeView InitializeAt(int flowIndex)
         {
             var result = CreateView();
             var resultElement = (UIElement)result;
@@ -79,26 +79,24 @@ namespace DevZest.Data.Presenters.Primitives
             return (UIElement)SettingUpView;
         }
 
-        internal sealed override void BeginSetup(int startOffset)
+        internal sealed override void Initialize(int startOffset)
         {
             if (FlowRepeatable)
-            {
-                _settingUpViews = Create(startOffset);
-                for (int i = 0; i < SettingUpViews.Count; i++)
-                    SettingUpViews[i].BindingDispatcher.BeginSetup();
-            }
+                _settingUpViews = InitializeFrom(startOffset);
             else if (startOffset == 0)
-            {
-                SettingUpView = CreateView(0);
-                SettingUpView.BindingDispatcher.BeginSetup();
-            }
+                SettingUpView = InitializeAt(0);
         }
 
         internal sealed override void BeginSetup(UIElement value)
         {
             Debug.Assert(!FlowRepeatable);
-            SettingUpView = value == null ? CreateView(0) : (ICompositeView)value;
-            SettingUpView.BindingDispatcher.BeginSetup();
+            if (value == null)
+                SettingUpView = InitializeAt(0);
+            else
+            {
+                SettingUpView = (ICompositeView)value;
+                SettingUpView.BindingDispatcher.BeginSetup();
+            }
         }
 
         internal sealed override void PrepareSettingUpElement(int flowIndex)

@@ -411,7 +411,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void InitializeElements()
         {
             var scalarBindings = Template.InternalScalarBindings;
-            BeginSetup(scalarBindings);
+            Initialize(scalarBindings);
             for (int i = 0; i < scalarBindings.Count; i++)
                 InsertScalarElementsAfter(scalarBindings[i], Elements.Count - 1, 1);
             scalarBindings.EndSetup();
@@ -420,10 +420,10 @@ namespace DevZest.Data.Presenters.Primitives
             RefreshView();
         }
 
-        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings)
+        private void Initialize(IReadOnlyList<ScalarBinding> scalarBindings)
         {
             for (int i = 0; i < scalarBindings.Count; i++)
-                scalarBindings[i].BeginSetup(0);
+                scalarBindings[i].Initialize(0);
         }
 
         internal virtual DataPresenter DataPresenter
@@ -537,7 +537,7 @@ namespace DevZest.Data.Presenters.Primitives
             var delta = 0;
             var scalarBindings = Template.InternalScalarBindings;
             if (flowRepeatCountDelta > 0)
-                BeginSetup(scalarBindings, flowRepeatCountDelta);
+                Initialize(scalarBindings, flowRepeatCountDelta);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 index++;
@@ -571,14 +571,14 @@ namespace DevZest.Data.Presenters.Primitives
                 CurrentContainerView.ReloadCurrentRow(CurrentRow);
         }
 
-        private void BeginSetup(IReadOnlyList<ScalarBinding> scalarBindings, int flowRepeatCountDelta)
+        private void Initialize(IReadOnlyList<ScalarBinding> scalarBindings, int flowRepeatCountDelta)
         {
             Debug.Assert(flowRepeatCountDelta > 0);
             for (int i = 0; i < scalarBindings.Count; i++)
             {
                 var scalarBinding = scalarBindings[i];
                 int startOffset = scalarBinding.FlowRepeatable ? FlowRepeatCount - flowRepeatCountDelta : 1;
-                scalarBinding.BeginSetup(startOffset);
+                scalarBinding.Initialize(startOffset);
             }
         }
 

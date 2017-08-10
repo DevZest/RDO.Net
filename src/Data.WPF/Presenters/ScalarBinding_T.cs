@@ -85,7 +85,7 @@ namespace DevZest.Data.Presenters
             return SettingUpElement;
         }
 
-        internal sealed override void BeginSetup(int startOffset)
+        internal sealed override void Initialize(int startOffset)
         {
             if (FlowRepeatable)
                 _settingUpElements = Create(startOffset);

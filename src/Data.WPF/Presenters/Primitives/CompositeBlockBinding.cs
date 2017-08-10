@@ -37,7 +37,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract ICompositeView CreateView();
 
-        private ICompositeView Create()
+        private ICompositeView Initialize()
         {
             return CreateView().BindingDispatcher.Initialize(this);
         }
@@ -52,8 +52,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override void BeginSetup(UIElement value)
         {
-            _settingUpView = value == null ? Create() : (ICompositeView)value;
-            _settingUpView.BindingDispatcher.BeginSetup();
+            if (value == null)
+                _settingUpView = Initialize();
+            else
+            {
+                _settingUpView = (ICompositeView)value;
+                _settingUpView.BindingDispatcher.BeginSetup();
+            }
         }
 
         internal sealed override UIElement Setup(BlockView blockView)

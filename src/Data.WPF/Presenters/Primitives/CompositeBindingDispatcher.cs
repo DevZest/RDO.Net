@@ -29,52 +29,42 @@ namespace DevZest.Data.Presenters.Primitives
 
         public abstract IReadOnlyList<UIElement> Children { get; }
 
-        private bool IsNew { get; set; }
-
         protected abstract void AddChild(UIElement child, string name);
 
         internal ICompositeView Initialize(ICompositeBinding compositeBinding)
         {
             Debug.Assert(compositeBinding != null);
             _compositeBinding = compositeBinding;
+
             var bindings = Bindings;
             var names = Names;
             for (int i = 0; i < bindings.Count; i++)
             {
                 var binding = bindings[i];
-                binding.BeginSetup(null);
                 var name = names[i];
-                AddChild(binding.GetSettingUpElement(), name);
+                Initialize(i, binding, name);
             }
-            IsNew = true;
             return View;
+        }
+
+        protected virtual void Initialize(int index, Binding binding, string name)
+        {
+            binding.BeginSetup(null);
+            AddChild(binding.GetSettingUpElement(), name);
         }
 
         internal void BeginSetup()
         {
             var bindings = Bindings;
             Debug.Assert(bindings.Count == Children.Count);
-            if (IsNew)
-                return;
 
             for (int i = 0; i < bindings.Count; i++)
-                bindings[i].BeginSetup(Children[i]);
+                BeginSetup(i, bindings[i], Children[i]);
         }
 
-        internal void Refresh()
+        protected virtual void BeginSetup(int index, Binding binding, UIElement element)
         {
-            var bindings = Bindings;
-            Debug.Assert(bindings.Count == Children.Count);
-            for (int i = 0; i < bindings.Count; i++)
-                bindings[i].Refresh(Children[i]);
-        }
-
-        internal void Cleanup()
-        {
-            var bindings = Bindings;
-            Debug.Assert(bindings.Count == Children.Count);
-            for (int i = 0; i < bindings.Count; i++)
-                bindings[i].Cleanup(Children[i]);
+            binding.BeginSetup(element);
         }
 
         internal void EndSetup()
@@ -82,8 +72,38 @@ namespace DevZest.Data.Presenters.Primitives
             var bindings = Bindings;
             Debug.Assert(bindings.Count == Children.Count);
             for (int i = 0; i < bindings.Count; i++)
-                bindings[i].EndSetup();
-            IsNew = false;
+                EndSetup(i, bindings[i]);
+        }
+
+        protected virtual void EndSetup(int index, Binding binding)
+        {
+            binding.EndSetup();
+        }
+
+        internal void Refresh()
+        {
+            var bindings = Bindings;
+            Debug.Assert(bindings.Count == Children.Count);
+            for (int i = 0; i < bindings.Count; i++)
+                Refresh(i, bindings[i], Children[i]);
+        }
+
+        protected virtual void Refresh(int index, Binding binding, UIElement element)
+        {
+            binding.Refresh(element);
+        }
+
+        internal void Cleanup()
+        {
+            var bindings = Bindings;
+            Debug.Assert(bindings.Count == Children.Count);
+            for (int i = 0; i < bindings.Count; i++)
+                Cleanup(i, bindings[i], Children[i]);
+        }
+
+        protected virtual void Cleanup(int index, Binding binding, UIElement element)
+        {
+            binding.Cleanup(element);
         }
 
         internal void FlushInput()
@@ -91,7 +111,12 @@ namespace DevZest.Data.Presenters.Primitives
             var bindings = Bindings;
             Debug.Assert(bindings.Count == Children.Count);
             for (int i = 0; i < bindings.Count; i++)
-                ((TwoWayBinding)bindings[i]).FlushInput(Children[i]);
+                FlushInput(i, (TwoWayBinding)bindings[i], Children[i]);
+        }
+
+        protected virtual void FlushInput(int index, TwoWayBinding binding, UIElement element)
+        {
+            binding.FlushInput(element);
         }
     }
 }
