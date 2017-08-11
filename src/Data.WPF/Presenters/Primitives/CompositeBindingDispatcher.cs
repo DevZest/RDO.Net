@@ -64,6 +64,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected virtual void BeginSetup(int index, Binding binding, UIElement element)
         {
+            Debug.Assert(element != null);
             binding.BeginSetup(element);
         }
 
