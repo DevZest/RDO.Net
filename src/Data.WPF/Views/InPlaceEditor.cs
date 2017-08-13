@@ -141,8 +141,8 @@ namespace DevZest.Data.Views
 
                 ElementBinding.Cleanup(Element);
                 base.Initialize(1, EditingElementBinding, Names[1]);
-                Setup(_view);
                 IsEditing = true;
+                Setup(_view);
             }
 
             public void CancelEdit()
@@ -150,8 +150,14 @@ namespace DevZest.Data.Views
                 Debug.Assert(_view.IsEditing);
                 EditingElementBinding.Cleanup(EditingElement);
                 base.Initialize(0, ElementBinding, Names[0]);
-                Setup(_view);
                 IsEditing = false;
+                Setup(_view);
+            }
+
+            public void EndEdit()
+            {
+                base.FlushInput(1, EditingElementBinding, EditingElement);
+                CancelEdit();
             }
         }
 
@@ -225,7 +231,7 @@ namespace DevZest.Data.Views
             if (IsEditing)
                 return;
 
-            throw new NotImplementedException();
+            _bindingDispatcher.BeginEdit();
         }
 
         public bool CanEndEdit
@@ -241,7 +247,7 @@ namespace DevZest.Data.Views
             if (!CanEndEdit)
                 return false;
 
-            throw new NotImplementedException();
+            _bindingDispatcher.EndEdit();
             return true;
         }
 
@@ -250,7 +256,7 @@ namespace DevZest.Data.Views
             if (!IsEditing)
                 return;
 
-            throw new NotImplementedException();
+            _bindingDispatcher.CancelEdit();
         }
     }
 }
