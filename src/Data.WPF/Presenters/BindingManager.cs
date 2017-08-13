@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.ComponentModel;
+using DevZest.Data.Views.Primitives;
 
 namespace DevZest.Data.Presenters
 {
@@ -121,6 +122,17 @@ namespace DevZest.Data.Presenters
             if (action == null)
                 action = (e, sp) => { };
             return (e, sp) => overrideAction(e, sp, action);
+        }
+
+        internal static void Verify<T>(this T binding, UIElement compositeView, string paramName)
+            where T : Binding, ICompositeBinding
+        {
+            Debug.Assert(binding != null);
+
+            if (compositeView == null)
+                throw new ArgumentNullException(paramName);
+            if (compositeView.GetBinding() != binding)
+                throw new ArgumentException(Strings.Binding_InvalidCompositeView, paramName);
         }
     }
 }

@@ -27,6 +27,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _compositeBinding?.Names; }
         }
 
+        protected void Setup<T>(T compositeView)
+            where T : UIElement, ICompositeView
+        {
+            _compositeBinding.Setup(compositeView);
+        }
+
         public abstract IReadOnlyList<UIElement> Children { get; }
 
         protected abstract void AddChild(UIElement child, string name);

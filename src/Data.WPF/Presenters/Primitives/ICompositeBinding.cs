@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DevZest.Data.Views.Primitives;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace DevZest.Data.Presenters.Primitives
 {
@@ -6,5 +8,6 @@ namespace DevZest.Data.Presenters.Primitives
     {
         IReadOnlyList<Binding> Bindings { get; }
         IReadOnlyList<string> Names { get; }
+        void Setup<T>(T compositeView) where T : UIElement, ICompositeView;
     }
 }

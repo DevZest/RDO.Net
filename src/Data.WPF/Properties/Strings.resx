@@ -123,6 +123,9 @@
   <data name="BindingFactory_InvalidInput" xml:space="preserve">
     <value>Invalid input for type {type}.</value>
   </data>
+  <data name="Binding_InvalidCompositeView" xml:space="preserve">
+    <value>The composite view does not belong to this Binding.</value>
+  </data>
   <data name="Binding_InvalidFrozenMargin" xml:space="preserve">
     <value>The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].</value>
   </data>

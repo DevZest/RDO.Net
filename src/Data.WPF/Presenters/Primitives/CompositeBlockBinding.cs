@@ -21,6 +21,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _names; }
         }
 
+        void ICompositeBinding.Setup<T>(T compositeView)
+        {
+            this.Verify(compositeView, nameof(compositeView));
+            Setup(compositeView.GetBlockView());
+        }
+
         internal void InternalAddChild<T>(BlockBinding<T> binding, string name)
             where T : UIElement, new()
         {

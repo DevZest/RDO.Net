@@ -28,6 +28,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The composite view does not belong to this Binding.
+        /// </summary>
+        public static string Binding_InvalidCompositeView
+        {
+            get { return GetString("Binding_InvalidCompositeView"); }
+        }
+
+        /// <summary>
         /// The {frozen} value is invalid. It cuts across {bindings}[{ordinal}].
         /// </summary>
         public static string Binding_InvalidFrozenMargin(object frozen, object bindings, object ordinal)

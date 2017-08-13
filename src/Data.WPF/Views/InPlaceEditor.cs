@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
+using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
@@ -80,21 +81,21 @@ namespace DevZest.Data.Views
                 get { return this; }
             }
 
-            private bool IsVisible(int index)
+            private bool IsEditing
             {
-                return index == (_view.IsEditing ? 1 : 0);
+                get { return _view.IsEditing; }
+                set { _view.IsEditing = value; }
             }
 
-            public void OnIsEditingChanged()
+            private int ActiveBindingIndex
             {
-                var newValue = _view.IsEditing;
-                var oldValue = !newValue;
+                get { return IsEditing ? 1 : 0; }
             }
 
             protected override void Initialize(int index, Binding binding, string name)
             {
                 Debug.Assert(index == 0 || index == 1);
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.Initialize(index, binding, name);
             }
 
@@ -105,32 +106,52 @@ namespace DevZest.Data.Views
 
             protected override void BeginSetup(int index, Binding binding, UIElement element)
             {
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.BeginSetup(index, binding, element);
             }
 
             protected override void EndSetup(int index, Binding binding)
             {
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.EndSetup(index, binding);
             }
 
             protected override void Refresh(int index, Binding binding, UIElement element)
             {
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.Refresh(index, binding, element);
             }
 
             protected override void Cleanup(int index, Binding binding, UIElement element)
             {
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.Cleanup(index, binding, element);
             }
 
             protected override void FlushInput(int index, TwoWayBinding binding, UIElement element)
             {
-                if (IsVisible(index))
+                if (index == ActiveBindingIndex)
                     base.FlushInput(index, binding, element);
+            }
+
+            public void BeginEdit()
+            {
+                Debug.Assert(!IsEditing);
+                Debug.Assert(Element != null);
+
+                ElementBinding.Cleanup(Element);
+                base.Initialize(1, EditingElementBinding, Names[1]);
+                Setup(_view);
+                IsEditing = true;
+            }
+
+            public void CancelEdit()
+            {
+                Debug.Assert(_view.IsEditing);
+                EditingElementBinding.Cleanup(EditingElement);
+                base.Initialize(0, ElementBinding, Names[0]);
+                Setup(_view);
+                IsEditing = false;
             }
         }
 
@@ -194,8 +215,42 @@ namespace DevZest.Data.Views
 
         private void SetContent(FrameworkElement element)
         {
-            element.Style = IsEditing ? EditingElementStyle : ElementStyle;
+            if (element != null)
+                element.Style = IsEditing ? EditingElementStyle : ElementStyle;
             Content = element;
+        }
+
+        public void BeginEdit()
+        {
+            if (IsEditing)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public bool CanEndEdit
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool EndEdit()
+        {
+            if (!CanEndEdit)
+                return false;
+
+            throw new NotImplementedException();
+            return true;
+        }
+
+        public void CancelEdit()
+        {
+            if (!IsEditing)
+                return;
+
+            throw new NotImplementedException();
         }
     }
 }

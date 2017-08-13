@@ -22,6 +22,12 @@ namespace DevZest.Data.Presenters.Primitives
             get { return _names; }
         }
 
+        void ICompositeBinding.Setup<T>(T compositeView)
+        {
+            this.Verify(compositeView, nameof(compositeView));
+            Setup(compositeView.GetScalarFlowIndex());
+        }
+
         internal void InternalAddChild<T>(ScalarBinding<T> binding, string name)
             where T : UIElement, new()
         {
