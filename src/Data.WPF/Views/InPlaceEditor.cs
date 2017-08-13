@@ -143,6 +143,7 @@ namespace DevZest.Data.Views
                 base.Initialize(1, EditingElementBinding, Names[1]);
                 IsEditing = true;
                 Setup(_view);
+                base.EndSetup(1, EditingElementBinding);
             }
 
             public void CancelEdit()
@@ -152,6 +153,7 @@ namespace DevZest.Data.Views
                 base.Initialize(0, ElementBinding, Names[0]);
                 IsEditing = false;
                 Setup(_view);
+                base.EndSetup(0, ElementBinding);
             }
 
             public void EndEdit()
