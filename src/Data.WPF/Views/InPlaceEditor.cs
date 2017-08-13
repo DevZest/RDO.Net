@@ -94,7 +94,8 @@ namespace DevZest.Data.Views
 
             protected override void Initialize(int index, Binding binding, string name)
             {
-                Debug.Assert(index == 0 || index == 1);
+                if (index < 0 || index > 1)
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 if (index == ActiveBindingIndex)
                     base.Initialize(index, binding, name);
             }
