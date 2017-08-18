@@ -74,7 +74,7 @@ namespace DevZest.Data.Presenters.Primitives
             _flushTrigger.Detach(element);
         }
 
-        internal abstract ViewInputError GetInputError(UIElement element);
+        public abstract ViewInputError GetInputError(UIElement element);
 
         internal abstract void SetInputError(UIElement element, ViewInputError inputError);
 

@@ -10,7 +10,7 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class InPlaceEditor : ContentControl, ICompositeView, IScalarElement, IRowElement
+    public class InPlaceEditor : ContentControl, ICompositeView, IRowElement
     {
         private sealed class BindingDispatcher : CompositeBindingDispatcher, IReadOnlyList<UIElement>
         {
@@ -41,9 +41,9 @@ namespace DevZest.Data.Views
                 get { return Bindings[0]; }
             }
 
-            public TwoWayBinding EditingElementBinding
+            public RowBinding EditingElementBinding
             {
-                get { return (TwoWayBinding)Bindings[1]; }
+                get { return (RowBinding)Bindings[1]; }
             }
 
             #region IReadOnlyList<UIElement>
@@ -262,22 +262,6 @@ namespace DevZest.Data.Views
             _bindingDispatcher.CancelEdit();
         }
 
-        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
-        {
-        }
-
-        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
-        {
-            if (Element != null)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
-        {
-        }
-
         void IRowElement.Setup(RowPresenter rowPresenter)
         {
         }
@@ -288,7 +272,7 @@ namespace DevZest.Data.Views
             if (element == null)
                 return;
 
-            var input = ((RowBinding)(_bindingDispatcher.EditingElementBinding)).GetInput();
+            var input = _bindingDispatcher.EditingElementBinding.GetInput();
             if (input != null)
                 element.RefreshValidation(input.GetErrors(rowPresenter), input.GetWarnings(rowPresenter));
         }

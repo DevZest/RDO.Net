@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
             get { return RowBinding; }
         }
 
-        internal sealed override ViewInputError GetInputError(UIElement element)
+        public sealed override ViewInputError GetInputError(UIElement element)
         {
             return InputManager.GetRowInputError(element);
         }
