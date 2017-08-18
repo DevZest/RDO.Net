@@ -36,9 +36,9 @@ namespace DevZest.Data.Views
                 get { return _view.EditingElement; }
             }
 
-            private Binding ElementBinding
+            private RowBinding ElementBinding
             {
-                get { return Bindings[0]; }
+                get { return (RowBinding)Bindings[0]; }
             }
 
             public RowBinding EditingElementBinding
