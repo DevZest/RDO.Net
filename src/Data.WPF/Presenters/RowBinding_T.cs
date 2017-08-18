@@ -23,6 +23,11 @@ namespace DevZest.Data.Presenters
 
         public RowInput<T> Input { get; private set; }
 
+        internal override IRowInput GetInput()
+        {
+            return Input;
+        }
+
         internal sealed override void FlushInput(UIElement element)
         {
             if (Input != null)

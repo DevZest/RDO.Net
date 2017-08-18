@@ -92,5 +92,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return elements == null ? null : elements[Ordinal];
             }
         }
+
+        internal abstract IRowInput GetInput();
     }
 }

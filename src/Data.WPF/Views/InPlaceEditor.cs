@@ -41,7 +41,7 @@ namespace DevZest.Data.Views
                 get { return Bindings[0]; }
             }
 
-            private TwoWayBinding EditingElementBinding
+            public TwoWayBinding EditingElementBinding
             {
                 get { return (TwoWayBinding)Bindings[1]; }
             }
@@ -284,10 +284,13 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
         {
-            if (Element != null)
-            {
-                throw new NotImplementedException();
-            }
+            var element = Element;
+            if (element == null)
+                return;
+
+            var input = ((RowBinding)(_bindingDispatcher.EditingElementBinding)).GetInput();
+            if (input != null)
+                element.RefreshValidation(input.GetErrors(rowPresenter), input.GetWarnings(rowPresenter));
         }
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
