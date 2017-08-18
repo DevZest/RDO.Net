@@ -66,7 +66,7 @@ namespace DevZest.Data.Presenters
                 get { return InputManager.CurrentRow; }
             }
 
-            public override IRowInput RowInput
+            internal override IRowInput RowInput
             {
                 get { return _rowInput; }
             }
@@ -122,7 +122,7 @@ namespace DevZest.Data.Presenters
                 get { return InputManager.CurrentRow; }
             }
 
-            public override IRowInput RowInput
+            internal override IRowInput RowInput
             {
                 get { return null; }
             }
@@ -149,7 +149,7 @@ namespace DevZest.Data.Presenters
 
             private readonly Func<Task<IValidationResult>> _action;
 
-            public override IRowInput RowInput
+            internal override IRowInput RowInput
             {
                 get { return null; }
             }
@@ -209,7 +209,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public abstract IRowInput RowInput { get; }
+        internal abstract IRowInput RowInput { get; }
 
         public abstract ValidationScope ValidationScope { get; }
 

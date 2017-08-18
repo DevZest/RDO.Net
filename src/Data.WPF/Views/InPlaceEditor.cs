@@ -10,7 +10,7 @@ using DevZest.Data.Presenters;
 
 namespace DevZest.Data.Views
 {
-    public class InPlaceEditor : ContentControl, ICompositeView
+    public class InPlaceEditor : ContentControl, ICompositeView, IScalarElement, IRowElement
     {
         private sealed class BindingDispatcher : CompositeBindingDispatcher, IReadOnlyList<UIElement>
         {
@@ -260,6 +260,38 @@ namespace DevZest.Data.Views
                 return;
 
             _bindingDispatcher.CancelEdit();
+        }
+
+        void IScalarElement.Setup(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        void IScalarElement.Refresh(ScalarPresenter scalarPresenter)
+        {
+            if (Element != null)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
+        {
+        }
+
+        void IRowElement.Setup(RowPresenter rowPresenter)
+        {
+        }
+
+        void IRowElement.Refresh(RowPresenter rowPresenter)
+        {
+            if (Element != null)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        void IRowElement.Cleanup(RowPresenter rowPresenter)
+        {
         }
     }
 }

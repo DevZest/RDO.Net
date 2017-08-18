@@ -1,6 +1,6 @@
 ﻿namespace DevZest.Data.Presenters
 {
-    public interface IRowInput
+    internal interface IRowInput
     {
     }
 }
