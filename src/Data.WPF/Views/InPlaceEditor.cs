@@ -18,6 +18,7 @@ namespace DevZest.Data.Views
             {
                 Debug.Assert(view != null);
                 _view = view;
+                IsEditing = _view.IsEditing;
             }
 
             private readonly InPlaceEditor _view;
@@ -81,11 +82,7 @@ namespace DevZest.Data.Views
                 get { return this; }
             }
 
-            private bool IsEditing
-            {
-                get { return _view.IsEditing; }
-                set { _view.IsEditing = value; }
-            }
+            private bool IsEditing { get; set; }
 
             private int ActiveBindingIndex
             {
@@ -135,6 +132,11 @@ namespace DevZest.Data.Views
                     base.FlushInput(index, binding, element);
             }
 
+            private void RefreshIsEditing()
+            {
+                _view.IsEditing = IsEditing;
+            }
+
             public void BeginEdit()
             {
                 Debug.Assert(!IsEditing);
@@ -145,6 +147,7 @@ namespace DevZest.Data.Views
                 IsEditing = true;
                 Setup(_view);
                 base.EndSetup(1, EditingElementBinding);
+                RefreshIsEditing();
             }
 
             public void CancelEdit()
@@ -155,6 +158,7 @@ namespace DevZest.Data.Views
                 IsEditing = false;
                 Setup(_view);
                 base.EndSetup(0, ElementBinding);
+                RefreshIsEditing();
             }
 
             public bool CanEndEdit
@@ -187,7 +191,7 @@ namespace DevZest.Data.Views
         }
 
         private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InPlaceEditor),
-            new FrameworkPropertyMetadata(BooleanBoxes.False));
+            new FrameworkPropertyMetadata(BooleanBoxes.False, new PropertyChangedCallback(_OnIsEditingChanged)));
         public static readonly DependencyProperty IsEditingProperty = IsEditingPropertyKey.DependencyProperty;
 
         public InPlaceEditor()
@@ -206,6 +210,18 @@ namespace DevZest.Data.Views
         {
             get { return (bool)GetValue(IsEditingProperty); }
             private set { SetValue(IsEditingPropertyKey, BooleanBoxes.Box(value)); }
+        }
+
+        private static void _OnIsEditingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((InPlaceEditor)d).OnIsEditingChanged();
+        }
+
+        private void OnIsEditingChanged()
+        {
+            var rowPresenter = this.GetRowPresenter();
+            if (rowPresenter != null)
+                rowPresenter.DataPresenter.InvalidateView();
         }
 
         public FrameworkElement Element
