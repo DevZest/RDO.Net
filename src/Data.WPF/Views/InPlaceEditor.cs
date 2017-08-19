@@ -41,7 +41,7 @@ namespace DevZest.Data.Views
                 get { return (RowBinding)Bindings[0]; }
             }
 
-            public RowBinding EditingElementBinding
+            private RowBinding EditingElementBinding
             {
                 get { return (RowBinding)Bindings[1]; }
             }
@@ -173,6 +173,17 @@ namespace DevZest.Data.Views
                 base.FlushInput(1, EditingElementBinding, EditingElement);
                 CancelEdit();
             }
+
+            public void RefreshValidation(RowPresenter rowPresenter)
+            {
+                var element = Element;
+                if (element == null)
+                    return;
+
+                var input = EditingElementBinding.GetInput();
+                if (input != null)
+                    element.RefreshValidation(input.GetErrors(rowPresenter), input.GetWarnings(rowPresenter));
+            }
         }
 
         private static readonly DependencyPropertyKey IsEditingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsEditing), typeof(bool), typeof(InPlaceEditor),
@@ -276,13 +287,7 @@ namespace DevZest.Data.Views
 
         void IRowElement.Refresh(RowPresenter rowPresenter)
         {
-            var element = Element;
-            if (element == null)
-                return;
-
-            var input = _bindingDispatcher.EditingElementBinding.GetInput();
-            if (input != null)
-                element.RefreshValidation(input.GetErrors(rowPresenter), input.GetWarnings(rowPresenter));
+            _bindingDispatcher.RefreshValidation(rowPresenter);
         }
 
         void IRowElement.Cleanup(RowPresenter rowPresenter)
