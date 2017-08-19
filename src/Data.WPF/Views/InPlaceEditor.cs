@@ -157,6 +157,17 @@ namespace DevZest.Data.Views
                 base.EndSetup(0, ElementBinding);
             }
 
+            public bool CanEndEdit
+            {
+                get
+                {
+                    var editingElement = EditingElement;
+                    Debug.Assert(editingElement != null);
+                    var rowInput = EditingElementBinding.GetInput();
+                    return rowInput == null ? true : rowInput.GetInputError(editingElement) == null;
+                }
+            }
+
             public void EndEdit()
             {
                 base.FlushInput(1, EditingElementBinding, EditingElement);
@@ -239,10 +250,7 @@ namespace DevZest.Data.Views
 
         public bool CanEndEdit
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get { return IsEditing ? _bindingDispatcher.CanEndEdit : false; }
         }
 
         public bool EndEdit()
