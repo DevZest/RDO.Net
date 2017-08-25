@@ -212,6 +212,22 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The Input.Columns property is not a single Column.
+        /// </summary>
+        public static string InPlaceEditor_EditingRowBindingNotColumn
+        {
+            get { return GetString("InPlaceEditor_EditingRowBindingNotColumn"); }
+        }
+
+        /// <summary>
+        /// The Input property is null.
+        /// </summary>
+        public static string InPlaceEditor_EditingRowBindingNullInput
+        {
+            get { return GetString("InPlaceEditor_EditingRowBindingNullInput"); }
+        }
+
+        /// <summary>
         /// The trigger has already been initialized with another Input.
         /// </summary>
         public static string Input_TriggerAlreadyInitialized

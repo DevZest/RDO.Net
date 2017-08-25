@@ -3,6 +3,7 @@ using DevZest.Data.Views;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,6 +12,37 @@ namespace DevZest.Data.Presenters
 {
     public static partial class BindingFactory
     {
+        public static CompositeRowBinding<InPlaceEditor> AsInPlaceEditor<T>(this RowBinding<T> editingRowBinding, string format = null, IFormatProvider formatProvider = null)
+            where T : UIElement, new()
+        {
+            if (editingRowBinding.Input == null)
+                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
+
+            var column = editingRowBinding.Input.Columns as Column;
+            if (column == null)
+                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNotColumn, nameof(editingRowBinding));
+            var inertRowBinding = column.AsTextBlock(format, formatProvider);
+            return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
+        }
+
+        public static CompositeRowBinding<InPlaceEditor> AsInPlaceEditor<TEditing, TInert>(this RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            if (editingRowBinding.Input == null)
+                throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
+            if (inertRowBinding == null)
+                throw new ArgumentNullException(nameof(inertRowBinding));
+            return ComposeInPlaceEditor(editingRowBinding, inertRowBinding);
+        }
+
+        private static CompositeRowBinding<InPlaceEditor> ComposeInPlaceEditor<TEditing, TInert>(RowBinding<TEditing> editingRowBinding, RowBinding<TInert> inertRowBinding)
+            where TEditing : UIElement, new()
+            where TInert : UIElement, new()
+        {
+            return new CompositeRowBinding<InPlaceEditor>().AddChild(inertRowBinding, "INERT").AddChild(editingRowBinding, "EDITING");
+        }
+
         public static RowBinding<ComboBox> AsComboBox<T>(this Column<T> source, IEnumerable selectionData, string selectedValuePath, string displayMemberPath)
         {
             return new RowBinding<ComboBox>(
@@ -96,7 +128,7 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<TextBlock> AsTextBlock<T>(this Column<T> source, string format = null, IFormatProvider formatProvider = null)
+        public static RowBinding<TextBlock> AsTextBlock(this Column source, string format = null, IFormatProvider formatProvider = null)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -104,7 +136,7 @@ namespace DevZest.Data.Presenters
             return new RowBinding<TextBlock>(
                 onRefresh: (e, r) =>
                 {
-                    e.Text = r.GetValue(source).ToString(format, formatProvider);
+                    e.Text = source.GetValue(r.DataRow).ToString(format, formatProvider);
                 });
         }
 

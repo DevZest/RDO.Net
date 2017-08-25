@@ -29,7 +29,7 @@ namespace DevZest.Data.Views
 
             private FrameworkElement Element
             {
-                get { return _view.Element; }
+                get { return _view.InertElement; }
             }
 
             private FrameworkElement EditingElement
@@ -224,7 +224,7 @@ namespace DevZest.Data.Views
                 rowPresenter.DataPresenter.InvalidateView();
         }
 
-        public FrameworkElement Element
+        public FrameworkElement InertElement
         {
             get { return IsEditing ? null : Content as FrameworkElement; }
         }
@@ -234,16 +234,16 @@ namespace DevZest.Data.Views
             get { return IsEditing ? Content as FrameworkElement : null; }
         }
 
-        private Style _elementStyle;
-        public Style ElementStyle
+        private Style _inertElementStyle;
+        public Style InertElementStyle
         {
-            get { return _elementStyle; }
+            get { return _inertElementStyle; }
             set
             {
-                _elementStyle = value;
-                var element = Element;
-                if (element != null)
-                    element.Style = value;
+                _inertElementStyle = value;
+                var inertElement = InertElement;
+                if (inertElement != null)
+                    inertElement.Style = value;
             }
         }
 
@@ -263,7 +263,7 @@ namespace DevZest.Data.Views
         private void SetContent(FrameworkElement element)
         {
             if (element != null)
-                element.Style = IsEditing ? EditingElementStyle : ElementStyle;
+                element.Style = IsEditing ? EditingElementStyle : InertElementStyle;
             Content = element;
         }
 

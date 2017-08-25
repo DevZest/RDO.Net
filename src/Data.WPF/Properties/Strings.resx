@@ -192,6 +192,12 @@
   <data name="GridRow_InvalidStarHeight" xml:space="preserve">
     <value>Star height GridRows[{ordinal}] is invalid for vertical or flowable layout.</value>
   </data>
+  <data name="InPlaceEditor_EditingRowBindingNotColumn" xml:space="preserve">
+    <value>The Input.Columns property is not a single Column.</value>
+  </data>
+  <data name="InPlaceEditor_EditingRowBindingNullInput" xml:space="preserve">
+    <value>The Input property is null.</value>
+  </data>
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>
   </data>
