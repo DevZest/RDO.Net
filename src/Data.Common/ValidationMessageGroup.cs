@@ -31,11 +31,6 @@ namespace DevZest.Data
                 get { return true; }
             }
 
-            AbstractValidationMessage IReadOnlyList<AbstractValidationMessage>.this[int index]
-            {
-                get { throw new ArgumentOutOfRangeException(nameof(index)); }
-            }
-
             public IValidationMessageGroup Add(ValidationMessage value)
             {
                 Check.NotNull(value, nameof(value));
@@ -53,22 +48,6 @@ namespace DevZest.Data
             }
 
             IEnumerator IEnumerable.GetEnumerator()
-            {
-                return EmptyEnumerator<ValidationMessage>.Singleton;
-            }
-
-            IAbstractValidationMessageGroup IAbstractValidationMessageGroup.Seal()
-            {
-                return this;
-            }
-
-            public IAbstractValidationMessageGroup Add(AbstractValidationMessage value)
-            {
-                Check.NotNull(value, nameof(value));
-                return value;
-            }
-
-            IEnumerator<AbstractValidationMessage> IEnumerable<AbstractValidationMessage>.GetEnumerator()
             {
                 return EmptyEnumerator<ValidationMessage>.Singleton;
             }
@@ -98,11 +77,6 @@ namespace DevZest.Data
             public int Count
             {
                 get { return _list.Count; }
-            }
-
-            AbstractValidationMessage IReadOnlyList<AbstractValidationMessage>.this[int index]
-            {
-                get { return _list[index]; }
             }
 
             public ValidationMessage this[int index]
@@ -144,29 +118,6 @@ namespace DevZest.Data
             }
 
             IEnumerator IEnumerable.GetEnumerator()
-            {
-                return _list.GetEnumerator();
-            }
-
-            IAbstractValidationMessageGroup IAbstractValidationMessageGroup.Seal()
-            {
-                return Seal();
-            }
-
-            public IAbstractValidationMessageGroup Add(AbstractValidationMessage value)
-            {
-                Check.NotNull(value, nameof(value));
-
-                if (!IsSealed && value is ValidationMessage)
-                    return Add((ValidationMessage)value);
-
-                var result = AbstractValidationMessageGroup.Empty;
-                for (int i = 0; i < Count; i++)
-                    result = result.Add(this[i]);
-                return result.Add(value);
-            }
-
-            IEnumerator<AbstractValidationMessage> IEnumerable<AbstractValidationMessage>.GetEnumerator()
             {
                 return _list.GetEnumerator();
             }

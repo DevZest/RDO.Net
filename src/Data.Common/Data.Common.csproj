@@ -69,8 +69,6 @@
     <Compile Include="DataSetContainer.LocalColumn.cs" />
     <Compile Include="IValidationMessageGroup.cs" />
     <Compile Include="IValidationResult.cs" />
-    <Compile Include="AbstractValidationMessageGroup.cs" />
-    <Compile Include="AbstractValidationMessage.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="LocalColumnBuilder.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
@@ -89,7 +87,6 @@
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="IAbstractValidationMessageGroup.cs" />
     <Compile Include="Primitives\ValidationMessage_T.cs" />
     <Compile Include="ColumnSet.cs" />
     <Compile Include="PagedDataSet.cs" />

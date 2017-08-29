@@ -3,16 +3,9 @@ using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    public interface IValidationMessageGroup : IReadOnlyList<ValidationMessage>, IAbstractValidationMessageGroup
+    public interface IValidationMessageGroup : IReadOnlyList<ValidationMessage>
     {
-        new IValidationMessageGroup Seal();
-
-        new int Count { get; }
-
-        new ValidationMessage this[int index] { get; }
-
-        new IEnumerator<ValidationMessage> GetEnumerator();
-
+        IValidationMessageGroup Seal();
         IValidationMessageGroup Add(ValidationMessage value);
     }
 }

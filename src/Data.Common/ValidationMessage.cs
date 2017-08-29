@@ -38,12 +38,6 @@ namespace DevZest.Data
         #region IValidationMessageGroup
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        int IValidationMessageGroup.Count
-        {
-            get { return 1; }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         int IReadOnlyCollection<ValidationMessage>.Count
         {
             get { return 1; }
@@ -51,17 +45,6 @@ namespace DevZest.Data
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         ValidationMessage IReadOnlyList<ValidationMessage>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        ValidationMessage IValidationMessageGroup.this[int index]
         {
             get
             {
@@ -95,13 +78,6 @@ namespace DevZest.Data
         {
             yield return this;
         }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator<ValidationMessage> IValidationMessageGroup.GetEnumerator()
-        {
-            yield return this;
-        }
-
         #endregion
     }
 }
