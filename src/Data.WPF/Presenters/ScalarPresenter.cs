@@ -18,9 +18,9 @@ namespace DevZest.Data.Presenters
 
         public int FlowIndex { get; private set; } = -1;
 
-        public ViewInputError InputError { get; private set; }
+        public FlushErrorMessage InputError { get; private set; }
 
-        public ViewInputError ValueError { get; private set; }
+        public FlushErrorMessage ValueError { get; private set; }
 
         internal void SetFlowIndex(int flowIndex)
         {
@@ -29,7 +29,7 @@ namespace DevZest.Data.Presenters
             ValueError = null;
         }
 
-        internal void SetErrors(ViewInputError inputError, ViewInputError valueError)
+        internal void SetErrors(FlushErrorMessage inputError, FlushErrorMessage valueError)
         {
             InputError = inputError;
             ValueError = valueError;

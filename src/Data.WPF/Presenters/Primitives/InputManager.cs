@@ -9,9 +9,9 @@ namespace DevZest.Data.Presenters.Primitives
 {
     internal abstract class InputManager : ElementManager
     {
-        private sealed class InputErrorCollection : KeyedCollection<UIElement, ViewInputError>
+        private sealed class FlushErrorCollection : KeyedCollection<UIElement, FlushErrorMessage>
         {
-            protected override UIElement GetKeyForItem(ViewInputError item)
+            protected override UIElement GetKeyForItem(FlushErrorMessage item)
             {
                 return item.Source;
             }
@@ -44,56 +44,56 @@ namespace DevZest.Data.Presenters.Primitives
                 CurrentRow.View.Flush();
         }
 
-        private InputErrorCollection _scalarInputErrors;
-        private InputErrorCollection InternalScalarInputErrors
+        private FlushErrorCollection _scalarFlushErrors;
+        private FlushErrorCollection InternalScalarFlushErrors
         {
             get
             {
-                if (_scalarInputErrors == null)
-                    _scalarInputErrors = new InputErrorCollection();
-                return _scalarInputErrors;
+                if (_scalarFlushErrors == null)
+                    _scalarFlushErrors = new FlushErrorCollection();
+                return _scalarFlushErrors;
             }
         }
 
-        private InputErrorCollection _scalarValueErrors;
-        private InputErrorCollection InternalScalarValueErrors
+        private FlushErrorCollection _scalarValueErrors;
+        private FlushErrorCollection InternalScalarValueErrors
         {
             get
             {
                 if (_scalarValueErrors == null)
-                    _scalarValueErrors = new InputErrorCollection();
+                    _scalarValueErrors = new FlushErrorCollection();
                 return _scalarValueErrors;
             }
         }
 
-        internal ViewInputError GetScalarInputError(UIElement element)
+        internal FlushErrorMessage GetScalarFlushError(UIElement element)
         {
-            return GetInputError(_scalarInputErrors, element);
+            return GetFlushError(_scalarFlushErrors, element);
         }
 
-        internal ViewInputError GetScalarValueError(UIElement element)
+        internal FlushErrorMessage GetScalarValueError(UIElement element)
         {
-            return GetInputError(_scalarValueErrors, element);
+            return GetFlushError(_scalarValueErrors, element);
         }
 
-        private static ViewInputError GetInputError(InputErrorCollection inputErrors, UIElement element)
+        private static FlushErrorMessage GetFlushError(FlushErrorCollection flushErrors, UIElement element)
         {
-            if (inputErrors == null)
+            if (flushErrors == null)
                 return null;
-            return inputErrors.Contains(element) ? inputErrors[element] : null;
+            return flushErrors.Contains(element) ? flushErrors[element] : null;
         }
 
-        internal void SetScalarInputError(UIElement element, ViewInputError inputError)
+        internal void SetScalarFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            SetInputError(InternalScalarInputErrors, element, inputError);
+            SetInputError(InternalScalarFlushErrors, element, inputError);
         }
 
-        internal void SetScalarValueError(UIElement element, ViewInputError inputError)
+        internal void SetScalarValueError(UIElement element, FlushErrorMessage inputError)
         {
             SetInputError(InternalScalarValueErrors, element, inputError);
         }
 
-        private void SetInputError(InputErrorCollection inputErrors, UIElement element, ViewInputError inputError)
+        private void SetInputError(FlushErrorCollection inputErrors, UIElement element, FlushErrorMessage inputError)
         {
             Debug.Assert(inputErrors != null);
             inputErrors.Remove(element);
@@ -102,44 +102,44 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
-        public IReadOnlyList<ViewInputError> ScalarInputErrors
+        public IReadOnlyList<FlushErrorMessage> ScalarInputErrors
         {
             get
             {
-                if (_scalarInputErrors == null)
-                    return Array<ViewInputError>.Empty;
-                return _scalarInputErrors;
+                if (_scalarFlushErrors == null)
+                    return Array<FlushErrorMessage>.Empty;
+                return _scalarFlushErrors;
             }
         }
 
-        private InputErrorCollection _rowInputErrors;
-        private InputErrorCollection InternalRowInputErrors
+        private FlushErrorCollection _rowFlushErrors;
+        private FlushErrorCollection InternalRowFlushErrors
         {
             get
             {
-                if (_rowInputErrors == null)
-                    _rowInputErrors = new InputErrorCollection();
-                return _rowInputErrors;
+                if (_rowFlushErrors == null)
+                    _rowFlushErrors = new FlushErrorCollection();
+                return _rowFlushErrors;
             }
         }
 
-        internal ViewInputError GetRowInputError(UIElement element)
+        internal FlushErrorMessage GetRowFlushError(UIElement element)
         {
-            return GetInputError(_rowInputErrors, element);
+            return GetFlushError(_rowFlushErrors, element);
         }
 
-        internal void SetRowInputError(UIElement element, ViewInputError inputError)
+        internal void SetRowFlushError(UIElement element, FlushErrorMessage value)
         {
-            SetInputError(InternalRowInputErrors, element, inputError);
+            SetInputError(InternalRowFlushErrors, element, value);
         }
 
-        public IReadOnlyList<ViewInputError> RowInputErrors
+        public IReadOnlyList<FlushErrorMessage> RowInputErrors
         {
             get
             {
-                if (_rowInputErrors == null)
-                    return Array<ViewInputError>.Empty;
-                return _rowInputErrors;
+                if (_rowFlushErrors == null)
+                    return Array<FlushErrorMessage>.Empty;
+                return _rowFlushErrors;
             }
         }
 

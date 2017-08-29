@@ -168,7 +168,7 @@ namespace DevZest.Data.Views
                     var editingElement = EditingElement;
                     Debug.Assert(editingElement != null);
                     var rowInput = EditingElementBinding.GetInput();
-                    return rowInput == null ? true : rowInput.GetInputError(editingElement) == null;
+                    return rowInput == null ? true : rowInput.GetFlushError(editingElement) == null;
                 }
             }
 
@@ -186,7 +186,7 @@ namespace DevZest.Data.Views
 
                 var input = EditingElementBinding.GetInput();
                 if (input != null)
-                    element.RefreshValidation(input.GetErrors(rowPresenter), input.GetWarnings(rowPresenter));
+                    element.RefreshValidation(() => null, () => input.GetErrors(rowPresenter), () => input.GetWarnings(rowPresenter));
             }
         }
 

@@ -28,22 +28,22 @@ namespace DevZest.Data.Presenters.Primitives
 
             var element = textBox[inputManager.CurrentRow];
             Assert.IsTrue(string.IsNullOrEmpty(element.Text));
-            Assert.IsNull(inputManager.GetRowInputError(element));
+            Assert.IsNull(inputManager.GetRowFlushError(element));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(element);
                 Assert.AreEqual(0, errors.Count);
             }
 
             element.Text = "A";
-            Assert.IsNotNull(inputManager.GetRowInputError(element));
+            Assert.IsNotNull(inputManager.GetRowFlushError(element));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[inputManager.CurrentRow]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.GetRowInputError(element), errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.GetRowFlushError(element), errors[0].ErrorContent);
             }
 
             element.Text = "100";
-            Assert.IsNull(inputManager.GetRowInputError(element));
+            Assert.IsNull(inputManager.GetRowFlushError(element));
             Assert.AreEqual(100, dataSet._.ParentProductCategoryID[inputManager.CurrentRow.DataRow]);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(element);
@@ -62,7 +62,7 @@ namespace DevZest.Data.Presenters.Primitives
                 },
                 valueValidator: x =>
                 {
-                    return x > 5 ? new InputError("ERR-01", "Value cannot be greater than 5.") : InputError.Empty;
+                    return x > 5 ? new FlushError("ERR-01", "Value cannot be greater than 5.") : FlushError.Empty;
                 });
 
             Assert.AreEqual(-1, oldValue);
@@ -90,7 +90,7 @@ namespace DevZest.Data.Presenters.Primitives
             var _ = dataSet._;
             Scalar<Int32> scalar = new Scalar<int>(valueValidator: x =>
             {
-                return x > 5 ? new InputError("ERR-01", "Value cannot be greater than 5.") : InputError.Empty;
+                return x > 5 ? new FlushError("ERR-01", "Value cannot be greater than 5.") : FlushError.Empty;
             });
             ScalarBinding<TextBox> textBox = null;
             RowBinding<TextBlock> textBlock = null;
@@ -102,24 +102,24 @@ namespace DevZest.Data.Presenters.Primitives
             });
 
             Assert.AreEqual("0", textBox[0].Text);
-            Assert.IsNull(inputManager.GetScalarInputError(textBox[0]));
+            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(0, errors.Count);
             }
 
             textBox[0].Text = "A";
-            Assert.IsNotNull(inputManager.GetScalarInputError(textBox[0]));
+            Assert.IsNotNull(inputManager.GetScalarFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.GetScalarInputError(textBox[0]), errors[0].ErrorContent);
+                Assert.AreEqual(inputManager.GetScalarFlushError(textBox[0]), errors[0].ErrorContent);
             }
 
             textBox[0].Text = "4";
-            Assert.IsNull(inputManager.GetScalarInputError(textBox[0]));
+            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
             Assert.AreEqual(4, scalar.Value);
-            Assert.IsNull(inputManager.GetScalarInputError(textBox[0]));
+            Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
                 Assert.AreEqual(0, errors.Count);

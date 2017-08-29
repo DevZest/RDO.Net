@@ -24,14 +24,14 @@ namespace DevZest.Data.Presenters
             get { return RowBinding; }
         }
 
-        public sealed override ViewInputError GetInputError(UIElement element)
+        public sealed override FlushErrorMessage GetFlushError(UIElement element)
         {
-            return InputManager.GetRowInputError(element);
+            return InputManager.GetRowFlushError(element);
         }
 
-        internal sealed override void SetInputError(UIElement element, ViewInputError inputError)
+        internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            InputManager.SetRowInputError(element, inputError);
+            InputManager.SetRowFlushError(element, inputError);
         }
 
         internal IColumnSet Columns { get; private set; } = ColumnSet.Empty;
@@ -42,7 +42,7 @@ namespace DevZest.Data.Presenters
             get { return InputManager.CurrentRow; }
         }
 
-        public RowInput<T> WithInputValidator(Func<T, InputError> inputValidaitor, Trigger<T> inputValidationTrigger)
+        public RowInput<T> WithInputValidator(Func<T, FlushError> inputValidaitor, Trigger<T> inputValidationTrigger)
         {
             SetInputValidator(inputValidaitor, inputValidationTrigger);
             return this;
@@ -92,17 +92,21 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public IAbstractValidationMessageGroup GetErrors(RowPresenter rowPresenter)
+        public FlushErrorMessage GetFlushError(RowPresenter rowPresenter)
         {
             RowBinding rowBinding = RowBinding;
             var element = rowBinding[rowPresenter];
             if (element != null)
             {
-                var inputError = GetInputError(RowBinding[rowPresenter]);
+                var inputError = GetFlushError(RowBinding[rowPresenter]);
                 if (inputError != null)
                     return inputError;
             }
+            return null;
+        }
 
+        public IValidationMessageGroup GetErrors(RowPresenter rowPresenter)
+        {
             var result = ValidationMessageGroup.Empty;
             result = AddValidationMessages(result, InputManager.Errors, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
@@ -156,20 +160,20 @@ namespace DevZest.Data.Presenters
 
         private void RefreshValidation(T element, RowPresenter rowPresenter)
         {
-            element.RefreshValidation(GetErrors(rowPresenter), GetWarnings(rowPresenter));
+            element.RefreshValidation(() => GetFlushError(element), () => GetErrors(rowPresenter), () => GetWarnings(rowPresenter));
         }
 
-        private Action<T, RowPresenter, ViewInputError> _onRefresh;
+        private Action<T, RowPresenter, FlushErrorMessage> _onRefresh;
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             if (_onRefresh != null)
-                _onRefresh(element, rowPresenter, GetInputError(element));
+                _onRefresh(element, rowPresenter, GetFlushError(element));
             else if (rowPresenter != CurrentRow)
                 RowBinding.Refresh(element, rowPresenter);
             RefreshValidation(element, rowPresenter);
         }
 
-        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, ViewInputError> onRefresh)
+        public RowInput<T> WithRefreshAction(Action<T, RowPresenter, FlushErrorMessage> onRefresh)
         {
             VerifyNotSealed();
             _onRefresh = onRefresh;

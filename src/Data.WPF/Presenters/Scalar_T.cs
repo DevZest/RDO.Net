@@ -3,20 +3,20 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class Scalar<T>
+    public sealed class Scalar<T> : Scalar
     {
-        public Scalar(T value = default(T), Action<T> onValueChanged = null, Func<T, InputError> valueValidator = null)
+        public Scalar(T value = default(T), Action<T> onValueChanged = null, Func<T, FlushError> valueValidator = null)
         {
             _value = value;
             _onValueChanged = onValueChanged;
             _valueValidator = valueValidator;
         }
 
-        private Func<T, InputError> _valueValidator;
+        private Func<T, FlushError> _valueValidator;
 
-        public InputError Validate(T value)
+        public FlushError Validate(T value)
         {
-            return _valueValidator != null ? _valueValidator(value) : InputError.Empty;
+            return _valueValidator != null ? _valueValidator(value) : FlushError.Empty;
         }
 
         private T _value;

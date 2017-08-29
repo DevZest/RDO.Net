@@ -24,17 +24,17 @@ namespace DevZest.Data.Presenters
             get { return ScalarBinding; }
         }
 
-        public sealed override ViewInputError GetInputError(UIElement element)
+        public sealed override FlushErrorMessage GetFlushError(UIElement element)
         {
-            return InputManager.GetScalarInputError(element);
+            return InputManager.GetScalarFlushError(element);
         }
 
-        internal sealed override void SetInputError(UIElement element, ViewInputError inputError)
+        internal sealed override void SetFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            InputManager.SetScalarInputError(element, inputError);
+            InputManager.SetScalarFlushError(element, inputError);
         }
 
-        public ScalarInput<T> WithInputValidator(Func<T, InputError> inputValidator, Trigger<T> inputValidationTrigger = null)
+        public ScalarInput<T> WithInputValidator(Func<T, FlushError> inputValidator, Trigger<T> inputValidationTrigger = null)
         {
             SetInputValidator(inputValidator, inputValidationTrigger);
             return this;
@@ -59,7 +59,7 @@ namespace DevZest.Data.Presenters
                     return scalar.ChangeValue(value);
                 else
                 {
-                    InputManager.SetScalarValueError(element, new ViewInputError(inputError, element));
+                    InputManager.SetScalarValueError(element, new FlushErrorMessage(inputError, element));
                     return false;
                 }
             });
@@ -87,15 +87,15 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onRefresh;
         internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
-            var inputError = GetInputError(element);
+            var flushError = GetFlushError(element);
             var valueError = InputManager.GetScalarValueError(element);
             if (_onRefresh != null)
             {
-                scalarPresenter.SetErrors(inputError, valueError);
+                scalarPresenter.SetErrors(flushError, valueError);
                 _onRefresh(element, scalarPresenter);
                 scalarPresenter.SetErrors(null, null);
             }
-            element.RefreshValidation(inputError ?? valueError, AbstractValidationMessageGroup.Empty);
+            //element.RefreshValidation(flushError ?? valueError, AbstractValidationMessageGroup.Empty);
         }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)

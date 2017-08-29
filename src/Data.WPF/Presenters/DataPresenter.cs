@@ -212,12 +212,12 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().Validate();
         }
 
-        public IReadOnlyList<ViewInputError> ScalarInputErrors
+        public IReadOnlyList<FlushErrorMessage> ScalarInputErrors
         {
             get { return LayoutManager == null ? null : LayoutManager.ScalarInputErrors; }
         }
 
-        public IReadOnlyList<ViewInputError> RowInputErrors
+        public IReadOnlyList<FlushErrorMessage> RowInputErrors
         {
             get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
         }

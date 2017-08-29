@@ -2,11 +2,11 @@
 
 namespace DevZest.Data.Presenters
 {
-    public struct InputError
+    public struct FlushError
     {
-        public static InputError Empty = new InputError();
+        public static FlushError Empty = new FlushError();
 
-        public InputError(string id, string description)
+        public FlushError(string id, string description)
         {
             if (string.IsNullOrEmpty(description))
                 throw new ArgumentNullException(nameof(description));

@@ -26,7 +26,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         private Trigger<T> _flushTrigger;
         private Trigger<T> _inputValidationTrigger;
-        private Func<T, InputError> _inputValidator;
+        private Func<T, FlushError> _inputValidator;
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -45,7 +45,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetInputValidator(Func<T, InputError> inputValidator, Trigger<T> inputValidationTrigger)
+        internal void SetInputValidator(Func<T, FlushError> inputValidator, Trigger<T> inputValidationTrigger)
         {
             if (inputValidator == null)
                 throw new ArgumentNullException(nameof(inputValidator));
@@ -74,21 +74,21 @@ namespace DevZest.Data.Presenters.Primitives
             _flushTrigger.Detach(element);
         }
 
-        public abstract ViewInputError GetInputError(UIElement element);
+        public abstract FlushErrorMessage GetFlushError(UIElement element);
 
-        internal abstract void SetInputError(UIElement element, ViewInputError inputError);
+        internal abstract void SetFlushError(UIElement element, FlushErrorMessage inputError);
 
         internal void ValidateInput(T element)
         {
             if (_inputValidator == null)
                 return;
-            var oldInputError = GetInputError(element);
+            var oldInputError = GetFlushError(element);
             var inputError = _inputValidator(element);
             if (IsInputErrorChanged(inputError, oldInputError))
-                SetInputError(element, inputError.IsEmpty ? null : new ViewInputError(inputError, element));
+                SetFlushError(element, inputError.IsEmpty ? null : new FlushErrorMessage(inputError, element));
         }
 
-        private static bool IsInputErrorChanged(InputError inputError, ViewInputError viewInputError)
+        private static bool IsInputErrorChanged(FlushError inputError, FlushErrorMessage viewInputError)
         {
             return inputError.IsEmpty ? viewInputError != null
                 : viewInputError == null || viewInputError.Id != inputError.Id || viewInputError.Description != inputError.Description;
@@ -100,7 +100,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return;
 
             ValidateInput(element);
-            if (GetInputError(element) == null)
+            if (GetFlushError(element) == null)
                 FlushCore(element);
         }
 

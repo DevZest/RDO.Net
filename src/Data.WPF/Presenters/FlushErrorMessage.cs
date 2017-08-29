@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public class ViewInputError : ValidationMessage<UIElement>
+    public class FlushErrorMessage : ValidationMessage<UIElement>
     {
-        public ViewInputError(InputError inputError, UIElement source)
+        public FlushErrorMessage(FlushError inputError, UIElement source)
             : base(inputError.Id, ValidationSeverity.Error, inputError.Description, source)
         {
             if (source == null)

@@ -57,10 +57,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
+                return Int16.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -83,10 +83,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
+                return Int32.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -109,10 +109,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
+                return Int64.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -135,10 +135,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Single result;
-                return Single.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
+                return Single.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -161,10 +161,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Double result;
-                return Double.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
+                return Double.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -196,10 +196,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
+                return Int16.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -222,10 +222,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
+                return Int32.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -248,10 +248,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
+                return Int64.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -274,10 +274,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Single result;
-                return Single.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
+                return Single.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -300,10 +300,10 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 if (string.IsNullOrEmpty(e.Text))
-                    return InputError.Empty;
+                    return FlushError.Empty;
                 Double result;
-                return Double.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
+                return Double.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -326,8 +326,8 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
+                return Int16.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int16)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -347,8 +347,8 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
+                return Int32.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int32)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -368,8 +368,8 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
+                return Int64.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Int64)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -389,8 +389,8 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 Single result;
-                return Single.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
+                return Single.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Single)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
@@ -410,8 +410,8 @@ namespace DevZest.Data.Presenters
             .WithInputValidator(e =>
             {
                 Double result;
-                return Double.TryParse(e.Text, out result) ? InputError.Empty
-                : new InputError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
+                return Double.TryParse(e.Text, out result) ? FlushError.Empty
+                : new FlushError(inputErrorId, GetInvalidInputErrorMessage(inputErrorDescription, typeof(Double)));
             }, inputValidationTrigger)
             .WithFlush(source, e =>
             {
