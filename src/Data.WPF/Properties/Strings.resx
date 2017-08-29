@@ -258,6 +258,9 @@
   <data name="ScalarBinding_OutOfVerticalRowRange" xml:space="preserve">
     <value>Flowable ScalarBindings[{index}] is out of vertical side of RowRange.</value>
   </data>
+  <data name="ScalarValidationMessage_EmptySourceScalars" xml:space="preserve">
+    <value>The source scalars cannot be empty.</value>
+  </data>
   <data name="StyleKey_StyleNotFound" xml:space="preserve">
     <value>Cannot find Style in the ResourceDictionary.</value>
   </data>

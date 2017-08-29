@@ -388,6 +388,14 @@ namespace DevZest.Data
         }
 
         /// <summary>
+        /// The source scalars cannot be empty.
+        /// </summary>
+        public static string ScalarValidationMessage_EmptySourceScalars
+        {
+            get { return GetString("ScalarValidationMessage_EmptySourceScalars"); }
+        }
+
+        /// <summary>
         /// Cannot find Style in the ResourceDictionary.
         /// </summary>
         public static string StyleKey_StyleNotFound
