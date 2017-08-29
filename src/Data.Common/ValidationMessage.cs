@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data
 {
-    public class ValidationMessage : ValidationMessage<IColumnSet>, IValidationMessageGroup
+    public class ValidationMessage : ValidationMessageBase<IColumnSet>, IValidationMessageGroup
     {
         public ValidationMessage(string id, ValidationSeverity severity, string description, IColumnSet source)
             : base(id, severity, description, source)

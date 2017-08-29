@@ -2,16 +2,15 @@
 
 namespace DevZest.Data.Primitives
 {
-    public abstract class ValidationMessage<T>
+    public abstract class ValidationMessageBase
     {
-        protected ValidationMessage(string id, ValidationSeverity severity, string description, T source)
+        protected ValidationMessageBase(string id, ValidationSeverity severity, string description)
         {
             Check.NotEmpty(description, nameof(description));
 
             _id = id;
             _description = description;
             _severity = severity;
-            Source = source;
         }
 
         private readonly string _id;
@@ -31,8 +30,6 @@ namespace DevZest.Data.Primitives
         {
             get { return _description; }
         }
-
-        public T Source { get; private set; }
 
         public override string ToString()
         {
