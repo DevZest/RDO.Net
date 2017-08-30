@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public static class ScalarValidationMessageGroup
+    public static class ScalarValidationMessages
     {
-        private class EmptyGroup : IScalarValidationMessageGroup
+        private class EmptyGroup : IScalarValidationMessages
         {
             public static EmptyGroup Singleton = new EmptyGroup();
             private EmptyGroup()
@@ -29,13 +29,13 @@ namespace DevZest.Data.Presenters
                 get { return true; }
             }
 
-            public IScalarValidationMessageGroup Add(ScalarValidationMessage value)
+            public IScalarValidationMessages Add(ScalarValidationMessage value)
             {
                 Check.NotNull(value, nameof(value));
                 return value;
             }
 
-            public IScalarValidationMessageGroup Seal()
+            public IScalarValidationMessages Seal()
             {
                 return this;
             }
@@ -51,7 +51,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class ListGroup : IScalarValidationMessageGroup
+        private class ListGroup : IScalarValidationMessages
         {
             private bool _isSealed;
             private List<ScalarValidationMessage> _list = new List<ScalarValidationMessage>();
@@ -82,13 +82,13 @@ namespace DevZest.Data.Presenters
                 get { return _list[index]; }
             }
 
-            public IScalarValidationMessageGroup Seal()
+            public IScalarValidationMessages Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IScalarValidationMessageGroup Add(ScalarValidationMessage value)
+            public IScalarValidationMessages Add(ScalarValidationMessage value)
             {
                 Check.NotNull(value, nameof(value));
 
@@ -121,25 +121,25 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static IScalarValidationMessageGroup Empty
+        public static IScalarValidationMessages Empty
         {
             get { return EmptyGroup.Singleton; }
         }
 
-        internal static IScalarValidationMessageGroup New(ScalarValidationMessage value1, ScalarValidationMessage value2)
+        internal static IScalarValidationMessages New(ScalarValidationMessage value1, ScalarValidationMessage value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new ListGroup(value1, value2);
         }
 
-        public static IScalarValidationMessageGroup New(params ScalarValidationMessage[] values)
+        public static IScalarValidationMessages New(params ScalarValidationMessage[] values)
         {
             Check.NotNull(values, nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IScalarValidationMessageGroup result = values[0].CheckNotNull(nameof(values), 0);
+            IScalarValidationMessages result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;

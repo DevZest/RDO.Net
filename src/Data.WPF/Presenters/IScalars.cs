@@ -3,28 +3,28 @@
 namespace DevZest.Data.Presenters
 {
     /// <summary>Represents set of Scalar(s), which is specially optimized for singleton set.</summary>
-    public interface IScalarSet : IReadOnlyCollection<Scalar>
+    public interface IScalars : IReadOnlyCollection<Scalar>
     {
         /// <summary>Gets a value indicates whether this set is sealed.</summary>
         bool IsSealed { get; }
 
         /// <summary>Ensures this set is sealed.</summary>
         /// <returns>This set.</returns>
-        IScalarSet Seal();
+        IScalars Seal();
 
         /// <summary>Adds the specified Scalar into this set.</summary>
         /// <param name="value">The Scalar to add.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IScalarSet Add(Scalar value);
+        IScalars Add(Scalar value);
 
         /// <summary>Removes the specified Scalar from this set.</summary>
         /// <param name="value">The Scalar to remove.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IScalarSet Remove(Scalar value);
+        IScalars Remove(Scalar value);
 
         /// <summary>Removes all the Scalar from this set.</summary>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IScalarSet Clear();
+        IScalars Clear();
 
         /// <summary>Determines whether this set contains a specified Scalar.</summary>
         /// <param name="value">The Scalar to locate in the set.</param>

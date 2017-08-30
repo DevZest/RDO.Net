@@ -44,8 +44,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Presenters\IScalarSet.cs" />
-    <Compile Include="Presenters\IScalarValidationMessageGroup.cs" />
+    <Compile Include="Presenters\IScalars.cs" />
+    <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\Primitives\CompositeBindingDispatcher.cs" />
     <Compile Include="Presenters\Primitives\ElementPresenter.cs" />
     <Compile Include="Presenters\Primitives\IBlockElement.cs" />
@@ -53,9 +53,9 @@
     <Compile Include="Presenters\Primitives\IRowElement.cs" />
     <Compile Include="Presenters\Primitives\IScalarElement.cs" />
     <Compile Include="Presenters\Scalar.cs" />
-    <Compile Include="Presenters\ScalarSet.cs" />
+    <Compile Include="Presenters\Scalars.cs" />
     <Compile Include="Presenters\ScalarValidationMessage.cs" />
-    <Compile Include="Presenters\ScalarValidationMessageGroup.cs" />
+    <Compile Include="Presenters\ScalarValidationMessages.cs" />
     <Compile Include="Presenters\Services\ColumnHeaderCommands.cs" />
     <Compile Include="Presenters\Services\CommandExtensions.cs" />
     <Compile Include="Presenters\Services\DataViewCommands.cs" />

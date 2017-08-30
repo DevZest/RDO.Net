@@ -5,12 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class Scalar : IScalarSet
+    public abstract class Scalar : IScalars
     {
         #region IColumnSet
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IScalarSet.Contains(Scalar value)
+        bool IScalars.Contains(Scalar value)
         {
             return value == this;
         }
@@ -34,42 +34,42 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IScalarSet.IsSealed
+        bool IScalars.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarSet IScalarSet.Seal()
+        IScalars IScalars.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarSet IScalarSet.Add(Scalar value)
+        IScalars IScalars.Add(Scalar value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
             if (value == this)
                 return this;
-            return ScalarSet.New(this, value);
+            return Scalars.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarSet IScalarSet.Remove(Scalar value)
+        IScalars IScalars.Remove(Scalar value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
             if (value == this)
-                return ScalarSet.Empty;
+                return Scalars.Empty;
             else
                 return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IScalarSet IScalarSet.Clear()
+        IScalars IScalars.Clear()
         {
-            return ScalarSet.Empty;
+            return Scalars.Empty;
         }
 
         #endregion
