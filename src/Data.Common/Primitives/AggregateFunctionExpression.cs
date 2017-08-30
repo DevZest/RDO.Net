@@ -22,13 +22,13 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetScalarSourceModels()
+        protected sealed override IModels GetScalarSourceModels()
         {
-            return ModelSet.Empty;
+            return Models.Empty;
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetAggregateBaseModels()
+        protected sealed override IModels GetAggregateBaseModels()
         {
             return Param.ScalarSourceModels;
         }

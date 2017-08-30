@@ -7,19 +7,19 @@ namespace DevZest.Data.Primitives
     {
         internal abstract void SetOwner(Column column);
 
-        private IColumnSet _baseColumns;
-        public IColumnSet BaseColumns
+        private IColumns _baseColumns;
+        public IColumns BaseColumns
         {
             get { return _baseColumns ?? (_baseColumns = GetBaseColumns().Seal()); }
         }
 
-        protected abstract IColumnSet GetBaseColumns();
+        protected abstract IColumns GetBaseColumns();
 
-        private IModelSet _scalarSourceModels;
+        private IModels _scalarSourceModels;
         /// <summary>
         /// Gets the set of parent models involved in this expression.
         /// </summary>
-        public IModelSet ScalarSourceModels
+        public IModels ScalarSourceModels
         {
             get { return _scalarSourceModels ?? (_scalarSourceModels = GetScalarSourceModels().Seal()); }
         }
@@ -28,13 +28,13 @@ namespace DevZest.Data.Primitives
         /// Gets the set of parent models involved in this expression.
         /// </summary>
         /// <returns>The set of parent models involved in this expression.</returns>
-        protected abstract IModelSet GetScalarSourceModels();
+        protected abstract IModels GetScalarSourceModels();
 
-        private IModelSet _aggregateSourceModels;
+        private IModels _aggregateSourceModels;
         /// <summary>
         /// Gets the set of aggregated models involved in this expression.
         /// </summary>
-        public IModelSet AggregateSourceModels
+        public IModels AggregateSourceModels
         {
             get { return _aggregateSourceModels ?? (_aggregateSourceModels = GetAggregateBaseModels().Seal()); }
         }
@@ -43,7 +43,7 @@ namespace DevZest.Data.Primitives
         /// Gets the set of aggregated models involved in this expression.
         /// </summary>
         /// <returns>The set of aggregated models involved in this expression.</returns>
-        protected abstract IModelSet GetAggregateBaseModels();
+        protected abstract IModels GetAggregateBaseModels();
 
         /// <summary>
         /// Gets the <see cref="DbExpression"/> object which can be used for database command generation.

@@ -23,7 +23,7 @@ namespace DevZest.Data
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
 
-            public IValidationMessageGroup this[DataRow key]
+            public IColumnValidationMessages this[DataRow key]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(key)); }
             }
@@ -55,7 +55,7 @@ namespace DevZest.Data
                 return false;
             }
 
-            public bool TryGetValue(DataRow key, out IValidationMessageGroup value)
+            public bool TryGetValue(DataRow key, out IColumnValidationMessages value)
             {
                 value = null;
                 return false;
@@ -86,7 +86,7 @@ namespace DevZest.Data
 
             public bool IsSealed { get; private set; }
 
-            IValidationMessageGroup IValidationResult.this[DataRow dataRow]
+            IColumnValidationMessages IValidationResult.this[DataRow dataRow]
             {
                 get { return base[dataRow].Messages; }
             }
@@ -120,7 +120,7 @@ namespace DevZest.Data
                 return result;
             }
 
-            public bool TryGetValue(DataRow dataRow, out IValidationMessageGroup value)
+            public bool TryGetValue(DataRow dataRow, out IColumnValidationMessages value)
             {
                 if (Contains(dataRow))
                 {

@@ -139,12 +139,12 @@ namespace DevZest.Data
                 throw new NotSupportedException();
             }
 
-            protected sealed override IModelSet GetAggregateBaseModels()
+            protected sealed override IModels GetAggregateBaseModels()
             {
                 throw new NotSupportedException();
             }
 
-            protected sealed override IModelSet GetScalarSourceModels()
+            protected sealed override IModels GetScalarSourceModels()
             {
                 throw new NotSupportedException();
             }
@@ -169,9 +169,9 @@ namespace DevZest.Data
                 get { return _expression(dataRow); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
-                return ColumnSet.Empty;
+                return Columns.Empty;
             }
         }
 
@@ -192,7 +192,7 @@ namespace DevZest.Data
                 get { return _expression(dataRow, _column); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _column.BaseColumns;
             }
@@ -213,14 +213,14 @@ namespace DevZest.Data
 
             private readonly T1 _column1;
             private readonly T2 _column2;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -244,14 +244,14 @@ namespace DevZest.Data
             private readonly T1 _column1;
             private readonly T2 _column2;
             private readonly T3 _column3;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -278,14 +278,14 @@ namespace DevZest.Data
             private readonly T2 _column2;
             private readonly T3 _column3;
             private readonly T4 _column4;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -316,14 +316,14 @@ namespace DevZest.Data
             private readonly T3 _column3;
             private readonly T4 _column4;
             private readonly T5 _column5;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -357,14 +357,14 @@ namespace DevZest.Data
             private readonly T4 _column4;
             private readonly T5 _column5;
             private readonly T6 _column6;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -402,14 +402,14 @@ namespace DevZest.Data
             private readonly T5 _column5;
             private readonly T6 _column6;
             private readonly T7 _column7;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -450,14 +450,14 @@ namespace DevZest.Data
             private readonly T6 _column6;
             private readonly T7 _column7;
             private readonly T8 _column8;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7, _column8); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -502,14 +502,14 @@ namespace DevZest.Data
             private readonly T7 _column7;
             private readonly T8 _column8;
             private readonly T9 _column9;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7, _column8, _column9); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -557,14 +557,14 @@ namespace DevZest.Data
             private readonly T8 _column8;
             private readonly T9 _column9;
             private readonly T10 _column10;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7, _column8, _column9, _column10); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -615,14 +615,14 @@ namespace DevZest.Data
             private readonly T9 _column9;
             private readonly T10 _column10;
             private readonly T11 _column11;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7, _column8, _column9, _column10, _column11); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }
@@ -676,14 +676,14 @@ namespace DevZest.Data
             private readonly T10 _column10;
             private readonly T11 _column11;
             private readonly T12 _column12;
-            private readonly IColumnSet _baseColumns;
+            private readonly IColumns _baseColumns;
             private readonly Func<DataRow, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TDataType> _expression;
             public override TDataType this[DataRow dataRow]
             {
                 get { return _expression(dataRow, _column1, _column2, _column3, _column4, _column5, _column6, _column7, _column8, _column9, _column10, _column11, _column12); }
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _baseColumns;
             }

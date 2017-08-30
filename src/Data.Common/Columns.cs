@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace DevZest.Data
 {
-    public static class ColumnSet
+    public static class Columns
     {
-        private class EmptyColumnSet : IColumnSet
+        private class EmptyColumnSet : IColumns
         {
             public static EmptyColumnSet Singleton = new EmptyColumnSet();
             private EmptyColumnSet()
@@ -32,24 +32,24 @@ namespace DevZest.Data
                 return false;
             }
 
-            public IColumnSet Add(Column value)
+            public IColumns Add(Column value)
             {
                 Check.NotNull(value, nameof(value));
                 return value;
             }
 
-            public IColumnSet Remove(Column value)
+            public IColumns Remove(Column value)
             {
                 Check.NotNull(value, nameof(value));
                 return this;
             }
 
-            public IColumnSet Clear()
+            public IColumns Clear()
             {
                 return this;
             }
 
-            public IColumnSet Seal()
+            public IColumns Seal()
             {
                 return this;
             }
@@ -65,7 +65,7 @@ namespace DevZest.Data
             }
         }
 
-        private class HashSetColumnSet : IColumnSet
+        private class HashSetColumnSet : IColumns
         {
             private bool _isSealed;
             private HashSet<Column> _hashSet = new HashSet<Column>();
@@ -91,13 +91,13 @@ namespace DevZest.Data
                 get { return _hashSet.Count; }
             }
 
-            public IColumnSet Seal()
+            public IColumns Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IColumnSet Add(Column value)
+            public IColumns Add(Column value)
             {
                 Check.NotNull(value, nameof(value));
 
@@ -122,7 +122,7 @@ namespace DevZest.Data
                 }
             }
 
-            public IColumnSet Remove(Column value)
+            public IColumns Remove(Column value)
             {
                 Check.NotNull(value, nameof(value));
 
@@ -150,7 +150,7 @@ namespace DevZest.Data
                 return result;
             }
 
-            public IColumnSet Clear()
+            public IColumns Clear()
             {
                 if (IsSealed)
                     return Empty;
@@ -178,56 +178,56 @@ namespace DevZest.Data
             }
         }
 
-        public static IColumnSet Empty
+        public static IColumns Empty
         {
             get { return EmptyColumnSet.Singleton; }
         }
 
-        internal static IColumnSet New(Column value1, Column value2)
+        internal static IColumns New(Column value1, Column value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new HashSetColumnSet(value1, value2);
         }
 
-        public static IColumnSet New(params Column[] values)
+        public static IColumns New(params Column[] values)
         {
             Check.NotNull(values, nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IColumnSet result = values[0].CheckNotNull(nameof(values), 0);
+            IColumns result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
 
-        internal static string Serialize(this IColumnSet columns)
+        internal static string Serialize(this IColumns columns)
         {
             return columns == null || columns.Count == 0 ? string.Empty : string.Join(",", columns.Select(x => x.Name));
         }
 
-        internal static IColumnSet Deserialize(Model model, string input)
+        internal static IColumns Deserialize(Model model, string input)
         {
             if (string.IsNullOrEmpty(input))
-                return ColumnSet.Empty;
+                return Columns.Empty;
 
             var columnNames = input.Split(',');
             if (columnNames == null || columnNames.Length == 0)
-                return ColumnSet.Empty;
+                return Columns.Empty;
 
             var result = new Column[columnNames.Length];
             for (int i = 0; i < result.Length; i++)
                 result[i] = model.DeserializeColumn(columnNames[i]);
 
-            return ColumnSet.New(result);
+            return Columns.New(result);
         }
 
         /// <summary>Removes the columns in the specified collection from the current set.</summary>
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection of items to remove from this set.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        public static IColumnSet Except(this IColumnSet source, IColumnSet other)
+        public static IColumns Except(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -244,7 +244,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
-        public static IColumnSet Intersect(this IColumnSet source, IColumnSet other)
+        public static IColumns Intersect(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -257,7 +257,7 @@ namespace DevZest.Data
             return source;
         }
 
-        private static bool ContainsAll(this IColumnSet source, IColumnSet other)
+        private static bool ContainsAll(this IColumns source, IColumns other)
         {
             foreach (var column in other)
             {
@@ -271,7 +271,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set is a proper subset of the specified collection; otherwise, <see langword="false" />.</returns>
-        public static bool IsProperSubsetOf(this IColumnSet source, IColumnSet other)
+        public static bool IsProperSubsetOf(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -282,7 +282,7 @@ namespace DevZest.Data
         /// <summary>Determines whether the current set is a proper (strict) superset of the specified collection.</summary>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set is a proper superset of the specified collection; otherwise, <see langword="false" />.</returns>
-        public static bool IsProperSupersetOf(this IColumnSet source, IColumnSet other)
+        public static bool IsProperSupersetOf(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -294,7 +294,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set is a subset of the specified collection; otherwise, <see langword="false" />.</returns>
-        public static bool IsSubsetOf(this IColumnSet source, IColumnSet other)
+        public static bool IsSubsetOf(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -306,7 +306,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set is a superset of the specified collection; otherwise, <see langword="false" />.</returns>
-        public static bool IsSupersetOf(this IColumnSet source, IColumnSet other)
+        public static bool IsSupersetOf(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -318,7 +318,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set overlaps with the specified collection; otherwise, <see langword="false" />.</returns>
-        public static bool Overlaps(this IColumnSet source, IColumnSet other)
+        public static bool Overlaps(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -335,7 +335,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns><see cref="true"/> if the current set and the specified collection contain the same elements; otherwise, <see langword="false" />.</returns>
-        public static bool SetEquals(this IColumnSet source, IColumnSet other)
+        public static bool SetEquals(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
@@ -347,12 +347,12 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to compare to the current set.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        public static IColumnSet SymmetricExcept(this IColumnSet source, IColumnSet other)
+        public static IColumns SymmetricExcept(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));
 
-            IColumnSet removedColumnSet = ColumnSet.Empty;
+            IColumns removedColumnSet = Columns.Empty;
             foreach (var column in source)
             {
                 if (other.Contains(column))
@@ -375,7 +375,7 @@ namespace DevZest.Data
         /// <param name="source">The current set.</param>
         /// <param name="other">The collection to add elements from.</param>
         /// <returns>A new set if there is any modification to current set and current set sealed; otherwise, the current set.</returns>
-        public static IColumnSet Union(this IColumnSet source, IColumnSet other)
+        public static IColumns Union(this IColumns source, IColumns other)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(other, nameof(other));

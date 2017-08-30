@@ -10,13 +10,13 @@ namespace DevZest.Data
         {
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, ColumnSet.New(column1));
+                Assert.AreEqual(column1, Columns.New(column1));
             }
 
             {
                 var column1 = new _Int32();
                 var column2 = new _Int32();
-                var columnSet = ColumnSet.New(column1, column2);
+                var columnSet = Columns.New(column1, column2);
                 Assert.AreEqual(2, columnSet.Count);
                 Assert.IsTrue(columnSet.Contains(column1));
                 Assert.IsTrue(columnSet.Contains(column2));
@@ -27,13 +27,13 @@ namespace DevZest.Data
         public void ColumnSet_Union()
         {
             {
-                Assert.AreEqual(ColumnSet.Empty, ColumnSet.Empty.Union(ColumnSet.Empty));
+                Assert.AreEqual(Columns.Empty, Columns.Empty.Union(Columns.Empty));
             }
 
             {
                 var column1 = new _Int32();
-                Assert.AreEqual(column1, ColumnSet.Empty.Union(column1));
-                Assert.AreEqual(column1, column1.Union(ColumnSet.Empty));
+                Assert.AreEqual(column1, Columns.Empty.Union(column1));
+                Assert.AreEqual(column1, column1.Union(Columns.Empty));
             }
 
             {
@@ -54,11 +54,11 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnSet_IsSubsetOf()
         {
-            Assert.IsTrue(ColumnSet.Empty.IsSubsetOf(ColumnSet.Empty));
+            Assert.IsTrue(Columns.Empty.IsSubsetOf(Columns.Empty));
 
             var column1 = new _Int32();
             var column2 = new _Int32();
-            var column1And2 = ColumnSet.New(column1, column2);
+            var column1And2 = Columns.New(column1, column2);
 
             Assert.IsTrue(column1.IsSubsetOf(column1And2));
             Assert.IsTrue(column2.IsSubsetOf(column1And2));
@@ -68,11 +68,11 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnSet_IsProperSubsetOf()
         {
-            Assert.IsTrue(ColumnSet.Empty.IsSubsetOf(ColumnSet.Empty));
+            Assert.IsTrue(Columns.Empty.IsSubsetOf(Columns.Empty));
 
             var column1 = new _Int32();
             var column2 = new _Int32();
-            var column1And2 = ColumnSet.New(column1, column2);
+            var column1And2 = Columns.New(column1, column2);
 
             Assert.IsTrue(column1.IsProperSubsetOf(column1And2));
             Assert.IsTrue(column2.IsProperSubsetOf(column1And2));
@@ -82,11 +82,11 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnSet_IsSupersetOf()
         {
-            Assert.IsTrue(ColumnSet.Empty.IsSubsetOf(ColumnSet.Empty));
+            Assert.IsTrue(Columns.Empty.IsSubsetOf(Columns.Empty));
 
             var column1 = new _Int32();
             var column2 = new _Int32();
-            var column1And2 = ColumnSet.New(column1, column2);
+            var column1And2 = Columns.New(column1, column2);
 
             Assert.IsTrue(column1And2.IsSupersetOf(column1));
             Assert.IsTrue(column1And2.IsSupersetOf(column2));
@@ -96,11 +96,11 @@ namespace DevZest.Data
         [TestMethod]
         public void ColumnSet_IsProperSupersetOf()
         {
-            Assert.IsTrue(ColumnSet.Empty.IsSubsetOf(ColumnSet.Empty));
+            Assert.IsTrue(Columns.Empty.IsSubsetOf(Columns.Empty));
 
             var column1 = new _Int32();
             var column2 = new _Int32();
-            var column1And2 = ColumnSet.New(column1, column2);
+            var column1And2 = Columns.New(column1, column2);
 
             Assert.IsTrue(column1And2.IsProperSupersetOf(column1));
             Assert.IsTrue(column1And2.IsProperSupersetOf(column2));

@@ -12,7 +12,7 @@ namespace DevZest.Data
         {
             private sealed class SimpleValidator : IValidator
             {
-                public SimpleValidator(string messageId, ValidationSeverity severity, IColumnSet columns, _Boolean isValidCondition, _String message)
+                public SimpleValidator(string messageId, ValidationSeverity severity, IColumns columns, _Boolean isValidCondition, _String message)
                 {
                     MessageId = messageId;
                     Severity = severity;
@@ -23,16 +23,16 @@ namespace DevZest.Data
 
                 public string MessageId { get; private set; }
                 public ValidationSeverity Severity { get; private set; }
-                public IColumnSet Columns { get; private set; }
+                public IColumns Columns { get; private set; }
                 public _Boolean ValidCondition { get; private set; }
                 public _String Message { get; private set; }
             }
 
-            public static IValidator Create(string messageId, ValidationSeverity severity, IColumnSet columns, _Boolean validCondition, _String message)
+            public static IValidator Create(string messageId, ValidationSeverity severity, IColumns columns, _Boolean validCondition, _String message)
             {
                 Utilities.Check.NotEmpty(messageId, nameof(messageId));
                 if (columns == null)
-                    columns = ColumnSet.Empty;
+                    columns = Data.Columns.Empty;
                 Utilities.Check.NotNull(validCondition, nameof(validCondition));
                 Utilities.Check.NotNull(message, nameof(message));
 

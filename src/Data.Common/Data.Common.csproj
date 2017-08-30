@@ -55,7 +55,7 @@
     <Compile Include="IColumnComparer.cs" />
     <Compile Include="IDataRowComparer.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
-    <Compile Include="Primitives\ValidationMessageBase.cs" />
+    <Compile Include="ValidationMessage.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Adhoc.cs" />
     <Compile Include="Binary.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="DataRowRemovedEventArgs.cs" />
     <Compile Include="DataSetContainer.cs" />
     <Compile Include="DataSetContainer.LocalColumn.cs" />
-    <Compile Include="IValidationMessageGroup.cs" />
+    <Compile Include="IColumnValidationMessages.cs" />
     <Compile Include="IValidationResult.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="LocalColumnBuilder.cs" />
@@ -84,12 +84,12 @@
     <Compile Include="ColumnMapping.cs" />
     <Compile Include="ColumnMappingsBuilder.cs" />
     <Compile Include="Column_T.ConverterBase.cs" />
-    <Compile Include="IColumnSet.cs" />
+    <Compile Include="IColumns.cs" />
     <Compile Include="IColumnValidator.cs" />
     <Compile Include="JsonIgnoreAttribute.cs" />
     <Compile Include="Model.Validator.cs" />
-    <Compile Include="Primitives\ValidationMessageBase_T.cs" />
-    <Compile Include="ColumnSet.cs" />
+    <Compile Include="ValidationMessage_T.cs" />
+    <Compile Include="Columns.cs" />
     <Compile Include="PagedDataSet.cs" />
     <Compile Include="Primitives\ColumnConverter.cs" />
     <Compile Include="Primitives\JsonColumn.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Scalar.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
     <Compile Include="ValidationEntry.cs" />
-    <Compile Include="ValidationMessage.cs" />
+    <Compile Include="ColumnValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
     <Compile Include="ColumnSort.cs" />
@@ -151,8 +151,8 @@
     <Compile Include="Identity.cs" />
     <Compile Include="IdentityAttribute.cs" />
     <Compile Include="IMockDb.cs" />
-    <Compile Include="IModelSet.cs" />
-    <Compile Include="ValidationMessageGroup.cs" />
+    <Compile Include="IModels.cs" />
+    <Compile Include="ColumnValidationMessages.cs" />
     <Compile Include="ValidationSeverity.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="ColumnValidatorAttribute.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="Model.cs" />
     <Compile Include="ModelCollection.cs" />
     <Compile Include="ModelKey.cs" />
-    <Compile Include="ModelSet.cs" />
+    <Compile Include="Models.cs" />
     <Compile Include="Model_T.cs" />
     <Compile Include="RequiredAttribute.cs" />
     <Compile Include="Primitives\PropertyManager.cs" />

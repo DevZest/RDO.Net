@@ -277,7 +277,7 @@ namespace DevZest.Data
                     return false;
                 }
 
-                private static void Check(IReadOnlyList<ValidationMessage> validationMessages, out bool hasError, out bool hasWarning)
+                private static void Check(IReadOnlyList<ColumnValidationMessage> validationMessages, out bool hasError, out bool hasWarning)
                 {
                     hasError = hasWarning = false;
                     for (int i = 0; i < validationMessages.Count; i++)
@@ -380,7 +380,7 @@ namespace DevZest.Data
             }
         }
 
-        public IValidationMessageGroup ValidateAddingRow(ValidationSeverity? severity = ValidationSeverity.Error)
+        public IColumnValidationMessages ValidateAddingRow(ValidationSeverity? severity = ValidationSeverity.Error)
         {
             var addingRow = AddingRow;
             if (addingRow == null)

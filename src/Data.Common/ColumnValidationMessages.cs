@@ -7,9 +7,9 @@ using DevZest.Data.Primitives;
 
 namespace DevZest.Data
 {
-    public static class ValidationMessageGroup
+    public static class ColumnValidationMessages
     {
-        private class EmptyGroup : IValidationMessageGroup
+        private class EmptyGroup : IColumnValidationMessages
         {
             public static EmptyGroup Singleton = new EmptyGroup();
             private EmptyGroup()
@@ -21,7 +21,7 @@ namespace DevZest.Data
                 get { return 0; }
             }
 
-            public ValidationMessage this[int index]
+            public ColumnValidationMessage this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
@@ -31,34 +31,34 @@ namespace DevZest.Data
                 get { return true; }
             }
 
-            public IValidationMessageGroup Add(ValidationMessage value)
+            public IColumnValidationMessages Add(ColumnValidationMessage value)
             {
                 Check.NotNull(value, nameof(value));
                 return value;
             }
 
-            public IValidationMessageGroup Seal()
+            public IColumnValidationMessages Seal()
             {
                 return this;
             }
 
-            public IEnumerator<ValidationMessage> GetEnumerator()
+            public IEnumerator<ColumnValidationMessage> GetEnumerator()
             {
-                return EmptyEnumerator<ValidationMessage>.Singleton;
+                return EmptyEnumerator<ColumnValidationMessage>.Singleton;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return EmptyEnumerator<ValidationMessage>.Singleton;
+                return EmptyEnumerator<ColumnValidationMessage>.Singleton;
             }
         }
 
-        private class ListGroup : IValidationMessageGroup
+        private class ListGroup : IColumnValidationMessages
         {
             private bool _isSealed;
-            private List<ValidationMessage> _list = new List<ValidationMessage>();
+            private List<ColumnValidationMessage> _list = new List<ColumnValidationMessage>();
 
-            public ListGroup(ValidationMessage value1, ValidationMessage value2)
+            public ListGroup(ColumnValidationMessage value1, ColumnValidationMessage value2)
             {
                 Debug.Assert(value1 != null && value2 != null);
                 Add(value1);
@@ -79,18 +79,18 @@ namespace DevZest.Data
                 get { return _list.Count; }
             }
 
-            public ValidationMessage this[int index]
+            public ColumnValidationMessage this[int index]
             {
                 get { return _list[index]; }
             }
 
-            public IValidationMessageGroup Seal()
+            public IColumnValidationMessages Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IValidationMessageGroup Add(ValidationMessage value)
+            public IColumnValidationMessages Add(ColumnValidationMessage value)
             {
                 Check.NotNull(value, nameof(value));
 
@@ -112,7 +112,7 @@ namespace DevZest.Data
                 }
             }
 
-            public IEnumerator<ValidationMessage> GetEnumerator()
+            public IEnumerator<ColumnValidationMessage> GetEnumerator()
             {
                 return _list.GetEnumerator();
             }
@@ -123,25 +123,25 @@ namespace DevZest.Data
             }
         }
 
-        public static IValidationMessageGroup Empty
+        public static IColumnValidationMessages Empty
         {
             get { return EmptyGroup.Singleton; }
         }
 
-        internal static IValidationMessageGroup New(ValidationMessage value1, ValidationMessage value2)
+        internal static IColumnValidationMessages New(ColumnValidationMessage value1, ColumnValidationMessage value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new ListGroup(value1, value2);
         }
 
-        public static IValidationMessageGroup New(params ValidationMessage[] values)
+        public static IColumnValidationMessages New(params ColumnValidationMessage[] values)
         {
             Check.NotNull(values, nameof(values));
 
             if (values.Length == 0)
                 return Empty;
 
-            IValidationMessageGroup result = values[0].CheckNotNull(nameof(values), 0);
+            IColumnValidationMessages result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;

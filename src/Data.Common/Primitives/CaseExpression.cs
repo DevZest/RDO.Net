@@ -56,9 +56,9 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
-            var result = ColumnSet.Empty;
+            var result = Columns.Empty;
             for (int i = 0; i < _when.Count; i++)
                 result = result.Union(_when[i].BaseColumns);
             for (int i = 0; i < _then.Count; i++)
@@ -119,9 +119,9 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetScalarSourceModels()
+        protected override IModels GetScalarSourceModels()
         {
-            var result = ModelSet.Empty;
+            var result = Models.Empty;
             for (int i = 0; i < _when.Count; i++)
             {
                 result = result.Union(_when[i].ScalarSourceModels);
@@ -132,9 +132,9 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetAggregateBaseModels()
+        protected override IModels GetAggregateBaseModels()
         {
-            var result = ModelSet.Empty;
+            var result = Models.Empty;
             for (int i = 0; i < _when.Count; i++)
             {
                 result = result.Union(_when[i].AggregateSourceModels);

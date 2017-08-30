@@ -44,7 +44,7 @@ namespace DevZest.Data
 
         #region FROM
 
-        IModelSet _sourceModelSet = ModelSet.Empty;
+        IModels _sourceModelSet = Models.Empty;
         SubQueryEliminator _subQueryEliminator;
         Dictionary<ColumnKey, List<Column>> _sourceColumnsByKey = new Dictionary<ColumnKey, List<Column>>();
 
@@ -313,7 +313,7 @@ namespace DevZest.Data
             VerifySourceColumn(column, paramName, _sourceModelSet, allowsAggregate);
         }
 
-        private void VerifySourceColumn(Column sourceColumn, string exceptionParamName, IModelSet sourceModelSet, bool allowsAggregate)
+        private void VerifySourceColumn(Column sourceColumn, string exceptionParamName, IModels sourceModelSet, bool allowsAggregate)
         {
             VerifyScalarSourceModels(sourceModelSet, sourceColumn, exceptionParamName);
             if (allowsAggregate)
@@ -322,7 +322,7 @@ namespace DevZest.Data
                 throw new ArgumentException(Strings.DbQueryBuilder_AggregateNotAllowed, exceptionParamName);
         }
 
-        private void VerifyScalarSourceModels(IModelSet containsBy, Column sourceColumn, string exceptionParamName)
+        private void VerifyScalarSourceModels(IModels containsBy, Column sourceColumn, string exceptionParamName)
         {
             if (sourceColumn.ScalarSourceModels.Count == 0 && sourceColumn.GetExpression() == null)
                 throw new ArgumentException(Strings.Column_EmptyScalarSourceModels, exceptionParamName);
@@ -334,7 +334,7 @@ namespace DevZest.Data
             }
         }
 
-        private static void VerifyAggregateSourceModels(Column sourceColumn, string exceptionParamName, IModelSet modelSet)
+        private static void VerifyAggregateSourceModels(Column sourceColumn, string exceptionParamName, IModels modelSet)
         {
             foreach (var model in sourceColumn.AggregateSourceModels)
             {

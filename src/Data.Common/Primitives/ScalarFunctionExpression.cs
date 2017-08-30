@@ -9,12 +9,12 @@ namespace DevZest.Data.Primitives
         {
         }
 
-        protected override IModelSet GetScalarSourceModels()
+        protected override IModels GetScalarSourceModels()
         {
             if (Parameters == null)
-                return ModelSet.Empty;
+                return Models.Empty;
 
-            var result = ModelSet.Empty;
+            var result = Models.Empty;
             foreach (var column in Parameters)
             {
                 if (column == null)
@@ -26,12 +26,12 @@ namespace DevZest.Data.Primitives
             return result.Seal();
         }
 
-        protected override IModelSet GetAggregateBaseModels()
+        protected override IModels GetAggregateBaseModels()
         {
             if (Parameters == null)
-                return ModelSet.Empty;
+                return Models.Empty;
 
-            var result = ModelSet.Empty;
+            var result = Models.Empty;
             foreach (var column in Parameters)
             {
                 if (column == null)

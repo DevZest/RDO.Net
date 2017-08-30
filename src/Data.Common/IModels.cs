@@ -3,28 +3,28 @@ using System.Collections.Generic;
 
 namespace DevZest.Data
 {
-    public interface IModelSet : IReadOnlyCollection<Model>
+    public interface IModels : IReadOnlyCollection<Model>
     {
         /// <summary>Gets a value indicates whether this set is sealed.</summary>
         bool IsSealed { get; }
 
         /// <summary>Ensures this set is sealed.</summary>
         /// <returns>This set.</returns>
-        IModelSet Seal();
+        IModels Seal();
 
         /// <summary>Adds the specified Model into this set.</summary>
         /// <param name="value">The Model to add.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IModelSet Add(Model value);
+        IModels Add(Model value);
 
         /// <summary>Removes the specified Model from this set.</summary>
         /// <param name="value">The Model to remove.</param>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IModelSet Remove(Model value);
+        IModels Remove(Model value);
 
         /// <summary>Removes all the Models from this set.</summary>
         /// <returns>A new set if there is any modification to current sealed set; otherwise, the current set.</returns>
-        IModelSet Clear();
+        IModels Clear();
 
         /// <summary>Determines whether this set contains a specified Model.</summary>
         /// <param name="value">The Model to locate in the set.</param>

@@ -6,7 +6,7 @@ namespace DevZest.Data
 {
     public struct ValidationEntry
     {
-        public ValidationEntry(DataRow dataRow, IValidationMessageGroup messages)
+        public ValidationEntry(DataRow dataRow, IColumnValidationMessages messages)
         {
             Check.NotNull(dataRow, nameof(dataRow));
             Check.NotNull(messages, nameof(messages));
@@ -18,7 +18,7 @@ namespace DevZest.Data
 
         public readonly DataRow DataRow;
 
-        public readonly IValidationMessageGroup Messages;
+        public readonly IColumnValidationMessages Messages;
 
         public bool IsEmpty
         {

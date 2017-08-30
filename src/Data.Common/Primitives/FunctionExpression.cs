@@ -87,9 +87,9 @@ namespace DevZest.Data.Primitives
 
         public ReadOnlyCollection<Column> Parameters;
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
-            var result = ColumnSet.Empty;
+            var result = Columns.Empty;
             if (Parameters == null)
                 return result;
 

@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace DevZest.Data
 {
-    public abstract partial class Model : ModelMember, IModelSet
+    public abstract partial class Model : ModelMember, IModels
     {
         #region RegisterColumn
 
@@ -402,9 +402,9 @@ namespace DevZest.Data
             get { return _validators; }
         }
 
-        protected internal virtual IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
+        protected internal virtual IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
         {
-            var result = ValidationMessageGroup.Empty;
+            var result = ColumnValidationMessages.Empty;
             foreach (var validator in Validators)
             {
                 if (severity.HasValue && validator.Severity != severity.GetValueOrDefault())
@@ -419,12 +419,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private static ValidationMessage Validate(IValidator validator, DataRow dataRow)
+        private static ColumnValidationMessage Validate(IValidator validator, DataRow dataRow)
         {
             if (validator.ValidCondition[dataRow] == true)
                 return null;
             else
-                return new ValidationMessage(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
+                return new ColumnValidationMessage(validator.MessageId, validator.Severity, validator.Message[dataRow], validator.Columns);
         }
 
         public ModelKey PrimaryKey
@@ -474,7 +474,7 @@ namespace DevZest.Data
 
         #region IModelSet
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IModelSet.Contains(Model model)
+        bool IModels.Contains(Model model)
         {
             return model == this;
         }
@@ -498,40 +498,40 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IModelSet.IsSealed
+        bool IModels.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IModelSet IModelSet.Seal()
+        IModels IModels.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IModelSet IModelSet.Add(Model value)
+        IModels IModels.Add(Model value)
         {
             Utilities.Check.NotNull(value, nameof(value));
             if (value == this)
                 return this;
-            return ModelSet.New(this, value);
+            return Models.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IModelSet IModelSet.Remove(Model value)
+        IModels IModels.Remove(Model value)
         {
             Utilities.Check.NotNull(value, nameof(value));
             if (value == this)
-                return ModelSet.Empty;
+                return Models.Empty;
             else
                 return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IModelSet IModelSet.Clear()
+        IModels IModels.Clear()
         {
-            return ModelSet.Empty;
+            return Models.Empty;
         }
         #endregion
 

@@ -66,13 +66,13 @@ namespace DevZest.Data.Primitives
         protected abstract BinaryExpressionKind Kind { get; }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetScalarSourceModels()
+        protected sealed override IModels GetScalarSourceModels()
         {
             return Left.ScalarSourceModels.Union(Right.ScalarSourceModels).Seal();
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetAggregateBaseModels()
+        protected sealed override IModels GetAggregateBaseModels()
         {
             return Left.AggregateSourceModels.Union(Right.AggregateSourceModels).Seal();
         }
@@ -100,7 +100,7 @@ namespace DevZest.Data.Primitives
         /// <returns>The result.</returns>
         protected abstract TResult EvalCore(T x, T y);
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
             return Left.BaseColumns.Union(Right.BaseColumns).Seal();
         }

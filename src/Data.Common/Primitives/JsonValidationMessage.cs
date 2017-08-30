@@ -5,12 +5,12 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonValidationMessage
     {
-        private const string ID = nameof(ValidationMessage.Id);
-        private const string SEVERITY = nameof(ValidationMessage.Severity);
-        private const string DESCRIPTION = nameof(ValidationMessage.Description);
-        private const string SOURCE = nameof(ValidationMessage.Source);
+        private const string ID = nameof(ColumnValidationMessage.Id);
+        private const string SEVERITY = nameof(ColumnValidationMessage.Severity);
+        private const string DESCRIPTION = nameof(ColumnValidationMessage.Description);
+        private const string SOURCE = nameof(ColumnValidationMessage.Source);
 
-        public static JsonWriter Write(this JsonWriter jsonWriter, ValidationMessage validationMessage)
+        public static JsonWriter Write(this JsonWriter jsonWriter, ColumnValidationMessage validationMessage)
         {
             return jsonWriter
                 .WriteStartObject()
@@ -21,7 +21,7 @@ namespace DevZest.Data.Primitives
                 .WriteEndObject();
         }
 
-        private static JsonWriter WriteColumns(this JsonWriter jsonWriter, IColumnSet columns)
+        private static JsonWriter WriteColumns(this JsonWriter jsonWriter, IColumns columns)
         {
             if (columns == null)
                 jsonWriter.WriteNameValuePair(SOURCE, JsonValue.Null);
@@ -30,12 +30,12 @@ namespace DevZest.Data.Primitives
             return jsonWriter;
         }
 
-        public static ValidationMessage ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
+        public static ColumnValidationMessage ParseValidationMessage(this JsonParser jsonParser, DataSet dataSet)
         {
             string messageId;
             ValidationSeverity severity;
             string description;
-            IColumnSet source;
+            IColumns source;
 
             jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
             messageId = jsonParser.ExpectNameStringPair(ID, true);
@@ -44,18 +44,18 @@ namespace DevZest.Data.Primitives
             source = jsonParser.ParseColumns(dataSet, false);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ValidationMessage(messageId, severity, description, source);
+            return new ColumnValidationMessage(messageId, severity, description, source);
         }
 
-        private static IColumnSet ParseColumns(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
+        private static IColumns ParseColumns(this JsonParser jsonParser, DataSet dataSet, bool expectComma)
         {
             var text = jsonParser.ExpectNameNullableStringPair(SOURCE, expectComma);
-            return text == null ? null : ColumnSet.Deserialize(dataSet.Model, text);
+            return text == null ? null : Columns.Deserialize(dataSet.Model, text);
         }
 
-        public static IValidationMessageGroup ParseValidationMessageGroup(this JsonParser jsonParser, DataSet dataSet)
+        public static IColumnValidationMessages ParseValidationMessageGroup(this JsonParser jsonParser, DataSet dataSet)
         {
-            IValidationMessageGroup result = ValidationMessageGroup.Empty;
+            IColumnValidationMessages result = ColumnValidationMessages.Empty;
 
             jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
 

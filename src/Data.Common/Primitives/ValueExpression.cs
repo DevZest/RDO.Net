@@ -40,19 +40,19 @@ namespace DevZest.Data.Primitives
             get { return Value; }
         }
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
-            return ColumnSet.Empty;
+            return Columns.Empty;
         }
 
-        protected sealed override IModelSet GetScalarSourceModels()
+        protected sealed override IModels GetScalarSourceModels()
         {
-            return ModelSet.Empty;
+            return Models.Empty;
         }
 
-        protected sealed override IModelSet GetAggregateBaseModels()
+        protected sealed override IModels GetAggregateBaseModels()
         {
-            return ModelSet.Empty;
+            return Models.Empty;
         }
 
         protected internal sealed override Type[] ArgColumnTypes

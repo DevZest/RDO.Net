@@ -63,7 +63,7 @@ namespace DevZest.Data.Primitives
         private List<Column<TResult>> _then;
         private Column<TResult> _else;
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
             var result = _on.BaseColumns;
             for (int i = 0; i < _when.Count; i++)
@@ -128,7 +128,7 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetScalarSourceModels()
+        protected override IModels GetScalarSourceModels()
         {
             var result = _on.ScalarSourceModels;
             for (int i = 0; i < _when.Count; i++)
@@ -141,7 +141,7 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetAggregateBaseModels()
+        protected override IModels GetAggregateBaseModels()
         {
             var result = _on.AggregateSourceModels;
             for (int i = 0; i < _when.Count; i++)

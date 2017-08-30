@@ -12,7 +12,7 @@ namespace DevZest.Data
     /// <summary>
     /// Represents a column of <see cref="Model"/>.
     /// </summary>
-    public abstract class Column : ModelMember, IColumnSet, IComparer<DataRow>
+    public abstract class Column : ModelMember, IColumns, IComparer<DataRow>
     {
         protected Column()
         {
@@ -116,7 +116,7 @@ namespace DevZest.Data
 
         public abstract DbExpression DbComputedExpression { get; }
 
-        public abstract IColumnSet BaseColumns { get; }
+        public abstract IColumns BaseColumns { get; }
 
         /// <summary>Gets the data type of this <see cref="Column"/>.</summary>
         public abstract Type DataType { get; }
@@ -132,10 +132,10 @@ namespace DevZest.Data
         }
 
         /// <summary>Gets the set of <see cref="Model"/> objects directly combined this <see cref="Column"/>.</summary>
-        public abstract IModelSet ScalarSourceModels { get; }
+        public abstract IModels ScalarSourceModels { get; }
 
         /// <summary>Gets the set of parent <see cref="Model"/> objects aggregated to this <see cref="Column"/>.</summary>
-        public abstract IModelSet AggregateSourceModels { get; }
+        public abstract IModels AggregateSourceModels { get; }
 
         /// <summary>Verifies whether this column belongs to provided <see cref="DbReader"/>.</summary>
         /// <param name="reader">The <see cref="DbReader"/> object to be verified.</param>
@@ -274,7 +274,7 @@ namespace DevZest.Data
         #region IColumnSet
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IColumnSet.Contains(Column column)
+        bool IColumns.Contains(Column column)
         {
             return column == this;
         }
@@ -298,40 +298,40 @@ namespace DevZest.Data
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IColumnSet.IsSealed
+        bool IColumns.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Seal()
+        IColumns IColumns.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Add(Column value)
+        IColumns IColumns.Add(Column value)
         {
             Check.NotNull(value, nameof(value));
             if (value == this)
                 return this;
-            return ColumnSet.New(this, value);
+            return Columns.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Remove(Column value)
+        IColumns IColumns.Remove(Column value)
         {
             Check.NotNull(value, nameof(value));
             if (value == this)
-                return ColumnSet.Empty;
+                return Columns.Empty;
             else
                 return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IColumnSet IColumnSet.Clear()
+        IColumns IColumns.Clear()
         {
-            return ColumnSet.Empty;
+            return Columns.Empty;
         }
 
         #endregion

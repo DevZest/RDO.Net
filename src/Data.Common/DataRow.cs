@@ -309,7 +309,7 @@ namespace DevZest.Data
             return result;
         }
 
-        public IValidationMessageGroup Validate(ValidationSeverity? severity = ValidationSeverity.Error)
+        public IColumnValidationMessages Validate(ValidationSeverity? severity = ValidationSeverity.Error)
         {
             if (Model == null)
                 throw new InvalidOperationException(Strings.DataRow_NullModel);

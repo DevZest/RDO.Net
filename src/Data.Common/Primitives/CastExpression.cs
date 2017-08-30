@@ -35,7 +35,7 @@ namespace DevZest.Data.Primitives
             Operand = operand;
         }
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
             return Operand.BaseColumns;
         }
@@ -55,13 +55,13 @@ namespace DevZest.Data.Primitives
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetScalarSourceModels()
+        protected sealed override IModels GetScalarSourceModels()
         {
             return Operand.ParentModel;
         }
 
         /// <inheritdoc/>
-        protected sealed override IModelSet GetAggregateBaseModels()
+        protected sealed override IModels GetAggregateBaseModels()
         {
             return Operand.AggregateSourceModels;
         }

@@ -385,7 +385,7 @@ namespace DevZest.Data
             var salesOrders = DataSet<SalesOrder>.New();
             var _ = salesOrders._;
             var dataRowUpdatedCount = 0;
-            var changedColumns = ColumnSet.Empty;
+            var changedColumns = Columns.Empty;
             _.ValueChanged += (sender, e) =>
             {
                 dataRowUpdatedCount++;
@@ -396,7 +396,7 @@ namespace DevZest.Data
 
             Assert.AreEqual("SO12345", _.SalesOrderNumber[0]);
             Assert.AreEqual(2, dataRowUpdatedCount);
-            Assert.IsTrue(changedColumns.SetEquals(ColumnSet.Empty.Add(_.SalesOrderID).Add(_.SalesOrderNumber)));
+            Assert.IsTrue(changedColumns.SetEquals(Columns.Empty.Add(_.SalesOrderID).Add(_.SalesOrderNumber)));
         }
 
         [TestMethod]

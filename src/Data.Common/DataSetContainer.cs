@@ -26,8 +26,8 @@ namespace DevZest.Data
                 public Node Next { get; set; }
             }
 
-            private Dictionary<Column, IColumnSet> _indirectDependencies = new Dictionary<Column, IColumnSet>();
-            private Dictionary<Column, IColumnSet> _directDependencies = new Dictionary<Column, IColumnSet>();
+            private Dictionary<Column, IColumns> _indirectDependencies = new Dictionary<Column, IColumns>();
+            private Dictionary<Column, IColumns> _directDependencies = new Dictionary<Column, IColumns>();
             private Dictionary<Model, List<Column>> _computationColumns = new Dictionary<Model, List<Column>>();
             private Dictionary<Model, List<Column>> _aggregateColumns = new Dictionary<Model, List<Column>>();
 
@@ -46,9 +46,9 @@ namespace DevZest.Data
                 }
             }
 
-            private static void AddDependency<T>(Dictionary<T, IColumnSet> dependencies, T key, Column computationColumn)
+            private static void AddDependency<T>(Dictionary<T, IColumns> dependencies, T key, Column computationColumn)
             {
-                IColumnSet computationColumns;
+                IColumns computationColumns;
                 if (dependencies.TryGetValue(key, out computationColumns))
                     dependencies[key] = computationColumns.Add(computationColumn);
                 else
@@ -127,7 +127,7 @@ namespace DevZest.Data
 
             private bool IsDependentUpon(Column computationColumn, Column baseColumn)
             {
-                IColumnSet computationColumns;
+                IColumns computationColumns;
                 if (_indirectDependencies.TryGetValue(baseColumn, out computationColumns))
                     return computationColumns.Contains(computationColumn);
                 else
@@ -224,12 +224,12 @@ namespace DevZest.Data
                 Invalidate(aggregateColumn, aggregateDataRow);
             }
 
-            private IColumnSet this[Column column]
+            private IColumns this[Column column]
             {
                 get
                 {
-                    IColumnSet result;
-                    return _directDependencies.TryGetValue(column, out result) ? result : ColumnSet.Empty;
+                    IColumns result;
+                    return _directDependencies.TryGetValue(column, out result) ? result : Columns.Empty;
                 }
             }
 

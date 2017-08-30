@@ -8,11 +8,11 @@ namespace DevZest.Data
 
         IValidationResult Seal();
 
-        IValidationMessageGroup this[DataRow dataRow] { get; }
+        IColumnValidationMessages this[DataRow dataRow] { get; }
 
         bool Contains(DataRow dataRow);
 
-        bool TryGetValue(DataRow dataRow, out IValidationMessageGroup value);
+        bool TryGetValue(DataRow dataRow, out IColumnValidationMessages value);
 
         IValidationResult Add(ValidationEntry value);
     }

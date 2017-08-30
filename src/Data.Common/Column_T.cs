@@ -146,7 +146,7 @@ namespace DevZest.Data
             return Expression;
         }
 
-        public sealed override IColumnSet BaseColumns
+        public sealed override IColumns BaseColumns
         {
             get { return IsExpression ? Expression.BaseColumns : this; }
         }
@@ -361,15 +361,15 @@ namespace DevZest.Data
         }
 
         /// <inheritdoc/>
-        public sealed override IModelSet ScalarSourceModels
+        public sealed override IModels ScalarSourceModels
         {
             get { return IsAbsoluteExpression ? Expression.ScalarSourceModels : ParentModel; }
         }
 
         /// <inheritdoc/>
-        public sealed override IModelSet AggregateSourceModels
+        public sealed override IModels AggregateSourceModels
         {
-            get { return IsAbsoluteExpression ? Expression.AggregateSourceModels : ModelSet.Empty; }
+            get { return IsAbsoluteExpression ? Expression.AggregateSourceModels : Models.Empty; }
         }
 
         /// <summary>Creates a column of constant expression.</summary>
@@ -478,17 +478,17 @@ namespace DevZest.Data
                 return _computation.DbExpression;
             }
 
-            protected override IModelSet GetAggregateBaseModels()
+            protected override IModels GetAggregateBaseModels()
             {
                 return _computation.AggregateSourceModels;
             }
 
-            protected override IModelSet GetScalarSourceModels()
+            protected override IModels GetScalarSourceModels()
             {
                 return _computation.ScalarSourceModels;
             }
 
-            protected override IColumnSet GetBaseColumns()
+            protected override IColumns GetBaseColumns()
             {
                 return _computation.BaseColumns;
             }

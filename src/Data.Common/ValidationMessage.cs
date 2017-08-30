@@ -1,83 +1,39 @@
-﻿using DevZest.Data.Primitives;
-using DevZest.Data.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
-    public class ValidationMessage : ValidationMessageBase<IColumnSet>, IValidationMessageGroup
+    public abstract class ValidationMessage
     {
-        public ValidationMessage(string id, ValidationSeverity severity, string description, IColumnSet source)
-            : base(id, severity, description, source)
+        protected ValidationMessage(string id, ValidationSeverity severity, string description)
         {
-            Check.NotNull(source, nameof(source));
-            if (source.Count == 0)
-                throw new ArgumentException(Strings.ValidationMessage_EmptySourceColumns, nameof(source));
+            Check.NotEmpty(description, nameof(description));
+
+            _id = id;
+            _description = description;
+            _severity = severity;
         }
 
-        public string ToJsonString(bool isPretty)
+        private readonly string _id;
+        public string Id
         {
-            return JsonWriter.New().Write(this).ToString(isPretty);
+            get { return _id; }
         }
 
-        public static ValidationMessage ParseJson(DataSet dataSet, string json)
+        private readonly ValidationSeverity _severity;
+        public ValidationSeverity Severity
         {
-            var jsonParser = new JsonParser(json);
-            var result = jsonParser.ParseValidationMessage(dataSet);
-            jsonParser.ExpectToken(JsonTokenKind.Eof);
-            return result;
+            get { return _severity; }
+        }
+
+        private readonly string _description;
+        public string Description
+        {
+            get { return _description; }
         }
 
         public override string ToString()
         {
-            return ToJsonString(true);
+            return Description;
         }
-
-        #region IValidationMessageGroup
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        int IReadOnlyCollection<ValidationMessage>.Count
-        {
-            get { return 1; }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        ValidationMessage IReadOnlyList<ValidationMessage>.this[int index]
-        {
-            get
-            {
-                if (index != 0)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return this;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IValidationMessageGroup IValidationMessageGroup.Seal()
-        {
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IValidationMessageGroup IValidationMessageGroup.Add(ValidationMessage value)
-        {
-            Check.NotNull(value, nameof(value));
-            return ValidationMessageGroup.New(this, value);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator<ValidationMessage> IEnumerable<ValidationMessage>.GetEnumerator()
-        {
-            yield return this;
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            yield return this;
-        }
-        #endregion
     }
 }

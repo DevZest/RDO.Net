@@ -37,19 +37,19 @@ namespace DevZest.Data.Primitives
         /// <summary>Gets the operand of this expression.</summary>
         public Column<T> Operand { get; private set; }
 
-        protected sealed override IColumnSet GetBaseColumns()
+        protected sealed override IColumns GetBaseColumns()
         {
             return Operand.BaseColumns;
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetScalarSourceModels()
+        protected override IModels GetScalarSourceModels()
         {
             return Operand.ParentModel;
         }
 
         /// <inheritdoc/>
-        protected override IModelSet GetAggregateBaseModels()
+        protected override IModels GetAggregateBaseModels()
         {
             return Operand.AggregateSourceModels;
         }
