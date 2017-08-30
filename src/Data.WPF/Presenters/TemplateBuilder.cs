@@ -144,7 +144,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationMessageGroup>> action, Action postAction = null, IColumnSet sourceColumns = null)
+        public TemplateBuilder AddAsyncValidator(Func<Task<IColumnValidationMessages>> action, Action postAction = null, IColumns sourceColumns = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
@@ -152,7 +152,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationResult>> action, Action postAction = null, IColumnSet sourceColumns = null)
+        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationResult>> action, Action postAction = null, IColumns sourceColumns = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));

@@ -232,12 +232,12 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.Warnings; }
         }
 
-        public IValidationMessageGroup CurrentRowErrors
+        public IColumnValidationMessages CurrentRowErrors
         {
             get { return LayoutManager == null ? null : LayoutManager.CurrentRowErrors; }
         }
 
-        public IValidationMessageGroup CurrentRowWarnings
+        public IColumnValidationMessages CurrentRowWarnings
         {
             get { return LayoutManager == null ? null : LayoutManager.CurrentRowWarnings; }
         }

@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DevZest.Data.Presenters
 {
-    public class FlushErrorMessage : ValidationMessage<UIElement>
+    public class FlushErrorMessage : ValidationMessageBase<UIElement>
     {
         public FlushErrorMessage(FlushError inputError, UIElement source)
             : base(inputError.Id, ValidationSeverity.Error, inputError.Description, source)

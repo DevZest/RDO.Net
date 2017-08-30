@@ -12,12 +12,12 @@ namespace DevZest.Data.Presenters
         {
             _inputManager = inputManager;
             if (Mode == ValidationMode.Progressive)
-                _progress = new Dictionary<RowPresenter, IColumnSet>();
+                _progress = new Dictionary<RowPresenter, IColumns>();
         }
 
         private InputManager _inputManager;
         private bool _showAll;
-        private Dictionary<RowPresenter, IColumnSet> _progress;
+        private Dictionary<RowPresenter, IColumns> _progress;
 
         internal void Reset()
         {
@@ -75,7 +75,7 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.ValidationScope; }
         }
 
-        public bool IsVisible(RowPresenter rowPresenter, IColumnSet columns)
+        public bool IsVisible(RowPresenter rowPresenter, IColumns columns)
         {
             if (_showAll)
                 return true;
@@ -88,13 +88,13 @@ namespace DevZest.Data.Presenters
             return GetProgress(rowPresenter).IsSupersetOf(columns);
         }
 
-        private IColumnSet GetProgress(RowPresenter rowPresenter)
+        private IColumns GetProgress(RowPresenter rowPresenter)
         {
             Debug.Assert(_progress != null);
-            IColumnSet result;
+            IColumns result;
             if (_progress.TryGetValue(rowPresenter, out result))
                 return result;
-            return ColumnSet.Empty;
+            return Columns.Empty;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            public IValidationMessageGroup this[RowPresenter key]
+            public IColumnValidationMessages this[RowPresenter key]
             {
                 get { throw new KeyNotFoundException(); }
             }
@@ -35,12 +35,12 @@ namespace DevZest.Data.Presenters
                 get { yield break; }
             }
 
-            public IEnumerable<IValidationMessageGroup> Values
+            public IEnumerable<IColumnValidationMessages> Values
             {
                 get { yield break; }
             }
 
-            public IValidationDictionary Add(RowPresenter rowPresenter, IValidationMessageGroup validationMessages)
+            public IValidationDictionary Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
             {
                 var result = new Dictionary();
                 result.Add(rowPresenter, validationMessages);
@@ -52,7 +52,7 @@ namespace DevZest.Data.Presenters
                 return false;
             }
 
-            public IEnumerator<KeyValuePair<RowPresenter, IValidationMessageGroup>> GetEnumerator()
+            public IEnumerator<KeyValuePair<RowPresenter, IColumnValidationMessages>> GetEnumerator()
             {
                 yield break;
             }
@@ -67,7 +67,7 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            public bool TryGetValue(RowPresenter key, out IValidationMessageGroup value)
+            public bool TryGetValue(RowPresenter key, out IColumnValidationMessages value)
             {
                 value = null;
                 return false;
@@ -79,7 +79,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private sealed class Dictionary : Dictionary<RowPresenter, IValidationMessageGroup>, IValidationDictionary
+        private sealed class Dictionary : Dictionary<RowPresenter, IColumnValidationMessages>, IValidationDictionary
         {
             public bool IsSealed { get; private set; }
 
@@ -89,7 +89,7 @@ namespace DevZest.Data.Presenters
                 return this;
             }
 
-            IValidationDictionary IValidationDictionary.Add(RowPresenter rowPresenter, IValidationMessageGroup validationMessages)
+            IValidationDictionary IValidationDictionary.Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
             {
                 if (rowPresenter == null)
                     throw new ArgumentNullException(nameof(rowPresenter));
@@ -139,11 +139,11 @@ namespace DevZest.Data.Presenters
             get { return EmptyDictionary.Singleton; }
         }
 
-        public static IValidationMessageGroup GetValidationMessages(this IValidationDictionary directory, RowPresenter rowPresenter)
+        public static IColumnValidationMessages GetValidationMessages(this IValidationDictionary directory, RowPresenter rowPresenter)
         {
             if (rowPresenter == null)
                 return null;
-            return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ValidationMessageGroup.Empty;
+            return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ColumnValidationMessages.Empty;
         }
 
         internal static IValidationDictionary Where(this IValidationDictionary directory, ValidationSeverity severity)
@@ -152,7 +152,7 @@ namespace DevZest.Data.Presenters
             foreach (var rowPresenter in directory.Keys)
             {
                 var messages = directory[rowPresenter];
-                var filteredMessages = ValidationMessageGroup.Empty;
+                var filteredMessages = ColumnValidationMessages.Empty;
                 for (int i = 0; i < messages.Count; i++)
                 {
                     var message = messages[i];

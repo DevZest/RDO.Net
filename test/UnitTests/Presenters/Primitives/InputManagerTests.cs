@@ -166,7 +166,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
                 Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
@@ -197,7 +197,7 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
                 Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
@@ -276,11 +276,11 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(0, validationView[currentRow].Errors.Count);
         }
 
-        private static async Task<IValidationMessageGroup> ValidateBadNameAsync(_String nameColumn, int index)
+        private static async Task<IColumnValidationMessages> ValidateBadNameAsync(_String nameColumn, int index)
         {
             await Task.Delay(200);
             var value = nameColumn[index];
-            return value == BAD_NAME ? new ValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
+            return value == BAD_NAME ? new ColumnValidationMessage("ERR-01", ValidationSeverity.Error, "Bad Name", nameColumn) : null;
         }
 
         [TestMethod]
@@ -326,7 +326,7 @@ namespace DevZest.Data.Presenters.Primitives
             Assert.AreEqual(asyncValidator, validationView[currentRow].FaultedAsyncValidators);
         }
 
-        private static async Task<IValidationMessageGroup> ValidateFaultedAsync()
+        private static async Task<IColumnValidationMessages> ValidateFaultedAsync()
         {
             await Task.Delay(200);
             throw new InvalidOperationException("Validation failed.");
@@ -403,12 +403,12 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);
-                var errorMessage = (ValidationMessage)errors[0].ErrorContent;
+                var errorMessage = (ColumnValidationMessage)errors[0].ErrorContent;
                 Assert.AreEqual("DevZest.Data.Required", errorMessage.Id);
                 Assert.AreEqual(_.Name, errorMessage.Source);
             }
 
-            var validationMessage = new ValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
+            var validationMessage = new ColumnValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
             IValidationResult validationResult = DevZest.Data.ValidationResult.Empty.Add(new ValidationEntry(currentRow.DataRow, validationMessage));
             inputManager.Show(validationResult);
             {

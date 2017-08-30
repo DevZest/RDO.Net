@@ -147,12 +147,12 @@ namespace DevZest.Data.Presenters.Primitives
         public IValidationDictionary Errors { get; private set; } = ValidationDictionary.Empty;
         public IValidationDictionary Warnings { get; private set; } = ValidationDictionary.Empty;
 
-        public IValidationMessageGroup CurrentRowErrors
+        public IColumnValidationMessages CurrentRowErrors
         {
             get { return Errors.GetValidationMessages(CurrentRow); }
         }
 
-        public IValidationMessageGroup CurrentRowWarnings
+        public IColumnValidationMessages CurrentRowWarnings
         {
             get { return Warnings.GetValidationMessages(CurrentRow); }
         }
@@ -173,15 +173,15 @@ namespace DevZest.Data.Presenters.Primitives
                 ClearValidationMessages();
         }
 
-        private static IValidationMessageGroup GetValidationMessages(IValidationDictionary dictionary, RowPresenter rowPresenter, IColumnSet columns)
+        private static IColumnValidationMessages GetValidationMessages(IValidationDictionary dictionary, RowPresenter rowPresenter, IColumns columns)
         {
             Debug.Assert(dictionary != null);
 
-            IValidationMessageGroup messages;
+            IColumnValidationMessages messages;
             if (!dictionary.TryGetValue(rowPresenter, out messages))
-                return ValidationMessageGroup.Empty;
+                return ColumnValidationMessages.Empty;
 
-            var result = ValidationMessageGroup.Empty;
+            var result = ColumnValidationMessages.Empty;
             for (int i = 0; i < messages.Count; i++)
             {
                 var message = messages[i];
@@ -192,20 +192,20 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
-        internal IValidationMessageGroup GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
+        internal IColumnValidationMessages GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
             if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
-                return ValidationMessageGroup.Empty;
+                return ColumnValidationMessages.Empty;
 
             return GetValidationMessages(Errors, rowPresenter, rowInput.Columns);
         }
 
-        internal IValidationMessageGroup GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
+        internal IColumnValidationMessages GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
             if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
-                return ValidationMessageGroup.Empty;
+                return ColumnValidationMessages.Empty;
 
             return GetValidationMessages(Warnings, rowPresenter, rowInput.Columns);
         }
@@ -240,12 +240,12 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private bool HasError(RowPresenter rowPresenter, IColumnSet columns)
+        private bool HasError(RowPresenter rowPresenter, IColumns columns)
         {
             if (Errors.Count == 0)
                 return false;
 
-            IValidationMessageGroup messages;
+            IColumnValidationMessages messages;
             if (!Errors.TryGetValue(rowPresenter, out messages))
                 return false;
 
@@ -338,7 +338,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(MoreToValidate);
 
-            IValidationMessageGroup errors, warnings;
+            IColumnValidationMessages errors, warnings;
             Validate(rowPresenter.DataRow, out errors, out warnings);
             if (errors != null && errors.Count > 0)
                 Errors = Errors.Add(rowPresenter, errors);
@@ -346,24 +346,24 @@ namespace DevZest.Data.Presenters.Primitives
                 Warnings = Warnings.Add(rowPresenter, warnings);
         }
 
-        private void Validate(DataRow dataRow, out IValidationMessageGroup errors, out IValidationMessageGroup warnings)
+        private void Validate(DataRow dataRow, out IColumnValidationMessages errors, out IColumnValidationMessages warnings)
         {
             Debug.Assert(MoreToValidate);
 
             if (MoreErrorsToValidate)
             {
                 errors = Validate(dataRow, ValidationSeverity.Error);
-                warnings = errors.Count > 0 || MoreWarningsToValidate ? Validate(dataRow, ValidationSeverity.Warning) : ValidationMessageGroup.Empty;
+                warnings = errors.Count > 0 || MoreWarningsToValidate ? Validate(dataRow, ValidationSeverity.Warning) : ColumnValidationMessages.Empty;
             }
             else
             {
                 Debug.Assert(MoreWarningsToValidate);
                 warnings = Validate(dataRow, ValidationSeverity.Warning);
-                errors = warnings.Count > 0 || MoreErrorsToValidate ? Validate(dataRow, ValidationSeverity.Error) : ValidationMessageGroup.Empty;
+                errors = warnings.Count > 0 || MoreErrorsToValidate ? Validate(dataRow, ValidationSeverity.Error) : ColumnValidationMessages.Empty;
             }
         }
 
-        private IValidationMessageGroup Validate(DataRow dataRow, ValidationSeverity? severity)
+        private IColumnValidationMessages Validate(DataRow dataRow, ValidationSeverity? severity)
         {
             return dataRow == DataSet.AddingRow ? DataSet.ValidateAddingRow(severity) : dataRow.Validate(severity);
         }

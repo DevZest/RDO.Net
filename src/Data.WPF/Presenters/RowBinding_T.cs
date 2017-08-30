@@ -34,9 +34,9 @@ namespace DevZest.Data.Presenters
                 Input.Flush((T)element);
         }
 
-        private IColumnSet Columns
+        private IColumns Columns
         {
-            get { return Input == null ? ColumnSet.Empty : Input.Columns; }
+            get { return Input == null ? Data.Columns.Empty : Input.Columns; }
         }
 
         private T Create()

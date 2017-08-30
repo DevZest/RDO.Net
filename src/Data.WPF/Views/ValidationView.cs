@@ -1,4 +1,6 @@
 ﻿using DevZest.Data.Presenters;
+using DevZest.Data.Primitives;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -6,11 +8,14 @@ namespace DevZest.Data.Views
 {
     public class ValidationView : Control
     {
+        public static readonly DependencyProperty FlushErrorProperty = DependencyProperty.Register(nameof(FlushError),
+            typeof(FlushErrorMessage), typeof(ValidationView), new FrameworkPropertyMetadata(null));
+
         public static readonly DependencyProperty ErrorsProperty = DependencyProperty.Register(nameof(Errors),
-            typeof(IAbstractValidationMessageGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AbstractValidationMessageGroup.Empty));
+            typeof(IReadOnlyList<ValidationMessage>), typeof(ValidationView), new FrameworkPropertyMetadata(Array<ValidationMessage>.Empty));
 
         public static readonly DependencyProperty WarningsProperty = DependencyProperty.Register(nameof(Warnings),
-            typeof(IAbstractValidationMessageGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AbstractValidationMessageGroup.Empty));
+            typeof(IReadOnlyList<ValidationMessage>), typeof(ValidationView), new FrameworkPropertyMetadata(Array<ValidationMessage>.Empty));
 
         public static readonly DependencyProperty AsyncValidatorsProperty = DependencyProperty.Register(nameof(AsyncValidators),
             typeof(IAsyncValidatorGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AsyncValidatorGroup.Empty, OnAsyncValidatorsChanged));
@@ -32,9 +37,21 @@ namespace DevZest.Data.Views
             ((ValidationView)d).RefreshStatus();
         }
 
-        public IAbstractValidationMessageGroup Errors
+        public FlushErrorMessage FlushError
         {
-            get { return (IAbstractValidationMessageGroup)GetValue(ErrorsProperty); }
+            get { return (FlushErrorMessage)GetValue(FlushErrorProperty); }
+            set
+            {
+                if (value == null)
+                    ClearValue(FlushErrorProperty);
+                else
+                    SetValue(FlushErrorProperty, value);
+            }
+        }
+
+        public IReadOnlyList<ValidationMessage> Errors
+        {
+            get { return (IReadOnlyList<ValidationMessage>)GetValue(ErrorsProperty); }
             set
             {
                 if (value == null || value.Count == 0)
@@ -44,9 +61,9 @@ namespace DevZest.Data.Views
             }
         }
 
-        public IAbstractValidationMessageGroup Warnings
+        public IReadOnlyList<ValidationMessage> Warnings
         {
-            get { return (IAbstractValidationMessageGroup)GetValue(WarningsProperty); }
+            get { return (IReadOnlyList<ValidationMessage>)GetValue(WarningsProperty); }
             set
             {
                 if (value == null || value.Count == 0)

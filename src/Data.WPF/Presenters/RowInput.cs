@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
             InputManager.SetRowFlushError(element, inputError);
         }
 
-        internal IColumnSet Columns { get; private set; } = ColumnSet.Empty;
+        internal IColumns Columns { get; private set; } = DevZest.Data.Columns.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private RowPresenter CurrentRow
@@ -105,31 +105,31 @@ namespace DevZest.Data.Presenters
             return null;
         }
 
-        public IValidationMessageGroup GetErrors(RowPresenter rowPresenter)
+        public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
         {
-            var result = ValidationMessageGroup.Empty;
+            var result = ColumnValidationMessages.Empty;
             result = AddValidationMessages(result, InputManager.Errors, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
             result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
             return result;
         }
 
-        public IValidationMessageGroup GetWarnings(RowPresenter rowPresenter)
+        public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
         {
-            var result = ValidationMessageGroup.Empty;
+            var result = ColumnValidationMessages.Empty;
             result = AddValidationMessages(result, InputManager.Warnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
             result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
             return result;
         }
 
-        private bool IsVisible(ValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
+        private bool IsVisible(ColumnValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
         {
             var source = validationMessage.Source;
             return source.SetEquals(Columns) && InputManager.Progress.IsVisible(rowPresenter, source) == progressVisible;
         }
 
-        private static IValidationMessageGroup AddValidationMessages(IValidationMessageGroup result, IValidationDictionary dictionary, RowPresenter rowPresenter, Func<ValidationMessage, bool> predict)
+        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IValidationDictionary dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
         {
             if (dictionary.ContainsKey(rowPresenter))
             {
@@ -145,7 +145,7 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private IValidationMessageGroup AddAsyncValidationMessages(IValidationMessageGroup result, RowPresenter rowPresenter, ValidationSeverity severity)
+        private IColumnValidationMessages AddAsyncValidationMessages(IColumnValidationMessages result, RowPresenter rowPresenter, ValidationSeverity severity)
         {
             var asyncValidators = Template.AsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
@@ -180,7 +180,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public RowInput<T> AddAsyncValidator(Func<Task<IValidationMessageGroup>> action, Action postAction = null)
+        public RowInput<T> AddAsyncValidator(Func<Task<IColumnValidationMessages>> action, Action postAction = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));

@@ -13,23 +13,23 @@ namespace DevZest.Data.Presenters
 {
     public abstract class AsyncValidator : IAsyncValidatorGroup, INotifyPropertyChanged
     {
-        internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action, Action postAction)
+        internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
             where T : UIElement, new()
         {
             return new RowInputAsyncValidator<T>(rowInput, action, postAction);
         }
 
-        internal static AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action, Action postAction)
+        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
         {
             return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        internal static AsyncValidator Create(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
+        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
         {
             return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        private static async Task<IValidationDictionary> Validate(Func<Task<IValidationMessageGroup>> action, RowPresenter currentRow)
+        private static async Task<IValidationDictionary> Validate(Func<Task<IColumnValidationMessages>> action, RowPresenter currentRow)
         {
             var messages = await action();
             return messages == null || messages.Count == 0 || currentRow == null
@@ -39,7 +39,7 @@ namespace DevZest.Data.Presenters
         private sealed class RowInputAsyncValidator<T> : AsyncValidator
             where T : UIElement, new()
         {
-            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IValidationMessageGroup>> action, Action postAction)
+            public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
                 : base(postAction)
             {
                 Debug.Assert(rowInput != null);
@@ -49,9 +49,9 @@ namespace DevZest.Data.Presenters
             }
 
             private readonly RowInput<T> _rowInput;
-            private readonly Func<Task<IValidationMessageGroup>> _action;
+            private readonly Func<Task<IColumnValidationMessages>> _action;
 
-            public override IColumnSet SourceColumns
+            public override IColumns SourceColumns
             {
                 get { return _rowInput.Columns; }
             }
@@ -84,7 +84,7 @@ namespace DevZest.Data.Presenters
 
         private abstract class RowAsyncValidator : AsyncValidator
         {
-            protected RowAsyncValidator(Template template, IColumnSet sourceColumns, Action postAction)
+            protected RowAsyncValidator(Template template, IColumns sourceColumns, Action postAction)
                 : base(postAction)
             {
                 Debug.Assert(template != null);
@@ -93,14 +93,14 @@ namespace DevZest.Data.Presenters
             }
 
             private readonly Template _template;
-            private readonly IColumnSet _sourceColumns;
+            private readonly IColumns _sourceColumns;
 
             internal override InputManager InputManager
             {
                 get { return _template.InputManager; }
             }
 
-            public override IColumnSet SourceColumns
+            public override IColumns SourceColumns
             {
                 get { return _sourceColumns; }
             }
@@ -108,14 +108,14 @@ namespace DevZest.Data.Presenters
 
         private sealed class CurrentRowAsyncValidator : RowAsyncValidator
         {
-            public CurrentRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationMessageGroup>> action, Action postAction)
+            public CurrentRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
                 _action = action;
             }
 
-            private readonly Func<Task<IValidationMessageGroup>> _action;
+            private readonly Func<Task<IColumnValidationMessages>> _action;
 
             private RowPresenter CurrentRow
             {
@@ -140,7 +140,7 @@ namespace DevZest.Data.Presenters
 
         private sealed class AllRowAsyncValidator : RowAsyncValidator
         {
-            public AllRowAsyncValidator(Template template, IColumnSet sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
+            public AllRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
@@ -179,7 +179,7 @@ namespace DevZest.Data.Presenters
 
         internal abstract InputManager InputManager { get; }
 
-        public abstract IColumnSet SourceColumns { get; }
+        public abstract IColumns SourceColumns { get; }
 
         private IValidationDictionary _errors = ValidationDictionary.Empty;
         public IValidationDictionary Errors

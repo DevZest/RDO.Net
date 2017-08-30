@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public sealed class ScalarValidationMessage : ValidationMessage<IScalarSet>, IScalarValidationMessageGroup
+    public sealed class ScalarValidationMessage : ValidationMessageBase<IScalarSet>, IScalarValidationMessageGroup
     {
         public ScalarValidationMessage(string id, ValidationSeverity severity, string description, IScalarSet source)
             : base(id, severity, description, source)

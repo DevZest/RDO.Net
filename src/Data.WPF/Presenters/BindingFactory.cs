@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Primitives;
 using DevZest.Data.Views;
 using System;
 using System.Collections;
@@ -160,7 +161,7 @@ namespace DevZest.Data.Presenters
                 onCleanup: (e, r) =>
                 {
                     e.AsyncValidators = AsyncValidatorGroup.Empty;
-                    e.Errors = e.Warnings = AbstractValidationMessageGroup.Empty;
+                    e.Errors = e.Warnings = Array<ValidationMessage>.Empty;
                 });
         }
 
