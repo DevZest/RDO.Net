@@ -88,7 +88,7 @@ namespace DevZest.Data.Views
         public IAsyncValidators RunningAsyncValidators
         {
             get { return (IAsyncValidators)GetValue(RunningAsyncValidatorsProperty); }
-            set
+            private set
             {
                 if (value == null || value.Count == 0)
                     ClearValue(RunningAsyncValidatorsPropertyKey);
@@ -100,7 +100,7 @@ namespace DevZest.Data.Views
         public IAsyncValidators CompletedAsyncValidators
         {
             get { return (IAsyncValidators)GetValue(CompletedAsyncValidatorsProperty); }
-            set
+            private set
             {
                 if (value == null || value.Count == 0)
                     ClearValue(CompletedAsyncValidatorsPropertyKey);
@@ -112,7 +112,7 @@ namespace DevZest.Data.Views
         public IAsyncValidators FaultedAsyncValidators
         {
             get { return (IAsyncValidators)GetValue(FaultedAsyncValidatorsProperty); }
-            set
+            private set
             {
                 if (value == null || value.Count == 0)
                     ClearValue(FaultedAsyncValidatorsPropertyKey);
