@@ -353,7 +353,7 @@ namespace DevZest.Data.Presenters
                 Reset();
         }
 
-        #region IAsyncValidatorGroup
+        #region IAsyncValidators
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IAsyncValidators.IsSealed
