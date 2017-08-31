@@ -146,14 +146,6 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        private static T CheckNotNull<T>(this T reference, string paramName, int index)
-            where T : class
-        {
-            if (reference == null)
-                throw new NullReferenceException(String.Format("{0}[{1}]", paramName, index));
-            return reference;
-        }
-
         public static IAsyncValidators Where(this IAsyncValidators asyncValidators, Func<AsyncValidator, bool> predict)
         {
             if (asyncValidators == null)
