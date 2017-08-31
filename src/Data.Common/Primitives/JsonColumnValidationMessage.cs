@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
-    public static class JsonValidationMessage
+    public static class JsonColumnValidationMessage
     {
         private const string ID = nameof(ColumnValidationMessage.Id);
         private const string SEVERITY = nameof(ColumnValidationMessage.Severity);

@@ -2,11 +2,11 @@
 
 namespace DevZest.Data
 {
-    public interface IValidationResult : IReadOnlyList<ValidationEntry>
+    public interface IDataRowValidationResults : IReadOnlyList<DataRowValidationResult>
     {
         bool IsSealed { get; }
 
-        IValidationResult Seal();
+        IDataRowValidationResults Seal();
 
         IColumnValidationMessages this[DataRow dataRow] { get; }
 
@@ -14,6 +14,6 @@ namespace DevZest.Data
 
         bool TryGetValue(DataRow dataRow, out IColumnValidationMessages value);
 
-        IValidationResult Add(ValidationEntry value);
+        IDataRowValidationResults Add(DataRowValidationResult value);
     }
 }

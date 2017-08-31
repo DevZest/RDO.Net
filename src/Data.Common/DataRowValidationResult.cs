@@ -4,9 +4,9 @@ using System;
 
 namespace DevZest.Data
 {
-    public struct ValidationEntry
+    public struct DataRowValidationResult
     {
-        public ValidationEntry(DataRow dataRow, IColumnValidationMessages messages)
+        public DataRowValidationResult(DataRow dataRow, IColumnValidationMessages messages)
         {
             Check.NotNull(dataRow, nameof(dataRow));
             Check.NotNull(messages, nameof(messages));
@@ -30,7 +30,7 @@ namespace DevZest.Data
             return JsonWriter.New().Write(this).ToString(isPretty);
         }
 
-        public static ValidationEntry ParseJson(DataSet dataSet, string json)
+        public static DataRowValidationResult ParseJson(DataSet dataSet, string json)
         {
             var jsonParser = new JsonParser(json);
             var result = jsonParser.ParseValidationEntry(dataSet);

@@ -4,10 +4,10 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonValidationEntry
     {
-        private const string DATA_ROW = nameof(ValidationEntry.DataRow);
-        private const string MESSAGES = nameof(ValidationEntry.Messages);
+        private const string DATA_ROW = nameof(DataRowValidationResult.DataRow);
+        private const string MESSAGES = nameof(DataRowValidationResult.Messages);
 
-        public static JsonWriter Write(this JsonWriter jsonWriter, ValidationEntry validationEntry)
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataRowValidationResult validationEntry)
         {
             return jsonWriter
                 .WriteStartObject()
@@ -16,7 +16,7 @@ namespace DevZest.Data.Primitives
                 .WriteEndObject();
         }
 
-        public static ValidationEntry ParseValidationEntry(this JsonParser jsonParser, DataSet dataSet)
+        public static DataRowValidationResult ParseValidationEntry(this JsonParser jsonParser, DataSet dataSet)
         {
             DataRow dataRow;
             IColumnValidationMessages validationMessages;
@@ -27,7 +27,7 @@ namespace DevZest.Data.Primitives
             validationMessages = jsonParser.ParseValidationMessageGroup(dataSet);
             jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
 
-            return new ValidationEntry(dataRow, validationMessages);
+            return new DataRowValidationResult(dataRow, validationMessages);
         }
     }
 }

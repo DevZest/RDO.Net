@@ -69,7 +69,7 @@
     <Compile Include="DataSetContainer.cs" />
     <Compile Include="DataSetContainer.LocalColumn.cs" />
     <Compile Include="IColumnValidationMessages.cs" />
-    <Compile Include="IValidationResult.cs" />
+    <Compile Include="IDataRowValidationResults.cs" />
     <Compile Include="JsonOrderBy.cs" />
     <Compile Include="LocalColumnBuilder.cs" />
     <Compile Include="Primitives\CaseOn.cs" />
@@ -105,14 +105,14 @@
     <Compile Include="Primitives\JsonTokenKind.cs" />
     <Compile Include="Primitives\JsonWriter.cs" />
     <Compile Include="Primitives\UnderlyingValueTypeAttribute.cs" />
-    <Compile Include="Primitives\JsonValidationEntry.cs" />
-    <Compile Include="Primitives\JsonValidationMessage.cs" />
-    <Compile Include="Primitives\JsonValidationResult.cs" />
+    <Compile Include="Primitives\JsonDataRowValidationResult.cs" />
+    <Compile Include="Primitives\JsonColumnValidationMessage.cs" />
+    <Compile Include="Primitives\JsonDataRowValidationResults.cs" />
     <Compile Include="Utilities\Array.Empty.cs" />
     <Compile Include="Primitives\ScalarExtensions.cs" />
     <Compile Include="Scalar.cs" />
     <Compile Include="Utilities\EmptyEnumerator.cs" />
-    <Compile Include="ValidationEntry.cs" />
+    <Compile Include="DataRowValidationResult.cs" />
     <Compile Include="ColumnValidationMessage.cs" />
     <Compile Include="DbAggregateQueryBuilder.cs" />
     <Compile Include="DbColumnNameAttribute.cs" />
@@ -264,7 +264,7 @@
     <Compile Include="Utilities\NullableExtensions.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\UniqueNameManager.cs" />
-    <Compile Include="ValidationResult.cs" />
+    <Compile Include="DataRowValidationResults.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="_Binary.cs" />
     <Compile Include="_Boolean.cs" />

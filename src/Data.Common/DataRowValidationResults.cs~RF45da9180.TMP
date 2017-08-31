@@ -9,16 +9,16 @@ using DevZest.Data.Utilities;
 
 namespace DevZest.Data
 {
-    public static class ValidationResult
+    public static class DataRowValidationResults
     {
-        private sealed class EmptyResult : IValidationResult
+        private sealed class EmptyResult : IDataRowValidationResults
         {
             public static EmptyResult Singleton = new EmptyResult();
             private EmptyResult()
             {
             }
 
-            public ValidationEntry this[int index]
+            public DataRowValidationResult this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
@@ -38,14 +38,14 @@ namespace DevZest.Data
                 get { return true; }
             }
 
-            public IValidationResult Seal()
+            public IDataRowValidationResults Seal()
             {
                 return this;
             }
 
-            public IValidationResult Add(ValidationEntry validationEntry)
+            public IDataRowValidationResults Add(DataRowValidationResult validationEntry)
             {
-                IValidationResult result = new KeyedCollection();
+                IDataRowValidationResults result = new KeyedCollection();
                 return result.Add(validationEntry);
             }
 
@@ -66,7 +66,7 @@ namespace DevZest.Data
                 yield break;
             }
 
-            IEnumerator<ValidationEntry> IEnumerable<ValidationEntry>.GetEnumerator()
+            IEnumerator<DataRowValidationResult> IEnumerable<DataRowValidationResult>.GetEnumerator()
             {
                 yield break;
             }
@@ -77,21 +77,21 @@ namespace DevZest.Data
             }
         }
 
-        private sealed class KeyedCollection : KeyedCollection<DataRow, ValidationEntry>, IValidationResult
+        private sealed class KeyedCollection : KeyedCollection<DataRow, DataRowValidationResult>, IDataRowValidationResults
         {
-            protected override DataRow GetKeyForItem(ValidationEntry item)
+            protected override DataRow GetKeyForItem(DataRowValidationResult item)
             {
                 return item.DataRow;
             }
 
             public bool IsSealed { get; private set; }
 
-            IColumnValidationMessages IValidationResult.this[DataRow dataRow]
+            IColumnValidationMessages IDataRowValidationResults.this[DataRow dataRow]
             {
                 get { return base[dataRow].Messages; }
             }
 
-            public IValidationResult Seal()
+            public IDataRowValidationResults Seal()
             {
                 IsSealed = true;
                 return this;
@@ -102,7 +102,7 @@ namespace DevZest.Data
                 return this.ToJsonString(true);
             }
 
-            IValidationResult IValidationResult.Add(ValidationEntry value)
+            IDataRowValidationResults IDataRowValidationResults.Add(DataRowValidationResult value)
             {
                 if (value.IsEmpty)
                     throw new ArgumentException("", nameof(value));
@@ -135,12 +135,12 @@ namespace DevZest.Data
             }
         }
 
-        public static IValidationResult Empty
+        public static IDataRowValidationResults Empty
         {
             get { return EmptyResult.Singleton; }
         }
 
-        public static IValidationResult ParseJson(DataSet dataSet, string json)
+        public static IDataRowValidationResults ParseJson(DataSet dataSet, string json)
         {
             var jsonParser = new JsonParser(json);
             var result = jsonParser.ParseValidationResult(dataSet);
@@ -148,27 +148,27 @@ namespace DevZest.Data
             return result;
         }
 
-        public static string ToJsonString(this IValidationResult validationResult, bool isPretty)
+        public static string ToJsonString(this IDataRowValidationResults validationResults, bool isPretty)
         {
-            return JsonWriter.New().Write(validationResult).ToString(isPretty);
+            return JsonWriter.New().Write(validationResults).ToString(isPretty);
         }
 
-        public static bool IsValid(this IValidationResult validationResult)
+        public static bool IsValid(this IDataRowValidationResults validationResult)
         {
             return !validationResult.HasError();
         }
 
-        public static bool HasError(this IValidationResult validationResult)
+        public static bool HasError(this IDataRowValidationResults validationResult)
         {
             return validationResult.Any(ValidationSeverity.Error);
         }
 
-        public static bool HasWarning(this IValidationResult validationResult)
+        public static bool HasWarning(this IDataRowValidationResults validationResult)
         {
             return validationResult.Any(ValidationSeverity.Warning);
         }
 
-        private static bool Any(this IValidationResult validationResult, ValidationSeverity severity)
+        private static bool Any(this IDataRowValidationResults validationResult, ValidationSeverity severity)
         {
             for (int i = 0; i < validationResult.Count; i++)
             {
