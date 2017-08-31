@@ -155,7 +155,7 @@ namespace DevZest.Data.Presenters
                 onRefresh: (e, r) =>
                 {
                     e.Errors = source.GetErrors(r);
-                    e.Warnings = source.GetErrors(r);
+                    e.Warnings = source.GetWarnings(r);
                     e.RefreshStatus();
                 },
                 onCleanup: (e, r) =>
