@@ -446,9 +446,9 @@ namespace DevZest.Data.Presenters
             get { return Template.InternalRowBindings; }
         }
 
-        public IAsyncValidatorGroup AsyncValidators
+        public IAsyncValidators AsyncValidators
         {
-            get { return IsCurrent ? InputManager.CurrentRowAsyncValidators : AsyncValidatorGroup.Empty; }
+            get { return IsCurrent ? InputManager.CurrentRowAsyncValidators : Presenters.AsyncValidators.Empty; }
         }
     }
 }

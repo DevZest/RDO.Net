@@ -17,19 +17,19 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty WarningsProperty = DependencyProperty.Register(nameof(Warnings),
             typeof(IReadOnlyList<ValidationMessage>), typeof(ValidationView), new FrameworkPropertyMetadata(Array<ValidationMessage>.Empty));
 
-        public static readonly DependencyProperty AsyncValidatorsProperty = DependencyProperty.Register(nameof(AsyncValidators),
-            typeof(IAsyncValidatorGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AsyncValidatorGroup.Empty, OnAsyncValidatorsChanged));
+        public static readonly DependencyProperty AsyncValidatorsProperty = DependencyProperty.Register(nameof(ValidationView.AsyncValidators),
+            typeof(IAsyncValidators), typeof(ValidationView), new FrameworkPropertyMetadata(Presenters.AsyncValidators.Empty, OnAsyncValidatorsChanged));
 
-        private static readonly DependencyPropertyKey RunningAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(RunningAsyncValidators),
-            typeof(IAsyncValidatorGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AsyncValidatorGroup.Empty));
+        private static readonly DependencyPropertyKey RunningAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValidationView.RunningAsyncValidators),
+            typeof(IAsyncValidators), typeof(ValidationView), new FrameworkPropertyMetadata(Presenters.AsyncValidators.Empty));
         public static readonly DependencyProperty RunningAsyncValidatorsProperty = RunningAsyncValidatorsPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey CompletedAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(CompletedAsyncValidators),
-            typeof(IAsyncValidatorGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AsyncValidatorGroup.Empty));
+        private static readonly DependencyPropertyKey CompletedAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValidationView.CompletedAsyncValidators),
+            typeof(IAsyncValidators), typeof(ValidationView), new FrameworkPropertyMetadata(Presenters.AsyncValidators.Empty));
         public static readonly DependencyProperty CompletedAsyncValidatorsProperty = CompletedAsyncValidatorsPropertyKey.DependencyProperty;
 
-        private static readonly DependencyPropertyKey FaultedAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(FaultedAsyncValidators),
-            typeof(IAsyncValidatorGroup), typeof(ValidationView), new FrameworkPropertyMetadata(AsyncValidatorGroup.Empty));
+        private static readonly DependencyPropertyKey FaultedAsyncValidatorsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ValidationView.FaultedAsyncValidators),
+            typeof(IAsyncValidators), typeof(ValidationView), new FrameworkPropertyMetadata(Presenters.AsyncValidators.Empty));
         public static readonly DependencyProperty FaultedAsyncValidatorsProperty = FaultedAsyncValidatorsPropertyKey.DependencyProperty;
 
         private static void OnAsyncValidatorsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -73,9 +73,9 @@ namespace DevZest.Data.Views
             }
         }
 
-        public IAsyncValidatorGroup AsyncValidators
+        public IAsyncValidators AsyncValidators
         {
-            get { return (IAsyncValidatorGroup)GetValue(AsyncValidatorsProperty); }
+            get { return (IAsyncValidators)GetValue(AsyncValidatorsProperty); }
             set
             {
                 if (value == null || value.Count == 0)
@@ -85,9 +85,9 @@ namespace DevZest.Data.Views
             }
         }
 
-        public IAsyncValidatorGroup RunningAsyncValidators
+        public IAsyncValidators RunningAsyncValidators
         {
-            get { return (IAsyncValidatorGroup)GetValue(RunningAsyncValidatorsProperty); }
+            get { return (IAsyncValidators)GetValue(RunningAsyncValidatorsProperty); }
             set
             {
                 if (value == null || value.Count == 0)
@@ -97,9 +97,9 @@ namespace DevZest.Data.Views
             }
         }
 
-        public IAsyncValidatorGroup CompletedAsyncValidators
+        public IAsyncValidators CompletedAsyncValidators
         {
-            get { return (IAsyncValidatorGroup)GetValue(CompletedAsyncValidatorsProperty); }
+            get { return (IAsyncValidators)GetValue(CompletedAsyncValidatorsProperty); }
             set
             {
                 if (value == null || value.Count == 0)
@@ -109,9 +109,9 @@ namespace DevZest.Data.Views
             }
         }
 
-        public IAsyncValidatorGroup FaultedAsyncValidators
+        public IAsyncValidators FaultedAsyncValidators
         {
-            get { return (IAsyncValidatorGroup)GetValue(FaultedAsyncValidatorsProperty); }
+            get { return (IAsyncValidators)GetValue(FaultedAsyncValidatorsProperty); }
             set
             {
                 if (value == null || value.Count == 0)
@@ -131,13 +131,13 @@ namespace DevZest.Data.Views
                 FaultedAsyncValidators = AsyncValidators.Where(x => x.Status == AsyncValidatorStatus.Faulted);
         }
 
-        private bool AnyStatusChange(AsyncValidatorStatus status, IAsyncValidatorGroup statusAsyncValidators)
+        private bool AnyStatusChange(AsyncValidatorStatus status, IAsyncValidators statusAsyncValidators)
         {
             return AnyStatusChange(AsyncValidators, status, statusAsyncValidators);
         }
 
         /// <remarks>Predicts if async validtor status has been changed to avoid unnecessary object creation.</remarks>
-        private static bool AnyStatusChange(IAsyncValidatorGroup asyncValidators, AsyncValidatorStatus status, IAsyncValidatorGroup statusAsyncValidators)
+        private static bool AnyStatusChange(IAsyncValidators asyncValidators, AsyncValidatorStatus status, IAsyncValidators statusAsyncValidators)
         {
             int count = 0;
             for (int i = 0; i < asyncValidators.Count; i++)

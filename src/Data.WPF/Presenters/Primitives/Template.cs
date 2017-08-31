@@ -505,9 +505,9 @@ namespace DevZest.Data.Presenters.Primitives
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }
 
-        internal IAsyncValidatorGroup InternalAsyncValidators { get; set; } = AsyncValidatorGroup.Empty;
+        internal IAsyncValidators InternalAsyncValidators { get; set; } = Presenters.AsyncValidators.Empty;
 
-        public IAsyncValidatorGroup AsyncValidators
+        public IAsyncValidators AsyncValidators
         {
             get { return IsSealed ? InternalAsyncValidators : null; }
         }

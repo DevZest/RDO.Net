@@ -198,8 +198,8 @@ namespace DevZest.Data.Presenters
             return RowBinding;
         }
 
-        private IAsyncValidatorGroup _asyncValidators;
-        public IAsyncValidatorGroup AsyncValidators
+        private IAsyncValidators _asyncValidators;
+        public IAsyncValidators AsyncValidators
         {
             get
             {

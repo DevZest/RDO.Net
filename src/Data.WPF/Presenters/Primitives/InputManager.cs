@@ -418,8 +418,8 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
-        private IAsyncValidatorGroup _allRowsAsyncValidators;
-        public IAsyncValidatorGroup AllRowsAsyncValidators
+        private IAsyncValidators _allRowsAsyncValidators;
+        public IAsyncValidators AllRowsAsyncValidators
         {
             get
             {
@@ -429,8 +429,8 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private IAsyncValidatorGroup _currentRowAsyncValidators;
-        public IAsyncValidatorGroup CurrentRowAsyncValidators
+        private IAsyncValidators _currentRowAsyncValidators;
+        public IAsyncValidators CurrentRowAsyncValidators
         {
             get
             {

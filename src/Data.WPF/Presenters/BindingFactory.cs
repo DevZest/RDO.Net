@@ -160,7 +160,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: (e, r) =>
                 {
-                    e.AsyncValidators = AsyncValidatorGroup.Empty;
+                    e.AsyncValidators = AsyncValidators.Empty;
                     e.Errors = e.Warnings = Array<ValidationMessage>.Empty;
                 });
         }
@@ -178,7 +178,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: (e, r) =>
                 {
-                    e.AsyncValidators = AsyncValidatorGroup.Empty;
+                    e.AsyncValidators = AsyncValidators.Empty;
                 });
         }
 
@@ -198,7 +198,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: e =>
                 {
-                    e.AsyncValidators = AsyncValidatorGroup.Empty;
+                    e.AsyncValidators = AsyncValidators.Empty;
                 });
         }
 

@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public static class AsyncValidatorGroup
+    public static class AsyncValidators
     {
-        private sealed class EmptyGroup : IAsyncValidatorGroup
+        private sealed class EmptyGroup : IAsyncValidators
         {
             public readonly static EmptyGroup Singleton = new EmptyGroup();
 
@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters
                 get { return true; }
             }
 
-            public IAsyncValidatorGroup Add(AsyncValidator value)
+            public IAsyncValidators Add(AsyncValidator value)
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -43,7 +43,7 @@ namespace DevZest.Data.Presenters
                 return EmptyEnumerator<AsyncValidator>.Singleton;
             }
 
-            public IAsyncValidatorGroup Seal()
+            public IAsyncValidators Seal()
             {
                 return this;
             }
@@ -54,7 +54,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class ListGroup : IAsyncValidatorGroup
+        private class ListGroup : IAsyncValidators
         {
             private bool _isSealed;
             private List<AsyncValidator> _list = new List<AsyncValidator>();
@@ -85,13 +85,13 @@ namespace DevZest.Data.Presenters
                 get { return _list[index]; }
             }
 
-            public IAsyncValidatorGroup Seal()
+            public IAsyncValidators Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IAsyncValidatorGroup Add(AsyncValidator value)
+            public IAsyncValidators Add(AsyncValidator value)
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -121,18 +121,18 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static IAsyncValidatorGroup Empty
+        public static IAsyncValidators Empty
         {
             get { return EmptyGroup.Singleton; }
         }
 
-        internal static IAsyncValidatorGroup New(AsyncValidator value1, AsyncValidator value2)
+        internal static IAsyncValidators New(AsyncValidator value1, AsyncValidator value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new ListGroup(value1, value2);
         }
 
-        public static IAsyncValidatorGroup New(params AsyncValidator[] values)
+        public static IAsyncValidators New(params AsyncValidator[] values)
         {
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
@@ -140,7 +140,7 @@ namespace DevZest.Data.Presenters
             if (values.Length == 0)
                 return Empty;
 
-            IAsyncValidatorGroup result = values[0].CheckNotNull(nameof(values), 0);
+            IAsyncValidators result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), 0));
             return result;
@@ -154,12 +154,12 @@ namespace DevZest.Data.Presenters
             return reference;
         }
 
-        public static IAsyncValidatorGroup Where(this IAsyncValidatorGroup asyncValidators, Func<AsyncValidator, bool> predict)
+        public static IAsyncValidators Where(this IAsyncValidators asyncValidators, Func<AsyncValidator, bool> predict)
         {
             if (asyncValidators == null)
                 throw new ArgumentNullException(nameof(asyncValidators));
 
-            var result = AsyncValidatorGroup.Empty;
+            var result = AsyncValidators.Empty;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
@@ -169,7 +169,7 @@ namespace DevZest.Data.Presenters
             return result.Seal();
         }
 
-        public static void Each(this IAsyncValidatorGroup asyncValidators, Action<AsyncValidator> action)
+        public static void Each(this IAsyncValidators asyncValidators, Action<AsyncValidator> action)
         {
             if (asyncValidators == null)
                 throw new ArgumentNullException(nameof(asyncValidators));

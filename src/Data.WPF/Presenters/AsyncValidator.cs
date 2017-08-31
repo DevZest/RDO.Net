@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class AsyncValidator : IAsyncValidatorGroup, INotifyPropertyChanged
+    public abstract class AsyncValidator : IAsyncValidators, INotifyPropertyChanged
     {
         internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
             where T : UIElement, new()
@@ -356,7 +356,7 @@ namespace DevZest.Data.Presenters
         #region IAsyncValidatorGroup
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IAsyncValidatorGroup.IsSealed
+        bool IAsyncValidators.IsSealed
         {
             get { return true; }
         }
@@ -379,17 +379,17 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IAsyncValidatorGroup IAsyncValidatorGroup.Seal()
+        IAsyncValidators IAsyncValidators.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IAsyncValidatorGroup IAsyncValidatorGroup.Add(AsyncValidator value)
+        IAsyncValidators IAsyncValidators.Add(AsyncValidator value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            return AsyncValidatorGroup.New(this, value);
+            return AsyncValidators.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
