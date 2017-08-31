@@ -71,9 +71,9 @@ namespace DevZest.Data.Presenters
                 get { return _rowInput; }
             }
 
-            public override ValidationScope ValidationScope
+            public override RowValidationScope ValidationScope
             {
-                get { return ValidationScope.CurrentRow; }
+                get { return RowValidationScope.Current; }
             }
 
             protected override async Task<IValidationDictionary> ValidateCoreAsync()
@@ -127,9 +127,9 @@ namespace DevZest.Data.Presenters
                 get { return null; }
             }
 
-            public override ValidationScope ValidationScope
+            public override RowValidationScope ValidationScope
             {
-                get { return ValidationScope.CurrentRow; }
+                get { return RowValidationScope.Current; }
             }
 
             protected override async Task<IValidationDictionary> ValidateCoreAsync()
@@ -154,9 +154,9 @@ namespace DevZest.Data.Presenters
                 get { return null; }
             }
 
-            public override ValidationScope ValidationScope
+            public override RowValidationScope ValidationScope
             {
-                get { return ValidationScope.AllRows; }
+                get { return RowValidationScope.All; }
             }
 
             protected override async Task<IValidationDictionary> ValidateCoreAsync()
@@ -211,7 +211,7 @@ namespace DevZest.Data.Presenters
 
         internal abstract IRowInput RowInput { get; }
 
-        public abstract ValidationScope ValidationScope { get; }
+        public abstract RowValidationScope ValidationScope { get; }
 
         protected abstract Task<IValidationDictionary> ValidateCoreAsync();
 
@@ -349,7 +349,7 @@ namespace DevZest.Data.Presenters
 
         internal void OnCurrentRowChanged()
         {
-            if (ValidationScope == ValidationScope.CurrentRow)
+            if (ValidationScope == RowValidationScope.Current)
                 Reset();
         }
 

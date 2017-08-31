@@ -261,12 +261,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal ValidationMode ValidationMode
         {
-            get { return Template.ValidationMode; }
+            get { return Template.RowValidationMode; }
         }
 
-        internal ValidationScope ValidationScope
+        internal RowValidationScope ValidationScope
         {
-            get { return Template.ValidationScope; }
+            get { return Template.RowValidationScope; }
         }
 
         public void Validate()
@@ -277,12 +277,12 @@ namespace DevZest.Data.Presenters.Primitives
 
         private int ErrorMaxEntries
         {
-            get { return Template.ValidationErrorMaxEntries; }
+            get { return Template.RowValidationErrorLimit; }
         }
 
         private int WarningMaxEntries
         {
-            get { return Template.ValidationWarningMaxEntries; }
+            get { return Template.RowValidationWarningLimit; }
         }
 
         private void Validate(bool showAll)
@@ -320,7 +320,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (!MoreToValidate)
                 return;
 
-            if (ValidationScope == ValidationScope.AllRows)
+            if (ValidationScope == RowValidationScope.All)
             {
                 for (int i = 0; i < Rows.Count; i++)
                 {
@@ -424,7 +424,7 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_allRowsAsyncValidators == null)
-                    _allRowsAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == ValidationScope.AllRows);
+                    _allRowsAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == RowValidationScope.All);
                 return _allRowsAsyncValidators;
             }
         }
@@ -435,17 +435,17 @@ namespace DevZest.Data.Presenters.Primitives
             get
             {
                 if (_currentRowAsyncValidators == null)
-                    _currentRowAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == ValidationScope.CurrentRow && x.RowInput == null);
+                    _currentRowAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == RowValidationScope.Current && x.RowInput == null);
                 return _currentRowAsyncValidators;
             }
         }
 
         internal sealed override bool EndEdit()
         {
-            if (ValidationScope == ValidationScope.AllRows)
+            if (ValidationScope == RowValidationScope.All)
                 return base.EndEdit();
 
-            Debug.Assert(ValidationScope == ValidationScope.CurrentRow);
+            Debug.Assert(ValidationScope == RowValidationScope.Current);
             Validate(true);
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)

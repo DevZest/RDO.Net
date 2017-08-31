@@ -54,7 +54,7 @@ namespace DevZest.Data.Presenters
         {
             if (_progress != null)
             {
-                if (Scope == ValidationScope.CurrentRow)
+                if (Scope == RowValidationScope.Current)
                     _progress.Clear();
             }
         }
@@ -70,7 +70,7 @@ namespace DevZest.Data.Presenters
             get { return _inputManager.ValidationMode; }
         }
 
-        public ValidationScope Scope
+        public RowValidationScope Scope
         {
             get { return _inputManager.ValidationScope; }
         }

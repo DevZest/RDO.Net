@@ -487,20 +487,20 @@ namespace DevZest.Data.Presenters.Primitives
         [DefaultValue(true)]
         public bool TransactionalEdit { get; internal set; } = true;
 
-        [DefaultValue(ValidationScope.CurrentRow)]
-        public ValidationScope ValidationScope { get; internal set; } = ValidationScope.CurrentRow;
+        [DefaultValue(RowValidationScope.Current)]
+        public RowValidationScope RowValidationScope { get; internal set; } = RowValidationScope.Current;
 
         [DefaultValue(ValidationMode.Progressive)]
-        public ValidationMode ValidationMode { get; internal set; } = ValidationMode.Progressive;
+        public ValidationMode RowValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(ValidationMode.Progressive)]
         public ValidationMode ScalarValidationMode { get; internal set; } = ValidationMode.Progressive;
 
         [DefaultValue(100)]
-        public int ValidationErrorMaxEntries { get; internal set; } = 100;
+        public int RowValidationErrorLimit { get; internal set; } = 100;
 
         [DefaultValue(100)]
-        public int ValidationWarningMaxEntries { get; internal set; } = 100;
+        public int RowValidationWarningLimit { get; internal set; } = 100;
 
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }

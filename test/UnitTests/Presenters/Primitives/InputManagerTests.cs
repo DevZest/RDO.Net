@@ -189,7 +189,7 @@ namespace DevZest.Data.Presenters.Primitives
             var inputManager = dataSet.CreateInputManager(builder =>
             {
                 textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
-                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 
             var currentRow = inputManager.CurrentRow;
@@ -231,7 +231,7 @@ namespace DevZest.Data.Presenters.Primitives
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
                     .AddBinding(0, 0, validationView);
 
                 textBox.Input.AddAsyncValidator(() => ValidateBadNameAsync(_.Name, 0));
@@ -303,7 +303,7 @@ namespace DevZest.Data.Presenters.Primitives
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
                     .AddBinding(0, 0, validationView);
 
                 textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
@@ -352,7 +352,7 @@ namespace DevZest.Data.Presenters.Primitives
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
-                    .AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit)
+                    .AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit)
                     .AddBinding(0, 0, validationView);
 
                 textBox.Input.AddAsyncValidator(ValidateFaultedAsync);
@@ -395,7 +395,7 @@ namespace DevZest.Data.Presenters.Primitives
             var inputManager = dataSet.CreateInputManager(builder =>
             {
                 textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
-                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithValidationMode(ValidationMode.Implicit);
+                builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 
             var currentRow = inputManager.CurrentRow;

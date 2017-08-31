@@ -135,12 +135,12 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        [DefaultValue(ValidationScope.CurrentRow)]
-        public TemplateBuilder WithValidationScope(ValidationScope value)
+        [DefaultValue(RowValidationScope.Current)]
+        public TemplateBuilder WithRowValidationScope(RowValidationScope value)
         {
-            if (Template.ValidationScope == ValidationScope.AllRows && Template.InternalAsyncValidators.Any(x => x.ValidationScope == ValidationScope.AllRows))
+            if (Template.RowValidationScope == RowValidationScope.All && Template.InternalAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
-            Template.ValidationScope = value;
+            Template.RowValidationScope = value;
             return this;
         }
 
@@ -156,34 +156,41 @@ namespace DevZest.Data.Presenters
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
-            if (Template.ValidationScope == ValidationScope.CurrentRow)
+            if (Template.RowValidationScope == RowValidationScope.Current)
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.InternalAsyncValidators = Template.InternalAsyncValidators.Add(AsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
 
         [DefaultValue(ValidationMode.Progressive)]
-        public TemplateBuilder WithValidationMode(ValidationMode value)
+        public TemplateBuilder WithRowValidationMode(ValidationMode value)
         {
-            Template.ValidationMode = value;
+            Template.RowValidationMode = value;
+            return this;
+        }
+
+        [DefaultValue(ValidationMode.Progressive)]
+        public TemplateBuilder WithScalarValidationMode(ValidationMode value)
+        {
+            Template.ScalarValidationMode = value;
             return this;
         }
 
         [DefaultValue(100)]
-        public TemplateBuilder WithValidationErrorMaxEntries(int value)
+        public TemplateBuilder WithRowValidationErrorLimit(int value)
         {
             if (value < 1)
                 throw new ArgumentOutOfRangeException(nameof(value));
-            Template.ValidationErrorMaxEntries = value;
+            Template.RowValidationErrorLimit = value;
             return this;
         }
 
         [DefaultValue(100)]
-        public TemplateBuilder WithValidationWarningMaxEntries(int value)
+        public TemplateBuilder WithRowValidationWarningLimit(int value)
         {
             if (value < 0)
                 throw new ArgumentOutOfRangeException(nameof(value));
-            Template.ValidationWarningMaxEntries = value;
+            Template.RowValidationWarningLimit = value;
             return this;
         }
 
