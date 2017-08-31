@@ -29,11 +29,11 @@ namespace DevZest.Data.Presenters
             return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        private static async Task<IValidationDictionary> Validate(Func<Task<IColumnValidationMessages>> action, RowPresenter currentRow)
+        private static async Task<IRowValidationResults> Validate(Func<Task<IColumnValidationMessages>> action, RowPresenter currentRow)
         {
             var messages = await action();
             return messages == null || messages.Count == 0 || currentRow == null
-                ? ValidationDictionary.Empty : ValidationDictionary.Empty.Add(currentRow, messages);
+                ? RowValidationResults.Empty : RowValidationResults.Empty.Add(currentRow, messages);
         }
 
         private sealed class RowInputAsyncValidator<T> : AsyncValidator
@@ -76,7 +76,7 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.Current; }
             }
 
-            protected override async Task<IValidationDictionary> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateCoreAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -132,7 +132,7 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.Current; }
             }
 
-            protected override async Task<IValidationDictionary> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateCoreAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -159,10 +159,10 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.All; }
             }
 
-            protected override async Task<IValidationDictionary> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateCoreAsync()
             {
                 var result = await _action();
-                return result == null ? ValidationDictionary.Empty : InputManager.ToValidationDictionary(result);
+                return result == null ? RowValidationResults.Empty : InputManager.ToValidationDictionary(result);
             }
         }
 
@@ -181,8 +181,8 @@ namespace DevZest.Data.Presenters
 
         public abstract IColumns SourceColumns { get; }
 
-        private IValidationDictionary _errors = ValidationDictionary.Empty;
-        public IValidationDictionary Errors
+        private IRowValidationResults _errors = RowValidationResults.Empty;
+        public IRowValidationResults Errors
         {
             get { return _errors; }
             private set
@@ -195,8 +195,8 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private IValidationDictionary _warnings = ValidationDictionary.Empty;
-        public IValidationDictionary Warnings
+        private IRowValidationResults _warnings = RowValidationResults.Empty;
+        public IRowValidationResults Warnings
         {
             get { return _warnings; }
             private set
@@ -213,7 +213,7 @@ namespace DevZest.Data.Presenters
 
         public abstract RowValidationScope ValidationScope { get; }
 
-        protected abstract Task<IValidationDictionary> ValidateCoreAsync();
+        protected abstract Task<IRowValidationResults> ValidateCoreAsync();
 
         private AsyncValidatorStatus _status = AsyncValidatorStatus.Created;
         public AsyncValidatorStatus Status
@@ -256,7 +256,7 @@ namespace DevZest.Data.Presenters
 #if DEBUG
         internal Task LastRunningTask { get; private set; }
 #endif
-        private Task<IValidationDictionary> _awaitingTask;
+        private Task<IRowValidationResults> _awaitingTask;
 
         public async void Run()
         {
@@ -276,12 +276,12 @@ namespace DevZest.Data.Presenters
                 return;
             }
 
-            Errors = Warnings = ValidationDictionary.Empty;
+            Errors = Warnings = RowValidationResults.Empty;
             Exception = null;
             Status = AsyncValidatorStatus.Running;
             InputManager.InvalidateView();
 
-            IValidationDictionary result;
+            IRowValidationResults result;
             AsyncValidatorStatus status;
             Exception exception;
             do
@@ -300,7 +300,7 @@ namespace DevZest.Data.Presenters
                 {
                     if (task != _awaitingTask)  // cancelled
                         return;
-                    result = ValidationDictionary.Empty;
+                    result = RowValidationResults.Empty;
                     status = AsyncValidatorStatus.Faulted;
                     exception = ex;
                 }
@@ -336,7 +336,7 @@ namespace DevZest.Data.Presenters
             _pendingValidationRequest = false;
             Status = AsyncValidatorStatus.Created;
             Exception = null;
-            Errors = Warnings = ValidationDictionary.Empty;
+            Errors = Warnings = RowValidationResults.Empty;
         }
 
         internal void OnRowDisposed(RowPresenter rowPresenter)

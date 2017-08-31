@@ -144,22 +144,22 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         public ValidationProgress Progress { get; private set; }
-        public IValidationDictionary Errors { get; private set; } = ValidationDictionary.Empty;
-        public IValidationDictionary Warnings { get; private set; } = ValidationDictionary.Empty;
+        public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
+        public IRowValidationResults RowValidationWarnings { get; private set; } = RowValidationResults.Empty;
 
         public IColumnValidationMessages CurrentRowErrors
         {
-            get { return Errors.GetValidationMessages(CurrentRow); }
+            get { return RowValidationErrors.GetValidationMessages(CurrentRow); }
         }
 
         public IColumnValidationMessages CurrentRowWarnings
         {
-            get { return Warnings.GetValidationMessages(CurrentRow); }
+            get { return RowValidationWarnings.GetValidationMessages(CurrentRow); }
         }
 
         private void ClearValidationMessages()
         {
-            Errors = Warnings = ValidationDictionary.Empty;
+            RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
         }
 
         protected override void Reload()
@@ -173,7 +173,7 @@ namespace DevZest.Data.Presenters.Primitives
                 ClearValidationMessages();
         }
 
-        private static IColumnValidationMessages GetValidationMessages(IValidationDictionary dictionary, RowPresenter rowPresenter, IColumns columns)
+        private static IColumnValidationMessages GetValidationMessages(IRowValidationResults dictionary, RowPresenter rowPresenter, IColumns columns)
         {
             Debug.Assert(dictionary != null);
 
@@ -198,7 +198,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
                 return ColumnValidationMessages.Empty;
 
-            return GetValidationMessages(Errors, rowPresenter, rowInput.Columns);
+            return GetValidationMessages(RowValidationErrors, rowPresenter, rowInput.Columns);
         }
 
         internal IColumnValidationMessages GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
@@ -207,7 +207,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
                 return ColumnValidationMessages.Empty;
 
-            return GetValidationMessages(Warnings, rowPresenter, rowInput.Columns);
+            return GetValidationMessages(RowValidationWarnings, rowPresenter, rowInput.Columns);
         }
 
         internal void MakeProgress<T>(RowInput<T> rowInput)
@@ -242,11 +242,11 @@ namespace DevZest.Data.Presenters.Primitives
 
         private bool HasError(RowPresenter rowPresenter, IColumns columns)
         {
-            if (Errors.Count == 0)
+            if (RowValidationErrors.Count == 0)
                 return false;
 
             IColumnValidationMessages messages;
-            if (!Errors.TryGetValue(rowPresenter, out messages))
+            if (!RowValidationErrors.TryGetValue(rowPresenter, out messages))
                 return false;
 
             for (int i = 0; i < messages.Count; i++)
@@ -292,18 +292,18 @@ namespace DevZest.Data.Presenters.Primitives
 
             ClearValidationMessages();
             DoValidate();
-            Errors.Seal();
-            Warnings.Seal();
+            RowValidationErrors.Seal();
+            RowValidationWarnings.Seal();
         }
 
         private bool MoreErrorsToValidate
         {
-            get { return Errors.Count < ErrorMaxEntries; }
+            get { return RowValidationErrors.Count < ErrorMaxEntries; }
         }
 
         private bool MoreWarningsToValidate
         {
-            get { return Warnings.Count < WarningMaxEntries; }
+            get { return RowValidationWarnings.Count < WarningMaxEntries; }
         }
 
         private bool MoreToValidate
@@ -341,9 +341,9 @@ namespace DevZest.Data.Presenters.Primitives
             IColumnValidationMessages errors, warnings;
             Validate(rowPresenter.DataRow, out errors, out warnings);
             if (errors != null && errors.Count > 0)
-                Errors = Errors.Add(rowPresenter, errors);
+                RowValidationErrors = RowValidationErrors.Add(rowPresenter, errors);
             if (warnings != null && warnings.Count > 0)
-                Warnings = Warnings.Add(rowPresenter, warnings);
+                RowValidationWarnings = RowValidationWarnings.Add(rowPresenter, warnings);
         }
 
         private void Validate(DataRow dataRow, out IColumnValidationMessages errors, out IColumnValidationMessages warnings)
@@ -381,16 +381,16 @@ namespace DevZest.Data.Presenters.Primitives
 
             Progress.OnRowDisposed(rowPresenter);
 
-            if (Errors.ContainsKey(rowPresenter))
-                Errors = Errors.Remove(rowPresenter);
+            if (RowValidationErrors.ContainsKey(rowPresenter))
+                RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
 
-            if (Warnings.ContainsKey(rowPresenter))
-                Warnings = Warnings.Remove(rowPresenter);
+            if (RowValidationWarnings.ContainsKey(rowPresenter))
+                RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
 
             Template.AsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
 
-        public IValidationDictionary ValidationResult { get; private set; } = ValidationDictionary.Empty;
+        public IRowValidationResults ValidationResult { get; private set; } = RowValidationResults.Empty;
 
         private bool _pendingShowAll;
         public void Show(IDataRowValidationResults validationResults)
@@ -405,9 +405,9 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
-        internal IValidationDictionary ToValidationDictionary(IDataRowValidationResults validationResults)
+        internal IRowValidationResults ToValidationDictionary(IDataRowValidationResults validationResults)
         {
-            var result = ValidationDictionary.Empty;
+            var result = RowValidationResults.Empty;
             for (int i = 0; i < validationResults.Count; i++)
             {
                 var entry = validationResults[i];

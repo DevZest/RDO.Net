@@ -108,7 +108,7 @@ namespace DevZest.Data.Presenters
         public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
         {
             var result = ColumnValidationMessages.Empty;
-            result = AddValidationMessages(result, InputManager.Errors, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = AddValidationMessages(result, InputManager.RowValidationErrors, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
             result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
             return result;
@@ -117,7 +117,7 @@ namespace DevZest.Data.Presenters
         public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
         {
             var result = ColumnValidationMessages.Empty;
-            result = AddValidationMessages(result, InputManager.Warnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
+            result = AddValidationMessages(result, InputManager.RowValidationWarnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
             result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
             return result;
@@ -129,7 +129,7 @@ namespace DevZest.Data.Presenters
             return source.SetEquals(Columns) && InputManager.Progress.IsVisible(rowPresenter, source) == progressVisible;
         }
 
-        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IValidationDictionary dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
+        private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)
         {
             if (dictionary.ContainsKey(rowPresenter))
             {

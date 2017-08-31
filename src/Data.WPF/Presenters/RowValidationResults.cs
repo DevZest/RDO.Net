@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace DevZest.Data.Presenters
 {
-    public static class ValidationDictionary
+    internal static class RowValidationResults
     {
-        private sealed class EmptyDictionary : IValidationDictionary
+        private sealed class EmptyDictionary : IRowValidationResults
         {
             public static EmptyDictionary Singleton = new EmptyDictionary();
 
@@ -40,7 +40,7 @@ namespace DevZest.Data.Presenters
                 get { yield break; }
             }
 
-            public IValidationDictionary Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
+            public IRowValidationResults Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
             {
                 var result = new Dictionary();
                 result.Add(rowPresenter, validationMessages);
@@ -57,12 +57,12 @@ namespace DevZest.Data.Presenters
                 yield break;
             }
 
-            public IValidationDictionary Remove(RowPresenter rowPresenter)
+            public IRowValidationResults Remove(RowPresenter rowPresenter)
             {
                 return this;
             }
 
-            public IValidationDictionary Seal()
+            public IRowValidationResults Seal()
             {
                 return this;
             }
@@ -79,17 +79,17 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private sealed class Dictionary : Dictionary<RowPresenter, IColumnValidationMessages>, IValidationDictionary
+        private sealed class Dictionary : Dictionary<RowPresenter, IColumnValidationMessages>, IRowValidationResults
         {
             public bool IsSealed { get; private set; }
 
-            public IValidationDictionary Seal()
+            public IRowValidationResults Seal()
             {
                 IsSealed = true;
                 return this;
             }
 
-            IValidationDictionary IValidationDictionary.Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
+            IRowValidationResults IRowValidationResults.Add(RowPresenter rowPresenter, IColumnValidationMessages validationMessages)
             {
                 if (rowPresenter == null)
                     throw new ArgumentNullException(nameof(rowPresenter));
@@ -102,14 +102,14 @@ namespace DevZest.Data.Presenters
                     return this;
                 }
 
-                IValidationDictionary result = new Dictionary();
+                IRowValidationResults result = new Dictionary();
                 foreach (var keyValuePair in this)
                     result = result.Add(keyValuePair.Key, keyValuePair.Value);
                 result = result.Add(rowPresenter, validationMessages);
                 return result;               
             }
 
-            IValidationDictionary IValidationDictionary.Remove(RowPresenter rowPresenter)
+            IRowValidationResults IRowValidationResults.Remove(RowPresenter rowPresenter)
             {
                 if (!ContainsKey(rowPresenter))
                     return this;
@@ -123,7 +123,7 @@ namespace DevZest.Data.Presenters
                 if (Count == 1)
                     return Empty;
 
-                IValidationDictionary result = new Dictionary();
+                IRowValidationResults result = new Dictionary();
                 foreach (var keyValuePair in this)
                 {
                     if (keyValuePair.Key != rowPresenter)
@@ -134,21 +134,21 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static IValidationDictionary Empty
+        public static IRowValidationResults Empty
         {
             get { return EmptyDictionary.Singleton; }
         }
 
-        public static IColumnValidationMessages GetValidationMessages(this IValidationDictionary directory, RowPresenter rowPresenter)
+        public static IColumnValidationMessages GetValidationMessages(this IRowValidationResults directory, RowPresenter rowPresenter)
         {
             if (rowPresenter == null)
                 return null;
             return directory.ContainsKey(rowPresenter) ? directory[rowPresenter] : ColumnValidationMessages.Empty;
         }
 
-        internal static IValidationDictionary Where(this IValidationDictionary directory, ValidationSeverity severity)
+        internal static IRowValidationResults Where(this IRowValidationResults directory, ValidationSeverity severity)
         {
-            var result = ValidationDictionary.Empty;
+            var result = RowValidationResults.Empty;
             foreach (var rowPresenter in directory.Keys)
             {
                 var messages = directory[rowPresenter];

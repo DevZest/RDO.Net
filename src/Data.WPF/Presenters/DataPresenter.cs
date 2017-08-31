@@ -222,14 +222,14 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
         }
 
-        public IValidationDictionary ValidationErrors
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowErrors
         {
-            get { return LayoutManager == null ? null : LayoutManager.Errors; }
+            get { return LayoutManager == null ? null : LayoutManager.RowValidationErrors; }
         }
 
-        public IValidationDictionary ValidationWarnings
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowWarnings
         {
-            get { return LayoutManager == null ? null : LayoutManager.Warnings; }
+            get { return LayoutManager == null ? null : LayoutManager.RowValidationWarnings; }
         }
 
         public IColumnValidationMessages CurrentRowErrors
@@ -252,7 +252,7 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.AllRowsAsyncValidators; }
         }
 
-        public IValidationDictionary ValidationResult
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationResults
         {
             get { return LayoutManager == null ? null : LayoutManager.ValidationResult; }
         }

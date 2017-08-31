@@ -103,7 +103,7 @@
     <Compile Include="Presenters\Primitives\IScrollable.cs" />
     <Compile Include="Presenters\Primitives\ScrollableManager.LogicalCrossTrack.cs" />
     <Compile Include="Presenters\ScalarPresenter.cs" />
-    <Compile Include="Presenters\IValidationDictionary.cs" />
+    <Compile Include="Presenters\IRowValidationResults.cs" />
     <Compile Include="Views\Pane.cs" />
     <Compile Include="Presenters\Primitives\CompositeBlockBinding.cs" />
     <Compile Include="Presenters\Primitives\CompositeRowBinding.cs" />
@@ -200,7 +200,7 @@
     <Compile Include="Utilities\ConcatList.cs" />
     <Compile Include="Utilities\IEnumerable.ForEach.cs" />
     <Compile Include="Utilities\IReadOnlyList.LastOf.cs" />
-    <Compile Include="Presenters\ValidationDictionary.cs" />
+    <Compile Include="Presenters\RowValidationResults.cs" />
     <Compile Include="Presenters\ValidationMode.cs" />
     <Compile Include="Presenters\ValidationProgress.cs" />
     <Compile Include="Presenters\RowValidationScope.cs" />
