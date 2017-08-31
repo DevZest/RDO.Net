@@ -152,7 +152,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddAsyncValidator(Func<Task<IValidationResult>> action, Action postAction = null, IColumns sourceColumns = null)
+        public TemplateBuilder AddAsyncValidator(Func<Task<IDataRowValidationResults>> action, Action postAction = null, IColumns sourceColumns = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));

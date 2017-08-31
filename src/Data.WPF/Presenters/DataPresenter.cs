@@ -257,11 +257,11 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.ValidationResult; }
         }
 
-        public void Show(IValidationResult validationResult)
+        public void Show(IDataRowValidationResults validationResults)
         {
-            if (validationResult == null)
-                throw new ArgumentNullException(nameof(validationResult));
-            RequireLayoutManager().Show(validationResult);
+            if (validationResults == null)
+                throw new ArgumentNullException(nameof(validationResults));
+            RequireLayoutManager().Show(validationResults);
         }
 
         public IScrollable Scrollable

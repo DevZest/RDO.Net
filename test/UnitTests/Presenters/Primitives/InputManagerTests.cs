@@ -409,8 +409,8 @@ namespace DevZest.Data.Presenters.Primitives
             }
 
             var validationMessage = new ColumnValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
-            IValidationResult validationResult = DevZest.Data.ValidationResult.Empty.Add(new ValidationEntry(currentRow.DataRow, validationMessage));
-            inputManager.Show(validationResult);
+            var validationResults = DataRowValidationResults.Empty.Add(new DataRowValidationResult(currentRow.DataRow, validationMessage));
+            inputManager.Show(validationResults);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);

@@ -24,7 +24,7 @@ namespace DevZest.Data.Presenters
             return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
+        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
         {
             return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
         }
@@ -140,14 +140,14 @@ namespace DevZest.Data.Presenters
 
         private sealed class AllRowAsyncValidator : RowAsyncValidator
         {
-            public AllRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IValidationResult>> action, Action postAction)
+            public AllRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
             {
                 Debug.Assert(action != null);
                 _action = action;
             }
 
-            private readonly Func<Task<IValidationResult>> _action;
+            private readonly Func<Task<IDataRowValidationResults>> _action;
 
             internal override IRowInput RowInput
             {

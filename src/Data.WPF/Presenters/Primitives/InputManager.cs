@@ -393,10 +393,10 @@ namespace DevZest.Data.Presenters.Primitives
         public IValidationDictionary ValidationResult { get; private set; } = ValidationDictionary.Empty;
 
         private bool _pendingShowAll;
-        public void Show(IValidationResult validationResult)
+        public void Show(IDataRowValidationResults validationResults)
         {
-            Debug.Assert(validationResult != null);
-            ValidationResult = ToValidationDictionary(validationResult);
+            Debug.Assert(validationResults != null);
+            ValidationResult = ToValidationDictionary(validationResults);
             Progress.Reset();
             ClearValidationMessages();
             if (ValidationMode == ValidationMode.Implicit)
@@ -405,12 +405,12 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
-        internal IValidationDictionary ToValidationDictionary(IValidationResult validationResult)
+        internal IValidationDictionary ToValidationDictionary(IDataRowValidationResults validationResults)
         {
             var result = ValidationDictionary.Empty;
-            for (int i = 0; i < validationResult.Count; i++)
+            for (int i = 0; i < validationResults.Count; i++)
             {
-                var entry = validationResult[i];
+                var entry = validationResults[i];
                 var rowPresenter = this[entry.DataRow];
                 if (rowPresenter != null)
                     result = result.Add(rowPresenter, entry.Messages);
