@@ -30,11 +30,11 @@ namespace DevZest.Data.Presenters
         internal void MakeProgress<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            var sourceColumns = rowInput.Columns;
+            var sourceColumns = rowInput.Target;
 
             if (!_showAll && _progress != null)
             {
-                var progress = GetProgress(rowPresenter).Union(rowInput.Columns);
+                var progress = GetProgress(rowPresenter).Union(rowInput.Target);
                 if (progress.Count > 0)
                     _progress[rowPresenter] = progress;
             }

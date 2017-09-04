@@ -161,6 +161,10 @@ namespace DevZest.Data.Views
             if (rowAsyncValidators != null)
                 return rowAsyncValidators.Where(x => x.Status == status);
 
+            var scalarAsyncValidators = asyncValidators as IScalarAsyncValidators;
+            if (scalarAsyncValidators != null)
+                return scalarAsyncValidators.Where(x => x.Status == status);
+
             return asyncValidators.Where(x => x.Status == status).ToArray();
         }
     }

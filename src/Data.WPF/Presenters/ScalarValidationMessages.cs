@@ -144,5 +144,17 @@ namespace DevZest.Data.Presenters
                 result = result.Add(values[i].CheckNotNull(nameof(values), i));
             return result;
         }
+
+        internal static IScalarValidationMessages Where(this IScalarValidationMessages messages, ValidationSeverity severity)
+        {
+            var result = ScalarValidationMessages.Empty;
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (message.Severity == severity)
+                    result = result.Add(message);
+            }
+            return result.Seal();
+        }
     }
 }

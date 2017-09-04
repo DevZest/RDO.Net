@@ -34,7 +34,7 @@ namespace DevZest.Data.Presenters
             InputManager.SetRowFlushError(element, inputError);
         }
 
-        internal IColumns Columns { get; private set; } = DevZest.Data.Columns.Empty;
+        internal IColumns Target { get; private set; } = Columns.Empty;
         private List<Func<RowPresenter, T, bool>> _flushFuncs = new List<Func<RowPresenter, T, bool>>();
 
         private RowPresenter CurrentRow
@@ -54,7 +54,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(column));
 
             VerifyNotSealed();
-            Columns = Columns.Union(column);
+            Target = Target.Union(column);
             _flushFuncs.Add((rowPresenter, element) =>
             {
                 if (getValue == null)
@@ -126,7 +126,7 @@ namespace DevZest.Data.Presenters
         private bool IsVisible(ColumnValidationMessage validationMessage, RowPresenter rowPresenter, bool progressVisible)
         {
             var source = validationMessage.Source;
-            return source.SetEquals(Columns) && InputManager.Progress.IsVisible(rowPresenter, source) == progressVisible;
+            return source.SetEquals(Target) && InputManager.Progress.IsVisible(rowPresenter, source) == progressVisible;
         }
 
         private static IColumnValidationMessages AddValidationMessages(IColumnValidationMessages result, IRowValidationResults dictionary, RowPresenter rowPresenter, Func<ColumnValidationMessage, bool> predict)

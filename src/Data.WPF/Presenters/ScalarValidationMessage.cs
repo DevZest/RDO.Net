@@ -35,6 +35,11 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        bool IScalarValidationMessages.IsSealed
+        {
+            get { return true; }
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         IScalarValidationMessages IScalarValidationMessages.Seal()
         {

@@ -195,19 +195,19 @@ namespace DevZest.Data.Presenters.Primitives
         internal IColumnValidationMessages GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
+            if (!Progress.IsVisible(rowPresenter, rowInput.Target))
                 return ColumnValidationMessages.Empty;
 
-            return GetValidationMessages(RowValidationErrors, rowPresenter, rowInput.Columns);
+            return GetValidationMessages(RowValidationErrors, rowPresenter, rowInput.Target);
         }
 
         internal IColumnValidationMessages GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.Columns))
+            if (!Progress.IsVisible(rowPresenter, rowInput.Target))
                 return ColumnValidationMessages.Empty;
 
-            return GetValidationMessages(RowValidationWarnings, rowPresenter, rowInput.Columns);
+            return GetValidationMessages(RowValidationWarnings, rowPresenter, rowInput.Target);
         }
 
         internal void MakeProgress<T>(RowInput<T> rowInput)
@@ -228,14 +228,14 @@ namespace DevZest.Data.Presenters.Primitives
             if (ValidationMode == ValidationMode.Explicit)
                 return;
 
-            if (HasError(CurrentRow, rowInput.Columns))
+            if (HasError(CurrentRow, rowInput.Target))
                 return;
 
             var asyncValidators = Template.RowAsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
-                if (asyncValidator.SourceColumns.Intersect(rowInput.Columns).Count > 0)
+                if (asyncValidator.SourceColumns.Intersect(rowInput.Target).Count > 0)
                     asyncValidator.Run();
             }
         }

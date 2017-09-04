@@ -19,7 +19,7 @@ namespace DevZest.Data.Presenters
             if (editingRowBinding.Input == null)
                 throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNullInput, nameof(editingRowBinding));
 
-            var column = editingRowBinding.Input.Columns as Column;
+            var column = editingRowBinding.Input.Target as Column;
             if (column == null)
                 throw new ArgumentException(Strings.InPlaceEditor_EditingRowBindingNotColumn, nameof(editingRowBinding));
             var inertRowBinding = column.AsTextBlock(format, formatProvider);

@@ -40,6 +40,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        internal IScalars Target { get; private set; } = Scalars.Empty;
         private List<Func<T, bool>> _flushFuncs = new List<Func<T, bool>>();
 
         public ScalarInput<T> WithFlush<TData>(Scalar<TData> scalar, Func<T, TData> getValue)
@@ -48,6 +49,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(scalar));
 
             VerifyNotSealed();
+            Target = Target.Union(scalar);
             _flushFuncs.Add(element =>
             {
                 if (getValue == null)

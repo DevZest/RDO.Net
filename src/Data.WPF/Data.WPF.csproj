@@ -45,6 +45,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Presenters\AsyncValidator.cs" />
+    <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
     <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\Primitives\AsyncValidator_T.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="Presenters\Primitives\IRowElement.cs" />
     <Compile Include="Presenters\Primitives\IScalarElement.cs" />
     <Compile Include="Presenters\Scalar.cs" />
+    <Compile Include="Presenters\ScalarAsyncValidator.cs" />
+    <Compile Include="Presenters\ScalarAsyncValidators.cs" />
     <Compile Include="Presenters\Scalars.cs" />
     <Compile Include="Presenters\ScalarValidationMessage.cs" />
     <Compile Include="Presenters\ScalarValidationMessages.cs" />

@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters
 
         private IColumns Columns
         {
-            get { return Input == null ? Data.Columns.Empty : Input.Columns; }
+            get { return Input == null ? Data.Columns.Empty : Input.Target; }
         }
 
         private T Create()

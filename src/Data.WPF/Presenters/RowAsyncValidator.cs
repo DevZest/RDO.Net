@@ -53,7 +53,7 @@ namespace DevZest.Data.Presenters
 
             public override IColumns SourceColumns
             {
-                get { return _rowInput.Columns; }
+                get { return _rowInput.Target; }
             }
 
             internal override InputManager InputManager
@@ -76,7 +76,7 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.Current; }
             }
 
-            protected override async Task<IRowValidationResults> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -132,7 +132,7 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.Current; }
             }
 
-            protected override async Task<IRowValidationResults> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateAsync()
             {
                 return await Validate(_action, CurrentRow);
             }
@@ -159,7 +159,7 @@ namespace DevZest.Data.Presenters
                 get { return RowValidationScope.All; }
             }
 
-            protected override async Task<IRowValidationResults> ValidateCoreAsync()
+            protected override async Task<IRowValidationResults> ValidateAsync()
             {
                 var result = await _action();
                 return result == null ? RowValidationResults.Empty : InputManager.ToValidationDictionary(result);
@@ -271,7 +271,7 @@ namespace DevZest.Data.Presenters
                 Reset();
         }
 
-        #region IAsyncValidators
+        #region IRowAsyncValidators
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
         bool IRowAsyncValidators.IsSealed
@@ -303,7 +303,7 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IRowAsyncValidators IRowAsyncValidators.Add(Presenters.RowAsyncValidator value)
+        IRowAsyncValidators IRowAsyncValidators.Add(RowAsyncValidator value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -311,7 +311,7 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator<Presenters.RowAsyncValidator> IEnumerable<Presenters.RowAsyncValidator>.GetEnumerator()
+        IEnumerator<RowAsyncValidator> IEnumerable<RowAsyncValidator>.GetEnumerator()
         {
             yield return this;
         }

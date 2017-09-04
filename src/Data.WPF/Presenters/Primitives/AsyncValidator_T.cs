@@ -18,7 +18,7 @@ namespace DevZest.Data.Presenters.Primitives
         public sealed override async void Run()
         {
 #if DEBUG
-            var runningTask = LastRunningTask = ValidateAsync();
+            var runningTask = LastRunningTask = RunAsync();
 #else
             var runningTask = ValidateAsync();
 #endif
@@ -27,13 +27,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract void ClearValidationMessages();
 
-        protected abstract Task<T> ValidateCoreAsync();
+        protected abstract Task<T> ValidateAsync();
 
         protected abstract void RefreshValidationMessages(T result);
 
         protected abstract T EmptyValidationResult { get; }
 
-        private async Task ValidateAsync()
+        private async Task RunAsync()
         {
             if (Status == AsyncValidatorStatus.Running)
             {
@@ -52,7 +52,7 @@ namespace DevZest.Data.Presenters.Primitives
             do
             {
                 _pendingValidationRequest = false;
-                var task = _awaitingTask = ValidateCoreAsync();
+                var task = _awaitingTask = ValidateAsync();
                 try
                 {
                     result = await task;
