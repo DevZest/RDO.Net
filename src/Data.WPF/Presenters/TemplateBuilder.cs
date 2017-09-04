@@ -138,7 +138,7 @@ namespace DevZest.Data.Presenters
         [DefaultValue(RowValidationScope.Current)]
         public TemplateBuilder WithRowValidationScope(RowValidationScope value)
         {
-            if (Template.RowValidationScope == RowValidationScope.All && Template.InternalAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
+            if (Template.RowValidationScope == RowValidationScope.All && Template.InternalRowAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.RowValidationScope = value;
             return this;
@@ -148,7 +148,7 @@ namespace DevZest.Data.Presenters
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
-            Template.InternalAsyncValidators = Template.InternalAsyncValidators.Add(AsyncValidator.Create(Template, sourceColumns, action, postAction));
+            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
 
@@ -158,7 +158,7 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(action));
             if (Template.RowValidationScope == RowValidationScope.Current)
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
-            Template.InternalAsyncValidators = Template.InternalAsyncValidators.Add(AsyncValidator.Create(Template, sourceColumns, action, postAction));
+            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(RowAsyncValidator.Create(Template, sourceColumns, action, postAction));
             return this;
         }
 

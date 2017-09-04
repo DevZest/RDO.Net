@@ -247,7 +247,7 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.Progress; }
         }
 
-        public IAsyncValidators AsyncValidators
+        public IRowAsyncValidators AllRowsAsyncValidators
         {
             get { return LayoutManager == null ? null : LayoutManager.AllRowsAsyncValidators; }
         }

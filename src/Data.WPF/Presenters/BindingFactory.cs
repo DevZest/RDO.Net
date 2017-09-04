@@ -160,7 +160,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: (e, r) =>
                 {
-                    e.AsyncValidators = AsyncValidators.Empty;
+                    e.AsyncValidators = RowAsyncValidators.Empty;
                     e.Errors = e.Warnings = Array<ValidationMessage>.Empty;
                 });
         }
@@ -178,7 +178,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: (e, r) =>
                 {
-                    e.AsyncValidators = AsyncValidators.Empty;
+                    e.AsyncValidators = RowAsyncValidators.Empty;
                 });
         }
 
@@ -190,7 +190,7 @@ namespace DevZest.Data.Presenters
             return new ScalarBinding<ValidationView>(
                 onRefresh: e =>
                 {
-                    e.AsyncValidators = source.AsyncValidators;
+                    e.AsyncValidators = source.AllRowsAsyncValidators;
                 },
                 onSetup: e =>
                 {
@@ -198,7 +198,7 @@ namespace DevZest.Data.Presenters
                 },
                 onCleanup: e =>
                 {
-                    e.AsyncValidators = AsyncValidators.Empty;
+                    e.AsyncValidators = RowAsyncValidators.Empty;
                 });
         }
 

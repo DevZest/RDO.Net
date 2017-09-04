@@ -231,7 +231,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (HasError(CurrentRow, rowInput.Columns))
                 return;
 
-            var asyncValidators = Template.AsyncValidators;
+            var asyncValidators = Template.RowAsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
@@ -372,7 +372,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.OnCurrentRowChanged(oldValue);
             Progress.OnCurrentRowChanged();
-            Template.AsyncValidators.Each(x => x.OnCurrentRowChanged());
+            Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
         }
 
         protected override void DisposeRow(RowPresenter rowPresenter)
@@ -387,7 +387,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (RowValidationWarnings.ContainsKey(rowPresenter))
                 RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
 
-            Template.AsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
+            Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
 
         public IRowValidationResults ValidationResult { get; private set; } = RowValidationResults.Empty;
@@ -401,7 +401,7 @@ namespace DevZest.Data.Presenters.Primitives
             ClearValidationMessages();
             if (ValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
-            Template.AsyncValidators.Each(x => x.Reset());
+            Template.RowAsyncValidators.Each(x => x.Reset());
             InvalidateView();
         }
 
@@ -418,24 +418,24 @@ namespace DevZest.Data.Presenters.Primitives
             return result;
         }
 
-        private IAsyncValidators _allRowsAsyncValidators;
-        public IAsyncValidators AllRowsAsyncValidators
+        private IRowAsyncValidators _allRowsAsyncValidators;
+        public IRowAsyncValidators AllRowsAsyncValidators
         {
             get
             {
                 if (_allRowsAsyncValidators == null)
-                    _allRowsAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == RowValidationScope.All);
+                    _allRowsAsyncValidators = Template.RowAsyncValidators.Where(x => x.ValidationScope == RowValidationScope.All);
                 return _allRowsAsyncValidators;
             }
         }
 
-        private IAsyncValidators _currentRowAsyncValidators;
-        public IAsyncValidators CurrentRowAsyncValidators
+        private IRowAsyncValidators _currentRowAsyncValidators;
+        public IRowAsyncValidators CurrentRowAsyncValidators
         {
             get
             {
                 if (_currentRowAsyncValidators == null)
-                    _currentRowAsyncValidators = Template.AsyncValidators.Where(x => x.ValidationScope == RowValidationScope.Current && x.RowInput == null);
+                    _currentRowAsyncValidators = Template.RowAsyncValidators.Where(x => x.ValidationScope == RowValidationScope.Current && x.RowInput == null);
                 return _currentRowAsyncValidators;
             }
         }

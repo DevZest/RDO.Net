@@ -81,8 +81,8 @@
     <Compile Include="Views\RowSelector.cs" />
     <Compile Include="Views\RowExpander.cs" />
     <Compile Include="Views\VisualStates.cs" />
-    <Compile Include="Presenters\AsyncValidator.cs" />
-    <Compile Include="Presenters\AsyncValidators.cs" />
+    <Compile Include="Presenters\RowAsyncValidator.cs" />
+    <Compile Include="Presenters\RowAsyncValidators.cs" />
     <Compile Include="Presenters\AsyncValidatorStatus.cs" />
     <Compile Include="Presenters\AutoSizeWaiver.cs" />
     <Compile Include="Presenters\BindingManager.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Presenters\DataPresenter_T.cs" />
     <Compile Include="Presenters\StyleKeyRelativeToAttribute.cs" />
     <Compile Include="Presenters\ExplicitTrigger.cs" />
-    <Compile Include="Presenters\IAsyncValidators.cs" />
+    <Compile Include="Presenters\IRowAsyncValidators.cs" />
     <Compile Include="Presenters\BlockPresenter.cs" />
     <Compile Include="Presenters\Services\ISortService.cs" />
     <Compile Include="Presenters\Services\IService.cs" />

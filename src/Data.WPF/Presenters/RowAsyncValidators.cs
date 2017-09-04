@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Presenters
 {
-    public static class AsyncValidators
+    public static class RowAsyncValidators
     {
-        private sealed class EmptyGroup : IAsyncValidators
+        private sealed class EmptyGroup : IRowAsyncValidators
         {
             public readonly static EmptyGroup Singleton = new EmptyGroup();
 
@@ -15,7 +15,7 @@ namespace DevZest.Data.Presenters
             {
             }
 
-            public AsyncValidator this[int index]
+            public RowAsyncValidator this[int index]
             {
                 get { throw new ArgumentOutOfRangeException(nameof(index)); }
             }
@@ -30,7 +30,7 @@ namespace DevZest.Data.Presenters
                 get { return true; }
             }
 
-            public IAsyncValidators Add(AsyncValidator value)
+            public IRowAsyncValidators Add(RowAsyncValidator value)
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -38,12 +38,12 @@ namespace DevZest.Data.Presenters
                 return value;
             }
 
-            public IEnumerator<AsyncValidator> GetEnumerator()
+            public IEnumerator<RowAsyncValidator> GetEnumerator()
             {
-                return EmptyEnumerator<AsyncValidator>.Singleton;
+                return EmptyEnumerator<RowAsyncValidator>.Singleton;
             }
 
-            public IAsyncValidators Seal()
+            public IRowAsyncValidators Seal()
             {
                 return this;
             }
@@ -54,12 +54,12 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private class ListGroup : IAsyncValidators
+        private class ListGroup : IRowAsyncValidators
         {
             private bool _isSealed;
-            private List<AsyncValidator> _list = new List<AsyncValidator>();
+            private List<RowAsyncValidator> _list = new List<RowAsyncValidator>();
 
-            public ListGroup(AsyncValidator value1, AsyncValidator value2)
+            public ListGroup(RowAsyncValidator value1, RowAsyncValidator value2)
             {
                 Debug.Assert(value1 != null && value2 != null);
                 Add(value1);
@@ -80,18 +80,18 @@ namespace DevZest.Data.Presenters
                 get { return _list.Count; }
             }
 
-            public AsyncValidator this[int index]
+            public RowAsyncValidator this[int index]
             {
                 get { return _list[index]; }
             }
 
-            public IAsyncValidators Seal()
+            public IRowAsyncValidators Seal()
             {
                 _isSealed = true;
                 return this;
             }
 
-            public IAsyncValidators Add(AsyncValidator value)
+            public IRowAsyncValidators Add(RowAsyncValidator value)
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
@@ -110,7 +110,7 @@ namespace DevZest.Data.Presenters
                 return result;
             }
 
-            public IEnumerator<AsyncValidator> GetEnumerator()
+            public IEnumerator<RowAsyncValidator> GetEnumerator()
             {
                 return _list.GetEnumerator();
             }
@@ -121,18 +121,18 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        public static IAsyncValidators Empty
+        public static IRowAsyncValidators Empty
         {
             get { return EmptyGroup.Singleton; }
         }
 
-        internal static IAsyncValidators New(AsyncValidator value1, AsyncValidator value2)
+        internal static IRowAsyncValidators New(RowAsyncValidator value1, RowAsyncValidator value2)
         {
             Debug.Assert(value1 != null && value2 != null && value1 != value2);
             return new ListGroup(value1, value2);
         }
 
-        public static IAsyncValidators New(params AsyncValidator[] values)
+        public static IRowAsyncValidators New(params RowAsyncValidator[] values)
         {
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
@@ -140,18 +140,18 @@ namespace DevZest.Data.Presenters
             if (values.Length == 0)
                 return Empty;
 
-            IAsyncValidators result = values[0].CheckNotNull(nameof(values), 0);
+            IRowAsyncValidators result = values[0].CheckNotNull(nameof(values), 0);
             for (int i = 1; i < values.Length; i++)
                 result = result.Add(values[i].CheckNotNull(nameof(values), 0));
             return result;
         }
 
-        public static IAsyncValidators Where(this IAsyncValidators asyncValidators, Func<AsyncValidator, bool> predict)
+        public static IRowAsyncValidators Where(this IRowAsyncValidators asyncValidators, Func<RowAsyncValidator, bool> predict)
         {
             if (asyncValidators == null)
                 throw new ArgumentNullException(nameof(asyncValidators));
 
-            var result = AsyncValidators.Empty;
+            var result = RowAsyncValidators.Empty;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
@@ -161,7 +161,7 @@ namespace DevZest.Data.Presenters
             return result.Seal();
         }
 
-        public static void Each(this IAsyncValidators asyncValidators, Action<AsyncValidator> action)
+        public static void Each(this IRowAsyncValidators asyncValidators, Action<RowAsyncValidator> action)
         {
             if (asyncValidators == null)
                 throw new ArgumentNullException(nameof(asyncValidators));

@@ -147,7 +147,7 @@ namespace DevZest.Data.Presenters
 
         private IColumnValidationMessages AddAsyncValidationMessages(IColumnValidationMessages result, RowPresenter rowPresenter, ValidationSeverity severity)
         {
-            var asyncValidators = Template.AsyncValidators;
+            var asyncValidators = Template.RowAsyncValidators;
             for (int i = 0; i < asyncValidators.Count; i++)
             {
                 var asyncValidator = asyncValidators[i];
@@ -188,8 +188,8 @@ namespace DevZest.Data.Presenters
                 throw new InvalidOperationException(Strings.RowInput_NullTemplateWhenAddAsyncValidator);
             VerifyNotSealed();
 
-            var asyncValidator = AsyncValidator.Create<T>(this, action, postAction);
-            Template.InternalAsyncValidators = Template.InternalAsyncValidators.Add(asyncValidator);
+            var asyncValidator = RowAsyncValidator.Create<T>(this, action, postAction);
+            Template.InternalRowAsyncValidators = Template.InternalRowAsyncValidators.Add(asyncValidator);
             return this;
         }
 
@@ -198,8 +198,8 @@ namespace DevZest.Data.Presenters
             return RowBinding;
         }
 
-        private IAsyncValidators _asyncValidators;
-        public IAsyncValidators AsyncValidators
+        private IRowAsyncValidators _asyncValidators;
+        public IRowAsyncValidators AsyncValidators
         {
             get
             {
@@ -207,7 +207,7 @@ namespace DevZest.Data.Presenters
                     return null;
 
                 if (_asyncValidators == null)
-                    _asyncValidators = Template.AsyncValidators.Where(x => x.RowInput == this);
+                    _asyncValidators = Template.RowAsyncValidators.Where(x => x.RowInput == this);
                 return _asyncValidators;
             }
         }

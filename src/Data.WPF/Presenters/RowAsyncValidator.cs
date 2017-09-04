@@ -11,20 +11,20 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class AsyncValidator : IAsyncValidators, INotifyPropertyChanged
+    public abstract class RowAsyncValidator : IRowAsyncValidators, INotifyPropertyChanged
     {
-        internal static AsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
+        internal static RowAsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
             where T : UIElement, new()
         {
             return new RowInputAsyncValidator<T>(rowInput, action, postAction);
         }
 
-        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
+        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
         {
             return new CurrentRowAsyncValidator(template, sourceColumns, action, postAction);
         }
 
-        internal static AsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
+        internal static RowAsyncValidator Create(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
         {
             return new AllRowAsyncValidator(template, sourceColumns, action, postAction);
         }
@@ -36,7 +36,7 @@ namespace DevZest.Data.Presenters
                 ? RowValidationResults.Empty : RowValidationResults.Empty.Add(currentRow, messages);
         }
 
-        private sealed class RowInputAsyncValidator<T> : AsyncValidator
+        private sealed class RowInputAsyncValidator<T> : RowAsyncValidator
             where T : UIElement, new()
         {
             public RowInputAsyncValidator(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
@@ -82,9 +82,9 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private abstract class RowAsyncValidator : AsyncValidator
+        private abstract class ColumnsAsyncValidator : RowAsyncValidator
         {
-            protected RowAsyncValidator(Template template, IColumns sourceColumns, Action postAction)
+            protected ColumnsAsyncValidator(Template template, IColumns sourceColumns, Action postAction)
                 : base(postAction)
             {
                 Debug.Assert(template != null);
@@ -106,7 +106,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private sealed class CurrentRowAsyncValidator : RowAsyncValidator
+        private sealed class CurrentRowAsyncValidator : ColumnsAsyncValidator
         {
             public CurrentRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IColumnValidationMessages>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
@@ -138,7 +138,7 @@ namespace DevZest.Data.Presenters
             }
         }
 
-        private sealed class AllRowAsyncValidator : RowAsyncValidator
+        private sealed class AllRowAsyncValidator : ColumnsAsyncValidator
         {
             public AllRowAsyncValidator(Template template, IColumns sourceColumns, Func<Task<IDataRowValidationResults>> action, Action postAction)
                 : base(template, sourceColumns, postAction)
@@ -167,12 +167,12 @@ namespace DevZest.Data.Presenters
         }
 
 #if DEBUG
-        public AsyncValidator()
+        public RowAsyncValidator()
         {
         }
 #endif
 
-        private AsyncValidator(Action postAction)
+        private RowAsyncValidator(Action postAction)
         {
             _postAction = postAction;
         }
@@ -356,19 +356,19 @@ namespace DevZest.Data.Presenters
         #region IAsyncValidators
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        bool IAsyncValidators.IsSealed
+        bool IRowAsyncValidators.IsSealed
         {
             get { return true; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        int IReadOnlyCollection<AsyncValidator>.Count
+        int IReadOnlyCollection<RowAsyncValidator>.Count
         {
             get { return 1; }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        AsyncValidator IReadOnlyList<AsyncValidator>.this[int index]
+        RowAsyncValidator IReadOnlyList<RowAsyncValidator>.this[int index]
         {
             get
             {
@@ -379,21 +379,21 @@ namespace DevZest.Data.Presenters
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IAsyncValidators IAsyncValidators.Seal()
+        IRowAsyncValidators IRowAsyncValidators.Seal()
         {
             return this;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IAsyncValidators IAsyncValidators.Add(AsyncValidator value)
+        IRowAsyncValidators IRowAsyncValidators.Add(Presenters.RowAsyncValidator value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            return AsyncValidators.New(this, value);
+            return RowAsyncValidators.New(this, value);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Justification = "Child types will not call this method.")]
-        IEnumerator<AsyncValidator> IEnumerable<AsyncValidator>.GetEnumerator()
+        IEnumerator<Presenters.RowAsyncValidator> IEnumerable<Presenters.RowAsyncValidator>.GetEnumerator()
         {
             yield return this;
         }
