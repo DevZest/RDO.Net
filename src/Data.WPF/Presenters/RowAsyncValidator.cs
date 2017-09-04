@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DevZest.Data.Presenters
 {
-    public abstract class RowAsyncValidator : IRowAsyncValidators, INotifyPropertyChanged
+    public abstract class RowAsyncValidator : AsyncValidator<IRowValidationResults>, IRowAsyncValidators
     {
         internal static RowAsyncValidator Create<T>(RowInput<T> rowInput, Func<Task<IColumnValidationMessages>> action, Action postAction)
             where T : UIElement, new()
@@ -168,16 +168,15 @@ namespace DevZest.Data.Presenters
 
 #if DEBUG
         public RowAsyncValidator()
+            : base(null)
         {
         }
 #endif
 
         private RowAsyncValidator(Action postAction)
+            : base(postAction)
         {
-            _postAction = postAction;
         }
-
-        internal abstract InputManager InputManager { get; }
 
         public abstract IColumns SourceColumns { get; }
 
@@ -192,7 +191,22 @@ namespace DevZest.Data.Presenters
                     return;
                 _errors = value;
                 OnPropertyChanged(nameof(Errors));
+                RefreshHasError();
             }
+        }
+
+        private bool _hasError;
+        public sealed override bool HasError
+        {
+            get { return _hasError; }
+        }
+        private void RefreshHasError()
+        {
+            var value = Errors.Count > 0;
+            if (value == _hasError)
+                return;
+            _hasError = value;
+            OnPropertyChanged(nameof(HasError));
         }
 
         private IRowValidationResults _warnings = RowValidationResults.Empty;
@@ -209,134 +223,38 @@ namespace DevZest.Data.Presenters
             }
         }
 
+        private bool _hasWarning;
+        public sealed override bool HasWarning
+        {
+            get { return _hasWarning; }
+        }
+        private void RefreshHasWarning()
+        {
+            var value = Warnings.Count > 0;
+            if (value == _hasWarning)
+                return;
+            _hasWarning = value;
+            OnPropertyChanged(nameof(HasWarning));
+        }
+
         internal abstract IRowInput RowInput { get; }
 
         public abstract RowValidationScope ValidationScope { get; }
 
-        protected abstract Task<IRowValidationResults> ValidateCoreAsync();
-
-        private AsyncValidatorStatus _status = AsyncValidatorStatus.Created;
-        public AsyncValidatorStatus Status
+        protected sealed override void ClearValidationMessages()
         {
-            get { return _status; }
-            internal set
-            {
-                if (_status == value)
-                    return;
-                _status = value;
-                OnPropertyChanged(nameof(Status));
-            }
-        }
-
-        private Exception _exception;
-        public Exception Exception
-        {
-            get { return _exception; }
-            private set
-            {
-                if (_exception == value)
-                    return;
-                _exception = value;
-                OnPropertyChanged(nameof(Exception));
-            }
-        }
-
-        private bool _pendingValidationRequest;
-        private readonly Action _postAction;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            var propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-#if DEBUG
-        internal Task LastRunningTask { get; private set; }
-#endif
-        private Task<IRowValidationResults> _awaitingTask;
-
-        public async void Run()
-        {
-#if DEBUG
-            var runningTask = LastRunningTask = ValidateAsync();
-#else
-            var runningTask = ValidateAsync();
-#endif
-            await runningTask;
-        }
-
-        private async Task ValidateAsync()
-        {
-            if (Status == AsyncValidatorStatus.Running)
-            {
-                _pendingValidationRequest = true;
-                return;
-            }
-
             Errors = Warnings = RowValidationResults.Empty;
-            Exception = null;
-            Status = AsyncValidatorStatus.Running;
-            InputManager.InvalidateView();
+        }
 
-            IRowValidationResults result;
-            AsyncValidatorStatus status;
-            Exception exception;
-            do
-            {
-                _pendingValidationRequest = false;
-                var task = _awaitingTask = ValidateCoreAsync();
-                try
-                {
-                    result = await task;
-                    if (task != _awaitingTask)   // cancelled
-                        return;
-                    status = AsyncValidatorStatus.Completed;
-                    exception = null;
-                }
-                catch (Exception ex)
-                {
-                    if (task != _awaitingTask)  // cancelled
-                        return;
-                    result = RowValidationResults.Empty;
-                    status = AsyncValidatorStatus.Faulted;
-                    exception = ex;
-                }
-            }
-            while (_pendingValidationRequest);
-
-            _awaitingTask = null;
-            Exception = exception;
-            Status = status;
+        protected sealed override void RefreshValidationMessages(IRowValidationResults result)
+        {
             Errors = result.Where(ValidationSeverity.Error);
             Warnings = result.Where(ValidationSeverity.Warning);
-
-            if (_postAction != null)
-                _postAction();
-
-            InputManager.InvalidateView();
         }
 
-        public void CancelRunning()
+        protected sealed override IRowValidationResults EmptyValidationResult
         {
-            if (Status == AsyncValidatorStatus.Running)
-            {
-                Status = AsyncValidatorStatus.Created;
-                InputManager.InvalidateView();
-            }
-        }
-
-        internal void Reset()
-        {
-            if (Status == AsyncValidatorStatus.Running)
-                _awaitingTask = null;
-
-            _pendingValidationRequest = false;
-            Status = AsyncValidatorStatus.Created;
-            Exception = null;
-            Errors = Warnings = RowValidationResults.Empty;
+            get { return RowValidationResults.Empty; }
         }
 
         internal void OnRowDisposed(RowPresenter rowPresenter)

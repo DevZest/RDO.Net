@@ -16,26 +16,26 @@ namespace DevZest.Data.Presenters
 
             validationView.AsyncValidators = asyncValidator;
             Assert.AreEqual(1, validationView.AsyncValidators.Count);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.RunningAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.CompletedAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.FaultedAsyncValidators);
+            Assert.AreEqual(0, validationView.RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView.CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView.FaultedAsyncValidators.Count);
 
             asyncValidator.Status = AsyncValidatorStatus.Running;
             validationView.RefreshStatus();
             Assert.AreEqual(asyncValidator, validationView.RunningAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.CompletedAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.FaultedAsyncValidators);
+            Assert.AreEqual(0, validationView.CompletedAsyncValidators.Count);
+            Assert.AreEqual(0, validationView.FaultedAsyncValidators.Count);
 
             asyncValidator.Status = AsyncValidatorStatus.Completed;
             validationView.RefreshStatus();
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.RunningAsyncValidators);
+            Assert.AreEqual(0, validationView.RunningAsyncValidators.Count);
             Assert.AreEqual(asyncValidator, validationView.CompletedAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.FaultedAsyncValidators);
+            Assert.AreEqual(0, validationView.FaultedAsyncValidators.Count);
 
             asyncValidator.Status = AsyncValidatorStatus.Faulted;
             validationView.RefreshStatus();
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.RunningAsyncValidators);
-            Assert.AreEqual(RowAsyncValidators.Empty, validationView.CompletedAsyncValidators);
+            Assert.AreEqual(0, validationView.RunningAsyncValidators.Count);
+            Assert.AreEqual(0, validationView.CompletedAsyncValidators.Count);
             Assert.AreEqual(asyncValidator, validationView.FaultedAsyncValidators);
 
         }
