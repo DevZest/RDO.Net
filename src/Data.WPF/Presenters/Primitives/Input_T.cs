@@ -25,8 +25,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private Trigger<T> _flushTrigger;
-        private Trigger<T> _inputValidationTrigger;
-        private Func<T, FlushError> _inputValidator;
+        private Func<T, FlushError> _flushValidator;
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -45,32 +44,21 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetInputValidator(Func<T, FlushError> inputValidator, Trigger<T> inputValidationTrigger)
+        internal void SetFlushValidator(Func<T, FlushError> flushValidator)
         {
-            if (inputValidator == null)
-                throw new ArgumentNullException(nameof(inputValidator));
-            if (inputValidationTrigger != null)
-                VerifyNotInitialized(inputValidationTrigger, nameof(inputValidationTrigger));
+            if (flushValidator == null)
+                throw new ArgumentNullException(nameof(flushValidator));
 
-            _inputValidator = inputValidator;
-            if (inputValidationTrigger != null)
-            {
-                _inputValidationTrigger = inputValidationTrigger;
-                _inputValidationTrigger.ExecuteAction = ValidateInput;
-            }
+            _flushValidator = flushValidator;
         }
 
         internal void Attach(T element)
         {
             _flushTrigger.Attach(element);
-            if (_inputValidationTrigger != null)
-                _inputValidationTrigger.Attach(element);
         }
 
         internal void Detach(T element)
         {
-            if (_inputValidationTrigger != null)
-                _inputValidationTrigger.Detach(element);
             _flushTrigger.Detach(element);
         }
 
@@ -78,14 +66,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal abstract void SetFlushError(UIElement element, FlushErrorMessage inputError);
 
-        internal void ValidateInput(T element)
+        internal void ValidateFlush(T element)
         {
-            if (_inputValidator == null)
+            if (_flushValidator == null)
                 return;
-            var oldInputError = GetFlushError(element);
-            var inputError = _inputValidator(element);
-            if (IsInputErrorChanged(inputError, oldInputError))
-                SetFlushError(element, inputError.IsEmpty ? null : new FlushErrorMessage(inputError, element));
+            var oldflushError = GetFlushError(element);
+            var flushError = _flushValidator(element);
+            if (IsInputErrorChanged(flushError, oldflushError))
+                SetFlushError(element, flushError.IsEmpty ? null : new FlushErrorMessage(flushError, element));
         }
 
         private static bool IsInputErrorChanged(FlushError inputError, FlushErrorMessage viewInputError)
@@ -99,7 +87,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (Binding.IsRefreshing)
                 return;
 
-            ValidateInput(element);
+            ValidateFlush(element);
             if (GetFlushError(element) == null)
                 FlushCore(element);
         }
