@@ -20,7 +20,7 @@ namespace DevZest.Data.Presenters.Primitives
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
-            Progress = new ValidationProgress(this);
+            RowValidationProgress = new RowValidationProgress(this);
             if (ValidationMode == ValidationMode.Implicit)
                 Validate();
         }
@@ -143,7 +143,7 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        public ValidationProgress Progress { get; private set; }
+        public RowValidationProgress RowValidationProgress { get; private set; }
         public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
         public IRowValidationResults RowValidationWarnings { get; private set; } = RowValidationResults.Empty;
 
@@ -166,7 +166,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.Reload();
 
-            Progress.Reset();
+            RowValidationProgress.Reset();
             if (ValidationMode == ValidationMode.Implicit)
                 Validate(true);
             else
@@ -195,7 +195,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal IColumnValidationMessages GetErrors<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.Target))
+            if (!RowValidationProgress.IsVisible(rowPresenter, rowInput.Target))
                 return ColumnValidationMessages.Empty;
 
             return GetValidationMessages(RowValidationErrors, rowPresenter, rowInput.Target);
@@ -204,7 +204,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal IColumnValidationMessages GetWarnings<T>(RowPresenter rowPresenter, RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (!Progress.IsVisible(rowPresenter, rowInput.Target))
+            if (!RowValidationProgress.IsVisible(rowPresenter, rowInput.Target))
                 return ColumnValidationMessages.Empty;
 
             return GetValidationMessages(RowValidationWarnings, rowPresenter, rowInput.Target);
@@ -213,7 +213,7 @@ namespace DevZest.Data.Presenters.Primitives
         internal void MakeProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            Progress.MakeProgress(CurrentRow, rowInput);
+            RowValidationProgress.MakeProgress(CurrentRow, rowInput);
             if (ValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
@@ -288,7 +288,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void Validate(bool showAll)
         {
             if (showAll)
-                Progress.ShowAll();
+                RowValidationProgress.ShowAll();
 
             ClearValidationMessages();
             DoValidate();
@@ -371,7 +371,7 @@ namespace DevZest.Data.Presenters.Primitives
         protected override void OnCurrentRowChanged(RowPresenter oldValue)
         {
             base.OnCurrentRowChanged(oldValue);
-            Progress.OnCurrentRowChanged();
+            RowValidationProgress.OnCurrentRowChanged();
             Template.RowAsyncValidators.Each(x => x.OnCurrentRowChanged());
         }
 
@@ -379,7 +379,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             base.DisposeRow(rowPresenter);
 
-            Progress.OnRowDisposed(rowPresenter);
+            RowValidationProgress.OnRowDisposed(rowPresenter);
 
             if (RowValidationErrors.ContainsKey(rowPresenter))
                 RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
@@ -397,7 +397,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
             Debug.Assert(validationResults != null);
             ValidationResult = ToValidationDictionary(validationResults);
-            Progress.Reset();
+            RowValidationProgress.Reset();
             ClearValidationMessages();
             if (ValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
@@ -451,7 +451,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (hasError)
                 return false;
 
-            Progress.Reset();
+            RowValidationProgress.Reset();
             return base.EndEdit();
         }
     }

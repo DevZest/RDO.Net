@@ -242,9 +242,9 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.CurrentRowWarnings; }
         }
 
-        public ValidationProgress ValidationProgress
+        public RowValidationProgress RowValidationProgress
         {
-            get { return LayoutManager == null ? null : LayoutManager.Progress; }
+            get { return LayoutManager == null ? null : LayoutManager.RowValidationProgress; }
         }
 
         public IRowAsyncValidators AllRowsAsyncValidators
