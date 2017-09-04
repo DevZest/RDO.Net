@@ -21,7 +21,7 @@ namespace DevZest.Data.Presenters.Primitives
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
             RowValidationProgress = new RowValidationProgress(this);
-            if (ValidationMode == ValidationMode.Implicit)
+            if (RowValidationMode == ValidationMode.Implicit)
                 Validate();
         }
 
@@ -167,7 +167,7 @@ namespace DevZest.Data.Presenters.Primitives
             base.Reload();
 
             RowValidationProgress.Reset();
-            if (ValidationMode == ValidationMode.Implicit)
+            if (RowValidationMode == ValidationMode.Implicit)
                 Validate(true);
             else
                 ClearValidationMessages();
@@ -214,7 +214,7 @@ namespace DevZest.Data.Presenters.Primitives
             where T : UIElement, new()
         {
             RowValidationProgress.MakeProgress(CurrentRow, rowInput);
-            if (ValidationMode != ValidationMode.Explicit)
+            if (RowValidationMode != ValidationMode.Explicit)
                 Validate(_pendingShowAll);
             _pendingShowAll = false;
 
@@ -225,7 +225,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void OnProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
-            if (ValidationMode == ValidationMode.Explicit)
+            if (RowValidationMode == ValidationMode.Explicit)
                 return;
 
             if (HasError(CurrentRow, rowInput.Target))
@@ -259,12 +259,17 @@ namespace DevZest.Data.Presenters.Primitives
             return false;
         }
 
-        internal ValidationMode ValidationMode
+        internal ValidationMode ScalarValidationMode
+        {
+            get { return Template.ScalarValidationMode; }
+        }
+
+        internal ValidationMode RowValidationMode
         {
             get { return Template.RowValidationMode; }
         }
 
-        internal RowValidationScope ValidationScope
+        internal RowValidationScope RowValidationScope
         {
             get { return Template.RowValidationScope; }
         }
@@ -320,7 +325,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (!MoreToValidate)
                 return;
 
-            if (ValidationScope == RowValidationScope.All)
+            if (RowValidationScope == RowValidationScope.All)
             {
                 for (int i = 0; i < Rows.Count; i++)
                 {
@@ -399,7 +404,7 @@ namespace DevZest.Data.Presenters.Primitives
             ValidationResult = ToValidationDictionary(validationResults);
             RowValidationProgress.Reset();
             ClearValidationMessages();
-            if (ValidationMode == ValidationMode.Implicit)
+            if (RowValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
             Template.RowAsyncValidators.Each(x => x.Reset());
             InvalidateView();
@@ -442,10 +447,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal sealed override bool EndEdit()
         {
-            if (ValidationScope == RowValidationScope.All)
+            if (RowValidationScope == RowValidationScope.All)
                 return base.EndEdit();
 
-            Debug.Assert(ValidationScope == RowValidationScope.Current);
+            Debug.Assert(RowValidationScope == RowValidationScope.Current);
             Validate(true);
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)

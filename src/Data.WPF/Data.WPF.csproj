@@ -61,6 +61,7 @@
     <Compile Include="Presenters\Scalars.cs" />
     <Compile Include="Presenters\ScalarValidationMessage.cs" />
     <Compile Include="Presenters\ScalarValidationMessages.cs" />
+    <Compile Include="Presenters\ScalarValidationProgress.cs" />
     <Compile Include="Presenters\Services\ColumnHeaderCommands.cs" />
     <Compile Include="Presenters\Services\CommandExtensions.cs" />
     <Compile Include="Presenters\Services\DataViewCommands.cs" />

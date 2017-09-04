@@ -67,12 +67,12 @@ namespace DevZest.Data.Presenters
 
         public ValidationMode Mode
         {
-            get { return _inputManager.ValidationMode; }
+            get { return _inputManager.RowValidationMode; }
         }
 
         public RowValidationScope Scope
         {
-            get { return _inputManager.ValidationScope; }
+            get { return _inputManager.RowValidationScope; }
         }
 
         public bool IsVisible(RowPresenter rowPresenter, IColumns columns)
