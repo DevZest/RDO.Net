@@ -173,6 +173,7 @@ namespace DevZest.Data.Presenters.Primitives
             base.Reload();
 
             RowValidationProgress.Reset();
+            AssignedRowValidationResults = RowValidationResults.Empty;
             if (RowValidationMode == ValidationMode.Implicit)
                 ValidateRows(true);
             else
@@ -431,10 +432,13 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidationProgress.OnRowDisposed(rowPresenter);
 
             if (RowValidationErrors.ContainsKey(rowPresenter))
-                RowValidationErrors = RowValidationErrors.Remove(rowPresenter);
+                RowValidationErrors = RowValidationErrors.Remove(rowPresenter).Seal();
 
             if (RowValidationWarnings.ContainsKey(rowPresenter))
-                RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter);
+                RowValidationWarnings = RowValidationWarnings.Remove(rowPresenter).Seal();
+
+            if (AssignedRowValidationResults.ContainsKey(rowPresenter))
+                AssignedRowValidationResults = AssignedRowValidationResults.Remove(rowPresenter).Seal();
 
             Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
