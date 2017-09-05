@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,9 +19,12 @@ namespace DevZest.Data.Presenters.Primitives
         protected InputManager(Template template, DataSet dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool emptyContainerViewList)
             : base(template, dataSet, where, orderBy, emptyContainerViewList)
         {
+            ScalarValidationProgress = new ScalarValidationProgress(this);
             RowValidationProgress = new RowValidationProgress(this);
+            if (ScalarValidationMode == ValidationMode.Implicit)
+                ValidateScalars();
             if (RowValidationMode == ValidationMode.Implicit)
-                Validate();
+                ValidateRows();
         }
 
         public void FlushScalars()
@@ -102,7 +104,7 @@ namespace DevZest.Data.Presenters.Primitives
             InvalidateView();
         }
 
-        public IReadOnlyList<FlushErrorMessage> ScalarInputErrors
+        public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
         {
             get
             {
@@ -133,7 +135,7 @@ namespace DevZest.Data.Presenters.Primitives
             SetInputError(InternalRowFlushErrors, element, value);
         }
 
-        public IReadOnlyList<FlushErrorMessage> RowInputErrors
+        public IReadOnlyList<FlushErrorMessage> RowFlushErrors
         {
             get
             {
@@ -142,6 +144,10 @@ namespace DevZest.Data.Presenters.Primitives
                 return _rowFlushErrors;
             }
         }
+
+        public ScalarValidationProgress ScalarValidationProgress { get; private set; }
+        public IScalarValidationMessages ScalarValidationErrors { get; private set; } = ScalarValidationMessages.Empty;
+        public IScalarValidationMessages ScalarValidationWarnings { get; private set; } = ScalarValidationMessages.Empty;
 
         public RowValidationProgress RowValidationProgress { get; private set; }
         public IRowValidationResults RowValidationErrors { get; private set; } = RowValidationResults.Empty;
@@ -157,7 +163,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return RowValidationWarnings.GetValidationMessages(CurrentRow); }
         }
 
-        private void ClearValidationMessages()
+        private void ClearRowValidationMessages()
         {
             RowValidationErrors = RowValidationWarnings = RowValidationResults.Empty;
         }
@@ -168,9 +174,9 @@ namespace DevZest.Data.Presenters.Primitives
 
             RowValidationProgress.Reset();
             if (RowValidationMode == ValidationMode.Implicit)
-                Validate(true);
+                ValidateRows(true);
             else
-                ClearValidationMessages();
+                ClearRowValidationMessages();
         }
 
         private static IColumnValidationMessages GetValidationMessages(IRowValidationResults dictionary, RowPresenter rowPresenter, IColumns columns)
@@ -210,12 +216,18 @@ namespace DevZest.Data.Presenters.Primitives
             return GetValidationMessages(RowValidationWarnings, rowPresenter, rowInput.Target);
         }
 
+        internal void MakeProgress<T>(ScalarInput<T> scalarInput)
+            where T : UIElement, new()
+        {
+            throw new NotImplementedException();
+        }
+
         internal void MakeProgress<T>(RowInput<T> rowInput)
             where T : UIElement, new()
         {
             RowValidationProgress.MakeProgress(CurrentRow, rowInput);
             if (RowValidationMode != ValidationMode.Explicit)
-                Validate(_pendingShowAll);
+                ValidateRows(_pendingShowAll);
             _pendingShowAll = false;
 
             OnProgress(rowInput);
@@ -264,6 +276,38 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.ScalarValidationMode; }
         }
 
+        public void ValidateScalars()
+        {
+            ValidateScalars(true);
+            InvalidateView();
+        }
+
+        private void ValidateScalars(bool showAll)
+        {
+            if (showAll)
+                ScalarValidationProgress.ShowAll();
+
+            ClearScalarValidationMessages();
+            if (DataPresenter == null)
+                return;
+            var messages = DataPresenter.OnValidateScalars();
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (message.Severity == ValidationSeverity.Error)
+                    ScalarValidationErrors = ScalarValidationErrors.Add(message);
+                else
+                    ScalarValidationWarnings = ScalarValidationWarnings.Add(message);
+            }
+            ScalarValidationErrors.Seal();
+            ScalarValidationWarnings.Seal();
+        }
+
+        private void ClearScalarValidationMessages()
+        {
+            ScalarValidationErrors = ScalarValidationWarnings = ScalarValidationMessages.Empty;
+        }
+
         internal ValidationMode RowValidationMode
         {
             get { return Template.RowValidationMode; }
@@ -274,41 +318,41 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Template.RowValidationScope; }
         }
 
-        public void Validate()
+        public void ValidateRows()
         {
-            Validate(true);
+            ValidateRows(true);
             InvalidateView();
         }
 
-        private int ErrorMaxEntries
+        private int RowValidationErrorLimit
         {
             get { return Template.RowValidationErrorLimit; }
         }
 
-        private int WarningMaxEntries
+        private int RowValidationWarningLimit
         {
             get { return Template.RowValidationWarningLimit; }
         }
 
-        private void Validate(bool showAll)
+        private void ValidateRows(bool showAll)
         {
             if (showAll)
                 RowValidationProgress.ShowAll();
 
-            ClearValidationMessages();
-            DoValidate();
+            ClearRowValidationMessages();
+            DoValidateRows();
             RowValidationErrors.Seal();
             RowValidationWarnings.Seal();
         }
 
         private bool MoreErrorsToValidate
         {
-            get { return RowValidationErrors.Count < ErrorMaxEntries; }
+            get { return RowValidationErrors.Count < RowValidationErrorLimit; }
         }
 
         private bool MoreWarningsToValidate
         {
-            get { return RowValidationWarnings.Count < WarningMaxEntries; }
+            get { return RowValidationWarnings.Count < RowValidationWarningLimit; }
         }
 
         private bool MoreToValidate
@@ -316,7 +360,7 @@ namespace DevZest.Data.Presenters.Primitives
             get { return MoreErrorsToValidate || MoreWarningsToValidate; }
         }
 
-        private void DoValidate()
+        private void DoValidateRows()
         {
             if (CurrentRow == null)
                 return;
@@ -401,16 +445,16 @@ namespace DevZest.Data.Presenters.Primitives
         public void Show(IDataRowValidationResults validationResults)
         {
             Debug.Assert(validationResults != null);
-            ValidationResult = ToValidationDictionary(validationResults);
+            ValidationResult = ToRowValidationResults(validationResults);
             RowValidationProgress.Reset();
-            ClearValidationMessages();
+            ClearRowValidationMessages();
             if (RowValidationMode == ValidationMode.Implicit)
                 _pendingShowAll = true;
             Template.RowAsyncValidators.Each(x => x.Reset());
             InvalidateView();
         }
 
-        internal IRowValidationResults ToValidationDictionary(IDataRowValidationResults validationResults)
+        internal IRowValidationResults ToRowValidationResults(IDataRowValidationResults validationResults)
         {
             var result = RowValidationResults.Empty;
             for (int i = 0; i < validationResults.Count; i++)
@@ -451,7 +495,7 @@ namespace DevZest.Data.Presenters.Primitives
                 return base.EndEdit();
 
             Debug.Assert(RowValidationScope == RowValidationScope.Current);
-            Validate(true);
+            ValidateRows(true);
             var hasError = CurrentRowErrors.Count > 0;
             if (hasError)
                 return false;

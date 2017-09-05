@@ -162,7 +162,7 @@ namespace DevZest.Data.Presenters
             protected override async Task<IRowValidationResults> ValidateAsync()
             {
                 var result = await _action();
-                return result == null ? RowValidationResults.Empty : InputManager.ToValidationDictionary(result);
+                return result == null ? RowValidationResults.Empty : InputManager.ToRowValidationResults(result);
             }
         }
 

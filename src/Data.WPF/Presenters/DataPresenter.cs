@@ -207,19 +207,29 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().FlushCurrentRow();
         }
 
-        public void Validate()
+        public void ValidateScalars()
         {
-            RequireLayoutManager().Validate();
+            RequireLayoutManager().ValidateScalars();
         }
 
-        public IReadOnlyList<FlushErrorMessage> ScalarInputErrors
+        protected internal virtual IScalarValidationMessages OnValidateScalars()
         {
-            get { return LayoutManager == null ? null : LayoutManager.ScalarInputErrors; }
+            return ScalarValidationMessages.Empty;
         }
 
-        public IReadOnlyList<FlushErrorMessage> RowInputErrors
+        public void ValidateRows()
         {
-            get { return LayoutManager == null ? null : LayoutManager.RowInputErrors; }
+            RequireLayoutManager().ValidateRows();
+        }
+
+        public IReadOnlyList<FlushErrorMessage> ScalarFlushErrors
+        {
+            get { return LayoutManager == null ? null : LayoutManager.ScalarFlushErrors; }
+        }
+
+        public IReadOnlyList<FlushErrorMessage> RowFlushErrors
+        {
+            get { return LayoutManager == null ? null : LayoutManager.RowFlushErrors; }
         }
 
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowErrors

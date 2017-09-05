@@ -55,22 +55,16 @@ namespace DevZest.Data.Presenters
                 if (getValue == null)
                     return false;
                 var value = getValue(element);
-
-                var inputError = scalar.Validate(value);
-                if (inputError.IsEmpty)
-                    return scalar.ChangeValue(value);
-                else
-                {
-                    InputManager.SetScalarValueError(element, new FlushErrorMessage(inputError, element));
-                    return false;
-                }
+                return scalar.ChangeValue(value);
             });
             return this;
         }
 
         internal override void FlushCore(T element)
         {
-            DoFlush(element);
+            var flushed = DoFlush(element);
+            if (flushed)
+                InputManager.MakeProgress(this);
         }
 
         private bool DoFlush(T element)
