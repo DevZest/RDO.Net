@@ -110,7 +110,7 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = AddValidationMessages(result, InputManager.RowValidationErrors, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
-            result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
             return result;
         }
 
@@ -119,7 +119,7 @@ namespace DevZest.Data.Presenters
             var result = ColumnValidationMessages.Empty;
             result = AddValidationMessages(result, InputManager.RowValidationWarnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
             result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
-            result = AddValidationMessages(result, InputManager.ValidationResult, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
+            result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
             return result;
         }
 

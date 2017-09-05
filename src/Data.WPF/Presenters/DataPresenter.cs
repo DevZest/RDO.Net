@@ -262,23 +262,23 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.AllRowsAsyncValidators; }
         }
 
-        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> RowValidationResults
+        public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> AssignedRowValidationResults
         {
-            get { return LayoutManager == null ? null : LayoutManager.ValidationResult; }
+            get { return LayoutManager == null ? null : LayoutManager.AssignedRowValidationResults; }
         }
 
-        public void Show(IDataRowValidationResults validationResults)
+        public void Assign(IDataRowValidationResults validationResults)
         {
             if (validationResults == null)
                 throw new ArgumentNullException(nameof(validationResults));
-            RequireLayoutManager().Show(validationResults);
+            RequireLayoutManager().Assign(validationResults);
         }
 
-        public void Show(IRowValidationResults validationResults)
+        public void Assign(IRowValidationResults validationResults)
         {
             if (validationResults == null)
                 throw new ArgumentNullException(nameof(validationResults));
-            RequireLayoutManager().Show(validationResults);
+            RequireLayoutManager().Assign(validationResults);
         }
 
         public IScrollable Scrollable

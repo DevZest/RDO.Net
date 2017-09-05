@@ -385,7 +385,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         [TestMethod]
-        public void InputManager_ShowValidationResult()
+        public void InputManager_AssignValidationResults()
         {
             var dataSet = DataSet<ProductCategory>.New();
             var _ = dataSet._;
@@ -410,7 +410,7 @@ namespace DevZest.Data.Presenters.Primitives
 
             var validationMessage = new ColumnValidationMessage("ERR-RESULT", ValidationSeverity.Error, "Result Error", _.Name);
             var validationResults = DataRowValidationResults.Empty.Add(new DataRowValidationResult(currentRow.DataRow, validationMessage));
-            inputManager.Show(validationResults);
+            inputManager.Assign(validationResults);
             {
                 var errors = System.Windows.Controls.Validation.GetErrors(textBox[currentRow]);
                 Assert.AreEqual(1, errors.Count);

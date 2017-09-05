@@ -439,19 +439,19 @@ namespace DevZest.Data.Presenters.Primitives
             Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
         }
 
-        public IRowValidationResults ValidationResult { get; private set; } = RowValidationResults.Empty;
+        public IRowValidationResults AssignedRowValidationResults { get; private set; } = RowValidationResults.Empty;
 
         private bool _rowPendingShowAll;
-        public void Show(IDataRowValidationResults validationResults)
+        public void Assign(IDataRowValidationResults validationResults)
         {
             Debug.Assert(validationResults != null);
-            Show(ToRowValidationResults(validationResults));
+            Assign(ToRowValidationResults(validationResults));
         }
 
-        public void Show(IRowValidationResults validationResults)
+        public void Assign(IRowValidationResults validationResults)
         {
             Debug.Assert(validationResults != null);
-            ValidationResult = validationResults;
+            AssignedRowValidationResults = validationResults;
             RowValidationProgress.Reset();
             ClearRowValidationMessages();
             if (RowValidationMode == ValidationMode.Implicit)
