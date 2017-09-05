@@ -57,25 +57,9 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private FlushErrorCollection _scalarValueErrors;
-        private FlushErrorCollection InternalScalarValueErrors
-        {
-            get
-            {
-                if (_scalarValueErrors == null)
-                    _scalarValueErrors = new FlushErrorCollection();
-                return _scalarValueErrors;
-            }
-        }
-
         internal FlushErrorMessage GetScalarFlushError(UIElement element)
         {
             return GetFlushError(_scalarFlushErrors, element);
-        }
-
-        internal FlushErrorMessage GetScalarValueError(UIElement element)
-        {
-            return GetFlushError(_scalarValueErrors, element);
         }
 
         private static FlushErrorMessage GetFlushError(FlushErrorCollection flushErrors, UIElement element)
@@ -87,15 +71,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void SetScalarFlushError(UIElement element, FlushErrorMessage inputError)
         {
-            SetInputError(InternalScalarFlushErrors, element, inputError);
+            SetFlushError(InternalScalarFlushErrors, element, inputError);
         }
 
-        internal void SetScalarValueError(UIElement element, FlushErrorMessage inputError)
-        {
-            SetInputError(InternalScalarValueErrors, element, inputError);
-        }
-
-        private void SetInputError(FlushErrorCollection inputErrors, UIElement element, FlushErrorMessage inputError)
+        private void SetFlushError(FlushErrorCollection inputErrors, UIElement element, FlushErrorMessage inputError)
         {
             Debug.Assert(inputErrors != null);
             inputErrors.Remove(element);
@@ -132,7 +111,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal void SetRowFlushError(UIElement element, FlushErrorMessage value)
         {
-            SetInputError(InternalRowFlushErrors, element, value);
+            SetFlushError(InternalRowFlushErrors, element, value);
         }
 
         public IReadOnlyList<FlushErrorMessage> RowFlushErrors

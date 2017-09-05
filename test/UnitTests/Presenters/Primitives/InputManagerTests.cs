@@ -22,7 +22,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = _.ParentProductCategoryID.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.ParentProductCategoryID.AsTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -55,32 +55,20 @@ namespace DevZest.Data.Presenters.Primitives
         public void InputManager_Scalar()
         {
             var oldValue = -1;
-            var scalar = new Scalar<int>(0,
-                onValueChanged: x =>
+            var scalar = new Scalar<int>(0)
+                .WithOnValueChanged(x =>
                 {
                     oldValue = x;
-                },
-                valueValidator: x =>
+                })
+                .AddValidator(x =>
                 {
-                    return x > 5 ? new FlushError("ERR-01", "Value cannot be greater than 5.") : FlushError.Empty;
-                });
+                    return x > 5 ? "Value cannot be greater than 5." : null;
+                }, ValidationSeverity.Error, "ERR-01");
 
             Assert.AreEqual(-1, oldValue);
 
             scalar.Value = 4;
             Assert.AreEqual(0, oldValue);
-
-            ArgumentException catchedException = null;
-            try
-            {
-                scalar.Value = 6;
-            }
-            catch (ArgumentException ex)
-            {
-                catchedException = ex;
-            }
-
-            Assert.IsNotNull(catchedException);
         }
 
         [TestMethod]
@@ -88,15 +76,15 @@ namespace DevZest.Data.Presenters.Primitives
         {
             var dataSet = DataSetMock.ProductCategories(3, false);
             var _ = dataSet._;
-            Scalar<Int32> scalar = new Scalar<int>(valueValidator: x =>
+            Scalar<Int32> scalar = new Scalar<int>().AddValidator(x =>
             {
-                return x > 5 ? new FlushError("ERR-01", "Value cannot be greater than 5.") : FlushError.Empty;
-            });
+                return x > 5 ? "Value cannot be greater than 5." : null;
+            }, ValidationSeverity.Error, "ERR-01");
             ScalarBinding<TextBox> textBox = null;
             RowBinding<TextBlock> textBlock = null;
             var inputManager = dataSet.CreateInputManager((builder) =>
             {
-                textBox = scalar.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = scalar.AsTextBox();
                 textBlock = _.Name.AsTextBlock(); // to avoid empty RowRange
                 builder.GridColumns("100").GridRows("100", "100").AddBinding(0, 0, textBox).AddBinding(0, 1, textBlock);
             });
@@ -127,12 +115,13 @@ namespace DevZest.Data.Presenters.Primitives
 
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
-            Assert.IsNotNull(inputManager.GetScalarValueError(textBox[0]));
-            {
-                var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
-                Assert.AreEqual(1, errors.Count);
-                Assert.AreEqual(inputManager.GetScalarValueError(textBox[0]), errors[0].ErrorContent);
-            }
+            throw new NotImplementedException();
+            //Assert.IsNotNull(inputManager.GetScalarValueError(textBox[0]));
+            //{
+            //    var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
+            //    Assert.AreEqual(1, errors.Count);
+            //    Assert.AreEqual(inputManager.GetScalarValueError(textBox[0]), errors[0].ErrorContent);
+            //}
         }
 
         [TestMethod]
@@ -145,7 +134,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox);
             });
 
@@ -188,7 +177,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 
@@ -227,7 +216,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
@@ -299,7 +288,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
@@ -348,7 +337,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<ValidationView> validationView = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 validationView = textBox.Input.AsValidationView();
 
                 builder.GridColumns("100").GridRows("100")
@@ -394,7 +383,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowBinding<TextBox> textBox = null;
             var inputManager = dataSet.CreateInputManager(builder =>
             {
-                textBox = _.Name.AsTextBox(UpdateSourceTrigger.PropertyChanged);
+                textBox = _.Name.AsTextBox();
                 builder.GridColumns("100").GridRows("100").AddBinding(0, 0, textBox).WithRowValidationMode(ValidationMode.Implicit);
             });
 

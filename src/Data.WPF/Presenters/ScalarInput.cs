@@ -35,9 +35,9 @@ namespace DevZest.Data.Presenters
             InputManager.SetScalarFlushError(element, inputError);
         }
 
-        public ScalarInput<T> WithFlushValidator(Func<T, FlushError> flushValidator)
+        public ScalarInput<T> WithFlushValidator(Func<T, string> flushValidator, string flushValidatorId = null)
         {
-            SetFlushValidator(flushValidator);
+            SetFlushValidator(flushValidator, flushValidatorId);
             return this;
         }
 
@@ -85,15 +85,46 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             var flushError = GetFlushError(element);
-            var valueError = InputManager.GetScalarValueError(element);
             if (_onRefresh != null)
             {
-                scalarPresenter.SetErrors(flushError, valueError);
+                scalarPresenter.SetErrors(flushError, null);
                 _onRefresh(element, scalarPresenter);
                 scalarPresenter.SetErrors(null, null);
             }
             //element.RefreshValidation(flushError ?? valueError, AbstractValidationMessageGroup.Empty);
         }
+
+        //public FlushErrorMessage GetFlushError()
+        //{
+        //    var scalarBinding = ScalarBinding;
+        //    var element = scalarBinding[0];
+        //    if (element != null)
+        //    {
+        //        var inputError = GetFlushError(element);
+        //        if (inputError != null)
+        //            return inputError;
+        //    }
+        //    return null;
+        //}
+
+        //public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
+        //{
+        //    var result = ColumnValidationMessages.Empty;
+        //    result = AddValidationMessages(result, InputManager.RowValidationErrors, rowPresenter, x => IsVisible(x, rowPresenter, true));
+        //    result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
+        //    result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
+        //    return result;
+        //}
+
+        //public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
+        //{
+        //    var result = ColumnValidationMessages.Empty;
+        //    result = AddValidationMessages(result, InputManager.RowValidationWarnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
+        //    result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
+        //    result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
+        //    return result;
+        //}
+
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
         {

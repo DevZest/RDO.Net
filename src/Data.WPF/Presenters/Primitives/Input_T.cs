@@ -25,7 +25,8 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private Trigger<T> _flushTrigger;
-        private Func<T, FlushError> _flushValidator;
+        private string _flushValidatorId;
+        private Func<T, string> _flushValidator;
 
         public abstract TwoWayBinding Binding { get; }
 
@@ -44,12 +45,13 @@ namespace DevZest.Data.Presenters.Primitives
             get { return Binding.Template; }
         }
 
-        internal void SetFlushValidator(Func<T, FlushError> flushValidator)
+        internal void SetFlushValidator(Func<T, string> flushValidator, string flushValidatorId)
         {
             if (flushValidator == null)
                 throw new ArgumentNullException(nameof(flushValidator));
 
             _flushValidator = flushValidator;
+            _flushValidatorId = flushValidatorId;
         }
 
         internal void Attach(T element)
@@ -71,15 +73,15 @@ namespace DevZest.Data.Presenters.Primitives
             if (_flushValidator == null)
                 return;
             var oldflushError = GetFlushError(element);
-            var flushError = _flushValidator(element);
-            if (IsInputErrorChanged(flushError, oldflushError))
-                SetFlushError(element, flushError.IsEmpty ? null : new FlushErrorMessage(flushError, element));
+            var flushErrorDescription = _flushValidator(element);
+            if (IsFlushErrorChanged(_flushValidatorId, flushErrorDescription, oldflushError))
+                SetFlushError(element, string.IsNullOrEmpty(flushErrorDescription) ? null : new FlushErrorMessage(_flushValidatorId, flushErrorDescription, element));
         }
 
-        private static bool IsInputErrorChanged(FlushError inputError, FlushErrorMessage viewInputError)
+        private static bool IsFlushErrorChanged(string flushErrorId, string flushErrorDescription, FlushErrorMessage flushErrorMessage)
         {
-            return inputError.IsEmpty ? viewInputError != null
-                : viewInputError == null || viewInputError.Id != inputError.Id || viewInputError.Description != inputError.Description;
+            return string.IsNullOrEmpty(flushErrorDescription) ? flushErrorMessage != null
+                : flushErrorMessage == null || flushErrorMessage.Id != flushErrorId || flushErrorMessage.Description != flushErrorDescription;
         }
 
         internal void Flush(T element)

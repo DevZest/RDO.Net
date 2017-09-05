@@ -7,8 +7,8 @@ namespace DevZest.Data.Presenters
 {
     public class FlushErrorMessage : ValidationMessageBase<UIElement>
     {
-        public FlushErrorMessage(FlushError inputError, UIElement source)
-            : base(inputError.Id, ValidationSeverity.Error, inputError.Description, source)
+        public FlushErrorMessage(string id, string description, UIElement source)
+            : base(id, ValidationSeverity.Error, description, source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
