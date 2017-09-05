@@ -20,7 +20,7 @@ namespace DevZest.Data.Presenters
             public readonly Func<T, string> Action;
         }
 
-        public Scalar(T value = default(T))
+        internal Scalar(T value = default(T))
         {
             _value = value;
         }
@@ -63,7 +63,7 @@ namespace DevZest.Data.Presenters
             return true;
         }
 
-        internal IScalarValidationMessages Validate(IScalarValidationMessages result)
+        internal override IScalarValidationMessages Validate(IScalarValidationMessages result)
         {
             if (result == null)
                 throw new ArgumentNullException(nameof(result));

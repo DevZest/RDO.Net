@@ -309,7 +309,7 @@ namespace DevZest.Data.Presenters.Primitives
             ClearScalarValidationMessages();
             if (DataPresenter == null)
                 return;
-            var messages = DataPresenter.OnValidateScalars();
+            var messages = DataPresenter.PerformValidateScalars();
             for (int i = 0; i < messages.Count; i++)
             {
                 var message = messages[i];

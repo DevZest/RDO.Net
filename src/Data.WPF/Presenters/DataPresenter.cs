@@ -212,11 +212,6 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().ValidateScalars();
         }
 
-        protected internal virtual IScalarValidationMessages OnValidateScalars()
-        {
-            return ScalarValidationMessages.Empty;
-        }
-
         public void ValidateRows()
         {
             RequireLayoutManager().ValidateRows();
@@ -376,5 +371,31 @@ namespace DevZest.Data.Presenters
         internal abstract void CancelLoading();
 
         internal abstract bool CanCancelLoading { get; }
+
+        private List<Scalar> _scalars = new List<Scalar>();
+        public IReadOnlyList<Scalar> Scalars
+        {
+            get { return _scalars; }
+        }
+
+        protected Scalar<T> NewScalar<T>(T value = default(T))
+        {
+            var result = new Scalar<T>(value);
+            _scalars.Add(result);
+            return result;
+        }
+
+        internal IScalarValidationMessages PerformValidateScalars()
+        {
+            var result = ScalarValidationMessages.Empty;
+            for (int i = 0; i < Scalars.Count; i++)
+                result = Scalars[i].Validate(result);
+            return PerformValidateScalars(result);
+        }
+
+        protected virtual IScalarValidationMessages PerformValidateScalars(IScalarValidationMessages result)
+        {
+            return result;
+        }
     }
 }
