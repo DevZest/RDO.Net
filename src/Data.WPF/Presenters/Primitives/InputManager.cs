@@ -227,8 +227,8 @@ namespace DevZest.Data.Presenters.Primitives
         {
             RowValidationProgress.MakeProgress(CurrentRow, rowInput);
             if (RowValidationMode != ValidationMode.Explicit)
-                ValidateRows(_pendingShowAll);
-            _pendingShowAll = false;
+                ValidateRows(_rowPendingShowAll);
+            _rowPendingShowAll = false;
 
             OnProgress(rowInput);
             InvalidateView();
@@ -441,7 +441,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         public IRowValidationResults ValidationResult { get; private set; } = RowValidationResults.Empty;
 
-        private bool _pendingShowAll;
+        private bool _rowPendingShowAll;
         public void Show(IDataRowValidationResults validationResults)
         {
             Debug.Assert(validationResults != null);
@@ -449,7 +449,7 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidationProgress.Reset();
             ClearRowValidationMessages();
             if (RowValidationMode == ValidationMode.Implicit)
-                _pendingShowAll = true;
+                _rowPendingShowAll = true;
             Template.RowAsyncValidators.Each(x => x.Reset());
             InvalidateView();
         }
