@@ -98,7 +98,7 @@ namespace DevZest.Data.Presenters
             var element = rowBinding[rowPresenter];
             if (element != null)
             {
-                var inputError = GetFlushError(RowBinding[rowPresenter]);
+                var inputError = GetFlushError(element);
                 if (inputError != null)
                     return inputError;
             }
