@@ -274,6 +274,13 @@ namespace DevZest.Data.Presenters
             RequireLayoutManager().Show(validationResults);
         }
 
+        public void Show(IRowValidationResults validationResults)
+        {
+            if (validationResults == null)
+                throw new ArgumentNullException(nameof(validationResults));
+            RequireLayoutManager().Show(validationResults);
+        }
+
         public IScrollable Scrollable
         {
             get { return LayoutManager as ScrollableManager; }

@@ -445,7 +445,13 @@ namespace DevZest.Data.Presenters.Primitives
         public void Show(IDataRowValidationResults validationResults)
         {
             Debug.Assert(validationResults != null);
-            ValidationResult = ToRowValidationResults(validationResults);
+            Show(ToRowValidationResults(validationResults));
+        }
+
+        public void Show(IRowValidationResults validationResults)
+        {
+            Debug.Assert(validationResults != null);
+            ValidationResult = validationResults;
             RowValidationProgress.Reset();
             ClearRowValidationMessages();
             if (RowValidationMode == ValidationMode.Implicit)
