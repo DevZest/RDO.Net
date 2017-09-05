@@ -220,7 +220,46 @@ namespace DevZest.Data.Presenters.Primitives
         internal void MakeProgress<T>(ScalarInput<T> scalarInput)
             where T : UIElement, new()
         {
-            throw new NotImplementedException();
+            ScalarValidationProgress.MakeProgress(scalarInput);
+            if (ScalarValidationMode != ValidationMode.Explicit)
+                ValidateScalars(_scalarPendingShowAll);
+            _scalarPendingShowAll = false;
+
+            OnProgress(scalarInput);
+            InvalidateView();
+        }
+
+        private void OnProgress<T>(ScalarInput<T> scalarInput)
+            where T : UIElement, new()
+        {
+            if (RowValidationMode == ValidationMode.Explicit)
+                return;
+
+            if (HasError(scalarInput.Target))
+                return;
+
+            var asyncValidators = Template.ScalarAsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                if (asyncValidator.SourceScalars.Intersect(scalarInput.Target).Count > 0)
+                    asyncValidator.Run();
+            }
+        }
+
+        private bool HasError(IScalars scalars)
+        {
+            if (ScalarValidationErrors.Count == 0)
+                return false;
+
+            for (int i = 0; i < ScalarValidationErrors.Count; i++)
+            {
+                var message = ScalarValidationErrors[i];
+                if (message.Source.SetEquals(scalars))
+                    return true;
+            }
+
+            return false;
         }
 
         internal void MakeProgress<T>(RowInput<T> rowInput)
@@ -441,6 +480,21 @@ namespace DevZest.Data.Presenters.Primitives
                 AssignedRowValidationResults = AssignedRowValidationResults.Remove(rowPresenter).Seal();
 
             Template.RowAsyncValidators.Each(x => x.OnRowDisposed(rowPresenter));
+        }
+
+        public IScalarValidationMessages AssignedScalarValidationResults { get; private set; } = ScalarValidationMessages.Empty;
+
+        private bool _scalarPendingShowAll;
+        public void Assign(IScalarValidationMessages validationResults)
+        {
+            Debug.Assert(validationResults != null);
+            AssignedScalarValidationResults = validationResults;
+            ScalarValidationProgress.Reset();
+            ClearScalarValidationMessages();
+            if (RowValidationMode == ValidationMode.Implicit)
+                _scalarPendingShowAll = true;
+            Template.ScalarAsyncValidators.Each(x => x.Reset());
+            InvalidateView();
         }
 
         public IRowValidationResults AssignedRowValidationResults { get; private set; } = RowValidationResults.Empty;

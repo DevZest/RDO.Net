@@ -144,6 +144,14 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
+        public TemplateBuilder AddAsyncValidator(Func<Task<IScalarValidationMessages>> action, Action postAction = null, IScalars sourceScalars = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(ScalarAsyncValidator.Create(Template, sourceScalars, action, postAction));
+            return this;
+        }
+
         public TemplateBuilder AddAsyncValidator(Func<Task<IColumnValidationMessages>> action, Action postAction = null, IColumns sourceColumns = null)
         {
             if (action == null)

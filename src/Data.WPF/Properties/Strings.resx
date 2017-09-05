@@ -213,9 +213,6 @@
   <data name="RowInput_FlushCurrentRowOnly" xml:space="preserve">
     <value>Flush operation can only be performed on CurrentRow.</value>
   </data>
-  <data name="RowInput_NullTemplateWhenAddAsyncValidator" xml:space="preserve">
-    <value>The RowBinding must be added into Template before adding async validator.</value>
-  </data>
   <data name="RowManager_ChangeEditingRowNotAllowed" xml:space="preserve">
     <value>Change editing row is not allowed.</value>
   </data>

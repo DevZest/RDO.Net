@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using DevZest.Data;
+using System.Threading.Tasks;
 
 namespace DevZest.Data.Presenters
 {
@@ -104,6 +105,17 @@ namespace DevZest.Data.Presenters
         public ScalarBinding<T> EndInput()
         {
             return ScalarBinding;
+        }
+
+        public ScalarInput<T> AddAsyncValidator(Func<Task<IScalarValidationMessages>> action, Action postAction = null)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            VerifyNotSealed();
+
+            var asyncValidator = ScalarAsyncValidator.Create<T>(this, action, postAction);
+            Template.InternalScalarAsyncValidators = Template.InternalScalarAsyncValidators.Add(asyncValidator);
+            return this;
         }
     }
 }

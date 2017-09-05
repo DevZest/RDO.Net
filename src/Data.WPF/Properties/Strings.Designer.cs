@@ -268,14 +268,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The RowBinding must be added into Template before adding async validator.
-        /// </summary>
-        public static string RowInput_NullTemplateWhenAddAsyncValidator
-        {
-            get { return GetString("RowInput_NullTemplateWhenAddAsyncValidator"); }
-        }
-
-        /// <summary>
         /// Change editing row is not allowed.
         /// </summary>
         public static string RowManager_ChangeEditingRowNotAllowed

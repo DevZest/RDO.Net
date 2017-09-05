@@ -132,7 +132,8 @@ namespace DevZest.Data.Presenters.Primitives
             VerifyGridUnitType();
             VerifyRowRange();
             VerifyFrozenMargins();
-            InternalRowAsyncValidators.Seal();
+            InternalScalarAsyncValidators = InternalScalarAsyncValidators.Seal();
+            InternalRowAsyncValidators = InternalRowAsyncValidators.Seal();
         }
 
         internal void VerifyGridUnitType()
@@ -504,6 +505,13 @@ namespace DevZest.Data.Presenters.Primitives
 
         [DefaultValue(null)]
         public SelectionMode? SelectionMode { get; internal set; }
+
+        internal IScalarAsyncValidators InternalScalarAsyncValidators { get; set; } = Presenters.ScalarAsyncValidators.Empty;
+
+        public IScalarAsyncValidators ScalarAsyncValidators
+        {
+            get { return IsSealed ? InternalScalarAsyncValidators : null; }
+        }
 
         internal IRowAsyncValidators InternalRowAsyncValidators { get; set; } = Presenters.RowAsyncValidators.Empty;
 

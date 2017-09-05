@@ -262,9 +262,21 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.AllRowsAsyncValidators; }
         }
 
+        public IReadOnlyList<ScalarValidationMessage> AssignedScalarValidationResults
+        {
+            get { return LayoutManager == null ? null : LayoutManager.AssignedScalarValidationResults; }
+        }
+
         public IReadOnlyDictionary<RowPresenter, IColumnValidationMessages> AssignedRowValidationResults
         {
             get { return LayoutManager == null ? null : LayoutManager.AssignedRowValidationResults; }
+        }
+
+        public void Assign(IScalarValidationMessages validationResults)
+        {
+            if (validationResults == null)
+                throw new ArgumentNullException(nameof(validationResults));
+            RequireLayoutManager().Assign(validationResults);
         }
 
         public void Assign(IDataRowValidationResults validationResults)

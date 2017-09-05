@@ -184,8 +184,6 @@ namespace DevZest.Data.Presenters
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
-            if (Template == null)
-                throw new InvalidOperationException(Strings.RowInput_NullTemplateWhenAddAsyncValidator);
             VerifyNotSealed();
 
             var asyncValidator = RowAsyncValidator.Create<T>(this, action, postAction);
