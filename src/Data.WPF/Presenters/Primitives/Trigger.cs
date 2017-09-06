@@ -10,7 +10,7 @@ namespace DevZest.Data.Presenters.Primitives
         {
         }
 
-        internal Action<T> ExecuteAction { get; set; }
+        protected internal Action<T> ExecuteAction { get; set; }
 
         protected internal abstract void Attach(T element);
 
@@ -18,7 +18,14 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected void Execute(T element)
         {
-            ExecuteAction(element);
+            if (ExecuteAction != null)
+                ExecuteAction(element);
+        }
+
+        public Trigger<T> WithExecuteAction(Action<T> executeAction)
+        {
+            ExecuteAction = executeAction;
+            return this;
         }
     }
 }

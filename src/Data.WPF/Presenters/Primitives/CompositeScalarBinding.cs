@@ -133,7 +133,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _isRefreshing;
-        internal sealed override bool IsRefreshing
+        public sealed override bool IsRefreshing
         {
             get { return _isRefreshing; }
         }

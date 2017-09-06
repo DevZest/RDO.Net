@@ -73,7 +73,7 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         private bool _isRefreshing;
-        internal override bool IsRefreshing
+        public override bool IsRefreshing
         {
             get { return _isRefreshing; }
         }
