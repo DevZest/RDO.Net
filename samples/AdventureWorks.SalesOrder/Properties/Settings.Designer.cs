@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SampleApp.Properties {
+namespace AdventureWorks.SalesOrders.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

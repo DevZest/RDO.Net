@@ -2,7 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using System.Windows;
 
-namespace SampleApp
+namespace AdventureWorks.SalesOrders
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

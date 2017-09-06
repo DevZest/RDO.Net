@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using DevZest.Data.Presenters;
 
-namespace SampleApp
+namespace AdventureWorks.SalesOrders
 {
     public class SalesOrderList : DataPresenter<SalesOrder>
     {

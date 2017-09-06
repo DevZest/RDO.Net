@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows;
 
-namespace SampleApp
+namespace AdventureWorks.SalesOrders
 {
     /// <summary>
     /// Interaction logic for App.xaml
