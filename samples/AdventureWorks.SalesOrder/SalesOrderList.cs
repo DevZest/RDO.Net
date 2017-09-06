@@ -40,7 +40,7 @@ namespace AdventureWorks.SalesOrders
             .GridLineY(new GridPoint(6, 0), 2)
             .GridLineY(new GridPoint(7, 0), 2)
             .GridLineY(new GridPoint(8, 0), 2)
-            .GridLineY(new GridPoint(9, 0), 3, _frozenLine)
+            .GridLineY(new GridPoint(9, 0), 3, _frozenLine, GridPlacement.Head)
             .GridLineY(new GridPoint(10, 0), 3)
             .AddBinding(0, 0, this.AsSelectionCheckBox().WithStyle(CheckBoxStyleKey))
             .AddBinding(0, 1, _.AsSelectionCheckBox().WithStyle(CheckBoxStyleKey))
