@@ -153,6 +153,11 @@
       <Link>AdventureWorksLT_log.ldf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\exit.png" />
+    <Resource Include="Images\find.png" />
+    <Resource Include="Images\delete.png" />
+    <Resource Include="Images\new.png" />
+    <Resource Include="Images\window_background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

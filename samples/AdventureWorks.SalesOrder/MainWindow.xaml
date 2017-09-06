@@ -6,8 +6,55 @@
         xmlns:local="clr-namespace:AdventureWorks.SalesOrders"
         xmlns:dz="clr-namespace:DevZest.Data.Views;assembly=DevZest.Data.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <dz:DataView x:Name="_dataView" />
-    </Grid>
+        Height="500" Width="700" WindowStartupLocation="CenterScreen" WindowState="Normal" WindowStyle="ToolWindow"
+        Title="AdventureWorks.SalesOrders">
+    <Window.Background>
+        <ImageBrush ImageSource="Images/window_background.jpg" Opacity=".5" />
+    </Window.Background>
+    <DockPanel>
+        <!-- TOOLBAR -->
+        <DockPanel DockPanel.Dock="Top" MinHeight="30" Margin="5">
+            <ToolBar FontWeight="Bold">
+                <!-- NEW -->
+                <Button Name="btnNew" Command="{Binding Path=NewCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/new.png" Width="22" Height="22" Margin="2"/>
+                        <Label VerticalAlignment="Center">_New</Label>
+                    </StackPanel>
+                </Button>
+                <!-- DELETE -->
+                <Button Name="btnDelete" Command="{Binding Path=DeleteCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/delete.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Delete</Label>
+                    </StackPanel>
+                </Button>
+                <Separator />
+                <!-- SEARCH -->
+                <Separator />
+                <TextBox 
+                    MinWidth="120" Margin="5"
+                    BorderThickness="1" BorderBrush="LightGray"
+                    FontWeight="Normal" Foreground="Gray" Text="{Binding Path=SearchText}">
+                </TextBox>
+                <Button Name="btnSearch" Command="{Binding Path=FindCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/find.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Find</Label>
+                    </StackPanel>
+                </Button>
+                <!-- EXIT -->
+                <Separator />
+                <Button Name="btnExit" Command="{Binding Path=ExitCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/exit.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Exit</Label>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </DockPanel>
+        <Border Background="White" Margin="5">
+            <dz:DataView x:Name="_dataView" />
+        </Border>
+    </DockPanel>
 </Window>
