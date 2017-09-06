@@ -91,40 +91,67 @@ namespace DevZest.Data.Presenters
                 _onRefresh(element, scalarPresenter);
                 scalarPresenter.SetErrors(null, null);
             }
-            //element.RefreshValidation(flushError ?? valueError, AbstractValidationMessageGroup.Empty);
+            RefreshValidation(element);
         }
 
-        //public FlushErrorMessage GetFlushError()
-        //{
-        //    var scalarBinding = ScalarBinding;
-        //    var element = scalarBinding[0];
-        //    if (element != null)
-        //    {
-        //        var inputError = GetFlushError(element);
-        //        if (inputError != null)
-        //            return inputError;
-        //    }
-        //    return null;
-        //}
+        private void RefreshValidation(T element)
+        {
+            element.RefreshValidation(() => GetFlushError(element), () => Errors, () => Warnings);
+        }
 
-        //public IColumnValidationMessages GetErrors(RowPresenter rowPresenter)
-        //{
-        //    var result = ColumnValidationMessages.Empty;
-        //    result = AddValidationMessages(result, InputManager.RowValidationErrors, rowPresenter, x => IsVisible(x, rowPresenter, true));
-        //    result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Error);
-        //    result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Error && IsVisible(x, rowPresenter, false));
-        //    return result;
-        //}
+        public IScalarValidationMessages Errors
+        {
+            get
+            {
+                var result = ScalarValidationMessages.Empty;
+                result = AddValidationMessages(result, InputManager.ScalarValidationErrors, x => IsVisible(x, true));
+                result = AddAsyncValidationMessages(result, ValidationSeverity.Error);
+                result = AddValidationMessages(result, InputManager.AssignedScalarValidationResults, x => x.Severity == ValidationSeverity.Error && IsVisible(x, false));
+                return result;
+            }
+        }
 
-        //public IColumnValidationMessages GetWarnings(RowPresenter rowPresenter)
-        //{
-        //    var result = ColumnValidationMessages.Empty;
-        //    result = AddValidationMessages(result, InputManager.RowValidationWarnings, rowPresenter, x => IsVisible(x, rowPresenter, true));
-        //    result = AddAsyncValidationMessages(result, rowPresenter, ValidationSeverity.Warning);
-        //    result = AddValidationMessages(result, InputManager.AssignedRowValidationResults, rowPresenter, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, rowPresenter, false));
-        //    return result;
-        //}
+        public IScalarValidationMessages Warnings
+        {
+            get
+            {
+                var result = ScalarValidationMessages.Empty;
+                result = AddValidationMessages(result, InputManager.ScalarValidationWarnings, x => IsVisible(x, true));
+                result = AddAsyncValidationMessages(result, ValidationSeverity.Warning);
+                result = AddValidationMessages(result, InputManager.AssignedScalarValidationResults, x => x.Severity == ValidationSeverity.Warning && IsVisible(x, false));
+                return result;
+            }
+        }
 
+        private bool IsVisible(ScalarValidationMessage validationMessage, bool progressVisible)
+        {
+            var source = validationMessage.Source;
+            return source.SetEquals(Target) && InputManager.ScalarValidationProgress.IsVisible(source) == progressVisible;
+        }
+
+        private static IScalarValidationMessages AddValidationMessages(IScalarValidationMessages result, IScalarValidationMessages messages, Func<ScalarValidationMessage, bool> predict)
+        {
+            for (int i = 0; i < messages.Count; i++)
+            {
+                var message = messages[i];
+                if (predict(message))
+                    result = result.Add(message);
+            }
+            return result;
+        }
+
+        private IScalarValidationMessages AddAsyncValidationMessages(IScalarValidationMessages result, ValidationSeverity severity)
+        {
+            var asyncValidators = Template.ScalarAsyncValidators;
+            for (int i = 0; i < asyncValidators.Count; i++)
+            {
+                var asyncValidator = asyncValidators[i];
+                var messages = severity == ValidationSeverity.Error ? asyncValidator.Errors : asyncValidator.Warnings;
+                result = AddValidationMessages(result, messages, x => IsVisible(x, true));
+            }
+
+            return result;
+        }
 
         public ScalarInput<T> WithRefreshAction(Action<T, ScalarPresenter> onRefresh)
         {

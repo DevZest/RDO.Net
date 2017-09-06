@@ -53,15 +53,7 @@ namespace DevZest.Data.Presenters
             return dataSet.CreateManager(buildTemplateAction, (t, d) => new ConcreteElementManager(t, d));
         }
 
-        private sealed class ConcreteInputManager : InputManager
-        {
-            public ConcreteInputManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
-                : base(template, dataSet, where, orderBy, emptyBlockViewList)
-            {
-            }
-        }
-
-        internal static InputManager CreateInputManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
+        internal static ConcreteInputManager CreateInputManager(this DataSet dataSet, Action<TemplateBuilder> buildTemplateAction)
         {
             return dataSet.CreateManager(buildTemplateAction, (t, d) => new ConcreteInputManager(t, d));
         }
@@ -70,5 +62,41 @@ namespace DevZest.Data.Presenters
         {
             return dataSet.CreateManager(buildTemplateAction, (t, d) => LayoutManager.Create(t, d));
         }
+    }
+
+    internal sealed class ConcreteInputManager : InputManager
+    {
+        public ConcreteInputManager(Template template, DataSet dataSet, Predicate<DataRow> where = null, IComparer<DataRow> orderBy = null, bool emptyBlockViewList = false)
+            : base(template, dataSet, where, orderBy, emptyBlockViewList)
+        {
+        }
+
+        private IReadOnlyList<Scalar> _scalars;
+        public ConcreteInputManager WithScalars(IReadOnlyList<Scalar> scalars)
+        {
+            _scalars = scalars;
+            return this;
+        }
+
+        Func<IScalarValidationMessages, IScalarValidationMessages> _validator;
+        public ConcreteInputManager WithValidator(Func<IScalarValidationMessages, IScalarValidationMessages> validator)
+        {
+            _validator = validator;
+            return this;
+        }
+
+        protected override IScalarValidationMessages PerformValidateScalars()
+        {
+            var result = ScalarValidationMessages.Empty;
+            if (_scalars != null)
+            {
+                for (int i = 0; i < _scalars.Count; i++)
+                    result = _scalars[i].Validate(result);
+            }
+            if (_validator != null)
+                result = _validator(result);
+            return result;
+        }
+
     }
 }

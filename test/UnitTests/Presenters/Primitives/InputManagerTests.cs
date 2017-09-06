@@ -87,7 +87,7 @@ namespace DevZest.Data.Presenters.Primitives
                 textBox = scalar.AsTextBox();
                 textBlock = _.Name.AsTextBlock(); // to avoid empty RowRange
                 builder.GridColumns("100").GridRows("100", "100").AddBinding(0, 0, textBox).AddBinding(0, 1, textBlock);
-            });
+            }).WithScalars(new Scalar[] { scalar });
 
             Assert.AreEqual("0", textBox[0].Text);
             Assert.IsNull(inputManager.GetScalarFlushError(textBox[0]));
@@ -115,13 +115,12 @@ namespace DevZest.Data.Presenters.Primitives
 
             textBox[0].Text = "6";
             Assert.AreEqual("6", textBox[0].Text);
-            throw new NotImplementedException();
-            //Assert.IsNotNull(inputManager.GetScalarValueError(textBox[0]));
-            //{
-            //    var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
-            //    Assert.AreEqual(1, errors.Count);
-            //    Assert.AreEqual(inputManager.GetScalarValueError(textBox[0]), errors[0].ErrorContent);
-            //}
+            Assert.IsTrue(inputManager.ScalarValidationErrors.Count == 1);
+            {
+                var errors = System.Windows.Controls.Validation.GetErrors(textBox[0]);
+                Assert.AreEqual(1, errors.Count);
+                Assert.AreEqual(inputManager.ScalarValidationErrors, errors[0].ErrorContent);
+            }
         }
 
         [TestMethod]

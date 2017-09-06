@@ -307,9 +307,7 @@ namespace DevZest.Data.Presenters.Primitives
                 ScalarValidationProgress.ShowAll();
 
             ClearScalarValidationMessages();
-            if (DataPresenter == null)
-                return;
-            var messages = DataPresenter.PerformValidateScalars();
+            var messages = PerformValidateScalars();
             for (int i = 0; i < messages.Count; i++)
             {
                 var message = messages[i];
@@ -318,8 +316,13 @@ namespace DevZest.Data.Presenters.Primitives
                 else
                     ScalarValidationWarnings = ScalarValidationWarnings.Add(message);
             }
-            ScalarValidationErrors.Seal();
-            ScalarValidationWarnings.Seal();
+            ScalarValidationErrors = ScalarValidationErrors.Seal();
+            ScalarValidationWarnings = ScalarValidationWarnings.Seal();
+        }
+
+        protected virtual IScalarValidationMessages PerformValidateScalars()
+        {
+            return DataPresenter == null ? ScalarValidationMessages.Empty : DataPresenter.PerformValidateScalars();
         }
 
         private void ClearScalarValidationMessages()
