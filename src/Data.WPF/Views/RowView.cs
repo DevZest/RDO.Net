@@ -118,7 +118,7 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
-            DataPresenter.OnSetup(this);
+            DataPresenter?.OnSetup(this);
         }
 
         internal sealed override void Cleanup()
@@ -126,7 +126,7 @@ namespace DevZest.Data.Views
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
 
-            DataPresenter.OnCleanup(this);
+            DataPresenter?.OnCleanup(this);
             CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
@@ -221,7 +221,7 @@ namespace DevZest.Data.Views
             }
 
             EnsureCommandEntriesSetup();
-            DataPresenter.OnRefresh(this);
+            DataPresenter?.OnRefresh(this);
             Refreshing(this, EventArgs.Empty);
         }
 

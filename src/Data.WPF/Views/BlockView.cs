@@ -46,7 +46,7 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements();
-            DataPresenter.OnSetup(this);
+            DataPresenter?.OnSetup(this);
         }
 
         public override void OnApplyTemplate()
@@ -112,7 +112,7 @@ namespace DevZest.Data.Views
 
         internal sealed override void Cleanup()
         {
-            DataPresenter.OnCleanup(this);
+            DataPresenter?.OnCleanup(this);
             CleanupElements();
             _elementManager = null;
             _ordinal = -1;
@@ -269,7 +269,7 @@ namespace DevZest.Data.Views
                 Refresh(blockBindings[i], index++);
 
             OnRefresh();
-            DataPresenter.OnRefresh(this);
+            DataPresenter?.OnRefresh(this);
         }
 
         private void Refresh(BlockBinding blockBinding, int index)

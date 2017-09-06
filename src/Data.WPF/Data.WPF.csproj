@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="Presenters\AsyncValidator.cs" />
     <Compile Include="Presenters\BindingFactory.CheckBox.cs" />
+    <Compile Include="Presenters\BindingFactory.Label.cs" />
     <Compile Include="Presenters\IScalarAsyncValidators.cs" />
     <Compile Include="Presenters\IScalars.cs" />
     <Compile Include="Presenters\IScalarValidationMessages.cs" />

@@ -79,27 +79,6 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<Label> AsLabel<TTarget>(this Column source, RowBinding<TTarget> target = null, string format = null, IFormatProvider formatProvider = null)
-            where TTarget : UIElement, new()
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new RowBinding<Label>(
-                onSetup: (e, r) =>
-                {
-                    e.Content = source.DisplayName.ToString(format, formatProvider);
-                    if (target != null)
-                        e.Target = target.SettingUpElement;
-                },
-                onRefresh: (e, r) =>
-                {
-                },
-                onCleanup: (e, r) =>
-                {
-                });
-        }
-
         public static RowBinding<RowHeader> AsRowHeader(this Model source)
         {
             return new RowBinding<RowHeader>(onRefresh: null);
