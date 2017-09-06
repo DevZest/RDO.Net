@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using DevZest.Data.Presenters;
 using System.Globalization;
+using DevZest.Data.Views;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -66,6 +67,15 @@ namespace AdventureWorks.SalesOrders
                     v.Text = "Total: ";
                 }, onRefresh: null, onCleanup: null).WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => v.Text = string.Format("{0:C}", Rows.Sum(x => x.GetValue(_.TotalDue)))).WithStyle(RightAlignedTextBlockStyleKey));
+        }
+
+        protected override void OnSetup(RowView rowView)
+        {
+            var index = rowView.RowPresenter.Index;
+            if (index % 2 == 1)
+                rowView.Background = Brushes.LightGray;
+            else
+                rowView.Background = Brushes.White;
         }
     }
 }

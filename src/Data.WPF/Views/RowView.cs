@@ -110,7 +110,7 @@ namespace DevZest.Data.Views
             Setup(elementManager.Rows[containerOrdinal]);
         }
 
-        internal virtual void Setup(RowPresenter rowPresenter)
+        internal void Setup(RowPresenter rowPresenter)
         {
             Debug.Assert(RowPresenter == null && rowPresenter != null);
             RowPresenter = rowPresenter;
@@ -118,6 +118,7 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
+            DataPresenter.OnSetup(this);
         }
 
         internal sealed override void Cleanup()
@@ -125,6 +126,7 @@ namespace DevZest.Data.Views
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
 
+            DataPresenter.OnCleanup(this);
             CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
@@ -219,6 +221,7 @@ namespace DevZest.Data.Views
             }
 
             EnsureCommandEntriesSetup();
+            DataPresenter.OnRefresh(this);
             Refreshing(this, EventArgs.Empty);
         }
 

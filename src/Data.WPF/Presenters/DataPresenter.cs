@@ -397,5 +397,29 @@ namespace DevZest.Data.Presenters
         {
             return result;
         }
+
+        protected internal virtual void OnSetup(RowView rowView)
+        {
+        }
+
+        protected internal virtual void OnRefresh(RowView rowView)
+        {
+        }
+
+        protected internal virtual void OnCleanup(RowView rowView)
+        {
+        }
+
+        protected internal virtual void OnSetup(BlockView blockView)
+        {
+        }
+
+        protected internal virtual void OnRefresh(BlockView blockView)
+        {
+        }
+
+        protected internal virtual void OnCleanup(BlockView blockView)
+        {
+        }
     }
 }
