@@ -39,33 +39,33 @@ namespace DevZest.Data.Presenters
         public static RowBinding<TextBox> AsTextBox(this _String source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source);
-            }).WithInput(flushTrigger, source, e => string.IsNullOrEmpty(e.Text) ? null : e.Text);
+                v.Text = p.GetValue(source);
+            }).WithInput(flushTrigger, source, v => string.IsNullOrEmpty(v.Text) ? null : v.Text);
         }
 
         public static RowBinding<TextBox> AsTextBox(this _Int16 source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source).ToString();
+                v.Text = p.GetValue(source).ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int16.Parse(e.Text);
+                    return Int16.Parse(v.Text);
             })
             .EndInput();
         }
@@ -74,24 +74,24 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source).ToString();
+                v.Text = p.GetValue(source).ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? null
+                return Int32.TryParse(v.Text, out result) ? null
                 : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int32.Parse(e.Text);
+                    return Int32.Parse(v.Text);
             })
             .EndInput();
         }
@@ -100,23 +100,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source).ToString();
+                v.Text = p.GetValue(source).ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int64.Parse(e.Text);
+                    return Int64.Parse(v.Text);
             })
             .EndInput();
         }
@@ -125,23 +125,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source).ToString();
+                v.Text = p.GetValue(source).ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Single result;
-                return Single.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Single.Parse(e.Text);
+                    return Single.Parse(v.Text);
             })
             .EndInput();
         }
@@ -150,23 +150,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new RowBinding<TextBox>(onRefresh: (e, r) =>
+            return new RowBinding<TextBox>(onRefresh: (v, p) =>
             {
-                e.Text = r.GetValue(source).ToString();
+                v.Text = p.GetValue(source).ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Double result;
-                return Double.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Double.Parse(e.Text);
+                    return Double.Parse(v.Text);
             })
             .EndInput();
         }
@@ -174,33 +174,33 @@ namespace DevZest.Data.Presenters
         public static ScalarBinding<TextBox> AsTextBox(this Scalar<String> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged)
         {
             var trigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value;
-            }).WithInput(trigger, source, e => e.Text);
+                v.Text = source.Value;
+            }).WithInput(trigger, source, v => v.Text);
         }
 
         public static ScalarBinding<TextBox> AsTextBox(this Scalar<Int16?> source, UpdateSourceTrigger updateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
             }, flushErrorDescription)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int16.Parse(e.Text);
+                    return Int16.Parse(v.Text);
             })
             .EndInput();
         }
@@ -209,23 +209,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
+                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int32.Parse(e.Text);
+                    return Int32.Parse(v.Text);
             })
             .EndInput();
         }
@@ -234,23 +234,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Int64.Parse(e.Text);
+                    return Int64.Parse(v.Text);
             })
             .EndInput();
         }
@@ -259,23 +259,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Single result;
-                return Single.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Single.Parse(e.Text);
+                    return Single.Parse(v.Text);
             })
             .EndInput();
         }
@@ -284,23 +284,23 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 Double result;
-                return Double.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                if (string.IsNullOrEmpty(e.Text))
+                if (string.IsNullOrEmpty(v.Text))
                     return null;
                 else
-                    return Double.Parse(e.Text);
+                    return Double.Parse(v.Text);
             })
             .EndInput();
         }
@@ -309,18 +309,18 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
                 Int16 result;
-                return Int16.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
+                return Int16.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int16));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                return Int16.Parse(e.Text);
+                return Int16.Parse(v.Text);
             })
             .EndInput();
         }
@@ -329,18 +329,18 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
                 Int32 result;
-                return Int32.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
+                return Int32.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int32));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                return Int32.Parse(e.Text);
+                return Int32.Parse(v.Text);
             })
             .EndInput();
         }
@@ -349,18 +349,18 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
                 Int64 result;
-                return Int64.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
+                return Int64.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Int64));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                return Int64.Parse(e.Text);
+                return Int64.Parse(v.Text);
             })
             .EndInput();
         }
@@ -369,18 +369,18 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
                 Single result;
-                return Single.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
+                return Single.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Single));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                return Single.Parse(e.Text);
+                return Single.Parse(v.Text);
             })
             .EndInput();
         }
@@ -389,18 +389,18 @@ namespace DevZest.Data.Presenters
             string flushErrorId = null, string flushErrorDescription = null)
         {
             var flushTrigger = TextBox.TextProperty.GetUpdateSourceTrigger<TextBox>(updateSourceTrigger);
-            return new ScalarBinding<TextBox>(onRefresh: e =>
+            return new ScalarBinding<TextBox>(onRefresh: v =>
             {
-                e.Text = source.Value.ToString();
+                v.Text = source.Value.ToString();
             }).BeginInput(flushTrigger)
-            .WithFlushValidator(e =>
+            .WithFlushValidator(v =>
             {
                 Double result;
-                return Double.TryParse(e.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
+                return Double.TryParse(v.Text, out result) ? null : GetInvalidInputErrorMessage(flushErrorDescription, typeof(Double));
             }, flushErrorId)
-            .WithFlush(source, e =>
+            .WithFlush(source, v =>
             {
-                return Double.Parse(e.Text);
+                return Double.Parse(v.Text);
             })
             .EndInput();
         }
