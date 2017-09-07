@@ -4,6 +4,7 @@
     <Style x:Key="{x:Static local:SalesOrderList.CheckBoxStyleKey}" TargetType="CheckBox">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Focusable" Value="False" />
     </Style>
     <Style x:Key="{x:Static local:SalesOrderList.LeftAlignedTextBlockStyleKey}" TargetType="TextBlock">
         <Setter Property="Margin" Value="2" />
