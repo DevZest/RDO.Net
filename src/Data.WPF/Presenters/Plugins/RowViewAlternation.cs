@@ -28,14 +28,14 @@ namespace DevZest.Data.Presenters.Plugins
 
         protected override void Setup(RowView rowView)
         {
-            if (_backgroudnBrushes.Length == 0)
-                return;
-
-            rowView.Background = _backgroudnBrushes[rowView.RowPresenter.Index % AlternationCount];
         }
 
         protected override void Refresh(RowView rowView)
         {
+            if (_backgroudnBrushes.Length == 0)
+                return;
+
+            rowView.Background = _backgroudnBrushes[rowView.RowPresenter.Index % AlternationCount];
         }
 
         protected override void Cleanup(RowView rowView)

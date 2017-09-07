@@ -54,7 +54,10 @@ namespace DevZest.Data.Views
             SetupElements();
             var plugins = Plugins;
             for (int i = 0; i < plugins.Count; i++)
+            {
                 plugins[i].Setup(this);
+                plugins[i].Refresh(this);
+            }
         }
 
         public override void OnApplyTemplate()

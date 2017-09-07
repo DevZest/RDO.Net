@@ -126,7 +126,10 @@ namespace DevZest.Data.Views
             SetupElements(true);
             var plugins = Plugins;
             for (int i = 0; i < plugins.Count; i++)
+            {
                 plugins[i].Setup(this);
+                plugins[i].Refresh(this);
+            }
         }
 
         internal sealed override void Cleanup()
