@@ -733,7 +733,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (_scrollToMainPlacement == GridPlacement.Tail)
             {
                 _scrollToMainPlacement = GridPlacement.Head;
-                var delta = GridTracksMain.AvailableLength - FrozenTailLengthMain;
+                var delta = GridTracksMain.AvailableLength - FrozenTailLengthMain - FrozenHeadLengthMain;
                 AdjustScrollToMain(-delta, true);
             }
         }

@@ -28,7 +28,7 @@ namespace AdventureWorks.SalesOrders
         protected override void BuildTemplate(TemplateBuilder builder)
         {
             builder.GridColumns("20", "50", "70", "70", "75", "60", "100", "70", "70", "70")
-            .GridRows("Auto", "Auto", "20")
+            .GridRows("Auto", "Auto", "Auto")
             .Layout(Orientation.Vertical)
             .WithFrozenLeft(2).WithFrozenRight(1).WithFrozenTop(1).WithFrozenBottom(1).WithStretches(1)
             .GridLineX(new GridPoint(0, 1), 10)
