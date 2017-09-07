@@ -748,11 +748,11 @@ namespace DevZest.Data.Presenters.Primitives
         private void AdjustToFillGap()
         {
             var headGapToAdjust = HeadGapToAdjust;
-            if (headGapToAdjust > 0)
+            if (headGapToAdjust > 0 && !headGapToAdjust.IsClose(0))
                 AdjustScrollToMain(-headGapToAdjust, true);
 
             var tailGapToAdjust = TailGapToAdjust;
-            if (tailGapToAdjust > 0)
+            if (tailGapToAdjust > 0 && !tailGapToAdjust.IsClose(0))
                 AdjustScrollToMain(-tailGapToAdjust, true);
         }
 
