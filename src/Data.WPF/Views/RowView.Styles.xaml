@@ -8,9 +8,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RowView}">
-                    <local:RowSelector>
-                        <primitives:RowViewPanel x:Name="PART_Panel" />
-                    </local:RowSelector>
+                    <Border BorderThickness="0" Background="{TemplateBinding Background}">
+                        <local:RowSelector>
+                            <primitives:RowViewPanel x:Name="PART_Panel" />
+                        </local:RowSelector>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

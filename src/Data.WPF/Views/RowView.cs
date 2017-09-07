@@ -7,6 +7,7 @@ using DevZest.Data.Views.Primitives;
 using DevZest.Data.Presenters;
 using System;
 using DevZest.Data.Presenters.Services;
+using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Views
 {
@@ -59,6 +60,11 @@ namespace DevZest.Data.Views
         internal sealed override ElementManager ElementManager
         {
             get { return _elementManager; }
+        }
+
+        private IReadOnlyList<IRowViewPlugin> Plugins
+        {
+            get { return _elementManager.Template.RowViewPlugins; }
         }
 
         internal RowBindingCollection RowBindings
@@ -118,7 +124,9 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements(true);
-            DataPresenter?.OnSetup(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Setup(this);
         }
 
         internal sealed override void Cleanup()
@@ -126,7 +134,9 @@ namespace DevZest.Data.Views
             Debug.Assert(RowPresenter != null);
             Debug.Assert(ElementCollection != null);
 
-            DataPresenter?.OnCleanup(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Cleanup(this);
             CleanupElements(true);
             RowPresenter.View = null;
             RowPresenter = null;
@@ -221,7 +231,9 @@ namespace DevZest.Data.Views
             }
 
             EnsureCommandEntriesSetup();
-            DataPresenter?.OnRefresh(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Refresh(this);
             Refreshing(this, EventArgs.Empty);
         }
 

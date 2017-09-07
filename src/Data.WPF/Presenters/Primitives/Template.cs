@@ -1,4 +1,5 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Presenters.Plugins;
 using DevZest.Data.Primitives;
 using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
@@ -540,6 +541,46 @@ namespace DevZest.Data.Presenters.Primitives
                     _blockPresenter = new BlockPresenter(this);
                 return _blockPresenter;
             }
+        }
+
+        private List<IBlockViewPlugin> _blockViewPlugins;
+        public IReadOnlyList<IBlockViewPlugin> BlockViewPlugins
+        {
+            get
+            {
+                if (_blockViewPlugins == null)
+                    return Array<IBlockViewPlugin>.Empty;
+                else
+                    return _blockViewPlugins;
+            }
+        }
+
+        internal void AddPlugin(IBlockViewPlugin plugin)
+        {
+            Debug.Assert(plugin != null);
+            if (_blockViewPlugins == null)
+                _blockViewPlugins = new List<IBlockViewPlugin>();
+            _blockViewPlugins.Add(plugin);
+        }
+
+        internal List<IRowViewPlugin> _rowViewPlugins;
+        public IReadOnlyList<IRowViewPlugin> RowViewPlugins
+        {
+            get
+            {
+                if (_rowViewPlugins == null)
+                    return Array<IRowViewPlugin>.Empty;
+                else
+                    return _rowViewPlugins;
+            }
+        }
+
+        internal void AddPlugin(IRowViewPlugin plugin)
+        {
+            Debug.Assert(plugin != null);
+            if (_rowViewPlugins == null)
+                _rowViewPlugins = new List<Plugins.IRowViewPlugin>();
+            _rowViewPlugins.Add(plugin);
         }
     }
 }

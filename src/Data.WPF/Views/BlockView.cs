@@ -6,6 +6,7 @@ using System.Windows;
 using System.Collections;
 using DevZest.Data.Presenters;
 using DevZest.Data.Views.Primitives;
+using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Views
 {
@@ -34,9 +35,14 @@ namespace DevZest.Data.Views
             SetValue(CurrentPropertyKey, this);
         }
 
-        private DataPresenter DataPresenter
+        public DataPresenter DataPresenter
         {
             get { return _elementManager.DataPresenter; }
+        }
+
+        private IReadOnlyList<IBlockViewPlugin> Plugins
+        {
+            get { return _elementManager.Template.BlockViewPlugins; }
         }
 
         internal sealed override void Setup(ElementManager elementManager, int ordinal)
@@ -46,7 +52,9 @@ namespace DevZest.Data.Views
             if (ElementCollection == null)
                 ElementCollection = ElementCollectionFactory.Create(null);
             SetupElements();
-            DataPresenter?.OnSetup(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Setup(this);
         }
 
         public override void OnApplyTemplate()
@@ -112,7 +120,9 @@ namespace DevZest.Data.Views
 
         internal sealed override void Cleanup()
         {
-            DataPresenter?.OnCleanup(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Cleanup(this);
             CleanupElements();
             _elementManager = null;
             _ordinal = -1;
@@ -269,7 +279,9 @@ namespace DevZest.Data.Views
                 Refresh(blockBindings[i], index++);
 
             OnRefresh();
-            DataPresenter?.OnRefresh(this);
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Refresh(this);
         }
 
         private void Refresh(BlockBinding blockBinding, int index)

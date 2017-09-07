@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Linq;
 using DevZest.Data.Views;
+using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Presenters
 {
@@ -332,6 +333,24 @@ namespace DevZest.Data.Presenters
 
             var gridLine = new GridLine(startGridPoint, new GridPoint(endGridPointX, endGridPointY), pen, placement);
             Template.AddGridLine(gridLine);
+            return this;
+        }
+
+        public TemplateBuilder AddPlugin(IBlockViewPlugin plugin)
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+
+            Template.AddPlugin(plugin);
+            return this;
+        }
+
+        public TemplateBuilder AddPlugin(IRowViewPlugin plugin)
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+
+            Template.AddPlugin(plugin);
             return this;
         }
     }
