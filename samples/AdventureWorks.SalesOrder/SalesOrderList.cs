@@ -8,6 +8,7 @@ using DevZest.Data.Presenters;
 using System.Globalization;
 using DevZest.Data.Views;
 using DevZest.Data.Presenters.Plugins;
+using System;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -23,6 +24,16 @@ namespace AdventureWorks.SalesOrders
         {
             _frozenLine = new Pen(Brushes.Black, 1);
             _frozenLine.Freeze();
+        }
+
+        private decimal? CalcTotalAmt()
+        {
+            return Rows.Sum(x => x.GetValue(_.TotalDue));
+        }
+
+        private Func<decimal?> CalcTotalAmtFunc
+        {
+            get { return CalcTotalAmt; }
         }
 
         protected override void BuildTemplate(TemplateBuilder builder)
@@ -67,7 +78,7 @@ namespace AdventureWorks.SalesOrders
                 {
                     v.Text = "Total: ";
                 }, onRefresh: null, onCleanup: null).WithStyle(RightAlignedTextBlockStyleKey))
-            .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => v.Text = string.Format("{0:C}", Rows.Sum(x => x.GetValue(_.TotalDue)))).AddPlugin(new TotalAmtConditionalFormat(_))
+            .AddBinding(9, 2, CalcTotalAmtFunc.AsTextBlock("{0:C}").AddPlugin(new TotalAmtConditionalFormat(CalcTotalAmtFunc))
                 .WithStyle(RightAlignedTextBlockStyleKey))
             .AddPlugin(new RowViewAlternation());
         }

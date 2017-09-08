@@ -11,12 +11,12 @@ namespace AdventureWorks.SalesOrders
 {
     public sealed class TotalAmtConditionalFormat : ScalarBindingPlugin<TextBlock>
     {
-        public TotalAmtConditionalFormat(SalesOrder salesOrder)
+        public TotalAmtConditionalFormat(Func<decimal?> calculation)
         {
-            _ = salesOrder;
+            _calculation = calculation;
         }
 
-        private SalesOrder _;
+        private Func<decimal?> _calculation;
 
         protected override void Setup(TextBlock view, ScalarPresenter presenter)
         {
@@ -24,7 +24,7 @@ namespace AdventureWorks.SalesOrders
 
         protected override void Refresh(TextBlock view, ScalarPresenter presenter)
         {
-            view.FontWeight = presenter.DataPresenter.Rows.Sum(x => x.GetValue(_.TotalDue)) >= 10000 ? FontWeights.Bold : FontWeights.Normal;
+            view.FontWeight = _calculation() >= 10000 ? FontWeights.Bold : FontWeights.Normal;
         }
 
         protected override void Cleanup(TextBlock view, ScalarPresenter presenter)

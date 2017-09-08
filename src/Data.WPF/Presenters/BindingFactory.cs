@@ -108,18 +108,6 @@ namespace DevZest.Data.Presenters
                 });
         }
 
-        public static RowBinding<TextBlock> AsTextBlock(this Column source, string format = null, IFormatProvider formatProvider = null)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new RowBinding<TextBlock>(
-                onRefresh: (e, r) =>
-                {
-                    e.Text = source.GetValue(r.DataRow).ToString(format, formatProvider);
-                });
-        }
-
         public static RowBinding<ValidationView> AsValidationView<T>(this RowInput<T> source)
             where T : UIElement, new()
         {
