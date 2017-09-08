@@ -24,5 +24,15 @@ namespace DevZest.Data.Presenters.Plugins
             scalarBinding.InternalAddPlugin(plugin);
             return scalarBinding;
         }
+
+        public static BlockBinding<T> AddPlugin<T, TPlugin>(this BlockBinding<T> blockBinding, BlockBindingPlugin<TPlugin> plugin)
+            where TPlugin : UIElement, new()
+            where T : TPlugin, new()
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+            blockBinding.InternalAddPlugin(plugin);
+            return blockBinding;
+        }
     }
 }

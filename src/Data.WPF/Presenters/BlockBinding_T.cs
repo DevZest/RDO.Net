@@ -3,6 +3,8 @@ using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Collections.Generic;
+using DevZest.Data.Presenters.Plugins;
 
 namespace DevZest.Data.Presenters
 {
@@ -66,6 +68,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onSetup;
         private void Setup(T element, BlockPresenter blockPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Setup(element, blockPresenter);
             if (_onSetup != null)
                 _onSetup(element, blockPresenter);
             var blockElement = element as IBlockElement;
@@ -76,6 +81,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onRefresh;
         private void Refresh(T element, BlockPresenter blockPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Refresh(element, blockPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, blockPresenter);
             var blockElement = element as IBlockElement;
@@ -86,6 +94,9 @@ namespace DevZest.Data.Presenters
         private Action<T, BlockPresenter> _onCleanup;
         private void Cleanup(T element, BlockPresenter blockPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Cleanup(element, blockPresenter);
             var blockElement = element as IBlockElement;
             if (blockElement != null)
                 blockElement.Cleanup(blockPresenter);
@@ -135,6 +146,26 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(overrideCleanup));
             _onCleanup = _onRefresh.Override(overrideCleanup);
             return this;
+        }
+
+        private List<IBlockBindingPlugin> _plugins;
+        public IReadOnlyList<IBlockBindingPlugin> Plugins
+        {
+            get
+            {
+                if (_plugins == null)
+                    return Array<IBlockBindingPlugin>.Empty;
+                else
+                    return _plugins;
+            }
+        }
+
+        internal void InternalAddPlugin(IBlockBindingPlugin plugin)
+        {
+            Debug.Assert(plugin != null);
+            if (_plugins == null)
+                _plugins = new List<IBlockBindingPlugin>();
+            _plugins.Add(plugin);
         }
     }
 }
