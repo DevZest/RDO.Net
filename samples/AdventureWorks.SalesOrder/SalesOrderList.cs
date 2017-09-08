@@ -62,12 +62,13 @@ namespace AdventureWorks.SalesOrders
             .AddBinding(8, 0, _.TaxAmt.AsColumnHeader("Tax Amt"))
             .AddBinding(8, 1, _.TaxAmt.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(9, 0, _.TaxAmt.AsColumnHeader("Total Due"))
-            .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey).AddPlugin(new TotalAmtConditionalFormat(_.TotalDue)))
+            .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey).AddPlugin(new TotalDueConditionalFormat(_.TotalDue)))
             .AddBinding(2, 2, 8, 2, new ScalarBinding<TextBlock>(onSetup: (v, p) =>
                 {
                     v.Text = "Total: ";
                 }, onRefresh: null, onCleanup: null).WithStyle(RightAlignedTextBlockStyleKey))
-            .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => v.Text = string.Format("{0:C}", Rows.Sum(x => x.GetValue(_.TotalDue)))).WithStyle(RightAlignedTextBlockStyleKey))
+            .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => v.Text = string.Format("{0:C}", Rows.Sum(x => x.GetValue(_.TotalDue)))).AddPlugin(new TotalAmtConditionalFormat(_))
+                .WithStyle(RightAlignedTextBlockStyleKey))
             .AddPlugin(new RowViewAlternation());
         }
     }

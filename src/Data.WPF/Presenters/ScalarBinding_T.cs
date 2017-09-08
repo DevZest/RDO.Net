@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Presenters.Primitives;
+﻿using DevZest.Data.Presenters.Plugins;
+using DevZest.Data.Presenters.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -137,6 +138,9 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onSetup;
         private void Setup(T element, ScalarPresenter scalarPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Setup(element, scalarPresenter);
             if (_onSetup != null)
                 _onSetup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
@@ -154,6 +158,9 @@ namespace DevZest.Data.Presenters
         private void Refresh(T element, ScalarPresenter scalarPresenter)
         {
             _isRefreshing = true;
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Refresh(element, scalarPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
@@ -165,6 +172,9 @@ namespace DevZest.Data.Presenters
         private Action<T, ScalarPresenter> _onCleanup;
         private void Cleanup(T element, ScalarPresenter scalarPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Cleanup(element, scalarPresenter);
             var scalarElement = element as IScalarElement;
             if (scalarElement != null)
                 scalarElement.Cleanup(scalarPresenter);
@@ -238,6 +248,26 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(overrideCleanup));
             _onCleanup = _onRefresh.Override(overrideCleanup);
             return this;
+        }
+
+        private List<IScalarBindingPlugin> _plugins;
+        public IReadOnlyList<IScalarBindingPlugin> Plugins
+        {
+            get
+            {
+                if (_plugins == null)
+                    return Array<IScalarBindingPlugin>.Empty;
+                else
+                    return _plugins;
+            }
+        }
+
+        internal void InternalAddPlugin(IScalarBindingPlugin plugin)
+        {
+            Debug.Assert(plugin != null);
+            if (_plugins == null)
+                _plugins = new List<IScalarBindingPlugin>();
+            _plugins.Add(plugin);
         }
     }
 }

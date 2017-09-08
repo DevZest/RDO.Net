@@ -14,5 +14,15 @@ namespace DevZest.Data.Presenters.Plugins
             rowBinding.InternalAddPlugin(plugin);
             return rowBinding;
         }
+
+        public static ScalarBinding<T> AddPlugin<T, TPlugin>(this ScalarBinding<T> scalarBinding, ScalarBindingPlugin<TPlugin> plugin)
+            where TPlugin : UIElement, new()
+            where T : TPlugin, new()
+        {
+            if (plugin == null)
+                throw new ArgumentNullException(nameof(plugin));
+            scalarBinding.InternalAddPlugin(plugin);
+            return scalarBinding;
+        }
     }
 }

@@ -4,28 +4,30 @@ using System.Windows.Controls;
 using DevZest.Data.Presenters;
 using System;
 using System.Windows;
+using DevZest.Samples.AdventureWorksLT;
+using System.Linq;
 
 namespace AdventureWorks.SalesOrders
 {
-    public sealed class TotalAmtConditionalFormat : RowBindingPlugin<TextBlock>
+    public sealed class TotalAmtConditionalFormat : ScalarBindingPlugin<TextBlock>
     {
-        public TotalAmtConditionalFormat(_Decimal totalAmt)
+        public TotalAmtConditionalFormat(SalesOrder salesOrder)
         {
-            _totalAmt = totalAmt;
+            _ = salesOrder;
         }
 
-        private _Decimal _totalAmt;
+        private SalesOrder _;
 
-        protected override void Setup(TextBlock view, RowPresenter presenter)
+        protected override void Setup(TextBlock view, ScalarPresenter presenter)
         {
         }
 
-        protected override void Refresh(TextBlock view, RowPresenter presenter)
+        protected override void Refresh(TextBlock view, ScalarPresenter presenter)
         {
-            view.FontWeight = presenter.GetValue(_totalAmt) >= 10000 ? FontWeights.Bold : FontWeights.Normal;
+            view.FontWeight = presenter.DataPresenter.Rows.Sum(x => x.GetValue(_.TotalDue)) >= 10000 ? FontWeights.Bold : FontWeights.Normal;
         }
 
-        protected override void Cleanup(TextBlock view, RowPresenter presenter)
+        protected override void Cleanup(TextBlock view, ScalarPresenter presenter)
         {
         }
     }
