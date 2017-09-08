@@ -17,6 +17,7 @@ namespace AdventureWorks.SalesOrders
         public static readonly StyleKey CheckBoxStyleKey = new StyleKey(typeof(SalesOrderList));
         public static readonly StyleKey LeftAlignedTextBlockStyleKey = new StyleKey(typeof(SalesOrderList));
         public static readonly StyleKey RightAlignedTextBlockStyleKey = new StyleKey(typeof(SalesOrderList));
+        public static readonly StyleKey LabelStyleKey = new StyleKey(typeof(SalesOrderList));
 
         private readonly Pen _frozenLine;
         
@@ -74,10 +75,7 @@ namespace AdventureWorks.SalesOrders
             .AddBinding(8, 1, _.TaxAmt.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(9, 0, _.TaxAmt.AsColumnHeader("Total Due"))
             .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey).AddPlugin(new TotalDueConditionalFormat(_.TotalDue)))
-            .AddBinding(2, 2, 8, 2, new ScalarBinding<TextBlock>(onSetup: (v, p) =>
-                {
-                    v.Text = "Total: ";
-                }, onRefresh: null, onCleanup: null).WithStyle(RightAlignedTextBlockStyleKey))
+            .AddBinding(2, 2, 8, 2, "Total: ".AsLabel().WithStyle(LabelStyleKey))
             .AddBinding(9, 2, CalcTotalAmtFunc.AsTextBlock("{0:C}").AddPlugin(new TotalAmtConditionalFormat(CalcTotalAmtFunc))
                 .WithStyle(RightAlignedTextBlockStyleKey))
             .AddPlugin(new RowViewAlternation());
