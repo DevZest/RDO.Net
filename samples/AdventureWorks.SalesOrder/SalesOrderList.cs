@@ -73,7 +73,7 @@ namespace AdventureWorks.SalesOrders
             .AddBinding(7, 1, _.SubTotal.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(8, 0, _.TaxAmt.AsColumnHeader("Tax Amt"))
             .AddBinding(8, 1, _.TaxAmt.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
-            .AddBinding(9, 0, _.TaxAmt.AsColumnHeader("Total Due"))
+            .AddBinding(9, 0, _.TotalDue.AsColumnHeader("Total Due"))
             .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey).AddPlugin(new TotalDueConditionalFormat(_.TotalDue)))
             .AddBinding(2, 2, 8, 2, "Total: ".AsLabel().WithStyle(LabelStyleKey))
             .AddBinding(9, 2, CalcTotalAmtFunc.AsTextBlock("{0:C}").AddPlugin(new TotalAmtConditionalFormat(CalcTotalAmtFunc))
