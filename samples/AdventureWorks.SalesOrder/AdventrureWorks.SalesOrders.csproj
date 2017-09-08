@@ -83,6 +83,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="SalesOrderList.cs" />
+    <Compile Include="TotalAmtConditionalFormat.cs" />
     <Page Include="SalesOrderList.Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

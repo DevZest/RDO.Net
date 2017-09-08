@@ -27,7 +27,7 @@ namespace AdventureWorks.SalesOrders
 
         protected override void BuildTemplate(TemplateBuilder builder)
         {
-            builder.GridColumns("20", "50", "70", "70", "75", "60", "100", "70", "70", "70")
+            builder.GridColumns("20", "50", "70", "70", "75", "60", "100", "70", "70", "75")
             .GridRows("Auto", "Auto", "Auto")
             .Layout(Orientation.Vertical)
             .WithFrozenLeft(2).WithFrozenRight(1).WithFrozenTop(1).WithFrozenBottom(1).WithStretches(1)
@@ -62,7 +62,7 @@ namespace AdventureWorks.SalesOrders
             .AddBinding(8, 0, _.TaxAmt.AsColumnHeader("Tax Amt"))
             .AddBinding(8, 1, _.TaxAmt.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(9, 0, _.TaxAmt.AsColumnHeader("Total Due"))
-            .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey))
+            .AddBinding(9, 1, _.TotalDue.AsTextBlock("{0:C}").WithStyle(RightAlignedTextBlockStyleKey).AddPlugin(new TotalAmtConditionalFormat(_.TotalDue)))
             .AddBinding(2, 2, 8, 2, new ScalarBinding<TextBlock>(onSetup: (v, p) =>
                 {
                     v.Text = "Total: ";

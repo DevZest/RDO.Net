@@ -1,6 +1,8 @@
 ﻿using DevZest.Data;
+using DevZest.Data.Presenters.Plugins;
 using DevZest.Data.Presenters.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -77,6 +79,9 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onSetup;
         private void Setup(T element, RowPresenter rowPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Setup(element, rowPresenter);
             if (_onSetup != null)
                 _onSetup(element, rowPresenter);
             var rowElement = element as IRowElement;
@@ -94,6 +99,9 @@ namespace DevZest.Data.Presenters
         internal void Refresh(T element, RowPresenter rowPresenter)
         {
             _isRefreshing = true;
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Refresh(element, rowPresenter);
             if (_onRefresh != null)
                 _onRefresh(element, rowPresenter);
             var rowElement = element as IRowElement;
@@ -105,6 +113,9 @@ namespace DevZest.Data.Presenters
         private Action<T, RowPresenter> _onCleanup;
         private void Cleanup(T element, RowPresenter rowPresenter)
         {
+            var plugins = Plugins;
+            for (int i = 0; i < plugins.Count; i++)
+                plugins[i].Cleanup(element, rowPresenter);
             var rowElement = element as IRowElement;
             if (rowElement != null)
                 rowElement.Cleanup(rowPresenter);
@@ -173,6 +184,26 @@ namespace DevZest.Data.Presenters
                 throw new ArgumentNullException(nameof(overrideCleanup));
             _onCleanup = _onRefresh.Override(overrideCleanup);
             return this;
+        }
+
+        private List<IRowBindingPlugin> _plugins;
+        public IReadOnlyList<IRowBindingPlugin> Plugins
+        {
+            get
+            {
+                if (_plugins == null)
+                    return Array<IRowBindingPlugin>.Empty;
+                else
+                    return _plugins;
+            }
+        }
+
+        internal void InternalAddPlugin(IRowBindingPlugin plugin)
+        {
+            Debug.Assert(plugin != null);
+            if (_plugins == null)
+                _plugins = new List<IRowBindingPlugin>();
+            _plugins.Add(plugin);
         }
     }
 }

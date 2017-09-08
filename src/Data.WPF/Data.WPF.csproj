@@ -51,6 +51,8 @@
     <Compile Include="Presenters\IScalars.cs" />
     <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\Plugins\BlockViewAlternation.cs" />
+    <Compile Include="Presenters\Plugins\Extensions.cs" />
+    <Compile Include="Presenters\Plugins\RowBindingPlugin.cs" />
     <Compile Include="Presenters\Plugins\RowViewAlternation.cs" />
     <Compile Include="Presenters\Plugins\BlockViewPlugin.cs" />
     <Compile Include="Presenters\Plugins\RowViewPlugin.cs" />
