@@ -26,11 +26,11 @@ namespace DevZest.Data.Presenters.Plugins
             get { return _backgroudnBrushes.Length; }
         }
 
-        protected override void Setup(BlockView blockView)
+        protected internal override void Setup(BlockView blockView)
         {
         }
 
-        protected override void Refresh(BlockView blockView)
+        protected internal override void Refresh(BlockView blockView)
         {
             if (_backgroudnBrushes.Length == 0)
                 return;
@@ -38,7 +38,7 @@ namespace DevZest.Data.Presenters.Plugins
             blockView.Background = _backgroudnBrushes[blockView.Ordinal % AlternationCount];
         }
 
-        protected override void Cleanup(BlockView rowView)
+        protected internal override void Cleanup(BlockView rowView)
         {
         }
     }

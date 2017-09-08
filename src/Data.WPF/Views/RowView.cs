@@ -62,7 +62,7 @@ namespace DevZest.Data.Views
             get { return _elementManager; }
         }
 
-        private IReadOnlyList<IRowViewPlugin> Plugins
+        private IReadOnlyList<RowViewPlugin> Plugins
         {
             get { return _elementManager.Template.RowViewPlugins; }
         }

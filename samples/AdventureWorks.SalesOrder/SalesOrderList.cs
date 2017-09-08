@@ -68,8 +68,6 @@ namespace AdventureWorks.SalesOrders
                     v.Text = "Total: ";
                 }, onRefresh: null, onCleanup: null).WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(9, 2, new ScalarBinding<TextBlock>(onRefresh : (v) => v.Text = string.Format("{0:C}", Rows.Sum(x => x.GetValue(_.TotalDue)))).WithStyle(RightAlignedTextBlockStyleKey))
-            .RowView<RowView>(RowView.SelectableStyleKey)
-            .WithSelectionMode(SelectionMode.Extended)
             .AddPlugin(new RowViewAlternation());
         }
     }

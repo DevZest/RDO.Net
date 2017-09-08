@@ -52,8 +52,6 @@
     <Compile Include="Presenters\IScalarValidationMessages.cs" />
     <Compile Include="Presenters\Plugins\BlockViewAlternation.cs" />
     <Compile Include="Presenters\Plugins\RowViewAlternation.cs" />
-    <Compile Include="Presenters\Plugins\IBlockViewPlugin.cs" />
-    <Compile Include="Presenters\Plugins\IRowViewPlugin.cs" />
     <Compile Include="Presenters\Plugins\BlockViewPlugin.cs" />
     <Compile Include="Presenters\Plugins\RowViewPlugin.cs" />
     <Compile Include="Presenters\Primitives\AsyncValidator_T.cs" />

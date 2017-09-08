@@ -543,43 +543,43 @@ namespace DevZest.Data.Presenters.Primitives
             }
         }
 
-        private List<IBlockViewPlugin> _blockViewPlugins;
-        public IReadOnlyList<IBlockViewPlugin> BlockViewPlugins
+        private List<BlockViewPlugin> _blockViewPlugins;
+        public IReadOnlyList<BlockViewPlugin> BlockViewPlugins
         {
             get
             {
                 if (_blockViewPlugins == null)
-                    return Array<IBlockViewPlugin>.Empty;
+                    return Array<BlockViewPlugin>.Empty;
                 else
                     return _blockViewPlugins;
             }
         }
 
-        internal void AddPlugin(IBlockViewPlugin plugin)
+        internal void AddPlugin(BlockViewPlugin plugin)
         {
             Debug.Assert(plugin != null);
             if (_blockViewPlugins == null)
-                _blockViewPlugins = new List<IBlockViewPlugin>();
+                _blockViewPlugins = new List<BlockViewPlugin>();
             _blockViewPlugins.Add(plugin);
         }
 
-        internal List<IRowViewPlugin> _rowViewPlugins;
-        public IReadOnlyList<IRowViewPlugin> RowViewPlugins
+        internal List<RowViewPlugin> _rowViewPlugins;
+        public IReadOnlyList<RowViewPlugin> RowViewPlugins
         {
             get
             {
                 if (_rowViewPlugins == null)
-                    return Array<IRowViewPlugin>.Empty;
+                    return Array<RowViewPlugin>.Empty;
                 else
                     return _rowViewPlugins;
             }
         }
 
-        internal void AddPlugin(IRowViewPlugin plugin)
+        internal void AddPlugin(RowViewPlugin plugin)
         {
             Debug.Assert(plugin != null);
             if (_rowViewPlugins == null)
-                _rowViewPlugins = new List<Plugins.IRowViewPlugin>();
+                _rowViewPlugins = new List<RowViewPlugin>();
             _rowViewPlugins.Add(plugin);
         }
     }

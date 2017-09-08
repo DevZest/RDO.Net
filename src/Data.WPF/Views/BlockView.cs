@@ -40,7 +40,7 @@ namespace DevZest.Data.Views
             get { return _elementManager.DataPresenter; }
         }
 
-        private IReadOnlyList<IBlockViewPlugin> Plugins
+        private IReadOnlyList<BlockViewPlugin> Plugins
         {
             get { return _elementManager.Template.BlockViewPlugins; }
         }

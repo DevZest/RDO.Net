@@ -336,7 +336,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddPlugin(IBlockViewPlugin plugin)
+        public TemplateBuilder AddPlugin(BlockViewPlugin plugin)
         {
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
@@ -345,7 +345,7 @@ namespace DevZest.Data.Presenters
             return this;
         }
 
-        public TemplateBuilder AddPlugin(IRowViewPlugin plugin)
+        public TemplateBuilder AddPlugin(RowViewPlugin plugin)
         {
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
