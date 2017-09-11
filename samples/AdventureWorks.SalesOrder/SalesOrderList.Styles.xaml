@@ -3,7 +3,6 @@
                     xmlns:local="clr-namespace:AdventureWorks.SalesOrders">
     <Style x:Key="DefaultTextBlock" TargetType="TextBlock">
         <Setter Property="Padding" Value="2" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style x:Key="{x:Static local:SalesOrderList.CheckBoxStyleKey}" TargetType="CheckBox">
@@ -19,7 +18,7 @@
     </Style>
     <Style x:Key="{x:Static local:SalesOrderList.LabelStyleKey}" TargetType="Label">
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="HorizontalContentAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 </ResourceDictionary>

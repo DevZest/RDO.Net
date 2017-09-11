@@ -201,6 +201,12 @@
   <data name="Input_TriggerAlreadyInitialized" xml:space="preserve">
     <value>The trigger has already been initialized with another Input.</value>
   </data>
+  <data name="LayoutManager_RenderHeightDifferFromBindingGrid" xml:space="preserve">
+    <value>RenderSize.Height differs from the binding grid. Ensure VerticalAlignment property is "Stretch".</value>
+  </data>
+  <data name="LayoutManager_RenderWidthDifferFromBindingGrid" xml:space="preserve">
+    <value>RenderSize.Width differs from the binding grid. Ensure HorizontalAlignment property is "Stretch".</value>
+  </data>
   <data name="ModelExtensions_ExpressionMustBeStatic" xml:space="preserve">
     <value>The expression must be static.</value>
   </data>

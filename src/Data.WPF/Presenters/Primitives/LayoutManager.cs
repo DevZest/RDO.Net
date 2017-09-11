@@ -319,7 +319,15 @@ namespace DevZest.Data.Presenters.Primitives
                 || double.IsPositiveInfinity(clip.Right) || double.IsPositiveInfinity(clip.Bottom))
                 element.Clip = Geometry.Empty;
             else
-                element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, rect.Width - clip.Left - clip.Right, rect.Height - clip.Top - clip.Bottom));
+            {
+                if (!rect.Width.IsClose(element.RenderSize.Width))
+                    throw new InvalidOperationException(Strings.LayoutManager_RenderWidthDifferFromBindingGrid);
+                if (!rect.Height.IsClose(element.RenderSize.Height))
+                    throw new InvalidOperationException(Strings.LayoutManager_RenderHeightDifferFromBindingGrid);
+                var clipWidth = Math.Max(0, rect.Width - clip.Left - clip.Right);
+                var clipHeight = Math.Max(0, rect.Height - clip.Top - clip.Bottom);
+                element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, clipWidth, clipHeight));
+            }
         }
 
         internal Rect GetRect(ContainerView containerView)
