@@ -32,7 +32,7 @@ namespace DevZest.Data.Presenters.Primitives
             return scalarBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(ScalarBinding scalarBinding, int flowIndex)
+        internal override Thickness GetFrozenClip(ScalarBinding scalarBinding, int flowIndex)
         {
             return new Thickness();
         }
@@ -47,7 +47,7 @@ namespace DevZest.Data.Presenters.Primitives
             return Template.ContainerRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(ContainerView containerView)
+        internal override Thickness GetFrozenClip(ContainerView containerView)
         {
             return new Thickness();
         }
@@ -62,7 +62,7 @@ namespace DevZest.Data.Presenters.Primitives
             return blockBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(BlockView blockView, BlockBinding blockBinding)
+        internal override Thickness GetFrozenClip(BlockView blockView, BlockBinding blockBinding)
         {
             return new Thickness();
         }
@@ -78,7 +78,7 @@ namespace DevZest.Data.Presenters.Primitives
             return Template.RowRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(int flowIndex)
+        internal override Thickness GetFrozenClip(int flowIndex)
         {
             return new Thickness();
         }
@@ -93,7 +93,7 @@ namespace DevZest.Data.Presenters.Primitives
             return rowBinding.GridRange.MeasuredSize;
         }
 
-        internal override Thickness GetClip(RowView rowView, RowBinding rowBinding)
+        internal override Thickness GetFrozenClip(RowView rowView, RowBinding rowBinding)
         {
             return new Thickness();
         }

@@ -289,7 +289,7 @@ namespace DevZest.Data.Presenters.Primitives
             return new Rect(point, size);
         }
 
-        internal abstract Thickness GetClip(ScalarBinding scalarBinding, int flowIndex);
+        internal abstract Thickness GetFrozenClip(ScalarBinding scalarBinding, int flowIndex);
 
         protected abstract Point GetPosition(ScalarBinding scalarBinding, int flowIndex);
 
@@ -301,8 +301,8 @@ namespace DevZest.Data.Presenters.Primitives
                 {
                     var element = scalarBinding[i];
                     var rect = GetRect(scalarBinding, i);
-                    var clip = GetClip(scalarBinding, i);
-                    Arrange(element, rect, clip);
+                    var clip = GetFrozenClip(scalarBinding, i);
+                    Arrange(element, scalarBinding, rect, clip);
                 }
             }
 
@@ -310,23 +310,79 @@ namespace DevZest.Data.Presenters.Primitives
             return finalSize;
         }
 
-        private void Arrange(UIElement element, Rect rect, Thickness clip)
+        private void Arrange(UIElement element, Rect rect, Geometry clip)
         {
             element.Arrange(rect);
-            if (clip.Left == 0 && clip.Top == 0 && clip.Right == 0 && clip.Bottom == 0)
-                element.Clip = null;
-            else if (double.IsPositiveInfinity(clip.Left) || double.IsPositiveInfinity(clip.Top)
-                || double.IsPositiveInfinity(clip.Right) || double.IsPositiveInfinity(clip.Bottom))
-                element.Clip = Geometry.Empty;
+            element.Clip = clip;
+        }
+
+        private void Arrange(UIElement element, Rect rect, Thickness frozenClip)
+        {
+            if (AllZero(frozenClip))
+                Arrange(element, rect, null);
+            else if (AnyPositiveInfinity(frozenClip))
+                Arrange(element, rect, Geometry.Empty);
+            else
+                ArrangeWithClip(element, rect, frozenClip);
+        }
+
+        private void ArrangeWithClip(UIElement element, Rect rect, Thickness frozenClip)
+        {
+            element.Arrange(rect);
+            if (!rect.Width.IsClose(element.RenderSize.Width))
+                throw new InvalidOperationException(Strings.LayoutManager_RenderWidthDifferFromBindingGrid);
+            if (!rect.Height.IsClose(element.RenderSize.Height))
+                throw new InvalidOperationException(Strings.LayoutManager_RenderHeightDifferFromBindingGrid);
+            var clipWidth = Math.Max(0, rect.Width - frozenClip.Left - frozenClip.Right);
+            var clipHeight = Math.Max(0, rect.Height - frozenClip.Top - frozenClip.Bottom);
+            element.Clip = new RectangleGeometry(new Rect(frozenClip.Left, frozenClip.Top, clipWidth, clipHeight));
+        }
+
+        private static bool AllZero(Thickness frozenClip)
+        {
+            return frozenClip.Left == 0 && frozenClip.Top == 0 && frozenClip.Right == 0 && frozenClip.Bottom == 0;
+        }
+
+        private static bool AnyPositiveInfinity(Thickness frozenClip)
+        {
+            return double.IsPositiveInfinity(frozenClip.Left) || double.IsPositiveInfinity(frozenClip.Top)
+                || double.IsPositiveInfinity(frozenClip.Right) || double.IsPositiveInfinity(frozenClip.Bottom);
+        }
+
+        private void Arrange(UIElement element, Binding binding, Rect rect, Thickness frozenClip)
+        {
+            Debug.Assert(binding != null);
+            if (AllZero(frozenClip))
+                Arrange(element, rect, null);
+            else if (AnyPositiveInfinity(frozenClip))
+                Arrange(element, rect, Geometry.Empty);
             else
             {
-                if (!rect.Width.IsClose(element.RenderSize.Width))
-                    throw new InvalidOperationException(Strings.LayoutManager_RenderWidthDifferFromBindingGrid);
-                if (!rect.Height.IsClose(element.RenderSize.Height))
-                    throw new InvalidOperationException(Strings.LayoutManager_RenderHeightDifferFromBindingGrid);
-                var clipWidth = Math.Max(0, rect.Width - clip.Left - clip.Right);
-                var clipHeight = Math.Max(0, rect.Height - clip.Top - clip.Bottom);
-                element.Clip = new RectangleGeometry(new Rect(clip.Left, clip.Top, clipWidth, clipHeight));
+                if (binding.FrozenLeftShrink && frozenClip.Left > 0)
+                {
+                    rect = new Rect(rect.Left + frozenClip.Left, rect.Top, Math.Max(0, rect.Width - frozenClip.Left), rect.Height);
+                    frozenClip = new Thickness(0, frozenClip.Top, frozenClip.Right, frozenClip.Bottom);
+                }
+
+                if (binding.FrozenTopShrink && frozenClip.Top > 0)
+                {
+                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Top));
+                    frozenClip = new Thickness(frozenClip.Left, 0, frozenClip.Right, frozenClip.Bottom);
+                }
+
+                if (binding.FrozenRightShrink && frozenClip.Right > 0)
+                {
+                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, Math.Max(0, rect.Width - frozenClip.Right), rect.Height);
+                    frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, 0, frozenClip.Bottom);
+                }
+
+                if (binding.FrozenBottomShrink && frozenClip.Bottom > 0)
+                {
+                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Bottom));
+                    frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, frozenClip.Right, 0);
+                }
+
+                Arrange(element, rect, frozenClip);
             }
         }
 
@@ -339,7 +395,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract Point GetPosition(ContainerView containerView);
 
-        internal abstract Thickness GetClip(ContainerView containerView);
+        internal abstract Thickness GetFrozenClip(ContainerView containerView);
 
         private void ArrangeContainerViews()
         {
@@ -353,7 +409,7 @@ namespace DevZest.Data.Presenters.Primitives
         private void Arrange(ContainerView containerView)
         {
             var rect = GetRect(containerView);
-            var clip = GetClip(containerView);
+            var clip = GetFrozenClip(containerView);
             Arrange(containerView, rect, clip);
         }
 
@@ -368,7 +424,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract Size GetSize(BlockView blockView, BlockBinding blockBinding);
 
-        internal abstract Thickness GetClip(BlockView blockView, BlockBinding blockBinding);
+        internal abstract Thickness GetFrozenClip(BlockView blockView, BlockBinding blockBinding);
 
         internal Rect GetRect(BlockView block, int flowIndex)
         {
@@ -381,7 +437,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract Size GetSize(BlockView blockView, int flowIndex);
 
-        internal abstract Thickness GetClip(int flowIndex);
+        internal abstract Thickness GetFrozenClip(int flowIndex);
 
         internal void ArrangeChildren(BlockView blockView)
         {
@@ -389,16 +445,16 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var element = blockView[blockBinding];
                 var rect = GetRect(blockView, blockBinding);
-                var clip = GetClip(blockView, blockBinding);
-                Arrange(element, rect, clip);
+                var clip = GetFrozenClip(blockView, blockBinding);
+                Arrange(element, blockBinding, rect, clip);
             }
 
             for (int i = 0; i < blockView.Count; i++)
             {
                 var row = blockView[i];
                 var rect = GetRect(blockView, i);
-                var clip = GetClip(i);
-                Arrange(row.View, rect, clip);
+                var clip = GetFrozenClip(i);
+                row.View.Arrange(rect);
             }
         }
 
@@ -413,7 +469,7 @@ namespace DevZest.Data.Presenters.Primitives
 
         protected abstract Size GetSize(RowView rowView, RowBinding rowBinding);
 
-        internal abstract Thickness GetClip(RowView rowView, RowBinding rowBinding);
+        internal abstract Thickness GetFrozenClip(RowView rowView, RowBinding rowBinding);
 
         internal void ArrangeChildren(RowView rowView)
         {
@@ -425,8 +481,8 @@ namespace DevZest.Data.Presenters.Primitives
             {
                 var element = rowView.Elements[rowBinding.Ordinal];
                 var rect = GetRect(rowView, rowBinding);
-                var clip = GetClip(rowView, rowBinding);
-                Arrange(element, rect, clip);
+                var clip = GetFrozenClip(rowView, rowBinding);
+                Arrange(element, rowBinding, rect, clip);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 
@@ -170,5 +171,17 @@ namespace DevZest.Data.Presenters.Primitives
         internal abstract void Refresh(UIElement element);
 
         internal abstract void Cleanup(UIElement element);
+
+        [DefaultValue(false)]
+        public bool FrozenLeftShrink { get; internal set; }
+
+        [DefaultValue(false)]
+        public bool FrozenTopShrink { get; internal set; }
+
+        [DefaultValue(false)]
+        public bool FrozenRightShrink { get; internal set; }
+
+        [DefaultValue(false)]
+        public bool FrozenBottomShrink { get; internal set; }
     }
 }

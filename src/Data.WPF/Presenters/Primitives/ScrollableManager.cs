@@ -319,18 +319,18 @@ namespace DevZest.Data.Presenters.Primitives
             return false;
         }
 
-        private Clip GetClipMain(double startPosition, double endPosition, Binding binding)
+        private Clip GetFrozenClipMain(double startPosition, double endPosition, Binding binding)
         {
-            return GetClipMain(startPosition, endPosition, binding.GridRange);
+            return GetFrozenClipMain(startPosition, endPosition, binding.GridRange);
         }
 
-        private Clip GetClipMain(double startPosition, double endPosition, GridRange gridRange)
+        private Clip GetFrozenClipMain(double startPosition, double endPosition, GridRange gridRange)
         {
             var gridSpan = GridTracksMain.GetGridSpan(gridRange);
-            return GetClipMain(startPosition, endPosition, gridSpan);
+            return GetFrozenClipMain(startPosition, endPosition, gridSpan);
         }
 
-        private Clip GetClipMain(double startPosition, double endPosition, GridSpan gridSpan)
+        private Clip GetFrozenClipMain(double startPosition, double endPosition, GridSpan gridSpan)
         {
             double? minStart = GetMinClipMain(gridSpan.StartTrack);
             double? maxEnd = GetMaxClipMain(gridSpan.EndTrack);
@@ -349,33 +349,32 @@ namespace DevZest.Data.Presenters.Primitives
             return FrozenTailTracksCountMain == 0 || gridTrack.IsFrozenTail ? new double?() : ViewportMain - FrozenTailLengthMain;
         }
 
-        private Clip GetClipCross(double startPosition, double endPosition, Binding binding, Clip containerClip)
+        private Clip GetFrozenClipCross(double startPosition, double endPosition, Binding binding)
         {
-            return GetClipCross(startPosition, endPosition, binding.GridRange, containerClip);
+            return GetFrozenClipCross(startPosition, endPosition, binding.GridRange);
         }
 
-        private Clip GetClipCross(double startPosition, double endPosition, GridRange gridRange, Clip containerClip, int? flowIndex = null)
+        private Clip GetFrozenClipCross(double startPosition, double endPosition, GridRange gridRange, int? flowIndex = null)
         {
             var gridSpan = GridTracksCross.GetGridSpan(gridRange);
-            return GetClipCross(startPosition, endPosition, gridSpan, containerClip, flowIndex);
+            return GetFrozenClipCross(startPosition, endPosition, gridSpan, flowIndex);
         }
 
-        private Clip GetClipCross(double startPosition, double endPosition, GridSpan gridSpan, Clip containerClip = new Clip(), int? flowIndex = null)
+        private Clip GetFrozenClipCross(double startPosition, double endPosition, GridSpan gridSpan, int? flowIndex = null)
         {
-            double? minStart = GetMinClipCross(gridSpan.StartTrack, containerClip);
-            double? maxEnd = GetMaxClipCross(gridSpan.EndTrack, flowIndex, containerClip);
+            double? minStart = GetMinFrozenClipCross(gridSpan.StartTrack);
+            double? maxEnd = GetMaxFrozenClipCross(gridSpan.EndTrack, flowIndex);
             return new Clip(startPosition, endPosition, minStart, maxEnd);
         }
 
-        private double? GetMinClipCross(GridTrack gridTrack, Clip containerClip = new Clip())
+        private double? GetMinFrozenClipCross(GridTrack gridTrack)
         {
-            return FrozenHeadTracksCountCross == 0 || containerClip.Head > 0 || gridTrack.IsFrozenHead ? new double?() : FrozenHeadLengthCross;
+            return FrozenHeadTracksCountCross == 0 || gridTrack.IsFrozenHead ? new double?() : FrozenHeadLengthCross;
         }
 
-        private double? GetMaxClipCross(GridTrack gridTrack, int? flowIndex = null, Clip containerClip = new Clip())
+        private double? GetMaxFrozenClipCross(GridTrack gridTrack, int? flowIndex = null)
         {
-            return FrozenTailTracksCountCross == 0 || containerClip.Tail > 0 || IsFrozenTailCross(gridTrack, flowIndex)
-                ? new double?() : ViewportCross - FrozenTailLengthCross;
+            return FrozenTailTracksCountCross == 0 || IsFrozenTailCross(gridTrack, flowIndex) ? new double?() : ViewportCross - FrozenTailLengthCross;
         }
 
         private bool IsFrozenTailCross(GridTrack gridTrack, int? flowIndex)
@@ -384,25 +383,25 @@ namespace DevZest.Data.Presenters.Primitives
             return !flowIndex.HasValue ? gridTrack.IsFrozenTail : flowIndex.Value == FlowRepeatCount - 1 && gridTrack.IsFrozenTail;
         }
 
-        internal override Thickness GetClip(ScalarBinding scalarBinding, int flowIndex)
+        internal override Thickness GetFrozenClip(ScalarBinding scalarBinding, int flowIndex)
         {
-            var clipMain = GetClipMain(scalarBinding);
-            var clipCross = GetClipCross(scalarBinding, flowIndex);
+            var clipMain = GetFrozenClipMain(scalarBinding);
+            var clipCross = GetFrozenClipCross(scalarBinding, flowIndex);
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetClipMain(ScalarBinding scalarBinding)
+        private Clip GetFrozenClipMain(ScalarBinding scalarBinding)
         {
             var startPosition = GetStartPositionMain(scalarBinding);
             var endPosition = startPosition + GetLengthMain(scalarBinding);
-            return GetClipMain(startPosition, endPosition, scalarBinding);
+            return GetFrozenClipMain(startPosition, endPosition, scalarBinding);
         }
 
-        private Clip GetClipCross(ScalarBinding scalarBinding, int flowIndex)
+        private Clip GetFrozenClipCross(ScalarBinding scalarBinding, int flowIndex)
         {
             var startPosition = GetStartPositionCross(scalarBinding, flowIndex);
             var endPosition = startPosition + GetLengthCross(scalarBinding);
-            return GetClipCross(startPosition, endPosition, scalarBinding, new Clip());
+            return GetFrozenClipCross(startPosition, endPosition, scalarBinding);
         }
 
         private double GetMeasuredLengthMain(ContainerView containerView, GridRange gridRange)
@@ -460,25 +459,25 @@ namespace DevZest.Data.Presenters.Primitives
             return GetContainerEndPositionCross() - GetContainerStartPositionCross();
         }
 
-        internal override Thickness GetClip(ContainerView containerView)
+        internal override Thickness GetFrozenClip(ContainerView containerView)
         {
-            var clipMain = GetClipMain(containerView);
-            var clipCross = GetContainerClipCross();
+            var clipMain = GetFrozenClipMain(containerView);
+            var clipCross = GetContainerFrozenClipCross();
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetClipMain(ContainerView containerView)
+        private Clip GetFrozenClipMain(ContainerView containerView)
         {
             var startPosition = GetStartPositionMain(containerView);
             var endPosition = startPosition + GetLengthMain(containerView);
-            return GetClipMain(startPosition, endPosition, Template.ContainerRange);
+            return GetFrozenClipMain(startPosition, endPosition, Template.ContainerRange);
         }
 
-        private Clip GetContainerClipCross()
+        private Clip GetContainerFrozenClipCross()
         {
             var startPosition = GetContainerStartPositionCross();
             var endPosition = GetContainerEndPositionCross();
-            return GetClipCross(startPosition, endPosition, Template.ContainerRange, new Clip());
+            return GetFrozenClipCross(startPosition, endPosition, Template.ContainerRange);
         }
 
         private double GetStartExtent(ContainerView containerView)
@@ -511,10 +510,10 @@ namespace DevZest.Data.Presenters.Primitives
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetClip(BlockView blockView, BlockBinding blockBinding)
+        internal override Thickness GetFrozenClip(BlockView blockView, BlockBinding blockBinding)
         {
             var clipMain = new Clip();
-            var clipCross = GetClipCross(blockView, blockBinding);
+            var clipCross = GetFrozenClipCross(blockView, blockBinding);
             return ToThickness(clipMain, clipCross);
         }
 
@@ -533,11 +532,11 @@ namespace DevZest.Data.Presenters.Primitives
             return GetEndPositionCross(blockBinding.GridRange, IsHead(blockBinding) ? 0 : FlowRepeatCount - 1);
         }
 
-        private Clip GetClipCross(BlockView blockView, BlockBinding blockBinding)
+        private Clip GetFrozenClipCross(BlockView blockView, BlockBinding blockBinding)
         {
             var startPosition = GetStartPositionCross(blockView, blockBinding);
             var endPosition = GetEndPositionCross(blockView, blockBinding);
-            return GetClipCross(startPosition, endPosition, blockBinding, GetContainerClipCross());
+            return GetFrozenClipCross(startPosition, endPosition, blockBinding);
         }
 
         private double GetRowViewStartPositionCross(int flowIndex)
@@ -562,18 +561,18 @@ namespace DevZest.Data.Presenters.Primitives
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetClip(int flowIndex)
+        internal override Thickness GetFrozenClip(int flowIndex)
         {
             var clipMain = new Clip();
-            var clipCross = GetClipCross(flowIndex);
+            var clipCross = GetFrozenClipCross(flowIndex);
             return ToThickness(clipMain, clipCross);
         }
 
-        private Clip GetClipCross(int flowIndex)
+        private Clip GetFrozenClipCross(int flowIndex)
         {
             var startPosition = GetRowViewStartPositionCross(flowIndex);
             var endPosition = GetEndPositionCross(Template.RowRange, flowIndex);
-            return GetClipCross(startPosition, endPosition, Template.RowRange, GetContainerClipCross(), flowIndex);
+            return GetFrozenClipCross(startPosition, endPosition, Template.RowRange, flowIndex);
         }
 
         protected override Point GetPosition(RowView rowView, RowBinding rowBinding)
@@ -597,10 +596,10 @@ namespace DevZest.Data.Presenters.Primitives
             return ToSize(valueMain, valueCross);
         }
 
-        internal override Thickness GetClip(RowView rowView, RowBinding rowBinding)
+        internal override Thickness GetFrozenClip(RowView rowView, RowBinding rowBinding)
         {
             var clipMain = new Clip();
-            var clipCross = GetClipCross(rowView, rowBinding);
+            var clipCross = GetFrozenClipCross(rowView, rowBinding);
             return ToThickness(clipMain, clipCross);
         }
 
@@ -614,12 +613,11 @@ namespace DevZest.Data.Presenters.Primitives
             return GetEndPositionCross(rowBinding.GridRange, rowView.FlowIndex);
         }
 
-        private Clip GetClipCross(RowView rowView, RowBinding rowBinding)
+        private Clip GetFrozenClipCross(RowView rowView, RowBinding rowBinding)
         {
             var startPosition = GetStartPositionCross(rowView, rowBinding);
             var endPosition = GetEndPositionCross(rowView, rowBinding);
-            var containerClip = GetContainerClipCross().Merge(GetClipCross(rowView.FlowIndex));
-            return GetClipCross(startPosition, endPosition, rowBinding, containerClip);
+            return GetFrozenClipCross(startPosition, endPosition, rowBinding);
         }
 
         protected sealed override Size MeasuredSize
@@ -688,7 +686,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (endPositionMain <= startPositionMain)
                 return null;
 
-            var clip = GetClipMain(startPositionMain, endPositionMain, new GridSpan(startTrackMain, endTrackMain));
+            var clip = GetFrozenClipMain(startPositionMain, endPositionMain, new GridSpan(startTrackMain, endTrackMain));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
                 return null;
             startPositionMain += clip.Head;
@@ -768,7 +766,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (beforeRepeat)
             {
                 var value = GetBeforeRepeatPositionCross(prevGridTrack, nextGridTrack, out gridTrack);
-                if (!Clip.IsHeadClipped(value, GetMinClipCross(gridTrack)))
+                if (!Clip.IsHeadClipped(value, GetMinFrozenClipCross(gridTrack)))
                     yield return value;
             }
 
@@ -783,7 +781,7 @@ namespace DevZest.Data.Presenters.Primitives
                 for (int i = first; i <= last; i++)
                 {
                     var value = GetRepeatPositionCross(prevGridTrack, nextGridTrack, i, out gridTrack);
-                    if (!Clip.IsClipped(value, GetMinClipCross(gridTrack), GetMaxClipCross(gridTrack, i)))
+                    if (!Clip.IsClipped(value, GetMinFrozenClipCross(gridTrack), GetMaxFrozenClipCross(gridTrack, i)))
                         yield return value;
                 }
             }
@@ -791,7 +789,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (afterRepeat)
             {
                 var value = GetAfterRepeatPositionCross(prevGridTrack, nextGridTrack, out gridTrack);
-                if (!Clip.IsTailClipped(value, GetMaxClipCross(gridTrack)))
+                if (!Clip.IsTailClipped(value, GetMaxFrozenClipCross(gridTrack)))
                     yield return value;
             }
         }
@@ -857,7 +855,7 @@ namespace DevZest.Data.Presenters.Primitives
             if (endPositionCross <= startPositionCross)
                 return new Span();
 
-            var clip = GetClipCross(startPositionCross, endPositionCross, new GridSpan(startTrackCross, endTrackCross));
+            var clip = GetFrozenClipCross(startPositionCross, endPositionCross, new GridSpan(startTrackCross, endTrackCross));
             if (double.IsPositiveInfinity(clip.Head) || double.IsPositiveInfinity(clip.Tail))
                 return new Span();
             startPositionCross += clip.Head;
