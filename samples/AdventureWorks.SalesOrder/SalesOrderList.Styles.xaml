@@ -7,13 +7,13 @@
         <Setter Property="Focusable" Value="False" />
     </Style>
     <Style x:Key="{x:Static local:SalesOrderList.LeftAlignedTextBlockStyleKey}" TargetType="TextBlock">
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Padding" Value="2" />
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style x:Key="{x:Static local:SalesOrderList.RightAlignedTextBlockStyleKey}" TargetType="TextBlock">
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Padding" Value="2" />
         <Setter Property="TextAlignment" Value="Right" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
