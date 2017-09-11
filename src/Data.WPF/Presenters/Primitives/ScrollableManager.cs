@@ -1,5 +1,4 @@
-﻿using DevZest.Data;
-using DevZest.Data.Views;
+﻿using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System;
 using System.Collections.Generic;
@@ -512,9 +511,16 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override Thickness GetFrozenClip(BlockView blockView, BlockBinding blockBinding)
         {
-            var clipMain = new Clip();
+            var clipMain = GetFrozenClipMain(blockView, blockBinding);
             var clipCross = GetFrozenClipCross(blockView, blockBinding);
             return ToThickness(clipMain, clipCross);
+        }
+
+        private Clip GetFrozenClipMain(BlockView blockView, BlockBinding blockBinding)
+        {
+            var startPosition = GetStartPositionMain(blockView, blockBinding);
+            var endPosition = startPosition + GetMeasuredLengthMain(blockView, blockBinding.GridRange);
+            return GetFrozenClipMain(startPosition, endPosition, blockBinding);
         }
 
         private bool IsHead(BlockBinding blockBinding)
@@ -598,9 +604,17 @@ namespace DevZest.Data.Presenters.Primitives
 
         internal override Thickness GetFrozenClip(RowView rowView, RowBinding rowBinding)
         {
-            var clipMain = new Clip();
+            var clipMain = GetFrozenClipMain(rowView, rowBinding);
             var clipCross = GetFrozenClipCross(rowView, rowBinding);
             return ToThickness(clipMain, clipCross);
+        }
+
+        private Clip GetFrozenClipMain(RowView rowView, RowBinding rowBinding)
+        {
+            var containerView = this[rowView];
+            var startPosition = GetStartPositionMain(containerView) + GetStartPositionMain(rowView, rowBinding);
+            var endPosition = startPosition + GetMeasuredLengthMain(containerView, rowBinding.GridRange);
+            return GetFrozenClipMain(startPosition, endPosition, rowBinding);
         }
 
         private double GetStartPositionCross(RowView rowView, RowBinding rowBinding)

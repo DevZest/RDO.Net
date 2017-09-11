@@ -236,22 +236,6 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// RenderSize.Height differs from the binding grid. Ensure VerticalAlignment property is "Stretch".
-        /// </summary>
-        public static string LayoutManager_RenderHeightDifferFromBindingGrid
-        {
-            get { return GetString("LayoutManager_RenderHeightDifferFromBindingGrid"); }
-        }
-
-        /// <summary>
-        /// RenderSize.Width differs from the binding grid. Ensure HorizontalAlignment property is "Stretch".
-        /// </summary>
-        public static string LayoutManager_RenderWidthDifferFromBindingGrid
-        {
-            get { return GetString("LayoutManager_RenderWidthDifferFromBindingGrid"); }
-        }
-
-        /// <summary>
         /// The expression must be static.
         /// </summary>
         public static string ModelExtensions_ExpressionMustBeStatic

@@ -330,12 +330,9 @@ namespace DevZest.Data.Presenters.Primitives
         private void ArrangeWithClip(UIElement element, Rect rect, Thickness frozenClip)
         {
             element.Arrange(rect);
-            if (!rect.Width.IsClose(element.RenderSize.Width))
-                throw new InvalidOperationException(Strings.LayoutManager_RenderWidthDifferFromBindingGrid);
-            if (!rect.Height.IsClose(element.RenderSize.Height))
-                throw new InvalidOperationException(Strings.LayoutManager_RenderHeightDifferFromBindingGrid);
-            var clipWidth = Math.Max(0, rect.Width - frozenClip.Left - frozenClip.Right);
-            var clipHeight = Math.Max(0, rect.Height - frozenClip.Top - frozenClip.Bottom);
+            var renderSize = element.RenderSize;
+            var clipWidth = Math.Max(0, renderSize.Width - frozenClip.Left - frozenClip.Right);
+            var clipHeight = Math.Max(0, renderSize.Height - frozenClip.Top - frozenClip.Bottom);
             element.Clip = new RectangleGeometry(new Rect(frozenClip.Left, frozenClip.Top, clipWidth, clipHeight));
         }
 
