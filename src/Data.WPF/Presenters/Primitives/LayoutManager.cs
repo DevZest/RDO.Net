@@ -318,9 +318,10 @@ namespace DevZest.Data.Presenters.Primitives
 
         private void Arrange(UIElement element, Rect rect, Thickness frozenClip)
         {
-            if (AllZero(frozenClip))
+            if (frozenClip.Left == 0 && frozenClip.Top == 0 && frozenClip.Right == 0 && frozenClip.Bottom == 0)
                 Arrange(element, rect, null);
-            else if (AnyPositiveInfinity(frozenClip))
+            else if (double.IsPositiveInfinity(frozenClip.Left) || double.IsPositiveInfinity(frozenClip.Top)
+                || double.IsPositiveInfinity(frozenClip.Right) || double.IsPositiveInfinity(frozenClip.Bottom))
                 Arrange(element, rect, Geometry.Empty);
             else
                 ArrangeWithClip(element, rect, frozenClip);
@@ -338,52 +339,37 @@ namespace DevZest.Data.Presenters.Primitives
             element.Clip = new RectangleGeometry(new Rect(frozenClip.Left, frozenClip.Top, clipWidth, clipHeight));
         }
 
-        private static bool AllZero(Thickness frozenClip)
-        {
-            return frozenClip.Left == 0 && frozenClip.Top == 0 && frozenClip.Right == 0 && frozenClip.Bottom == 0;
-        }
-
-        private static bool AnyPositiveInfinity(Thickness frozenClip)
-        {
-            return double.IsPositiveInfinity(frozenClip.Left) || double.IsPositiveInfinity(frozenClip.Top)
-                || double.IsPositiveInfinity(frozenClip.Right) || double.IsPositiveInfinity(frozenClip.Bottom);
-        }
-
         private void Arrange(UIElement element, Binding binding, Rect rect, Thickness frozenClip)
         {
-            Debug.Assert(binding != null);
-            if (AllZero(frozenClip))
-                Arrange(element, rect, null);
-            else if (AnyPositiveInfinity(frozenClip))
-                Arrange(element, rect, Geometry.Empty);
-            else
+            var left = frozenClip.Left;
+            if (binding.FrozenLeftShrink && left > 0 && !double.IsPositiveInfinity(left))
             {
-                if (binding.FrozenLeftShrink && frozenClip.Left > 0)
-                {
-                    rect = new Rect(rect.Left + frozenClip.Left, rect.Top, Math.Max(0, rect.Width - frozenClip.Left), rect.Height);
-                    frozenClip = new Thickness(0, frozenClip.Top, frozenClip.Right, frozenClip.Bottom);
-                }
-
-                if (binding.FrozenTopShrink && frozenClip.Top > 0)
-                {
-                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Top));
-                    frozenClip = new Thickness(frozenClip.Left, 0, frozenClip.Right, frozenClip.Bottom);
-                }
-
-                if (binding.FrozenRightShrink && frozenClip.Right > 0)
-                {
-                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, Math.Max(0, rect.Width - frozenClip.Right), rect.Height);
-                    frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, 0, frozenClip.Bottom);
-                }
-
-                if (binding.FrozenBottomShrink && frozenClip.Bottom > 0)
-                {
-                    rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Bottom));
-                    frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, frozenClip.Right, 0);
-                }
-
-                Arrange(element, rect, frozenClip);
+                rect = new Rect(rect.Left + frozenClip.Left, rect.Top, Math.Max(0, rect.Width - frozenClip.Left), rect.Height);
+                frozenClip = new Thickness(0, frozenClip.Top, frozenClip.Right, frozenClip.Bottom);
             }
+
+            var top = frozenClip.Top;
+            if (binding.FrozenTopShrink && top > 0 && !double.IsPositiveInfinity(top))
+            {
+                rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Top));
+                frozenClip = new Thickness(frozenClip.Left, 0, frozenClip.Right, frozenClip.Bottom);
+            }
+
+            var right = frozenClip.Right;
+            if (binding.FrozenRightShrink && right > 0 && !double.IsPositiveInfinity(right))
+            {
+                rect = new Rect(rect.Left, rect.Top + frozenClip.Top, Math.Max(0, rect.Width - frozenClip.Right), rect.Height);
+                frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, 0, frozenClip.Bottom);
+            }
+
+            var bottom = frozenClip.Bottom;
+            if (binding.FrozenBottomShrink && bottom > 0 && !double.IsPositiveInfinity(bottom))
+            {
+                rect = new Rect(rect.Left, rect.Top + frozenClip.Top, rect.Width, Math.Max(0, rect.Height - frozenClip.Bottom));
+                frozenClip = new Thickness(frozenClip.Left, frozenClip.Top, frozenClip.Right, 0);
+            }
+
+            Arrange(element, rect, frozenClip);
         }
 
         internal Rect GetRect(ContainerView containerView)
