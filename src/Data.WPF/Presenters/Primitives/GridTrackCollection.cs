@@ -13,10 +13,14 @@ namespace DevZest.Data.Presenters.Primitives
         internal GridTrackCollection(Template template)
             : base(new List<T>())
         {
-            Template = template;
+            _template = template;
         }
 
-        public Template Template { get; private set; }
+        private readonly Template _template;
+        public Template Template
+        {
+            get { return _template; }
+        }
 
         public abstract Orientation Orientation { get; }
 
@@ -31,11 +35,23 @@ namespace DevZest.Data.Presenters.Primitives
         public void Add(T item)
         {
             Items.Add(item);
+            AddLength(item.Length);
+        }
 
-            if (item.Length.IsAbsolute)
-                TotalAbsoluteLength += item.Length.Value;
-            else if (item.Length.IsStar)
-                TotalStarFactor += item.Length.Value;
+        private void AddLength(GridLength length)
+        {
+            if (length.IsAbsolute)
+                TotalAbsoluteLength += length.Value;
+            else if (length.IsStar)
+                TotalStarFactor += length.Value;
+        }
+
+        private void RemoveLength(GridLength length)
+        {
+            if (length.IsAbsolute)
+                TotalAbsoluteLength -= length.Value;
+            else if (length.IsStar)
+                TotalStarFactor -= length.Value;
         }
 
         public double TotalAbsoluteLength { get; private set; }
@@ -43,6 +59,13 @@ namespace DevZest.Data.Presenters.Primitives
         public double TotalAutoLength { get; set; }
 
         public double TotalStarFactor { get; private set; }
+
+        public virtual void OnResized(GridTrack gridTrack, GridLength oldValue)
+        {
+            Debug.Assert(gridTrack.Owner == this);
+            RemoveLength(oldValue);
+            AddLength(gridTrack.Length);
+        }
 
         private IConcatList<T> Filter(Func<T, bool> predict, Action<T> action = null)
         {

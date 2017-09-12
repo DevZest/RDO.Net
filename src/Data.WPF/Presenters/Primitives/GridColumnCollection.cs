@@ -54,5 +54,11 @@ namespace DevZest.Data.Presenters.Primitives
         {
             return new Vector(valueMain, valueCross);
         }
+
+        public override void OnResized(GridTrack gridTrack, GridLength oldValue)
+        {
+            base.OnResized(gridTrack, oldValue);
+            Template.InvalidateGridColumns();
+        }
     }
 }

@@ -398,12 +398,16 @@ namespace DevZest.Data.Presenters.Primitives
 
                 if (oldSizeToContentX == newSizeToContentX)
                     return;
-
-                InternalGridColumns.InvalidateStarLengthTracks();
-                InternalScalarBindings.InvalidateAutoWidthBindings();
-                InternalBlockBindings.InvalidateAutoWidthBindings();
-                InternalRowBindings.InvalidateAutoHeightBindings();
+                InvalidateGridColumns();
             }
+        }
+
+        internal void InvalidateGridColumns()
+        {
+            InternalGridColumns.InvalidateStarLengthTracks();
+            InternalScalarBindings.InvalidateAutoWidthBindings();
+            InternalBlockBindings.InvalidateAutoWidthBindings();
+            InternalRowBindings.InvalidateAutoWidthBindings();
         }
 
         private double _availableHeight;
@@ -420,11 +424,16 @@ namespace DevZest.Data.Presenters.Primitives
                 if (oldSizeToContentY == newSizeToContentY)
                     return;
 
-                InternalGridRows.InvalidateStarLengthTracks();
-                InternalScalarBindings.InvalidateAutoHeightBindings();
-                InternalBlockBindings.InvalidateAutoHeightBindings();
-                InternalRowBindings.InvalidateAutoHeightBindings();
+                InvalidateGridRows();
             }
+        }
+
+        internal void InvalidateGridRows()
+        {
+            InternalGridRows.InvalidateStarLengthTracks();
+            InternalScalarBindings.InvalidateAutoHeightBindings();
+            InternalBlockBindings.InvalidateAutoHeightBindings();
+            InternalRowBindings.InvalidateAutoHeightBindings();
         }
 
         internal bool SizeToContentX

@@ -17,17 +17,6 @@ namespace DevZest.Data.Presenters.Primitives
                 ScrollOwner.InvalidateScrollInfo();
         }
 
-        public FrameworkElement Panel
-        {
-            get { return ElementCollection.Parent; }
-        }
-
-        private void InvalidateMeasure()
-        {
-            if (Panel != null)
-                Panel.InvalidateMeasure();
-        }
-
         public abstract double ViewportWidth { get; }
 
         public abstract double ViewportHeight { get; }

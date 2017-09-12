@@ -470,5 +470,16 @@ namespace DevZest.Data.Presenters.Primitives
         }
 
         internal abstract IEnumerable<GridLineFigure> GridLineFigures { get; }
+
+        public FrameworkElement Panel
+        {
+            get { return ElementCollection.Parent; }
+        }
+
+        public void InvalidateMeasure()
+        {
+            if (Panel != null)
+                Panel.InvalidateMeasure();
+        }
     }
 }

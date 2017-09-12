@@ -27,5 +27,6 @@ namespace DevZest.Data.Presenters.Primitives
         double GetMeasuredLength(GridRange gridRange);
         GridSpan GetGridSpan(GridRange gridRange);
         bool VariantByContainer { get; }
+        void OnResized(GridTrack gridTrack, GridLength oldValue);
     }
 }

@@ -9,28 +9,55 @@ namespace DevZest.Data.Presenters.Primitives
     {
         internal GridTrack(IGridTrackCollection owner, int ordinal, GridLengthParser.Result result)
         {
-            Owner = owner;
-            Ordinal = ordinal;
-            Length = result.Length;
+            _owner = owner;
+            _ordinal = ordinal;
+            _length = result.Length;
             MinLength = result.MinLength;
             MaxLength = result.MaxLength;
         }
 
-        internal IGridTrackCollection Owner { get; private set; }
+        private readonly IGridTrackCollection _owner;
+        internal IGridTrackCollection Owner
+        {
+            get { return _owner; }
+        }
 
         internal Template Template
         {
             get { return Owner.Template; }
         }
 
-        internal int Ordinal { get; private set; }
+        private readonly int _ordinal;
+        internal int Ordinal
+        {
+            get { return _ordinal; }
+        }
 
         public Orientation Orientation
         {
             get { return Owner.Orientation; }
         }
 
-        public GridLength Length { get; private set; }
+        private GridLength _length;
+        public GridLength Length
+        {
+            get { return _length; }
+            set
+            {
+                var oldValue = _length;
+                if (oldValue == value)
+                    return;
+
+                _length = value;
+                Owner.OnResized(this, oldValue);
+                LayoutManager?.InvalidateMeasure();
+            }
+        }
+
+        private LayoutManager LayoutManager
+        {
+            get { return Template.LayoutManager; }
+        }
 
         public double MinLength { get; private set; }
 
@@ -51,10 +78,10 @@ namespace DevZest.Data.Presenters.Primitives
         /// </remarks>
         private double _measuredValue;
 
-        internal double MeasuredLength
+        public double MeasuredLength
         {
-            get { return VariantByContainer ? 0 : _measuredValue; }
-            set
+            get { return VariantByContainer ? double.NaN : _measuredValue; }
+            internal set
             {
                 Debug.Assert(!VariantByContainer);
                 if (_measuredValue == value)
