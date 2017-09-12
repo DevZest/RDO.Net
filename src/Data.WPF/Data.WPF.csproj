@@ -86,6 +86,9 @@
     <Compile Include="Presenters\ValidationMessageType.cs" />
     <Compile Include="Utilities\Check.NotNull.cs" />
     <Compile Include="Utilities\Check.CheckNotNull.cs" />
+    <Compile Include="Utilities\Windows\DragHandlerBase.cs" />
+    <Compile Include="Utilities\Windows\KeyboardManager.cs" />
+    <Compile Include="Utilities\Windows\Point.IsClose.cs" />
     <Compile Include="Views\DataLoadState.cs" />
     <Compile Include="Views\Primitives\ICompositeView.cs" />
     <Compile Include="Views\InPlaceEditor.cs" />
