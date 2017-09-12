@@ -21,27 +21,50 @@ namespace DevZest.Data.Views
     {
         private sealed class DragHandler : DragHandlerBase
         {
-            private ColumnHeader _columnHeader;
+            private GridTrack _gridTrack;
+            private double _resized;
+            private GridLength _oldValue;
 
-            public void BeginDrag(ColumnHeader columnHeader, UIElement resizeGripper, MouseEventArgs e)
+            public bool BeginDrag(ColumnHeader columnHeader, UIElement resizeGripper, MouseEventArgs e)
             {
-                _columnHeader = columnHeader;
+                Debug.Assert(columnHeader != null);
+                Debug.Assert(resizeGripper != null);
+                _gridTrack = columnHeader.GridTrackToResize;
+                if (_gridTrack == null)
+                    return false;
                 DragDetect(resizeGripper, e);
+                return true;
             }
 
             protected override void OnBeginDrag()
             {
+                _oldValue = _gridTrack.Length;
+                _resized = _gridTrack.MeasuredLength;
+            }
+
+            private double MinLength
+            {
+                get { return _gridTrack.MinLength; }
+            }
+
+            private double MaxLength
+            {
+                get { return _gridTrack.MaxLength; }
             }
 
             protected override void OnDragDelta()
             {
-                var binding = _columnHeader.GetBinding();
-                var track = binding.GridRange.ColumnSpan.EndTrack;
-                track.Length = new GridLength(track.MeasuredLength + MouseDeltaX, GridUnitType.Pixel);
+                var newValue = _resized = _resized + MouseDeltaX;
+                newValue = Math.Max(newValue, MinLength);
+                newValue = Math.Min(newValue, MaxLength);
+                _resized += newValue - _resized;
+                _gridTrack.Length = new GridLength(newValue, GridUnitType.Pixel);
             }
 
             protected override void OnEndDrag(UIElement dragElement, bool abort)
             {
+                if (abort)
+                    _gridTrack.Length = _oldValue;
             }
         }
 
@@ -187,6 +210,11 @@ namespace DevZest.Data.Views
             return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
         }
 
+        private GridTrack GridTrackToResize
+        {
+            get { return this.GetBinding()?.GridRange.ColumnSpan.EndTrack; }
+        }
+
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
@@ -198,15 +226,18 @@ namespace DevZest.Data.Views
                 return;
 
             if (e.ClickCount == 1)
-            {
-                new DragHandler().BeginDrag(this, resizeGripper, e);
-                e.Handled = true;
-            }
+                e.Handled = new DragHandler().BeginDrag(this, resizeGripper, e);
             else if (e.ClickCount == 2)
-            {
-                throw new NotImplementedException();
-                e.Handled = true;
-            }
+                e.Handled = AutoResize();
+        }
+
+        private bool AutoResize()
+        {
+            var gridTrackToResize = GridTrackToResize;
+            if (gridTrackToResize == null)
+                return false;
+            gridTrackToResize.Length = GridLength.Auto;
+            return true;
         }
     }
 }

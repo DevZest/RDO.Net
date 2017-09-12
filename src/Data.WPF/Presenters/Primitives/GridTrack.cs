@@ -49,6 +49,7 @@ namespace DevZest.Data.Presenters.Primitives
                     return;
 
                 _length = value;
+                MeasuredLength = 0;
                 Owner.OnResized(this, oldValue);
                 LayoutManager?.InvalidateMeasure();
             }
