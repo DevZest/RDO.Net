@@ -82,6 +82,9 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(Visibility.Visible));
 
+        public static readonly DependencyProperty ResizeGripperVisibilityProperty = DependencyProperty.Register(nameof(ResizeGripperVisibility), typeof(Visibility),
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(Visibility.Visible));
+
         public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
@@ -124,6 +127,12 @@ namespace DevZest.Data.Views
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
+        }
+
+        public Visibility ResizeGripperVisibility
+        {
+            get { return (Visibility)GetValue(ResizeGripperVisibilityProperty); }
+            set { SetValue(ResizeGripperVisibilityProperty, value); }
         }
 
         public static bool GetIsResizeGripper(DependencyObject obj)

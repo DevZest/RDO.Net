@@ -94,7 +94,8 @@
                         </Grid>
 
                         <Rectangle Name="VerticalSeparator" Grid.Column="1" Width="1" VerticalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
-                        <Border local:ColumnHeader.IsResizeGripper="True" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="8" Background="Transparent" Cursor="SizeWE" />
+                        <Border local:ColumnHeader.IsResizeGripper="True" Visibility="{TemplateBinding ResizeGripperVisibility}" Grid.ColumnSpan="2"
+                                HorizontalAlignment="Right" Width="8" Background="Transparent" Cursor="SizeWE" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
