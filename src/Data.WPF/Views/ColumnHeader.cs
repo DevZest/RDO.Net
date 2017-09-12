@@ -1,13 +1,13 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Data.Presenters.Primitives;
 using DevZest.Data.Presenters.Services;
-using System;
-using System.Collections.Generic;
+using DevZest.Windows;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System;
 
 namespace DevZest.Data.Views
 {
@@ -19,6 +19,32 @@ namespace DevZest.Data.Views
     [TemplateVisualState(GroupName = VisualStates.GroupSort, Name = VisualStates.StateSortDescending)]
     public class ColumnHeader : ButtonBase, IScalarElement
     {
+        private sealed class DragHandler : DragHandlerBase
+        {
+            private ColumnHeader _columnHeader;
+
+            public void BeginDrag(ColumnHeader columnHeader, UIElement resizeGripper, MouseEventArgs e)
+            {
+                _columnHeader = columnHeader;
+                DragDetect(resizeGripper, e);
+            }
+
+            protected override void OnBeginDrag()
+            {
+            }
+
+            protected override void OnDragDelta()
+            {
+                var binding = _columnHeader.GetBinding();
+                var track = binding.GridRange.ColumnSpan.EndTrack;
+                track.Length = new GridLength(track.MeasuredLength + MouseDeltaX, GridUnitType.Pixel);
+            }
+
+            protected override void OnEndDrag(UIElement dragElement, bool abort)
+            {
+            }
+        }
+
         public static readonly DependencyProperty CanSortProperty = DependencyProperty.Register(nameof(CanSort), typeof(bool),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.True));
 
@@ -30,8 +56,11 @@ namespace DevZest.Data.Views
         public static readonly DependencyProperty SeparatorBrushProperty = DependencyProperty.Register(nameof(SeparatorBrush), typeof(Brush),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(null));
 
-        public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register("SeparatorVisibility", typeof(Visibility),
+        public static readonly DependencyProperty SeparatorVisibilityProperty = DependencyProperty.Register(nameof(SeparatorVisibility), typeof(Visibility),
             typeof(ColumnHeader), new FrameworkPropertyMetadata(Visibility.Visible));
+
+        public static readonly DependencyProperty IsResizeGripperProperty = DependencyProperty.RegisterAttached("IsResizeGripper", typeof(bool),
+            typeof(ColumnHeader), new FrameworkPropertyMetadata(BooleanBoxes.False));
 
         static ColumnHeader()
         {
@@ -72,6 +101,16 @@ namespace DevZest.Data.Views
         {
             get { return (Visibility)GetValue(SeparatorVisibilityProperty); }
             set { SetValue(SeparatorVisibilityProperty, value); }
+        }
+
+        public static bool GetIsResizeGripper(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsResizeGripperProperty);
+        }
+
+        public static void SetIsResizeGripper(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsResizeGripperProperty, BooleanBoxes.Box(value));
         }
 
         void IScalarElement.Cleanup(ScalarPresenter scalarPresenter)
@@ -146,6 +185,28 @@ namespace DevZest.Data.Views
         {
             Debug.Assert(dataPresenter != null);
             return dataPresenter.GetService<ColumnHeaderCommands>(() => new ColumnHeaderCommands());
+        }
+
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseLeftButtonDown(e);
+            if (e.Handled)
+                return;
+
+            var resizeGripper = e.OriginalSource as UIElement;
+            if (resizeGripper == null || !GetIsResizeGripper(resizeGripper))
+                return;
+
+            if (e.ClickCount == 1)
+            {
+                new DragHandler().BeginDrag(this, resizeGripper, e);
+                e.Handled = true;
+            }
+            else if (e.ClickCount == 2)
+            {
+                throw new NotImplementedException();
+                e.Handled = true;
+            }
         }
     }
 }

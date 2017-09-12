@@ -84,7 +84,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ContentPresenter Content="{TemplateBinding Content}"/>
+                            <ContentPresenter Content="{TemplateBinding Content}" />
 
                             <Path Grid.Column="1" Name="SortIcon" Fill="#FF444444" RenderTransformOrigin=".5,.5" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0" Stretch="Uniform" Width="8" Margin="4,0,0,0" Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z ">
                                 <Path.RenderTransform>
@@ -94,7 +94,7 @@
                         </Grid>
 
                         <Rectangle Name="VerticalSeparator" Grid.Column="1" Width="1" VerticalAlignment="Stretch" Fill="{TemplateBinding SeparatorBrush}" Visibility="{TemplateBinding SeparatorVisibility}" />
-
+                        <Border local:ColumnHeader.IsResizeGripper="True" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="8" Background="Transparent" Cursor="SizeWE" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
