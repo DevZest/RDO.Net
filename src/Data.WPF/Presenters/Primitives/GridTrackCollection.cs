@@ -81,7 +81,9 @@ namespace DevZest.Data.Presenters.Primitives
                 if (gridTrack.VariantByContainer)
                     continue;
 
-                if (gridTrack.IsAutoLength || gridTrack.IsStarLength)
+                if (gridTrack.IsAutoLength)
+                    TotalAutoLength += gridTrack.MeasuredLength;
+                else if (gridTrack.IsStarLength)
                     gridTrack.MeasuredLength = 0;
                 else
                     gridTrack.MeasuredLength = gridTrack.Length.Value;
