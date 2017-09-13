@@ -16,14 +16,14 @@
         <DockPanel DockPanel.Dock="Top" MinHeight="30" Margin="5">
             <ToolBar FontWeight="Bold">
                 <!-- NEW -->
-                <Button Name="btnNew" Command="{Binding Path=NewCommand}">
+                <Button Name="btnNew" Command="New">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/new.png" Width="22" Height="22" Margin="2"/>
                         <Label VerticalAlignment="Center">_New</Label>
                     </StackPanel>
                 </Button>
                 <!-- DELETE -->
-                <Button Name="btnDelete" Command="{Binding Path=DeleteCommand}">
+                <Button Name="btnDelete" Command="Delete">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Images/delete.png" Width="22" Height="22" Margin="2" />
                         <Label VerticalAlignment="Center">_Delete</Label>

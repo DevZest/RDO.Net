@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
@@ -14,6 +16,30 @@ namespace DevZest.Data.Presenters
                 onRefresh: (v, p) =>
                 {
                     v.Text = source.GetValue(p.DataRow).ToString(format, formatProvider);
+                });
+        }
+
+        public static RowBinding<TextBlock> AsHyperlinkTextBlock(this Column source, ICommand command, string format = null, IFormatProvider formatProvider = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new RowBinding<TextBlock>(
+                onSetup: (v, p) =>
+                {
+                    var hyperlink = new Hyperlink(new Run());
+                    hyperlink.Command = command;
+                    v.Inlines.Add(hyperlink);
+                },
+                onRefresh: (v, p) =>
+                {
+                    var hyperlink = (Hyperlink)v.Inlines.FirstInline;
+                    var run = (Run)hyperlink.Inlines.FirstInline;
+                    run.Text = source.GetValue(p.DataRow).ToString(format, formatProvider);              
+                },
+                onCleanup: (v, p) =>
+                {
+                    v.Inlines.Clear();
                 });
         }
 

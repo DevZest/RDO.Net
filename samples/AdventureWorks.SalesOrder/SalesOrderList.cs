@@ -9,6 +9,7 @@ using System.Globalization;
 using DevZest.Data.Views;
 using DevZest.Data.Presenters.Plugins;
 using System;
+using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
 {
@@ -66,7 +67,7 @@ namespace AdventureWorks.SalesOrders
             .AddBinding(8, 0, _.TaxAmt.AsColumnHeader("Tax Amt"))
             .AddBinding(9, 0, _.TotalDue.AsColumnHeader("Total Due"))
             .AddBinding(0, 1, _.AsSelectionCheckBox().WithStyle(CheckBoxStyleKey))
-            .AddBinding(1, 1, _.SalesOrderID.AsTextBlock().WithStyle(LeftAlignedTextBlockStyleKey))
+            .AddBinding(1, 1, _.SalesOrderID.AsHyperlinkTextBlock(ApplicationCommands.Open).WithStyle(LeftAlignedTextBlockStyleKey))
             .AddBinding(2, 1, _.SalesOrderNumber.AsTextBlock().WithStyle(LeftAlignedTextBlockStyleKey))
             .AddBinding(3, 1, _.DueDate.AsTextBlock("{0:d}").WithStyle(RightAlignedTextBlockStyleKey))
             .AddBinding(4, 1, _.ShipDate.AsTextBlock("{0:d}").WithStyle(RightAlignedTextBlockStyleKey))
