@@ -37,12 +37,12 @@ namespace DevZest.Data.Presenters
             OnViewChanged();
         }
 
-        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inherited)
+        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inheritTemplate)
         {
-            var template = inherited ? Template : new Template();
+            var template = inheritTemplate ? Template : new Template();
             Debug.Assert(template != null);
 
-            if (inherited)
+            if (inheritTemplate)
             {
                 DetachView();
                 AttachView(dataView);
@@ -50,7 +50,7 @@ namespace DevZest.Data.Presenters
 
             dataSet._.EnsureInitialized();
             DataSet = dataSet;
-            using (var builder = new TemplateBuilder(template, DataSet.Model, inherited))
+            using (var builder = new TemplateBuilder(template, DataSet.Model, inheritTemplate))
             {
                 BuildTemplate(builder);
                 builder.Seal();
