@@ -25,6 +25,7 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete, CanDelete));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
         private SalesOrder _
@@ -70,6 +71,11 @@ namespace AdventureWorks.SalesOrders
         private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _salesOrderList.DataSet != null;
+        }
+
+        private void Close(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private SalesOrderList _salesOrderList;
