@@ -39,10 +39,17 @@ namespace DevZest.Data.Presenters
 
         private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inherited)
         {
-            dataSet._.EnsureInitialized();
-            DataSet = dataSet;
             var template = inherited ? Template : new Template();
             Debug.Assert(template != null);
+
+            if (inherited)
+            {
+                DetachView();
+                AttachView(dataView);
+            }
+
+            dataSet._.EnsureInitialized();
+            DataSet = dataSet;
             using (var builder = new TemplateBuilder(template, DataSet.Model, inherited))
             {
                 BuildTemplate(builder);

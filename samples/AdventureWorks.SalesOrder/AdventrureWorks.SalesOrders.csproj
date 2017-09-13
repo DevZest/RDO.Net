@@ -159,6 +159,7 @@
       <Link>AdventureWorksLT_log.ldf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\refresh.png" />
     <Resource Include="Images\exit.png" />
     <Resource Include="Images\find.png" />
     <Resource Include="Images\delete.png" />

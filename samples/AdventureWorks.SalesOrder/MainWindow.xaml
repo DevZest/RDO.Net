@@ -30,6 +30,13 @@
                     </StackPanel>
                 </Button>
                 <Separator />
+                <Button Command="Refresh">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Images/refresh.png" Width="22" Height="22" Margin="2" />
+                        <Label VerticalAlignment="Center">_Refresh</Label>
+                    </StackPanel>
+                </Button>
+                <Separator />
                 <!-- SEARCH -->
                 <Separator />
                 <TextBox 
