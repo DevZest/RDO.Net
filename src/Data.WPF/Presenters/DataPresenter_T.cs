@@ -33,16 +33,17 @@ namespace DevZest.Data.Presenters
             if (_dataLoader != null)
                 _dataLoader.Reset();
             AttachView(dataView);
-            Mount(dataView, dataSet, where, orderBy);
+            Mount(dataView, dataSet, where, orderBy, false);
             OnViewChanged();
         }
 
-        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        private void Mount(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy, bool inherited)
         {
             dataSet._.EnsureInitialized();
             DataSet = dataSet;
-            var template = new Template();
-            using (var builder = new TemplateBuilder(template, DataSet.Model))
+            var template = inherited ? Template : new Template();
+            Debug.Assert(template != null);
+            using (var builder = new TemplateBuilder(template, DataSet.Model, inherited))
             {
                 BuildTemplate(builder);
                 builder.Seal();
@@ -154,13 +155,11 @@ namespace DevZest.Data.Presenters
 
             private Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool cancellable, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
             {
-                Debug.Assert(dataView != null);
-
                 bool dataViewChanged = false;
-                if (dataView != DataView)
+                if (dataView != null)
                 {
+                    dataViewChanged = dataView != DataView;
                     _dataPresenter.AttachView(dataView);
-                    dataViewChanged = true;
                 }
 
                 _revision++;
@@ -201,6 +200,11 @@ namespace DevZest.Data.Presenters
             {
                 DataView.OnDataLoadCancelling();
                 _cts.Cancel();
+            }
+
+            private LayoutManager LayoutManager
+            {
+                get { return _dataPresenter.LayoutManager; }
             }
 
             private async Task Run()
@@ -260,7 +264,7 @@ namespace DevZest.Data.Presenters
                             dataSet = DataSet<T>.New();
                         Predicate<DataRow> where = _getWhere == null ? null : _getWhere(dataSet._);
                         IComparer<DataRow> orderBy = _getOrderBy == null ? null : _getOrderBy(dataSet._);
-                        _dataPresenter.Mount(DataView, dataSet, where, orderBy);
+                        _dataPresenter.Mount(DataView, dataSet, where, orderBy, LayoutManager != null);
                         Dispose();
                         return;
                     }
@@ -328,6 +332,63 @@ namespace DevZest.Data.Presenters
         public T _
         {
             get { return DataSet == null ? null : DataSet._; }
+        }
+
+        public void Show(DataSet<T> dataSet, bool resetCriteria = false)
+        {
+            if (resetCriteria)
+                Show(dataSet, null, null);
+            else
+                Show(dataSet, Where, OrderBy);
+        }
+
+        public void Show(DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        {
+            if (dataSet == null)
+                throw new ArgumentNullException(nameof(dataSet));
+            if (LayoutManager == null)
+                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+            Mount(View, dataSet, where, orderBy, true);
+        }
+
+        public void ShowAsync(Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        {
+            if (resetCriteria)
+                ShowAsync(getDataSet, null, null);
+            else
+                ShowAsync(getDataSet, _ => Where, _ => OrderBy);
+        }
+
+        public void ShowAsync(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        {
+            if (getDataSet == null)
+                throw new ArgumentNullException(nameof(getDataSet));
+            if (LayoutManager == null)
+                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+
+            if (_dataLoader == null)
+                _dataLoader = new DataLoader(this);
+            _dataLoader.ShowAsync(null, getDataSet, getWhere, getOrderBy);
+        }
+
+        public void ShowAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        {
+            if (resetCriteria)
+                ShowAsync(getDataSet, null, null);
+            else
+                ShowAsync(getDataSet, _ => Where, _ => OrderBy);
+        }
+
+        public void ShowAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        {
+            if (getDataSet == null)
+                throw new ArgumentNullException(nameof(getDataSet));
+            if (LayoutManager == null)
+                throw new InvalidOperationException(Strings.DataPresenter_NullDataSet);
+
+            if (_dataLoader == null)
+                _dataLoader = new DataLoader(this);
+            _dataLoader.ShowAsync(null, getDataSet, getWhere, getOrderBy);
         }
     }
 }

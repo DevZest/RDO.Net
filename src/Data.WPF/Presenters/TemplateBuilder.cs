@@ -16,12 +16,17 @@ namespace DevZest.Data.Presenters
 {
     public sealed class TemplateBuilder : IDisposable
     {
-        internal TemplateBuilder(Template template, Model model)
+        internal TemplateBuilder(Template template, Model model, bool inherited = false)
         {
             Debug.Assert(template != null);
             Template = template;
             _model = model;
+            _inherited = inherited;
+            if (inherited)
+                template.InitializeAsInherited();
         }
+
+        private readonly bool _inherited;
 
         internal void Seal()
         {
@@ -39,6 +44,9 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder GridColumns(params string[] widths)
         {
+            if (_inherited)
+                return this;
+
             if (widths == null)
                 throw new ArgumentNullException(nameof(widths));
 
@@ -48,6 +56,9 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder GridRows(params string[] heights)
         {
+            if (_inherited)
+                return this;
+
             if (heights == null)
                 throw new ArgumentNullException(nameof(heights));
 
@@ -57,12 +68,18 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder RowRange(int left, int top, int right, int bottom)
         {
+            if (_inherited)
+                return this;
+
             Template.RowRange = Template.Range(left, top, right, bottom);
             return this;
         }
 
         public TemplateBuilder Layout(Orientation orientation, int flowRepeatCount = 1)
         {
+            if (_inherited)
+                return this;
+
             if (flowRepeatCount < 0)
                 throw new ArgumentOutOfRangeException(nameof(flowRepeatCount));
 
@@ -73,6 +90,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(0)]
         public TemplateBuilder WithFrozenLeft(int tracks)
         {
+            if (_inherited)
+                return this;
+
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
             Template.FrozenLeft = tracks;
@@ -82,6 +102,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(0)]
         public TemplateBuilder WithFrozenTop(int tracks)
         {
+            if (_inherited)
+                return this;
+
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
             Template.FrozenTop = tracks;
@@ -91,6 +114,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(0)]
         public TemplateBuilder WithFrozenRight(int tracks)
         {
+            if (_inherited)
+                return this;
+
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
             Template.FrozenRight = tracks;
@@ -100,6 +126,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(0)]
         public TemplateBuilder WithFrozenBottom(int tracks)
         {
+            if (_inherited)
+                return this;
+
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
             Template.FrozenBottom = tracks;
@@ -109,6 +138,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(0)]
         public TemplateBuilder WithStretches(int tracks)
         {
+            if (_inherited)
+                return this;
+
             if (tracks < 0)
                 throw new ArgumentOutOfRangeException(nameof(tracks));
             Template.Stretches = tracks;
@@ -118,6 +150,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(VirtualRowPlacement.Explicit)]
         public TemplateBuilder WithVirtualRowPlacement(VirtualRowPlacement value)
         {
+            if (_inherited)
+                return this;
+
             Template.VirtualRowPlacement = value;
             return this;
         }
@@ -125,6 +160,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(true)]
         public TemplateBuilder WithTransactionalEdit(bool value)
         {
+            if (_inherited)
+                return this;
+
             Template.TransactionalEdit = value;
             return this;
         }
@@ -132,6 +170,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(null)]
         public TemplateBuilder WithSelectionMode(SelectionMode value)
         {
+            if (_inherited)
+                return this;
+
             Template.SelectionMode = value;
             return this;
         }
@@ -139,6 +180,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(RowValidationScope.Current)]
         public TemplateBuilder WithRowValidationScope(RowValidationScope value)
         {
+            if (_inherited)
+                return this;
+
             if (Template.RowValidationScope == RowValidationScope.All && Template.InternalRowAsyncValidators.Any(x => x.ValidationScope == RowValidationScope.All))
                 throw new InvalidOperationException(Strings.TemplateBuilder_AsyncValidatorScopeConflict);
             Template.RowValidationScope = value;
@@ -174,6 +218,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(ValidationMode.Progressive)]
         public TemplateBuilder WithRowValidationMode(ValidationMode value)
         {
+            if (_inherited)
+                return this;
+
             Template.RowValidationMode = value;
             return this;
         }
@@ -181,6 +228,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(ValidationMode.Progressive)]
         public TemplateBuilder WithScalarValidationMode(ValidationMode value)
         {
+            if (_inherited)
+                return this;
+
             Template.ScalarValidationMode = value;
             return this;
         }
@@ -188,6 +238,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(100)]
         public TemplateBuilder WithRowValidationErrorLimit(int value)
         {
+            if (_inherited)
+                return this;
+
             if (value < 1)
                 throw new ArgumentOutOfRangeException(nameof(value));
             Template.RowValidationErrorLimit = value;
@@ -197,6 +250,9 @@ namespace DevZest.Data.Presenters
         [DefaultValue(100)]
         public TemplateBuilder WithRowValidationWarningLimit(int value)
         {
+            if (_inherited)
+                return this;
+
             if (value < 0)
                 throw new ArgumentOutOfRangeException(nameof(value));
             Template.RowValidationWarningLimit = value;
@@ -205,6 +261,9 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder MakeRecursive(Model childModel)
         {
+            if (_inherited)
+                return this;
+
             if (childModel == null)
                 throw new ArgumentNullException(nameof(childModel));
 
@@ -218,6 +277,9 @@ namespace DevZest.Data.Presenters
         public TemplateBuilder BlockView<T>(Style style = null)
             where T : BlockView, new()
         {
+            if (_inherited)
+                return this;
+
             Template.BlockView<T>(style);
             return this;
         }
@@ -225,6 +287,9 @@ namespace DevZest.Data.Presenters
         public TemplateBuilder BlockView<T>(StyleKey styleKey)
             where T : BlockView, new()
         {
+            if (_inherited)
+                return this;
+
             if (styleKey == null)
                 throw new ArgumentNullException(nameof(styleKey));
             return BlockView<T>(styleKey.Style);
@@ -233,6 +298,9 @@ namespace DevZest.Data.Presenters
         public TemplateBuilder RowView<T>(Style style = null)
             where T : RowView, new()
         {
+            if (_inherited)
+                return this;
+
             Template.RowView<T>(style);
             return this;
         }
@@ -240,6 +308,9 @@ namespace DevZest.Data.Presenters
         public TemplateBuilder RowView<T>(StyleKey styleKey)
             where T : RowView, new()
         {
+            if (_inherited)
+                return this;
+
             if (styleKey == null)
                 throw new ArgumentNullException(nameof(styleKey));
             return RowView<T>(styleKey.Style);
@@ -283,11 +354,17 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder GridLineX(GridPoint startGridPoint, int length, Pen pen = null, GridPlacement? placement = null)
         {
+            if (_inherited)
+                return this;
+
             return GridLine(Orientation.Horizontal, startGridPoint, length, pen, placement);
         }
 
         public TemplateBuilder GridLineY(GridPoint startGridPoint, int length, Pen pen = null, GridPlacement? placement = null)
         {
+            if (_inherited)
+                return this;
+
             return GridLine(Orientation.Vertical, startGridPoint, length, pen, placement);
         }
 
@@ -338,6 +415,9 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder AddPlugin(BlockViewPlugin plugin)
         {
+            if (_inherited)
+                return this;
+
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
 
@@ -347,6 +427,9 @@ namespace DevZest.Data.Presenters
 
         public TemplateBuilder AddPlugin(RowViewPlugin plugin)
         {
+            if (_inherited)
+                return this;
+
             if (plugin == null)
                 throw new ArgumentNullException(nameof(plugin));
 

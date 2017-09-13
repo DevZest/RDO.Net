@@ -60,7 +60,11 @@ namespace FileExplorer
 
                 public sealed override void ShowAsync(DataView dataView, string currentFolder)
                 {
-                    GetDataPresenter().ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
+                    var dataPresenter = GetDataPresenter();
+                    if (dataPresenter.DataSet == null)
+                        dataPresenter.ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
+                    else
+                        dataPresenter.ShowAsync((CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
                 }
             }
 

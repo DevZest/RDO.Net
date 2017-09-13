@@ -591,5 +591,15 @@ namespace DevZest.Data.Presenters.Primitives
                 _rowViewPlugins = new List<RowViewPlugin>();
             _rowViewPlugins.Add(plugin);
         }
+
+        internal void InitializeAsInherited()
+        {
+            RowManager = null;
+            InternalScalarBindings.Clear();
+            InternalBlockBindings.Clear();
+            InternalRowBindings.Clear();
+            InternalScalarAsyncValidators = Presenters.ScalarAsyncValidators.Empty;
+            InternalRowAsyncValidators = Presenters.RowAsyncValidators.Empty;
+        }
     }
 }

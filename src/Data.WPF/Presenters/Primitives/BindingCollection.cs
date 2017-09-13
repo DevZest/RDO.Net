@@ -65,5 +65,10 @@ namespace DevZest.Data.Presenters.Primitives
             foreach (var binding in this)
                 binding.EndSetup();
         }
+
+        internal void Clear()
+        {
+            base.Items.Clear();
+        }
     }
 }
