@@ -140,12 +140,22 @@ namespace DevZest.Data.Presenters
 
             public Task ShowAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
             {
-                return ShowAsync(dataView, ct => getDataSet(), false, getWhere, getOrderBy);
+                return ShowOrRefreshAsync(dataView, ct => getDataSet(), false, getWhere, getOrderBy);
             }
 
             public Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
             {
-                return ShowAsync(dataView, getDataSet, true, getWhere, getOrderBy);
+                return ShowOrRefreshAsync(dataView, getDataSet, true, getWhere, getOrderBy);
+            }
+
+            public Task RefreshAsync(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            {
+                return ShowOrRefreshAsync(null, ct => getDataSet(), false, getWhere, getOrderBy);
+            }
+
+            public Task RefreshAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            {
+                return ShowOrRefreshAsync(null, getDataSet, true, getWhere, getOrderBy);
             }
 
             public DataLoadState? State
@@ -153,7 +163,7 @@ namespace DevZest.Data.Presenters
                 get { return DataView?.DataLoadState; }
             }
 
-            private Task ShowAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool cancellable, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+            private Task ShowOrRefreshAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool cancellable, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
             {
                 bool dataViewChanged = false;
                 if (dataView != null)
@@ -318,6 +328,7 @@ namespace DevZest.Data.Presenters
                 _layoutManager.ClearElements();
                 _layoutManager = null;
             }
+            DataSet = null;
             OnViewChanged();
         }
 
@@ -334,15 +345,15 @@ namespace DevZest.Data.Presenters
             get { return DataSet == null ? null : DataSet._; }
         }
 
-        public void Show(DataSet<T> dataSet, bool resetCriteria = false)
+        public void Refresh(DataSet<T> dataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
-                Show(dataSet, null, null);
+                Refresh(dataSet, null, null);
             else
-                Show(dataSet, Where, OrderBy);
+                Refresh(dataSet, Where, OrderBy);
         }
 
-        public void Show(DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        public void Refresh(DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
         {
             if (dataSet == null)
                 throw new ArgumentNullException(nameof(dataSet));
@@ -351,15 +362,15 @@ namespace DevZest.Data.Presenters
             Mount(View, dataSet, where, orderBy, true);
         }
 
-        public void ShowAsync(Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        public void RefreshAsync(Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
-                ShowAsync(getDataSet, null, null);
+                RefreshAsync(getDataSet, null, null);
             else
-                ShowAsync(getDataSet, _ => Where, _ => OrderBy);
+                RefreshAsync(getDataSet, _ => Where, _ => OrderBy);
         }
 
-        public void ShowAsync(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        public void RefreshAsync(Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
@@ -368,18 +379,18 @@ namespace DevZest.Data.Presenters
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
-            _dataLoader.ShowAsync(null, getDataSet, getWhere, getOrderBy);
+            _dataLoader.RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
 
-        public void ShowAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        public void RefreshAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
         {
             if (resetCriteria)
-                ShowAsync(getDataSet, null, null);
+                RefreshAsync(getDataSet, null, null);
             else
-                ShowAsync(getDataSet, _ => Where, _ => OrderBy);
+                RefreshAsync(getDataSet, _ => Where, _ => OrderBy);
         }
 
-        public void ShowAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        public void RefreshAsync(Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
         {
             if (getDataSet == null)
                 throw new ArgumentNullException(nameof(getDataSet));
@@ -388,7 +399,55 @@ namespace DevZest.Data.Presenters
 
             if (_dataLoader == null)
                 _dataLoader = new DataLoader(this);
-            _dataLoader.ShowAsync(null, getDataSet, getWhere, getOrderBy);
+            _dataLoader.RefreshAsync(getDataSet, getWhere, getOrderBy);
+        }
+
+        public void ShowOrRefresh(DataView dataView, DataSet<T> dataSet, bool resetCriteria = false)
+        {
+            if (LayoutManager == null)
+                Show(dataView, dataSet, resetCriteria);
+            else
+                Refresh(dataSet, resetCriteria);
+        }
+
+        public void ShowOrRefresh(DataView dataView, DataSet<T> dataSet, Predicate<DataRow> where, IComparer<DataRow> orderBy)
+        {
+            if (LayoutManager == null)
+                Show(dataView, dataSet, where, orderBy);
+            else
+                Refresh(dataSet, where, orderBy);
+        }
+
+        public void ShowOrRefreshAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        {
+            if (LayoutManager == null)
+                ShowAsync(dataView, getDataSet, resetCriteria);
+            else
+                RefreshAsync(getDataSet, resetCriteria);
+        }
+
+        public void ShowOrRefreshAsync(DataView dataView, Func<Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        {
+            if (LayoutManager == null)
+                ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
+            else
+                RefreshAsync(getDataSet, getWhere, getOrderBy);
+        }
+
+        public void ShowOrRefreshAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, bool resetCriteria = false)
+        {
+            if (LayoutManager == null)
+                ShowAsync(dataView, getDataSet, resetCriteria);
+            else
+                RefreshAsync(getDataSet, resetCriteria);
+        }
+
+        public void ShowOrRefreshAsync(DataView dataView, Func<CancellationToken, Task<DataSet<T>>> getDataSet, Func<T, Predicate<DataRow>> getWhere, Func<T, IComparer<DataRow>> getOrderBy)
+        {
+            if (LayoutManager == null)
+                ShowAsync(dataView, getDataSet, getWhere, getOrderBy);
+            else
+                RefreshAsync(getDataSet, getWhere, getOrderBy);
         }
     }
 }

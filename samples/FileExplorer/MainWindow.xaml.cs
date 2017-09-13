@@ -37,7 +37,7 @@ namespace FileExplorer
 
             public abstract ListMode ListMode { get; }
 
-            public abstract void ShowAsync(DataView dataView, string currentFolder);
+            public abstract void ShowOrRefreshAsync(DataView dataView, string currentFolder);
 
             public abstract FolderContent _ { get; }
 
@@ -58,13 +58,9 @@ namespace FileExplorer
 
                 protected abstract DataPresenter<T> GetDataPresenter();
 
-                public sealed override void ShowAsync(DataView dataView, string currentFolder)
+                public sealed override void ShowOrRefreshAsync(DataView dataView, string currentFolder)
                 {
-                    var dataPresenter = GetDataPresenter();
-                    if (dataPresenter.DataSet == null)
-                        dataPresenter.ShowAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
-                    else
-                        dataPresenter.ShowAsync((CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
+                    GetDataPresenter().ShowOrRefreshAsync(dataView, (CancellationToken ct) => FolderContent.GetFolderContentsAsync<T>(currentFolder, ct));
                 }
             }
 
@@ -130,7 +126,7 @@ namespace FileExplorer
             bool loadData = _listManager != null;
             _listManager = ListManager.Create(_listManager, value);
             if (loadData)
-                _listManager.ShowAsync(_folderContentListView, CurrentFolder);
+                _listManager.ShowOrRefreshAsync(_folderContentListView, CurrentFolder);
         }
 
         private void ExecuteCloseCommand(object sener, ExecutedRoutedEventArgs e)
@@ -148,7 +144,7 @@ namespace FileExplorer
                     return;
 
                 _currentFolder = value;
-                _listManager.ShowAsync(_folderContentListView, _currentFolder);
+                _listManager.ShowOrRefreshAsync(_folderContentListView, _currentFolder);
             }
         }
 
