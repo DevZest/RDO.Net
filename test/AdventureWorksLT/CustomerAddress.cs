@@ -19,8 +19,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Property<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID, Customer.Ref._CustomerID);
-            public static readonly Property<_Int32> _AddressID = RegisterColumn((Ref _) => _.AddressID);
+            public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID, Customer.Ref._CustomerID);
+            public static readonly Mounter<_Int32> _AddressID = RegisterColumn((Ref _) => _.AddressID);
 
             public Ref()
             {
@@ -38,9 +38,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public static readonly Property<_Int32> _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID, Ref._CustomerID);
-        public static readonly Property<_Int32> _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID, Ref._AddressID);
-        public static readonly Property<_String> _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
+        public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID, Ref._CustomerID);
+        public static readonly Mounter<_Int32> _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID, Ref._AddressID);
+        public static readonly Mounter<_String> _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
 
         public CustomerAddress()
         {

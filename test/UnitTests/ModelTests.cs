@@ -12,9 +12,9 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Property<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
+            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1, x => x.DbColumnName = "DbColumnName");
 
-            public static readonly Property<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
+            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((SimpleModel x) => x.Column2, x => x.DbColumnName = "DbColumnName");
 
             [Required]
             public _Int32 Column1 { get; private set; }
@@ -25,9 +25,9 @@ namespace DevZest.Data
 
         private class RefSimpleModel : Model
         {
-            public static readonly Property<_Int32> _Column1 = RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
+            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((RefSimpleModel x) => x.Col1, SimpleModel._Column1);
 
-            public static readonly Property<_Int32> _Column2 = RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
+            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((RefSimpleModel x) => x.Col2, SimpleModel._Column2);
 
             public _Int32 Col1 { get; private set; }
 
@@ -36,9 +36,9 @@ namespace DevZest.Data
 
         private class RefSimpleModel2 : Model
         {
-            public static readonly Property<_Int32> _Column1 = RegisterColumn((RefSimpleModel2 x) => x.Col1, RefSimpleModel._Column1);
+            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((RefSimpleModel2 x) => x.Col1, RefSimpleModel._Column1);
 
-            public static readonly Property<_Int32> _Column2 = RegisterColumn((RefSimpleModel2 x) => x.Col2, RefSimpleModel._Column2);
+            public static readonly Mounter<_Int32> _Column2 = RegisterColumn((RefSimpleModel2 x) => x.Col2, RefSimpleModel._Column2);
 
             public _Int32 Col1 { get; private set; }
 
@@ -47,7 +47,7 @@ namespace DevZest.Data
 
         private class ColumnListModel : Model
         {
-            public static readonly Property<ColumnList<_Int32>> _Cols = RegisterColumnList((ColumnListModel x) => x.Cols);
+            public static readonly Mounter<ColumnList<_Int32>> _Cols = RegisterColumnList((ColumnListModel x) => x.Cols);
 
             public ColumnListModel()
             {
@@ -96,7 +96,7 @@ namespace DevZest.Data
 
         private class RecursiveModel : SimpleModelBase
         {
-            public static readonly Property<RecursiveModel> _ChildModel = RegisterChildModel((RecursiveModel x) => x.ChildModel, x => x.ParentKey);
+            public static readonly Mounter<RecursiveModel> _ChildModel = RegisterChildModel((RecursiveModel x) => x.ChildModel, x => x.ParentKey);
 
             public RecursiveModel ChildModel { get; private set; }
         }
@@ -185,9 +185,9 @@ namespace DevZest.Data
 
         private class CloneModel : SimpleModelBase
         {
-            public static Property<ColumnList<_Int32>> _ColumnList = RegisterColumnList((CloneModel x) => x.ColumnList);
+            public static Mounter<ColumnList<_Int32>> _ColumnList = RegisterColumnList((CloneModel x) => x.ColumnList);
 
-            public static readonly Property<CloneModel> _ChildModel = RegisterChildModel((CloneModel x) => x.ChildModel, x => x.ParentKey);
+            public static readonly Mounter<CloneModel> _ChildModel = RegisterChildModel((CloneModel x) => x.ChildModel, x => x.ParentKey);
 
             public ColumnList<_Int32> ColumnList { get; private set; }
 
@@ -245,10 +245,10 @@ namespace DevZest.Data
                 public _Int32 Id { get; private set; }
             }
 
-            public static readonly Property<_Int32> _Id = RegisterColumn((TempModel x) => x.Id);
-            public static readonly Property<_String> _Name = RegisterColumn((TempModel x) => x.Name);
-            public static readonly Property<_Int32> _Unique1 = RegisterColumn((TempModel x) => x.Unique1);
-            public static readonly Property<_Int32> _Unique2 = RegisterColumn((TempModel x) => x.Unique2);
+            public static readonly Mounter<_Int32> _Id = RegisterColumn((TempModel x) => x.Id);
+            public static readonly Mounter<_String> _Name = RegisterColumn((TempModel x) => x.Name);
+            public static readonly Mounter<_Int32> _Unique1 = RegisterColumn((TempModel x) => x.Unique1);
+            public static readonly Mounter<_Int32> _Unique2 = RegisterColumn((TempModel x) => x.Unique2);
 
             public TempModel()
             {

@@ -288,7 +288,7 @@ AfterDataRowInserted: DataSet-0[0].
 
         private class OrderByModel : Model
         {
-            private static readonly Property<_Int32> _Column = RegisterColumn((OrderByModel x) => x.Column);
+            private static readonly Mounter<_Int32> _Column = RegisterColumn((OrderByModel x) => x.Column);
 
             public _Int32 Column { get; private set; }
 

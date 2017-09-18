@@ -17,7 +17,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Property<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID);
+            public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID);
 
             public Ref()
             {
@@ -33,19 +33,19 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 CustomerID { get; private set; }
         }
 
-        public static readonly Property<_Int32> _CustomerID = RegisterColumn((Customer _) => _.CustomerID, Ref._CustomerID);
-        public static readonly Property<_Boolean> _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
-        public static readonly Property<_String> _Title = RegisterColumn((Customer _) => _.Title);
-        public static readonly Property<_String> _FirstName = RegisterColumn((Customer _) => _.FirstName);
-        public static readonly Property<_String> _MiddleName = RegisterColumn((Customer _) => _.MiddleName);
-        public static readonly Property<_String> _LastName = RegisterColumn((Customer _) => _.LastName);
-        public static readonly Property<_String> _Suffix = RegisterColumn((Customer _) => _.Suffix);
-        public static readonly Property<_String> _CompanyName = RegisterColumn((Customer _) => _.CompanyName);
-        public static readonly Property<_String> _SalesPersion = RegisterColumn((Customer _) => _.SalesPerson);
-        public static readonly Property<_String> _EmailAddress = RegisterColumn((Customer _) => _.EmailAddress);
-        public static readonly Property<_String> _Phone = RegisterColumn((Customer _) => _.Phone);
-        public static readonly Property<_String> _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
-        public static readonly Property<_String> _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
+        public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((Customer _) => _.CustomerID, Ref._CustomerID);
+        public static readonly Mounter<_Boolean> _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
+        public static readonly Mounter<_String> _Title = RegisterColumn((Customer _) => _.Title);
+        public static readonly Mounter<_String> _FirstName = RegisterColumn((Customer _) => _.FirstName);
+        public static readonly Mounter<_String> _MiddleName = RegisterColumn((Customer _) => _.MiddleName);
+        public static readonly Mounter<_String> _LastName = RegisterColumn((Customer _) => _.LastName);
+        public static readonly Mounter<_String> _Suffix = RegisterColumn((Customer _) => _.Suffix);
+        public static readonly Mounter<_String> _CompanyName = RegisterColumn((Customer _) => _.CompanyName);
+        public static readonly Mounter<_String> _SalesPersion = RegisterColumn((Customer _) => _.SalesPerson);
+        public static readonly Mounter<_String> _EmailAddress = RegisterColumn((Customer _) => _.EmailAddress);
+        public static readonly Mounter<_String> _Phone = RegisterColumn((Customer _) => _.Phone);
+        public static readonly Mounter<_String> _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
+        public static readonly Mounter<_String> _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
 
         public Customer()
         {

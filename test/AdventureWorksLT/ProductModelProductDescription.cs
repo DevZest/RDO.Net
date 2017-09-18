@@ -22,9 +22,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
-        public static Property<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription x) => x.ProductModelID);
-        public static Property<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription x) => x.ProductDescriptionID);
-        public static readonly Property<_String> _Culture = RegisterColumn((ProductModelProductDescription x) => x.Culture);
+        public static Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription x) => x.ProductModelID);
+        public static Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription x) => x.ProductDescriptionID);
+        public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription x) => x.Culture);
 
         public ProductModelProductDescription()
         {

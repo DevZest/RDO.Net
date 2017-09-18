@@ -99,20 +99,20 @@ namespace DevZest.Data
 
         /// <summary>Add a new column into this column list, from existing column property.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
-        /// <param name="fromProperty">The existing column property.</param>
+        /// <param name="fromMounter">The existing column mounter.</param>
         /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnKey"/> from existing column property,
         /// otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T Add<T>(Property<T> fromProperty, bool inheritColumnKey = false, Action<T> initializer = null)
+        public T Add<T>(Mounter<T> fromMounter, bool inheritColumnKey = false, Action<T> initializer = null)
             where T : TColumn, new()
         {
             VerifyDesignMode();
-            Check.NotNull(fromProperty, nameof(fromProperty));
+            Check.NotNull(fromMounter, nameof(fromMounter));
             if (inheritColumnKey)
-                return Add(x => CreateColumn(x, fromProperty.OriginalOwnerType, fromProperty.OriginalName, fromProperty.Initializer, initializer));
+                return Add(x => CreateColumn(x, fromMounter.OriginalOwnerType, fromMounter.OriginalName, fromMounter.Initializer, initializer));
             else
-                return Add(x => CreateColumn(x, null, null, fromProperty.Initializer, initializer));
+                return Add(x => CreateColumn(x, null, null, fromMounter.Initializer, initializer));
         }
 
         private static T CreateColumn<T>(ColumnList<TColumn> columnList, Type originalOwnerType, string originalName, Action<T> baseInitializer, Action<T> initializer)

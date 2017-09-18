@@ -20,19 +20,19 @@ namespace DevZest.Data
 
         private class SimpleModel : SimpleModelBase
         {
-            public static readonly Property<SimpleModel> _Child = RegisterChildModel((SimpleModel x) => x.Child, x => x.ParentKey);
+            public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel x) => x.Child, x => x.ParentKey);
 
-            public static readonly Property<_Int32> _Int32Column = RegisterColumn((SimpleModel x) => x.Int32Column);
+            public static readonly Mounter<_Int32> _Int32Column = RegisterColumn((SimpleModel x) => x.Int32Column);
 
-            public static readonly Property<_Int64> _Int64Column = RegisterColumn((SimpleModel x) => x.Int64Column);
+            public static readonly Mounter<_Int64> _Int64Column = RegisterColumn((SimpleModel x) => x.Int64Column);
 
-            public static readonly Property<_Decimal> _DecimalColumn = RegisterColumn((SimpleModel x) => x.DecimalColumn);
+            public static readonly Mounter<_Decimal> _DecimalColumn = RegisterColumn((SimpleModel x) => x.DecimalColumn);
 
-            public static readonly Property<_Double> _DoubleColumn = RegisterColumn((SimpleModel x) => x.DoubleColumn);
+            public static readonly Mounter<_Double> _DoubleColumn = RegisterColumn((SimpleModel x) => x.DoubleColumn);
 
-            public static readonly Property<_Single> _SingleColumn = RegisterColumn((SimpleModel x) => x.SingleColumn);
+            public static readonly Mounter<_Single> _SingleColumn = RegisterColumn((SimpleModel x) => x.SingleColumn);
 
-            public static readonly Property<_String> _StringColumn = RegisterColumn((SimpleModel x) => x.StringColumn);
+            public static readonly Mounter<_String> _StringColumn = RegisterColumn((SimpleModel x) => x.StringColumn);
 
             public SimpleModel Child { get; private set; }
 

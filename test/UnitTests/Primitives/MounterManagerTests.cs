@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 namespace DevZest.Data.Primitives
 {
     [TestClass]
-    public class PropertyManagerTests
+    public class MounterManagerTests
     {
         class TargetType
         {
-            static readonly PropertyManager<TargetType, PropertyType> s_propertyManager = new PropertyManager<TargetType, PropertyType>();
+            static readonly MounterManager<TargetType, PropertyType> s_propertyManager = new MounterManager<TargetType, PropertyType>();
 
             static TargetType()
             {
@@ -25,7 +25,7 @@ namespace DevZest.Data.Primitives
                 s_propertyManager.Register<TTarget, TProperty>(getter, a => new TProperty(), null);
             }
 
-            public static Property<TTarget, TProperty> RegisterAttachedProperty<TTarget, TProperty>(Expression<Func<TTarget, TProperty>> getter)
+            public static Mounter<TTarget, TProperty> RegisterAttachedProperty<TTarget, TProperty>(Expression<Func<TTarget, TProperty>> getter)
                 where TTarget : TargetType
                 where TProperty : PropertyType, new()
             {
@@ -35,10 +35,10 @@ namespace DevZest.Data.Primitives
             public TargetType()
             {
                 foreach (var property in Properties)
-                    property.Construct(this);
+                    property.Mount(this);
             }
 
-            public ReadOnlyCollection<IProperty<TargetType, PropertyType>> Properties
+            public ReadOnlyCollection<IMounter<TargetType, PropertyType>> Properties
             {
                 get { return s_propertyManager.GetAll(this.GetType()); }
             }
@@ -82,17 +82,17 @@ namespace DevZest.Data.Primitives
 
         class Extension
         {
-            public static readonly Property<TargetTypeAttached, PropertyType> _Property3 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty3(x));
-            public static readonly Property<TargetTypeAttached, PropertyType> _Property4 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty4(x));
+            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property3 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty3(x));
+            public static readonly Mounter<TargetTypeAttached, PropertyType> _Property4 = TargetType.RegisterAttachedProperty<TargetTypeAttached, PropertyType>(x => GetProperty4(x));
 
             public static PropertyType GetProperty3(TargetTypeAttached target)
             {
-                return _Property3.GetProperty(target);
+                return _Property3.GetMember(target);
             }
 
             public static PropertyType GetProperty4(TargetTypeAttached target)
             {
-                return _Property4.GetProperty(target);
+                return _Property4.GetMember(target);
             }
 
             public static TargetTypeAttached CreateTarget()
@@ -102,7 +102,7 @@ namespace DevZest.Data.Primitives
         }
 
         [TestMethod]
-        public void PropertyManager_RegisterProperty()
+        public void MounterManager_RegisterProperty()
         {
             TargetType target = new TargetType();
             Assert.AreEqual(2, target.Properties.Count, "Target object should have 2 properties.");
@@ -116,7 +116,7 @@ namespace DevZest.Data.Primitives
         }
 
         [TestMethod]
-        public void PropertyManager_RegisterProperty_in_derived_class()
+        public void MounterManager_RegisterProperty_in_derived_class()
         {
             TargetTypeDerived target = new TargetTypeDerived();
             Assert.AreEqual(3, target.Properties.Count, "Derived target object should have 3 properties.");
@@ -136,7 +136,7 @@ namespace DevZest.Data.Primitives
         }
 
         [TestMethod]
-        public void PropertyManager_RegisterAttachedProperty()
+        public void MounterManager_RegisterAttachedProperty()
         {
             TargetTypeAttached target = Extension.CreateTarget();
             Assert.AreEqual(4, target.Properties.Count, "Derived target object should have 4 properties.");
@@ -155,14 +155,14 @@ namespace DevZest.Data.Primitives
             Assert.AreEqual(Extension.GetProperty4(target), target.Properties[3].GetInstance(target));
         }
 
-        void VerifyProperty(IProperty<TargetType, PropertyType> property, Type expectedOwnerType, string expectedName, Type expectedTargetType, Type expectedPropertyType)
+        void VerifyProperty(IMounter<TargetType, PropertyType> property, Type expectedOwnerType, string expectedName, Type expectedTargetType, Type expectedPropertyType)
         {
             Assert.AreEqual(expectedOwnerType, property.OwnerType, string.Format("The owner type should be '{0}'", expectedOwnerType));
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void PropertyManager_throws_exception_when_register_after_use()
+        public void MounterManager_throws_exception_when_register_after_use()
         {
             new TargetType();
             TargetType.RegisterProperty<TargetType, PropertyType>(x => x.Property1);

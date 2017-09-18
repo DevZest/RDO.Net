@@ -8,11 +8,11 @@ namespace DevZest.Data.Helpers
     {
         protected class SimpleModel : SimpleModelBase
         {
-            public static readonly Property<_Int32> _InheritedValue = RegisterColumn((SimpleModel x) => x.InheritedValue);
+            public static readonly Mounter<_Int32> _InheritedValue = RegisterColumn((SimpleModel x) => x.InheritedValue);
 
-            public static readonly Property<_Int32> _ChildCount = RegisterColumn((SimpleModel x) => x.ChildCount);
+            public static readonly Mounter<_Int32> _ChildCount = RegisterColumn((SimpleModel x) => x.ChildCount);
 
-            public static readonly Property<SimpleModel> _Child = RegisterChildModel((SimpleModel x) => x.Child,
+            public static readonly Mounter<SimpleModel> _Child = RegisterChildModel((SimpleModel x) => x.Child,
                 x => x.ParentKey, (ColumnMappingsBuilder builder, SimpleModel child, SimpleModel parent) => builder.Select(child.InheritedValue, parent.InheritedValue));
 
             public const string MESSAGE_ID = "IdMustBeEven";

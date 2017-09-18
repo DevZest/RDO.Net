@@ -9,11 +9,11 @@ using System.Diagnostics;
 
 namespace DevZest.Data.Primitives
 {
-    internal sealed class PropertyManager<TTarget, TProperty>
+    internal sealed class MounterManager<TTarget, TProperty>
     {
         private struct Key
         {
-            public Key(IProperty<TTarget, TProperty> item)
+            public Key(IMounter<TTarget, TProperty> item)
             {
                 OwnerType = item.OwnerType;
                 Name = item.Name;
@@ -44,23 +44,23 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private struct PropertyInfo<TDerivedTarget, TDerivedProperty>
+        private struct MounterInfo<TDerivedTarget, TDerivedProperty>
         {
-            public static PropertyInfo<TDerivedTarget, TDerivedProperty>? FromGetter(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            public static MounterInfo<TDerivedTarget, TDerivedProperty>? FromGetter(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 var result = GetPropertyInfo(getter);
                 return result.HasValue ? result : GetAttachedPropertyInfo(getter);
             }
 
-            private static PropertyInfo<TDerivedTarget, TDerivedProperty>? GetPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            private static MounterInfo<TDerivedTarget, TDerivedProperty>? GetPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 var propExp = getter.Body as MemberExpression;
                 if (propExp == null)
                     return null;
-                return new PropertyInfo<TDerivedTarget, TDerivedProperty>(false, typeof(TDerivedTarget), propExp.Member.Name, getter);
+                return new MounterInfo<TDerivedTarget, TDerivedProperty>(false, typeof(TDerivedTarget), propExp.Member.Name, getter);
             }
 
-            private static PropertyInfo<TDerivedTarget, TDerivedProperty>? GetAttachedPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            private static MounterInfo<TDerivedTarget, TDerivedProperty>? GetAttachedPropertyInfo(Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 var callExp = getter.Body as MethodCallExpression;
                 if (callExp == null)
@@ -75,10 +75,10 @@ namespace DevZest.Data.Primitives
                 if (!name.StartsWith("Get"))
                     return null;
                 name = name.Substring("Get".Length);
-                return new PropertyInfo<TDerivedTarget, TDerivedProperty>(true, ownerType, name, getter);
+                return new MounterInfo<TDerivedTarget, TDerivedProperty>(true, ownerType, name, getter);
             }
 
-            private PropertyInfo(bool isAttached, Type ownerType, string name, Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
+            private MounterInfo(bool isAttached, Type ownerType, string name, Expression<Func<TDerivedTarget, TDerivedProperty>> getter)
             {
                 IsAttached = isAttached;
                 OwnerType = ownerType;
@@ -95,18 +95,18 @@ namespace DevZest.Data.Primitives
             public readonly Expression<Func<TDerivedTarget, TDerivedProperty>> Getter;
         }
 
-        private abstract class PropertyImplBase<TDerivedTarget, TDerivedProperty> : Property<TDerivedTarget, TDerivedProperty>, IProperty<TTarget, TProperty>
+        private abstract class MounterImplBase<TDerivedTarget, TDerivedProperty> : Mounter<TDerivedTarget, TDerivedProperty>, IMounter<TTarget, TProperty>
             where TDerivedTarget : TTarget
             where TDerivedProperty : TProperty
         {
-            protected PropertyImplBase()
+            protected MounterImplBase()
             {
             }
 
             protected void Init(string name,
                 Func<TDerivedTarget, TDerivedProperty> getter,
                 Action<TDerivedTarget, TDerivedProperty> setter,
-                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+                Func<Mounter<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 _name = name;
@@ -146,22 +146,22 @@ namespace DevZest.Data.Primitives
                 get { return _initializer; }
             }
 
-            TProperty IProperty<TTarget, TProperty>.GetInstance(TTarget target)
+            TProperty IMounter<TTarget, TProperty>.GetInstance(TTarget target)
             {
-                return this.GetProperty((TDerivedTarget)target);
+                return this.GetMember((TDerivedTarget)target);
             }
 
-            TProperty IProperty<TTarget, TProperty>.Construct(TTarget target)
+            TProperty IMounter<TTarget, TProperty>.Mount(TTarget target)
             {
-                return this.Construct((TDerivedTarget)target);
+                return this.Mount((TDerivedTarget)target);
             }
         }
-        private sealed class PropertyImpl<TDerivedTarget, TDerivedProperty> : PropertyImplBase<TDerivedTarget, TDerivedProperty>
+        private sealed class MounterImpl<TDerivedTarget, TDerivedProperty> : MounterImplBase<TDerivedTarget, TDerivedProperty>
             where TDerivedTarget : TTarget
             where TDerivedProperty : TProperty
         {
-            public PropertyImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
-                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            public MounterImpl(MounterInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
+                Func<Mounter<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 Debug.Assert(constructor != null);
@@ -197,7 +197,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private sealed class AttachedPropertyImpl<TDerivedTarget, TDerivedProperty> : PropertyImplBase<TDerivedTarget, TDerivedProperty>
+        private sealed class AttachedMounterImpl<TDerivedTarget, TDerivedProperty> : MounterImplBase<TDerivedTarget, TDerivedProperty>
             where TDerivedTarget : class, TTarget
             where TDerivedProperty : class, TProperty
         {
@@ -213,8 +213,8 @@ namespace DevZest.Data.Primitives
                 _storage.Add(target, value);
             }
 
-            public AttachedPropertyImpl(PropertyInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
-                Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            public AttachedMounterImpl(MounterInfo<TDerivedTarget, TDerivedProperty> propertyInfo,
+                Func<Mounter<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
                 Action<TDerivedProperty> initializer)
             {
                 Init(propertyInfo.Name, GetStoredProperty, SetStoredProperty, constructor, initializer);
@@ -228,45 +228,45 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private sealed class RegistrationCollection : KeyedCollection<Key, IProperty<TTarget, TProperty>>
+        private sealed class RegistrationCollection : KeyedCollection<Key, IMounter<TTarget, TProperty>>
         {
-            protected override Key GetKeyForItem(IProperty<TTarget, TProperty> item)
+            protected override Key GetKeyForItem(IMounter<TTarget, TProperty> item)
             {
                 return new Key(item);
             }
         }
 
         private Dictionary<Type, RegistrationCollection> _registrations = new Dictionary<Type, RegistrationCollection>();
-        private Dictionary<Type, ReadOnlyCollection<IProperty<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, ReadOnlyCollection<IProperty<TTarget, TProperty>>>();
+        private Dictionary<Type, ReadOnlyCollection<IMounter<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, ReadOnlyCollection<IMounter<TTarget, TProperty>>>();
 
-        public Property<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
+        public Mounter<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
             Expression<Func<TDerivedTarget, TDerivedProperty>> getter,
-            Func<Property<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
+            Func<Mounter<TDerivedTarget, TDerivedProperty>, TDerivedProperty> constructor,
             Action<TDerivedProperty> initializer = null)
             where TDerivedTarget : class, TTarget
             where TDerivedProperty : class, TProperty
         {
             Debug.Assert(getter != null);
-            var propertyInfo = PropertyInfo<TDerivedTarget, TDerivedProperty>.FromGetter(getter);
+            var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.FromGetter(getter);
             if (propertyInfo == null)
                 throw new ArgumentException(Strings.Property_InvalidGetter);
 
             var info = propertyInfo.Value;
             if (info.IsAttached)
             {
-                var result = new AttachedPropertyImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+                var result = new AttachedMounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
                 Register(result);
                 return result;
             }
             else
             {
-                var result = new PropertyImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
+                var result = new MounterImpl<TDerivedTarget, TDerivedProperty>(info, constructor, initializer);
                 Register(result);
                 return result;
             }
         }
 
-        private void Register(IProperty<TTarget, TProperty> item)
+        private void Register(IMounter<TTarget, TProperty> item)
         {
             Type targetType = item.ParentType;
             lock (_resultRegistrations) // ensure thread safety
@@ -288,16 +288,16 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public ReadOnlyCollection<IProperty<TTarget, TProperty>> GetAll(Type targetType)
+        public ReadOnlyCollection<IMounter<TTarget, TProperty>> GetAll(Type targetType)
         {
-            ReadOnlyCollection<IProperty<TTarget, TProperty>> result;
+            ReadOnlyCollection<IMounter<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 
             return SyncGetAll(targetType);
         }
 
-        private ReadOnlyCollection<IProperty<TTarget, TProperty>> SyncGetAll(Type targetType)
+        private ReadOnlyCollection<IMounter<TTarget, TProperty>> SyncGetAll(Type targetType)
         {
             lock (_resultRegistrations) // ensure thread safety
             {
@@ -305,13 +305,13 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static readonly ReadOnlyCollection<IProperty<TTarget, TProperty>> Empty =
-            new ReadOnlyCollection<IProperty<TTarget, TProperty>>(new IProperty<TTarget, TProperty>[0]);
-        private ReadOnlyCollection<IProperty<TTarget, TProperty>> GetProperties(Type targetType)
+        private static readonly ReadOnlyCollection<IMounter<TTarget, TProperty>> Empty =
+            new ReadOnlyCollection<IMounter<TTarget, TProperty>>(new IMounter<TTarget, TProperty>[0]);
+        private ReadOnlyCollection<IMounter<TTarget, TProperty>> GetProperties(Type targetType)
         {
             Debug.Assert(targetType != null);
 
-            ReadOnlyCollection<IProperty<TTarget, TProperty>> result;
+            ReadOnlyCollection<IMounter<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 
@@ -320,7 +320,7 @@ namespace DevZest.Data.Primitives
             if (_registrations.TryGetValue(targetType, out registrations))
             {
                 _registrations.Remove(targetType);
-                result = new ReadOnlyCollection<IProperty<TTarget, TProperty>>(registrations);
+                result = new ReadOnlyCollection<IMounter<TTarget, TProperty>>(registrations);
             }
             else
                 result = Empty;

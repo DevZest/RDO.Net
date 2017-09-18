@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace DevZest.Data
 {
-    public abstract class Property<T>
+    public abstract class Mounter<T>
     {
         internal abstract Func<T> Constructor { get; }
 
@@ -31,21 +31,12 @@ namespace DevZest.Data
 
         /// <summary>Gets the type which the property is member of.</summary>
         public abstract Type ParentType { get; }
-
-        /// <summary>Gets the type of the property.</summary>
-        public Type PropertyType
-        {
-            get { return typeof(T); }
-        }
     }
 
-    /// <summary>Represents a property registered with a class.</summary>
-    /// <typeparam name="TParent">The type of the parent.</typeparam>
-    /// <typeparam name="TProperty">The type of the property.</typeparam>
     /// <threadsafety static="true" instance="true"/>
-    internal abstract class Property<TParent, TProperty> : Property<TProperty>
+    internal abstract class Mounter<TParent, TProperty> : Mounter<TProperty>
     {
-        internal Property()
+        internal Mounter()
         {
         }
 
@@ -69,10 +60,10 @@ namespace DevZest.Data
             private set { s_parent.Value = value; }
         }
 
-        /// <summary>Gets the property value of the specified parent object.</summary>
+        /// <summary>Gets the member value of the specified parent object.</summary>
         /// <param name="parent">The parent object.</param>
         /// <returns>The property value.</returns>
-        public TProperty GetProperty(TParent parent)
+        public TProperty GetMember(TParent parent)
         {
             if (parent == null)
                 throw new ArgumentNullException(nameof(parent));
@@ -80,7 +71,7 @@ namespace DevZest.Data
             return Getter(parent);
         }
 
-        internal TProperty Construct(TParent target)
+        internal TProperty Mount(TParent target)
         {
             Parent = target;
             var result = Constructor();

@@ -18,7 +18,7 @@ namespace DevZest.Data
     {
         #region RegisterColumn
 
-        static PropertyManager<Model, Column> s_columnManager = new PropertyManager<Model, Column>();
+        static MounterManager<Model, Column> s_columnManager = new MounterManager<Model, Column>();
 
         /// <summary>
         /// Registers a new column which has a default constructor.
@@ -27,10 +27,10 @@ namespace DevZest.Data
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
         /// <param name="initializer">The additional initializer.</param>
-        /// <returns>Property of the column.</returns>
+        /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static Property<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Action<TColumn> initializer = null)
+        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter, Action<TColumn> initializer = null)
             where TModel : Model
             where TColumn : Column, new()
         {
@@ -47,13 +47,13 @@ namespace DevZest.Data
         /// <param name="getter">The lambda expression of the column getter.</param>
         /// <param name="fromProperty">The existing column property.</param>
         /// <param name="initializer">The additional initializer.</param>
-        /// <returns>Property of the column.</returns>
+        /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fromProperty"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="initializer"/> is null.</exception>
-        public static Property<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
-            Property<TColumn> fromProperty,
+        public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
+            Mounter<TColumn> fromProperty,
             Action<TColumn> initializer = null)
             where TModel : Model
             where TColumn : Column, new()
@@ -81,12 +81,12 @@ namespace DevZest.Data
             return propertyInfo.GetCustomAttributes<ColumnAttribute>();
         }
 
-        private static T CreateColumn<TModel, T>(Property<TModel, T> property, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(property.OwnerType, property.Name);
-            result.Construct(property.Parent, property.OwnerType, property.Name, ColumnKind.User, null, GetColumnInitializer(initializer, columnAttributes));
+            var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, null, GetColumnInitializer(initializer, columnAttributes));
             return result;
         }
 
@@ -120,12 +120,12 @@ namespace DevZest.Data
             }
         }
 
-        private static T CreateColumn<TModel, T>(Property<TModel, T> property, Property<T> fromProperty, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
+        private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Mounter<T> fromMounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
             where TModel : Model
             where T : Column, new()
         {
-            var result = Column.Create<T>(fromProperty.OriginalOwnerType, fromProperty.OriginalName);
-            result.Construct(property.Parent, property.OwnerType, property.Name, ColumnKind.User, fromProperty.Initializer, GetColumnInitializer(initializer, columnAttributes));
+            var result = Column.Create<T>(fromMounter.OriginalOwnerType, fromMounter.OriginalName);
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, fromMounter.Initializer, GetColumnInitializer(initializer, columnAttributes));
             return result;
         }
 
@@ -133,7 +133,7 @@ namespace DevZest.Data
 
         #region RegisterColumnList
 
-        static PropertyManager<Model, ColumnList> s_columnListManager = new PropertyManager<Model, ColumnList>();
+        static MounterManager<Model, ColumnList> s_columnListManager = new MounterManager<Model, ColumnList>();
 
         /// <summary>
         /// Registers a column list.
@@ -141,10 +141,10 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
         /// <typeparam name="T">The type of the column contained by the column list.</typeparam>
         /// <param name="getter">The lambda expression of the column list getter.</param>
-        /// <returns>Property of the column list.</returns>
+        /// <returns>Mounter of the column list.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        public static Property<ColumnList<T>> RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
+        public static Mounter<ColumnList<T>> RegisterColumnList<TModel, T>(Expression<Func<TModel, ColumnList<T>>> getter)
             where TModel : Model
             where T : Column
         {
@@ -153,12 +153,12 @@ namespace DevZest.Data
             return s_columnListManager.Register(getter, a => CreateColumnList(a), null);
         }
 
-        private static ColumnList<T> CreateColumnList<TModel, T>(Property<TModel, ColumnList<T>> property)
+        private static ColumnList<T> CreateColumnList<TModel, T>(Mounter<TModel, ColumnList<T>> mounter)
             where TModel : Model
             where T : Column
         {
             var result = new ColumnList<T>();
-            result.ConstructModelMember(property.Parent, property.OwnerType, property.Name);
+            result.ConstructModelMember(mounter.Parent, mounter.OwnerType, mounter.Name);
             return result;
         }
 
@@ -166,9 +166,9 @@ namespace DevZest.Data
 
         #region RegisterChildModel
 
-        static PropertyManager<Model, Model> s_childModelManager = new PropertyManager<Model, Model>();
+        static MounterManager<Model, Model> s_childModelManager = new MounterManager<Model, Model>();
 
-        public static Property<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter)
+        public static Mounter<TChildModel> RegisterChildModel<TModel, TChildModel>(Expression<Func<TModel, TChildModel>> getter)
             where TModel : Model, new()
             where TChildModel : Model, new()
         {
@@ -177,13 +177,13 @@ namespace DevZest.Data
         }
 
         private static ReadOnlyCollection<ColumnMapping> s_emptyColumnMapping = new ReadOnlyCollection<ColumnMapping>(Array<ColumnMapping>.Empty);
-        private static TChildModel CreateChildModel<TModel, TChildModel>(Property<TModel, TChildModel> property)
+        private static TChildModel CreateChildModel<TModel, TChildModel>(Mounter<TModel, TChildModel> mounter)
             where TModel : Model, new()
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
-            var parentModel = property.Parent;
-            result.Construct(parentModel, property.OwnerType, property.Name);
+            var parentModel = mounter.Parent;
+            result.Construct(parentModel, mounter.OwnerType, mounter.Name);
             return result;
         }
 
@@ -199,11 +199,11 @@ namespace DevZest.Data
         /// <typeparam name="TChildModel">The type of the child model.</typeparam>
         /// <param name="getter">The lambda expression of the child model getter.</param>
         /// <param name="childRefGetter">The relationship between child model and parent model.</param>
-        /// <returns>Property of the child model.</returns>
+        /// <returns>Mounter of the child model.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="childRefGetter"/> is <see langword="null"/>.</exception>
-        public static Property<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
+        public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
             Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
             where TModel : Model<TModelKey>
             where TModelKey : KeyBase
@@ -215,17 +215,17 @@ namespace DevZest.Data
             return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, childRefGetter, childColumnsBuilder), null);
         }
 
-        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Property<TModel, TChildModel> property,
+        private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
             Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
             where TModel : Model<TModelKey>
             where TModelKey : KeyBase
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
-            var parentModel = property.Parent;
+            var parentModel = mounter.Parent;
             var parentRelationship = childRefGetter(result).GetRelationship(parentModel.PrimaryKey);
             var parentMappings = GetParentMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
-            result.Construct(parentModel, property.OwnerType, property.Name, parentRelationship, parentMappings);
+            result.Construct(parentModel, mounter.OwnerType, mounter.Name, parentRelationship, parentMappings);
             return result;
         }
 
@@ -284,8 +284,8 @@ namespace DevZest.Data
             Columns = new ColumnCollection(this);
             ChildModels = new ModelCollection(this);
 
-            Initialize(s_columnManager);
-            Initialize(s_columnListManager);
+            Mount(s_columnManager);
+            Mount(s_columnListManager);
         }
 
         internal override void ConstructModelMember(Model parentModel, Type ownerType, string name)
@@ -325,7 +325,7 @@ namespace DevZest.Data
             if (IsInitialized)
                 return;
 
-            Initialize(s_childModelManager);
+            Mount(s_childModelManager);
             if (DataSource != null && DataSource.Kind == DataSourceKind.DataSet)
             {
                 foreach (var model in ChildModels)
@@ -371,12 +371,12 @@ namespace DevZest.Data
             return Expression.Lambda<Action<Model>>(call, paramModel).Compile();
         }
 
-        private void Initialize<T>(PropertyManager<Model, T> propertyManager)
+        private void Mount<T>(MounterManager<Model, T> mounterManager)
             where T : class
         {
-            var properties = propertyManager.GetAll(this.GetType());
-            foreach (var property in properties)
-                property.Construct(this);
+            var mounters = mounterManager.GetAll(this.GetType());
+            foreach (var mounter in mounters)
+                mounter.Mount(this);
         }
 
         protected internal ColumnCollection Columns { get; private set; }

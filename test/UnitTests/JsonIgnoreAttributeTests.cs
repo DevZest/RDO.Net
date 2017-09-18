@@ -7,7 +7,7 @@ namespace DevZest.Data
     {
         private class MyModel : Model
         {
-            public static readonly Property<_Int32> _Column = RegisterColumn((MyModel x) => x.Column);
+            public static readonly Mounter<_Int32> _Column = RegisterColumn((MyModel x) => x.Column);
 
             [JsonIgnore]
             public _Int32 Column { get; private set; }

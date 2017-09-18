@@ -15,21 +15,21 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductID { get; private set; }
         }
 
-        public static readonly Property<_Int32> _ProductID = RegisterColumn((Product x) => x.ProductID);
-        public static readonly Property<_String> _Name = RegisterColumn((Product x) => x.Name);
-        public static readonly Property<_String> _ProductNumber = RegisterColumn((Product x) => x.ProductNumber);
-        public static readonly Property<_String> _Color = RegisterColumn((Product x) => x.Color);
-        public static readonly Property<_Decimal> _StandardCost = RegisterColumn((Product x) => x.StandardCost);
-        public static readonly Property<_Decimal> _ListPrice = RegisterColumn((Product x) => x.ListPrice);
-        public static readonly Property<_String> _Size = RegisterColumn((Product x) => x.Size);
-        public static readonly Property<_Decimal> _Weight = RegisterColumn((Product x) => x.Weight);
-        public static readonly Property<_Int32> _ProductCategoryID = RegisterColumn((Product x) => x.ProductCategoryID);
-        public static readonly Property<_Int32> _ProductModelID = RegisterColumn((Product x) => x.ProductModelID);
-        public static readonly Property<_DateTime> _SellStartDate = RegisterColumn((Product x) => x.SellStartDate, x => x.AsDateTime());
-        public static readonly Property<_DateTime> _SellEndDate = RegisterColumn((Product x) => x.SellEndDate, x => x.AsDateTime());
-        public static readonly Property<_DateTime> _DiscontinuedDate = RegisterColumn((Product x) => x.DiscontinuedDate, x => x.AsDateTime());
-        public static readonly Property<_Binary> _ThumbNailPhoto = RegisterColumn((Product x) => x.ThumbNailPhoto);
-        public static readonly Property<_String> _ThumbnailPhotoFileName = RegisterColumn((Product x) => x.ThumbnailPhotoFileName);
+        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Product x) => x.ProductID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((Product x) => x.Name);
+        public static readonly Mounter<_String> _ProductNumber = RegisterColumn((Product x) => x.ProductNumber);
+        public static readonly Mounter<_String> _Color = RegisterColumn((Product x) => x.Color);
+        public static readonly Mounter<_Decimal> _StandardCost = RegisterColumn((Product x) => x.StandardCost);
+        public static readonly Mounter<_Decimal> _ListPrice = RegisterColumn((Product x) => x.ListPrice);
+        public static readonly Mounter<_String> _Size = RegisterColumn((Product x) => x.Size);
+        public static readonly Mounter<_Decimal> _Weight = RegisterColumn((Product x) => x.Weight);
+        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Product x) => x.ProductCategoryID);
+        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Product x) => x.ProductModelID);
+        public static readonly Mounter<_DateTime> _SellStartDate = RegisterColumn((Product x) => x.SellStartDate, x => x.AsDateTime());
+        public static readonly Mounter<_DateTime> _SellEndDate = RegisterColumn((Product x) => x.SellEndDate, x => x.AsDateTime());
+        public static readonly Mounter<_DateTime> _DiscontinuedDate = RegisterColumn((Product x) => x.DiscontinuedDate, x => x.AsDateTime());
+        public static readonly Mounter<_Binary> _ThumbNailPhoto = RegisterColumn((Product x) => x.ThumbNailPhoto);
+        public static readonly Mounter<_String> _ThumbnailPhotoFileName = RegisterColumn((Product x) => x.ThumbnailPhotoFileName);
 
         public Product()
         {

@@ -39,14 +39,14 @@ namespace DevZest.Data
 
         /// <summary>Adds a new column to this adhoc model, from existing column property.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
-        /// <param name="property">The existing column property.</param>
+        /// <param name="mounter">The existing column mounter.</param>
         /// <param name="inheritColumnKey">A value indicates whether the newly added column should inherit <see cref="ColumnKey"/> from the existing column property.</param>
         /// <param name="initializer">The additional column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T AddColumn<T>(Property<T> property, bool inheritColumnKey = false, Action<T> initializer = null)
+        public T AddColumn<T>(Mounter<T> mounter, bool inheritColumnKey = false, Action<T> initializer = null)
             where T : Column, new()
         {
-            return ColumnList.Add(property, inheritColumnKey, initializer);
+            return ColumnList.Add(mounter, inheritColumnKey, initializer);
         }
 
         /// <summary>Gets the column at specified index.</summary>
