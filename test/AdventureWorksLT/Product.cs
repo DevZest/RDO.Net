@@ -15,21 +15,39 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Product x) => x.ProductID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((Product x) => x.Name);
-        public static readonly Mounter<_String> _ProductNumber = RegisterColumn((Product x) => x.ProductNumber);
-        public static readonly Mounter<_String> _Color = RegisterColumn((Product x) => x.Color);
-        public static readonly Mounter<_Decimal> _StandardCost = RegisterColumn((Product x) => x.StandardCost);
-        public static readonly Mounter<_Decimal> _ListPrice = RegisterColumn((Product x) => x.ListPrice);
-        public static readonly Mounter<_String> _Size = RegisterColumn((Product x) => x.Size);
-        public static readonly Mounter<_Decimal> _Weight = RegisterColumn((Product x) => x.Weight);
-        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Product x) => x.ProductCategoryID);
-        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Product x) => x.ProductModelID);
-        public static readonly Mounter<_DateTime> _SellStartDate = RegisterColumn((Product x) => x.SellStartDate, x => x.AsDateTime());
-        public static readonly Mounter<_DateTime> _SellEndDate = RegisterColumn((Product x) => x.SellEndDate, x => x.AsDateTime());
-        public static readonly Mounter<_DateTime> _DiscontinuedDate = RegisterColumn((Product x) => x.DiscontinuedDate, x => x.AsDateTime());
-        public static readonly Mounter<_Binary> _ThumbNailPhoto = RegisterColumn((Product x) => x.ThumbNailPhoto);
-        public static readonly Mounter<_String> _ThumbnailPhotoFileName = RegisterColumn((Product x) => x.ThumbnailPhotoFileName);
+        public class Ref : Model<Key>
+        {
+            public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Ref _) => _.ProductID);
+
+            public Ref()
+            {
+                _primaryKey = new Key(ProductID);
+            }
+
+            private readonly Key _primaryKey;
+            public sealed override Key PrimaryKey
+            {
+                get { return _primaryKey; }
+            }
+
+            public _Int32 ProductID { get; private set; }
+        }
+
+        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Product _) => _.ProductID, Ref._ProductID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((Product _) => _.Name);
+        public static readonly Mounter<_String> _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
+        public static readonly Mounter<_String> _Color = RegisterColumn((Product _) => _.Color);
+        public static readonly Mounter<_Decimal> _StandardCost = RegisterColumn((Product _) => _.StandardCost);
+        public static readonly Mounter<_Decimal> _ListPrice = RegisterColumn((Product _) => _.ListPrice);
+        public static readonly Mounter<_String> _Size = RegisterColumn((Product _) => _.Size);
+        public static readonly Mounter<_Decimal> _Weight = RegisterColumn((Product _) => _.Weight);
+        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Product _) => _.ProductCategoryID);
+        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Product _) => _.ProductModelID);
+        public static readonly Mounter<_DateTime> _SellStartDate = RegisterColumn((Product _) => _.SellStartDate, x => x.AsDateTime());
+        public static readonly Mounter<_DateTime> _SellEndDate = RegisterColumn((Product _) => _.SellEndDate, x => x.AsDateTime());
+        public static readonly Mounter<_DateTime> _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate, x => x.AsDateTime());
+        public static readonly Mounter<_Binary> _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
+        public static readonly Mounter<_String> _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
 
         public Product()
         {

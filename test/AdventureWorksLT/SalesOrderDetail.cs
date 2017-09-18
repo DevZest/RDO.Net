@@ -1,6 +1,5 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
-using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -19,13 +18,34 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail x) => x.SalesOrderID);
-        public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail x) => x.SalesOrderDetailID);
-        public static readonly Mounter<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail x) => x.OrderQty);
-        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((SalesOrderDetail x) => x.ProductID);
-        public static readonly Mounter<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail x) => x.UnitPrice);
-        public static readonly Mounter<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail x) => x.UnitPriceDiscount, x => x.DefaultValue(0));
-        public static readonly Mounter<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail x) => x.LineTotal);
+        public class Ref : Model<Key>
+        {
+            public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((Ref _) => _.SalesOrderID);
+            public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((Ref _) => _.SalesOrderDetailID);
+
+            public Ref()
+            {
+                _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
+            }
+
+            private readonly Key _primaryKey;
+            public sealed override Key PrimaryKey
+            {
+                get { return _primaryKey; }
+            }
+
+            public _Int32 SalesOrderID { get; private set; }
+
+            public _Int32 SalesOrderDetailID { get; private set; }
+        }
+
+        public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, Ref._SalesOrderID);
+        public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID, Ref._SalesOrderDetailID);
+        public static readonly Mounter<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
+        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((SalesOrderDetail _) => _.ProductID);
+        public static readonly Mounter<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
+        public static readonly Mounter<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount, x => x.DefaultValue(0));
+        public static readonly Mounter<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
 
         public SalesOrderDetail()
         {

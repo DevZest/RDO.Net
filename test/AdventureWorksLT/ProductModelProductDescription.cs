@@ -1,6 +1,5 @@
 ﻿using DevZest.Data;
 using DevZest.Data.SqlServer;
-using System;
 
 namespace DevZest.Samples.AdventureWorksLT
 {
@@ -22,9 +21,9 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
-        public static Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription x) => x.ProductModelID);
-        public static Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription x) => x.ProductDescriptionID);
-        public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription x) => x.Culture);
+        public static Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);
+        public static Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID);
+        public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
 
         public ProductModelProductDescription()
         {

@@ -15,9 +15,27 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModel x) => x.ProductModelID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((ProductModel x) => x.Name);
-        public static readonly Mounter<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel x) => x.CatalogDescription);
+        public class Ref : Model<Key>
+        {
+            public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Ref _) => _.ProductModelID);
+
+            public Ref()
+            {
+                _primaryKey = new Key(ProductModelID);
+            }
+
+            private readonly Key _primaryKey;
+            public sealed override Key PrimaryKey
+            {
+                get { return _primaryKey; }
+            }
+
+            public _Int32 ProductModelID { get; private set; }
+        }
+
+        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModel _) => _.ProductModelID, Ref._ProductModelID);
+        public static readonly Mounter<_String> _Name = RegisterColumn((ProductModel _) => _.Name);
+        public static readonly Mounter<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
 
         public ProductModel()
         {
