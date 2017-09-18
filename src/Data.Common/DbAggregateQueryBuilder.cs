@@ -49,7 +49,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             base.InnerJoin(dbSet, left, right, out model);
             return this;
@@ -57,7 +57,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             base.LeftJoin(dbSet, left, right, out model);
             return this;
@@ -65,7 +65,7 @@ namespace DevZest.Data
 
         public new DbAggregateQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             base.RightJoin(dbSet, left, right, out model);
             return this;

@@ -9,7 +9,7 @@ namespace DevZest.Data
     {
         private sealed class MyTable : Model<MyTable.Key>
         {
-            public sealed class Key : ModelKey
+            public sealed class Key : KeyBase
             {
                 public Key(_Int32 id)
                 {

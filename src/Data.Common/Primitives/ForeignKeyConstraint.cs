@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public sealed class ForeignKeyConstraint : DbTableConstraint
     {
-        internal ForeignKeyConstraint(string name, ModelKey foreignKey, ModelKey referencedKey, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
+        internal ForeignKeyConstraint(string name, KeyBase foreignKey, KeyBase referencedKey, ForeignKeyAction onDelete, ForeignKeyAction onUpdate)
             : base(name)
         {
             Debug.Assert(foreignKey != null);
@@ -18,7 +18,7 @@ namespace DevZest.Data.Primitives
             OnUpdate = onUpdate;
         }
 
-        public ModelKey ForeignKey { get; private set; }
+        public KeyBase ForeignKey { get; private set; }
 
         public string ReferencedTableName
         {
@@ -29,7 +29,7 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public ModelKey ReferencedKey { get; private set; }
+        public KeyBase ReferencedKey { get; private set; }
 
         public ForeignKeyAction OnDelete { get; private set; }
 

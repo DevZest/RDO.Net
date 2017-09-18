@@ -143,7 +143,7 @@ namespace DevZest.Data
             return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
-        private IList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, ModelKey> joinOn = null)
+        private IList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, KeyBase> joinOn = null)
         {
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)

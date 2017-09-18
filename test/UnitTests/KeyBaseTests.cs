@@ -4,9 +4,9 @@ using System;
 namespace DevZest.Data
 {
     [TestClass]
-    public class ModelKeyTests
+    public class KeyBaseTests
     {
-        private class SimpleKey : ModelKey
+        private class SimpleKey : KeyBase
         {
             public SimpleKey(_Int32 column1, _Int32 column2)
             {
@@ -21,7 +21,7 @@ namespace DevZest.Data
         }
 
         [TestMethod]
-        public void ModelKey_successfully_constructed()
+        public void KeyBase_column_sort_list_successfully_constructed()
         {
             var simpleKey = new SimpleKey(new _Int32(), new _Int32());
             Assert.AreEqual(2, simpleKey.Count);

@@ -5,7 +5,7 @@ namespace DevZest.Samples.AdventureWorksLT
 {
     public class Customer : BaseModel<Customer.Key>
     {
-        public sealed class Key : ModelKey
+        public sealed class Key : KeyBase
         {
             public Key(_Int32 customerID)
             {
@@ -15,19 +15,37 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 CustomerID { get; private set; }
         }
 
-        public static readonly Property<_Int32> _CustomerID = RegisterColumn((Customer x) => x.CustomerID);
-        public static readonly Property<_Boolean> _NameStyle = RegisterColumn((Customer x) => x.NameStyle);
-        public static readonly Property<_String> _Title = RegisterColumn((Customer x) => x.Title);
-        public static readonly Property<_String> _FirstName = RegisterColumn((Customer x) => x.FirstName);
-        public static readonly Property<_String> _MiddleName = RegisterColumn((Customer x) => x.MiddleName);
-        public static readonly Property<_String> _LastName = RegisterColumn((Customer x) => x.LastName);
-        public static readonly Property<_String> _Suffix = RegisterColumn((Customer x) => x.Suffix);
-        public static readonly Property<_String> _CompanyName = RegisterColumn((Customer x) => x.CompanyName);
-        public static readonly Property<_String> _SalesPersion = RegisterColumn((Customer x) => x.SalesPerson);
-        public static readonly Property<_String> _EmailAddress = RegisterColumn((Customer x) => x.EmailAddress);
-        public static readonly Property<_String> _Phone = RegisterColumn((Customer x) => x.Phone);
-        public static readonly Property<_String> _PasswordHash = RegisterColumn((Customer x) => x.PasswordHash);
-        public static readonly Property<_String> _PasswordSalt = RegisterColumn((Customer x) => x.PasswordSalt);
+        public class Ref : Model<Key>
+        {
+            public static readonly Property<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID);
+
+            public Ref()
+            {
+                _primaryKey = new Key(CustomerID);
+            }
+
+            private Key _primaryKey;
+            public sealed override Key PrimaryKey
+            {
+                get { return _primaryKey; }
+            }
+
+            public _Int32 CustomerID { get; private set; }
+        }
+
+        public static readonly Property<_Int32> _CustomerID = RegisterColumn((Customer _) => _.CustomerID, Ref._CustomerID);
+        public static readonly Property<_Boolean> _NameStyle = RegisterColumn((Customer _) => _.NameStyle);
+        public static readonly Property<_String> _Title = RegisterColumn((Customer _) => _.Title);
+        public static readonly Property<_String> _FirstName = RegisterColumn((Customer _) => _.FirstName);
+        public static readonly Property<_String> _MiddleName = RegisterColumn((Customer _) => _.MiddleName);
+        public static readonly Property<_String> _LastName = RegisterColumn((Customer _) => _.LastName);
+        public static readonly Property<_String> _Suffix = RegisterColumn((Customer _) => _.Suffix);
+        public static readonly Property<_String> _CompanyName = RegisterColumn((Customer _) => _.CompanyName);
+        public static readonly Property<_String> _SalesPersion = RegisterColumn((Customer _) => _.SalesPerson);
+        public static readonly Property<_String> _EmailAddress = RegisterColumn((Customer _) => _.EmailAddress);
+        public static readonly Property<_String> _Phone = RegisterColumn((Customer _) => _.Phone);
+        public static readonly Property<_String> _PasswordHash = RegisterColumn((Customer _) => _.PasswordHash);
+        public static readonly Property<_String> _PasswordSalt = RegisterColumn((Customer _) => _.PasswordSalt);
 
         public Customer()
         {

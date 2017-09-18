@@ -166,7 +166,7 @@
     <Compile Include="MockDb.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelCollection.cs" />
-    <Compile Include="ModelKey.cs" />
+    <Compile Include="KeyBase.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="Model_T.cs" />
     <Compile Include="RequiredAttribute.cs" />

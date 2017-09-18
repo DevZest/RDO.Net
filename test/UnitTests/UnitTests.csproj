@@ -139,7 +139,7 @@
     <Compile Include="Helpers\ColumnExtensions.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="Primitives\PropertyManagerTests.cs" />
-    <Compile Include="ModelKeyTests.cs" />
+    <Compile Include="KeyBaseTests.cs" />
     <Compile Include="Helpers\DbExpressionExtensions.cs" />
     <Compile Include="Helpers\ModelMemberExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

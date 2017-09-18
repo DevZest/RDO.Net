@@ -26,7 +26,7 @@ namespace DevZest.Data
         {
             _subQueryEliminator = query.SubQueryEliminator;
             FromClause = query.From;
-            _sourceModelSet = _sourceModelSet.Add(FromClause);
+            _sourceModels = _sourceModels.Add(FromClause);
             WhereExpression = query.Where;
             OrderByList = query.OrderBy;
         }
@@ -44,7 +44,7 @@ namespace DevZest.Data
 
         #region FROM
 
-        IModels _sourceModelSet = Models.Empty;
+        IModels _sourceModels = Models.Empty;
         SubQueryEliminator _subQueryEliminator;
         Dictionary<ColumnKey, List<Column>> _sourceColumnsByKey = new Dictionary<ColumnKey, List<Column>>();
 
@@ -56,7 +56,7 @@ namespace DevZest.Data
             Check.NotNull(dbSet, nameof(dbSet));
 
             model = dbSet._;
-            if (_sourceModelSet.Count > 0)
+            if (_sourceModels.Count > 0)
                 throw new InvalidOperationException(Strings.DbQueryBuilder_DuplicateFrom);
 
             From(model);
@@ -75,9 +75,9 @@ namespace DevZest.Data
 
         private void AddSourceModel(Model model)
         {
-            Debug.Assert(!_sourceModelSet.Contains(model));
+            Debug.Assert(!_sourceModels.Contains(model));
 
-            _sourceModelSet = _sourceModelSet.Add(model);
+            _sourceModels = _sourceModels.Add(model);
             foreach (var column in model.Columns)
             {
                 var columnKey = column.Key;
@@ -93,7 +93,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.InnerJoin, out model);
             return this;
@@ -101,7 +101,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder LeftJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.LeftJoin, out model);
             return this;
@@ -109,7 +109,7 @@ namespace DevZest.Data
 
         public DbQueryBuilder RightJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             Join(dbSet, left, right(dbSet._), DbJoinKind.RightJoin, out model);
             return this;
@@ -117,11 +117,11 @@ namespace DevZest.Data
 
         private void Join<T, TKey>(DbSet<T> dbSet, TKey left, TKey right, DbJoinKind kind, out T model)
             where T : Model, new()
-            where TKey : ModelKey
+            where TKey : KeyBase
         {
             Check.NotNull(dbSet, nameof(dbSet));
             Check.NotNull(left, nameof(left));
-            if (!_sourceModelSet.Contains(left.ParentModel))
+            if (!_sourceModels.Contains(left.ParentModel))
                 throw new ArgumentException(Strings.DbQueryBuilder_Join_InvalidLeftKey, nameof(left));
             Check.NotNull(right, nameof(right));
             if (right.ParentModel != dbSet.Model)
@@ -193,7 +193,7 @@ namespace DevZest.Data
         {
             Debug.Assert(model != null);
 
-            if (!_sourceModelSet.Contains(model))
+            if (!_sourceModels.Contains(model))
                 return model;
 
             return model.Clone(true);
@@ -310,7 +310,7 @@ namespace DevZest.Data
 
         internal void VerifySourceColumn(Column column, string paramName, bool allowsAggregate)
         {
-            VerifySourceColumn(column, paramName, _sourceModelSet, allowsAggregate);
+            VerifySourceColumn(column, paramName, _sourceModels, allowsAggregate);
         }
 
         private void VerifySourceColumn(Column sourceColumn, string exceptionParamName, IModels sourceModelSet, bool allowsAggregate)
