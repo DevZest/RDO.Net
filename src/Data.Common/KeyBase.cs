@@ -189,5 +189,21 @@ namespace DevZest.Data
         {
             return _columns.GetEnumerator();
         }
+
+        internal IReadOnlyList<ColumnMapping> Join(KeyBase target)
+        {
+            Debug.Assert(target != null);
+            Debug.Assert(Count == target.Count);
+
+            var result = new ColumnMapping[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                var sourceColumn = this[i].Column;
+                var targetColumn = target[i].Column;
+                result[i] = new ColumnMapping(sourceColumn, targetColumn);
+            }
+
+            return result;
+        }
     }
 }
