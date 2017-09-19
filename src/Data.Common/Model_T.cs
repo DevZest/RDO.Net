@@ -22,7 +22,7 @@ namespace DevZest.Data
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
-            return Data.Relationship.Create(this.PrimaryKey, target.PrimaryKey);
+            return new Relationship(this, target);
         }
 
         public Relationship Join<TTarget>(TTarget target, Func<TTarget, T> keyGetter)
@@ -36,7 +36,7 @@ namespace DevZest.Data
 
             var sourceKey = this.PrimaryKey;
             var targetKey = keyGetter(target);
-            return Data.Relationship.Create(sourceKey, targetKey);
+            return new Relationship(sourceKey, targetKey);
         }
     }
 }

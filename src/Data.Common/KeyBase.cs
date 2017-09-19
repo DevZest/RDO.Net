@@ -23,28 +23,6 @@ namespace DevZest.Data
             public SortDirection Direction { get; private set; }
         }
 
-        internal ReadOnlyCollection<ColumnMapping> GetRelationship(KeyBase target)
-        {
-            return new ReadOnlyCollection<ColumnMapping>(GetRelationship(this, target));
-        }
-
-        private static IList<ColumnMapping> GetRelationship(KeyBase source, KeyBase target)
-        {
-            Debug.Assert(source != null);
-            Debug.Assert(target != null);
-            Debug.Assert(source.Count == target.Count);
-
-            var result = new List<ColumnMapping>();
-            for (int i = 0; i < source.Count; i++)
-            {
-                var sourceColumn = source[i].Column;
-                var targetColumn = target[i].Column;
-                result.Add(new ColumnMapping(sourceColumn, targetColumn));
-            }
-
-            return result;
-        }
-
         internal KeyBase Clone(KeyOutput model)
         {
             EnsureIntialized();

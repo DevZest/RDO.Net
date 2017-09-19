@@ -17,7 +17,7 @@ namespace DevZest.Data
                 throw new ArgumentNullException(nameof(targetKeyGetter));
             var sourceKey = sourceKeyGetter(source);
             var targetKey = targetKeyGetter(target);
-            return Data.Relationship.Create(sourceKey, targetKey);
+            return new Relationship(sourceKey, targetKey);
         }
     }
 }

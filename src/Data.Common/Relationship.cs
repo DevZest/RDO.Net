@@ -5,13 +5,12 @@ namespace DevZest.Data
 {
     public sealed class Relationship
     {
-        internal static Relationship Create<T>(T source, T target)
-            where T : KeyBase
+        internal Relationship(Model source, Model target)
+            : this(source.PrimaryKey, target.PrimaryKey)
         {
-            return new Data.Relationship(source, target);
         }
 
-        private Relationship(KeyBase source, KeyBase target)
+        internal Relationship(KeyBase source, KeyBase target)
         {
             Debug.Assert(source != null);
             Debug.Assert(target != null);
