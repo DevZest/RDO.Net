@@ -90,7 +90,7 @@ namespace DevZest.Data
         {
             Debug.Assert(source != null);
 
-            var keyMappings = GetKeyMappings(source._);
+            var keyMappings = GetKeyMappings(source._, joinOn);
             return source.QueryStatement.BuildDeleteStatement(Model, keyMappings);
         }
 
