@@ -813,7 +813,7 @@ namespace DevZest.Data
             for (int i = 0; i < result.Length; i++)
             {
                 var mapping = parentRelationship[i];
-                var source = GetSource(mapping.SourceExpression, columnMappings);
+                var source = GetSource(columnMappings, mapping.SourceExpression);
                 if (source == null)
                     throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
                 result[i] = new ColumnMapping(source, mapping.Target);
@@ -822,9 +822,9 @@ namespace DevZest.Data
             return result;
         }
 
-        private static DbExpression GetSource(DbExpression target, IReadOnlyList<ColumnMapping> relationship)
+        private static DbExpression GetSource(IReadOnlyList<ColumnMapping> mappings, DbExpression target)
         {
-            foreach (var mapping in relationship)
+            foreach (var mapping in mappings)
             {
                 if (mapping.TargetExpression == target)
                     return mapping.SourceExpression;

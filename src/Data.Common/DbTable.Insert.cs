@@ -217,7 +217,7 @@ namespace DevZest.Data
             var sourceModel = dataSet._;
             var columnMappings = GetColumnMappings(sourceModel, columnMappingsBuilder, true);
             var keyMappings = autoJoin ? GetKeyMappings(sourceModel) : null;
-            var parentMappings = ShouldJoinParent(dataSet) ? columnMappings.GetParentRelationship(this) : null;
+            var parentMappings = ShouldJoinParent(dataSet) ? this.Model.GetParentRelationship(columnMappings) : null;
 
             var paramManager = new ScalarParamManager(dataSet[rowOrdinal]);
             var select = GetScalarMapping(paramManager, columnMappings);

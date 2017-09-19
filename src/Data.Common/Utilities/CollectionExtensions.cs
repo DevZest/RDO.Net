@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Primitives;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace DevZest.Data.Utilities
 {
@@ -29,50 +28,11 @@ namespace DevZest.Data.Utilities
             return result;
         }
 
-        internal static IReadOnlyList<ColumnMapping> GetParentRelationship(this IReadOnlyList<ColumnMapping> columnMappings, IDbTable dbTable)
-        {
-            var parentMappings = dbTable.Model.ParentRelationship;
-            if (parentMappings == null)
-                return null;
-
-            var result = new ColumnMapping[parentMappings.Count];
-            for (int i = 0; i < result.Length; i++)
-            {
-                var mapping = parentMappings[i];
-                var source = GetSource(mapping.SourceExpression, columnMappings);
-                if (source == null)
-                    throw new InvalidOperationException(Strings.ChildColumnNotExistInColumnMappings(mapping.SourceExpression));
-                result[i] = new ColumnMapping(source, mapping.Target);
-            }
-
-            return result;
-        }
-
-        private static DbExpression GetSource(DbExpression target, IReadOnlyList<ColumnMapping> mappings)
-        {
-            foreach (var mapping in mappings)
-            {
-                if (mapping.TargetExpression == target)
-                    return mapping.SourceExpression;
-            }
-            return null;
-        }
-
         internal static bool ContainsSource(this IReadOnlyList<ColumnMapping> columnMappings, Column source)
         {
             foreach (var mapping in columnMappings)
             {
                 if (mapping.Source == source)
-                    return true;
-            }
-            return false;
-        }
-
-        internal static bool ContainsTarget(this IReadOnlyList<ColumnMapping> columnMappings, Column target)
-        {
-            foreach (var mapping in columnMappings)
-            {
-                if (mapping.Target == target)
                     return true;
             }
             return false;
