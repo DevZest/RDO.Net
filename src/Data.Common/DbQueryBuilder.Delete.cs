@@ -8,19 +8,19 @@ namespace DevZest.Data
 {
     partial class DbQueryBuilder
     {
-        internal DbSelectStatement BuildDeleteStatement(Model sourceDataModel, IList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildDeleteStatement(Model sourceDataModel, IReadOnlyList<ColumnMapping> keyMappings)
         {
             From(sourceDataModel);
             return BuildDeleteSelect(keyMappings);
         }
 
-        internal DbSelectStatement BuildDeleteStatement(DbSelectStatement selectStatement, IList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildDeleteStatement(DbSelectStatement selectStatement, IReadOnlyList<ColumnMapping> keyMappings)
         {
             Initialize(selectStatement);
             return BuildDeleteSelect(keyMappings);
         }
 
-        private DbSelectStatement BuildDeleteSelect(IList<ColumnMapping> keyMappings)
+        private DbSelectStatement BuildDeleteSelect(IReadOnlyList<ColumnMapping> keyMappings)
         {
             Debug.Assert(keyMappings != null);
 

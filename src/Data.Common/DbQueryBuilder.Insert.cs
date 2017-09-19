@@ -8,21 +8,21 @@ namespace DevZest.Data
 {
     partial class DbQueryBuilder
     {
-        internal DbSelectStatement BuildInsertStatement(Model sourceDataModel, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
+        internal DbSelectStatement BuildInsertStatement(Model sourceDataModel, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings, bool joinParent)
         {
             From(sourceDataModel);
             Select(columnMappings);
             return BuildInsertSelect(columnMappings, keyMappings, joinParent);
         }
 
-        internal DbSelectStatement BuildInsertStatement(DbSelectStatement selectStatement, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
+        internal DbSelectStatement BuildInsertStatement(DbSelectStatement selectStatement, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings, bool joinParent)
         {
             Initialize(selectStatement);
             Select(columnMappings);
             return BuildInsertSelect(columnMappings, keyMappings, joinParent);
         }
 
-        private DbSelectStatement BuildInsertSelect(IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
+        private DbSelectStatement BuildInsertSelect(IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings, bool joinParent)
         {
             if (joinParent)
             {

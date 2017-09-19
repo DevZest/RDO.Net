@@ -7,15 +7,21 @@ namespace DevZest.Data.Utilities
 {
     internal static class CollectionExtensions
     {
-        internal static ReadOnlyCollection<T> Concat<T>(this ReadOnlyCollection<T> list1, ReadOnlyCollection<T> list2)
+        internal static IReadOnlyList<T> Concat<T>(this IReadOnlyList<T> list1, IReadOnlyList<T> list2)
         {
             var result = new T[list1.Count + list2.Count];
             list1.CopyTo(result, 0);
             list2.CopyTo(result, list1.Count);
-            return new ReadOnlyCollection<T>(result);
+            return result;
         }
 
-        internal static IList<T> Append<T>(this IList<T> list, T value)
+        private static void CopyTo<T>(this IReadOnlyList<T> list, T[] array, int startIndex)
+        {
+            for (int i = 0; i < list.Count; i++)
+                array[startIndex + i] = list[i];
+        }
+
+        internal static IReadOnlyList<T> Append<T>(this IReadOnlyList<T> list, T value)
         {
             var result = new T[list.Count + 1];
             list.CopyTo(result, 0);
@@ -23,7 +29,7 @@ namespace DevZest.Data.Utilities
             return result;
         }
 
-        internal static IList<ColumnMapping> GetParentRelationship(this IList<ColumnMapping> columnMappings, IDbTable dbTable)
+        internal static IReadOnlyList<ColumnMapping> GetParentRelationship(this IReadOnlyList<ColumnMapping> columnMappings, IDbTable dbTable)
         {
             var parentMappings = dbTable.Model.ParentRelationship;
             if (parentMappings == null)
@@ -42,7 +48,7 @@ namespace DevZest.Data.Utilities
             return result;
         }
 
-        private static DbExpression GetSource(DbExpression target, IList<ColumnMapping> mappings)
+        private static DbExpression GetSource(DbExpression target, IReadOnlyList<ColumnMapping> mappings)
         {
             foreach (var mapping in mappings)
             {
@@ -62,7 +68,7 @@ namespace DevZest.Data.Utilities
             return false;
         }
 
-        internal static bool ContainsTarget(this IList<ColumnMapping> columnMappings, Column target)
+        internal static bool ContainsTarget(this IReadOnlyList<ColumnMapping> columnMappings, Column target)
         {
             foreach (var mapping in columnMappings)
             {

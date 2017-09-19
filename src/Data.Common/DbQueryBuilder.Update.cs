@@ -8,21 +8,21 @@ namespace DevZest.Data
 {
     partial class DbQueryBuilder
     {
-        internal DbSelectStatement BuildUpdateStatement(Model sourceDataModel, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildUpdateStatement(Model sourceDataModel, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings)
         {
             From(sourceDataModel);
             Select(columnMappings);
             return BuildUpdateSelect(columnMappings, keyMappings);
         }
 
-        internal DbSelectStatement BuildUpdateStatement(DbSelectStatement selectStatement, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal DbSelectStatement BuildUpdateStatement(DbSelectStatement selectStatement, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings)
         {
             Initialize(selectStatement);
             Select(columnMappings);
             return BuildUpdateSelect(columnMappings, keyMappings);
         }
 
-        private DbSelectStatement BuildUpdateSelect(IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        private DbSelectStatement BuildUpdateSelect(IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings)
         {
             Debug.Assert(keyMappings != null);
 

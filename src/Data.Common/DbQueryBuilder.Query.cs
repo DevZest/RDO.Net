@@ -72,7 +72,7 @@ namespace DevZest.Data
             return BuildSelectStatement(select, FromClause, WhereExpression, orderBy);
         }
 
-        private IList<DbExpressionSort> GetOrderBy(Identity parentRowIdIdentity, Identity rowIdIdentity)
+        private IReadOnlyList<DbExpressionSort> GetOrderBy(Identity parentRowIdIdentity, Identity rowIdIdentity)
         {
             if (rowIdIdentity != null)
             {
@@ -93,7 +93,7 @@ namespace DevZest.Data
             return new DbExpressionSort(identity.Column.DbExpression, identity.Increment > 0 ? SortDirection.Ascending : SortDirection.Descending);
         }
 
-        private IList<DbExpressionSort> GetOrderBy(Identity parentIdentity)
+        private IReadOnlyList<DbExpressionSort> GetOrderBy(Identity parentIdentity)
         {
             Debug.Assert(parentIdentity != null);
             var orderByListCount = OrderByList == null ? 0 : OrderByList.Count;
@@ -133,7 +133,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private IList<ColumnMapping> ResolveRelationship(IReadOnlyList<ColumnMapping> relationship, Model targetModel)
+        private IReadOnlyList<ColumnMapping> ResolveRelationship(IReadOnlyList<ColumnMapping> relationship, Model targetModel)
         {
             var result = new ColumnMapping[relationship.Count];
             for (int i = 0; i < relationship.Count; i++)
@@ -176,7 +176,7 @@ namespace DevZest.Data
             return null;
         }
 
-        private IList<ColumnMapping> NormalizeSelectList()
+        private IReadOnlyList<ColumnMapping> NormalizeSelectList()
         {
             var result = new ColumnMapping[Model.Columns.Count];
 

@@ -236,11 +236,11 @@ namespace DevZest.Data
             if (from != null)
             {
                 if (parentMappings != null)
-                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentTable.FromClause, new ReadOnlyCollection<ColumnMapping>(parentMappings));
+                    from = new DbJoinClause(DbJoinKind.InnerJoin, from, parentTable.FromClause, parentMappings);
 
                 if (keyMappings != null)
                 {
-                    from = new DbJoinClause(DbJoinKind.LeftJoin, from, FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
+                    from = new DbJoinClause(DbJoinKind.LeftJoin, from, FromClause, keyMappings);
                     where = new DbFunctionExpression(FunctionKeys.IsNull, new DbExpression[] { keyMappings[0].Target.DbExpression });
                 }
             }

@@ -237,7 +237,7 @@ namespace DevZest.Data.Primitives
         }
 
         private Dictionary<Type, RegistrationCollection> _registrations = new Dictionary<Type, RegistrationCollection>();
-        private Dictionary<Type, ReadOnlyCollection<IMounter<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, ReadOnlyCollection<IMounter<TTarget, TProperty>>>();
+        private Dictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>> _resultRegistrations = new Dictionary<Type, IReadOnlyList<IMounter<TTarget, TProperty>>>();
 
         public Mounter<TDerivedTarget, TDerivedProperty> Register<TDerivedTarget, TDerivedProperty>(
             Expression<Func<TDerivedTarget, TDerivedProperty>> getter,
@@ -288,16 +288,16 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        public ReadOnlyCollection<IMounter<TTarget, TProperty>> GetAll(Type targetType)
+        public IReadOnlyList<IMounter<TTarget, TProperty>> GetAll(Type targetType)
         {
-            ReadOnlyCollection<IMounter<TTarget, TProperty>> result;
+            IReadOnlyList<IMounter<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 
             return SyncGetAll(targetType);
         }
 
-        private ReadOnlyCollection<IMounter<TTarget, TProperty>> SyncGetAll(Type targetType)
+        private IReadOnlyList<IMounter<TTarget, TProperty>> SyncGetAll(Type targetType)
         {
             lock (_resultRegistrations) // ensure thread safety
             {
@@ -305,13 +305,12 @@ namespace DevZest.Data.Primitives
             }
         }
 
-        private static readonly ReadOnlyCollection<IMounter<TTarget, TProperty>> Empty =
-            new ReadOnlyCollection<IMounter<TTarget, TProperty>>(new IMounter<TTarget, TProperty>[0]);
-        private ReadOnlyCollection<IMounter<TTarget, TProperty>> GetProperties(Type targetType)
+        private static readonly IReadOnlyList<IMounter<TTarget, TProperty>> Empty = Array<IMounter<TTarget, TProperty>>.Empty;
+        private IReadOnlyList<IMounter<TTarget, TProperty>> GetProperties(Type targetType)
         {
             Debug.Assert(targetType != null);
 
-            ReadOnlyCollection<IMounter<TTarget, TProperty>> result;
+            IReadOnlyList<IMounter<TTarget, TProperty>> result;
             if (_resultRegistrations.TryGetValue(targetType, out result))
                 return result;
 

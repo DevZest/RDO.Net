@@ -196,7 +196,7 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append(")");
         }
 
-        private void GenerateJoinOnClause(ReadOnlyCollection<ColumnMapping> joinOn)
+        private void GenerateJoinOnClause(IReadOnlyList<ColumnMapping> joinOn)
         {
             if (joinOn == null)
                 return;
@@ -297,7 +297,7 @@ namespace DevZest.Data.SqlServer
             _queryStatementCount--;
         }
 
-        private void GenerateSelectClause(ReadOnlyCollection<ColumnMapping> select, bool appendLine)
+        private void GenerateSelectClause(IReadOnlyList<ColumnMapping> select, bool appendLine)
         {
             SqlBuilder.Append("SELECT");
             GenerateExpressionList(select.Count, i => select[i].SourceExpression, i => select[i].Target, appendLine);
@@ -359,7 +359,7 @@ namespace DevZest.Data.SqlServer
             where.Accept(_expressionGenerator);
         }
 
-        private void GenerateGroupByClause(ReadOnlyCollection<DbExpression> groupBy)
+        private void GenerateGroupByClause(IReadOnlyList<DbExpression> groupBy)
         {
             if (groupBy == null || groupBy.Count == 0)
                 return;
@@ -377,7 +377,7 @@ namespace DevZest.Data.SqlServer
             having.Accept(_expressionGenerator);
         }
 
-        private void GenerateOrderByClause(ReadOnlyCollection<DbExpressionSort> orderByList, int offset, int fetch)
+        private void GenerateOrderByClause(IReadOnlyList<DbExpressionSort> orderByList, int offset, int fetch)
         {
             if (orderByList == null)
                 return;

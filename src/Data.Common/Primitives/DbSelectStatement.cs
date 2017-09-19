@@ -7,27 +7,27 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbSelectStatement : DbQueryStatement
     {
-        public DbSelectStatement(Model model, IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy, int offset, int fetch)
+        public DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch)
             : this(model, select, from, where, orderBy, offset, fetch, true)
         {
         }
 
-        private DbSelectStatement(Model model, IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy, int offset, int fetch, bool isSimple)
+        private DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch, bool isSimple)
             : base(model)
         {
-            Select = select == null ? null : new ReadOnlyCollection<ColumnMapping>(select);
+            Select = select;
             From = from;
             Where = where;
-            OrderBy = orderBy == null ? null : new ReadOnlyCollection<DbExpressionSort>(orderBy);
+            OrderBy = orderBy;
             Offset = offset;
             Fetch = fetch;
             IsSimple = isSimple && offset == -1 && fetch == -1;
         }
 
-        public DbSelectStatement(Model model, IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpression> groupBy, DbExpression having, IList<DbExpressionSort> orderBy, int offset, int fetch)
+        public DbSelectStatement(Model model, IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpression> groupBy, DbExpression having, IReadOnlyList<DbExpressionSort> orderBy, int offset, int fetch)
             : this(model, select, from, where, orderBy, offset, fetch, false)
         {
-            GroupBy = groupBy == null ? null : new ReadOnlyCollection<DbExpression>(groupBy);
+            GroupBy = groupBy;
             Having = having;
         }
 
@@ -38,17 +38,17 @@ namespace DevZest.Data.Primitives
 
         public bool IsSimple { get; private set; }
 
-        public ReadOnlyCollection<ColumnMapping> Select { get; private set; }
+        public IReadOnlyList<ColumnMapping> Select { get; private set; }
 
         public DbFromClause From { get; private set; }
 
         public DbExpression Where { get; private set; }
 
-        public ReadOnlyCollection<DbExpression> GroupBy { get; private set; }
+        public IReadOnlyList<DbExpression> GroupBy { get; private set; }
 
         public DbExpression Having { get; private set; }
 
-        public ReadOnlyCollection<DbExpressionSort> OrderBy { get; private set; }
+        public IReadOnlyList<DbExpressionSort> OrderBy { get; private set; }
 
         public int Offset { get; private set; }
 
@@ -82,19 +82,19 @@ namespace DevZest.Data.Primitives
             return queryBuilder.BuildQueryStatement(this, action, sequentialKeys);
         }
 
-        internal override DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
+        internal override DbSelectStatement BuildInsertStatement(Model model, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings, bool joinParent)
         {
             return IsSimple ? new DbQueryBuilder(model).BuildInsertStatement(this, columnMappings, keyMappings, joinParent)
                 : base.BuildInsertStatement(model, columnMappings, keyMappings, joinParent);
         }
 
-        internal override DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal override DbSelectStatement BuildUpdateStatement(Model model, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings)
         {
             return IsSimple ? new DbQueryBuilder(model).BuildUpdateStatement(this, columnMappings, keyMappings)
                 : base.BuildUpdateStatement(model, columnMappings, keyMappings);
         }
 
-        internal override DbSelectStatement BuildDeleteStatement(Model model, IList<ColumnMapping> keyMappings)
+        internal override DbSelectStatement BuildDeleteStatement(Model model, IReadOnlyList<ColumnMapping> keyMappings)
         {
             return IsSimple ? new DbQueryBuilder(model).BuildDeleteStatement(this, keyMappings)
                 : base.BuildDeleteStatement(model, keyMappings);

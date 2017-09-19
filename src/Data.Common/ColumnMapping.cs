@@ -20,7 +20,7 @@ namespace DevZest.Data
             return new ColumnMapping(source, target);
         }
 
-        public static IList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
+        public static IReadOnlyList<ColumnMapping> Map<TSource, TTarget>(TSource sourceModel, TTarget targetModel, Action<ColumnMappingsBuilder, TSource, TTarget> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
             where TTarget : Model, new()
         {

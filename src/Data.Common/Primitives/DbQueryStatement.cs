@@ -84,17 +84,17 @@ namespace DevZest.Data.Primitives
             return result;
         }
 
-        internal virtual DbSelectStatement BuildInsertStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings, bool joinParent)
+        internal virtual DbSelectStatement BuildInsertStatement(Model model, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings, bool joinParent)
         {
             return new DbQueryBuilder(model).BuildInsertStatement(Model, columnMappings, keyMappings, joinParent);
         }
 
-        internal virtual DbSelectStatement BuildUpdateStatement(Model model, IList<ColumnMapping> columnMappings, IList<ColumnMapping> keyMappings)
+        internal virtual DbSelectStatement BuildUpdateStatement(Model model, IReadOnlyList<ColumnMapping> columnMappings, IReadOnlyList<ColumnMapping> keyMappings)
         {
             return new DbQueryBuilder(model).BuildUpdateStatement(Model, columnMappings, keyMappings);
         }
 
-        internal virtual DbSelectStatement BuildDeleteStatement(Model model, IList<ColumnMapping> keyMappings)
+        internal virtual DbSelectStatement BuildDeleteStatement(Model model, IReadOnlyList<ColumnMapping> keyMappings)
         {
             return new DbQueryBuilder(model).BuildDeleteStatement(Model, keyMappings);
         }

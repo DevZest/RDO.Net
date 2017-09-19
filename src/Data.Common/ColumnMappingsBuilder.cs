@@ -21,7 +21,7 @@ namespace DevZest.Data
         private Model _targetModel;
 
         private List<ColumnMapping> _result = new List<ColumnMapping>();
-        internal IList<ColumnMapping> Build(Action<ColumnMappingsBuilder> buildAction)
+        internal IReadOnlyList<ColumnMapping> Build(Action<ColumnMappingsBuilder> buildAction)
         {
             Debug.Assert(buildAction != null);
 

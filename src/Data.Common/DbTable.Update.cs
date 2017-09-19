@@ -144,11 +144,11 @@ namespace DevZest.Data
             return BuildUpdateScalarStatement(dataSet[ordinal], keyMappings, columnMappings);
         }
 
-        private DbSelectStatement BuildUpdateScalarStatement(DataRow dataRow, IList<ColumnMapping> keyMappings, IList<ColumnMapping> columnMappings)
+        private DbSelectStatement BuildUpdateScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> keyMappings, IReadOnlyList<ColumnMapping> columnMappings)
         {
             var paramManager = new ScalarParamManager(dataRow);
             var select = GetScalarMapping(paramManager, columnMappings);
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, keyMappings);
             return new DbSelectStatement(Model, select, from, null, null, -1, -1);
         }
     }

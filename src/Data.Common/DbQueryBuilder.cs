@@ -31,7 +31,7 @@ namespace DevZest.Data
             OrderByList = query.OrderBy;
         }
 
-        private void Select(IList<ColumnMapping> select)
+        private void Select(IReadOnlyList<ColumnMapping> select)
         {
             foreach (var columnMapping in select)
             {
@@ -130,13 +130,13 @@ namespace DevZest.Data
             Join(dbSet, kind, left.GetRelationship(right), out model);
         }
 
-        private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IList<ColumnMapping> relationship, out T model)
+        private void Join<T>(DbSet<T> dbSet, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship, out T model)
             where T : Model, new()
         {
             model = (T)Join(dbSet.Model, kind, relationship);
         }
 
-        private Model Join(Model model, DbJoinKind kind, IList<ColumnMapping> relationship)
+        private Model Join(Model model, DbJoinKind kind, IReadOnlyList<ColumnMapping> relationship)
         {
             Debug.Assert(relationship[0].Target.ParentModel == model);
 
@@ -158,7 +158,7 @@ namespace DevZest.Data
             return _subQueryEliminator == null ? expression : _subQueryEliminator.GetExpressioin(expression);
         }
 
-        private IList<ColumnMapping> EliminateSubQuery(IList<ColumnMapping> relationship)
+        private IReadOnlyList<ColumnMapping> EliminateSubQuery(IReadOnlyList<ColumnMapping> relationship)
         {
             if (relationship == null)
                 return relationship;
@@ -347,7 +347,7 @@ namespace DevZest.Data
 
         #region ORDER BY
 
-        public ReadOnlyCollection<DbExpressionSort> OrderByList { get; private set; }
+        public IReadOnlyList<DbExpressionSort> OrderByList { get; private set; }
 
         public int Offset { get; private set; }
 
@@ -409,12 +409,12 @@ namespace DevZest.Data
 
         #endregion
 
-        internal virtual DbSelectStatement BuildSelectStatement(IList<ColumnMapping> select, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
+        internal virtual DbSelectStatement BuildSelectStatement(IReadOnlyList<ColumnMapping> select, DbFromClause from, DbExpression where, IReadOnlyList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, select, from, where, orderBy, Offset, Fetch);
         }
 
-        private DbUnionStatement GetEliminatableUnionStatement(IList<ColumnMapping> selectList)
+        private DbUnionStatement GetEliminatableUnionStatement(IReadOnlyList<ColumnMapping> selectList)
         {
             var fromQuery = FromClause as DbUnionStatement;
             if (fromQuery == null)
@@ -435,13 +435,13 @@ namespace DevZest.Data
             return fromQuery;
         }
 
-        private DbUnionStatement EliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        private DbUnionStatement EliminateUnionSubQuery(IReadOnlyList<ColumnMapping> selectList)
         {
             var fromQuery = GetEliminatableUnionStatement(selectList);
             return fromQuery == null ? null : new DbUnionStatement(Model, fromQuery.Query1, fromQuery.Query2, fromQuery.Kind);
         }
 
-        private bool CanEliminateUnionSubQuery(IList<ColumnMapping> selectList)
+        private bool CanEliminateUnionSubQuery(IReadOnlyList<ColumnMapping> selectList)
         {
             return GetEliminatableUnionStatement(selectList) != null;
         }

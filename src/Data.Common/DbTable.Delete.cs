@@ -137,10 +137,10 @@ namespace DevZest.Data
             return BuildDeleteScalarStatement(source[ordinal], keyMappings);
         }
 
-        private DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IList<ColumnMapping> keyMappings)
+        private DbSelectStatement BuildDeleteScalarStatement(DataRow dataRow, IReadOnlyList<ColumnMapping> keyMappings)
         {
             var paramManager = new ScalarParamManager(dataRow);
-            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, new ReadOnlyCollection<ColumnMapping>(keyMappings));
+            var from = new DbJoinClause(DbJoinKind.InnerJoin, GetScalarDataSource(paramManager, keyMappings), FromClause, keyMappings);
             return new DbSelectStatement(Model, null, from, null, null, -1, -1);
         }
 

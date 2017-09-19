@@ -61,7 +61,7 @@ namespace DevZest.Data
             return new DbSelectStatement(this.Model, selectList, this.FromClause, null, GetOrderBy(), -1, -1);
         }
 
-        private IList<DbExpressionSort> GetOrderBy()
+        private IReadOnlyList<DbExpressionSort> GetOrderBy()
         {
             if (Kind == DataSourceKind.DbTable)
                 return null;
@@ -138,12 +138,12 @@ namespace DevZest.Data
             return childModel.DataSource as DbTable<TChild>;
         }
 
-        private IList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)
+        private IReadOnlyList<ColumnMapping> BuildColumnMappings(Action<ColumnMappingsBuilder, T> columnMappingsBuilder)
         {
             return new ColumnMappingsBuilder(null, _).Build(builder => columnMappingsBuilder(builder, _));
         }
 
-        private IList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, KeyBase> joinOn = null)
+        private IReadOnlyList<ColumnMapping> GetKeyMappings(Model sourceModel, Func<T, KeyBase> joinOn = null)
         {
             var sourceKey = sourceModel.PrimaryKey;
             if (sourceKey == null)
@@ -198,10 +198,9 @@ namespace DevZest.Data
             }
         }
 
-        private static IList<ColumnMapping> GetScalarMapping(ScalarParamManager paramManager, IList<ColumnMapping> mappings, bool mapToSource = false)
+        private static IReadOnlyList<ColumnMapping> GetScalarMapping(ScalarParamManager paramManager, IReadOnlyList<ColumnMapping> mappings, bool mapToSource = false)
         {
-            IList<ColumnMapping> result;
-            result = new ColumnMapping[mappings.Count];
+            var result = new ColumnMapping[mappings.Count];
             for (int i = 0; i < mappings.Count; i++)
             {
                 var mapping = mappings[i];
@@ -212,12 +211,12 @@ namespace DevZest.Data
             return result;
         }
 
-        private static DbSelectStatement GetScalarDataSource(ScalarParamManager paramManager, IList<ColumnMapping> keyMappings, IList<ColumnMapping> parentMappings = null)
+        private static DbSelectStatement GetScalarDataSource(ScalarParamManager paramManager, IReadOnlyList<ColumnMapping> keyMappings, IReadOnlyList<ColumnMapping> parentMappings = null)
         {
             if (keyMappings == null && parentMappings == null)
                 return null;
 
-            IList<ColumnMapping> mappings;
+            IReadOnlyList<ColumnMapping> mappings;
             if (parentMappings == null)
                 mappings = keyMappings;
             else if (keyMappings == null)
@@ -244,7 +243,7 @@ namespace DevZest.Data
             throw new ArgumentException(Strings.DbTable_VerifyWhere, nameof(where));
         }
 
-        private IList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool isInsertable)
+        private IReadOnlyList<ColumnMapping> GetColumnMappings<TSource>(TSource sourceModel, Action<ColumnMappingsBuilder, TSource, T> columnMappingsBuilder, bool isInsertable)
             where TSource : Model, new()
         {
             return ColumnMapping.Map(sourceModel, _, columnMappingsBuilder, isInsertable);

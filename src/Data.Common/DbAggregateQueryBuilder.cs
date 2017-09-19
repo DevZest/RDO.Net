@@ -145,7 +145,7 @@ namespace DevZest.Data
                 _groupByList.Add(sourceExpression);
         }
 
-        internal override DbSelectStatement BuildSelectStatement(IList<ColumnMapping> selectList, DbFromClause from, DbExpression where, IList<DbExpressionSort> orderBy)
+        internal override DbSelectStatement BuildSelectStatement(IReadOnlyList<ColumnMapping> selectList, DbFromClause from, DbExpression where, IReadOnlyList<DbExpressionSort> orderBy)
         {
             return new DbSelectStatement(Model, selectList, from, where, GroupByList, HavingExpression, orderBy, Offset, Fetch);
         }

@@ -7,13 +7,12 @@ namespace DevZest.Data.Primitives
 {
     public sealed class DbJoinClause : DbFromClause
     {
-        public DbJoinClause(DbJoinKind kind, DbFromClause left, DbFromClause right, IList<ColumnMapping> on)
+        public DbJoinClause(DbJoinKind kind, DbFromClause left, DbFromClause right, IReadOnlyList<ColumnMapping> on)
         {
             Kind = kind;
             Left = left;
             Right = right;
-            var readonlyCollection = on as ReadOnlyCollection<ColumnMapping>;
-            On = readonlyCollection != null ? readonlyCollection : new ReadOnlyCollection<ColumnMapping>(on);
+            On = on;
         }
 
         public DbJoinKind Kind { get; private set; }
@@ -22,7 +21,7 @@ namespace DevZest.Data.Primitives
 
         public DbFromClause Right { get; private set; }
 
-        public ReadOnlyCollection<ColumnMapping> On { get; private set; }
+        public IReadOnlyList<ColumnMapping> On { get; private set; }
 
         public override void Accept(DbFromClauseVisitor visitor)
         {

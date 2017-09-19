@@ -803,7 +803,7 @@ namespace DevZest.Data
             }
         }
 
-        internal IList<ColumnMapping> GetParentRelationship(IList<ColumnMapping> columnMappings)
+        internal IReadOnlyList<ColumnMapping> GetParentRelationship(IReadOnlyList<ColumnMapping> columnMappings)
         {
             var parentRelationship = ParentRelationship;
             if (parentRelationship == null)
@@ -822,7 +822,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private static DbExpression GetSource(DbExpression target, IList<ColumnMapping> relationship)
+        private static DbExpression GetSource(DbExpression target, IReadOnlyList<ColumnMapping> relationship)
         {
             foreach (var mapping in relationship)
             {

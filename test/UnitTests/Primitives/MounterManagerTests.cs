@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace DevZest.Data.Primitives
 {
@@ -38,7 +39,7 @@ namespace DevZest.Data.Primitives
                     property.Mount(this);
             }
 
-            public ReadOnlyCollection<IMounter<TargetType, PropertyType>> Properties
+            public IReadOnlyList<IMounter<TargetType, PropertyType>> Properties
             {
                 get { return s_propertyManager.GetAll(this.GetType()); }
             }
