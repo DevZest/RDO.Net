@@ -52,7 +52,7 @@ namespace DevZest.Data.Utilities
             return null;
         }
 
-        internal static bool ContainsSource(this IList<ColumnMapping> columnMappings, Column source)
+        internal static bool ContainsSource(this IReadOnlyList<ColumnMapping> columnMappings, Column source)
         {
             foreach (var mapping in columnMappings)
             {

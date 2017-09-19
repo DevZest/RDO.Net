@@ -86,7 +86,7 @@ namespace DevZest.Data.Primitives
             return model.GetUpdatableColumns(model.ParentRelationship);
         }
 
-        private static IEnumerable<Column> GetUpdatableColumns(this Model model, IList<ColumnMapping> parentRelationship)
+        private static IEnumerable<Column> GetUpdatableColumns(this Model model, IReadOnlyList<ColumnMapping> parentRelationship)
         {
             foreach (var column in model.GetInsertableColumns())
             {

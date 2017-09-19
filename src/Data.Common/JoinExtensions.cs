@@ -12,7 +12,7 @@ namespace DevZest.Data
             return Data.Join.Create(source.PrimaryKey, target.PrimaryKey);
         }
 
-        public static Join Join<TSource, TTargetKey>(this TSource source, Model<TTargetKey> target, Func<TSource, TTargetKey> keyGetter)
+        public static Join JoinTo<TSource, TTargetKey>(this TSource source, Model<TTargetKey> target, Func<TSource, TTargetKey> keyGetter)
             where TSource : Model, new()
             where TTargetKey : KeyBase
         {
@@ -27,7 +27,7 @@ namespace DevZest.Data
             return Data.Join.Create(sourceKey, targetKey);
         }
 
-        public static Join Join<TSourceKey, TTarget>(this Model<TSourceKey> source, TTarget target, Func<TTarget, TSourceKey> keyGetter)
+        public static Join JoinFrom<TSourceKey, TTarget>(this Model<TSourceKey> source, TTarget target, Func<TTarget, TSourceKey> keyGetter)
             where TSourceKey : KeyBase
             where TTarget : Model, new()
         {

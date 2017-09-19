@@ -44,7 +44,7 @@ namespace DevZest.Data
             var product = new Product();
             var productCategory = new ProductCategory();
 
-            var join = product.Join(productCategory, _ => _.ProductCategoryKey);
+            var join = product.JoinTo(productCategory, _ => _.ProductCategoryKey);
             Assert.AreEqual(product.ProductCategoryKey, join.Source);
             Assert.AreEqual(productCategory.PrimaryKey, join.Target);
 
@@ -60,7 +60,7 @@ namespace DevZest.Data
             var productCategory = new ProductCategory();
             var product = new Product();
 
-            var join = productCategory.Join(product, _ => _.ProductCategoryKey);
+            var join = productCategory.JoinFrom(product, _ => _.ProductCategoryKey);
             Assert.AreEqual(productCategory.PrimaryKey, join.Source);
             Assert.AreEqual(product.ProductCategoryKey, join.Target);
 

@@ -176,7 +176,6 @@ namespace DevZest.Data
             return s_childModelManager.Register(getter, CreateChildModel, null);
         }
 
-        private static ReadOnlyCollection<ColumnMapping> s_emptyColumnMapping = new ReadOnlyCollection<ColumnMapping>(Array<ColumnMapping>.Empty);
         private static TChildModel CreateChildModel<TModel, TChildModel>(Mounter<TModel, TChildModel> mounter)
             where TModel : Model, new()
             where TChildModel : Model, new()
@@ -189,7 +188,7 @@ namespace DevZest.Data
 
         internal void Construct(Model parentModel, Type ownerType, string name)
         {
-            Construct(parentModel, ownerType, name, s_emptyColumnMapping, s_emptyColumnMapping);
+            Construct(parentModel, ownerType, name, Array<ColumnMapping>.Empty, Array<ColumnMapping>.Empty);
         }
 
         /// <summary>
@@ -198,38 +197,38 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the child model is registered on.</typeparam>
         /// <typeparam name="TChildModel">The type of the child model.</typeparam>
         /// <param name="getter">The lambda expression of the child model getter.</param>
-        /// <param name="childRefGetter">The relationship between child model and parent model.</param>
+        /// <param name="relationshipGetter">Gets relationship between child model and parent model.</param>
         /// <returns>Mounter of the child model.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not a valid getter.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="childRefGetter"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="relationshipGetter"/> is <see langword="null"/>.</exception>
         public static Mounter<TChildModel> RegisterChildModel<TModel, TModelKey, TChildModel>(Expression<Func<TModel, TChildModel>> getter,
-            Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> childColumnsBuilder = null)
             where TModel : Model<TModelKey>
             where TModelKey : KeyBase
             where TChildModel : Model, new()
         {
             Utilities.Check.NotNull(getter, nameof(getter));
-            Utilities.Check.NotNull(childRefGetter, nameof(childRefGetter));
+            Utilities.Check.NotNull(relationshipGetter, nameof(relationshipGetter));
 
-            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, childRefGetter, childColumnsBuilder), null);
+            return s_childModelManager.Register(getter, a => CreateChildModel<TModel, TModelKey, TChildModel>(a, relationshipGetter, childColumnsBuilder), null);
         }
 
         private static TChildModel CreateChildModel<TModel, TModelKey, TChildModel>(Mounter<TModel, TChildModel> mounter,
-            Func<TChildModel, TModelKey> childRefGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
+            Func<TChildModel, TModelKey> relationshipGetter, Action<ColumnMappingsBuilder, TChildModel, TModel> parentMappingsBuilder)
             where TModel : Model<TModelKey>
             where TModelKey : KeyBase
             where TChildModel : Model, new()
         {
             TChildModel result = new TChildModel();
             var parentModel = mounter.Parent;
-            var parentRelationship = childRefGetter(result).GetRelationship(parentModel.PrimaryKey);
-            var parentMappings = GetParentMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
+            var parentRelationship = Join.Create(relationshipGetter(result), parentModel.PrimaryKey).Relationship;
+            var parentMappings = AppendColumnMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
             result.Construct(parentModel, mounter.OwnerType, mounter.Name, parentRelationship, parentMappings);
             return result;
         }
 
-        private static ReadOnlyCollection<ColumnMapping> GetParentMappings<TChildModel, TParentModel>(ReadOnlyCollection<ColumnMapping> parentRelationship,
+        private static IReadOnlyList<ColumnMapping> AppendColumnMappings<TChildModel, TParentModel>(IReadOnlyList<ColumnMapping> parentRelationship,
             Action<ColumnMappingsBuilder, TChildModel, TParentModel> parentMappingsBuilderAction, TChildModel childModel, TParentModel parentModel)
             where TChildModel : Model
             where TParentModel : Model
@@ -245,11 +244,10 @@ namespace DevZest.Data
                 result[i] = parentRelationship[i];
             for (int i = 0; i < parentMappings.Count; i++)
                 result[i + parentRelationship.Count] = parentMappings[i];
-            return new ReadOnlyCollection<ColumnMapping>(result);
+            return result;
         }
 
-        private void Construct(Model parentModel, Type ownerType, string name, ReadOnlyCollection<ColumnMapping> parentRelationship,
-            ReadOnlyCollection<ColumnMapping> parentMappings)
+        private void Construct(Model parentModel, Type ownerType, string name, IReadOnlyList<ColumnMapping> parentRelationship, IReadOnlyList<ColumnMapping> parentMappings)
         {
             this.ConstructModelMember(parentModel, ownerType, name);
 
@@ -273,9 +271,9 @@ namespace DevZest.Data
         /// <summary>
         /// Gets the column mappings between its parent model and this model.
         /// </summary>
-        internal ReadOnlyCollection<ColumnMapping> ParentRelationship { get; private set; }
+        internal IReadOnlyList<ColumnMapping> ParentRelationship { get; private set; }
 
-        internal ReadOnlyCollection<ColumnMapping> ParentMappings { get; private set; }
+        internal IReadOnlyList<ColumnMapping> ParentMappings { get; private set; }
 
         #endregion
 

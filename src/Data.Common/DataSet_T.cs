@@ -1,6 +1,7 @@
 ﻿using DevZest.Data.Primitives;
 using DevZest.Data.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
@@ -227,7 +228,7 @@ namespace DevZest.Data
             return childDataSet;
         }
 
-        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, ReadOnlyCollection<ColumnMapping> parentRelationship, Action<TChild> initializer)
+        private static DbQuery<TChild> GetChildQuery<TChild>(DbSet<TChild> dbSet, DataRow parentRow, IReadOnlyList<ColumnMapping> parentRelationship, Action<TChild> initializer)
             where TChild : Model, new()
         {
             var dbSession = dbSet.DbSession;

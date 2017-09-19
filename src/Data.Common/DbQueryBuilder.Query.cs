@@ -133,7 +133,7 @@ namespace DevZest.Data
             return result;
         }
 
-        private IList<ColumnMapping> ResolveRelationship(IList<ColumnMapping> relationship, Model targetModel)
+        private IList<ColumnMapping> ResolveRelationship(IReadOnlyList<ColumnMapping> relationship, Model targetModel)
         {
             var result = new ColumnMapping[relationship.Count];
             for (int i = 0; i < relationship.Count; i++)
@@ -192,7 +192,7 @@ namespace DevZest.Data
             return result;
         }
 
-        internal void Where(DataRow parentRow, IList<ColumnMapping> parentRelationship)
+        internal void Where(DataRow parentRow, IReadOnlyList<ColumnMapping> parentRelationship)
         {
             var primaryKey = parentRow.Model.PrimaryKey;
             Debug.Assert(primaryKey != null);
