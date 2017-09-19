@@ -222,7 +222,7 @@ namespace DevZest.Data
         {
             TChildModel result = new TChildModel();
             var parentModel = mounter.Parent;
-            var parentRelationship = Join.Create(relationshipGetter(result), parentModel.PrimaryKey).Relationship;
+            var parentRelationship = Relationship.Create(relationshipGetter(result), parentModel.PrimaryKey).Mappings;
             var parentMappings = AppendColumnMappings(parentRelationship, parentMappingsBuilder, result, parentModel);
             result.Construct(parentModel, mounter.OwnerType, mounter.Name, parentRelationship, parentMappings);
             return result;

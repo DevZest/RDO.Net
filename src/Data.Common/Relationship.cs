@@ -3,15 +3,15 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class Join
+    public sealed class Relationship
     {
-        internal static Join Create<T>(T source, T target)
+        internal static Relationship Create<T>(T source, T target)
             where T : KeyBase
         {
-            return new Data.Join(source, target);
+            return new Data.Relationship(source, target);
         }
 
-        private Join(KeyBase source, KeyBase target)
+        private Relationship(KeyBase source, KeyBase target)
         {
             Debug.Assert(source != null);
             Debug.Assert(target != null);
@@ -32,18 +32,18 @@ namespace DevZest.Data
             get { return _target; }
         }
 
-        private ColumnMapping[] _relationship;
-        public IReadOnlyList<ColumnMapping> Relationship
+        private ColumnMapping[] _mappings;
+        public IReadOnlyList<ColumnMapping> Mappings
         {
             get
             {
-                if (_relationship == null)
-                    _relationship = GetRelationship();
-                return _relationship;
+                if (_mappings == null)
+                    _mappings = GetMappings();
+                return _mappings;
             }
         }
 
-        private ColumnMapping[] GetRelationship()
+        private ColumnMapping[] GetMappings()
         {
             var result = new ColumnMapping[_source.Count];
             for (int i = 0; i < _source.Count; i++)
@@ -54,6 +54,11 @@ namespace DevZest.Data
             }
 
             return result;
+        }
+
+        public Relationship Swap()
+        {
+            return new Relationship(_target, _source);
         }
     }
 }
