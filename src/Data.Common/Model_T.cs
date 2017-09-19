@@ -17,5 +17,26 @@ namespace DevZest.Data
         {
             return this.PrimaryKey;
         }
+
+        public Relationship Join(Model<T> target)
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+            return Data.Relationship.Create(this.PrimaryKey, target.PrimaryKey);
+        }
+
+        public Relationship Join<TTarget>(TTarget target, Func<TTarget, T> keyGetter)
+            where TTarget : Model, new()
+        {
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+
+            if (keyGetter == null)
+                throw new ArgumentNullException(nameof(keyGetter));
+
+            var sourceKey = this.PrimaryKey;
+            var targetKey = keyGetter(target);
+            return Data.Relationship.Create(sourceKey, targetKey);
+        }
     }
 }
