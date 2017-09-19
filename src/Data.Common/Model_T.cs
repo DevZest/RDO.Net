@@ -18,14 +18,14 @@ namespace DevZest.Data
             return this.PrimaryKey;
         }
 
-        public Relationship Join(Model<T> target)
+        public Join Join(Model<T> target)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
-            return new Relationship(this, target);
+            return new Join(this, target);
         }
 
-        public Relationship Join<TTarget>(TTarget target, Func<TTarget, T> keyGetter)
+        public Join Join<TTarget>(TTarget target, Func<TTarget, T> keyGetter)
             where TTarget : Model, new()
         {
             if (target == null)
@@ -36,7 +36,7 @@ namespace DevZest.Data
 
             var sourceKey = this.PrimaryKey;
             var targetKey = keyGetter(target);
-            return new Relationship(sourceKey, targetKey);
+            return new Join(sourceKey, targetKey);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace DevZest.Data
 {
     public static class ModelExtensions
     {
-        public static Relationship Join<TSource, TTarget, TKey>(this TSource source, TTarget target, Func<TSource, TKey> sourceKeyGetter, Func<TTarget, TKey> targetKeyGetter)
+        public static Join Join<TSource, TTarget, TKey>(this TSource source, TTarget target, Func<TSource, TKey> sourceKeyGetter, Func<TTarget, TKey> targetKeyGetter)
             where TSource : Model, new()
             where TTarget : Model, new()
             where TKey : KeyBase
@@ -17,7 +17,7 @@ namespace DevZest.Data
                 throw new ArgumentNullException(nameof(targetKeyGetter));
             var sourceKey = sourceKeyGetter(source);
             var targetKey = targetKeyGetter(target);
-            return new Relationship(sourceKey, targetKey);
+            return new Join(sourceKey, targetKey);
         }
     }
 }

@@ -126,7 +126,7 @@ namespace DevZest.Data
             var sequentialKeyModel = sequentialKeys.Model;
 
             var sysRowId = Model.GetSysRowIdColumn(createIfNotExist: true);
-            var relationship = ResolveRelationship(new Relationship(Model, sequentialKeyModel).Mappings, sequentialKeyModel);
+            var relationship = ResolveRelationship(new Join(Model, sequentialKeyModel).Relationship, sequentialKeyModel);
             Join(sequentialKeyModel, DbJoinKind.InnerJoin, relationship);
             var result = sequentialKeyModel.GetIdentity(true);
             Select(result.Column, sysRowId);

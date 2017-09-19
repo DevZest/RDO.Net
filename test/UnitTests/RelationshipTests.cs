@@ -16,7 +16,7 @@ namespace DevZest.Data
             Assert.AreEqual(product1.PrimaryKey, join.Source);
             Assert.AreEqual(product2.PrimaryKey, join.Target);
 
-            var relationship = join.Mappings;
+            var relationship = join.Relationship;
             Assert.AreEqual(1, relationship.Count);
             Assert.AreEqual(product1.PrimaryKey.ProductID, relationship[0].Source);
             Assert.AreEqual(product2.PrimaryKey.ProductID, relationship[0].Target);
@@ -32,7 +32,7 @@ namespace DevZest.Data
             Assert.AreEqual(product1.PrimaryKey, join.Source);
             Assert.AreEqual(product2.PrimaryKey, join.Target);
 
-            var relationship = join.Mappings;
+            var relationship = join.Relationship;
             Assert.AreEqual(1, relationship.Count);
             Assert.AreEqual(product1.PrimaryKey.ProductID, relationship[0].Source);
             Assert.AreEqual(product2.PrimaryKey.ProductID, relationship[0].Target);
@@ -48,7 +48,7 @@ namespace DevZest.Data
             Assert.AreEqual(productCategory.PrimaryKey, join.Source);
             Assert.AreEqual(product.ProductCategoryKey, join.Target);
 
-            var relationship = join.Mappings;
+            var relationship = join.Relationship;
             Assert.AreEqual(1, relationship.Count);
             Assert.AreEqual(productCategory.PrimaryKey.ProductCategoryID, relationship[0].Source);
             Assert.AreEqual(product.ProductCategoryKey.ProductCategoryID, relationship[0].Target);

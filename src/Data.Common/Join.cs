@@ -3,14 +3,14 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class Relationship
+    public sealed class Join
     {
-        internal Relationship(Model source, Model target)
+        internal Join(Model source, Model target)
             : this(source.PrimaryKey, target.PrimaryKey)
         {
         }
 
-        internal Relationship(KeyBase source, KeyBase target)
+        internal Join(KeyBase source, KeyBase target)
         {
             Debug.Assert(source != null);
             Debug.Assert(target != null);
@@ -31,14 +31,14 @@ namespace DevZest.Data
             get { return _target; }
         }
 
-        private ColumnMapping[] _mappings;
-        public IReadOnlyList<ColumnMapping> Mappings
+        private ColumnMapping[] _relationship;
+        public IReadOnlyList<ColumnMapping> Relationship
         {
             get
             {
-                if (_mappings == null)
-                    _mappings = GetMappings();
-                return _mappings;
+                if (_relationship == null)
+                    _relationship = GetMappings();
+                return _relationship;
             }
         }
 
@@ -55,9 +55,9 @@ namespace DevZest.Data
             return result;
         }
 
-        public Relationship Swap()
+        public Join Swap()
         {
-            return new Relationship(_target, _source);
+            return new Join(_target, _source);
         }
     }
 }
