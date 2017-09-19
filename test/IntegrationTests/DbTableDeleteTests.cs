@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using DevZest.Samples.AdventureWorksLT;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,11 +77,19 @@ namespace DevZest.Data
             using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
             {
                 var count = db.SalesOrderDetails.Count();
-                var dataSet = db.SalesOrderDetails.Where(x => x.SalesOrderDetailID > 2).ToDataSet();
-                var countToDelete = dataSet.Count;
+                var countToDelete = db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1 | _.SalesOrderID == 2).Count();
                 Assert.IsTrue(countToDelete > 1);
 
-                var countDeleted = db.SalesOrderDetails.Delete(dataSet);
+                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Ref _) =>
+                {
+                    SalesOrder s;
+                    builder.From(db.SalesOrders, out s)
+                    .AutoSelect()
+                    .Where(s.SalesOrderID == 1 | s.SalesOrderID == 2);
+                });
+                var dataSet = query.ToDataSet();
+
+                var countDeleted = db.SalesOrderDetails.Delete(dataSet, _ => _.SalesOrderKey);
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, db.SalesOrderDetails.Count());
             }
@@ -93,11 +102,19 @@ namespace DevZest.Data
             using (var db = new SalesOrderMockDb().Initialize(OpenDb(log)))
             {
                 var count = await db.SalesOrderDetails.CountAsync();
-                var dataSet = await db.SalesOrderDetails.Where(x => x.SalesOrderDetailID > 2).ToDataSetAsync();
-                var countToDelete = dataSet.Count;
+                var countToDelete = await db.SalesOrderDetails.Where(_ => _.SalesOrderID == 1 | _.SalesOrderID == 2).CountAsync();
                 Assert.IsTrue(countToDelete > 1);
 
-                var countDeleted = await db.SalesOrderDetails.DeleteAsync(dataSet);
+                var query = db.CreateQuery((DbQueryBuilder builder, SalesOrder.Ref _) =>
+                {
+                    SalesOrder s;
+                    builder.From(db.SalesOrders, out s)
+                    .AutoSelect()
+                    .Where(s.SalesOrderID == 1 | s.SalesOrderID == 2);
+                });
+                var dataSet = await query.ToDataSetAsync();
+
+                var countDeleted = await db.SalesOrderDetails.DeleteAsync(dataSet, _ => _.SalesOrderKey);
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, await db.SalesOrderDetails.CountAsync());
             }

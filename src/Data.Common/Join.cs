@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevZest.Data
 {
-    public sealed class Join
+    internal sealed class Join
     {
         internal Join(Model source, Model target)
             : this(source.PrimaryKey, target.PrimaryKey)

@@ -17,26 +17,5 @@ namespace DevZest.Data
         {
             return this.PrimaryKey;
         }
-
-        public Join Join(Model<T> target)
-        {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-            return new Join(this, target);
-        }
-
-        public Join Join<TTarget>(TTarget target, Func<TTarget, T> keyGetter)
-            where TTarget : Model, new()
-        {
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
-
-            if (keyGetter == null)
-                throw new ArgumentNullException(nameof(keyGetter));
-
-            var sourceKey = this.PrimaryKey;
-            var targetKey = keyGetter(target);
-            return new Join(sourceKey, targetKey);
-        }
     }
 }
