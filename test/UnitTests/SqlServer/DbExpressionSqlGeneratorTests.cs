@@ -331,6 +331,9 @@ END";
             VerifyDbExpression(SqlVersion.Sql11, intColumn.Max().DbExpression, "MAX([TestModel].[Column1])");
             VerifyDbExpression(SqlVersion.Sql11, intColumn.Min().DbExpression, "MIN([TestModel].[Column1])");
             VerifyDbExpression(SqlVersion.Sql11, intColumn.Sum().DbExpression, "SUM([TestModel].[Column1])");
+
+            var stringColumn = CreateColumn<_String>(model, "Column2");
+            VerifyDbExpression(SqlVersion.Sql11, stringColumn.Contains(_String.Const("abc")).DbExpression, "(CHARINDEX(N'abc', [TestModel].[Column2]) > 0)");
         }
     }
 }

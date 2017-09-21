@@ -52,6 +52,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="DataRowComparer.cs" />
+    <Compile Include="Functions.Contains.cs" />
     <Compile Include="Functions.GetDate.cs" />
     <Compile Include="Functions.GetUtcDate.cs" />
     <Compile Include="Functions.IfNull.cs" />

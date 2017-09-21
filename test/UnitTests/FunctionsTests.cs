@@ -11,9 +11,13 @@ namespace DevZest.Data
     {
         private class SimpleModel : Model
         {
-            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel x) => x.Column1);
+            public static readonly Mounter<_Int32> _Column1 = RegisterColumn((SimpleModel _) => _.Column1);
+
+            public static readonly Mounter<_String> _Column2 = RegisterColumn((SimpleModel _) => _.Column2);
 
             public _Int32 Column1 { get; private set; }
+
+            public _String Column2 { get; private set; }
         }
 
         [TestMethod]
@@ -173,6 +177,40 @@ namespace DevZest.Data
             var columnFromJson = Column.ParseJson<_Guid>(null, json);
             var newGuid = columnFromJson.Eval();
             Assert.IsTrue(newGuid.HasValue);
+        }
+
+        [TestMethod]
+        public void Functions_Contains()
+        {
+            var dataSet = DataSet<SimpleModel>.New();
+            var model = dataSet._;
+
+            var column = model.Column2;
+            var value = _String.Const("abc");
+            var containsExpr = column.Contains(value);
+            ((DbFunctionExpression)containsExpr.DbExpression).Verify(FunctionKeys.Contains, column, value);
+
+            var dataRow = dataSet.AddRow();
+
+            column[dataRow] = null;
+            Assert.AreEqual(null, containsExpr[dataRow]);
+
+            column[dataRow] = "abcdefg";
+            Assert.AreEqual(true, containsExpr[dataRow]);
+
+            column[dataRow] = "cdefg";
+            Assert.AreEqual(false, containsExpr[dataRow]);
+        }
+
+        [TestMethod]
+        public void Functions_Contains_Converter()
+        {
+            var column = _String.Const("abcdef").Contains(_String.Const("abc"));
+            var json = column.ToJson(true);
+            Assert.AreEqual(Json.Converter_Functions_Contains, json);
+
+            var columnFromJson = Column.ParseJson<_Boolean>(null, json);
+            Assert.AreEqual(true, columnFromJson.Eval());
         }
     }
 }

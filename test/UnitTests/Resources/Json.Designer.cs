@@ -2895,6 +2895,34 @@ namespace DevZest.Data.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///   &quot;TypeId&quot; : &quot;_Boolean&quot;,
+        ///   &quot;Expression&quot; : {
+        ///      &quot;TypeId&quot; : &quot;Contains(_String, _String)&quot;,
+        ///      &quot;ArgTypeIds&quot; : [],
+        ///      &quot;Params&quot; : [
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_String&quot;,
+        ///            &quot;Expression&quot; : {
+        ///               &quot;TypeId&quot; : &quot;ConstantExpression&quot;,
+        ///               &quot;ArgTypeIds&quot; : [
+        ///                  &quot;_String&quot;,
+        ///                  &quot;_String&quot;
+        ///               ],
+        ///               &quot;Value&quot; : &quot;abcdef&quot;
+        ///            }
+        ///         },
+        ///         {
+        ///            &quot;TypeId&quot; : &quot;_String&quot;,
+        ///            &quot;Express [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Converter_Functions_Contains {
+            get {
+                return ResourceManager.GetString("Converter_Functions_Contains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///   &quot;TypeId&quot; : &quot;_Int32&quot;,
         ///   &quot;Expression&quot; : {
         ///      &quot;TypeId&quot; : &quot;Count(Column)&quot;,

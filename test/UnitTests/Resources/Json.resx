@@ -2855,6 +2855,39 @@
    }
 }</value>
   </data>
+  <data name="Converter_Functions_Contains" xml:space="preserve">
+    <value>{
+   "TypeId" : "_Boolean",
+   "Expression" : {
+      "TypeId" : "Contains(_String, _String)",
+      "ArgTypeIds" : [],
+      "Params" : [
+         {
+            "TypeId" : "_String",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_String",
+                  "_String"
+               ],
+               "Value" : "abcdef"
+            }
+         },
+         {
+            "TypeId" : "_String",
+            "Expression" : {
+               "TypeId" : "ConstantExpression",
+               "ArgTypeIds" : [
+                  "_String",
+                  "_String"
+               ],
+               "Value" : "abc"
+            }
+         }
+      ]
+   }
+}</value>
+  </data>
   <data name="Converter_Functions_Count" xml:space="preserve">
     <value>{
    "TypeId" : "_Int32",

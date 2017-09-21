@@ -131,6 +131,7 @@ namespace DevZest.Data.SqlServer
             { Data.FunctionKeys.Max, (g, e) => g.VisitFunction_Max(e) },
             { Data.FunctionKeys.Min, (g, e) => g.VisitFunction_Min(e) },
             { Data.FunctionKeys.Sum, (g, e) => g.VisitFunction_Sum(e) },
+            { Data.FunctionKeys.Contains, (g, e) => g.VisitFunction_Contains(e) },
             { FunctionKeys.XmlValue, (g, e) => g.VisitFunction_XmlValue(e) }
         };
 
@@ -253,6 +254,16 @@ namespace DevZest.Data.SqlServer
             SqlBuilder.Append("SUM(");
             e.ParamList[0].Accept(this);
             SqlBuilder.Append(")");
+        }
+
+        private void VisitFunction_Contains(DbFunctionExpression e)
+        {
+            Debug.Assert(e.ParamList.Count == 2);
+            SqlBuilder.Append("(CHARINDEX(");
+            e.ParamList[1].Accept(this);
+            SqlBuilder.Append(", ");
+            e.ParamList[0].Accept(this);
+            SqlBuilder.Append(") > 0)");
         }
 
         private void VisitFunction_XmlValue(DbFunctionExpression e)

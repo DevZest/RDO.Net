@@ -32,5 +32,7 @@ namespace DevZest.Data
         public static readonly FunctionKey Min = new FunctionKey(typeof(Functions), nameof(Min));
 
         public static readonly FunctionKey Max = new FunctionKey(typeof(Functions), nameof(Max));
+
+        public static readonly FunctionKey Contains = new FunctionKey(typeof(Functions), nameof(Contains));
     }
 }
