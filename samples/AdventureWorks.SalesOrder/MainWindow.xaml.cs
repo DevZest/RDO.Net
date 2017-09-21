@@ -80,7 +80,7 @@ namespace AdventureWorks.SalesOrders
 
         private SalesOrderList _salesOrderList;
 
-        private DataSet<SalesOrder> LoadSalesOrders()
+        private static DataSet<SalesOrder> LoadSalesOrders()
         {
             using (var db = Db.Open(App.ConnectionString))
             {
