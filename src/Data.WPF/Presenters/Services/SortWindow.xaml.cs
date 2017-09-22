@@ -40,31 +40,6 @@ namespace DevZest.Data.Presenters.Services
 
                 return result;
             }
-
-            public static void Apply(ISortService sortService, DataSet<Model> sortData)
-            {
-                sortService.OrderBy = GetOrderBy(sortData);
-            }
-
-            private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<Model> sortData)
-            {
-                if (sortData == null || sortData.Count == 0)
-                    return Array<IColumnComparer>.Empty;
-
-                Debug.Assert(sortData.Validate(ValidationSeverity.Error).Count == 0);
-
-                var _ = sortData._;
-                var result = new IColumnComparer[sortData.Count];
-                for (int i = 0; i < sortData.Count; i++)
-                {
-                    var columnHeader = _.ColumnHeader[i];
-                    var direction = _.Direction[i];
-                    Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
-                    result[i] = DataRow.OrderBy(columnHeader.Column, direction);
-                }
-
-                return result;
-            }
         }
 
         private sealed class Presenter : DataPresenter<Model>
@@ -240,7 +215,30 @@ namespace DevZest.Data.Presenters.Services
 
         private void ExecApply(object sender, ExecutedRoutedEventArgs e)
         {
+            var target = _presenter.Target;
+            var sortService = target.GetService<ISortService>(() => new SortService());
+            sortService.OrderBy = GetOrderBy(_data);
             this.Close();
+        }
+
+        private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<Model> sortData)
+        {
+            if (sortData == null || sortData.Count == 0)
+                return Array<IColumnComparer>.Empty;
+
+            Debug.Assert(sortData.Validate(ValidationSeverity.Error).Count == 0);
+
+            var _ = sortData._;
+            var result = new IColumnComparer[sortData.Count];
+            for (int i = 0; i < sortData.Count; i++)
+            {
+                var columnHeader = _.ColumnHeader[i];
+                var direction = _.Direction[i];
+                Debug.Assert(direction == SortDirection.Ascending || direction == SortDirection.Descending);
+                result[i] = DataRow.OrderBy(columnHeader.Column, direction);
+            }
+
+            return result;
         }
     }
 }
