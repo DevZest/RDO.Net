@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace DevZest.Data.Presenters
 {
@@ -224,6 +225,18 @@ namespace DevZest.Data.Presenters
                 get { return _dataPresenter.LayoutManager; }
             }
 
+            private static void DoEvents()
+            {
+                DispatcherFrame f = new DispatcherFrame();
+                Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                (SendOrPostCallback)delegate (object arg)
+                {
+                    DispatcherFrame fr = arg as DispatcherFrame;
+                    fr.Continue = false;
+                }, f);
+                Dispatcher.PushFrame(f);
+            }
+
             private async Task Run()
             {
                 Debug.Assert(DataView != null && _runningTask == null);
@@ -250,6 +263,7 @@ namespace DevZest.Data.Presenters
                             DataView.OnDataLoading(false);
                             dataSet = await _getDataSet(CancellationToken.None);
                         }
+                        DoEvents();
                         state = DataLoadState.Succeeded;
                     }
                     catch (OperationCanceledException)

@@ -64,7 +64,8 @@ namespace AdventureWorks.SalesOrders
 
         private void CanDelete(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = _salesOrderList.SelectedRows.Count > 0;
+            var selectedRows = _salesOrderList.SelectedRows;
+            e.CanExecute = selectedRows != null && selectedRows.Count > 0;
         }
 
         private void Refresh(object sender, ExecutedRoutedEventArgs e)
