@@ -39,15 +39,14 @@
                 <Separator />
                 <!-- SEARCH -->
                 <Separator />
-                <TextBox 
-                    MinWidth="120" Margin="5"
+                <TextBox x:Name="_findTextBox"
+                    MinWidth="120" Margin="5" TextChanged="FindTextBox_TextChanged"
                     BorderThickness="1" BorderBrush="LightGray"
-                    FontWeight="Normal" Foreground="Gray" Text="{Binding Path=SearchText}">
+                    FontWeight="Normal" Foreground="Gray">
                 </TextBox>
-                <Button Name="btnSearch" Command="{Binding Path=FindCommand}">
+                <Button Name="btnResetFilter" Command="{x:Static local:MainWindow.ResetFilterCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="Images/find.png" Width="22" Height="22" Margin="2" />
-                        <Label VerticalAlignment="Center">_Find</Label>
+                        <Image Source="Images/reset_filter.png" Width="22" Height="22" Margin="2" />
                     </StackPanel>
                 </Button>
                 <!-- EXIT -->

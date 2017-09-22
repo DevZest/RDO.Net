@@ -1,19 +1,22 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DevZest.Data.Presenters;
-using System.Globalization;
-using DevZest.Data.Views;
 using DevZest.Data.Presenters.Plugins;
 using System;
 using System.Windows.Input;
+using DevZest.Data.Presenters.Services;
+using System.Collections.Generic;
+using System.Diagnostics;
+using DevZest.Data.Views;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AdventureWorks.SalesOrders
 {
-    public class SalesOrderList : DataPresenter<SalesOrder>
+    public class SalesOrderList : DataPresenter<SalesOrder>, ISortService
     {
         public static readonly StyleKey CheckBoxStyleKey = new StyleKey(typeof(SalesOrderList));
         public static readonly StyleKey LeftAlignedTextBlockStyleKey = new StyleKey(typeof(SalesOrderList));
@@ -21,11 +24,12 @@ namespace AdventureWorks.SalesOrders
         public static readonly StyleKey LabelStyleKey = new StyleKey(typeof(SalesOrderList));
 
         private readonly Pen _frozenLine;
-        
+
         public SalesOrderList()
         {
             _frozenLine = new Pen(Brushes.Black, 1);
             _frozenLine.Freeze();
+            this[typeof(ISortService)] = this;
         }
 
         private decimal? CalcTotalAmt()
@@ -36,6 +40,49 @@ namespace AdventureWorks.SalesOrders
         private Func<decimal?> CalcTotalAmtFunc
         {
             get { return CalcTotalAmt; }
+        }
+
+        private string _searchText;
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                _searchText = value;
+                RefreshAsync();
+            }
+        }
+
+        private IReadOnlyList<IColumnComparer> _orderBy = new IColumnComparer[] { };
+        IReadOnlyList<IColumnComparer> ISortService.OrderBy
+        {
+            get { return _orderBy; }
+            set
+            {
+                _orderBy = value;
+                RefreshAsync();
+            }
+        }
+
+        DataPresenter IService.DataPresenter
+        {
+            get { return this; }
+            set { Debug.Assert(value == this); }
+        }
+
+        private Task<DataSet<SalesOrder>> LoadDataAsync(CancellationToken ct)
+        {
+            return Data.GetSalesOrdersAsync(SearchText, _orderBy, ct);
+        }
+
+        public void ShowAsync(DataView dataView)
+        {
+            ShowAsync(dataView, LoadDataAsync);
+        }
+
+        public void RefreshAsync()
+        {
+            RefreshAsync(LoadDataAsync);
         }
 
         protected override void BuildTemplate(TemplateBuilder builder)

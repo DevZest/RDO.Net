@@ -2,6 +2,7 @@
 using DevZest.Samples.AdventureWorksLT;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace AdventureWorks.SalesOrders
@@ -11,12 +12,14 @@ namespace AdventureWorks.SalesOrders
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly RoutedUICommand ResetFilterCommand = new RoutedUICommand();
+
         public MainWindow()
         {
             InitializeComponent();
             InitializeCommandBindings();
             _salesOrderList = new SalesOrderList();
-            _salesOrderList.Show(_dataView, LoadSalesOrders());
+            _salesOrderList.ShowAsync(_dataView);
         }
 
         private void InitializeCommandBindings()
@@ -25,6 +28,7 @@ namespace AdventureWorks.SalesOrders
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, Open, CanOpen));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, Delete, CanDelete));
             CommandBindings.Add(new CommandBinding(NavigationCommands.Refresh, Refresh, CanRefresh));
+            CommandBindings.Add(new CommandBinding(ResetFilterCommand, ResetFilter, CanResetFilter));
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, Close));
         }
 
@@ -65,12 +69,22 @@ namespace AdventureWorks.SalesOrders
 
         private void Refresh(object sender, ExecutedRoutedEventArgs e)
         {
-            _salesOrderList.Refresh(LoadSalesOrders());
+            _salesOrderList.RefreshAsync();
         }
 
         private void CanRefresh(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _salesOrderList.DataSet != null;
+        }
+
+        private void ResetFilter(object sender, ExecutedRoutedEventArgs e)
+        {
+            _findTextBox.Text = null;
+        }
+
+        private void CanResetFilter(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !string.IsNullOrEmpty(_findTextBox.Text);
         }
 
         private void Close(object sender, ExecutedRoutedEventArgs e)
@@ -80,12 +94,9 @@ namespace AdventureWorks.SalesOrders
 
         private SalesOrderList _salesOrderList;
 
-        private static DataSet<SalesOrder> LoadSalesOrders()
+        private void FindTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            using (var db = Db.Open(App.ConnectionString))
-            {
-                return db.SalesOrders.ToDataSet();
-            }
+            _salesOrderList.SearchText = _findTextBox.Text;
         }
     }
 }
