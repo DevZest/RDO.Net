@@ -188,8 +188,6 @@ namespace DevZest.Data.Presenters
 
                 if (_runningTask == null)
                     _runningTask = Run();
-                else if (_cts != null)
-                    _cts.Cancel();
 
                 if (dataViewChanged)
                     _dataPresenter.OnViewChanged();
@@ -263,7 +261,6 @@ namespace DevZest.Data.Presenters
                             DataView.OnDataLoading(false);
                             dataSet = await _getDataSet(CancellationToken.None);
                         }
-                        DoEvents();
                         state = DataLoadState.Succeeded;
                     }
                     catch (OperationCanceledException)
@@ -276,6 +273,8 @@ namespace DevZest.Data.Presenters
                         errorMessage = ex.ToString();
                     }
                     finally { _cts = null; }
+
+                    DoEvents();
                 }
                 while (revision != _revision && _getDataSet != null);
 
