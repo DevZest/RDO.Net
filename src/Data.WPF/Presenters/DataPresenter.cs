@@ -6,6 +6,7 @@ using DevZest.Data.Views;
 using DevZest.Data.Views.Primitives;
 using System.Diagnostics;
 using DevZest.Data.Presenters.Services;
+using System.Windows.Input;
 
 namespace DevZest.Data.Presenters
 {
@@ -49,6 +50,7 @@ namespace DevZest.Data.Presenters
 
         protected virtual void OnViewChanged()
         {
+            CommandManager.InvalidateRequerySuggested();
             ViewChanged(this, EventArgs.Empty);
         }
 
