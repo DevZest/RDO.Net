@@ -55,11 +55,22 @@ namespace AdventureWorks.SalesOrders
 
         private void Delete(object sender, ExecutedRoutedEventArgs e)
         {
-            var selectedRows = _salesOrderList.SelectedRows.ToArray();
-            var salesOrderIds = new int?[selectedRows.Length];
-            for (int i = 0; i < selectedRows.Length; i++)
-                salesOrderIds[i] = selectedRows[i].GetValue(_.SalesOrderID);
-            MessageBox.Show(string.Format("Delete: {0}", string.Join(", ", salesOrderIds)));
+            var selectedRows = _salesOrderList.SelectedRows;
+            var messageBoxText = string.Format("Are you sure you want to delete selected {0} rows?", selectedRows.Count);
+            var caption = "Delete Sales Order(s)";
+            if (MessageBox.Show(messageBoxText, caption, MessageBoxButton.YesNo, MessageBoxImage.Asterisk, MessageBoxResult.No) == MessageBoxResult.No)
+                return;
+
+            var refs = DataSet<SalesOrder.Ref>.New();
+            foreach (var rowPresenter in selectedRows)
+            {
+                var id = rowPresenter.GetValue(_.SalesOrderID);
+                refs.AddRow((_, row) => _.SalesOrderID[row] = id);
+            }
+
+            var success = App.Execute(ct => Data.DeleteAsync(refs, ct), this, caption);
+            if (success)
+                RefreshList();
         }
 
         private void CanDelete(object sender, CanExecuteRoutedEventArgs e)
@@ -69,6 +80,11 @@ namespace AdventureWorks.SalesOrders
         }
 
         private void Refresh(object sender, ExecutedRoutedEventArgs e)
+        {
+            RefreshList();
+        }
+
+        private void RefreshList()
         {
             _salesOrderList.RefreshAsync();
         }

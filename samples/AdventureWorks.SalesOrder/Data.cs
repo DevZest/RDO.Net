@@ -1,5 +1,6 @@
 ﻿using DevZest.Data;
 using DevZest.Samples.AdventureWorksLT;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -9,10 +10,10 @@ namespace AdventureWorks.SalesOrders
 {
     static class Data
     {
-        public static Task<DataSet<SalesOrder>> GetSalesOrdersAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
+        public static async Task<DataSet<SalesOrder>> GetListAsync(string filterText, IReadOnlyList<IColumnComparer> orderBy, CancellationToken ct)
         {
             DbSet<SalesOrder> salesOrders;
-            using (var db = Db.Open(App.ConnectionString))
+            using (var db = await Db.OpenAsync(App.ConnectionString))
             {
                 if (string.IsNullOrEmpty(filterText))
                     salesOrders = db.SalesOrders;
@@ -23,7 +24,7 @@ namespace AdventureWorks.SalesOrders
             if (orderBy != null && orderBy.Count > 0)
                 salesOrders = salesOrders.OrderBy(GetOrderBy(salesOrders._, orderBy));
 
-            return salesOrders.ToDataSetAsync(ct);
+            return await salesOrders.ToDataSetAsync(ct);
         }
 
         private static ColumnSort[] GetOrderBy(Model model, IReadOnlyList<IColumnComparer> orderBy)
@@ -37,6 +38,14 @@ namespace AdventureWorks.SalesOrders
                 result[i] = direction == SortDirection.Descending ? column.Desc() : column.Asc();
             }
             return result;
+        }
+
+        public static async Task DeleteAsync(DataSet<SalesOrder.Ref> dataSet, CancellationToken ct)
+        {
+            using (var db = await Db.OpenAsync(App.ConnectionString))
+            {
+                await db.SalesOrders.DeleteAsync(dataSet, _ => _.PrimaryKey, ct);
+            }
         }
     }
 }

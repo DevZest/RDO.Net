@@ -72,7 +72,7 @@ namespace AdventureWorks.SalesOrders
 
         private Task<DataSet<SalesOrder>> LoadDataAsync(CancellationToken ct)
         {
-            return Data.GetSalesOrdersAsync(SearchText, _orderBy, ct);
+            return Data.GetListAsync(SearchText, _orderBy, ct);
         }
 
         public void ShowAsync(DataView dataView)
