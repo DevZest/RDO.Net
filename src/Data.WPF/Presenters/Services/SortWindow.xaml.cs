@@ -91,6 +91,7 @@ namespace DevZest.Data.Presenters.Services
         public static RoutedUICommand MoveDown { get { return ComponentCommands.MoveDown; } }
         public static RoutedUICommand Delete { get { return ApplicationCommands.Delete; } }
         public static RoutedUICommand Apply { get; private set; } = new RoutedUICommand();
+        public static RoutedUICommand Cancel { get { return ApplicationCommands.Close; } }
 
         private Presenter _presenter;
         private DataSet<Model> _data;
@@ -102,6 +103,7 @@ namespace DevZest.Data.Presenters.Services
             CommandBindings.Add(new CommandBinding(MoveDown, ExecMoveDown, CanExecMoveDown));
             CommandBindings.Add(new CommandBinding(Delete, ExecDelete, CanExecDelete));
             CommandBindings.Add(new CommandBinding(Apply, ExecApply, CanExecApply));
+            CommandBindings.Add(new CommandBinding(Cancel, ExecCancel));
         }
 
         private static IReadOnlyList<ColumnHeader> GetColumnHeaders(DataPresenter dataPresenter)
@@ -210,7 +212,7 @@ namespace DevZest.Data.Presenters.Services
 
         private bool CanApply
         {
-            get { return true; }
+            get { return !_presenter.HasError; }
         }
 
         private void ExecApply(object sender, ExecutedRoutedEventArgs e)
@@ -219,6 +221,11 @@ namespace DevZest.Data.Presenters.Services
             var sortService = target.GetService<ISortService>(() => new SortService());
             sortService.OrderBy = GetOrderBy(_data);
             this.Close();
+        }
+
+        private void ExecCancel(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
         }
 
         private static IReadOnlyList<IColumnComparer> GetOrderBy(DataSet<Model> sortData)

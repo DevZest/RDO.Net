@@ -239,6 +239,16 @@ namespace DevZest.Data.Presenters
             get { return LayoutManager == null ? null : LayoutManager.RowValidationWarnings; }
         }
 
+        public IReadOnlyList<ScalarValidationMessage> ScalarErrors
+        {
+            get { return LayoutManager == null ? null : LayoutManager.ScalarValidationErrors; }
+        }
+
+        public IReadOnlyList<ScalarValidationMessage> ScalarWarnings
+        {
+            get { return LayoutManager == null ? null : LayoutManager.ScalarValidationWarnings; }
+        }
+
         public IColumnValidationMessages CurrentRowErrors
         {
             get { return LayoutManager == null ? null : LayoutManager.CurrentRowErrors; }
@@ -398,6 +408,11 @@ namespace DevZest.Data.Presenters
         protected virtual IScalarValidationMessages PerformValidateScalars(IScalarValidationMessages result)
         {
             return result;
+        }
+
+        public bool HasError
+        {
+            get { return LayoutManager == null ? false : ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0 || ScalarErrors.Count > 0 || RowErrors.Count > 0; }
         }
     }
 }

@@ -58,7 +58,7 @@
         <v:DataView x:Name="_dataView" HorizontalAlignment="Stretch" Height="150" BorderThickness="1" BorderBrush="Gray" Margin="0,5,0,0" />
         <UniformGrid HorizontalAlignment="Right" Margin="0,5,0,0">
             <Button IsDefault="True" Content="{x:Static res:UIText._OK}" Command="{x:Static svc:SortWindow.Apply}" />
-            <Button Margin="5,0,0,0" IsCancel="True" Content="{x:Static res:UIText._Cancel}" />
+            <Button Margin="5,0,0,0" IsCancel="True" Content="{x:Static res:UIText._Cancel}" Command="{x:Static svc:SortWindow.Cancel}" />
         </UniformGrid>
     </StackPanel>
 </Window>
