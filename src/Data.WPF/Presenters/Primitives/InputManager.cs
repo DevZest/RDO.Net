@@ -549,5 +549,35 @@ namespace DevZest.Data.Presenters.Primitives
             RowValidationProgress.Reset();
             return base.EndEdit();
         }
+
+        public bool HasVisibleError
+        {
+            get
+            {
+                if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
+                    return true;
+
+                for (int i = 0; i < ScalarValidationErrors.Count; i++)
+                {
+                    var error = ScalarValidationErrors[i];
+                    if (ScalarValidationProgress.IsVisible(error.Source))
+                        return true;
+                }
+
+                foreach (var keyValuePair in RowValidationErrors)
+                {
+                    var rowPresenter = keyValuePair.Key;
+                    var messages = keyValuePair.Value;
+                    for (int i = 0; i < messages.Count; i++)
+                    {
+                        var message = messages[i];
+                        if (RowValidationProgress.IsVisible(rowPresenter, message.Source))
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 }

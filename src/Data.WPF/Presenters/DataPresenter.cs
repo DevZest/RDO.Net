@@ -410,9 +410,24 @@ namespace DevZest.Data.Presenters
             return result;
         }
 
-        public bool HasError
+        public bool HasVisibleInputError
         {
-            get { return LayoutManager == null ? false : ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0 || ScalarErrors.Count > 0 || RowErrors.Count > 0; }
+            get { return LayoutManager == null ? false : LayoutManager.HasVisibleError; }
+        }
+
+        public bool SubmitInput()
+        {
+            if (ScalarFlushErrors.Count > 0 || RowFlushErrors.Count > 0)
+                return false;
+
+            ValidateScalars();
+            ValidateRows();
+            if (HasVisibleInputError)
+                return false;
+
+            if (IsEditing)
+                CurrentRow.EndEdit();
+            return true;
         }
     }
 }

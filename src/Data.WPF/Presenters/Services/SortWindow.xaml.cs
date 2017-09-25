@@ -212,11 +212,14 @@ namespace DevZest.Data.Presenters.Services
 
         private bool CanApply
         {
-            get { return !_presenter.HasError; }
+            get { return !_presenter.HasVisibleInputError; }
         }
 
         private void ExecApply(object sender, ExecutedRoutedEventArgs e)
         {
+            bool success = _presenter.SubmitInput();
+            if (!success)
+                return;
             var target = _presenter.Target;
             var sortService = target.GetService<ISortService>(() => new SortService());
             sortService.OrderBy = GetOrderBy(_data);
