@@ -127,24 +127,27 @@ namespace DevZest.Data.Primitives
             return new DbQuery<T>(model, this, queryStatement);
         }
 
-
-        public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery, T fromModel = null)
+         public DbQuery<T> CreateQuery<T>(Action<DbQueryBuilder, T> buildQuery, T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
+            if (initializer != null)
+                initializer(model);
             var builder = new DbQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
         }
 
-        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery, T fromModel = null)
+        public DbQuery<T> CreateQuery<T>(Action<DbAggregateQueryBuilder, T> buildQuery, T fromModel = null, Action<T> initializer = null)
             where T : Model, new()
         {
             Check.NotNull(buildQuery, nameof(buildQuery));
 
             var model = fromModel == null ? new T() : (fromModel.DataSource == null ? fromModel : Model.Clone(fromModel, false));
+            if (initializer != null)
+                initializer(model);
             var builder = new DbAggregateQueryBuilder(model);
             buildQuery(builder, model);
             return CreateQuery(model, builder.BuildQueryStatement(null));
