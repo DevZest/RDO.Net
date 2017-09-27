@@ -419,12 +419,16 @@
   <data name="ExpectedJSON_SalesOrderDynamicModel" xml:space="preserve">
     <value>[
    {
-      "ColumnList_0" : 71774,
-      "ColumnList_1" : "SO71774"
+      "ColumnList" : [
+         71774,
+         "SO71774"
+      ]
    },
    {
-      "ColumnList_0" : 71776,
-      "ColumnList_1" : "SO71776"
+      "ColumnList" : [
+         71776,
+         "SO71776"
+      ]
    }
 ]</value>
   </data>

@@ -111,12 +111,16 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
-        ///      &quot;ColumnList_0&quot; : 71774,
-        ///      &quot;ColumnList_1&quot; : &quot;SO71774&quot;
+        ///      &quot;ColumnList&quot; : [
+        ///         71774,
+        ///         &quot;SO71774&quot;
+        ///      ]
         ///   },
         ///   {
-        ///      &quot;ColumnList_0&quot; : 71776,
-        ///      &quot;ColumnList_1&quot; : &quot;SO71776&quot;
+        ///      &quot;ColumnList&quot; : [
+        ///         71776,
+        ///         &quot;SO71776&quot;
+        ///      ]
         ///   }
         ///].
         /// </summary>

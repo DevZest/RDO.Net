@@ -16,14 +16,29 @@ namespace DevZest.Data.Primitives
                 if (!column.ShouldSerialize)
                     continue;
 
+                if (column.Kind == ColumnKind.ColumnList || column.Kind == ColumnKind.Extension)
+                    continue;
+
                 if (count > 0)
                     jsonWriter.WriteComma();
                 jsonWriter.WriteObjectName(column.Name);
-                var dataSetColumn = column as IDataSetColumn;
-                if (dataSetColumn != null)
-                    dataSetColumn.Serialize(dataRow.Ordinal, jsonWriter);
-                else
-                    jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+                jsonWriter.Write(dataRow, column);
+                count++;
+            }
+
+            foreach (var columnList in dataRow.Model.ColumnLists)
+            {
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.WriteObjectName(columnList.Name);
+                jsonWriter.WriteStartArray();
+                for (int i = 0; i < columnList.Count; i++)
+                {
+                    if (i > 0)
+                        jsonWriter.WriteComma();
+                    jsonWriter.Write(dataRow, columnList[i]);
+                }
+                jsonWriter.WriteEndArray();
                 count++;
             }
 
@@ -36,6 +51,15 @@ namespace DevZest.Data.Primitives
             }
 
             return jsonWriter.WriteEndObject();
+        }
+
+        private static void Write(this JsonWriter jsonWriter, DataRow dataRow, Column column)
+        {
+            var dataSetColumn = column as IDataSetColumn;
+            if (dataSetColumn != null)
+                dataSetColumn.Serialize(dataRow.Ordinal, jsonWriter);
+            else
+                jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
         }
 
         public static void Parse(this JsonParser jsonParser, DataRow dataRow)
@@ -67,9 +91,10 @@ namespace DevZest.Data.Primitives
             var member = model[memberName];
             if (member == null)
                 throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-            var column = member as Column;
-            if (column != null)
-                jsonParser.Parse(column, dataRow.Ordinal);
+            if (member is Column)
+                jsonParser.Parse((Column)member, dataRow.Ordinal);
+            else if (member is ColumnList)
+                jsonParser.Parse((ColumnList)member, dataRow.Ordinal);
             else
                 jsonParser.Parse(dataRow[(Model)member], false);
         }
@@ -90,6 +115,18 @@ namespace DevZest.Data.Primitives
             var token = jsonParser.ExpectToken(JsonTokenKind.ColumnValues);
             if (column.ShouldSerialize)
                 column.Deserialize(ordinal, token.JsonValue);
+        }
+
+        private static void Parse(this JsonParser jsonParser, ColumnList columnList, int ordinal)
+        {
+            jsonParser.ExpectToken(JsonTokenKind.SquaredOpen);
+            for (int i = 0; i < columnList.Count; i++)
+            {
+                jsonParser.Parse(columnList[i], ordinal);
+                if (i < columnList.Count - 1)
+                    jsonParser.ExpectComma();
+            }
+            jsonParser.ExpectToken(JsonTokenKind.SquaredClose);
         }
     }
 }
