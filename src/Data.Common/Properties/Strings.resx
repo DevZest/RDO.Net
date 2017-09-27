@@ -135,8 +135,8 @@
   <data name="ColumnAggregateFunction_NoModelChain" xml:space="preserve">
     <value>Cannot resolve model chain from Column "{column}" to provided dataRow.</value>
   </data>
-  <data name="ColumnCollection_DuplicateColumnKey" xml:space="preserve">
-    <value>Duplicate ColumnKey is not allowed: OriginalOwnerType={originalOwnerType}, OriginalName={originalName}.</value>
+  <data name="ColumnCollection_DuplicateModelId" xml:space="preserve">
+    <value>Duplicate ModelId is not allowed: OwnerType={ownerType}, Name={name}.</value>
   </data>
   <data name="GenericInvoker_TypeResolverReturnsNull" xml:space="preserve">
     <value>The type resolver callback returns null.</value>

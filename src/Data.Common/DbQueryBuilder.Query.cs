@@ -41,19 +41,30 @@ namespace DevZest.Data
         internal DbQueryStatement BuildQueryStatement(Model sourceModel, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
         {
             From(sourceModel);
-            var sourceColumns = sourceModel.Columns;
+            var sourceColumnsByOridinalId = sourceModel.Columns.ByOriginalId();
             var targetColumns = Model.Columns;
-            Debug.Assert(targetColumns.Count <= sourceColumns.Count);
+            Debug.Assert(targetColumns.Count <= sourceColumnsByOridinalId.Count);
             for (int i = 0; i < targetColumns.Count; i++)
             {
                 var targetColumn = targetColumns[i];
-                SelectCore(sourceColumns[targetColumn.Key], targetColumn);
+                SelectCore(GetColumnByOriginalId(sourceColumnsByOridinalId, targetColumn.OriginalId), targetColumn);
             }
 
             if (action != null)
                 action(this);
 
             return BuildQueryStatement(sequentialKeys);
+        }
+
+        private static Column GetColumnByOriginalId(IReadOnlyDictionary<ColumnId, IColumns> columnsByOriginalId, ColumnId originalId)
+        {
+            IColumns columns;
+            if (columnsByOriginalId.TryGetValue(originalId, out columns))
+            {
+                if (columns.Count == 1)
+                    return columns.Single();
+            }
+            return null;
         }
 
         internal DbQueryStatement BuildQueryStatement(DbTable<KeyOutput> sequentialKeys)

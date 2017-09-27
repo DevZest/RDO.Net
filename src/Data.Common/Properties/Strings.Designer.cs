@@ -60,11 +60,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Duplicate ColumnKey is not allowed: OriginalOwnerType={originalOwnerType}, OriginalName={originalName}.
+        /// Duplicate ModelId is not allowed: OwnerType={ownerType}, Name={name}.
         /// </summary>
-        public static string ColumnCollection_DuplicateColumnKey(object originalOwnerType, object originalName)
+        public static string ColumnCollection_DuplicateModelId(object ownerType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateColumnKey", "originalOwnerType", "originalName"), originalOwnerType, originalName);
+            return string.Format(CultureInfo.CurrentCulture, GetString("ColumnCollection_DuplicateModelId", "ownerType", "name"), ownerType, name);
         }
 
         /// <summary>

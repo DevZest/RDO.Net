@@ -82,7 +82,7 @@ namespace DevZest.Data
         /// <summary>Add a new column into this column list, from existing column.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
         /// <param name="column">The existing column.</param>
-        /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnKey"/> from existing column, otherwise <see langword="false"/>.</param>
+        /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnId"/> from existing column, otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
         public T Add<T>(T column, bool inheritColumnKey = false, Action<T> initializer = null)
@@ -100,16 +100,16 @@ namespace DevZest.Data
         /// <summary>Add a new column into this column list, from existing column property.</summary>
         /// <typeparam name="T">The type of the column.</typeparam>
         /// <param name="fromMounter">The existing column mounter.</param>
-        /// <param name="inheritColumnKey"><see langword="true"/> to inherit <see cref="ColumnKey"/> from existing column property,
+        /// <param name="inheritOriginalId"><see langword="true"/> to inherit <see cref="ColumnId"/> from existing column property,
         /// otherwise <see langword="false"/>.</param>
         /// <param name="initializer">The column initializer.</param>
         /// <returns>The new column added.</returns>
-        public T Add<T>(Mounter<T> fromMounter, bool inheritColumnKey = false, Action<T> initializer = null)
+        public T Add<T>(Mounter<T> fromMounter, bool inheritOriginalId = false, Action<T> initializer = null)
             where T : TColumn, new()
         {
             VerifyDesignMode();
             Check.NotNull(fromMounter, nameof(fromMounter));
-            if (inheritColumnKey)
+            if (inheritOriginalId)
                 return Add(x => CreateColumn(x, fromMounter.OriginalOwnerType, fromMounter.OriginalName, fromMounter.Initializer, initializer));
             else
                 return Add(x => CreateColumn(x, null, null, fromMounter.Initializer, initializer));

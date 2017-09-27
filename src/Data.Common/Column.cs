@@ -22,20 +22,23 @@ namespace DevZest.Data
         /// <summary>
         /// Gets the original owner type of this <see cref="Column"/>.
         /// </summary>
-        /// <remarks>This property forms <see cref="ColumnKey"/> of this <see cref="Column"/>.</remarks>
+        /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public Type OriginalOwnerType { get; internal set; }
 
         /// <summary>
         /// Gets the original name of this <see cref="Column"/>.
         /// </summary>
-        /// <remarks>This property forms <see cref="ColumnKey"/> of this <see cref="Column"/>.</remarks>
+        /// <remarks>This property forms <see cref="ColumnId"/> of this <see cref="Column"/>.</remarks>
         public string OriginalName { get; internal set; }
 
-        /// <summary>Gets the key of this <see cref="Column"/>, which uniquely identifies this <see cref="Column"/> of <see cref="Model"/>,
-        /// and can be used for column mapping between different <see cref="Model"/> objects.</summary>
-        public ColumnKey Key
+        public ColumnId ModelId
         {
-            get { return new ColumnKey(OriginalOwnerType, OriginalName); }
+            get { return new ColumnId(OwnerType, Name); }
+        }
+
+        public ColumnId OriginalId
+        {
+            get { return new ColumnId(OriginalOwnerType, OriginalName); }
         }
 
         /// <summary>

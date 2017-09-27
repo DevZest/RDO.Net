@@ -40,7 +40,7 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// Registers a column from existing column property, without inheriting its <see cref="ColumnKey"/> value.
+        /// Registers a column from existing column property, without inheriting its <see cref="ColumnId"/> value.
         /// </summary>
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
         /// <typeparam name="TColumn">The type of the column.</typeparam>

@@ -46,7 +46,7 @@ namespace DevZest.Data
 
         IModels _sourceModels = Models.Empty;
         SubQueryEliminator _subQueryEliminator;
-        Dictionary<ColumnKey, List<Column>> _sourceColumnsByKey = new Dictionary<ColumnKey, List<Column>>();
+        Dictionary<ColumnId, IColumns> _sourceColumnsByOriginalId = new Dictionary<ColumnId, IColumns>();
 
         public DbFromClause FromClause { get; private set; }
 
@@ -80,14 +80,12 @@ namespace DevZest.Data
             _sourceModels = _sourceModels.Add(model);
             foreach (var column in model.Columns)
             {
-                var columnKey = column.Key;
-                List<Column> sourceColumns;
-                if (!_sourceColumnsByKey.TryGetValue(columnKey, out sourceColumns))
-                {
-                    sourceColumns = new List<Column>();
-                    _sourceColumnsByKey.Add(columnKey, sourceColumns);
-                }
-                sourceColumns.Add(column);
+                var originalId = column.OriginalId;
+                IColumns sourceColumns;
+                if (_sourceColumnsByOriginalId.TryGetValue(originalId, out sourceColumns))
+                    _sourceColumnsByOriginalId[originalId] = sourceColumns.Add(column);
+                else
+                    _sourceColumnsByOriginalId.Add(originalId, column);
             }
         }
 
@@ -227,11 +225,11 @@ namespace DevZest.Data
                 if (_targetColumns.Contains(targetColumn))
                     continue;
 
-                List<Column> sourceColumns;
-                if (_sourceColumnsByKey.TryGetValue(targetColumn.Key, out sourceColumns))
+                IColumns sourceColumns;
+                if (_sourceColumnsByOriginalId.TryGetValue(targetColumn.OriginalId, out sourceColumns))
                 {
                     if (sourceColumns.Count == 1)
-                        SelectCore(sourceColumns[0], targetColumn);
+                        SelectCore(sourceColumns.Single(), targetColumn);
                 }
             }
             return this;

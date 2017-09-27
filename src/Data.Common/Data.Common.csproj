@@ -86,7 +86,7 @@
     <Compile Include="Primitives\ColumnConverterAttribute.cs" />
     <Compile Include="ColumnExtensions.cs" />
     <Compile Include="ColumnInitializerManager.cs" />
-    <Compile Include="ColumnKey.cs" />
+    <Compile Include="ColumnId.cs" />
     <Compile Include="ColumnKind.cs" />
     <Compile Include="ColumnList.cs" />
     <Compile Include="ColumnMapping.cs" />

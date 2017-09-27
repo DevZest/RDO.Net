@@ -43,7 +43,7 @@ namespace DevZest.Data.Primitives
         public static _Int32 GetTableRowIdColumn(this Model model)
         {
             Check.NotNull(model, nameof(model));
-            return model.Columns[new ColumnKey(model.GetType(), Model.SYS_ROW_ID_COL_NAME)] as _Int32;
+            return model.Columns[new ColumnId(model.GetType(), Model.SYS_ROW_ID_COL_NAME)] as _Int32;
         }
 
         public static DbTable<T> CreateDbTable<T>(this T model, DbSession dbSession, string name)

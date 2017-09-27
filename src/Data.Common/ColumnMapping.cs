@@ -32,10 +32,10 @@ namespace DevZest.Data
 
             var result = new ColumnMappingsBuilder(sourceModel, targetModel).Build(builder => columnMappingsBuilder(builder, sourceModel, targetModel));
             var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
-            var columnKeys = new HashSet<ColumnKey>(columns.Select(x => x.Key));
+            var targetModelIds = new HashSet<ColumnId>(columns.Select(x => x.ModelId));
             foreach (var resultItem in result)
             {
-                if (!columnKeys.Contains(resultItem.Target.Key))
+                if (!targetModelIds.Contains(resultItem.Target.ModelId))
                     throw new InvalidOperationException(Strings.ColumnMappingsBuilder_InvalidTarget(resultItem.Target));
             }
 
@@ -48,15 +48,18 @@ namespace DevZest.Data
             Check.NotNull(sourceModel, nameof(sourceModel));
 
             var result = new List<ColumnMapping>();
-            var sourceColumns = sourceModel.Columns;
-            var columns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
-            foreach (var column in columns)
+            var sourceColumns = sourceModel.Columns.ByOriginalId();
+            var targetColumns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
+            foreach (var targetColumn in targetColumns)
             {
-                if (column.IsSystem)
+                if (targetColumn.IsSystem)
                     continue;
-                var sourceColumn = sourceColumns[column.Key];
-                if (sourceColumn != null)
-                    result.Add(new ColumnMapping(sourceColumn, column));
+                IColumns columns;
+                if (sourceColumns.TryGetValue(targetColumn.OriginalId, out columns))
+                {
+                    if (columns.Count == 1)
+                        result.Add(new ColumnMapping(columns.Single(), targetColumn));
+                }
             }
 
             return result;
