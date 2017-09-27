@@ -27,7 +27,7 @@ namespace DevZest.Data
             var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
             var parent = mounter.Parent;
             result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer.Merge(columnAttributes));
-            parent._columns.Add(result);
+            parent.Add(result);
             return result;
         }
 
@@ -62,7 +62,7 @@ namespace DevZest.Data
             TChild result = new TChild();
             var parent = mounter.Parent;
             result.Initialize(parent, mounter.Name);
-            parent._childExtensions.Add(result);
+            parent.Add(result);
             return result;
         }
 
@@ -111,16 +111,42 @@ namespace DevZest.Data
             return FullName + "." + mounter.Name;
         }
 
-        private List<Column> _columns = new List<Column>();
+        private List<Column> _columns;
         public IReadOnlyList<Column> Columns
         {
-            get { return _columns; }
+            get
+            {
+                if (_columns == null)
+                    return Array<Column>.Empty;
+                else
+                    return _columns;
+            }
         }
 
-        private List<ModelExtension> _childExtensions = new List<ModelExtension>();
+        private void Add(Column column)
+        {
+            if (_columns == null)
+                _columns = new List<Data.Column>();
+            _columns.Add(column);
+        }
+
+        private List<ModelExtension> _childExtensions;
         public IReadOnlyList<ModelExtension> ChildExtensions
         {
-            get { return _childExtensions; }
+            get
+            {
+                if (_childExtensions == null)
+                    return Array<ModelExtension>.Empty;
+                else
+                    return _childExtensions;
+            }
+        }
+
+        private void Add(ModelExtension childExtension)
+        {
+            if (_childExtensions == null)
+                _childExtensions = new List<Data.ModelExtension>();
+            _childExtensions.Add(childExtension);
         }
     }
 }
