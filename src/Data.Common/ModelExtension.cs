@@ -106,7 +106,7 @@ namespace DevZest.Data
 
         private Model Model { get; set; }
 
-        private string FullName { get; set; }
+        public string FullName { get; private set; }
 
         public string Name { get; private set; }
 

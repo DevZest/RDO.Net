@@ -42,6 +42,15 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
+            var extension = dataRow.Model.Extension;
+            if (extension != null)
+            {
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.Write(extension, dataRow);
+                count++;
+            }
+
             foreach (var dataSet in dataRow.ChildDataSets)
             {
                 if (count > 0)
@@ -60,6 +69,30 @@ namespace DevZest.Data.Primitives
                 dataSetColumn.Serialize(dataRow.Ordinal, jsonWriter);
             else
                 jsonWriter.WriteValue(column.Serialize(dataRow.Ordinal));
+        }
+
+        private static void Write(this JsonWriter jsonWriter, ModelExtension extension, DataRow dataRow)
+        {
+            jsonWriter.WriteObjectName(extension.Name);
+
+            var count = 0;
+            jsonWriter.WriteStartObject();
+            foreach (var column in extension.Columns)
+            {
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.WriteObjectName(column.RelativeName);
+                jsonWriter.Write(dataRow, column);
+                count++;
+            }
+            foreach (var childExtension in extension.ChildExtensions)
+            {
+                if (count > 0)
+                    jsonWriter.WriteComma();
+                jsonWriter.Write(childExtension, dataRow);
+                count++;
+            }
+            jsonWriter.WriteEndObject();
         }
 
         public static void Parse(this JsonParser jsonParser, DataRow dataRow)
@@ -88,6 +121,15 @@ namespace DevZest.Data.Primitives
             jsonParser.ExpectToken(JsonTokenKind.Colon);
 
             var model = dataRow.Model;
+
+            if (memberName == nameof(Model.Extension))
+            {
+                var extension = model.Extension;
+                if (model.Extension == null)
+                    throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                jsonParser.Parse(extension, dataRow);
+            }
+
             var member = model[memberName];
             if (member == null)
                 throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
@@ -97,6 +139,35 @@ namespace DevZest.Data.Primitives
                 jsonParser.Parse((ColumnList)member, dataRow.Ordinal);
             else
                 jsonParser.Parse(dataRow[(Model)member], false);
+        }
+
+        private static void Parse(this JsonParser jsonParser, ModelExtension extension, DataRow dataRow)
+        {
+            jsonParser.ExpectToken(JsonTokenKind.CurlyOpen);
+            var token = jsonParser.PeekToken();
+            if (token.Kind == JsonTokenKind.String)
+            {
+                jsonParser.ConsumeToken();
+                jsonParser.Parse(extension, token.Text, dataRow);
+
+                while (jsonParser.PeekToken().Kind == JsonTokenKind.Comma)
+                {
+                    jsonParser.ConsumeToken();
+                    token = jsonParser.ExpectToken(JsonTokenKind.String);
+                    jsonParser.Parse(extension, token.Text, dataRow);
+                }
+            }
+            jsonParser.ExpectToken(JsonTokenKind.CurlyClose);
+        }
+
+        private static void Parse(this JsonParser jsonParser, ModelExtension extension, string memberName, DataRow dataRow)
+        {
+            if (extension.ColumnsByRelativeName.ContainsKey(memberName))
+                jsonParser.Parse(extension.ColumnsByRelativeName[memberName], dataRow.Ordinal);
+            else if (extension.ChildExtensionsByName.ContainsKey(memberName))
+                jsonParser.Parse(extension.ChildExtensionsByName[memberName], dataRow);
+            else
+                throw new FormatException(Strings.JsonParser_InvalidExtensionMember(memberName, extension.FullName));
         }
 
         private static void Parse(this JsonParser jsonParser, Column column, int ordinal)

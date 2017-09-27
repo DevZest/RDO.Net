@@ -1003,6 +1003,14 @@ namespace DevZest.Data
             get { return GetString("Model_ExtensionAlreadyExists"); }
         }
 
+        /// <summary>
+        /// Invalid member name "{memberName}" for ModelExtension "{extension}".
+        /// </summary>
+        public static string JsonParser_InvalidExtensionMember(object memberName, object extension)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidExtensionMember", "memberName", "extension"), memberName, extension);
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

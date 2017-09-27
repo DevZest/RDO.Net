@@ -489,4 +489,7 @@
   <data name="Model_ExtensionAlreadyExists" xml:space="preserve">
     <value>Extension already exists.</value>
   </data>
+  <data name="JsonParser_InvalidExtensionMember" xml:space="preserve">
+    <value>Invalid member name "{memberName}" for ModelExtension "{extension}".</value>
+  </data>
 </root>
