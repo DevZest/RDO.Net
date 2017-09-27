@@ -114,8 +114,29 @@ namespace DevZest.Data
             where T : Column
         {
             var result = new ColumnList<T>();
-            result.ConstructModelMember(mounter.Parent, mounter.OwnerType, mounter.Name);
+            var parent = mounter.Parent;
+            result.ConstructModelMember(parent, mounter.OwnerType, mounter.Name);
+            parent.Add(result);
             return result;
+        }
+
+        private List<ColumnList> _columnLists;
+        public IReadOnlyList<ColumnList> ColumnLists
+        {
+            get
+            {
+                if (_columnLists == null)
+                    return Array<ColumnList>.Empty;
+                else
+                    return _columnLists;
+            }
+        }
+
+        private void Add(ColumnList columnList)
+        {
+            if (_columnLists == null)
+                _columnLists = new List<Data.ColumnList>();
+            _columnLists.Add(columnList);
         }
 
         #endregion
