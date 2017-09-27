@@ -13,11 +13,12 @@ namespace DevZest.Data.Utilities
             Check.NotNull(getter, paramName);
             var memberExpr = getter.Body as MemberExpression;
             if (memberExpr == null)
-                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
+                throw new ArgumentException(Strings.InvalidGetterExpression, paramName);
 
-            var propertyInfo = typeof(TParent).GetProperty(memberExpr.Member.Name, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var name = memberExpr.Member.Name;
+            var propertyInfo = typeof(TParent).GetProperty(name, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (propertyInfo == null)
-                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
+                throw new ArgumentException(Strings.InvalidGetterExpression, paramName);
 
             return propertyInfo.GetCustomAttributes<ColumnAttribute>();
         }

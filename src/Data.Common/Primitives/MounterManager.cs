@@ -169,7 +169,7 @@ namespace DevZest.Data.Primitives
                 var name = propertyInfo.Name;
                 var setter = GetSetter(name);
                 if (setter == null)
-                    throw new ArgumentException(Strings.Property_InvalidGetter, nameof(propertyInfo));
+                    throw new ArgumentException(Strings.InvalidGetterExpression, nameof(propertyInfo));
                 Init(name, propertyInfo.Getter.Compile(), setter, constructor, initializer);
             }
 
@@ -249,7 +249,7 @@ namespace DevZest.Data.Primitives
             Debug.Assert(getter != null);
             var propertyInfo = MounterInfo<TDerivedTarget, TDerivedProperty>.FromGetter(getter);
             if (propertyInfo == null)
-                throw new ArgumentException(Strings.Property_InvalidGetter);
+                throw new ArgumentException(Strings.InvalidGetterExpression);
 
             var info = propertyInfo.Value;
             if (info.IsAttached)
@@ -272,7 +272,7 @@ namespace DevZest.Data.Primitives
             lock (_resultRegistrations) // ensure thread safety
             {
                 if (_resultRegistrations.ContainsKey(targetType))
-                    throw new InvalidOperationException(Strings.Property_RegisterAfterUse(targetType.FullName));
+                    throw new InvalidOperationException(Strings.MounterManager_RegisterAfterUse(targetType.FullName));
 
                 RegistrationCollection registrations;
                 if (!_registrations.TryGetValue(targetType, out registrations))
@@ -282,7 +282,7 @@ namespace DevZest.Data.Primitives
                 }
 
                 if (registrations.Contains(new Key(item)))
-                    throw new InvalidOperationException(Strings.Property_RegisterDuplicate(item.OwnerType.FullName, item.Name));
+                    throw new InvalidOperationException(Strings.MounterManager_RegisterDuplicate(item.OwnerType.FullName, item.Name));
 
                 registrations.Add(item);
             }

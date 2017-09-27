@@ -14,25 +14,25 @@ namespace DevZest.Data
         /// <summary>
         /// The provided getter expression is invalid.
         /// </summary>
-        public static string Property_InvalidGetter
+        public static string InvalidGetterExpression
         {
-            get { return GetString("Property_InvalidGetter"); }
+            get { return GetString("InvalidGetterExpression"); }
         }
 
         /// <summary>
         /// Cannot register property for type '{type}' after an instance of this type or its derived type has been created.
         /// </summary>
-        public static string Property_RegisterAfterUse(object type)
+        public static string MounterManager_RegisterAfterUse(object type)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Property_RegisterAfterUse", "type"), type);
+            return string.Format(CultureInfo.CurrentCulture, GetString("MounterManager_RegisterAfterUse", "type"), type);
         }
 
         /// <summary>
         /// The property with OwnerType '{ownerType}' and Name '{name}' has been registered already.
         /// </summary>
-        public static string Property_RegisterDuplicate(object ownerType, object name)
+        public static string MounterManager_RegisterDuplicate(object ownerType, object name)
         {
-            return string.Format(CultureInfo.CurrentCulture, GetString("Property_RegisterDuplicate", "ownerType", "name"), ownerType, name);
+            return string.Format(CultureInfo.CurrentCulture, GetString("MounterManager_RegisterDuplicate", "ownerType", "name"), ownerType, name);
         }
 
         /// <summary>
