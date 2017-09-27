@@ -34,9 +34,9 @@ namespace DevZest.Data
             where TModel : Model
             where TColumn : Column, new()
         {
-            var columnAttributes = VerifyPropertyGetter(getter);
+            var columnAttributes = getter.Verify(nameof(getter));
 
-            return s_columnManager.Register(getter, a => CreateColumn(a, initializer, columnAttributes));
+            return s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
         }
 
         /// <summary>
@@ -45,40 +45,26 @@ namespace DevZest.Data
         /// <typeparam name="TModel">The type of model which the column is registered on.</typeparam>
         /// <typeparam name="TColumn">The type of the column.</typeparam>
         /// <param name="getter">The lambda expression of the column getter.</param>
-        /// <param name="fromProperty">The existing column property.</param>
+        /// <param name="fromMounter">The existing column mounter.</param>
         /// <param name="initializer">The additional initializer.</param>
         /// <returns>Mounter of the column.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="getter"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="getter"/> expression is not an valid getter.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="fromProperty"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="fromMounter"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="initializer"/> is null.</exception>
         public static Mounter<TColumn> RegisterColumn<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter,
-            Mounter<TColumn> fromProperty,
+            Mounter<TColumn> fromMounter,
             Action<TColumn> initializer = null)
             where TModel : Model
             where TColumn : Column, new()
         {
-            var columnAttributes = VerifyPropertyGetter(getter);
-            Utilities.Check.NotNull(fromProperty, nameof(fromProperty));
+            var columnAttributes = getter.Verify(nameof(getter));
+            Utilities.Check.NotNull(fromMounter, nameof(fromMounter));
 
-            var result = s_columnManager.Register(getter, a => CreateColumn(a, fromProperty, initializer, columnAttributes));
-            result.OriginalOwnerType = fromProperty.OriginalOwnerType;
-            result.OriginalName = fromProperty.OriginalName;
+            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, fromMounter, initializer, columnAttributes));
+            result.OriginalOwnerType = fromMounter.OriginalOwnerType;
+            result.OriginalName = fromMounter.OriginalName;
             return result;
-        }
-
-        private static IEnumerable<ColumnAttribute> VerifyPropertyGetter<TModel, TColumn>(Expression<Func<TModel, TColumn>> getter)
-        {
-            Utilities.Check.NotNull(getter, nameof(getter));
-            var memberExpr = getter.Body as MemberExpression;
-            if (memberExpr == null)
-                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
-
-            var propertyInfo = typeof(TModel).GetProperty(memberExpr.Member.Name, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            if (propertyInfo == null)
-                throw new ArgumentException(Strings.Property_InvalidGetter, nameof(getter));
-
-            return propertyInfo.GetCustomAttributes<ColumnAttribute>();
         }
 
         private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
@@ -86,38 +72,8 @@ namespace DevZest.Data
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, null, GetColumnInitializer(initializer, columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, null, initializer.Merge(columnAttributes));
             return result;
-        }
-
-        private static Action<T> GetColumnInitializer<T>(Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
-            where T : Column, new()
-        {
-            return x =>
-            {
-                if (initializer != null)
-                    initializer(x);
-                InitializeColumnAttributes(x, columnAttributes);
-            };
-        }
-
-        private static void InitializeColumnAttributes(Column column, IEnumerable<ColumnAttribute> columnAttributes)
-        {
-            if (columnAttributes == null)
-                return;
-            foreach (var columnAttribute in columnAttributes)
-            {
-                columnAttribute.Initialize(column);
-
-                var columnValidator = columnAttribute as IColumnValidator;
-                if (columnValidator != null)
-                {
-                    var validator = columnValidator.GetValidator(column);
-                    var model = column.ParentModel;
-                    Debug.Assert(model != null);
-                    model._validators.Add(validator);
-                }
-            }
         }
 
         private static T CreateColumn<TModel, T>(Mounter<TModel, T> mounter, Mounter<T> fromMounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
@@ -125,7 +81,7 @@ namespace DevZest.Data
             where T : Column, new()
         {
             var result = Column.Create<T>(fromMounter.OriginalOwnerType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, fromMounter.Initializer, GetColumnInitializer(initializer, columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, fromMounter.Initializer, initializer.Merge(columnAttributes));
             return result;
         }
 
@@ -552,6 +508,7 @@ namespace DevZest.Data
         {
             Debug.Assert(prototype != null && prototype != this);
             InitializeColumnLists(prototype);
+            InitializeExtension(prototype);
             if (setDataSource && prototype.DataSource != null)
                 SetDataSource(prototype.DataSource);
         }
@@ -564,6 +521,16 @@ namespace DevZest.Data
                 var columnList = property.GetInstance(this);
                 var sourceColumnList = property.GetInstance(prototype);
                 columnList.Initialize(sourceColumnList);
+            }
+        }
+
+        private void InitializeExtension(Model prototype)
+        {
+            var prototypeExtension = prototype.Extension;
+            if (prototypeExtension != null)
+            {
+                Extension = (ModelExtension)Activator.CreateInstance(prototypeExtension.GetType());
+                Extension.Initialize(this, nameof(Extension));
             }
         }
 
@@ -1331,6 +1298,24 @@ namespace DevZest.Data
             VerifyCreateLocalColumn(childModel, nameof(childModel));
             return DataSetContainer.CreateLocalColumn(childModel, column1, column2, column3, column4, column5, column6, column7, column8, column9, column10,
                 column11, column12, expression, builder);
+        }
+
+        internal ModelExtension Extension { get; private set; }
+
+        public void SetExtension<T>()
+            where T : ModelExtension, new()
+        {
+            VerifyDesignMode();
+            if (Extension != null)
+                throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
+            Extension = new T();
+            Extension.Initialize(this, nameof(Extension));
+        }
+
+        public T GetExtension<T>()
+            where T : ModelExtension, new()
+        {
+            return Extension as T;
         }
     }
 }

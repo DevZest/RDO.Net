@@ -8,15 +8,17 @@ namespace DevZest.Data
     {
         /// <summary>The column is defined by user.</summary>
         User = 1,
+        /// <summary>The column is defined by extension.</summary>
+        Extension = 2,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
-        SystemParentRowId = 2,
+        SystemParentRowId = 4,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
-        SystemRowId = 4,
+        SystemRowId = 8,
         /// <summary>Other system column, such as system columns defined by SQL Server implementation (internal use only).</summary>
-        SystemCustom = 8,
+        SystemCustom = 16,
         /// <summary>Union of <see cref="SystemRowId"/>, <see cref="SystemParentRowId"/> and <see cref="SystemCustom"/>.</summary>
         System = SystemRowId | SystemParentRowId | SystemCustom,
         /// <summary>All kinds of column.</summary>
-        All = User | System
+        All = User | Extension | System
     }
 }

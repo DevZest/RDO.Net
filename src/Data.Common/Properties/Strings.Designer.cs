@@ -995,6 +995,14 @@ namespace DevZest.Data
             get { return GetString("DataRow_NullModel"); }
         }
 
+        /// <summary>
+        /// Extension already exists.
+        /// </summary>
+        public static string Model_ExtensionAlreadyExists
+        {
+            get { return GetString("Model_ExtensionAlreadyExists"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -486,4 +486,7 @@
   <data name="DataRow_NullModel" xml:space="preserve">
     <value>The Model is null.</value>
   </data>
+  <data name="Model_ExtensionAlreadyExists" xml:space="preserve">
+    <value>Extension already exists.</value>
+  </data>
 </root>
