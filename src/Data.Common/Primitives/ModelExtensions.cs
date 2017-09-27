@@ -1,7 +1,6 @@
 ﻿using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DevZest.Data.Primitives
 {
@@ -15,6 +14,11 @@ namespace DevZest.Data.Primitives
         public static IReadOnlyList<Column> GetLocalColumns(this Model model)
         {
             return model.LocalColumns;
+        }
+
+        public static IReadOnlyList<ColumnList> GetColumnLists(this Model model)
+        {
+            return model.ColumnLists;
         }
 
         public static string GetDbAlias(this Model model)

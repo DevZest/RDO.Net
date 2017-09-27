@@ -121,7 +121,7 @@ namespace DevZest.Data
         }
 
         private List<ColumnList> _columnLists;
-        public IReadOnlyList<ColumnList> ColumnLists
+        internal IReadOnlyList<ColumnList> ColumnLists
         {
             get
             {
