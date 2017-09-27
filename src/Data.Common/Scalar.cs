@@ -26,7 +26,7 @@ namespace DevZest.Data
             var result = new T();
             if (initializer != null)
                 initializer(result);
-            result.Initialize(_model, typeof(_Model), name, ColumnKind.User, null);
+            result.Initialize(_model, typeof(_Model), name, ColumnKind.ModelProperty, null);
             return result;
         }
 

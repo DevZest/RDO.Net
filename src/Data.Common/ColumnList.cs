@@ -126,7 +126,7 @@ namespace DevZest.Data
             }
             var result = Column.Create<T>(originalOwnerType, originalName);
 
-            result.Construct(columnList.ParentModel, columnList.OwnerType, name, ColumnKind.User, baseInitializer, initializer);
+            result.Construct(columnList.ParentModel, columnList.OwnerType, name, ColumnKind.ColumnList, baseInitializer, initializer);
             return result;
         }
 
@@ -158,9 +158,9 @@ namespace DevZest.Data
             return _columns.GetEnumerator();
         }
 
-        internal override void Initialize(ColumnList sourceColumnList)
+        internal override void Initialize(ColumnList prototype)
         {
-            var source = (ColumnList<TColumn>)sourceColumnList;
+            var source = (ColumnList<TColumn>)prototype;
 
             foreach (var constructor in source._constructors)
             {

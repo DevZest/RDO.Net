@@ -6,19 +6,21 @@ namespace DevZest.Data
     [Flags]
     public enum ColumnKind
     {
-        /// <summary>The column is defined by user.</summary>
-        User = 1,
+        /// <summary>The column is a property of the model.</summary>
+        ModelProperty = 1,
+        /// <summary></summary>
+        ColumnList = 2,
         /// <summary>The column is defined by extension.</summary>
-        Extension = 2,
+        Extension = 4,
         /// <summary>sys_parent_row_id column of sequential key temp table (internal use only).</summary>
-        SystemParentRowId = 4,
+        SystemParentRowId = 8,
         /// <summary>sys_row_id column of sequential key temp table (internal use only).</summary>
-        SystemRowId = 8,
+        SystemRowId = 16,
         /// <summary>Other system column, such as system columns defined by SQL Server implementation (internal use only).</summary>
-        SystemCustom = 16,
+        SystemCustom = 32,
         /// <summary>Union of <see cref="SystemRowId"/>, <see cref="SystemParentRowId"/> and <see cref="SystemCustom"/>.</summary>
         System = SystemRowId | SystemParentRowId | SystemCustom,
         /// <summary>All kinds of column.</summary>
-        All = User | Extension | System
+        All = ModelProperty | ColumnList | Extension | System
     }
 }

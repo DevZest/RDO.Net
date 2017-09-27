@@ -72,7 +72,7 @@ namespace DevZest.Data
             where T : Column, new()
         {
             var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, null, initializer.Merge(columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, null, initializer.Merge(columnAttributes));
             return result;
         }
 
@@ -81,7 +81,7 @@ namespace DevZest.Data
             where T : Column, new()
         {
             var result = Column.Create<T>(fromMounter.OriginalOwnerType, fromMounter.OriginalName);
-            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.User, fromMounter.Initializer, initializer.Merge(columnAttributes));
+            result.Construct(mounter.Parent, mounter.OwnerType, mounter.Name, ColumnKind.ModelProperty, fromMounter.Initializer, initializer.Merge(columnAttributes));
             return result;
         }
 

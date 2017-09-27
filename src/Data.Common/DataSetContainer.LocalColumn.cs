@@ -54,7 +54,7 @@ namespace DevZest.Data
                 }
                 else
                     Name = "LocalColumn";
-                Kind = ColumnKind.User;
+                Kind = ColumnKind.ModelProperty;
                 Expression = expression;
             }
 
