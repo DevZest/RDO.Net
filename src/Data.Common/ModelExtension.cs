@@ -27,6 +27,7 @@ namespace DevZest.Data
             var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
             var parent = mounter.Parent;
             result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer.Merge(columnAttributes));
+            parent._columns.Add(result);
             return result;
         }
 
@@ -61,6 +62,7 @@ namespace DevZest.Data
             TChild result = new TChild();
             var parent = mounter.Parent;
             result.Initialize(parent, mounter.Name);
+            parent._childExtensions.Add(result);
             return result;
         }
 
@@ -107,6 +109,18 @@ namespace DevZest.Data
         private string GetName<T>(Mounter<T> mounter)
         {
             return FullName + "." + mounter.Name;
+        }
+
+        private List<Column> _columns = new List<Column>();
+        public IReadOnlyList<Column> Columns
+        {
+            get { return _columns; }
+        }
+
+        private List<ModelExtension> _childExtensions = new List<ModelExtension>();
+        public IReadOnlyList<ModelExtension> ChildExtensions
+        {
+            get { return _childExtensions; }
         }
     }
 }
