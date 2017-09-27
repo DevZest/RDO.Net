@@ -551,7 +551,7 @@ namespace DevZest.Data
             if (prototypeExtension != null)
             {
                 Extension = (ModelExtension)Activator.CreateInstance(prototypeExtension.GetType());
-                Extension.Initialize(this, nameof(Extension));
+                Extension.Initialize(this);
             }
         }
 
@@ -1330,7 +1330,7 @@ namespace DevZest.Data
             if (Extension != null)
                 throw new InvalidOperationException(Strings.Model_ExtensionAlreadyExists);
             Extension = new T();
-            Extension.Initialize(this, nameof(Extension));
+            Extension.Initialize(this);
         }
 
         public T GetExtension<T>()

@@ -486,5 +486,18 @@ namespace DevZest.Data
         internal abstract IColumnComparer ToColumnComparer(SortDirection direction);
 
         public abstract bool HasValueComparer { get; }
+
+        private string _relativeName;
+        public string RelativeName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Name))
+                    return Name;
+                if (_relativeName == null)
+                    _relativeName = Name.LastPart('.');
+                return _relativeName;
+            }
+        }
     }
 }

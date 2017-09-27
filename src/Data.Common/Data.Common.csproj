@@ -63,6 +63,9 @@
     <Compile Include="ModelExtension.cs" />
     <Compile Include="Primitives\ModelExtensions.cs" />
     <Compile Include="Utilities\ColumnManager.cs" />
+    <Compile Include="Utilities\EmptyDictionary.cs" />
+    <Compile Include="Utilities\EmptyEnumerable.cs" />
+    <Compile Include="Utilities\String.LastPart.cs" />
     <Compile Include="ValidationMessage.cs" />
     <Compile Include="Mounter.cs" />
     <Compile Include="Adhoc.cs" />

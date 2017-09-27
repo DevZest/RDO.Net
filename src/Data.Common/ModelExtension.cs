@@ -2,6 +2,7 @@
 using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -66,11 +67,11 @@ namespace DevZest.Data
             return result;
         }
 
-        internal void Initialize(Model model, string name)
+        internal void Initialize(Model model)
         {
             Debug.Assert(model != null);
             Model = model;
-            FullName = name;
+            Name = FullName = nameof(Model.Extension);
             Mount();
         }
 
@@ -79,6 +80,7 @@ namespace DevZest.Data
             Debug.Assert(parent != null);
             Debug.Assert(parent.Model != null);
             Model = parent.Model;
+            Name = name;
             FullName = parent.FullName + "." + name;
             Mount();
         }
@@ -106,12 +108,61 @@ namespace DevZest.Data
 
         private string FullName { get; set; }
 
+        public string Name { get; private set; }
+
         private string GetName<T>(Mounter<T> mounter)
         {
             return FullName + "." + mounter.Name;
         }
 
-        private List<Column> _columns;
+        private sealed class ColumnCollection : KeyedCollection<string, Column>, IReadOnlyDictionary<string, Column>
+        {
+            public IEnumerable<string> Keys
+            {
+                get
+                {
+                    foreach (var column in this)
+                        yield return column.RelativeName;
+                }
+            }
+
+            public IEnumerable<Column> Values
+            {
+                get { return this; }
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return Contains(key);
+            }
+
+            public bool TryGetValue(string key, out Column value)
+            {
+                if (Contains(key))
+                {
+                    value = this[key];
+                    return true;
+                }
+                else
+                {
+                    value = null;
+                    return false;
+                }
+            }
+
+            protected override string GetKeyForItem(Column item)
+            {
+                return item.RelativeName;
+            }
+
+            IEnumerator<KeyValuePair<string, Column>> IEnumerable<KeyValuePair<string, Column>>.GetEnumerator()
+            {
+                foreach (var column in this)
+                    yield return new KeyValuePair<string, Column>(column.RelativeName, column);
+            }
+        }
+
+        private ColumnCollection _columns;
         public IReadOnlyList<Column> Columns
         {
             get
@@ -123,14 +174,72 @@ namespace DevZest.Data
             }
         }
 
+        public IReadOnlyDictionary<string, Column> ColumnsByRelativeName
+        {
+            get
+            {
+                if (_columns == null)
+                    return EmptyDictionary<string, Column>.Singleton;
+                else
+                    return _columns;
+            }
+        }
+
         private void Add(Column column)
         {
             if (_columns == null)
-                _columns = new List<Data.Column>();
+                _columns = new ColumnCollection();
             _columns.Add(column);
         }
 
-        private List<ModelExtension> _childExtensions;
+        private sealed class ExtensionCollection : KeyedCollection<string, ModelExtension>, IReadOnlyDictionary<string, ModelExtension>
+        {
+            public IEnumerable<string> Keys
+            {
+                get
+                {
+                    foreach (var extension in this)
+                        yield return extension.Name;
+                }
+            }
+
+            public IEnumerable<ModelExtension> Values
+            {
+                get { return this; }
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return Contains(key);
+            }
+
+            public bool TryGetValue(string key, out ModelExtension value)
+            {
+                if (Contains(key))
+                {
+                    value = this[key];
+                    return true;
+                }
+                else
+                {
+                    value = null;
+                    return false;
+                }
+            }
+
+            protected override string GetKeyForItem(ModelExtension item)
+            {
+                return item.Name;
+            }
+
+            IEnumerator<KeyValuePair<string, ModelExtension>> IEnumerable<KeyValuePair<string, ModelExtension>>.GetEnumerator()
+            {
+                foreach (var extension in this)
+                    yield return new KeyValuePair<string, ModelExtension>(extension.Name, extension);
+            }
+        }
+
+        private ExtensionCollection _childExtensions;
         public IReadOnlyList<ModelExtension> ChildExtensions
         {
             get
@@ -142,10 +251,21 @@ namespace DevZest.Data
             }
         }
 
+        public IReadOnlyDictionary<string, ModelExtension> ChildExtensionsByName
+        {
+            get
+            {
+                if (_childExtensions == null)
+                    return EmptyDictionary<string, ModelExtension>.Singleton;
+                else
+                    return _childExtensions;
+            }
+        }
+
         private void Add(ModelExtension childExtension)
         {
             if (_childExtensions == null)
-                _childExtensions = new List<Data.ModelExtension>();
+                _childExtensions = new ExtensionCollection();
             _childExtensions.Add(childExtension);
         }
     }
