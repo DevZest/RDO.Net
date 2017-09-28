@@ -78,7 +78,7 @@ namespace DevZest.Samples.AdventureWorksLT
         {
             get
             {
-                return GetTable(ref _customerAddresses, "[SalesLT].[Customer]", m =>
+                return GetTable(ref _customerAddresses, "[SalesLT].[CustomerAddress]", m =>
                 {
                     ForeignKey(null, m.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
                     ForeignKey(null, m.Address, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
@@ -141,8 +141,8 @@ namespace DevZest.Samples.AdventureWorksLT
                 return GetTable(ref _salesOrders, "[SalesLT].[SalesOrderHeader]", m =>
                 {
                     ForeignKey(null, m.Customer, Customers._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.BillToAddress, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
-                    ForeignKey(null, m.ShipToAddress, Addresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
+                    ForeignKey(null, m.BillToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
+                    ForeignKey(null, m.ShipToCustomerAddress, CustomerAddresses._, ForeignKeyAction.NoAction, ForeignKeyAction.NoAction);
                 });
             }
         }
