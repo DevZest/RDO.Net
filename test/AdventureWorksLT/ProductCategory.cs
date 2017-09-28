@@ -18,9 +18,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
+            public static readonly Mounter<_Int32> _ProductCategoryID;
+
             static Ref()
             {
-                RegisterColumn((Ref _) => _.ProductCategoryID);
+                _ProductCategoryID = RegisterColumn((Ref _) => _.ProductCategoryID);
             }
             
             private Key _primaryKey;
@@ -37,14 +39,12 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductCategoryID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductCategoryID;
-        public static readonly Mounter<_Int32> _ParentProductCategoryID;
         public static readonly Mounter<_String> _Name;
 
         static ProductCategory()
         {
-            _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID);
-            _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID, _ProductCategoryID);
+            RegisterColumn((ProductCategory _) => _.ProductCategoryID, Ref._ProductCategoryID);
+            RegisterColumn((ProductCategory _) => _.ParentProductCategoryID, Ref._ProductCategoryID);
             _Name = RegisterColumn((ProductCategory _) => _.Name, _ => { _.AsNVarChar(50); });
             RegisterChildModel((ProductCategory x) => x.SubCategories, (ProductCategory x) => x.ParentProductCategory);
         }

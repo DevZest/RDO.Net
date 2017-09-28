@@ -17,9 +17,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
+            public static readonly Mounter<_Int32> _ProductID;
+
             static Ref()
             {
-                RegisterColumn((Ref _) => _.ProductID, _ProductID);
+                _ProductID = RegisterColumn((Ref _) => _.ProductID);
             }
 
             private Key _primaryKey;
@@ -49,7 +51,6 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String ProductNumber { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductID;
         public static readonly Mounter<_String> _Name;
         public static readonly Mounter<_String> _ProductNumber;
         public static readonly Mounter<_String> _Color;
@@ -65,7 +66,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static Product()
         {
-            _ProductID = RegisterColumn((Product _) => _.ProductID);
+            RegisterColumn((Product _) => _.ProductID, Ref._ProductID);
             _Name = RegisterColumn((Product _) => _.Name);
             _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
             _Color = RegisterColumn((Product _) => _.Color);
@@ -73,8 +74,8 @@ namespace DevZest.Samples.AdventureWorksLT
             _ListPrice = RegisterColumn((Product _) => _.ListPrice);
             _Size = RegisterColumn((Product _) => _.Size);
             _Weight = RegisterColumn((Product _) => _.Weight);
-            RegisterColumn((Product _) => _.ProductCategoryID, AdventureWorksLT.ProductCategory._ProductCategoryID);
-            RegisterColumn((Product _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
+            RegisterColumn((Product _) => _.ProductCategoryID, AdventureWorksLT.ProductCategory.Ref._ProductCategoryID);
+            RegisterColumn((Product _) => _.ProductModelID, AdventureWorksLT.ProductModel.Ref._ProductModelID);
             _SellStartDate = RegisterColumn((Product _) => _.SellStartDate, x => x.AsDateTime());
             _SellEndDate = RegisterColumn((Product _) => _.SellEndDate, x => x.AsDateTime());
             _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate, x => x.AsDateTime());

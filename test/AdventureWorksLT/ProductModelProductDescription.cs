@@ -25,8 +25,8 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static ProductModelProductDescription()
         {
-            RegisterColumn((ProductModelProductDescription _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
-            RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID, AdventureWorksLT.ProductDescription._ProductDescriptionID);
+            RegisterColumn((ProductModelProductDescription _) => _.ProductModelID, AdventureWorksLT.ProductModel.Ref._ProductModelID);
+            RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID, AdventureWorksLT.ProductDescription.Ref._ProductDescriptionID);
             _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
         }
 

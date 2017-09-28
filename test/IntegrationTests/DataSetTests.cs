@@ -74,7 +74,7 @@ namespace DevZest.Data
 
                 var dataSet = DataSet<Adhoc>.ParseJson(json, (Adhoc adhoc) =>
                 {
-                    adhoc.AddColumn(SalesOrder._SalesOrderID);
+                    adhoc.AddColumn(SalesOrder.Ref._SalesOrderID);
                     adhoc.AddColumn(SalesOrder._SalesOrderNumber);
                 });
 

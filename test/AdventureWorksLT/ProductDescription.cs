@@ -18,9 +18,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
+            public static readonly Mounter<_Int32> _ProductDescriptionID;
+
             static Ref()
             {
-                RegisterColumn((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
+                _ProductDescriptionID = RegisterColumn((Ref _) => _.ProductDescriptionID);
             }
 
             private Key _primaryKey;
@@ -37,12 +39,11 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 ProductDescriptionID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductDescriptionID;
         public static readonly Mounter<_String> _Description;
 
         static ProductDescription()
         {
-            _ProductDescriptionID = RegisterColumn((ProductDescription _) => _.ProductDescriptionID);
+            RegisterColumn((ProductDescription _) => _.ProductDescriptionID, Ref._ProductDescriptionID);
             _Description = RegisterColumn((ProductDescription _) => _.Description);
         }
 

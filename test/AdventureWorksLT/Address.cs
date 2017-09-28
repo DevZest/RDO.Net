@@ -17,9 +17,11 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Address.Key>
         {
+            public static readonly Mounter<_Int32> _AddressID;
+
             static Ref()
             {
-                RegisterColumn((Ref _) => _.AddressID, _AddressID);
+                _AddressID = RegisterColumn((Ref _) => _.AddressID);
             }
 
             private Key _primaryKey;
@@ -56,7 +58,6 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String PostalCode { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _AddressID;
         public static readonly Mounter<_String> _AddressLine1;
         public static readonly Mounter<_String> _AddressLine2;
         public static readonly Mounter<_String> _City;
@@ -66,7 +67,7 @@ namespace DevZest.Samples.AdventureWorksLT
 
         static Address()
         {
-            _AddressID = RegisterColumn((Address x) => x.AddressID);
+            RegisterColumn((Address x) => x.AddressID, Ref._AddressID);
             _AddressLine1 = RegisterColumn((Address x) => x.AddressLine1);
             _AddressLine2 = RegisterColumn((Address x) => x.AddressLine2);
             _City = RegisterColumn((Address x) => x.City);
