@@ -1011,6 +1011,14 @@ namespace DevZest.Data
             return string.Format(CultureInfo.CurrentCulture, GetString("JsonParser_InvalidExtensionMember", "memberName", "extension"), memberName, extension);
         }
 
+        /// <summary>
+        /// The From clause is empty.
+        /// </summary>
+        public static string DbQueryBuilder_EmptyFrom
+        {
+            get { return GetString("DbQueryBuilder_EmptyFrom"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

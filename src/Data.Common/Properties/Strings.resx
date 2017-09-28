@@ -492,4 +492,7 @@
   <data name="JsonParser_InvalidExtensionMember" xml:space="preserve">
     <value>Invalid member name "{memberName}" for ModelExtension "{extension}".</value>
   </data>
+  <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
+    <value>The From clause is empty.</value>
+  </data>
 </root>

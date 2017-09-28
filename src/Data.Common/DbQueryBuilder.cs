@@ -215,6 +215,8 @@ namespace DevZest.Data
 
         public DbQueryBuilder AutoSelect()
         {
+            if (_autoColumnSelector == null)
+                throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
             foreach (var targetColumn in Model.Columns)
             {
                 if (_targetColumns.Contains(targetColumn))
