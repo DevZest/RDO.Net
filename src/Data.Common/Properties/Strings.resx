@@ -402,8 +402,8 @@
   <data name="Case_WhenThenNotMatch" xml:space="preserve">
     <value>Cannot match When and Then columns. They cannot be empty and must have identical size.</value>
   </data>
-  <data name="JsonWriter_EmptyStringBuilder" xml:space="preserve">
-    <value>The StringBuilder is empty.</value>
+  <data name="JsonWriter_Empty" xml:space="preserve">
+    <value>The JsonWriter is empty. Use JsonWriter.New to create a non empty JsonWriter.</value>
   </data>
   <data name="ValidationMessage_EmptySourceColumns" xml:space="preserve">
     <value>The source colums cannot be empty.</value>

@@ -772,11 +772,11 @@ namespace DevZest.Data
         }
 
         /// <summary>
-        /// The StringBuilder is empty.
+        /// The JsonWriter is empty. Use JsonWriter.New to create a non empty JsonWriter.
         /// </summary>
-        public static string JsonWriter_EmptyStringBuilder
+        public static string JsonWriter_Empty
         {
-            get { return GetString("JsonWriter_EmptyStringBuilder"); }
+            get { return GetString("JsonWriter_Empty"); }
         }
 
         /// <summary>
