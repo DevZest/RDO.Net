@@ -2,9 +2,9 @@
 
 namespace DevZest.Data.Primitives
 {
-    internal interface IAutoColumnSelector : IEnumerable<Column>
+    internal interface IAutoColumnSelector
     {
         Column Select(Column column);
-        IAutoColumnSelector Merge(IAutoColumnSelector selector);
+        IAutoColumnSelector Merge(IEnumerable<Column> columns);
     }
 }

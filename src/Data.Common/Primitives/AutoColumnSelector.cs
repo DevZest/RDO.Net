@@ -9,19 +9,20 @@ namespace DevZest.Data.Primitives
 {
     internal sealed class AutoColumnSelector : IAutoColumnSelector
     {
-        public AutoColumnSelector(IAutoColumnSelector selector1, IAutoColumnSelector selector2)
+        public AutoColumnSelector(IEnumerable<Column> columns1, IEnumerable<Column> columns2)
         {
-
+            foreach (var column in columns1)
+                Add(column);
+            foreach (var column in columns2)
+                Add(column);
         }
 
-        private List<Column> _columns = new List<Column>();
         private Dictionary<ColumnId, IColumns> _byModelId = new Dictionary<ColumnId, IColumns>();
         private Dictionary<ColumnId, IColumns> _byOriginalId = new Dictionary<ColumnId, IColumns>();
 
         private void Add(Column column)
         {
             Debug.Assert(column != null);
-            _columns.Add(column);
             Add(_byModelId, column, c => c.ModelId);
             Add(_byOriginalId, column, c => c.OriginalId);
         }
@@ -55,22 +56,12 @@ namespace DevZest.Data.Primitives
             return null;
         }
 
-        public IAutoColumnSelector Merge(IAutoColumnSelector selector)
+        public IAutoColumnSelector Merge(IEnumerable<Column> columns)
         {
-            foreach (var column in selector)
+            foreach (var column in columns)
                 Add(column);
 
             return this;
-        }
-
-        public IEnumerator<Column> GetEnumerator()
-        {
-            return _columns.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _columns.GetEnumerator();
         }
     }
 }

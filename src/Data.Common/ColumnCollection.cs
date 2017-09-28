@@ -131,7 +131,7 @@ namespace DevZest.Data
             return AutoSelect(column);
         }
 
-        IAutoColumnSelector IAutoColumnSelector.Merge(IAutoColumnSelector selector)
+        IAutoColumnSelector IAutoColumnSelector.Merge(IEnumerable<Column> selector)
         {
             return new AutoColumnSelector(this, selector);
         }
