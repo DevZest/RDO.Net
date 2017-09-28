@@ -48,18 +48,15 @@ namespace DevZest.Data
             Check.NotNull(sourceModel, nameof(sourceModel));
 
             var result = new List<ColumnMapping>();
-            var sourceColumns = sourceModel.Columns.ByOriginalId();
+            var sourceColumns = sourceModel.Columns;
             var targetColumns = isInsertable ? targetModel.GetInsertableColumns() : targetModel.GetUpdatableColumns();
             foreach (var targetColumn in targetColumns)
             {
                 if (targetColumn.IsSystem)
                     continue;
-                IColumns columns;
-                if (sourceColumns.TryGetValue(targetColumn.OriginalId, out columns))
-                {
-                    if (columns.Count == 1)
-                        result.Add(new ColumnMapping(columns.Single(), targetColumn));
-                }
+                var sourceColumn = sourceColumns.AutoSelect(targetColumn);
+                if (sourceColumn != null)
+                    result.Add(new ColumnMapping(sourceColumn, targetColumn));
             }
 
             return result;

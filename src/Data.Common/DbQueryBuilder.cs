@@ -46,7 +46,7 @@ namespace DevZest.Data
 
         IModels _sourceModels = Models.Empty;
         SubQueryEliminator _subQueryEliminator;
-        Dictionary<ColumnId, IColumns> _sourceColumnsByOriginalId = new Dictionary<ColumnId, IColumns>();
+        IAutoColumnSelector _autoColumnSelector;
 
         public DbFromClause FromClause { get; private set; }
 
@@ -78,15 +78,10 @@ namespace DevZest.Data
             Debug.Assert(!_sourceModels.Contains(model));
 
             _sourceModels = _sourceModels.Add(model);
-            foreach (var column in model.Columns)
-            {
-                var originalId = column.OriginalId;
-                IColumns sourceColumns;
-                if (_sourceColumnsByOriginalId.TryGetValue(originalId, out sourceColumns))
-                    _sourceColumnsByOriginalId[originalId] = sourceColumns.Add(column);
-                else
-                    _sourceColumnsByOriginalId.Add(originalId, column);
-            }
+            if (_autoColumnSelector == null)
+                _autoColumnSelector = model.Columns;
+            else
+                _autoColumnSelector = _autoColumnSelector.Merge(model.Columns);
         }
 
         public DbQueryBuilder InnerJoin<T, TKey>(DbSet<T> dbSet, TKey left, Func<T, TKey> right, out T model)
@@ -225,12 +220,9 @@ namespace DevZest.Data
                 if (_targetColumns.Contains(targetColumn))
                     continue;
 
-                IColumns sourceColumns;
-                if (_sourceColumnsByOriginalId.TryGetValue(targetColumn.OriginalId, out sourceColumns))
-                {
-                    if (sourceColumns.Count == 1)
-                        SelectCore(sourceColumns.Single(), targetColumn);
-                }
+                var sourceColumn = _autoColumnSelector.Select(targetColumn);
+                if (sourceColumn != null)
+                    SelectCore(sourceColumn, targetColumn);
             }
             return this;
         }

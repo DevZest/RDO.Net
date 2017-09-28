@@ -18,28 +18,34 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Ref _) => _.ProductCategoryID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(ProductCategoryID);
+                RegisterColumn((Ref _) => _.ProductCategoryID);
             }
-
-            private readonly Key _primaryKey;
+            
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(ProductCategoryID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 ProductCategoryID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID, Ref._ProductCategoryID);
-        public static readonly Mounter<_Int32> _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((ProductCategory _) => _.Name, _ => { _.AsNVarChar(50); });
+        public static readonly Mounter<_Int32> _ProductCategoryID;
+        public static readonly Mounter<_Int32> _ParentProductCategoryID;
+        public static readonly Mounter<_String> _Name;
 
         static ProductCategory()
         {
+            _ProductCategoryID = RegisterColumn((ProductCategory _) => _.ProductCategoryID);
+            _ParentProductCategoryID = RegisterColumn((ProductCategory _) => _.ParentProductCategoryID, _ProductCategoryID);
+            _Name = RegisterColumn((ProductCategory _) => _.Name, _ => { _.AsNVarChar(50); });
             RegisterChildModel((ProductCategory x) => x.SubCategories, (ProductCategory x) => x.ParentProductCategory);
         }
 

@@ -18,34 +18,43 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _ProductDescriptionID = RegisterColumn((Ref _) => _.ProductDescriptionID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(ProductDescriptionID);
+                RegisterColumn((Ref _) => _.ProductDescriptionID, _ProductDescriptionID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(ProductDescriptionID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 ProductDescriptionID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductDescription _) => _.ProductDescriptionID, Ref._ProductDescriptionID);
-        public static readonly Mounter<_String> _Description = RegisterColumn((ProductDescription _) => _.Description);
+        public static readonly Mounter<_Int32> _ProductDescriptionID;
+        public static readonly Mounter<_String> _Description;
 
-        public ProductDescription()
+        static ProductDescription()
         {
-            _primaryKey = new Key(ProductDescriptionID);
+            _ProductDescriptionID = RegisterColumn((ProductDescription _) => _.ProductDescriptionID);
+            _Description = RegisterColumn((ProductDescription _) => _.Description);
         }
 
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(ProductDescriptionID);
+                return _primaryKey;
+            }
         }
 
         [Identity(1, 1)]

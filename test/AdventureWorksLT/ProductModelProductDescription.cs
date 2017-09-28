@@ -21,26 +21,47 @@ namespace DevZest.Samples.AdventureWorksLT
             public _String Culture { get; private set; }
         }
 
-        public static Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModelProductDescription _) => _.ProductModelID);
-        public static Mounter<_Int32> _ProductDescriptionID = RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID);
         public static readonly Mounter<_String> _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
 
-        public ProductModelProductDescription()
+        static ProductModelProductDescription()
         {
-            _primaryKey = new Key(ProductModelID, ProductDescriptionID, Culture);
-            ProductModelKey = new ProductModel.Key(ProductModelID);
-            ProductDescriptionKey = new ProductDescription.Key(ProductDescriptionID);
+            RegisterColumn((ProductModelProductDescription _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
+            RegisterColumn((ProductModelProductDescription _) => _.ProductDescriptionID, AdventureWorksLT.ProductDescription._ProductDescriptionID);
+            _Culture = RegisterColumn((ProductModelProductDescription _) => _.Culture);
         }
 
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(ProductModelID, ProductDescriptionID, Culture);
+                return _primaryKey;
+            }
         }
 
-        public ProductModel.Key ProductModelKey { get; private set; }
+        private ProductModel.Key _productModel;
+        public ProductModel.Key ProductModel
+        {
+            get
+            {
+                if (_productModel == null)
+                    _productModel = new ProductModel.Key(ProductModelID);
+                return _productModel;
+            }
+        }
 
-        public ProductDescription.Key ProductDescriptionKey { get; private set; }
+        private ProductDescription.Key _productDescription;
+        public ProductDescription.Key ProductDescription
+        {
+            get
+            {
+                if (_productDescription == null)
+                    _productDescription = new ProductDescription.Key(ProductDescriptionID);
+                return _productDescription;
+            }
+        }
 
         public _Int32 ProductModelID { get; private set; }
 

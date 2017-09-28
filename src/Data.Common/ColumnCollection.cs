@@ -1,4 +1,5 @@
-﻿using DevZest.Data.Utilities;
+﻿using DevZest.Data.Primitives;
+using DevZest.Data.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,7 @@ using System.Linq;
 namespace DevZest.Data
 {
     /// <summary>Represents a collection of <see cref="Column"/> objects contained by <see cref="Model"/>.</summary>
-    public sealed class ColumnCollection : ReadOnlyCollection<Column>
+    public sealed class ColumnCollection : ReadOnlyCollection<Column>, IAutoColumnSelector
     {
         private class InnerCollection : KeyedCollection<ColumnId, Column>
         {
@@ -76,7 +77,18 @@ namespace DevZest.Data
                 column.InitDbColumnName(columnNameSuffixes);
         }
 
-        internal IReadOnlyDictionary<ColumnId, IColumns> ByOriginalId()
+        private IReadOnlyDictionary<ColumnId, IColumns> _byOriginalId;
+        private IReadOnlyDictionary<ColumnId, IColumns> ByOriginalId
+        {
+            get
+            {
+                if (_byOriginalId == null)
+                    _byOriginalId = GetColumnsByOriginalId();
+                return _byOriginalId;
+            }
+        }
+
+        private IReadOnlyDictionary<ColumnId, IColumns> GetColumnsByOriginalId()
         {
             var result = new Dictionary<ColumnId, IColumns>();
 
@@ -95,6 +107,33 @@ namespace DevZest.Data
             foreach (var keyValuePair in keyValuePairs)
                 result[keyValuePair.Key] = keyValuePair.Value.Seal();
             return result;
+        }
+
+        internal Column AutoSelect(Column column)
+        {
+            Debug.Assert(column != null);
+            var result = this[column.ModelId];
+            if (result != null)
+                return result;
+
+            IColumns columns;
+            if (ByOriginalId.TryGetValue(column.OriginalId, out columns))
+            {
+                if (columns.Count == 1)
+                    return columns.Single();
+            }
+
+            return null;
+        }
+
+        Column IAutoColumnSelector.Select(Column column)
+        {
+            return AutoSelect(column);
+        }
+
+        IAutoColumnSelector IAutoColumnSelector.Merge(IAutoColumnSelector selector)
+        {
+            return new AutoColumnSelector(this, selector);
         }
     }
 }

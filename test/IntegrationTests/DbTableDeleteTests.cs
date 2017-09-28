@@ -89,7 +89,7 @@ namespace DevZest.Data
                 });
                 var dataSet = query.ToDataSet();
 
-                var countDeleted = db.SalesOrderDetails.Delete(dataSet, _ => _.SalesOrderKey);
+                var countDeleted = db.SalesOrderDetails.Delete(dataSet, _ => _.SalesOrder);
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, db.SalesOrderDetails.Count());
             }
@@ -114,7 +114,7 @@ namespace DevZest.Data
                 });
                 var dataSet = await query.ToDataSetAsync();
 
-                var countDeleted = await db.SalesOrderDetails.DeleteAsync(dataSet, _ => _.SalesOrderKey);
+                var countDeleted = await db.SalesOrderDetails.DeleteAsync(dataSet, _ => _.SalesOrder);
                 Assert.AreEqual(countToDelete, countDeleted);
                 Assert.AreEqual(count - countDeleted, await db.SalesOrderDetails.CountAsync());
             }

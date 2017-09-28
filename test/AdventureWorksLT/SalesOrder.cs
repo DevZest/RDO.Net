@@ -18,57 +18,72 @@ namespace DevZest.Samples.AdventureWorksLT
         
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((Ref _) => _.SalesOrderID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(SalesOrderID);
+                RegisterColumn((Ref _) => _.SalesOrderID, _SalesOrderID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(SalesOrderID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 SalesOrderID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrder _) => _.SalesOrderID, Ref._SalesOrderID);
-        public static readonly Mounter<_Byte> _RevisionNumber = RegisterColumn((SalesOrder _) => _.RevisionNumber, x => x.WithDefaultValue((byte?)0));
-        public static readonly Mounter<_DateTime> _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate, x => x.WithDefault(Functions.GetDate()));
-        public static readonly Mounter<_DateTime> _DueDate = RegisterColumn((SalesOrder _) => _.DueDate);
-        public static readonly Mounter<_DateTime> _ShipDate = RegisterColumn((SalesOrder _) => _.ShipDate);
-        public static readonly Mounter<_SalesOrderStatus> _Status = RegisterColumn((SalesOrder _) => _.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
-        public static readonly Mounter<_Boolean> _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag, x => x.DefaultValue(true));
-        public static readonly Mounter<_String> _SalesOrderNumber = RegisterColumn((SalesOrder _) => _.SalesOrderNumber);
-        public static readonly Mounter<_String> _PurchaseOrderNumber = RegisterColumn((SalesOrder _) => _.PurchaseOrderNumber);
-        public static readonly Mounter<_String> _AccountNumber = RegisterColumn((SalesOrder _) => _.AccountNumber);
-        public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((SalesOrder _) => _.CustomerID);
-        public static readonly Mounter<_Int32> _ShipToAddressID = RegisterColumn((SalesOrder _) => _.ShipToAddressID);
-        public static readonly Mounter<_Int32> _BillToAddressID = RegisterColumn((SalesOrder _) => _.BillToAddressID);
-        public static readonly Mounter<_String> _ShipMethod = RegisterColumn((SalesOrder _) => _.ShipMethod);
-        public static readonly Mounter<_String> _CreditCardApprovalCode = RegisterColumn((SalesOrder _) => _.CreditCardApprovalCode);
-        public static readonly Mounter<_Decimal> _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal, x => x.DefaultValue(0));
-        public static readonly Mounter<_Decimal> _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt, x => x.DefaultValue(0));
-        public static readonly Mounter<_Decimal> _Freight = RegisterColumn((SalesOrder _) => _.Freight, x => x.DefaultValue(0));
-        public static readonly Mounter<_Decimal> _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue, x => x.DefaultValue(0));
-        public static readonly Mounter<_String> _Comment = RegisterColumn((SalesOrder _) => _.Comment);
+        public static readonly Mounter<_Int32> _SalesOrderID;
+        public static readonly Mounter<_Byte> _RevisionNumber;
+        public static readonly Mounter<_DateTime> _OrderDate;
+        public static readonly Mounter<_DateTime> _DueDate;
+        public static readonly Mounter<_DateTime> _ShipDate;
+        public static readonly Mounter<_SalesOrderStatus> _Status;
+        public static readonly Mounter<_Boolean> _OnlineOrderFlag;
+        public static readonly Mounter<_String> _SalesOrderNumber;
+        public static readonly Mounter<_String> _PurchaseOrderNumber;
+        public static readonly Mounter<_String> _AccountNumber;
+        public static readonly Mounter<_String> _ShipMethod;
+        public static readonly Mounter<_String> _CreditCardApprovalCode;
+        public static readonly Mounter<_Decimal> _SubTotal;
+        public static readonly Mounter<_Decimal> _TaxAmt;
+        public static readonly Mounter<_Decimal> _Freight;
+        public static readonly Mounter<_Decimal> _TotalDue;
+        public static readonly Mounter<_String> _Comment;
 
         static SalesOrder()
         {
-            RegisterChildModel((SalesOrder x) => x.SalesOrderDetails, (SalesOrderDetail x) => x.SalesOrderKey);
+            _SalesOrderID = RegisterColumn((SalesOrder _) => _.SalesOrderID);
+            _RevisionNumber = RegisterColumn((SalesOrder _) => _.RevisionNumber, x => x.WithDefaultValue((byte?)0));
+            _OrderDate = RegisterColumn((SalesOrder _) => _.OrderDate, x => x.WithDefault(Functions.GetDate()));
+            _DueDate = RegisterColumn((SalesOrder _) => _.DueDate);
+            _ShipDate = RegisterColumn((SalesOrder _) => _.ShipDate);
+            _Status = RegisterColumn((SalesOrder _) => _.Status, x => x.DefaultValue(SalesOrderStatus.InProcess));
+            _OnlineOrderFlag = RegisterColumn((SalesOrder _) => _.OnlineOrderFlag, x => x.DefaultValue(true));
+            _SalesOrderNumber = RegisterColumn((SalesOrder _) => _.SalesOrderNumber);
+            _PurchaseOrderNumber = RegisterColumn((SalesOrder _) => _.PurchaseOrderNumber);
+            _AccountNumber = RegisterColumn((SalesOrder _) => _.AccountNumber);
+            RegisterColumn((SalesOrder _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+            RegisterColumn((SalesOrder _) => _.ShipToAddressID, Address._AddressID);
+            RegisterColumn((SalesOrder _) => _.BillToAddressID, Address._AddressID);
+            _ShipMethod = RegisterColumn((SalesOrder _) => _.ShipMethod);
+            _CreditCardApprovalCode = RegisterColumn((SalesOrder _) => _.CreditCardApprovalCode);
+            _SubTotal = RegisterColumn((SalesOrder _) => _.SubTotal, x => x.DefaultValue(0));
+            _TaxAmt = RegisterColumn((SalesOrder _) => _.TaxAmt, x => x.DefaultValue(0));
+            _Freight = RegisterColumn((SalesOrder _) => _.Freight, x => x.DefaultValue(0));
+            _TotalDue = RegisterColumn((SalesOrder _) => _.TotalDue, x => x.DefaultValue(0));
+            _Comment = RegisterColumn((SalesOrder _) => _.Comment);
+            RegisterChildModel((SalesOrder x) => x.SalesOrderDetails, (SalesOrderDetail x) => x.SalesOrder);
         }
 
         public SalesOrderDetail SalesOrderDetails { get; private set; }
 
         public SalesOrder()
         {
-            _primaryKey = new Key(SalesOrderID);
-            CustomerKey = new Customer.Key(CustomerID);
-            ShipToAddressKey = new Address.Key(ShipToAddressID);
-            BillToAddressKey = new Address.Key(BillToAddressID);
-
             SalesOrderNumber.ComputedAs((_String.Const("SO") + ((_String)SalesOrderID).AsNVarChar(23)).IfNull(_String.Const("*** ERROR ***")));
             TotalDue.ComputedAs((SubTotal + TaxAmt + Freight).IfNull(_Decimal.Const(0)));
         }
@@ -76,14 +91,68 @@ namespace DevZest.Samples.AdventureWorksLT
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(SalesOrderID);
+                return _primaryKey;
+            }
         }
 
-        public Customer.Key CustomerKey { get; private set; }
+        private Customer.Key _customer;
+        public Customer.Key Customer
+        {
+            get
+            {
+                if (_customer == null)
+                    _customer = new Customer.Key(CustomerID);
+                return _customer;
+            }
+        }
 
-        public Address.Key ShipToAddressKey { get; private set; }
+        private Address.Key _shipToAddress;
+        public Address.Key ShipToAddress
+        {
+            get
+            {
+                if (_shipToAddress == null)
+                    _shipToAddress = new Address.Key(ShipToAddressID);
+                return _shipToAddress;
+            }
+        }
 
-        public Address.Key BillToAddressKey { get; private set; }
+        private CustomerAddress.Key _shipToCustomerAddress;
+        public CustomerAddress.Key ShipToCustomerAddress
+        {
+            get
+            {
+                if (_shipToCustomerAddress == null)
+                    _shipToCustomerAddress = new CustomerAddress.Key(CustomerID, ShipToAddressID);
+                return _shipToCustomerAddress;
+            }
+        }
+
+        private Address.Key _billToAddress;
+        public Address.Key BillToAddress
+        {
+            get
+            {
+                if (_billToAddress == null)
+                    _billToAddress = new Address.Key(BillToAddressID);
+                return _billToAddress;
+            }
+        }
+
+        private CustomerAddress.Key _billToCustomerAddress;
+        public CustomerAddress.Key BillToCustomerAddress
+        {
+            get
+            {
+                if (_billToCustomerAddress == null)
+                    _billToCustomerAddress = new CustomerAddress.Key(CustomerID, BillToAddressID);
+                return _billToCustomerAddress;
+            }
+        }
 
         [Identity(1, 1)]
         public _Int32 SalesOrderID { get; private set; }

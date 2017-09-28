@@ -17,35 +17,56 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Ref _) => _.ProductModelID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(ProductModelID);
+                RegisterColumn((Ref _) => _.ProductModelID, _ProductModelID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(ProductModelID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 ProductModelID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((ProductModel _) => _.ProductModelID, Ref._ProductModelID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((ProductModel _) => _.Name);
-        public static readonly Mounter<_SqlXml> _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
-
-        public ProductModel()
+        public class Lookup : ModelExtension
         {
-            _primaryKey = new Key(ProductModelID);
+            static Lookup()
+            {
+                RegisterColumn((Lookup _) => _.Name, _Name);
+            }
+
+            public _String Name { get; private set; }
+        }
+
+
+        public static readonly Mounter<_Int32> _ProductModelID;
+        public static readonly Mounter<_String> _Name;
+        public static readonly Mounter<_SqlXml> _CatalogDescription;
+
+        static ProductModel()
+        {
+            _ProductModelID = RegisterColumn((ProductModel _) => _.ProductModelID);
+            _Name = RegisterColumn((ProductModel _) => _.Name);
+            _CatalogDescription = RegisterColumn((ProductModel _) => _.CatalogDescription);
         }
 
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(ProductModelID);
+                return _primaryKey;
+            }
         }
 
         [Identity(1, 1)]

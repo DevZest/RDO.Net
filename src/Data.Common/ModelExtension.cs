@@ -48,7 +48,7 @@ namespace DevZest.Data
 
         static MounterManager<ModelExtension, ModelExtension> s_childExtensionManager = new MounterManager<ModelExtension, ModelExtension>();
 
-        protected static void RegisterChildModel<TExtension, TChild>(Expression<Func<TExtension, TChild>> getter)
+        protected static void RegisterChildExtension<TExtension, TChild>(Expression<Func<TExtension, TChild>> getter)
             where TExtension : ModelExtension, new()
             where TChild : ModelExtension, new()
         {
@@ -106,9 +106,9 @@ namespace DevZest.Data
 
         private Model Model { get; set; }
 
-        public string FullName { get; private set; }
+        internal string FullName { get; private set; }
 
-        public string Name { get; private set; }
+        internal string Name { get; private set; }
 
         private string GetName<T>(Mounter<T> mounter)
         {

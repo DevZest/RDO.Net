@@ -20,18 +20,21 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((Ref _) => _.SalesOrderID);
-            public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((Ref _) => _.SalesOrderDetailID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
+                RegisterColumn((Ref _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
+                RegisterColumn((Ref _) => _.SalesOrderDetailID, _SalesOrderDetailID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 SalesOrderID { get; private set; }
@@ -39,30 +42,65 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderDetailID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _SalesOrderID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, Ref._SalesOrderID);
-        public static readonly Mounter<_Int32> _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID, Ref._SalesOrderDetailID);
-        public static readonly Mounter<_Int16> _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
-        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((SalesOrderDetail _) => _.ProductID);
-        public static readonly Mounter<_Decimal> _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
-        public static readonly Mounter<_Decimal> _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount, x => x.DefaultValue(0));
-        public static readonly Mounter<_Decimal> _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
-
-        public SalesOrderDetail()
+        public class Ext : ModelExtension
         {
-            _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
-            SalesOrderKey = new SalesOrder.Key(SalesOrderID);
-            ProductKey = new Product.Key(ProductID);
+            static Ext()
+            {
+                RegisterChildExtension((Ext _) => _.Product);
+            }
+
+            public Product.Lookup Product { get; private set; }
+        }
+
+        public static readonly Mounter<_Int32> _SalesOrderDetailID;
+        public static readonly Mounter<_Int16> _OrderQty;
+        public static readonly Mounter<_Decimal> _UnitPrice;
+        public static readonly Mounter<_Decimal> _UnitPriceDiscount;
+        public static readonly Mounter<_Decimal> _LineTotal;
+
+        static SalesOrderDetail()
+        {
+            RegisterColumn((SalesOrderDetail _) => _.SalesOrderID, AdventureWorksLT.SalesOrder._SalesOrderID);
+            _SalesOrderDetailID = RegisterColumn((SalesOrderDetail _) => _.SalesOrderDetailID);
+            _OrderQty = RegisterColumn((SalesOrderDetail _) => _.OrderQty);
+            RegisterColumn((SalesOrderDetail _) => _.ProductID, AdventureWorksLT.Product._ProductID);
+            _UnitPrice = RegisterColumn((SalesOrderDetail _) => _.UnitPrice);
+            _UnitPriceDiscount = RegisterColumn((SalesOrderDetail _) => _.UnitPriceDiscount, x => x.DefaultValue(0));
+            _LineTotal = RegisterColumn((SalesOrderDetail _) => _.LineTotal);
         }
 
         private Key _primaryKey;
         public sealed override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(SalesOrderID, SalesOrderDetailID);
+                return _primaryKey;
+            }
         }
 
-        public SalesOrder.Key SalesOrderKey { get; private set; }
+        private SalesOrder.Key _salesOrder;
+        public SalesOrder.Key SalesOrder
+        {
+            get
+            {
+                if (_salesOrder == null)
+                    _salesOrder = new SalesOrder.Key(SalesOrderID);
+                return _salesOrder;
+            }
+        }
 
-        public Product.Key ProductKey { get; private set; }
+        private Product.Key _product;
+        public Product.Key Product
+        {
+            get
+            {
+                if (_product == null)
+                    _product = new Product.Key(ProductID);
+                return _product;
+            }
+        }
 
         public _Int32 SalesOrderID { get; private set; }
 

@@ -41,13 +41,13 @@ namespace DevZest.Data
         internal DbQueryStatement BuildQueryStatement(Model sourceModel, Action<DbQueryBuilder> action, DbTable<KeyOutput> sequentialKeys)
         {
             From(sourceModel);
-            var sourceColumnsByOridinalId = sourceModel.Columns.ByOriginalId();
+            var sourceColumns = sourceModel.Columns;
             var targetColumns = Model.Columns;
-            Debug.Assert(targetColumns.Count <= sourceColumnsByOridinalId.Count);
+            Debug.Assert(targetColumns.Count <= sourceColumns.Count);
             for (int i = 0; i < targetColumns.Count; i++)
             {
                 var targetColumn = targetColumns[i];
-                SelectCore(GetColumnByOriginalId(sourceColumnsByOridinalId, targetColumn.OriginalId), targetColumn);
+                SelectCore(sourceColumns.AutoSelect(targetColumn), targetColumn);
             }
 
             if (action != null)

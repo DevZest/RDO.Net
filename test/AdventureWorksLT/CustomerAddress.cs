@@ -19,18 +19,21 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((Ref _) => _.CustomerID, Customer.Ref._CustomerID);
-            public static readonly Mounter<_Int32> _AddressID = RegisterColumn((Ref _) => _.AddressID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(CustomerID, AddressID);
+                RegisterColumn((Ref _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+                RegisterColumn((Ref _) => _.AddressID, AdventureWorksLT.Address._AddressID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(CustomerID, AddressID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 CustomerID { get; private set; }
@@ -38,26 +41,57 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 AddressID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _CustomerID = RegisterColumn((CustomerAddress _) => _.CustomerID, Ref._CustomerID);
-        public static readonly Mounter<_Int32> _AddressID = RegisterColumn((CustomerAddress _) => _.AddressID, Ref._AddressID);
-        public static readonly Mounter<_String> _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
-
-        public CustomerAddress()
+        public class Lookup : ModelExtension
         {
-            _primaryKey = new Key(CustomerID, AddressID);
-            CustomerKey = new Customer.Key(CustomerID);
-            AddressKey = new Address.Key(AddressID);
+            static Lookup()
+            {
+                RegisterColumn((Lookup _) => _.AddressType, _AddressType);
+            }
+
+            public _String AddressType { get; private set; }
         }
 
-        private readonly Key _primaryKey;
+        public static readonly Mounter<_String> _AddressType;
+
+        static CustomerAddress()
+        {
+            RegisterColumn((CustomerAddress _) => _.CustomerID, AdventureWorksLT.Customer._CustomerID);
+            RegisterColumn((CustomerAddress _) => _.AddressID, AdventureWorksLT.Address._AddressID);
+            _AddressType = RegisterColumn((CustomerAddress _) => _.AddressType);
+        }
+
+        private Key _primaryKey;
         public override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(CustomerID, AddressID);
+                return _primaryKey;
+            }
         }
 
-        public Customer.Key CustomerKey { get; private set; }
+        private Customer.Key _customer;
+        public Customer.Key Customer
+        {
+            get
+            {
+                if (_customer == null)
+                    _customer = new Customer.Key(CustomerID);
+                return _customer;
+            }
+        }
 
-        public Address.Key AddressKey { get; private set; }
+        private Address.Key _address;
+        public Address.Key Address
+        {
+            get
+            {
+                if (_address == null)
+                    _address = new Address.Key(AddressID);
+                return _address;
+            }
+        }
 
         public _Int32 CustomerID { get; private set; }
 

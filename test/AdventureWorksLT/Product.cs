@@ -17,54 +17,103 @@ namespace DevZest.Samples.AdventureWorksLT
 
         public class Ref : Model<Key>
         {
-            public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Ref _) => _.ProductID);
-
-            public Ref()
+            static Ref()
             {
-                _primaryKey = new Key(ProductID);
+                RegisterColumn((Ref _) => _.ProductID, _ProductID);
             }
 
-            private readonly Key _primaryKey;
+            private Key _primaryKey;
             public sealed override Key PrimaryKey
             {
-                get { return _primaryKey; }
+                get
+                {
+                    if (_primaryKey == null)
+                        _primaryKey = new Key(ProductID);
+                    return _primaryKey;
+                }
             }
 
             public _Int32 ProductID { get; private set; }
         }
 
-        public static readonly Mounter<_Int32> _ProductID = RegisterColumn((Product _) => _.ProductID, Ref._ProductID);
-        public static readonly Mounter<_String> _Name = RegisterColumn((Product _) => _.Name);
-        public static readonly Mounter<_String> _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
-        public static readonly Mounter<_String> _Color = RegisterColumn((Product _) => _.Color);
-        public static readonly Mounter<_Decimal> _StandardCost = RegisterColumn((Product _) => _.StandardCost);
-        public static readonly Mounter<_Decimal> _ListPrice = RegisterColumn((Product _) => _.ListPrice);
-        public static readonly Mounter<_String> _Size = RegisterColumn((Product _) => _.Size);
-        public static readonly Mounter<_Decimal> _Weight = RegisterColumn((Product _) => _.Weight);
-        public static readonly Mounter<_Int32> _ProductCategoryID = RegisterColumn((Product _) => _.ProductCategoryID);
-        public static readonly Mounter<_Int32> _ProductModelID = RegisterColumn((Product _) => _.ProductModelID);
-        public static readonly Mounter<_DateTime> _SellStartDate = RegisterColumn((Product _) => _.SellStartDate, x => x.AsDateTime());
-        public static readonly Mounter<_DateTime> _SellEndDate = RegisterColumn((Product _) => _.SellEndDate, x => x.AsDateTime());
-        public static readonly Mounter<_DateTime> _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate, x => x.AsDateTime());
-        public static readonly Mounter<_Binary> _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
-        public static readonly Mounter<_String> _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
-
-        public Product()
+        public class Lookup : ModelExtension
         {
-            _primaryKey = new Key(ProductID);
-            ProductCategoryKey = new ProductCategory.Key(ProductCategoryID);
-            ProductModelKey = new ProductModel.Key(ProductModelID);
+            static Lookup()
+            {
+                RegisterColumn((Lookup _) => _.Name, _Name);
+                RegisterColumn((Lookup _) => _.ProductNumber, _ProductNumber);
+            }
+
+            public _String Name { get; private set; }
+
+            public _String ProductNumber { get; private set; }
+        }
+
+        public static readonly Mounter<_Int32> _ProductID;
+        public static readonly Mounter<_String> _Name;
+        public static readonly Mounter<_String> _ProductNumber;
+        public static readonly Mounter<_String> _Color;
+        public static readonly Mounter<_Decimal> _StandardCost;
+        public static readonly Mounter<_Decimal> _ListPrice;
+        public static readonly Mounter<_String> _Size;
+        public static readonly Mounter<_Decimal> _Weight;
+        public static readonly Mounter<_DateTime> _SellStartDate;
+        public static readonly Mounter<_DateTime> _SellEndDate;
+        public static readonly Mounter<_DateTime> _DiscontinuedDate;
+        public static readonly Mounter<_Binary> _ThumbNailPhoto;
+        public static readonly Mounter<_String> _ThumbnailPhotoFileName;
+
+        static Product()
+        {
+            _ProductID = RegisterColumn((Product _) => _.ProductID);
+            _Name = RegisterColumn((Product _) => _.Name);
+            _ProductNumber = RegisterColumn((Product _) => _.ProductNumber);
+            _Color = RegisterColumn((Product _) => _.Color);
+            _StandardCost = RegisterColumn((Product _) => _.StandardCost);
+            _ListPrice = RegisterColumn((Product _) => _.ListPrice);
+            _Size = RegisterColumn((Product _) => _.Size);
+            _Weight = RegisterColumn((Product _) => _.Weight);
+            RegisterColumn((Product _) => _.ProductCategoryID, AdventureWorksLT.ProductCategory._ProductCategoryID);
+            RegisterColumn((Product _) => _.ProductModelID, AdventureWorksLT.ProductModel._ProductModelID);
+            _SellStartDate = RegisterColumn((Product _) => _.SellStartDate, x => x.AsDateTime());
+            _SellEndDate = RegisterColumn((Product _) => _.SellEndDate, x => x.AsDateTime());
+            _DiscontinuedDate = RegisterColumn((Product _) => _.DiscontinuedDate, x => x.AsDateTime());
+            _ThumbNailPhoto = RegisterColumn((Product _) => _.ThumbNailPhoto);
+            _ThumbnailPhotoFileName = RegisterColumn((Product _) => _.ThumbnailPhotoFileName);
         }
 
         private Key _primaryKey;
         public override Key PrimaryKey
         {
-            get { return _primaryKey; }
+            get
+            {
+                if (_primaryKey == null)
+                    _primaryKey = new Key(ProductID);
+                return _primaryKey;
+            }
         }
 
-        public ProductCategory.Key ProductCategoryKey { get; private set; }
+        private ProductCategory.Key _productCategory;
+        public ProductCategory.Key ProductCategory
+        {
+            get
+            {
+                if (_productCategory == null)
+                    _productCategory = new ProductCategory.Key(ProductCategoryID);
+                return _productCategory;
+            }
+        }
 
-        public ProductModel.Key ProductModelKey { get; private set; }
+        private ProductModel.Key _productModel;
+        public ProductModel.Key ProductModel
+        {
+            get
+            {
+                if (_productModel == null)
+                    _productModel = new ProductModel.Key(ProductModelID);
+                return _productModel;
+            }
+        }
 
         [Identity(1, 1)]
         public _Int32 ProductID { get; private set; }
