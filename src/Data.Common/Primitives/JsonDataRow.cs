@@ -132,16 +132,18 @@ namespace DevZest.Data.Primitives
                     throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
                 jsonParser.Parse(extension, dataRow);
             }
-
-            var member = model[memberName];
-            if (member == null)
-                throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
-            if (member is Column)
-                jsonParser.Parse((Column)member, dataRow.Ordinal);
-            else if (member is ColumnList)
-                jsonParser.Parse((ColumnList)member, dataRow.Ordinal);
             else
-                jsonParser.Parse(dataRow[(Model)member], false);
+            {
+                var member = model[memberName];
+                if (member == null)
+                    throw new FormatException(Strings.JsonParser_InvalidModelMember(memberName, model.GetType().FullName));
+                if (member is Column)
+                    jsonParser.Parse((Column)member, dataRow.Ordinal);
+                else if (member is ColumnList)
+                    jsonParser.Parse((ColumnList)member, dataRow.Ordinal);
+                else
+                    jsonParser.Parse(dataRow[(Model)member], false);
+            }
         }
 
         private static void Parse(this JsonParser jsonParser, ModelExtension extension, DataRow dataRow)
@@ -165,6 +167,7 @@ namespace DevZest.Data.Primitives
 
         private static void Parse(this JsonParser jsonParser, ModelExtension extension, string memberName, DataRow dataRow)
         {
+            jsonParser.ExpectToken(JsonTokenKind.Colon);
             if (extension.ColumnsByRelativeName.ContainsKey(memberName))
                 jsonParser.Parse(extension.ColumnsByRelativeName[memberName], dataRow.Ordinal);
             else if (extension.ChildExtensionsByName.ContainsKey(memberName))

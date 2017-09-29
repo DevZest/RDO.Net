@@ -18,14 +18,16 @@ namespace DevZest.Data
         {
             var columnAttributes = getter.Verify(nameof(getter));
 
-            s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
+            var result = s_columnManager.Register(getter, mounter => CreateColumn(mounter, initializer, columnAttributes));
+            result.OriginalOwnerType = result.OwnerType;
+            result.OriginalName = result.Name;
         }
 
         private static T CreateColumn<TExtension, T>(Mounter<TExtension, T> mounter, Action<T> initializer, IEnumerable<ColumnAttribute> columnAttributes)
             where TExtension : ModelExtension
             where T : Column, new()
         {
-            var result = Column.Create<T>(mounter.OwnerType, mounter.Name);
+            var result = Column.Create<T>(mounter.OriginalOwnerType, mounter.OriginalName);
             var parent = mounter.Parent;
             result.Construct(parent.Model, mounter.OwnerType, parent.GetName(mounter), ColumnKind.Extension, null, initializer.Merge(columnAttributes));
             parent.Add(result);

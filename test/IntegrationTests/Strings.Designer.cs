@@ -111,6 +111,34 @@ namespace DevZest.Data {
         /// <summary>
         ///   Looks up a localized string similar to [
         ///   {
+        ///      &quot;SalesOrderID&quot; : 71774,
+        ///      &quot;SalesOrderDetailID&quot; : 110562,
+        ///      &quot;OrderQty&quot; : 1,
+        ///      &quot;ProductID&quot; : 836,
+        ///      &quot;UnitPrice&quot; : 356.8980,
+        ///      &quot;UnitPriceDiscount&quot; : 0,
+        ///      &quot;LineTotal&quot; : 356.898000,
+        ///      &quot;RowGuid&quot; : &quot;e3a1994c-7a68-4ce8-96a3-77fdd3bbd730&quot;,
+        ///      &quot;ModifiedDate&quot; : &quot;2008-06-01T00:00:00.000&quot;,
+        ///      &quot;Extension&quot; : {
+        ///         &quot;Product&quot; : {
+        ///            &quot;Name&quot; : &quot;ML Road Frame-W - Yellow, 48&quot;,
+        ///            &quot;ProductNumber&quot; : &quot;FR-R72Y-48&quot;
+        ///         }
+        ///      }
+        ///   },
+        ///   {
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ExpectedJSON_SalesOrderDetail_71774_with_ext {
+            get {
+                return ResourceManager.GetString("ExpectedJSON_SalesOrderDetail_71774_with_ext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///   {
         ///      &quot;ColumnList&quot; : [
         ///         71774,
         ///         &quot;SO71774&quot;
