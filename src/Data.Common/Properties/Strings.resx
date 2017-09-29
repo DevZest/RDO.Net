@@ -495,4 +495,7 @@
   <data name="DbQueryBuilder_EmptyFrom" xml:space="preserve">
     <value>The From clause is empty.</value>
   </data>
+  <data name="DbQueryBuilder_InvalidAutoSelectSourceModel" xml:space="preserve">
+    <value>The source Model is invalid.</value>
+  </data>
 </root>

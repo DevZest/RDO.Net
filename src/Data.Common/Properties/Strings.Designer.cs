@@ -1019,6 +1019,14 @@ namespace DevZest.Data
             get { return GetString("DbQueryBuilder_EmptyFrom"); }
         }
 
+        /// <summary>
+        /// The source Model is invalid.
+        /// </summary>
+        public static string DbQueryBuilder_InvalidAutoSelectSourceModel
+        {
+            get { return GetString("DbQueryBuilder_InvalidAutoSelectSourceModel"); }
+        }
+
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

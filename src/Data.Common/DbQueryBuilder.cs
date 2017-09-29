@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace DevZest.Data
@@ -229,12 +230,38 @@ namespace DevZest.Data
             return this;
         }
 
-        public DbQueryBuilder Select<T>(T source, T target)
+        public DbQueryBuilder AutoSelect(Model from, ModelExtension to)
+        {
+            if (to == null)
+                throw new ArgumentNullException(nameof(to));
+            if (from == null)
+                throw new ArgumentNullException(nameof(from));
+            if (_sourceModels == null)
+                throw new InvalidOperationException(Strings.DbQueryBuilder_EmptyFrom);
+            if (!_sourceModels.Contains(from))
+                throw new ArgumentException(Strings.DbQueryBuilder_InvalidAutoSelectSourceModel, nameof(from));
+
+            var targetColumns = to.Columns;
+            for (int i = 0; i < targetColumns.Count; i++)
+            {
+                var targetColumn = targetColumns[i];
+                if (_targetColumns.Contains(targetColumn))
+                    continue;
+                VerifyTargetColumn(targetColumn, string.Format(CultureInfo.InvariantCulture, "{0}.Columns[{1}]", nameof(to), i));
+                var sourceColumn = from.Columns.AutoSelect(targetColumn);
+                if (sourceColumn != null)
+                    SelectCore(sourceColumn, targetColumn);
+            }
+
+            return this;
+        }
+
+        public DbQueryBuilder Select<T>(T from, T to)
             where T : Column, new()
         {
-            VerifySourceColumn(source, nameof(source));
-            VerifyTargetColumn(target);
-            SelectCore(source, target);
+            VerifySourceColumn(from, nameof(from));
+            VerifyTargetColumn(to, nameof(to));
+            SelectCore(from, to);
             return this;
         }
 
@@ -244,11 +271,11 @@ namespace DevZest.Data
             return Select(sourceColumn, adhoc.AddColumn(sourceColumn, false, c => c.DbColumnName = string.IsNullOrEmpty(name) ? sourceColumn.DbColumnName : name));
         }
 
-        private void VerifyTargetColumn(Column target)
+        private void VerifyTargetColumn(Column target, string paramName)
         {
-            Check.NotNull(target, nameof(target));
+            Check.NotNull(target, paramName);
             if (target.ParentModel != Model || _targetColumns.Contains(target))
-                throw new ArgumentException(Strings.DbQueryBuilder_VerifyTargetColumn, nameof(target));
+                throw new ArgumentException(Strings.DbQueryBuilder_VerifyTargetColumn, paramName);
         }
 
         internal void SelectCore(Column source, Column target)

@@ -39,6 +39,20 @@ namespace DevZest.Samples.AdventureWorksLT
             public _Int32 SalesOrderID { get; private set; }
         }
 
+        public class Ext : ModelExtension
+        {
+            static Ext()
+            {
+                RegisterChildExtension((Ext _) => _.Customer);
+                RegisterChildExtension((Ext _) => _.ShipToAddress);
+                RegisterChildExtension((Ext _) => _.BillToAddress);
+            }
+
+            public Customer.Lookup Customer { get; private set; }
+            public Address.Lookup ShipToAddress { get; private set; }
+            public Address.Lookup BillToAddress { get; private set; }
+        }
+
         public static readonly Mounter<_Byte> _RevisionNumber;
         public static readonly Mounter<_DateTime> _OrderDate;
         public static readonly Mounter<_DateTime> _DueDate;
