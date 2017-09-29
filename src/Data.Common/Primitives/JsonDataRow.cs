@@ -5,7 +5,7 @@ namespace DevZest.Data.Primitives
 {
     public static class JsonDataRow
     {
-        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow)
+        public static JsonWriter Write(this JsonWriter jsonWriter, DataRow dataRow, bool includeExtension = true)
         {
             jsonWriter.WriteStartObject();
 
@@ -42,13 +42,16 @@ namespace DevZest.Data.Primitives
                 count++;
             }
 
-            var extension = dataRow.Model.Extension;
-            if (extension != null)
+            if (includeExtension)
             {
-                if (count > 0)
-                    jsonWriter.WriteComma();
-                jsonWriter.Write(extension, dataRow);
-                count++;
+                var extension = dataRow.Model.Extension;
+                if (extension != null)
+                {
+                    if (count > 0)
+                        jsonWriter.WriteComma();
+                    jsonWriter.Write(extension, dataRow);
+                    count++;
+                }
             }
 
             foreach (var dataSet in dataRow.ChildDataSets)
