@@ -90,6 +90,7 @@
     <Compile Include="Utilities\Windows\KeyboardManager.cs" />
     <Compile Include="Utilities\Windows\Point.IsClose.cs" />
     <Compile Include="Views\DataLoadState.cs" />
+    <Compile Include="Views\ForeignKeyBox.cs" />
     <Compile Include="Views\Primitives\ICompositeView.cs" />
     <Compile Include="Views\InPlaceEditor.cs" />
     <Compile Include="Views\Primitives\LoadingAnimation.xaml.cs">

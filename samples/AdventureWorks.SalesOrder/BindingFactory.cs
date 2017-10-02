@@ -1,20 +1,31 @@
 ﻿using DevZest.Data.Presenters;
 using DevZest.Samples.AdventureWorksLT;
+using System;
 
 namespace AdventureWorks.SalesOrders
 {
     public static class BindingFactory
     {
-        public static RowBinding<CustomerControl> AsCustomerControl(this Customer.Key key, Customer.Lookup _)
+        public static Action<CustomerBox, RowPresenter> AsCustomerBox(Customer.Lookup _, Customer.Key key)
         {
-            return new RowBinding<CustomerControl>((v, p) =>
+            return (v, p) =>
             {
-                v.CustomerID = p.GetValue(key.CustomerID);
-                v.CompanyName = p.GetValue(_.CompanyName);
-                v.ContactPerson = GetContactPerson(p.GetValue(_.LastName), p.GetValue(_.FirstName), p.GetValue(_.Title));
-                v.Phone = p.GetValue(_.Phone);
-                v.Email = p.GetValue(_.EmailAddress);
-            }).WithInput(new PropertyChangedTrigger<CustomerControl>(CustomerControl.CustomerIDProperty), key.CustomerID, v => v.CustomerID);
+                var customerID = p.GetValue(key.CustomerID);
+                if (customerID == null)
+                {
+                    v.CompanyName = "Company";
+                    v.ContactPerson = null;
+                    v.Phone = null;
+                    v.Email = null;
+                }
+                else
+                {
+                    v.CompanyName = p.GetValue(_.CompanyName);
+                    v.ContactPerson = GetContactPerson(p.GetValue(_.LastName), p.GetValue(_.FirstName), p.GetValue(_.Title));
+                    v.Phone = p.GetValue(_.Phone);
+                    v.Email = p.GetValue(_.EmailAddress);
+                }
+            };
         }
 
         private static string GetContactPerson(string lastName, string firstName, string title)

@@ -1,11 +1,11 @@
 ﻿namespace AdventureWorks.SalesOrders
 {
     /// <summary>
-    /// Interaction logic for AddressControl.xaml
+    /// Interaction logic for AddressBox.xaml
     /// </summary>
-    public partial class AddressControl
+    public partial class AddressBox
     {
-        public AddressControl()
+        public AddressBox()
         {
             InitializeComponent();
         }

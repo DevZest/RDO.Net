@@ -82,12 +82,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddressControl.xaml.cs">
-      <DependentUpon>AddressControl.xaml</DependentUpon>
+    <Compile Include="AddressBox.xaml.cs">
+      <DependentUpon>AddressBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="BindingFactory.cs" />
-    <Compile Include="CustomerControl.xaml.cs">
-      <DependentUpon>CustomerControl.xaml</DependentUpon>
+    <Compile Include="CustomerBox.xaml.cs">
+      <DependentUpon>CustomerBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="ProgressDialog.xaml.cs">
@@ -96,11 +96,11 @@
     <Compile Include="SalesOrderList.cs" />
     <Compile Include="TotalAmtConditionalFormat.cs" />
     <Compile Include="TotalDueConditionalFormat.cs" />
-    <Page Include="AddressControl.xaml">
+    <Page Include="AddressBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CustomerControl.xaml">
+    <Page Include="CustomerBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
